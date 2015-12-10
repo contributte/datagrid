@@ -1,7 +1,7 @@
 {
 	"name": "ublaboo/datagrid",
 	"type": "library",
-	"description": "DataGrid for Nette Framework: filtering, sorting, pagination, tree view, table view, etc",
+	"description": "DataGrid for Nette Framework: filtering, sorting, pagination, tree view, table view, translator, etc",
 	"keywords": ["datagrid", "grid", "nette"],
 	"homepage": "http://ublaboo.paveljanda.com/datagrid",
 	"license": ["MIT"],
