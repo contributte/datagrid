@@ -1,0 +1,36 @@
+{
+	"name": "ublaboo/datagrid",
+	"type": "library",
+	"description": "DataGrid for Nette Framework: filtering, sorting, pagination, tree view, table view, etc",
+	"keywords": ["datagrid", "grid", "nette"],
+	"homepage": "http://ublaboo.paveljanda.com/datagrid",
+	"license": ["MIT"],
+	"support": {
+		"issues": "https://github.com/ublaboo/datagrid/issues"
+	},
+	"authors": [
+		{
+			"name": "Pavel Janda",
+			"homepage": "http://paveljanda.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Ublaboo\\DataGrid\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Ublaboo\\DataGrid\\Tests\\": "tests"
+		}
+	},
+	"require": {
+		"nette/application" : "~2.3.0",
+		"nette/utils"       : "~2.3.0",
+		"nette/forms"       : "~2.3.0",
+		"ublaboo/responses" : "~1.0"
+	},
+	"require-test": {
+		"nette/tester": "~1.6.1"
+	}
+}

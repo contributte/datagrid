@@ -1,0 +1,34 @@
+{*
+ * @param Paginator $paginator
+ * @param array     $steps
+ *}
+
+{var $link = $control->getParent()->link}
+
+<ul class="pagination" n:if="$paginator->pageCount > 1">
+	{if $paginator->isFirst()}
+		<li class="first disabled"><a>&lt;&lt;</a></li>
+	{else}
+		<li>
+			<a class="ajax" href="{$link('page!', ['page' => $paginator->page - 1])}" rel="prev">&lt;&lt;</a>
+		</li>
+	{/if}
+
+	{foreach $steps as $step}
+		{if $step == $paginator->page}
+			<li class="active"><span>{$step}</span></li>
+		{else}
+			<li><a class="ajax" href="{$link('page!', ['page' => $step])}">{$step}</a></li>
+		{/if}
+		
+		{if $iterator->nextValue > $step + 1}<li><span>…</span></li>{/if}
+	{/foreach}
+
+	{if $paginator->isLast()}
+		<li class="last disabled"><a>&gt;&gt;</a></li>
+	{else}
+		<li>
+			<a class="ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">&gt;&gt;</a>
+		</li>
+	{/if}
+</ul>
