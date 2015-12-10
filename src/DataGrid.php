@@ -216,11 +216,11 @@ class DataGrid extends Nette\Application\UI\Control
 	public function initCheck()
 	{
 		if (!($this->dataModel instanceof DataModel)) {
-			throw new DataGridException('You have to set a data source first.');
+			throw new DataGridException('You have to set some data source to DataGrid.');
 		}
 
 		if (empty($this->columns)) {
-			throw new DataGridException('You have to add at least one column.');
+			throw new DataGridException('You have to add at least one column to DataGrid.');
 		}
 	}
 
@@ -747,7 +747,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function findSessionFilters()
 	{
-		if ($this->filter) {
+		if ($this->filter || $this->page > 1 || !$this->sort || !$this->per_page) {
 			return;
 		}
 

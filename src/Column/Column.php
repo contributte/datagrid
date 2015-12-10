@@ -8,9 +8,10 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Ublaboo\DataGrid\DataGridException;
+use Ublaboo\DataGrid\DataGridException,
+	Nette;
 
-class Column extends Ublaboo\DataGrid\Object
+class Column extends Nette\Object
 {
 
 	/**

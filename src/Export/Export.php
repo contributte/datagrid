@@ -11,9 +11,10 @@ namespace Ublaboo\DataGrid\Export;
 use Ublaboo\DataGrid\DataGridException,
 	Ublaboo\DataGrid\DataGrid,
 	Nette\Utils\Callback,
-	Nette\Utils\Html;
+	Nette\Utils\Html,
+	Nette;
 
-class Export extends Ublaboo\DataGrid\Object
+class Export extends Nette\Object
 {
 
 	/**
