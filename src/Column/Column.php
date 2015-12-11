@@ -320,4 +320,14 @@ class Column extends Nette\Object
 		return $this->align;
 	}
 
+
+	public function __call($name, $args)
+	{
+		$set_method = 'set' . ucfirst($name);
+
+		if (method_exists($this, $set_method)) {
+			return Nette\Utils\Callback::invokeArgs([$this, $set_method], $args);
+		}
+	}
+
 }

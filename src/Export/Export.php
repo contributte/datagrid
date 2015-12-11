@@ -181,4 +181,14 @@ class Export extends Nette\Object
 		Callback::invokeArgs($this->callback, [$data, $grid]);
 	}
 
+
+	public function __call($name, $args)
+	{
+		$set_method = 'set' . ucfirst($name);
+
+		if (method_exists($this, $set_method)) {
+			return Nette\Utils\Callback::invokeArgs([$this, $set_method], $args);
+		}
+	}
+
 }
