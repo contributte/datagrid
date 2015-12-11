@@ -131,6 +131,13 @@ $grid->addColumnNumber('replacement', 'Replace deset/dvacet', 'id')
 	->setReplacement([10 => 'deset', 20 => 'dvacet']);
 ```
 
+### `::setAlign`: data sloupce mohou být zarovnána doprava/doleva/na střed
+
+```php
+$grid->addColumnNumber('replacement', 'Replace deset/dvacet', 'id')
+	->setAlign('right');
+```
+
 ### `::setRenderer`: sloupci můžeme nastavit vlastní renderer
 
 ```php
@@ -454,7 +461,7 @@ public function getAdminSelection($show = NULL)
 
 DataGrid v zavolané metodě `::redrawItem` potřebuje stejnou selekci, na které později specifikuje výběr pouze jedné položky. Musí však už v základu obsahovat zvolenou položku, aby ji DataGrid později našel.
 
-## DEMO
+## Příklad použití
 
 ```php
 public function createComponentExamplesGrid($name)
