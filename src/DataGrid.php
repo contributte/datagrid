@@ -143,6 +143,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $tree_view_has_children_column;
 
+	/**
+	 * @var string
+	 */
+	protected $title = 'Seznam položek';
+
 
 	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
@@ -216,11 +221,11 @@ class DataGrid extends Nette\Application\UI\Control
 	public function initCheck()
 	{
 		if (!($this->dataModel instanceof DataModel)) {
-			throw new DataGridException('You have to set some data source to DataGrid.');
+			throw new DataGridException('You have to set a data source first.');
 		}
 
 		if (empty($this->columns)) {
-			throw new DataGridException('You have to add at least one column to DataGrid.');
+			throw new DataGridException('You have to add at least one column.');
 		}
 	}
 
@@ -431,6 +436,26 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return $this;
+	}
+
+
+	/**
+	 * Set grid title (shown in template)
+	 * @param string $title
+	 */
+	public function setTitle($title)
+	{
+		$this->title = (string) $title;
+	}
+
+
+	/**
+	 * Get grid title (shown in template)
+	 * @return string
+	 */
+	public function getTitle()
+	{
+		return $this->title;
 	}
 
 
@@ -747,7 +772,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function findSessionFilters()
 	{
-		if ($this->filter || $this->page > 1 || !$this->sort || !$this->per_page) {
+		if ($this->filter) {
 			return;
 		}
 

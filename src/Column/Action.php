@@ -189,7 +189,15 @@ class Action extends Column
 			return NULL;
 		}
 
-		return str_replace('%s', $item[$this->confirm[1]], $this->confirm[0]);
+		if (!$this->confirm[1]) {
+			return $this->confirm[0];
+		}
+
+		if (is_object($item)) {
+			return str_replace('%s', $item->{$this->confirm[1]}, $this->confirm[0]);
+		} else {
+			return str_replace('%s', $item[$this->confirm[1]], $this->confirm[0]);
+		}
 	}
 
 
@@ -202,11 +210,11 @@ class Action extends Column
 	{
 		$return = [];
 
-		foreach ($this->params as $param) {
+		foreach ($this->params as $param_name => $param) {
 			if (is_object($item)) {
-				$return[$param] = $item->{$param};
+				$return[is_string($param_name) ? $param_name : $param] = $item->{$param};
 			} else {
-				$return[$param] = $item[$param];
+				$return[is_string($param_name) ? $param_name : $param] = $item[$param];
 			}
 		}
 
