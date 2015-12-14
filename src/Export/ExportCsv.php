@@ -39,7 +39,7 @@ class ExportCsv extends Export
 	}
 
 
-	public function invoke(array $data, Ublaboo\DataGrid\DataGrid $grid)
+	public function invoke(array $data, DataGrid $grid)
 	{
 		$columns = $this->getColumns() ?: $grid->getColumns();
 
