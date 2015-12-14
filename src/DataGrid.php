@@ -278,7 +278,7 @@ class DataGrid extends Nette\Application\UI\Control
 				$data_source = new DataSource\DibiMssqlDataSource($data_source, $this->primary_key);
 
 			} else {
-				$data_source = new DataSource\DibiDataSource($data_source, $this->primary_key);
+				$data_source = new DataSource\DibiFluentDataSource($data_source, $this->primary_key);
 			}
 
 		} else {

@@ -13,7 +13,7 @@ use DibiFluent,
 	Nette\Utils\Strings,
 	Ublaboo\DataGrid\Filter;
 
-class DibiDataSource
+class DibiFluentDataSource
 {
 
 	/**
