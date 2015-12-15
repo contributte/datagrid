@@ -11,7 +11,7 @@ namespace Ublaboo\DataGrid\Column;
 use Ublaboo\DataGrid\DataGridException,
 	Nette;
 
-class Column extends Nette\Object
+abstract class Column extends Nette\Object
 {
 
 	/**

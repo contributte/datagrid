@@ -21,7 +21,7 @@ final class XTestingPresenter extends Nette\Application\UI\Presenter
 
 	public function link($destination, $args = array())
 	{
-		return $destination;
+		return $destination . '?' . http_build_query($args);
 	}
 
 }

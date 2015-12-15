@@ -27,9 +27,28 @@ final class ColumnActionTest extends TestCase
 	}
 
 
-	public function render($action, $item = ['id' => 1])
+	public function render($action)
 	{
+		$item = ['id' => 1, 'name' => 'John'];
+
 		return (string) $action->render($item);
+	}
+
+
+	public function testActionDuplcitColumn()
+	{
+		$action = $this->grid->addAction('action', 'Do', 'doStuff!');
+
+		$grid = $this->grid;
+		$add_action = function() use ($grid) {
+			$grid->addAction('action', 'Do', 'doStuff!');
+		};
+
+		Assert::exception(
+			$add_action,
+			'Ublaboo\DataGrid\DataGridException',
+			'There is already action at key [action] defined.'
+		);
 	}
 
 
@@ -38,14 +57,28 @@ final class ColumnActionTest extends TestCase
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!');
 
 		Assert::same(
-			'<a href="doStuff!" class="btn btn-xs btn-default">Do</a>',
+			'<a href="doStuff!?id=1" class="btn btn-xs btn-default">Do</a>',
 			$this->render($action)
 		);
 
 		$action = $this->grid->addAction('detail', 'Do');
 
 		Assert::same(
-			'<a href="detail" class="btn btn-xs btn-default">Do</a>',
+			'<a href="detail?id=1" class="btn btn-xs btn-default">Do</a>',
+			$this->render($action)
+		);
+
+		$action = $this->grid->addAction('title', 'Do', 'detail', ['id', 'name']);
+		Assert::same(
+			'<a href="detail?id=1&amp;name=John" class="btn btn-xs btn-default">Do</a>',
+			$this->render($action)
+		);
+
+		$action = $this->grid->addAction('title2', 'Do', 'detail', [
+			'id' => 'name', 'name' => 'id'
+		]);
+		Assert::same(
+			'<a href="detail?id=John&amp;name=1" class="btn btn-xs btn-default">Do</a>',
 			$this->render($action)
 		);
 	}
@@ -59,7 +92,7 @@ final class ColumnActionTest extends TestCase
 		$action->icon('user');
 
 		Assert::same(
-			'<a href="doStuff!" class="btn btn-xs btn-default"><span class="icon-user"></span>&nbsp;Do</a>',
+			'<a href="doStuff!?id=1" class="btn btn-xs btn-default"><span class="icon-user"></span>&nbsp;Do</a>',
 			$this->render($action)
 		);
 	}
@@ -69,11 +102,11 @@ final class ColumnActionTest extends TestCase
 	{
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->class('btn');
 
-		Assert::same('<a href="doStuff!" class="btn">Do</a>', $this->render($action));
+		Assert::same('<a href="doStuff!?id=1" class="btn">Do</a>', $this->render($action));
 
 		$action->setClass(NULL);
 
-		Assert::same('<a href="doStuff!">Do</a>', $this->render($action));
+		Assert::same('<a href="doStuff!?id=1">Do</a>', $this->render($action));
 	}
 
 
@@ -82,7 +115,7 @@ final class ColumnActionTest extends TestCase
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->title('hello');
 
 		Assert::same(
-			'<a href="doStuff!" title="hello" class="btn btn-xs btn-default">Do</a>',
+			'<a href="doStuff!?id=1" title="hello" class="btn btn-xs btn-default">Do</a>',
 			$this->render($action)
 		);
 	}
@@ -93,7 +126,7 @@ final class ColumnActionTest extends TestCase
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->confirm('Really?');
 
 		Assert::same(
-			'<a href="doStuff!" class="btn btn-xs btn-default" data-confirm="Really?">Do</a>',
+			'<a href="doStuff!?id=1" class="btn btn-xs btn-default" data-confirm="Really?">Do</a>',
 			$this->render($action)
 		);
 	}
