@@ -1,7 +1,7 @@
 <?php
 
 /**
- * * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
  * @author      Pavel Janda <me@paveljanda.com>
  * @package     Ublaboo
  */
