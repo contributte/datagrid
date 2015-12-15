@@ -84,7 +84,7 @@ class Action extends Column
 			->href($this->grid->getPresenter()->link($this->href, $this->getItemParams($item)));
 
 		if ($this->icon) {
-			$a->add(Html::el('span')->class("fa fa-$this->icon"));
+			$a->add(Html::el('span')->class(DataGrid::$icon_prefix . $this->icon));
 			
 			if (strlen($this->name)) {
 				$a->add('&nbsp;');

@@ -81,7 +81,7 @@ class Export extends Nette\Object
 		]);
 
 		if ($this->icon) {
-			$a->add(Html::el('span')->class("fa fa-$this->icon"));
+			$a->add(Html::el('span')->class(DataGrid::$icon_prefix . $this->icon));
 
 			if (strlen($this->text)) {
 				$a->add('&nbsp;');

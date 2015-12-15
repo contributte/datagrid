@@ -24,7 +24,7 @@
                             {if $column->isSortedBy()}
                                 <span n:class="$column->isSortAsc() ? 'fa-caret-up' : 'fa-caret-down', 'fa'"></span>
                             {else}
-                                <span class="fa fa-sort"></span>
+                                <span class="{$icon_prefix}sort"></span>
                             {/if}
                         </a>
                     {else}
@@ -50,7 +50,7 @@
                 </div>
                 <div class="tree__column col-toggle" data-id="{$id_value}">
                     <a n:href="getChildren! parent => $id_value" class="btn btn-toggle" n:if="$item->{$tree_view_has_children_column}">
-                        <div class="fa fa-caret-right"></div>
+                        <div class="{$icon_prefix}caret-right"></div>
                     </a>
                 </div>
                 {foreach $columns as $column}
@@ -72,7 +72,7 @@
                     {/foreach}
                     {if $control->isSortable()}
                         <span class="handle btn btn-xs btn-default">
-                            <span class="fa fa-arrows"></span>
+                            <span class="{$icon_prefix}arrows"></span>
                         </span>
                     {/if}
                 </div>

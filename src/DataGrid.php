@@ -15,6 +15,12 @@ class DataGrid extends Nette\Application\UI\Control
 {
 
 	/**
+	 * @var string
+	 * @todo Tell about this on github
+	 */
+	public static $icon_prefix = 'fa fa-';
+
+	/**
 	 * @var int
 	 * @persistent
 	 */
@@ -210,6 +216,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->template->filter_active = $this->isFilterActive();
 		$this->template->original_template = $this->getOriginalTemplateFile();
+		$this->template->icon_prefix = static::$icon_prefix;
 
 		/**
 		 * Set template file and render it

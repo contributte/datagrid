@@ -53,7 +53,7 @@
                                         <div class="col-sm-9">
                                             <div class="input-group">
                                                 {input $filter->getKey() class => 'form-control', data-autosubmit => TRUE}
-                                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                                <span class="input-group-addon"><span class="{$icon_prefix}calendar"></span></span>
                                             </div>
                                         </div>
                                     {elseif ($filter instanceof Ublaboo\DataGrid\Filter\FilterDateRange)}
@@ -63,14 +63,14 @@
                                         <div class="col-sm-4">
                                             <div class="input-group">
                                                 {input $form[$container]['from'] class => 'form-control', data-autosubmit => TRUE}
-                                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                                <span class="input-group-addon"><span class="{$icon_prefix}calendar"></span></span>
                                             </div>
                                         </div>
                                         {label $form[$container]['to'] class => 'col-sm-1 control-label' /}
                                         <div class="col-sm-4">
                                             <div class="input-group">
                                                 {input $form[$container]['to'] class => 'form-control', data-autosubmit => TRUE}
-                                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                                <span class="input-group-addon"><span class="{$icon_prefix}calendar"></span></span>
                                             </div>
                                         </div>
                                     {else}
@@ -150,7 +150,7 @@
                                             {if $column->isSortedBy()}
                                                 <span n:class="$column->isSortAsc() ? 'fa-caret-up' : 'fa-caret-down', 'fa'"></span>
                                             {else}
-                                                <span class="fa fa-sort"></span>
+                                                <span class="{$icon_prefix}sort"></span>
                                             {/if}
                                         </a>
                                     {else}
@@ -195,7 +195,7 @@
                                     {/foreach}
                                     {if $control->isSortable()}
                                         <span class="handle btn btn-xs btn-default">
-                                            <span class="fa fa-arrows"></span>
+                                            <span class="{$icon_prefix}arrows"></span>
                                         </span>
                                     {/if}
                                 </td>
