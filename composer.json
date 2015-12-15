@@ -30,7 +30,9 @@
 		"nette/forms"       : "~2.3.0",
 		"ublaboo/responses" : "dev-master"
 	},
-	"require-test": {
-		"nette/tester": "~1.6.1"
+	"require-dev": {
+		"nette/tester"    : "~1.6.1",
+		"tracy/tracy"     : "~2.3.0",
+		"mockery/mockery" : "~0.9"
 	}
 }
