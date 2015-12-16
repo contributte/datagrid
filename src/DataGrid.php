@@ -635,15 +635,9 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param array|string $columns
 	 * @throws DataGridException
 	 */
-	public function addFilterText($key, $name, $columns)
+	public function addFilterText($key, $name, $columns = NULL)
 	{
-		if ($this->dataModel->getDataSource() instanceof DataSource\ArrayDataSource) {
-			throw new DataGridException('Filtering in array is not implemented yet');
-		}
-
-		if (is_string($columns)) {
-			$columns = [$columns];
-		}
+		$columns = NULL === $columns ? [$key] : (is_string($columns) ? [$columns] : $columns);
 
 		if (!is_array($columns)) {
 			throw new DataGridException("Filter Text can except only array or string.");
@@ -667,10 +661,6 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$column = $column ?: $key;
 
-		if ($this->dataModel->getDataSource() instanceof DataSource\ArrayDataSource) {
-			throw new DataGridException('Filtering in array is not implemented yet');
-		}
-
 		if (!is_string($column)) {
 			throw new DataGridException("Filter Select can only filter through one column.");
 		}
@@ -692,10 +682,6 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$column = $column ?: $key;
 
-		if ($this->dataModel->getDataSource() instanceof DataSource\ArrayDataSource) {
-			throw new DataGridException('Filtering in array is not implemented yet');
-		}
-
 		if (!is_string($column)) {
 			throw new DataGridException("Filter Date can only filter through one column.");
 		}
@@ -716,10 +702,6 @@ class DataGrid extends Nette\Application\UI\Control
 	public function addFilterDateRange($key, $name, $column = NULL, $name_second = '-')
 	{
 		$column = $column ?: $key;
-
-		if ($this->dataModel->getDataSource() instanceof DataSource\ArrayDataSource) {
-			throw new DataGridException('Filtering in array is not implemented yet');
-		}
 
 		if (!is_string($column)) {
 			throw new DataGridException("Filter Date can only filter through one column.");
@@ -943,13 +925,17 @@ class DataGrid extends Nette\Application\UI\Control
 			$filter    = [];
 		}
 
+		if (NULL === $this->dataModel) {
+			throw new DataGridException('You have to set a data source first.');
+		}
+
 		$data = Nette\Utils\Callback::invokeArgs(
 			[$this->dataModel, 'filterData'], [NULL, $sort, $filter]
 		);
 
 		$export->invoke($data, $this);
 
-		if ($filter->isAjax()) {
+		if ($export->isAjax()) {
 			$this->reload();
 		}
 	}
