@@ -8,7 +8,10 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use DibiFluent;
+use DibiFluent,
+	Ublaboo\DataGrid\Filter\Filter,
+	Nette\Utils\Callback,
+	Nette\Utils\Strings;
 
 class ArrayDataSource
 {
@@ -57,22 +60,19 @@ class ArrayDataSource
 			if ($filter->isValueSet()) {
 				$or = [];
 
-				/**
-				 * @var array|callable
-				 */
-				$condition = $filter->getCondition();
-
-				if (is_callable($condition)) {
-					Callback::invokeArgs($condition, [$this->data_source, $filter->getValue()]);
+				if ($filter->hasConditionCallback()) {
+					$this->data = Callback::invokeArgs(
+						$filter->getConditionCallback(),
+						[$this->data, $filter->getValue()]
+					);
 				} else {
-					/**
-					 * @todo
-					 */
-					$this->data = $this->makeWhere($condition);
+					$this->data = array_filter($this->data, function($row) use ($filter) {
+						return $this->applyFilter($row, $filter);
+					});
 				}
 			}
 		}
-
+		
 		return $this;
 	}
 
@@ -83,7 +83,11 @@ class ArrayDataSource
 	 */
 	public function filterOne(array $filter)
 	{
-		$this->data = $this->makeWhere($filter);
+		$this->data = array_filter($this->data, function($row) use ($filter) {
+			return $this->applyFilter($row, $filter);
+		});
+
+		$this->data = $this->data ? reset($this->data) : [];
 
 		return $this;
 	}
@@ -138,97 +142,23 @@ class ArrayDataSource
 	}
 
 
-	/********************************************************************************
-	 *                                Support methods                               *
-	 ********************************************************************************/
-
-
 	/**
-	 * @param Condition $condition
-	 * @param array $data
-	 * @return array
+	 * Apply fitler and tell whether row passes conditions or not
+	 * @param  mixed  $row
+	 * @param  Filter $filter
+	 * @return mixed
 	 */
-	protected function makeWhere(Condition $condition, array $data = NULL)
+	protected function applyFilter($row, Filter $filter)
 	{
-		/**
-		 * Taken from Grido
-		 * @todo Not tested yet
-		 */
-		$data = $data === NULL
-			? $this->data
-			: $data;
-
-		$compare = [$this, 'compare'];
-		return array_filter($data, function ($row) use ($condition, $compare) {
-			if ($condition->callback) {
-				return callback($condition->callback)->invokeArgs(array($condition->value, $row));
-			}
-
-			$i = 0;
-			$results = array();
-			foreach ($condition->column as $column) {
-				if (Condition::isOperator($column)) {
-					$results[] = " $column ";
-
-				} else {
-					$i = count($condition->condition) > 1 ? $i : 0;
-					$results[] = (int) $compare(
-						$row[$column],
-						$condition->condition[$i],
-						isset($condition->value[$i])
-							? $condition->value[$i]
-							: NULL
-					);
-
-					$i++;
+		if (is_array($row) || $row instanceof \Traversable) {
+			foreach ($row as $key => $value) {
+				if (FALSE !== strpos(Strings::toAscii($value), Strings::toAscii($filter->getValue()))) {
+					return $row;
 				}
 			}
-
-			$result = implode('', $results);
-			return count($condition->column) === 1
-				? (bool) $result
-				: eval("return $result;");
-		});
-	}
-
-	/**
-	 * @param string $actual
-	 * @param string $condition
-	 * @param mixed $expected
-	 * @throws \InvalidArgumentException
-	 * @return bool
-	 */
-	public function compare($actual, $condition, $expected)
-	{
-		/**
-		 * Taken from Grido
-		 * @todo Not tested yet
-		 */
-		$expected = current((array) $expected);
-		$cond = str_replace(' ?', '', $condition);
-
-		if ($cond === 'LIKE') {
-			$pattern = str_replace('%', '.*', preg_quote($expected));
-			return (bool) preg_match("/^{$pattern}$/i", $actual);
-
-		} else if ($cond === '=') {
-			return $actual == $expected;
-
-		} else if ($cond === '<>') {
-			return $actual != $expected;
-
-		} elseif ($cond === 'IS NULL') {
-			return $actual === NULL;
-
-		} elseif ($cond === 'IS NOT NULL') {
-			return $actual !== NULL;
-
-		} elseif (in_array($cond, array('<', '<=', '>', '>='))) {
-			return eval("return {$actual} {$cond} {$expected};");
-
-		} else {
-			throw new \InvalidArgumentException("Condition '$condition' not implemented yet.");
 		}
+
+		return FALSE;
 	}
 
 }

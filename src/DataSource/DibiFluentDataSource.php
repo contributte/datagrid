@@ -101,7 +101,7 @@ class DibiFluentDataSource
 	 */
 	public function filterOne(array $filter)
 	{
-		$this->data_source->where($filter);
+		$this->data_source->where($filter)->limit(1);
 
 		return $this;
 	}
