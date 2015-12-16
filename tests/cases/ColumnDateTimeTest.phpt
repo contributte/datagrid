@@ -4,18 +4,16 @@ namespace Ublaboo\DataGrid\Tests\Cases;
 
 use Tester\TestCase,
 	Tester\Assert,
-	Mockery,
-	Ublaboo\DataGrid\DataGrid,
 	Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../files/XTestingDataGridFactory.php';
 
-final class ColumnNumberTest extends TestCase
+final class ColumnDateTimeTest extends TestCase
 {
 
 	/**
-	 * @var DataGrid
+	 * @var Ublaboo\DataGrid\DataGrid
 	 */
 	private $grid;
 
@@ -29,7 +27,8 @@ final class ColumnNumberTest extends TestCase
 
 	public function render($column)
 	{
-		$item = ['id' => 1, 'name' => 'John', 'amount' => 345678.567];
+		$datetime = \DateTime::createFromFormat('Y-m-d H:i:s', '2015-12-15 22:58:42');
+		$item = ['id' => 1, 'name' => 'John', 'date' => $datetime];
 
 		return (string) $column->render($item);
 	}
@@ -37,15 +36,18 @@ final class ColumnNumberTest extends TestCase
 
 	public function testFormat()
 	{
-		$number = $this->grid->addColumnNumber('amount', 'Amount');
-		Assert::same('345 679', $this->render($number));
+		/**
+		 * Defaul forma is 'j. n. Y'
+		 */
+		$datetime = $this->grid->addColumnDateTime('date', 'Date');
+		Assert::same('15. 12. 2015', $this->render($datetime));
 
-		$number = $this->grid->addColumnNumber('amount2', 'Amount', 'amount')->format('2', '.', ',');
-		Assert::same('345,678.57', $this->render($number));
+		$datetime->format('H:i:s');
+		Assert::same('22:58:42', $this->render($datetime));
 	}
 
 }
 
 
-$test_case = new ColumnNumberTest;
+$test_case = new ColumnDateTimeTest;
 $test_case->run();

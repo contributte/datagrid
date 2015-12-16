@@ -4,8 +4,6 @@ namespace Ublaboo\DataGrid\Tests\Cases;
 
 use Tester\TestCase,
 	Tester\Assert,
-	Mockery,
-	Ublaboo\DataGrid\DataGrid,
 	Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
@@ -15,7 +13,7 @@ final class ColumnLinkTest extends TestCase
 {
 
 	/**
-	 * @var DataGrid
+	 * @var Ublaboo\DataGrid\DataGrid
 	 */
 	private $grid;
 
