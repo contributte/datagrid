@@ -11,7 +11,7 @@ namespace Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\DataGridException,
 	Nette;
 
-class Filter extends Nette\Object
+abstract class Filter extends Nette\Object
 {
 
 	/**
@@ -48,6 +48,11 @@ class Filter extends Nette\Object
 	 * @var string|array
 	 */
 	protected $column;
+
+	/**
+	 * @var string
+	 */
+	protected $template;
 
 
 	public function __construct($key, $name, $column)
@@ -160,6 +165,28 @@ class Filter extends Nette\Object
 	public function getConditionCallback()
 	{
 		return $this->condition_callback;
+	}
+
+
+	/**
+	 * Filter may have its own template
+	 * @param string $template
+	 */
+	public function setTemplate($template)
+	{
+		$this->template = (string) $template;
+
+		return $this;
+	}
+
+
+	/**
+	 * Get filter template path
+	 * @return string
+	 */
+	public function getTemplate()
+	{
+		return $this->template;
 	}
 
 }

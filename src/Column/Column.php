@@ -243,7 +243,7 @@ abstract class Column extends Nette\Object
 	 */
 	public function setTemplate($template)
 	{
-		$this->template = $template;
+		$this->template = (string) $template;
 
 		return $this;
 	}

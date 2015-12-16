@@ -23,6 +23,11 @@ class FilterDateRange extends Filter
 	 */
 	private $name_second;
 
+	/**
+	 * @var string
+	 */
+	protected $template = 'datagrid_filter_daterange.latte';
+
 
 	public function __construct($key, $name, $column, $name_second)
 	{

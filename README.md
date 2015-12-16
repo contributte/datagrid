@@ -243,10 +243,10 @@ $grid->addFilterText('custom', 'Custom vyhledávač:', ['name'])
 $grid->addFilterSelect('name', 'Hledat:', ['' => 'Vše', 'franta' => 'franta', 'pepa' => 'pepa']);
 ```
 
-### `::addFilterDate`: filtr s datepickerem
+### `::addFilterDateTime`: filtr s datepickerem
 
 ```php
-$grid->addFilterDate('inserted', 'Vloženo:');
+$grid->addFilterDateTime('inserted', 'Vloženo:');
 ```
 
 ### `::addFilterDateRange`: filtr s datepickerem - dvě políčka pro výběr "od - do"
@@ -508,7 +508,7 @@ public function createComponentExamplesGrid($name)
 			$data_source->where('id > ?', strlen($value)); // DataSource je zde DibiFluent
 		});
 	
-	$grid->addFilterDate('inserted', 'Vloženo:');
+	$grid->addFilterDateTime('inserted', 'Vloženo:');
 	$grid->addFilterDateRange('from_to', 'Vloženo:', 'inserted');
 
 	$grid->addExportCallback('Dump do ajax rq', function($data_source, $grid) {

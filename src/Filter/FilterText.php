@@ -14,6 +14,12 @@ class FilterText extends Filter
 {
 
 	/**
+	 * @var string
+	 */
+	protected $template = 'datagrid_filter_text.latte';
+
+
+	/**
 	 * Adds text field to filter form
 	 * @param Nette\Application\UI\Form $form
 	 */

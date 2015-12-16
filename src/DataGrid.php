@@ -360,7 +360,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getOriginalTemplateFile()
 	{
-		return __DIR__ . '/templates/data_grid.latte';
+		return __DIR__ . '/templates/datagrid.latte';
 	}
 
 
@@ -438,7 +438,7 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Set tree view template file
 		 */
 		if (!$this->template_file) {
-			$this->setTemplateFile(__DIR__ . '/templates/data_grid_tree.latte');
+			$this->setTemplateFile(__DIR__ . '/templates/datagrid_tree.latte');
 		}
 
 		return $this;
@@ -677,7 +677,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param string $column
 	 * @throws DataGridException
 	 */
-	public function addFilterDate($key, $name, $column = NULL)
+	public function addFilterDateTime($key, $name, $column = NULL)
 	{
 		$column = $column ?: $key;
 
@@ -687,7 +687,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new Filter\FilterDate($key, $name, $column);
+		return $this->filters[$key] = new Filter\FilterDateTime($key, $name, $column);
 	}
 
 

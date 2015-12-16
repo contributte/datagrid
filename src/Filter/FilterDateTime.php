@@ -10,8 +10,14 @@ namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
 
-class FilterDate extends Filter
+class FilterDateTime extends Filter
 {
+
+	/**
+	 * @var string
+	 */
+	protected $template = 'datagrid_filter_datetime.latte';
+
 
 	/**
 	 * Adds select box to filter form

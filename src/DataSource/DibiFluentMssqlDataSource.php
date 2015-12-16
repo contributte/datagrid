@@ -84,8 +84,8 @@ class DibiFluentMssqlDataSource
 						$this->applyFilterText($filter);
 					} else if ($filter instanceof Filter\FilterSelect) {
 						$this->applyFilterSelect($filter);
-					} else if ($filter instanceof Filter\FilterDate) {
-						$this->applyFilterDate($filter);
+					} else if ($filter instanceof Filter\FilterDateTime) {
+						$this->applyFilterDateTime($filter);
 					}
 				}
 			}
@@ -129,7 +129,7 @@ class DibiFluentMssqlDataSource
 	}
 
 
-	public function applyFilterDate(Filter\FilterDate $filter)
+	public function applyFilterDateTime(Filter\FilterDateTime $filter)
 	{
 		$conditions = $filter->getCondition();
 
