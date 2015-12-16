@@ -12,7 +12,7 @@ use DibiFluent,
 	Nette\Utils\Callback,
 	Ublaboo\DataGrid\Filter;
 
-class DibiMssqlDataSource
+class DibiFluentMssqlDataSource
 {
 
 	/**

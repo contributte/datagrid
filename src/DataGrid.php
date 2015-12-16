@@ -274,15 +274,14 @@ class DataGrid extends Nette\Application\UI\Control
 		} else if (is_array($data_source)) {
 			$data_source = new DataSource\ArrayDataSource($data_source);
 
-
 		} else if ($data_source instanceof \DibiFluent) {
 			$driver = $data_source->getConnection()->getDriver();
 
 			if ($driver instanceof \DibiOdbcDriver) {
-				$data_source = new DataSource\DibiMssqlDataSource($data_source, $this->primary_key);
+				$data_source = new DataSource\DibiFluentMssqlDataSource($data_source, $this->primary_key);
 
 			} else if ($driver instanceof \DibiMsSqlDriver) {
-				$data_source = new DataSource\DibiMssqlDataSource($data_source, $this->primary_key);
+				$data_source = new DataSource\DibiFluentMssqlDataSource($data_source, $this->primary_key);
 
 			} else {
 				$data_source = new DataSource\DibiFluentDataSource($data_source, $this->primary_key);
@@ -761,7 +760,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function findSessionFilters()
 	{
-		if ($this->filter) {
+		if ($this->filter || $this->page || $this->sort || $this->per_page) {
 			return;
 		}
 
@@ -873,7 +872,7 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Session stuff
 		 */
 		$grid_session = $this->getPresenter()->getSession($this->getName());
-		$grid_session->_grid_sort = $page;
+		$grid_session->_grid_sort = $this->sort;
 
 		$this->reload();
 	}
@@ -885,6 +884,8 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Session stuff
 		 */
 		$grid_session = $this->getPresenter()->getSession($this->getName());
+
+		unset($grid_session->_grid_page);
 
 		foreach ($grid_session as $key => $value) {
 			if (!in_array($key, ['_grid_per_page', '_grid_sort', '_grid_page'])) {
@@ -1032,7 +1033,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$grid_session = $this->getPresenter()->getSession($this->getName());
 
-		$form->onSuccess[] = function($form, $values) {
+		$form->onSuccess[] = function($form, $values) use ($grid_session) {
 			/**
 			 * Session stuff
 			 */
