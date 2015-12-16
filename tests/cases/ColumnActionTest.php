@@ -27,11 +27,11 @@ final class ColumnActionTest extends TestCase
 	}
 
 
-	public function render($action)
+	public function render($column)
 	{
 		$item = ['id' => 1, 'name' => 'John'];
 
-		return (string) $action->render($item);
+		return (string) $column->render($item);
 	}
 
 
