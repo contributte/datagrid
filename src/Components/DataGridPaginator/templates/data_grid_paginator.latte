@@ -4,13 +4,15 @@
  *}
 
 {var $link = $control->getParent()->link}
+{var $arrow_left = '<i class="fa fa-angle-double-left"></i>'}
+{var $arrow_right = '<i class="fa fa-angle-double-right"></i>'}
 
 <ul class="pagination" n:if="$paginator->pageCount > 1">
 	{if $paginator->isFirst()}
-		<li class="first disabled"><a>&lt;&lt;</a></li>
+		<li class="first disabled"><a>{!$arrow_left}</a></li>
 	{else}
 		<li>
-			<a class="ajax" href="{$link('page!', ['page' => $paginator->page - 1])}" rel="prev">&lt;&lt;</a>
+			<a class="ajax" href="{$link('page!', ['page' => $paginator->page - 1])}" rel="prev">{!$arrow_left}</a>
 		</li>
 	{/if}
 
@@ -25,10 +27,10 @@
 	{/foreach}
 
 	{if $paginator->isLast()}
-		<li class="last disabled"><a>&gt;&gt;</a></li>
+		<li class="last disabled"><a>{!$arrow_right}</a></li>
 	{else}
 		<li>
-			<a class="ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">&gt;&gt;</a>
+			<a class="ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">{!$arrow_right}</a>
 		</li>
 	{/if}
 </ul>
