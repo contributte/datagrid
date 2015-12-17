@@ -81,8 +81,7 @@
 					</tr>
 				</thead>
 
-				<tbody {if $control->isSortable()}data-sortable data-sortable-url="{plink sort!}"{/}>
-					{snippet items}
+				<tbody n:snippet="items" {if $control->isSortable()}data-sortable data-sortable-url="{plink sort!}"{/}>
 						{foreach $items as $item}
 							{var $id_value = is_object($item) ? $item->{$control->getPrimaryKey()} : $item[$control->getPrimaryKey()]}
 
@@ -118,14 +117,13 @@
 								</td>
 							</tr>
 						{/foreach}
-					{/snippet}
 					<tr>
 						{var $columns_count = sizeof($columns) + (int) $control->hasGroupActions() + (int) $actions}
 						<td colspan="{$columns_count}" class="form-inline">
 							{if $control->hasGroupActions()}
 								{block group_actions}
 									Hromadné akce:
-									{foreach $form->getControls() as $form_control}
+									{foreach $filter_and_group_action->getControls() as $form_control}
 										{if $form_control instanceof \Nette\Forms\Controls\SubmitButton}
 											{input $form_control, class => 'btn btn-primary btn-sm', style => 'display:none'}
 										{elseif $form_control->getName() == 'group_action'}

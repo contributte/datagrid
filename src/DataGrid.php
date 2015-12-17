@@ -220,6 +220,11 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->template->icon_prefix = static::$icon_prefix;
 
 		/**
+		 * Walkaround for Latte (does not know $form in snippet in {form} atc)
+		 */
+		$this->template->filter_and_group_action = $this['filterAndGroupAction'];
+
+		/**
 		 * Set template file and render it
 		 */
 		$this->template->setFile($this->getTemplateFile())->render();
