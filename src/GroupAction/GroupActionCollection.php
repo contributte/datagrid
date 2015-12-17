@@ -25,12 +25,11 @@ class GroupActionCollection extends Nette\Object
 
 	/**
 	 * Get assambled form
-	 * @return Nette\Application\UI\Form
+	 * @param  Nette\Forms\Container $group_action_container
+	 * @return void
 	 */
-	public function getFormComponent()
+	public function addToFormContainer($group_action_container, $form)
 	{
-		$form = new Form;
-
 		/**
 		 * First foreach for filling "main" select
 		 */
@@ -38,7 +37,7 @@ class GroupActionCollection extends Nette\Object
 			$main_options[$id] = $action->getTitle();
 		}
 
-		$form->addSelect('group_action', '', $main_options)
+		$group_action_container->addSelect('group_action', '', $main_options)
 			->setPrompt('Vyberte')
 			->setRequired('Vyberte, prosím, akci');
 
@@ -47,25 +46,23 @@ class GroupActionCollection extends Nette\Object
 		 */
 		foreach ($this->group_actions as $id => $action) {
 			if ($action->hasOptions()) {
-				$form->addSelect($id, '', $action->getOptions())
+				$group_action_container->addSelect($id, '', $action->getOptions())
 					->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id);
 			}
 		}
 
 		foreach ($this->group_actions as $id => $action) {
-			$form['group_action']->addCondition(Form::EQUAL, $id)
+			$group_action_container['group_action']->addCondition(Form::EQUAL, $id)
 				->toggle(static::ID_ATTRIBUTE_PREFIX . $id);
 		}
 
-		$form['group_action']->addCondition(Form::FILLED)
+		$group_action_container['group_action']->addCondition(Form::FILLED)
 			->toggle('group_action_submit');
 
-		$form->addSubmit('submit', 'Provést')
+		$group_action_container->addSubmit('submit', 'Provést')
 			->setAttribute('id', 'group_action_submit');
 
 		$form->onSubmit[] = [$this, 'submitted'];
-
-		return $form;
 	}
 
 
@@ -76,7 +73,12 @@ class GroupActionCollection extends Nette\Object
 	 */
 	public function submitted(Form $form)
 	{
+		if (!isset($form['group_action']['submit']) || !$form['group_action']['submit']->isSubmittedBy()) {
+			return;
+		}
+
 		$values = $form->getValues();
+		$values = $values['group_action'];
 
 		if ($values->group_action === 0) {
 			return;

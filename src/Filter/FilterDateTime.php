@@ -23,7 +23,7 @@ class FilterDateTime extends Filter
 	 * Adds select box to filter form
 	 * @param Nette\Application\UI\Form $form
 	 */
-	public function addToForm($form)
+	public function addToFormContainer($form)
 	{
 		$form->addText($this->key, $this->name)
 			->setAttribute('data-datepicker');

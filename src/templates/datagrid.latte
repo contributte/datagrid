@@ -1,0 +1,174 @@
+{**
+ * @param array    $columns           Avalible columns
+ * @param array    $actions           Avalible actions
+ * @param array    $exports           Avalible exports
+ * @param array    $items             List of items from data source
+ * @param DataGrid $control           Parent (DataGrid)
+ * @param string   $original_template Original template file path
+ * @param string   $icon_prefix       Icon prefix (fa fa-)
+ *}
+
+<div class="datagrid card card-1 primary">
+	{**
+	 * Filter form
+	 *}
+	{* {snippet filter}
+		{form filter, class => 'ajax form-datagrid'}
+			{foreach $filters as $filter} *}
+				{**
+				 * Each fitlers are rendered separately in their own templates
+				 *}
+				{* {include $filter->getTemplate(), 'filter' => $filter, '_form' => $form, 'form' => $form} *}
+			{* {/foreach}
+			<a n:href="resetFilter!" class="ajax btn btn-default reset-filter">Zrušit filtr</a>
+		{/form}
+	{/snippet} *}
+
+	{snippet exports}
+		<div class="card-header">
+			<strong>{_$control->getTitle()}</strong>
+
+			<small class="text-muted" n:if="$control->isPaginated()">
+				({var $paginator = $control['paginator']->getPaginator()}
+
+				{if $control->getPerPage() === 'all'}
+					{_'Položky'}: {_'všechny'}
+				{else}
+					{_'Položky'}: {$paginator->getOffset() + 1} - {sizeof($items) + $paginator->getOffset()}
+					{_'z'} {$paginator->getItemCount()}
+				{/if})
+			</small>
+
+			<span class="pull-right exports" n:if="$exports">
+				{foreach $exports as $export}{$export->render()}{/foreach}
+			</span>
+		</div>
+	{/snippet}
+	<div class="box-content">
+		{**
+		 * Own data
+		 *}
+		{snippet data}
+
+		<div class="grid" data-refresh-url="{link redrawAll!}">
+		{form filterAndGroupAction, class => 'ajax'}
+			<table class="table table-striped table-hover table-bordered" n:block="data" n:if="$items">
+				<thead>
+					<tr>
+						<th n:if="$control->hasGroupActions()">
+							<input class="happy primary" name="toggle-all" type="checkbox" data-check-all="{$control->getName()}">
+						</th>
+						{foreach $columns as $column}
+						{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
+						<th class="col-{$column->getColumnName()} text-{$align}">
+							{if $column->isSortable()}
+								<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortOpposite()">
+									{$column->getName()}
+									{if $column->isSortedBy()}
+										<span n:class="$column->isSortAsc() ? 'fa-caret-up' : 'fa-caret-down', 'fa'"></span>
+									{else}
+										<span class="fa fa-sort"></span>
+									{/if}
+								</a>
+							{else}
+								{$column->getName()}
+							{/if}
+						</th>
+						{/foreach}
+						<th n:if="$actions || $control->isSortable()">
+							{_'Akce'}
+						</th>
+					</tr>
+				</thead>
+
+				<tbody {if $control->isSortable()}data-sortable data-sortable-url="{plink sort!}"{/}>
+					{snippet items}
+						{foreach $items as $item}
+							{var $id_value = is_object($item) ? $item->{$control->getPrimaryKey()} : $item[$control->getPrimaryKey()]}
+
+							<tr data-id="{$id_value}" n:snippet="data-{$id_value}">
+								<td n:if="$control->hasGroupActions()" class="col-checkbox">
+									<input class="happy primary" type="checkbox" data-check-all-{!$control->getName()} name="group_action_item[{$id_value}]">
+								</td>
+								{foreach $columns as $column}
+								{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
+								<td class="col-{$column->getColumnName()} text-{$align}">
+									{if $column->hasTemplate()}
+										{include $column->getTemplate(), item => $item}
+									{else}
+										{if $column->isTemplateEscaped()}
+											{$column->render($item)}
+										{else}
+											{!$column->render($item)}
+										{/if}
+									{/if}
+								</td>
+								{/foreach}
+								<td n:if="$actions || $control->isSortable()" class="col-action">
+									{foreach $actions as $action}
+										{if $action->hasTemplate()}
+											{include $action->getTemplate(), item => $item}
+										{else}
+											{!$action->render($item)}
+										{/if}
+									{/foreach}
+									<span class="handle btn btn-xs btn-default" n:if="$control->isSortable()">
+										<span class="{$icon_prefix}arrows"></span>
+									</span>
+								</td>
+							</tr>
+						{/foreach}
+					{/snippet}
+					<tr>
+						{var $columns_count = sizeof($columns) + (int) $control->hasGroupActions() + (int) $actions}
+						<td colspan="{$columns_count}" class="form-inline">
+							{if $control->hasGroupActions()}
+								{block group_actions}
+									Hromadné akce:
+									{foreach $form->getControls() as $form_control}
+										{if $form_control instanceof \Nette\Forms\Controls\SubmitButton}
+											{input $form_control, class => 'btn btn-primary btn-sm', style => 'display:none'}
+										{elseif $form_control->getName() == 'group_action'}
+											{input $form_control, class => 'form-control input-sm'}
+										{else}
+											{input $form_control, class => 'form-control input-sm', style => 'display:none'}
+										{/if}
+									{/foreach}
+								{/block}
+							{/if}
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="alert alert-info" n:if="!$items">
+				{if $filter_active}
+					{_'Zadanému filtru nevyhovuje žádná položka. Filtr můžete vynulovat kliknutím'} <a class="ajax" n:href="resetFilter!">{_'na tento odkaz'}</a>.
+				{else}
+					{_'Žádné položky k zobrazení'}
+				{/if}
+			</div>
+		{/form}
+		</div>
+		{/snippet}
+
+		{**
+		 * Bottom row
+		 *}
+		{snippet pagination}
+			{**
+			 * Items per page form (display only besie paginated grido)
+			 *}
+			{if $control->isPaginated()}
+				{form perPage, class => 'ajax form-pagination'}
+					{input per_page, data-autosubmit => TRUE, class => 'form-control'}
+					{input submit, class => 'hidden'}
+				{/form}
+			{/if}
+
+			{**
+			 * Pagination
+			 *}
+			{control paginator}
+		{/snippet}
+	</div>
+</div>

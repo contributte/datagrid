@@ -9,7 +9,8 @@
 namespace Ublaboo\DataGrid;
 
 use Nette,
-	Ublaboo\DataGrid\Utils\ArraysHelper;
+	Ublaboo\DataGrid\Utils\ArraysHelper,
+	Nette\Application\UI\Form;
 
 class DataGrid extends Nette\Application\UI\Control
 {
@@ -1020,11 +1021,11 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * PerPage form factory
-	 * @return Nette\Application\UI\Form
+	 * @return Form
 	 */
 	public function createComponentPerPage()
 	{
-		$form = new Nette\Application\UI\Form;
+		$form = new Form;
 
 		$form->addSelect('per_page', '', $this->getItemsPerPageList())
 			->setValue($this->getPerPage());
@@ -1051,22 +1052,36 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * Filter form factory
-	 * @return Nette\Application\UI\Form
+	 * FilterAndGroupAction form factory
+	 * @return Form
 	 */
-	public function createComponentFilter()
+	public function createComponentFilterAndGroupAction()
 	{
-		$form = new Nette\Application\UI\Form;
+		$form = new Form;
 
 		$form->setMethod('get');
 
+		/**
+		 * Filter part
+		 */
+		$filter_container = $form->addContainer('filter');
+
 		foreach ($this->filters as $filter) {
-			$filter->addToForm($form);
+			$filter->addToFormContainer($filter_container, $form);
 		}
 
-		$form->setDefaults($this->filter);
+		$form['filter']->setDefaults($this->filter);
 
-		$form->onSuccess[] = [$this, 'filterFormSucceeded'];
+		/**
+		 * Group action part
+		 */
+		$group_action_container = $form->addContainer('group_action');
+
+		if ($this->hasGroupActions()) {
+			$this->getGroupActionCollection()->addToFormContainer($group_action_container, $form);
+		}
+
+		$form->onSuccess[] = [$this, 'filterGroupActionSucceeded'];
 
 		return $form;
 	}
@@ -1074,13 +1089,19 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set $this->filter values after filter form submitted
-	 * @param  Nette\Application\UI\Form $form
+	 * @param  Form $form
 	 * @param  Nette\Utils\ArrayHash     $values
 	 * @return void
 	 */
-	public function filterFormSucceeded($form, $values)
+	public function filterGroupActionSucceeded(Form $form, $values)
 	{
+		if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
+			return;
+		}
+
 		$grid_session = $this->getPresenter()->getSession($this->getName());
+
+		$values = $values['filter'];
 
 		foreach ($values as $key => $value) {
 			/**
@@ -1095,20 +1116,6 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$this->reload();
-	}
-
-
-	/**
-	 * Group actions form factory
-	 * @return Nette\Application\UI\Form
-	 */
-	public function createComponentGroupAction()
-	{
-		if ($this->hasGroupActions()) {
-			return $this->getGroupActionCollection()->getFormComponent();
-		}
-
-		return new Nette\Application\UI\Form;
 	}
 
 
