@@ -86,6 +86,8 @@ class DibiFluentDataSource
 						$this->applyFilterDateTime($filter);
 					} else if ($filter instanceof Filter\FilterDateRange) {
 						$this->applyFilterDateRange($filter);
+					} else if ($filter instanceof Filter\FilterRange) {
+						$this->applyFilterRange($filter);
 					}
 				}
 			}
@@ -115,7 +117,7 @@ class DibiFluentDataSource
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
 		
-		$date_timestamp_to   = $value_to   ? strtotime($value_to)   : NULL;
+		$date_timestamp_to = $value_to ? strtotime($value_to) : NULL;
 
 		if ($value_from) {
 			$date_timestamp_from = strtotime($value_from);
@@ -127,6 +129,23 @@ class DibiFluentDataSource
 			$date_timestamp_from = strtotime($value_to);
 
 			$this->data_source->where('DATE(%n) <= ?', $filter->getColumn(), date('Y-m-d', $date_timestamp_to));
+		}
+	}
+
+
+	public function applyFilterRange(Filter\FilterRange $filter)
+	{
+		$conditions = $filter->getCondition();
+
+		$value_from = $conditions[$filter->getColumn()]['from'];
+		$value_to   = $conditions[$filter->getColumn()]['to'];
+
+		if ($value_from) {
+			$this->data_source->where('%n >= ?', $filter->getColumn(), $value_from);
+		}
+
+		if ($value_to) {
+			$this->data_source->where('%n <= ?', $filter->getColumn(), $value_to);
 		}
 	}
 
@@ -187,16 +206,25 @@ class DibiFluentDataSource
 	}
 
 
-	/**
-	 * @param array $sorting
-	 * @return void
-	 */
 	public function sort(array $sorting)
 	{
 		if ($sorting) {
+			$this->data_source->removeClause('ORDER BY');
 			$this->data_source->orderBy($sorting);
 		} else {
-			$this->data_source->orderBy($this->primary_key);
+			/**
+			 * Has the statement already a order by clause?
+			 */
+			$this->data_source->clause('ORDER BY');
+
+			$reflection = new \ReflectionClass('DibiFluent');
+			$cursor_property = $reflection->getProperty('cursor');
+			$cursor_property->setAccessible(TRUE);
+			$cursor = $cursor_property->getValue($this->data_source);
+
+			if (!$cursor) {
+				$this->data_source->orderBy($this->primary_key);
+			}
 		}
 
 		return $this;

@@ -12,20 +12,22 @@
 	{**
 	 * Filter form
 	 *}
-	{* {snippet filter}
-		{form filter, class => 'ajax form-datagrid'}
-			{foreach $filters as $filter} *}
-				{**
-				 * Each fitlers are rendered separately in their own templates
-				 *}
-				{* {include $filter->getTemplate(), 'filter' => $filter, '_form' => $form, 'form' => $form} *}
-			{* {/foreach}
-			<a n:href="resetFilter!" class="ajax btn btn-default reset-filter">Zrušit filtr</a>
-		{/form}
-	{/snippet} *}
+	{snippet filter}
+		{if $control->hasOuterFilterRendering()}
+			{form filter, class => 'ajax form-datagrid'}
+				{foreach $filters as $filter}
+					{**
+					 * Each fitlers are rendered separately in their own templates
+					 *}
+					{include $filter->getTemplate(), 'filter' => $filter, '_form' => $form, 'form' => $form}
+				{/foreach}
+				<a n:href="resetFilter!" class="ajax btn btn-default reset-filter">Zrušit filtr</a>
+			{/form}
+		{/if}
+	{/snippet}
 
 	{snippet exports}
-		<div class="card-header">
+		<div class="card-header" n:block="header">
 			<strong>{_$control->getTitle()}</strong>
 
 			<small class="text-muted" n:if="$control->isPaginated()">
@@ -50,7 +52,7 @@
 		{form filterAndGroupAction, class => 'ajax'}
 			<table class="table table-striped table-hover table-bordered" n:block="data" n:if="$items">
 				<thead>
-					<tr class="row-group-actions">
+					<tr class="row-group-actions" n:if="$control->hasGroupActions() && $exports">
 						{var $columns_count = sizeof($columns) + (int) $control->hasGroupActions() + (int) $actions}
 						<th colspan="{$columns_count}" class="form-inline">
 							{if $control->hasGroupActions()}
@@ -75,24 +77,28 @@
 					</tr>
 					<tr>
 						<th n:if="$control->hasGroupActions()" class="col-checkbox col-checkbox-first">
-							<input class="happy primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
+							<input class="happy gray-border primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
-						{foreach $columns as $column}
-						{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
-						<th class="col-{$column->getColumnName()} text-{$align}">
-							{if $column->isSortable()}
-								<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortOpposite()">
+						{foreach $columns as $column_key => $column}
+							{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
+							<th class="col-{$column->getColumnName()} text-{$align}">
+								{if $column->isSortable()}
+									<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortOpposite()">
+										{$column->getName()}
+										{if $column->isSortedBy()}
+											<span n:class="$column->isSortAsc() ? 'fa-caret-up' : 'fa-caret-down', 'fa'"></span>
+										{else}
+											<span class="fa fa-sort"></span>
+										{/if}
+									</a>
+								{else}
 									{$column->getName()}
-									{if $column->isSortedBy()}
-										<span n:class="$column->isSortAsc() ? 'fa-caret-up' : 'fa-caret-down', 'fa'"></span>
-									{else}
-										<span class="fa fa-sort"></span>
-									{/if}
-								</a>
-							{else}
-								{$column->getName()}
-							{/if}
-						</th>
+								{/if}
+								{if !$control->hasOuterFilterRendering() && isset($filters[$column_key])}
+									<br>
+									{input $filter_and_group_action['filter'][$column_key], data-autosubmit => TRUE}
+								{/if}
+							</th>
 						{/foreach}
 						<th n:if="$actions || $control->isSortable()">
 							{_'Akce'}
@@ -106,7 +112,7 @@
 
 						<tr data-id="{$id_value}" n:snippet="data-{$id_value}">
 							<td n:if="$control->hasGroupActions()" class="col-checkbox">
-								<input class="happy primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$id_value}]">
+								<input class="happy gray-border primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$id_value}]">
 							</td>
 							{foreach $columns as $column}
 							{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
@@ -152,7 +158,7 @@
 		{**
 		 * Bottom row
 		 *}
-		 <div class="row-pagination-per_page row" n:snippet="pagination">
+		 <div class="row-pagination-per_page row" n:snippet="pagination" n:if="$items">
 		 	<div class="col-sm-2">
 		 		
 		 	</div>

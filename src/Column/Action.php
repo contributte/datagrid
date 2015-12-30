@@ -250,34 +250,4 @@ class Action extends Column
 		return $this->renderer;
 	}
 
-
-	/**
-	 * Column may have its own template
-	 * @param string $template
-	 */
-	public function setTemplate($template)
-	{
-		$this->template = $template;
-	}
-
-
-	/**
-	 * Tell whether column has its owntemplate
-	 * @return bool
-	 */
-	public function hasTemplate()
-	{
-		return (bool) $this->template;
-	}
-
-
-	/**
-	 * Get column template path
-	 * @return string
-	 */
-	public function getTemplate()
-	{
-		return $this->template;
-	}
-
 }

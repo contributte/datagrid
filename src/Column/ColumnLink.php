@@ -51,7 +51,7 @@ class ColumnLink extends Column
 
 	public function render($item)
 	{
-		$value = parent::getColumnValue($item);
+		$value = parent::render($item);
 
 		$href = $this->grid->getPresenter()->link($this->href, $this->getItemParams($item));
 		$a = Html::el('a')

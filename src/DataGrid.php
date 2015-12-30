@@ -155,6 +155,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $title = 'Seznam položek';
 
+	/**
+	 * @var bool
+	 */
+	protected $outer_filter_rendering = FALSE;
+
 
 	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
@@ -1062,6 +1067,23 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function createComponentFilterAndGroupAction()
 	{
+		$form = $this->createComponentFilter();
+
+		/**
+		 * Group action part
+		 */
+		$group_action_container = $form->addContainer('group_action');
+
+		if ($this->hasGroupActions()) {
+			$this->getGroupActionCollection()->addToFormContainer($group_action_container, $form);
+		}
+
+		return $form;
+	}
+
+
+	public function createComponentFilter()
+	{
 		$form = new Form;
 
 		$form->setMethod('get');
@@ -1077,16 +1099,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$form['filter']->setDefaults($this->filter);
 
-		/**
-		 * Group action part
-		 */
-		$group_action_container = $form->addContainer('group_action');
-
-		if ($this->hasGroupActions()) {
-			$this->getGroupActionCollection()->addToFormContainer($group_action_container, $form);
-		}
-
-		$form->onSuccess[] = [$this, 'filterGroupActionSucceeded'];
+		$form->onSubmit[] = [$this, 'filterGroupActionSucceeded'];
 
 		return $form;
 	}
@@ -1098,8 +1111,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param  Nette\Utils\ArrayHash     $values
 	 * @return void
 	 */
-	public function filterGroupActionSucceeded(Form $form, $values)
+	public function filterGroupActionSucceeded(Form $form)
 	{
+		$values = $form->getValues();
+
 		if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
 			return;
 		}
@@ -1204,6 +1219,18 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->translator = $translator;
 
 		return $this;
+	}
+
+
+	public function setOuterFilterRendering($out = TRUE)
+	{
+		$this->outer_filter_rendering = (bool) $out;
+	}
+
+
+	public function hasOuterFilterRendering()
+	{
+		return $this->outer_filter_rendering;
 	}
 
 }
