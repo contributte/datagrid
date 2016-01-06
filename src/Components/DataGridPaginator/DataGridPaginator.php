@@ -28,6 +28,23 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	 */
 	private $paginator;
 
+	/**
+	 * @var string
+	 */
+	private $template_file;
+
+
+	public function setTemplateFile($template_file)
+	{
+		$this->template_file = (string) $template_file;
+	}
+
+
+	public function getTemplateFile()
+	{
+		return $this->template_file ?: __DIR__ . '/templates/data_grid_paginator.latte';
+	}
+
 
 	/**
 	 * @return Nette\Paginator
@@ -73,11 +90,12 @@ class DataGridPaginator extends Nette\Application\UI\Control
 		}
 
 		$this->template->parent_name = $this->getParent()->getName();
+		$this->template->setTranslator($this->getParent()->getTranslator());
 
 		$this->template->steps = $steps;
 		$this->template->paginator = $paginator;
 		
-		$this->template->render(__DIR__ . "/templates/data_grid_paginator.latte");
+		$this->template->render($this->getTemplateFile());
 	}
 
 

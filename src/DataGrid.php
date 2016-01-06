@@ -151,11 +151,6 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $tree_view_has_children_column;
 
 	/**
-	 * @var string
-	 */
-	protected $title = 'Seznam položek';
-
-	/**
 	 * @var bool
 	 */
 	protected $outer_filter_rendering = FALSE;
@@ -453,26 +448,6 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return $this;
-	}
-
-
-	/**
-	 * Set grid title (shown in template)
-	 * @param string $title
-	 */
-	public function setTitle($title)
-	{
-		$this->title = (string) $title;
-	}
-
-
-	/**
-	 * Get grid title (shown in template)
-	 * @return string
-	 */
-	public function getTitle()
-	{
-		return $this->title;
 	}
 
 

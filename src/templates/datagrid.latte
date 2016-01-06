@@ -26,22 +26,6 @@
 		{/if}
 	{/snippet}
 
-	{snippet exports}
-		<div class="card-header" n:block="header">
-			<strong>{_$control->getTitle()}</strong>
-
-			<small class="text-muted" n:if="$control->isPaginated()">
-				({var $paginator = $control['paginator']->getPaginator()}
-
-				{if $control->getPerPage() === 'all'}
-					{_'Položky'}: {_'všechny'}
-				{else}
-					{_'Položky'}: {$paginator->getOffset() + 1} - {sizeof($items) + $paginator->getOffset()}
-					{_'z'} {$paginator->getItemCount()}
-				{/if})
-			</small>
-		</div>
-	{/snippet}
 	<div class="box-content">
 		{**
 		 * Own data
@@ -70,13 +54,13 @@
 								{/block}
 							{/if}
 
-							<span class="pull-right exports" n:if="$exports">
+							<span class="pull-right exports" n:if="$exports" n:block="exports">
 								{foreach $exports as $export}{$export->render()}{/foreach}
 							</span>
 						</th>
 					</tr>
 					<tr>
-						<th n:if="$control->hasGroupActions()">
+						<th n:if="$control->hasGroupActions()" rowspan="2">
 							<input class="happy gray-border primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $column_key => $column}
@@ -164,17 +148,26 @@
 		{**
 		 * Bottom row
 		 *}
-		 <div class="row-pagination-per_page row" n:snippet="pagination" n:if="$items">
-		 	<div class="col-sm-2">
-		 		
+		 <div n:snippet="pagination" n:if="$items" class="row-grid-bottom">
+		 	<div class="col-items">
+				<small class="text-muted" n:if="$control->isPaginated()">
+					({var $paginator = $control['paginator']->getPaginator()}
+
+					{if $control->getPerPage() === 'all'}
+						{_'Položky'}: {_'všechny'}
+					{else}
+						{_'Položky'}: {$paginator->getOffset() + 1} - {sizeof($items) + $paginator->getOffset()}
+						{_'z'} {$paginator->getItemCount()}
+					{/if})
+				</small>
 		 	</div>
-		 	<div class="col-sm-8 text-center">
+		 	<div class="col-pagination text-center">
 		 		{**
 				 * Pagination
 				 *}
 				{control paginator}
 		 	</div>
-		 	<div class="col-sm-2 text-right">
+		 	<div class="col-per-page text-right">
 		 		{**
 				 * Items per page form (display only besie paginated grido)
 				 *}
