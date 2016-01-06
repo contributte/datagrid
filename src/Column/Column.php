@@ -30,7 +30,7 @@ abstract class Column extends Nette\Object
 	protected $replacements = [];
 
 	/**
-	 * @var callable
+	 * @var Renderer|NULL
 	 */
 	protected $renderer;
 
@@ -59,6 +59,11 @@ abstract class Column extends Nette\Object
 	 */
 	protected $align;
 
+	/**
+	 * @var array
+	 */
+	protected $template_variables;
+
 
 	public function __construct($column, $name)
 	{
@@ -73,7 +78,13 @@ abstract class Column extends Nette\Object
 		 * Renderer function may be used
 		 */
 		if ($renderer = $this->getRenderer()) {
-			return call_user_func_array($renderer, [$item]);
+			if (!$renderer->getConditionCallback()) {
+				return call_user_func_array($renderer->getCallback(), [$item]);
+			}
+
+			if (call_user_func_array($renderer->getConditionCallback(), [$item])) {
+				return call_user_func_array($renderer->getCallback(), [$item]);
+			}
 		}
 
 		/**
@@ -204,10 +215,10 @@ abstract class Column extends Nette\Object
 
 
 	/**
-	 * Set renderer callback
+	 * Set renderer callback and (it may be optional - the condition callback will decide)
 	 * @param callable $renderer
 	 */
-	public function setRenderer($renderer)
+	public function setRenderer($renderer, $condition_callback = NULL)
 	{
 		if ($this->hasReplacements()) {
 			throw new DataGridException (
@@ -221,9 +232,25 @@ abstract class Column extends Nette\Object
 			);
 		}
 
-		$this->renderer = $renderer;
+		if (NULL != $condition_callback && !is_callable($condition_callback)) {
+			throw new DataGridException (
+				"Renderer (method Column::setRenderer()) must be callable."
+			);
+		}
+
+		$this->renderer = new Renderer($renderer, $condition_callback);
 
 		return $this;
+	}
+
+
+	/**
+	 * Set renderer callback just if condition is truthy
+	 * @param callable $renderer
+	 */
+	public function setRendererOnCondition($renderer, $condition_callback)
+	{
+		return $this->setRenderer($renderer, $condition_callback);
 	}
 
 
@@ -241,11 +268,18 @@ abstract class Column extends Nette\Object
 	 * Column may have its own template
 	 * @param string $template
 	 */
-	public function setTemplate($template)
+	public function setTemplate($template, array $template_variables = [])
 	{
-		$this->template = (string) $template;
+		$this->template = $template;
+		$this->template_variables = $template_variables;
 
 		return $this;
+	}
+
+
+	public function getTemplateVariables()
+	{
+		return $this->template_variables;
 	}
 
 

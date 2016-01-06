@@ -51,6 +51,19 @@ class ColumnLink extends Column
 
 	public function render($item)
 	{
+		/**
+		 * Renderer function may be used
+		 */
+		if ($renderer = $this->getRenderer()) {
+			if (!$renderer->getConditionCallback()) {
+				return call_user_func_array($renderer->getCallback(), [$item]);
+			}
+
+			if (call_user_func_array($renderer->getConditionCallback(), [$item])) {
+				return call_user_func_array($renderer->getCallback(), [$item]);
+			}
+		}
+
 		$value = parent::render($item);
 
 		$href = $this->grid->getPresenter()->link($this->href, $this->getItemParams($item));

@@ -76,7 +76,7 @@
 						</th>
 					</tr>
 					<tr>
-						<th n:if="$control->hasGroupActions()" class="col-checkbox col-checkbox-first">
+						<th n:if="$control->hasGroupActions()">
 							<input class="happy gray-border primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $column_key => $column}
@@ -111,24 +111,30 @@
 						{var $id_value = is_object($item) ? $item->{$control->getPrimaryKey()} : $item[$control->getPrimaryKey()]}
 
 						<tr data-id="{$id_value}" n:snippet="data-{$id_value}">
-							<td n:if="$control->hasGroupActions()" class="col-checkbox">
+							<td n:if="$control->hasGroupActions()">
 								<input class="happy gray-border primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$id_value}]">
 							</td>
-							{foreach $columns as $column}
-							{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
-							<td class="col-{$column->getColumnName()} text-{$align}">
-								{if $column->hasTemplate()}
-									{include $column->getTemplate(), item => $item}
-								{else}
-									{if $column->isTemplateEscaped()}
-										{$column->render($item)}
+							{foreach $columns as $key => $column}
+								{var $col = 'col-' . $key}
+								{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
+
+								<td class="{$col} text-{$align}">
+									{if $column->hasTemplate()}
+										{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
 									{else}
-										{!$column->render($item)}
+										{ifset #$col}
+											{include #$col, item => $item}
+										{else}
+											{if $column->isTemplateEscaped()}
+												{$column->render($item)}
+											{else}
+												{!$column->render($item)}
+											{/if}
+										{/ifset}
 									{/if}
-								{/if}
-							</td>
+								</td>
 							{/foreach}
-							<td n:if="$actions || $control->isSortable()" class="col-action">
+							<td n:if="$actions || $control->isSortable()">
 								{foreach $actions as $action}
 									{if $action->hasTemplate()}
 										{include $action->getTemplate(), item => $item}

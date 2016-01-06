@@ -54,12 +54,6 @@ class Action extends Column
 	 */
 	protected $confirm;
 
-	/**
-	 * @var callable
-	 */
-	protected $renderer;
-
-
 	public function __construct($grid, $href, $name, $params)
 	{
 		$this->grid = $grid;
@@ -77,7 +71,13 @@ class Action extends Column
 		 * Renderer function may be used
 		 */
 		if ($renderer = $this->getRenderer()) {
-			return call_user_func_array($renderer, [$item]);
+			if (!$renderer->getConditionCallback()) {
+				return call_user_func_array($renderer->getCallback(), [$item]);
+			}
+
+			if (call_user_func_array($this->getRenderer(), [$item])) {
+				return call_user_func_array($renderer->getCallback(), [$item]);
+			}
 		}
 
 		$a = Html::el('a')
@@ -220,34 +220,6 @@ class Action extends Column
 		}
 
 		return $return;
-	}
-
-
-	/**
-	 * Set renderer callback
-	 * @param callable $renderer
-	 */
-	public function setRenderer($renderer)
-	{
-		if (!is_callable($renderer)) {
-			throw new DataGridException (
-				"Renderer (method Column::setRenderer()) must be callable."
-			);
-		}
-
-		$this->renderer = $renderer;
-
-		return $this;
-	}
-
-
-	/**
-	 * Return custom renderer callback
-	 * @return callable
-	 */
-	public function getRenderer()
-	{
-		return $this->renderer;
 	}
 
 }

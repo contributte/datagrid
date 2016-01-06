@@ -1233,6 +1233,24 @@ class DataGrid extends Nette\Application\UI\Control
 		return $this->outer_filter_rendering;
 	}
 
+
+	public function setColumnsOrder($order)
+	{
+		$new_order = [];
+
+		foreach ($order as $key) {
+			if (isset($this->columns[$key])) {
+				$new_order[$key] = $this->columns[$key];
+			}
+		}
+
+		if (sizeof($new_order) === sizeof($this->columns)) {
+			$this->columns = $new_order;
+		} else {
+			throw new DataGridException('When changing columns order, you have to specify all columns');
+		}
+	}
+
 }
 
 
