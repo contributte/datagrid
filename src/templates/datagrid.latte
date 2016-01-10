@@ -13,7 +13,7 @@
 		{**
 		 * Own data
 		 *}
-		<div class="grid" n:snippet="data">
+		<div class="grid">
 		{form filter, class => 'ajax'}
 			{**
 			 * Filter form
@@ -29,11 +29,11 @@
 						{var $i = $i+1}
 					</div>
 					<div n:class="$i % 2 ? 'col-sm-6' : 'col-sm-12', 'text-right'">
-						<a n:href="resetFilter!" class="ajax btn btn-default reset-filter">Zrušit filtr</a>
+						<a n:href="resetFilter!" class="ajax btn btn-danger reset-filter">Zrušit filtr</a>
 					</div>
 				</div>
 			{/if}
-			<table class="table table-striped table-hover table-bordered" n:block="data" n:if="$items">
+			<table class="table table-striped table-hover table-bordered" n:snippet="data" n:block="data" n:if="$items">
 				<thead>
 					<tr class="row-group-actions" n:if="$control->hasGroupActions() && $exports">
 						{var $columns_count = sizeof($columns) + (int) $control->hasGroupActions() + (int) $actions}

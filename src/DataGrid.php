@@ -883,12 +883,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	public function handleRedrawAll()
-	{
-		$this->reload(['filter']);
-	}
-
-
 	/**
 	 * Handler for export
 	 * @param  int $id Key for particular export class in array $this->exports
@@ -1064,7 +1058,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$form->setDefaults($this->filter);
 
-		$form->onSuccess[] = [$this, 'filterSucceeded'];
+		$form->onSubmit[] = [$this, 'filterSucceeded'];
 
 		return $form;
 	}
