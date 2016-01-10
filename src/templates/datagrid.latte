@@ -14,18 +14,18 @@
 		 * Own data
 		 *}
 		<div class="grid" n:snippet="data">
-		{form filterAndGroupAction, class => 'ajax'}
+		{form filter, class => 'ajax'}
 			{**
 			 * Filter form
 			 *}
 			{if $control->hasOuterFilterRendering()}
 				<div class="row row-filters">
 					{var $i = 0}
-					<div class="col-sm-6" n:foreach="$filters as $filter">
+					<div class="col-sm-6" n:foreach="$filters as $f">
 						{**
 						 * Each fitlers are rendered separately in their own templates
 						 *}
-						{include $filter->getTemplate(), filter => $filter, control => $form['filter'][$filter->getKey()]}
+						{include $f->getTemplate(), filter => $f, control => $form['filter'][$f->getKey()]}
 						{var $i = $i+1}
 					</div>
 					<div n:class="$i % 2 ? 'col-sm-6' : 'col-sm-12', 'text-right'">
@@ -41,7 +41,7 @@
 							{if $control->hasGroupActions()}
 								{block group_actions}
 									{_'Hromadné akce:'}
-									{foreach $filter_and_group_action['group_action']->getControls() as $form_control}
+									{foreach $filter['group_action']->getControls() as $form_control}
 										{if $form_control instanceof \Nette\Forms\Controls\SubmitButton}
 											{input $form_control, class => 'btn btn-primary btn-sm', style => 'display:none'}
 										{elseif $form_control->getName() == 'group_action'}
@@ -79,7 +79,7 @@
 								{/if}
 								{if !$control->hasOuterFilterRendering() && isset($filters[$column_key])}
 									<hr>
-									{input $filter_and_group_action['filter'][$column_key], data-autosubmit => TRUE}
+									{input $filter['filter'][$column_key], data-autosubmit => TRUE, class => 'form-control input-sm'}
 								{/if}
 							</th>
 						{/foreach}

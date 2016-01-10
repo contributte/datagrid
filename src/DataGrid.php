@@ -222,7 +222,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} atc)
 		 */
-		$this->template->filter_and_group_action = $this['filterAndGroupAction'];
+		$this->template->filter = $this['filter'];
 
 		/**
 		 * Set template file and render it
@@ -1038,9 +1038,9 @@ class DataGrid extends Nette\Application\UI\Control
 	 * FilterAndGroupAction form factory
 	 * @return Form
 	 */
-	public function createComponentFilterAndGroupAction()
+	public function createComponentFilter()
 	{
-		$form = new Form($this, 'filterAndGroupAction');
+		$form = new Form($this, 'filter');
 
 		$form->setMethod('get');
 
@@ -1062,6 +1062,10 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->getGroupActionCollection()->addToFormContainer($group_action_container, $form);
 		}
 
+		$form->setDefaults($this->filter);
+
+		$form->onSuccess[] = [$this, 'filterSucceeded'];
+
 		return $form;
 	}
 
@@ -1072,7 +1076,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param  Nette\Utils\ArrayHash     $values
 	 * @return void
 	 */
-	public function filterGroupActionSucceeded(Form $form)
+	public function filterSucceeded(Form $form)
 	{
 		$values = $form->getValues();
 

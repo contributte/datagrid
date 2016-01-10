@@ -38,8 +38,7 @@ class GroupActionCollection extends Nette\Object
 		}
 
 		$group_action_container->addSelect('group_action', '', $main_options)
-			->setPrompt('Vyberte')
-			->setRequired('Vyberte, prosím, akci');
+			->setPrompt('Vyberte');
 
 		/**
 		 * Second for creating select for each "sub"-action
