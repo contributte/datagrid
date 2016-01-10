@@ -879,9 +879,7 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
-		$this->filter = [];
-		$this->reload(['filter']);
-		$this->template->just_reset = TRUE;
+		$this->getPresenter()->redirect('this');
 	}
 
 
@@ -1042,24 +1040,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function createComponentFilterAndGroupAction()
 	{
-		$form = $this->createComponentFilter();
-
-		/**
-		 * Group action part
-		 */
-		$group_action_container = $form->addContainer('group_action');
-
-		if ($this->hasGroupActions()) {
-			$this->getGroupActionCollection()->addToFormContainer($group_action_container, $form);
-		}
-
-		return $form;
-	}
-
-
-	public function createComponentFilter()
-	{
-		$form = new Form;
+		$form = new Form($this, 'filterAndGroupAction');
 
 		$form->setMethod('get');
 
@@ -1069,12 +1050,17 @@ class DataGrid extends Nette\Application\UI\Control
 		$filter_container = $form->addContainer('filter');
 
 		foreach ($this->filters as $filter) {
-			$filter->addToFormContainer($filter_container, $form);
+			$filter->addToFormContainer($filter_container, $filter_container);
 		}
 
-		$form['filter']->setDefaults($this->filter);
+		/**
+		 * Group action part
+		 */
+		$group_action_container = $form->addContainer('group_action');
 
-		$form->onSubmit[] = [$this, 'filterGroupActionSucceeded'];
+		if ($this->hasGroupActions()) {
+			$this->getGroupActionCollection()->addToFormContainer($group_action_container, $form);
+		}
 
 		return $form;
 	}

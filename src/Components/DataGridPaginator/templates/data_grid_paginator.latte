@@ -7,30 +7,26 @@
 {var $arrow_left = '<i class="fa fa-arrow-left"></i>'}
 {var $arrow_right = '<i class="fa fa-arrow-right"></i>'}
 
-<ul class="pagination" n:if="$paginator->pageCount > 1">
+<div class="pagination" n:if="$paginator->pageCount > 1">
 	{if $paginator->isFirst()}
-		<li class="first disabled"><a>{!$arrow_left} {_'Předchozí'}</a></li>
+		<a class="first btn btn-sm btn-default disabled">{!$arrow_left} {_'Předchozí'}</a>
 	{else}
-		<li>
-			<a class="ajax" href="{$link('page!', ['page' => $paginator->page - 1])}" rel="prev">{!$arrow_left} {_'Předchozí'}</a>
-		</li>
+		<a class="btn btn-sm btn-default ajax" href="{$link('page!', ['page' => $paginator->page - 1])}" rel="prev">{!$arrow_left} {_'Předchozí'}</a>
 	{/if}
 
 	{foreach $steps as $step}
 		{if $step == $paginator->page}
-			<li class="active"><span>{$step}</span></li>
+			<a class="first btn btn-sm btn-primary active">{$step}</a>
 		{else}
-			<li><a class="ajax" href="{$link('page!', ['page' => $step])}">{$step}</a></li>
+			<a class="btn btn-sm btn-default ajax" href="{$link('page!', ['page' => $step])}">{$step}</a>
 		{/if}
 		
-		{if $iterator->nextValue > $step + 1}<li><span>…</span></li>{/if}
+		{if $iterator->nextValue > $step + 1}<span>…</span>{/if}
 	{/foreach}
 
 	{if $paginator->isLast()}
-		<li class="last disabled"><a>{_'Další'} {!$arrow_right}</a></li>
+		<a class="first btn btn-sm btn-default disabled">{_'Další'} {!$arrow_right}</a>
 	{else}
-		<li>
-			<a class="ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">{_'Další'} {!$arrow_right}</a>
-		</li>
+		<a class="btn btn-sm btn-default ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">{_'Další'} {!$arrow_right}</a>
 	{/if}
-</ul>
+</div>

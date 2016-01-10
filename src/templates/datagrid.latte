@@ -9,31 +9,30 @@
  *}
 
 <div class="datagrid card card-1 primary grid-{!$control->getName()}">
-	{**
-	 * Filter form
-	 *}
-	{snippet filter}
-		{if $control->hasOuterFilterRendering()}
-			{form filter, class => 'ajax form-datagrid'}
-				{foreach $filters as $filter}
-					{**
-					 * Each fitlers are rendered separately in their own templates
-					 *}
-					{include $filter->getTemplate(), 'filter' => $filter, '_form' => $form, 'form' => $form}
-				{/foreach}
-				<a n:href="resetFilter!" class="ajax btn btn-default reset-filter">Zrušit filtr</a>
-			{/form}
-		{/if}
-	{/snippet}
-
 	<div class="box-content">
 		{**
 		 * Own data
 		 *}
-		{snippet data}
-
-		<div class="grid" data-refresh-url="{link redrawAll!}">
+		<div class="grid" n:snippet="data">
 		{form filterAndGroupAction, class => 'ajax'}
+			{**
+			 * Filter form
+			 *}
+			{if $control->hasOuterFilterRendering()}
+				<div class="row row-filters">
+					{var $i = 0}
+					<div class="col-sm-6" n:foreach="$filters as $filter">
+						{**
+						 * Each fitlers are rendered separately in their own templates
+						 *}
+						{include $filter->getTemplate(), filter => $filter, control => $form['filter'][$filter->getKey()]}
+						{var $i = $i+1}
+					</div>
+					<div n:class="$i % 2 ? 'col-sm-6' : 'col-sm-12', 'text-right'">
+						<a n:href="resetFilter!" class="ajax btn btn-default reset-filter">Zrušit filtr</a>
+					</div>
+				</div>
+			{/if}
 			<table class="table table-striped table-hover table-bordered" n:block="data" n:if="$items">
 				<thead>
 					<tr class="row-group-actions" n:if="$control->hasGroupActions() && $exports">
@@ -42,7 +41,7 @@
 							{if $control->hasGroupActions()}
 								{block group_actions}
 									{_'Hromadné akce:'}
-									{foreach $filter_and_group_action->getControls() as $form_control}
+									{foreach $filter_and_group_action['group_action']->getControls() as $form_control}
 										{if $form_control instanceof \Nette\Forms\Controls\SubmitButton}
 											{input $form_control, class => 'btn btn-primary btn-sm', style => 'display:none'}
 										{elseif $form_control->getName() == 'group_action'}
@@ -60,7 +59,7 @@
 						</th>
 					</tr>
 					<tr>
-						<th n:if="$control->hasGroupActions()" rowspan="2">
+						<th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
 							<input class="happy gray-border primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $column_key => $column}
@@ -79,7 +78,7 @@
 									{$column->getName()}
 								{/if}
 								{if !$control->hasOuterFilterRendering() && isset($filters[$column_key])}
-									<br>
+									<hr>
 									{input $filter_and_group_action['filter'][$column_key], data-autosubmit => TRUE}
 								{/if}
 							</th>
@@ -95,7 +94,7 @@
 						{var $id_value = is_object($item) ? $item->{$control->getPrimaryKey()} : $item[$control->getPrimaryKey()]}
 
 						<tr data-id="{$id_value}" n:snippet="data-{$id_value}">
-							<td n:if="$control->hasGroupActions()">
+							<td n:if="$control->hasGroupActions()" class="col-checkbox">
 								<input class="happy gray-border primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$id_value}]">
 							</td>
 							{foreach $columns as $key => $column}
@@ -143,7 +142,6 @@
 			</div>
 		{/form}
 		</div>
-		{/snippet}
 
 		{**
 		 * Bottom row
@@ -172,8 +170,8 @@
 				 * Items per page form (display only besie paginated grido)
 				 *}
 				{if $control->isPaginated()}
-					{form perPage, class => 'ajax form-per-page'}
-						{input per_page, data-autosubmit => TRUE}
+					{form perPage, class => 'ajax'}
+						{input per_page, data-autosubmit => TRUE, class => 'form-control input-sm'}
 						{input submit, class => 'hidden'}
 					{/form}
 				{/if}
