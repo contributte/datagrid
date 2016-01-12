@@ -53,7 +53,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var array
 	 */
-	protected $items_per_page_list = [50, 100, 200];
+	protected $items_per_page_list = [10, 20, 50];
 
 	/**
 	 * @var string
@@ -479,7 +479,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param  string|null $column
 	 * @return Column\Column
 	 */
-	public function addColumnLink($key, $name, $column = NULL, $href = NULL, array $params = NULL)
+	public function addColumnLink($key, $name, $href = NULL, $column = NULL, array $params = NULL)
 	{
 		$this->addColumnCheck($key);
 		$column = $column ?: $key;

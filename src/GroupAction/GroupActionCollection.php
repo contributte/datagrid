@@ -91,6 +91,8 @@ class GroupActionCollection extends Nette\Object
 
 		$id = $values->group_action;
 		$this->group_actions[$id]->onSelect($ids, isset($values->{$id}) ? $values->{$id} : NULL);
+
+		$form['group_action']['group_action']->setValue(NULL);
 	}
 
 
