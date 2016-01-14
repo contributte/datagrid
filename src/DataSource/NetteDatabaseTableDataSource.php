@@ -210,7 +210,7 @@ class NetteDatabaseTableDataSource
 	{
 		if ($sorting) {
 			$this->data_source->getSqlBuilder()->setOrder([], []);
-			$this->data_source->order($sorting);
+			$this->data_source->order(array_search(reset($sorting), $sorting) . ' ' . reset($sorting));
 		} else {
 			/**
 			 * Has the statement already a order by clause?
