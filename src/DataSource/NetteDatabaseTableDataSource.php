@@ -117,18 +117,18 @@ class NetteDatabaseTableDataSource
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
 		
-		$date_timestamp_to = $value_to ? strtotime($value_to) : NULL;
-
 		if ($value_from) {
-			$date_timestamp_from = strtotime($value_from);
+			$date_from = \DateTime::createFromFormat($filter->getPhpFormat(), $value_from);
+			$date_from->setTime(0, 0, 0);
 
-			$this->data_source->where('DATE(%n) >= ?', $filter->getColumn(), date('Y-m-d', $date_timestamp_from));
+			$this->data_source->where("DATE({$filter->getColumn()}) >= ?", $date_from);
 		}
 
 		if ($value_to) {
-			$date_timestamp_from = strtotime($value_to);
+			$date_to = \DateTime::createFromFormat($filter->getPhpFormat(), $value_to);
+			$date_to->setTime(23, 59, 59);
 
-			$this->data_source->where('DATE(%n) <= ?', $filter->getColumn(), date('Y-m-d', $date_timestamp_to));
+			$this->data_source->where("DATE({$filter->getColumn()}) <= ?", $date_to);
 		}
 	}
 
@@ -141,11 +141,11 @@ class NetteDatabaseTableDataSource
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
-			$this->data_source->where('%n >= ?', $filter->getColumn(), $value_from);
+			$this->data_source->where("{$filter->getColumn()} >= ?", $value_from);
 		}
 
 		if ($value_to) {
-			$this->data_source->where('%n <= ?', $filter->getColumn(), $value_to);
+			$this->data_source->where("{$filter->getColumn()} <= ?", $value_to);
 		}
 	}
 
@@ -207,9 +207,9 @@ class NetteDatabaseTableDataSource
 	{
 		$conditions = $filter->getCondition();
 
-		$date_timestamp = strtotime($conditions[$filter->getColumn()]);
+		$date = \DateTime::createFromFormat($filter->getPhpFormat(), $conditions[$filter->getColumn()]);
 
-		$this->data_source->where('DATE(%n) = ?', $filter->getColumn(), date('Y-m-d', $date_timestamp));
+		$this->data_source->where("DATE({$filter->getColumn()}) = ?", $date->format('Y-m-d'));
 	}
 
 

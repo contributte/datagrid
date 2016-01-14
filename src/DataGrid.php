@@ -897,7 +897,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$grid_session = $this->getPresenter()->getSession($this->getName());
 		$grid_session->_grid_page = $page;
 
-		$this->reload();
+		$this->reload(['table']);
 	}
 
 
@@ -936,7 +936,7 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
-		$this->getPresenter()->redirect('this');
+		$this->reload(['table']);
 	}
 
 
@@ -1003,7 +1003,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function reload($snippets = [])
 	{
 		if ($this->getPresenter()->isAjax()) {
-			$this->redrawControl('data');
+			$this->redrawControl('tbody');
 			$this->redrawControl('pagination');
 
 			/**
@@ -1119,7 +1119,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->getGroupActionCollection()->addToFormContainer($group_action_container, $form);
 		}
 
-		$form->setDefaults($this->filter);
+		$form->setDefaults(['filter' => $this->filter]);
 
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
 

@@ -28,6 +28,11 @@ class FilterDateRange extends Filter
 	 */
 	protected $template = 'datagrid_filter_daterange.latte';
 
+	/**
+	 * @var array
+	 */
+	protected $format = ['j. n. Y', 'd. m. yyyy'];
+
 
 	public function __construct($key, $name, $column, $name_second)
 	{
@@ -46,10 +51,18 @@ class FilterDateRange extends Filter
 		$container = $form->addContainer($this->key);
 
 		$container->addText('from', $this->name)
-			->setAttribute('data-datepicker');
+			->setAttribute('data-provide', 'datepicker')
+			->setAttribute('data-date-orientation', 'bottom')
+			->setAttribute('data-date-format', $this->getJsFormat())
+			->setAttribute('data-date-today-highlight', 'true')
+			->setAttribute('data-date-autoclose', 'true');
 
 		$container->addText('to', $this->name_second)
-			->setAttribute('data-datepicker');
+			->setAttribute('data-provide', 'datepicker')
+			->setAttribute('data-date-orientation', 'bottom')
+			->setAttribute('data-date-format', $this->getJsFormat())
+			->setAttribute('data-date-today-highlight', 'true')
+			->setAttribute('data-date-autoclose', 'true');
 
 		if ($placeholder = $this->getPlaceholder()) {
 			if ($text_from = reset($placeholder)) {
@@ -89,6 +102,24 @@ class FilterDateRange extends Filter
 			'from' => $value['from'],
 			'to' => $value['to']
 		]];
+	}
+
+
+	public function setFormat($php_format, $js_format)
+	{
+		$this->format = [$php_format, $js_format];
+	}
+
+
+	public function getPhpFormat()
+	{
+		return $this->format[0];
+	}
+
+
+	public function getJsFormat()
+	{
+		return $this->format[1];
 	}
 
 }

@@ -18,6 +18,11 @@ class FilterDateTime extends Filter
 	 */
 	protected $template = 'datagrid_filter_datetime.latte';
 
+	/**
+	 * @var array
+	 */
+	protected $format = ['j. n. Y', 'd. m. yyyy'];
+
 
 	/**
 	 * Adds select box to filter form
@@ -26,7 +31,11 @@ class FilterDateTime extends Filter
 	public function addToFormContainer($form)
 	{
 		$form->addText($this->key, $this->name)
-			->setAttribute('data-datepicker');
+			->setAttribute('data-provide', 'datepicker')
+			->setAttribute('data-date-orientation', 'bottom')
+			->setAttribute('data-date-format', $this->getJsFormat())
+			->setAttribute('data-date-today-highlight', 'true')
+			->setAttribute('data-date-autoclose', 'true');
 
 		if ($this->getPlaceholder()) {
 			$form[$this->key]->setAttribute('placeholder', $this->getPlaceholder());
@@ -37,6 +46,24 @@ class FilterDateTime extends Filter
 	public function getCondition()
 	{
 		return [$this->column => $this->getValue()];
+	}
+
+
+	public function setFormat($php_format, $js_format)
+	{
+		$this->format = [$php_format, $js_format];
+	}
+
+
+	public function getPhpFormat()
+	{
+		return $this->format[0];
+	}
+
+
+	public function getJsFormat()
+	{
+		return $this->format[1];
 	}
 
 }
