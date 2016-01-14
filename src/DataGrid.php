@@ -749,7 +749,7 @@ class DataGrid extends Nette\Application\UI\Control
 					$this->filters[$key]->setValue($value);
 				}
 			} else {
-				if ($value !== '') {
+				if ($value !== '' && $value !== NULL) {
 					$this->filters[$key]->setValue($value);
 				}
 			}
@@ -771,7 +771,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function findSessionFilters()
 	{
-		if ($this->filter || $this->page || $this->sort || $this->per_page) {
+		if ($this->filter || ($this->page != 1) || $this->sort || $this->per_page) {
 			return;
 		}
 
@@ -936,10 +936,17 @@ class DataGrid extends Nette\Application\UI\Control
 		foreach ($this->getSessionData() as $key => $value) {
 			if (!in_array($key, ['_grid_per_page', '_grid_sort', '_grid_page'])) {
 				$this->deleteSesssionData($key);
+				if ($value instanceof \Traversable) {
+					foreach ($value as $key2 => $value2) {
+						$this->filter[$key][$key2] = NULL;
+					}
+				} else {
+					$this->filter[$key] = NULL;
+				}
 			}
 		}
 
-		$this->reload(['table']);
+		$this->reload(['grid']);
 	}
 
 
