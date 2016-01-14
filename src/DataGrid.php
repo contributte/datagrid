@@ -155,6 +155,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $outer_filter_rendering = FALSE;
 
+	/**
+	 * @var bool
+	 */
+	private $remember_state = TRUE;
+
 
 	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
@@ -770,21 +775,23 @@ class DataGrid extends Nette\Application\UI\Control
 			return;
 		}
 
-		$grid_session = $this->getPresenter()->getSession($this->getName());
-
-		if ($grid_session->_grid_page) {
-			$this->page = $grid_session->_grid_page;
+		if (!$this->remember_state) {
+			return;
 		}
 
-		if ($grid_session->_grid_per_page) {
-			$this->page = $grid_session->_grid_per_page;
+		if ($page = $this->getSessionData('_grid_page')) {
+			$this->page = $page;
 		}
 
-		if ($grid_session->_grid_sort) {
-			$this->sort = $grid_session->_grid_sort;
+		if ($per_page = $this->getSessionData('_grid_per_page')) {
+			$this->per_page = $per_page;
 		}
 
-		foreach ($grid_session as $key => $value) {
+		if ($sort = $this->getSessionData('_grid_sort')) {
+			$this->sort = $sort;
+		}
+
+		foreach ($this->getSessionData() as $key => $value) {
 			if (!in_array($key, ['_grid_per_page', '_grid_sort', '_grid_page'])) {
 				$this->filter[$key] = $value;
 			}
@@ -894,8 +901,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Session stuff
 		 */
-		$grid_session = $this->getPresenter()->getSession($this->getName());
-		$grid_session->_grid_page = $page;
+		$this->saveSessionData('_grid_page', $page);
 
 		$this->reload(['table']);
 	}
@@ -910,8 +916,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Session stuff
 		 */
-		$grid_session = $this->getPresenter()->getSession($this->getName());
-		$grid_session->_grid_sort = $this->sort;
+		$this->saveSessionData('_grid_sort', $this->sort);
 
 		$this->reload();
 	}
@@ -926,13 +931,11 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Session stuff
 		 */
-		$grid_session = $this->getPresenter()->getSession($this->getName());
+		$this->deleteSesssionData('_grid_page');
 
-		unset($grid_session->_grid_page);
-
-		foreach ($grid_session as $key => $value) {
+		foreach ($this->getSessionData() as $key => $value) {
 			if (!in_array($key, ['_grid_per_page', '_grid_sort', '_grid_page'])) {
-				unset($grid_session->{$key});
+				$this->deleteSesssionData($key);
 			}
 		}
 
@@ -989,6 +992,7 @@ class DataGrid extends Nette\Application\UI\Control
 		);
 
 		if ($this->getPresenter()->isAjax()) {
+			$this->getPresenter()->payload->_datagrid_url = TRUE;
 			$this->redrawControl('items');
 		} else {
 			$this->getPresenter()->redirect('this');
@@ -1015,6 +1019,7 @@ class DataGrid extends Nette\Application\UI\Control
 			foreach ($snippets as $snippet) {
 				$this->redrawControl($snippet);
 			}
+			$this->getPresenter()->payload->_datagrid_url = TRUE;
 		} else {
 			$this->getPresenter()->redirect('this');
 		}
@@ -1032,6 +1037,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->redraw_item = [($primary_where_column?: $this->primary_key) => $id];
 
 		$this->redrawControl('items');
+		$this->getPresenter()->payload->_datagrid_url = TRUE;
 	}
 
 
@@ -1072,13 +1078,13 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$form->addSubmit('submit', '');
 
-		$grid_session = $this->getPresenter()->getSession($this->getName());
+		$saveSessionData = [$this, 'saveSessionData'];
 
-		$form->onSuccess[] = function($form, $values) use ($grid_session) {
+		$form->onSuccess[] = function($form, $values) use ($saveSessionData) {
 			/**
 			 * Session stuff
 			 */
-			$grid_session->_grid_per_page = $values->per_page;
+			$saveSessionData('_grid_per_page', $values->per_page);
 
 			/**
 			 * Other stuff
@@ -1141,15 +1147,13 @@ class DataGrid extends Nette\Application\UI\Control
 			return;
 		}
 
-		$grid_session = $this->getPresenter()->getSession($this->getName());
-
 		$values = $values['filter'];
 
 		foreach ($values as $key => $value) {
 			/**
 			 * Session stuff
 			 */
-			$grid_session->{$key} = $value;
+			$this->saveSessionData($key, $value);
 
 			/**
 			 * Other stuff
@@ -1271,6 +1275,55 @@ class DataGrid extends Nette\Application\UI\Control
 		} else {
 			throw new DataGridException('When changing columns order, you have to specify all columns');
 		}
+	}
+
+
+	public function setRememberState($remember)
+	{
+		$this->remember_state = (bool) $remember;
+	}
+
+
+	/**
+	 * Get session data if functionality is enabled
+	 * @param  string $key
+	 * @return mixed
+	 */
+	public function getSessionData($key = NULL)
+	{
+		if (!$this->remember_state) {
+			return NULL;
+		}
+
+		$grid_session = $this->getPresenter()->getSession($this->getName());
+
+		return $key ? $grid_session->{$key} : $grid_session;
+	}
+
+
+	/**
+	 * Save session data - just if it is enabled
+	 * @param  string $key
+	 * @param  mixed  $value
+	 * @return void
+	 */
+	public function saveSessionData($key, $value)
+	{
+		if ($this->remember_state) {
+			$grid_session = $this->getPresenter()->getSession($this->getName());
+			$grid_session->{$key} = $value;
+		}
+	}
+
+
+	/**
+	 * Delete session data
+	 * @return void
+	 */
+	public function deleteSesssionData($key)
+	{
+		$grid_session = $this->getPresenter()->getSession($this->getName());
+		unset($grid_session->{$key});
 	}
 
 }
