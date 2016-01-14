@@ -152,27 +152,47 @@ class NetteDatabaseTableDataSource
 
 	public function applyFilterText(Filter\FilterText $filter)
 	{
+		$or = [];
+		$big_or = '(';
+		$big_or_args = [];
 		$condition = $filter->getCondition();
 
 		foreach ($condition as $column => $value) {
 			$words = explode(' ', $value);
 
-			foreach ($words as $word) {
-				$escaped = $this->data_source->getConnection()->getDriver()->escapeLike($word, 0);
+			$reflection = new \ReflectionClass(get_class($this->data_source));
+				
+			$property_reflection = $reflection->getProperty('context');
+			$property_reflection->setAccessible(TRUE);
+			$context =  $property_reflection->getValue($this->data_source);
+			$driver = $context->getConnection()->getSupplementalDriver();
+			$formatLike = [$driver, 'formatLike'];
 
-				if (preg_match("/[\x80-\xFF]/", $escaped)) {
-					$or[] = "$column LIKE $escaped COLLATE utf8_bin";
-				} else {
-					$escaped = Strings::toAscii($escaped);
-					$or[] = "$column LIKE $escaped COLLATE utf8_general_ci";
-				}
+			$like = '(';
+			$args = [];
+
+			foreach ($words as $word) {
+				$like .= "$column LIKE ? OR ";
+				$args[] = "%$word%";
 			}
+
+			$like = substr($like, 0, strlen($like) - 4) . ')';
+
+			$or[] = $like;
+			$big_or .= "$like OR ";
+			$big_or_args = array_merge($big_or_args, $args);
 		}
 
+		$query = array_merge($or, $args);
+
 		if (sizeof($or) > 1) {
-			$this->data_source->where('(%or)', $or);
+			$big_or = substr($big_or, 0, strlen($big_or) - 4) . ')';
+
+			$query = array_merge([$big_or], $big_or_args);
+
+			call_user_func_array([$this->data_source, 'where'], $query);
 		} else {
-			$this->data_source->where($or);
+			call_user_func_array([$this->data_source, 'where'], $query);
 		}
 	}
 
