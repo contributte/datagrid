@@ -362,6 +362,8 @@ abstract class Column extends Nette\Object
 		if (method_exists($this, $set_method)) {
 			return Nette\Utils\Callback::invokeArgs([$this, $set_method], $args);
 		}
+
+		parent::__call($name, $args);
 	}
 
 }

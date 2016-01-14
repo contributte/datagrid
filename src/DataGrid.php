@@ -231,6 +231,10 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Just check whether there are some columns to show etd
+	 * @return void
+	 */
 	public function initCheck()
 	{
 		if (!($this->dataModel instanceof DataModel)) {
@@ -244,6 +248,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Return current paginator class
 	 * @return NULL|Components\DataGridPaginator\DataGridPaginator
 	 */
 	public function getPaginator()
@@ -269,32 +274,35 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set Grid data source
-	 * @param DataSource\IDataSource|array|\DibiFluent $data_source
+	 * @param DataSource\IDataSource|array|\DibiFluent $source
 	 * @return DataGrid
 	 */
-	public function setDataSource($data_source)
+	public function setDataSource($source)
 	{
-		if ($data_source instanceof DataSource\IDataSource) {
-			// $data_source is ready for interact
+		if ($source instanceof DataSource\IDataSource) {
+			// $source is ready for interact
 
-		} else if (is_array($data_source)) {
-			$data_source = new DataSource\ArrayDataSource($data_source);
+		} else if (is_array($source)) {
+			$data_source = new DataSource\ArrayDataSource($source);
 
-		} else if ($data_source instanceof \DibiFluent) {
-			$driver = $data_source->getConnection()->getDriver();
+		} else if ($source instanceof \DibiFluent) {
+			$driver = $source->getConnection()->getDriver();
 
 			if ($driver instanceof \DibiOdbcDriver) {
-				$data_source = new DataSource\DibiFluentMssqlDataSource($data_source, $this->primary_key);
+				$data_source = new DataSource\DibiFluentMssqlDataSource($source, $this->primary_key);
 
 			} else if ($driver instanceof \DibiMsSqlDriver) {
-				$data_source = new DataSource\DibiFluentMssqlDataSource($data_source, $this->primary_key);
+				$data_source = new DataSource\DibiFluentMssqlDataSource($source, $this->primary_key);
 
 			} else {
-				$data_source = new DataSource\DibiFluentDataSource($data_source, $this->primary_key);
+				$data_source = new DataSource\DibiFluentDataSource($source, $this->primary_key);
 			}
 
+		} else if ($source instanceof Nette\Database\Table\Selection) {
+			$data_source = new DataSource\NetteDatabaseTableDataSource($source, $this->primary_key);
+
 		} else {
-			$data_source_class = $data_source ? get_class($data_source) : 'NULL';
+			$data_source_class = $source ? get_class($source) : 'NULL';
 			throw new DataGridException("DataGrid can not take [$data_source_class] as data source.");
 		}
 
@@ -304,12 +312,20 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Is filter active?
+	 * @return boolean
+	 */
 	public function isFilterActive()
 	{
 		return ((bool) $this->filter) || $this->force_filter_active;
 	}
 
 
+	/**
+	 * Tell that filter is active from whatever reasons
+	 * return self
+	 */
 	public function setFilterActive()
 	{
 		$this->force_filter_active = TRUE;
@@ -318,6 +334,10 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * If we want to sent some initial filter
+	 * @param array $filter
+	 */
 	public function setFilter(array $filter)
 	{
 		$this->filter = $filter;
@@ -777,6 +797,12 @@ class DataGrid extends Nette\Application\UI\Control
 	 ********************************************************************************/
 
 
+	/**
+	 * Add export of type callback
+	 * @param string   $text
+	 * @param callable $callback
+	 * @param boolean  $filtered
+	 */
 	public function addExportCallback($text, $callback, $filtered = FALSE)
 	{
 		if (!is_callable($callback)) {
@@ -787,18 +813,32 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Add already implemented csv export
+	 * @param string $text
+	 * @param string $csv_file_name
+	 */
 	public function addExportCsv($text, $csv_file_name)
 	{
 		return $this->addToExports(new Export\ExportCsv($text, $csv_file_name, FALSE));
 	}
 
 
+	/**
+	 * Add already implemented csv export, but for filtered data
+	 * @param string $text
+	 * @param string $csv_file_name
+	 */
 	public function addExportCsvFiltered($text, $csv_file_name)
 	{
 		return $this->addToExports(new Export\ExportCsv($text, $csv_file_name, TRUE));
 	}
 
 
+	/**
+	 * Add export to array
+	 * @param Export\Export $export
+	 */
 	protected function addToExports(Export\Export $export)
 	{
 		$id = ($s = sizeof($this->exports)) ? ($s + 1) : 1;
@@ -814,12 +854,21 @@ class DataGrid extends Nette\Application\UI\Control
 	 ********************************************************************************/
 
 
+	/**
+	 * Add group actino
+	 * @param string $title
+	 * @param array  $options
+	 */
 	public function addGroupAction($title, $options = [])
 	{
 		return $this->getGroupActionCollection()->addGroupAction($title, $options);
 	}
 
 
+	/**
+	 * Get collection of all group actions
+	 * @return array
+	 */
 	public function getGroupActionCollection()
 	{
 		if (!$this->group_action_collection) {
@@ -852,6 +901,10 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Handler for sorting
+	 * @return void
+	 */
 	public function handleSort()
 	{
 		/**
@@ -864,6 +917,10 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * handler for reseting the filter
+	 * @return void
+	 */
 	public function handleResetFilter()
 	{
 		/**
@@ -964,6 +1021,12 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Redraw just one row via ajax
+	 * @param  int   $id
+	 * @param  mixed $primary_where_column
+	 * @return void
+	 */
 	public function redrawItem($id, $primary_where_column = NULL)
 	{
 		$this->redraw_item = [($primary_where_column?: $this->primary_key) => $id];
