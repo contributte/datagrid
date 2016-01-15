@@ -967,6 +967,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Session stuff
 		 */
+		$this->page = $page;
 		$this->saveSessionData('_grid_page', $page);
 
 		$this->reload(['table']);
@@ -977,14 +978,15 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Handler for sorting
 	 * @return void
 	 */
-	public function handleSort()
+	public function handleSort(array $sort)
 	{
 		/**
 		 * Session stuff
 		 */
+		$this->sort = $sort;
 		$this->saveSessionData('_grid_sort', $this->sort);
 
-		$this->reload();
+		$this->reload(['table']);
 	}
 
 
