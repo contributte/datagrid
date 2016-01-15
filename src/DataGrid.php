@@ -165,6 +165,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	private $refresh_url = TRUE;
 
+	/**
+	 * @var Nette\Http\SessionSection
+	 */
+	private $grid_session;
+
 
 	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
@@ -175,6 +180,8 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		parent::__construct($parent, $name);
+
+		$this->grid_session = $this->getPresenter()->getSession($this->getName());
 
 		/**
 		 * Try to find previous filters/pagination/sort in session
@@ -572,6 +579,17 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Remove column
+	 * @param string $key
+	 * @return void
+	 */
+	public function removeColumn($key)
+	{
+		unset($this->columns[$key]);
+	}
+
+
+	/**
 	 * Check whether given key already exists in $this->columns
 	 * @param  string $key
 	 * @throws DataGridException
@@ -622,6 +640,17 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return $this->actions[$key];
+	}
+
+
+	/**
+	 * Remove action
+	 * @param string $key
+	 * @return void
+	 */
+	public function removeAction($key)
+	{
+		unset($this->actions[$key]);
 	}
 
 
@@ -822,6 +851,17 @@ class DataGrid extends Nette\Application\UI\Control
 				$this->filter[$key] = $value;
 			}
 		}
+	}
+
+
+	/**
+	 * Remove filter
+	 * @param string $key
+	 * @return void
+	 */
+	public function removeFilter($key)
+	{
+		unset($this->filters[$key]);
 	}
 
 
@@ -1334,9 +1374,7 @@ class DataGrid extends Nette\Application\UI\Control
 			return NULL;
 		}
 
-		$grid_session = $this->getPresenter()->getSession($this->getName());
-
-		return $key ? $grid_session->{$key} : $grid_session;
+		return $key ? $this->grid_session->{$key} : $this->grid_session;
 	}
 
 
@@ -1348,9 +1386,9 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function saveSessionData($key, $value)
 	{
+	
 		if ($this->remember_state) {
-			$grid_session = $this->getPresenter()->getSession($this->getName());
-			$grid_session->{$key} = $value;
+			$this->grid_session->{$key} = $value;
 		}
 	}
 
@@ -1361,8 +1399,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function deleteSesssionData($key)
 	{
-		$grid_session = $this->getPresenter()->getSession($this->getName());
-		unset($grid_session->{$key});
+		unset($this->grid_session->{$key});
 	}
 
 }
