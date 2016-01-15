@@ -82,8 +82,8 @@ class DibiFluentDataSource
 						$this->applyFilterText($filter);
 					} else if ($filter instanceof Filter\FilterSelect) {
 						$this->applyFilterSelect($filter);
-					} else if ($filter instanceof Filter\FilterDateTime) {
-						$this->applyFilterDateTime($filter);
+					} else if ($filter instanceof Filter\FilterDate) {
+						$this->applyFilterDate($filter);
 					} else if ($filter instanceof Filter\FilterDateRange) {
 						$this->applyFilterDateRange($filter);
 					} else if ($filter instanceof Filter\FilterRange) {
@@ -182,7 +182,7 @@ class DibiFluentDataSource
 	}
 
 
-	public function applyFilterDateTime(Filter\FilterDateTime $filter)
+	public function applyFilterDate(Filter\FilterDate $filter)
 	{
 		$conditions = $filter->getCondition();
 

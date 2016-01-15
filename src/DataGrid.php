@@ -160,6 +160,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	private $remember_state = TRUE;
 
+	/**
+	 * @var bool
+	 */
+	private $refresh_url = TRUE;
+
 
 	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
@@ -688,17 +693,38 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param string $column
 	 * @throws DataGridException
 	 */
-	public function addFilterDateTime($key, $name, $column = NULL)
+	public function addFilterDate($key, $name, $column = NULL)
 	{
 		$column = $column ?: $key;
 
 		if (!is_string($column)) {
-			throw new DataGridException("Filter Date can only filter through one column.");
+			throw new DataGridException("FilterDate can only filter through one column.");
 		}
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new Filter\FilterDateTime($key, $name, $column);
+		return $this->filters[$key] = new Filter\FilterDate($key, $name, $column);
+	}
+
+
+	/**
+	 * Add range filter (from - to)
+	 * @param string $key
+	 * @param string $name
+	 * @param string $column
+	 * @throws DataGridException
+	 */
+	public function addFilterRange($key, $name, $column = NULL, $name_second = '-')
+	{
+		$column = $column ?: $key;
+
+		if (!is_string($column)) {
+			throw new DataGridException("FilterRange can only filter through one column.");
+		}
+
+		$this->addFilterCheck($key);
+
+		return $this->filters[$key] = new Filter\FilterRange($key, $name, $column, $name_second);
 	}
 
 
@@ -714,7 +740,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$column = $column ?: $key;
 
 		if (!is_string($column)) {
-			throw new DataGridException("Filter Date can only filter through one column.");
+			throw new DataGridException("FilterDateRange can only filter through one column.");
 		}
 
 		$this->addFilterCheck($key);
@@ -999,7 +1025,7 @@ class DataGrid extends Nette\Application\UI\Control
 		);
 
 		if ($this->getPresenter()->isAjax()) {
-			$this->getPresenter()->payload->_datagrid_url = TRUE;
+			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 			$this->redrawControl('items');
 		} else {
 			$this->getPresenter()->redirect('this');
@@ -1026,7 +1052,7 @@ class DataGrid extends Nette\Application\UI\Control
 			foreach ($snippets as $snippet) {
 				$this->redrawControl($snippet);
 			}
-			$this->getPresenter()->payload->_datagrid_url = TRUE;
+			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 		} else {
 			$this->getPresenter()->redirect('this');
 		}
@@ -1044,7 +1070,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->redraw_item = [($primary_where_column?: $this->primary_key) => $id];
 
 		$this->redrawControl('items');
-		$this->getPresenter()->payload->_datagrid_url = TRUE;
+		$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 	}
 
 
@@ -1288,6 +1314,12 @@ class DataGrid extends Nette\Application\UI\Control
 	public function setRememberState($remember)
 	{
 		$this->remember_state = (bool) $remember;
+	}
+
+
+	public function setRefreshUrl($refresh)
+	{
+		$this->refresh_url = (bool) $refresh;
 	}
 
 

@@ -1,10 +1,11 @@
 {**
- * @param Filter $filter
+ * @param Filter                         $filter
+ * @param Nette\Forms\Controls\SelectBox $input
  *}
 
 <div class="row">
-	{label $control class => 'col-sm-3 control-label' /}
+	{label $input class => 'col-sm-3 control-label' /}
 	<div class="col-sm-9">
-		{input $control, class => 'form-control input-sm',  data-autosubmit => TRUE}
+		{input $input, class => 'form-control input-sm',  data-autosubmit => TRUE}
 	</div>
 </div>

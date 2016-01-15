@@ -26,7 +26,7 @@
 							{**
 							 * Each fitlers are rendered separately in their own templates
 							 *}
-							{include $f->getTemplate(), filter => $f, control => $form['filter'][$f->getKey()]}
+							{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()]}
 							{var $i = $i+1}
 						</div>
 						<div n:class="$i % 2 ? 'col-sm-6' : 'col-sm-12', 'text-right'">
@@ -34,7 +34,7 @@
 						</div>
 					</div>
 				{/if}
-				<table class="table table-striped table-hover table-bordered" n:snippet="table" n:block="data" n:if="$items">
+				<table class="table table-striped table-hover table-bordered" n:snippet="table" n:block="data">
 					<thead>
 						<tr class="row-group-actions" n:if="$control->hasGroupActions() && $exports">
 							{var $columns_count = sizeof($columns) + (int) $control->hasGroupActions() + (int) $actions}
@@ -134,16 +134,19 @@
 								</tr>
 							
 							{/foreach}
+
+								<tr>
+									<td n:if="!$items" colspan="{sizeof($columns) + ($actions || $control->isSortable() ? 1 : 0) + ($control->hasGroupActions() ? 1 : 0)}">
+										{if $filter_active}
+											{_'Zadanému filtru nevyhovuje žádná položka. Filtr můžete vynulovat'} <a class="link ajax" n:href="resetFilter!">{_'zde'}</a>.
+										{else}
+											{_'Žádné položky k zobrazení'}
+										{/if}
+									</td>
+								</tr>
 						{/snippetArea}
 					</tbody>
 				</table>
-				<div class="alert alert-info" n:if="!$items">
-					{if $filter_active}
-						{_'Zadanému filtru nevyhovuje žádná položka. Filtr můžete vynulovat kliknutím'} <a class="ajax" n:href="resetFilter!">{_'na tento odkaz'}</a>.
-					{else}
-						{_'Žádné položky k zobrazení'}
-					{/if}
-				</div>
 			{/form}
 		{/snippetArea}
 		</div>

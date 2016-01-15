@@ -10,13 +10,13 @@ namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
 
-class FilterDateTime extends Filter
+class FilterDate extends Filter
 {
 
 	/**
 	 * @var string
 	 */
-	protected $template = 'datagrid_filter_datetime.latte';
+	protected $template = 'datagrid_filter_date.latte';
 
 	/**
 	 * @var array
