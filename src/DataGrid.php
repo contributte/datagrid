@@ -335,7 +335,27 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function isFilterActive()
 	{
-		return ((bool) $this->filter) || $this->force_filter_active;
+		$is_filter = $this->isArrayTruthy($this->filter);
+
+		return ($is_filter) || $this->force_filter_active;
+	}
+
+
+	public function isArrayTruthy($a)
+	{
+		foreach ($a as $value) {
+			if (is_array($value)) {
+				if ($this->isArrayTruthy($value)) {
+					return TRUE;
+				}
+			} else {
+				if ($value) {
+					return TRUE;
+				}
+			}
+		}
+
+		return FALSE;
 	}
 
 
