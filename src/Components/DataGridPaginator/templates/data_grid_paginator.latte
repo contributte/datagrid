@@ -9,9 +9,9 @@
 
 <div class="pagination" n:if="$paginator->pageCount > 1">
 	{if $paginator->isFirst()}
-		<a class="first btn btn-sm btn-default disabled">{!$arrow_left} {_'Předchozí'}</a>
+		<a class="first btn btn-sm btn-default disabled">{!$arrow_left} {_'Previous'}</a>
 	{else}
-		<a class="btn btn-sm btn-default ajax" href="{$link('page!', ['page' => $paginator->page - 1])}" rel="prev">{!$arrow_left} {_'Předchozí'}</a>
+		<a class="btn btn-sm btn-default ajax" href="{$link('page!', ['page' => $paginator->page - 1])}" rel="prev">{!$arrow_left} {_'Previous'}</a>
 	{/if}
 
 	{foreach $steps as $step}
@@ -25,8 +25,8 @@
 	{/foreach}
 
 	{if $paginator->isLast()}
-		<a class="first btn btn-sm btn-default disabled">{_'Další'} {!$arrow_right}</a>
+		<a class="first btn btn-sm btn-default disabled">{_'Next'} {!$arrow_right}</a>
 	{else}
-		<a class="btn btn-sm btn-default ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">{_'Další'} {!$arrow_right}</a>
+		<a class="btn btn-sm btn-default ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">{_'Next'} {!$arrow_right}</a>
 	{/if}
 </div>

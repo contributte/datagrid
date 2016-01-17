@@ -37,7 +37,7 @@
 						<th colspan="{$columns_count}" class="form-inline">
 							{if $control->hasGroupActions()}
 								{block group_actions}
-									{_'Hromadné akce:'}
+									{_'Group actions:'}
 									{foreach $filter['group_action']->getControls() as $form_control}
 										{if $form_control instanceof \Nette\Forms\Controls\SubmitButton}
 											{input $form_control, class => 'btn btn-primary btn-sm', style => 'display:none'}
@@ -81,7 +81,7 @@
 							</th>
 						{/foreach}
 						<th n:if="$actions || $control->isSortable()">
-							{_'Akce'}
+							{_'Action'}
 						</th>
 					</tr>
 				</thead>
@@ -134,9 +134,9 @@
 							<tr n:if="!$items">
 								<td colspan="{sizeof($columns) + ($actions || $control->isSortable() ? 1 : 0) + ($control->hasGroupActions() ? 1 : 0)}">
 									{if $filter_active}
-										{_'Zadanému filtru nevyhovuje žádná položka. Filtr můžete vynulovat'} <a class="link ajax" n:href="resetFilter!">{_'zde'}</a>.
+										{_'No items found. You can reset the filter'} <a class="link ajax" n:href="resetFilter!">{_'zde'}</a>.
 									{else}
-										{_'Žádné položky k zobrazení'}
+										{_'No items found.'}
 									{/if}
 								</td>
 							</tr>
@@ -156,10 +156,10 @@
 				({var $paginator = $control['paginator']->getPaginator()}
 
 				{if $control->getPerPage() === 'all'}
-					{_'Položky'}: {_'všechny'}
+					{_'Items'}: {_'all'}
 				{else}
-					{_'Položky'}: {$paginator->getOffset() + 1} - {sizeof($items) + $paginator->getOffset()}
-					{_'z'} {$paginator->getItemCount()}
+					{_'Items'}: {$paginator->getOffset() + 1} - {sizeof($items) + $paginator->getOffset()}
+					{_'from'} {$paginator->getItemCount()}
 				{/if})
 			</small>
 		</div>

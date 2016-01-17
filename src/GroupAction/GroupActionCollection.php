@@ -28,7 +28,7 @@ class GroupActionCollection extends Nette\Object
 	 * @param  Nette\Forms\Container $group_action_container
 	 * @return void
 	 */
-	public function addToFormContainer($group_action_container, $form)
+	public function addToFormContainer($group_action_container, $form, $translator = NULL)
 	{
 		/**
 		 * First foreach for filling "main" select
@@ -38,7 +38,7 @@ class GroupActionCollection extends Nette\Object
 		}
 
 		$group_action_container->addSelect('group_action', '', $main_options)
-			->setPrompt('Vyberte');
+			->setPrompt($translator ? $translator->translate('Choose') : 'Choose');
 
 		/**
 		 * Second for creating select for each "sub"-action
