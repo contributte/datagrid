@@ -80,7 +80,7 @@
 								{/if}
 							</th>
 						{/foreach}
-						<th n:if="$actions || $control->isSortable()">
+						<th n:if="$actions || $control->isSortable()" class="col-action text-center">
 							{_'Action'}
 						</th>
 					</tr>
@@ -115,7 +115,7 @@
 										{/if}
 									</td>
 								{/foreach}
-								<td n:if="$actions || $control->isSortable()">
+								<td n:if="$actions || $control->isSortable()" class="col-action">
 									{foreach $actions as $action}
 										{if $action->hasTemplate()}
 											{include $action->getTemplate(), item => $item}

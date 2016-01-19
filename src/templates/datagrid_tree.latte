@@ -18,7 +18,7 @@
 			<div class="datagrid-tree-item" data-id="{$id_value}" n:snippet="item-{$id_value}">
 				<div class="datagrid-tree-item-content" data-id="{$id_value}">
 					<div class="datagrid-tree-item-left">
-						<a n:href="getChildren! parent => $id_value" n:if="$has_children" class="chevron ajax">
+						<a n:href="getChildren! parent => $id_value" data-toggle-tree="true" n:if="$has_children" class="chevron ajax">
 							<i class="fa fa-chevron-right"></i>
 						</a>
 						{foreach $columns as $key => $column}
@@ -43,25 +43,27 @@
 					</div>
 					<div class="datagrid-tree-item-right">
 						<div class="datagrid-tree-item-right-columns">
-							<div clasdatagrid-tree-items="datagrid-tree-item-right-columns-column" n:foreach="$columns as $key => $column">
+							{foreach $columns as $key => $column}
 								{continueIf $iterator->isFirst()}
 
-								{var $col = 'col-' . $key}
+								<div class="datagrid-tree-item-right-columns-column">
+									{var $col = 'col-' . $key}
 
-								{if $column->hasTemplate()}
-									{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
-								{else}
-									{ifset #$col}
-										{include #$col, item => $item}
+									{if $column->hasTemplate()}
+										{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
 									{else}
-										{if $column->isTemplateEscaped()}
-											{$column->render($item)}
+										{ifset #$col}
+											{include #$col, item => $item}
 										{else}
-											{!$column->render($item)}
-										{/if}
-									{/ifset}
-								{/if}
-							</div>
+											{if $column->isTemplateEscaped()}
+												{$column->render($item)}
+											{else}
+												{!$column->render($item)}
+											{/if}
+										{/ifset}
+									{/if}
+								</div>
+							{/foreach}
 						</div>
 						<div class="datagrid-tree-item-right-actions">
 							<div class="datagrid-tree-item-right-actions-action" n:foreach="$actions as $action">
