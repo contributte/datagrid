@@ -1088,6 +1088,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if ($this->getPresenter()->isAjax()) {
 			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
+			$this->getPresenter()->payload->_datagrid_tree = $parent;
+
 			$this->redrawControl('items');
 		} else {
 			$this->getPresenter()->redirect('this');

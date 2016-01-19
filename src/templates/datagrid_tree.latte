@@ -9,109 +9,135 @@
 
 {extends $original_template}
 
-<ul class="datagrid-list" n:snippet="table" n:block="data">
-    {* <tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports">
-        {var $columns_count = sizeof($columns) + (int) $control->hasGroupActions() + (int) $actions}
-        <th colspan="{$columns_count}" class="form-inline">
-            {if $control->hasGroupActions()}
-                {block group_actions}
-                    {_'Group actions:'}
-                    {foreach $filter['group_action']->getControls() as $form_control}
-                        {if $form_control instanceof \Nette\Forms\Controls\SubmitButton}
-                            {input $form_control, class => 'btn btn-primary btn-sm', style => 'display:none'}
-                        {elseif $form_control->getName() == 'group_action'}
-                            {input $form_control, class => 'form-control input-sm', disabled => TRUE}
-                        {else}
-                            {input $form_control, class => 'form-control input-sm', style => 'display:none'}
-                        {/if}
-                    {/foreach}
-                {/block}
-            {/if}
+<div class="datagrid-tree" n:snippet="table" n:block="data" {if $control->isSortable()}data-sortable data-sortable-url="{plink sort!}"{/}>
+	{snippetArea items}
+		{foreach $items as $item}
+			{var $id_value = is_object($item) ? $item->{$control->getPrimaryKey()} : $item[$control->getPrimaryKey()]}
+			{var $has_children = is_object($item) ? $item->{$tree_view_has_children_column} : $item[$tree_view_has_children_column]}
 
-            <span class="pull-right exports" n:if="$exports" n:block="exports">
-                {foreach $exports as $export}{$export->render()}{/foreach}
-            </span>
-        </th>
-    </tr> *}
-    <li class="datagrid-list-item">
-        {* <th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
-            <input class="happy gray-border primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
-        </th> *}
-        {foreach $columns as $column_key => $column}
-            <span class="col-{$column->getColumnName()}">
-                {if $column->isSortable()}
-                    <a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortOpposite()">
-                        {$column->getName()}
-                        {if $column->isSortedBy()}
-                            <span n:class="$column->isSortAsc() ? 'fa-caret-up' : 'fa-caret-down', 'fa'"></span>
-                        {else}
-                            <span class="fa fa-sort"></span>
-                        {/if}
-                    </a>
-                {else}
-                    {$column->getName()}
-                {/if}
-            </span>
-        {/foreach}
-        <span n:if="$actions || $control->isSortable()">
-            <strong>{_'Action'}</strong>
-        </span>
-    </li>
+			<div class="datagrid-tree-item" data-id="{$id_value}" n:snippet="item-{$id_value}">
+				<div class="datagrid-tree-item-content" data-id="{$id_value}">
+					<div class="datagrid-tree-item-left">
+						<a n:href="getChildren! parent => $id_value" n:if="$has_children" class="chevron ajax">
+							<i class="fa fa-chevron-right"></i>
+						</a>
+						{foreach $columns as $key => $column}
+							{var $col = 'col-' . $key}
 
-    {* <tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink sort!}"{/}>
-        {snippetArea items}
-            {foreach $items as $item}
-                {var $id_value = is_object($item) ? $item->{$control->getPrimaryKey()} : $item[$control->getPrimaryKey()]}
+							{if $column->hasTemplate()}
+								{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
+							{else}
+								{ifset #$col}
+									{include #$col, item => $item}
+								{else}
+									{if $column->isTemplateEscaped()}
+										{$column->render($item)}
+									{else}
+										{!$column->render($item)}
+									{/if}
+								{/ifset}
+							{/if}
 
-                <tr data-id="{$id_value}" n:snippet="item-{$id_value}">
-                    <td n:if="$control->hasGroupActions()" class="col-checkbox">
-                        <input class="happy gray-border primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$id_value}]">
-                    </td>
-                    {foreach $columns as $key => $column}
-                        {var $col = 'col-' . $key}
-                        {var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
+							{breakIf TRUE}
+						{/foreach}
+					</div>
+					<div class="datagrid-tree-item-right">
+						<div class="datagrid-tree-item-right-columns">
+							<div clasdatagrid-tree-items="datagrid-tree-item-right-columns-column" n:foreach="$columns as $key => $column">
+								{continueIf $iterator->isFirst()}
 
-                        <td class="{$col} text-{$align}">
-                            {if $column->hasTemplate()}
-                                {include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
-                            {else}
-                                {ifset #$col}
-                                    {include #$col, item => $item}
-                                {else}
-                                    {if $column->isTemplateEscaped()}
-                                        {$column->render($item)}
-                                    {else}
-                                        {!$column->render($item)}
-                                    {/if}
-                                {/ifset}
-                            {/if}
-                        </td>
-                    {/foreach}
-                    <td n:if="$actions || $control->isSortable()">
-                        {foreach $actions as $action}
-                            {if $action->hasTemplate()}
-                                {include $action->getTemplate(), item => $item}
-                            {else}
-                                {!$action->render($item)}
-                            {/if}
-                        {/foreach}
-                        <span class="handle btn btn-xs btn-default" n:if="$control->isSortable()">
-                            <span class="{$icon_prefix}arrows"></span>
-                        </span>
-                    </td>
-                </tr>
-            
-            {/foreach}
+								{var $col = 'col-' . $key}
 
-                <tr n:if="!$items">
-                    <td colspan="{sizeof($columns) + ($actions || $control->isSortable() ? 1 : 0) + ($control->hasGroupActions() ? 1 : 0)}">
-                        {if $filter_active}
-                            {_'No items found. You can reset the filter'} <a class="link ajax" n:href="resetFilter!">{_'zde'}</a>.
-                        {else}
-                            {_'No items found.'}
-                        {/if}
-                    </td>
-                </tr>
-        {/snippetArea}
-    </tbody> *}
-</ul>
+								{if $column->hasTemplate()}
+									{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
+								{else}
+									{ifset #$col}
+										{include #$col, item => $item}
+									{else}
+										{if $column->isTemplateEscaped()}
+											{$column->render($item)}
+										{else}
+											{!$column->render($item)}
+										{/if}
+									{/ifset}
+								{/if}
+							</div>
+						</div>
+						<div class="datagrid-tree-item-right-actions">
+							<div class="datagrid-tree-item-right-actions-action" n:foreach="$actions as $action">
+								{if $action->hasTemplate()}
+									{include $action->getTemplate(), item => $item}
+								{else}
+									{!$action->render($item)}
+								{/if}
+							</div>
+						</div>
+						<span class="handle btn btn-xs btn-default" n:if="$control->isSortable()">
+							<span class="{$icon_prefix}arrows"></span>
+						</span>
+					</div>
+				</div>
+				<div class="datagrid-tree-item-children">
+					
+				</div>
+			</div>
+		{/foreach}
+		{if !$items}
+			{_'No items found.'}
+		{/if}
+	{/snippetArea}
+</div>
+
+{block tree-item}
+			
+{/block}
+
+{* <ul class="datagrid-list" n:snippet="tablea" n:block="dataa" {if $control->isSortable()}data-sortable data-sortable-url="{plink sort!}"{/}>
+	<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports">
+		{var $columns_count = sizeof($columns) + (int) $control->hasGroupActions() + (int) $actions}
+		<th colspan="{$columns_count}" class="form-inline">
+			{if $control->hasGroupActions()}
+				{block group_actions}
+					{_'Group actions:'}
+					{foreach $filter['group_action']->getControls() as $form_control}
+						{if $form_control instanceof \Nette\Forms\Controls\SubmitButton}
+							{input $form_control, class => 'btn btn-primary btn-sm', style => 'display:none'}
+						{elseif $form_control->getName() == 'group_action'}
+							{input $form_control, class => 'form-control input-sm', disabled => TRUE}
+						{else}
+							{input $form_control, class => 'form-control input-sm', style => 'display:none'}
+						{/if}
+					{/foreach}
+				{/block}
+			{/if}
+
+			<span class="pull-right exports" n:if="$exports" n:block="exports">
+				{foreach $exports as $export}{$export->render()}{/foreach}
+			</span>
+		</th>
+	</tr>
+	<li class="datagrid-list-item">
+		<th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
+			<input class="happy gray-border primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
+		</th>
+		{foreach $columns as $column_key => $column}
+			<span class="col-{$column->getColumnName()}">
+				{if $column->isSortable()}
+					<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortOpposite()">
+						{$column->getName()}
+						{if $column->isSortedBy()}
+							<span n:class="$column->isSortAsc() ? 'fa-caret-up' : 'fa-caret-down', 'fa'"></span>
+						{else}
+							<span class="fa fa-sort"></span>
+						{/if}
+					</a>
+				{else}
+					{$column->getName()}
+				{/if}
+			</span>
+		{/foreach}
+		<span n:if="$actions || $control->isSortable()">
+			<strong>{_'Action'}</strong>
+		</span>
+	</li>
+</ul> *}
