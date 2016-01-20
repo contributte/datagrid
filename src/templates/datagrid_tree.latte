@@ -79,7 +79,7 @@
 						</span>
 					</div>
 				</div>
-				<div class="datagrid-tree-item-children">
+				<div class="datagrid-tree-item-children" style="display: none;">
 					
 				</div>
 			</div>
@@ -89,57 +89,3 @@
 		{/if}
 	{/snippetArea}
 </div>
-
-{block tree-item}
-			
-{/block}
-
-{* <ul class="datagrid-list" n:snippet="tablea" n:block="dataa" {if $control->isSortable()}data-sortable data-sortable-url="{plink sort!}"{/}>
-	<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports">
-		{var $columns_count = sizeof($columns) + (int) $control->hasGroupActions() + (int) $actions}
-		<th colspan="{$columns_count}" class="form-inline">
-			{if $control->hasGroupActions()}
-				{block group_actions}
-					{_'Group actions:'}
-					{foreach $filter['group_action']->getControls() as $form_control}
-						{if $form_control instanceof \Nette\Forms\Controls\SubmitButton}
-							{input $form_control, class => 'btn btn-primary btn-sm', style => 'display:none'}
-						{elseif $form_control->getName() == 'group_action'}
-							{input $form_control, class => 'form-control input-sm', disabled => TRUE}
-						{else}
-							{input $form_control, class => 'form-control input-sm', style => 'display:none'}
-						{/if}
-					{/foreach}
-				{/block}
-			{/if}
-
-			<span class="pull-right exports" n:if="$exports" n:block="exports">
-				{foreach $exports as $export}{$export->render()}{/foreach}
-			</span>
-		</th>
-	</tr>
-	<li class="datagrid-list-item">
-		<th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
-			<input class="happy gray-border primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
-		</th>
-		{foreach $columns as $column_key => $column}
-			<span class="col-{$column->getColumnName()}">
-				{if $column->isSortable()}
-					<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortOpposite()">
-						{$column->getName()}
-						{if $column->isSortedBy()}
-							<span n:class="$column->isSortAsc() ? 'fa-caret-up' : 'fa-caret-down', 'fa'"></span>
-						{else}
-							<span class="fa fa-sort"></span>
-						{/if}
-					</a>
-				{else}
-					{$column->getName()}
-				{/if}
-			</span>
-		{/foreach}
-		<span n:if="$actions || $control->isSortable()">
-			<strong>{_'Action'}</strong>
-		</span>
-	</li>
-</ul> *}
