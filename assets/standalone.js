@@ -4755,9 +4755,6 @@ datagridSortable = function() {
       return $.nette.ajax({
         type: 'GET',
         url: url,
-        success: function(data) {
-          return console.log(data);
-        },
         error: function(jqXHR, textStatus, errorThrown) {
           console.log(jqXHR.statusText);
           return alert(jqXHR.statusText);

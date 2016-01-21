@@ -136,11 +136,6 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $translator;
 
 	/**
-	 * @var bool
-	 */
-	protected $force_filter_active;
-
-	/**
 	 * @var callable
 	 */
 	protected $tree_view_children_callback;
@@ -337,7 +332,7 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$is_filter = $this->isArrayTruthy($this->filter);
 
-		return ($is_filter) || $this->force_filter_active;
+		return ($is_filter);
 	}
 
 
@@ -356,18 +351,6 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return FALSE;
-	}
-
-
-	/**
-	 * Tell that filter is active from whatever reasons
-	 * return self
-	 */
-	public function setFilterActive()
-	{
-		$this->force_filter_active = TRUE;
-
-		return $this;
 	}
 
 

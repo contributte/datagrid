@@ -78,6 +78,11 @@
   margin-left: 20px;
 }
 
+.datagrid .datagrid-tree .datagrid-tree-item.ui-sortable-placeholder {
+  visibility: visible !important;
+  background-color: pink !important;
+}
+
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content {
   display: flex;
   flex-direction: row;
