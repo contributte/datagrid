@@ -67,6 +67,35 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	}
 
 
+	public function applyFilterDate(Filter\FilterDate $filter)
+	{
+		$conditions = $filter->getCondition();
+
+		$date = \DateTime::createFromFormat($filter->getPhpFormat(), $conditions[$filter->getColumn()]);
+
+		$ymd = $date->format('Ymd');
+
+		$this->data_source->where('CONVERT(varchar(10), %n, 112) = ?', $filter->getColumn(), $ymd);
+	}
+
+
+	public function applyFilterDateRange(Filter\FilterDateRange $filter)
+	{
+		$conditions = $filter->getCondition();
+
+		$value_from = $conditions[$filter->getColumn()]['from'];
+		$value_to   = $conditions[$filter->getColumn()]['to'];
+
+		if ($value_from) {
+			$this->data_source->where('CONVERT(varchar(10), %n, 112) >= ?', $filter->getColumn(), $value_from);
+		}
+
+		if ($value_to) {
+			$this->data_source->where('CONVERT(varchar(10), %n, 112) <= ?', $filter->getColumn(), $value_to);
+		}
+	}
+
+
 	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$condition = $filter->getCondition();
