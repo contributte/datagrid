@@ -10,165 +10,182 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use DibiFluent,
-    Ublaboo\DataGrid\Filter\Filter,
-    Nette\Utils\Callback,
-    Nette\Utils\Strings;
+	Ublaboo\DataGrid\Filter\Filter,
+	Nette\Utils\Callback,
+	Nette\Utils\Strings,
+	Doctrine;
 
 class DoctrineDataSource implements IDataSource
 {
 
-    /**
-     * @var \Doctrine\ORM\QueryBuilder
-     */
-    protected $data_source;
+	/**
+	 * @var Doctrine\ORM\QueryBuilder
+	 */
+	protected $data_source;
 
-    /**
-     * @var array
-     */
-    protected $data = [];
+	/**
+	 * @var array
+	 */
+	protected $data = [];
 
-    /**
-     * @var string
-     */
-    protected $primary_key;
-
-
-    public function __construct($data_source, $primary_key)
-    {
-        $this->data_source = $data_source;
-        $this->primary_key = $primary_key;
-    }
-
-    /**
-     * @return \Doctrine\ORM\Query
-    */
-    public function getQuery()
-    {
-        return $this->data_source->getQuery();
-    }
+	/**
+	 * @var string
+	 */
+	protected $primary_key;
 
 
-    /********************************************************************************
-     *                          IDataSource implementation                          *
-     ********************************************************************************/
+	public function __construct($data_source, $primary_key)
+	{
+		$this->data_source = $data_source;
+		$this->primary_key = $primary_key;
+	}
+
+	/**
+	 * @return Doctrine\ORM\Query
+	*/
+	public function getQuery()
+	{
+		return $this->data_source->getQuery();
+	}
 
 
-    /**
-     * @return int
-     */
-    public function getCount()
-    {
-        $paginator = new \Doctrine\ORM\Tools\Pagination\Paginator($this->getQuery());
-        $count = count($paginator);
-
-        return $count;
-    }
-
-    /**
-     * @return array
-     */
-    public function getData()
-    {
-        // Paginator is better if the query uses ManyToMany associations
-        $result = $this->data_source->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-
-        $this->data = $result;
-        return $this->data;
-    }
+	/********************************************************************************
+	 *                          IDataSource implementation                          *
+	 ********************************************************************************/
 
 
-    /**
-     * @param array $filters
-     * @return void
-     */
-    public function filter(array $filters)
-    {
-        foreach ($filters as $filter) {
-            if ($filter->isValueSet()) {
-                $or = [];
+	/**
+	 * @return int
+	 */
+	public function getCount()
+	{
+		$paginator = new Doctrine\ORM\Tools\Pagination\Paginator($this->getQuery());
+		$count = count($paginator);
 
-                if ($filter->hasConditionCallback()) {
-                    Callback::invokeArgs(
-                        $filter->getConditionCallback(),
-                        [$this->data_source, $filter->getValue()]
-                    );
-                } else {
-                    if ($filter instanceof Filter\FilterText) {
-                        $this->applyFilterText($filter);
-                    } else if ($filter instanceof Filter\FilterSelect) {
-                        $this->applyFilterSelect($filter);
-                    } else if ($filter instanceof Filter\FilterDate) {
-                        $this->applyFilterDate($filter);
-                    } else if ($filter instanceof Filter\FilterDateRange) {
-                        $this->applyFilterDateRange($filter);
-                    } else if ($filter instanceof Filter\FilterRange) {
-                        $this->applyFilterRange($filter);
-                    }
-                }
-            }
-        }
+		return $count;
+	}
 
-        return $this;
-    }
+	/**
+	 * @return array
+	 */
+	public function getData()
+	{
+		// Paginator is better if the query uses ManyToMany associations
+		$result = $this->data_source->getQuery()->getResult(Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+		$this->data = $result;
+		return $this->data;
+	}
 
 
-    /**
-     * @param array $filter
-     * @return void
-     */
-    public function filterOne(array $filter)
-    {
-        $this->data_source->where($filter);
+	/**
+	 * @param array $filters
+	 * @return void
+	 */
+	public function filter(array $filters)
+	{
+		foreach ($filters as $filter) {
+			if ($filter->isValueSet()) {
+				$or = [];
 
-        return $this;
-    }
+				if ($filter->hasConditionCallback()) {
+					Callback::invokeArgs(
+						$filter->getConditionCallback(),
+						[$this->data_source, $filter->getValue()]
+					);
+				} else {
+					if ($filter instanceof Filter\FilterText) {
+						$this->applyFilterText($filter);
+					} else if ($filter instanceof Filter\FilterSelect) {
+						$this->applyFilterSelect($filter);
+					} else if ($filter instanceof Filter\FilterDate) {
+						$this->applyFilterDate($filter);
+					} else if ($filter instanceof Filter\FilterDateRange) {
+						$this->applyFilterDateRange($filter);
+					} else if ($filter instanceof Filter\FilterRange) {
+						$this->applyFilterRange($filter);
+					}
+				}
+			}
+		}
 
-
-    public function applyFilterDateRange(Filter\FilterDateRange $filter)
-    {
-        return $this;
-    }
-
-
-    public function applyFilterRange(Filter\FilterRange $filter)
-    {
-        return $this;
-    }
-
-
-    public function applyFilterText(Filter\FilterText $filter)
-    {
-        return $this;
-    }
-
-
-    public function applyFilterSelect(Filter\FilterSelect $filter)
-    {
-        return $this;
-    }
-
-
-    public function applyFilterDate(Filter\FilterDate $filter)
-    {
-        return $this;
-    }
+		return $this;
+	}
 
 
-    /**
-     * @param int $offset
-     * @param int $limit
-     * @return void
-     */
-    public function limit($offset, $limit)
-    {
-        $this->data_source->setFirstResult($offset)->setMaxResults($limit);
-        return $this;
-    }
+	/**
+	 * @param array $filter
+	 * @return void
+	 */
+	public function filterOne(array $filter)
+	{
+		$this->data_source->where($filter);
+
+		return $this;
+	}
 
 
-    public function sort(array $sorting)
-    {
-        return $this;
-    }
+	public function applyFilterDateRange(Filter\FilterDateRange $filter)
+	{
+		return $this;
+	}
+
+
+	public function applyFilterRange(Filter\FilterRange $filter)
+	{
+		return $this;
+	}
+
+
+	public function applyFilterText(Filter\FilterText $filter)
+	{
+		return $this;
+	}
+
+
+	public function applyFilterSelect(Filter\FilterSelect $filter)
+	{
+		return $this;
+	}
+
+
+	public function applyFilterDate(Filter\FilterDate $filter)
+	{
+		return $this;
+	}
+
+
+	/**
+	 * @param int $offset
+	 * @param int $limit
+	 * @return void
+	 */
+	public function limit($offset, $limit)
+	{
+		$this->data_source->setFirstResult($offset)->setMaxResults($limit);
+
+		return $this;
+	}
+
+
+	public function sort(array $sorting)
+	{
+		$alias = current($this->data_source->getDQLPart('from'))->getAlias();
+
+		if ($sorting) {
+			foreach ($sorting as $column => $sort) {
+				$this->data_source->orderBy("{$alias}.{$column}", $sort);
+			}
+		} else {
+			/**
+			 * Has the statement already a order by clause?
+			 */
+			if (!$this->data_source->getDQLPart('orderBy')) {
+				$this->data_source->orderBy("{$alias}.{$this->primary_key}");
+			}
+		}
+
+		return $this;
+	}
 
 }
