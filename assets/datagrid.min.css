@@ -8,6 +8,7 @@
 .datagrid table thead tr.row-group-actions th{border-bottom-width:0!important;background-color:#f9f9f9}
 .datagrid table thead tr th{font-size:90%;vertical-align:top}
 .datagrid table thead tr th hr{margin:8px -8px}
+.datagrid table thead tr th .datagrid-col-filter-date-range input,.datagrid table thead tr th .datagrid-col-filter-range input{width:48%}
 .datagrid table tbody td{vertical-align:middle}
 .datagrid table tbody tr.ui-sortable-helper{display:table}
 .datagrid table td.col-checkbox,.datagrid table th.col-checkbox{padding:0;width:2.1em;text-align:center;vertical-align:middle;background-color:#f9f9f9}
@@ -15,7 +16,6 @@
 .datagrid table td.col-checkbox.col-checkbox-first,.datagrid table th.col-checkbox.col-checkbox-first{border-top-color:transparent}
 .datagrid table td.col-action,.datagrid table th.col-action{white-space:nowrap;width:10px}
 .datagrid .datagrid-tree>.datagrid-tree-item{margin-left:20px}
-.datagrid .datagrid-tree .datagrid-tree-item.ui-sortable-placeholder{visibility:visible!important;background-color:pink!important}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content{display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:space-between;border-bottom:1px solid #ddd;box-sizing:border-box;height:37px}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left,.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right{display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:space-between;align-items:center}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left{order:1}
