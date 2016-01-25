@@ -99,8 +99,8 @@ class FilterDateRange extends Filter
 		$value = $this->getValue();
 
 		return [$this->column => [
-			'from' => $value['from'],
-			'to' => $value['to']
+			'from' => isset($value['from']) ? $value['from'] : '',
+			'to' => isset($value['to']) ? $value['to'] : ''
 		]];
 	}
 

@@ -41,7 +41,7 @@ class FilterRange extends Filter
 	 * Adds select box to filter form
 	 * @param Nette\Application\UI\Form $form
 	 */
-	public function addToForm($form)
+	public function addToFormContainer($form)
 	{
 		$container = $form->addContainer($this->key);
 

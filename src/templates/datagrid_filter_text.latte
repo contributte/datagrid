@@ -3,9 +3,13 @@
  * @param Nette\Forms\Controls\TextInput $input
  *}
 
-<div class="row">
-	{label $input class => 'col-sm-3 control-label' /}
-	<div class="col-sm-9">
-		{input $input, class => 'form-control input-sm', data-autosubmit => TRUE}
+{if $outer}
+	<div class="row">
+		{label $input class => 'col-sm-3 control-label' /}
+		<div class="col-sm-9">
+			{input $input, class => 'form-control input-sm', data-autosubmit => TRUE}
+		</div>
 	</div>
-</div>
+{else}
+	{input $input, class => 'form-control input-sm', data-autosubmit => TRUE}
+{/if}

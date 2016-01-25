@@ -116,19 +116,18 @@ class NetteDatabaseTableDataSource
 		$value_from = $conditions[$filter->getColumn()]['from'];
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
-		
 		if ($value_from) {
 			$date_from = \DateTime::createFromFormat($filter->getPhpFormat(), $value_from);
 			$date_from->setTime(0, 0, 0);
 
-			$this->data_source->where("DATE({$filter->getColumn()}) >= ?", $date_from);
+			$this->data_source->where("DATE({$filter->getColumn()}) >= ?", $date_from->format('Y-m-d'));
 		}
 
 		if ($value_to) {
 			$date_to = \DateTime::createFromFormat($filter->getPhpFormat(), $value_to);
 			$date_to->setTime(23, 59, 59);
 
-			$this->data_source->where("DATE({$filter->getColumn()}) <= ?", $date_to);
+			$this->data_source->where("DATE({$filter->getColumn()}) <= ?", $date_to->format('Y-m-d'));
 		}
 	}
 

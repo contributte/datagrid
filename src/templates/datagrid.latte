@@ -25,7 +25,7 @@
 						{**
 						 * Each fitlers are rendered separately in their own templates
 						 *}
-						{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()]}
+						{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
 						{var $i = $i+1}
 					</div>
 				</div>
@@ -76,7 +76,8 @@
 								{/if}
 								{if !$control->hasOuterFilterRendering() && isset($filters[$column_key])}
 									<hr>
-									{input $filter['filter'][$column_key], data-autosubmit => TRUE, class => 'form-control input-sm'}
+									{var $i = $filter['filter'][$column_key]}
+									{include $filters[$column_key]->getTemplate(), filter => $filters[$column_key], input => $i, outer => FALSE}
 								{/if}
 							</th>
 						{/foreach}
@@ -150,7 +151,7 @@
 	{**
 	 * Bottom row
 	 *}
-	<div n:snippet="pagination" n:if="$items && !$control->isTreeView()" class="row-grid-bottom">
+	<div n:snippet="pagination" n:if="!$control->isTreeView()" class="row-grid-bottom">
 		<div class="col-items">
 			<small class="text-muted" n:if="$control->isPaginated()">
 				({var $paginator = $control['paginator']->getPaginator()}

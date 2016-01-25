@@ -5,19 +5,27 @@
 
 {var $container = $input}
 
-<div class="row">
-	{label $container['from'] class => 'col-sm-3 control-label' /}
-	<div class="col-sm-4">
-		<div class="input-group">
-			{input $container['from'] class => 'form-control input-sm', data-autosubmit => TRUE}
-			<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+{if $outer}
+	<div class="row">
+		{label $container['from'] class => 'col-sm-3 control-label' /}
+		<div class="col-sm-4">
+			<div class="input-group">
+				{input $container['from'] class => 'form-control input-sm', data-autosubmit => TRUE}
+				<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+			</div>
+		</div>
+		{label $container['to'] class => 'col-sm-1 control-label' /}
+		<div class="col-sm-4">
+			<div class="input-group">
+				{input $container['to'] class => 'form-control input-sm', data-autosubmit => TRUE}
+				<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+			</div>
 		</div>
 	</div>
-	{label $container['to'] class => 'col-sm-1 control-label' /}
-	<div class="col-sm-4">
-		<div class="input-group">
-			{input $container['to'] class => 'form-control input-sm', data-autosubmit => TRUE}
-			<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-		</div>
+{else}
+	<div class="datagrid-col-filter-date-range form-inline">
+		{input $container['from'] class => 'form-control input-sm', data-autosubmit => TRUE}
+		-
+		{input $container['to'] class => 'form-control input-sm', data-autosubmit => TRUE}
 	</div>
-</div>
+{/if}
