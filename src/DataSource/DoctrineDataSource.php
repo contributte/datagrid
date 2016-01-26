@@ -10,7 +10,7 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use DibiFluent,
-	Ublaboo\DataGrid\Filter\Filter,
+	Ublaboo\DataGrid\Filter,
 	Nette\Utils\Callback,
 	Nette\Utils\Strings,
 	Doctrine;
@@ -70,11 +70,10 @@ class DoctrineDataSource implements IDataSource
 	 */
 	public function getData()
 	{
-		// Paginator is better if the query uses ManyToMany associations
-		$result = $this->data_source->getQuery()->getResult(Doctrine\ORM\Query::HYDRATE_ARRAY);
-
-		$this->data = $result;
-		return $this->data;
+		/**
+		 * Paginator is better if the query uses ManyToMany associations
+		 */
+		return $this->data ?: $this->data_source->getQuery()->getResult(Doctrine\ORM\Query::HYDRATE_ARRAY);
 	}
 
 
@@ -139,13 +138,41 @@ class DoctrineDataSource implements IDataSource
 
 	public function applyFilterText(Filter\FilterText $filter)
 	{
-		return $this;
+		$condition = $filter->getCondition();
+
+		foreach ($condition as $column => $value) {
+			$words = explode(' ', $value);
+
+			foreach ($words as $word) {
+				//$escaped = $this->data_source->getConnection()->getDriver()->escapeLike($word, 0);
+
+				$or[] = $this->data_source->expr()->like($column, $word);
+
+				/*if (preg_match("/[\x80-\xFF]/", $word)) {
+					$or[] = "$column LIKE $escaped COLLATE utf8_bin";
+				} else {
+					$escaped = Strings::toAscii($escaped);
+					$or[] = "$column LIKE $escaped COLLATE utf8_general_ci";
+				}*/
+			}
+		}
+
+		/*if (sizeof($or) > 1) {
+			foreach ($or as $o) {
+				$this->data_source->orWhere($o);
+			}
+		} else {
+			$this->data_source->where($or);
+		}*/
 	}
 
 
 	public function applyFilterSelect(Filter\FilterSelect $filter)
 	{
-		return $this;
+		foreach ($filter->getCondition() as $key => $value) {
+			$this->data_source->where("$key = ?1")
+				->setParameters([1 => $value]);
+		}
 	}
 
 
