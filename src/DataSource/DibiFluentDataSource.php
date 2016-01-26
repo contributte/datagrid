@@ -98,12 +98,12 @@ class DibiFluentDataSource
 
 
 	/**
-	 * @param array $filter
+	 * @param array $condition
 	 * @return void
 	 */
-	public function filterOne(array $filter)
+	public function filterOne(array $condition)
 	{
-		$this->data_source->where($filter)->limit(1);
+		$this->data_source->where($condition)->limit(1);
 
 		return $this;
 	}

@@ -56,12 +56,12 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 
 	/**
-	 * @param array $filter
+	 * @param array $condition
 	 * @return void
 	 */
-	public function filterOne(array $filter)
+	public function filterOne(array $condition)
 	{
-		$this->data_source->where($filter);
+		$this->data_source->where($condition);
 
 		return $this;
 	}

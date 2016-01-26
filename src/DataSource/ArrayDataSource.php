@@ -78,13 +78,13 @@ class ArrayDataSource
 
 
 	/**
-	 * @param array $filter
+	 * @param array $condition
 	 * @return void
 	 */
-	public function filterOne(array $filter)
+	public function filterOne(array $condition)
 	{
-		$this->data = array_filter($this->data, function($row) use ($filter) {
-			return $this->applyFilter($row, $filter);
+		$this->data = array_filter($this->data, function($row) use ($condition) {
+			return $this->applyFilter($row, $condition);
 		});
 
 		$this->data = $this->data ? reset($this->data) : [];

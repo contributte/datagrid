@@ -118,15 +118,15 @@ class DoctrineDataSource implements IDataSource
 
 
 	/**
-	 * @param array $filter
+	 * @param array $condition
 	 * @return void
 	 */
-	public function filterOne(array $filter)
+	public function filterOne(array $condition)
 	{
 		$p = $this->getPlaceholder();
 
-		foreach ($filter->getCondition() as $key => $value) {
-			$this->data_source->andWhere("$key = ?$p")
+		foreach ($condition as $column => $value) {
+			$this->data_source->andWhere("$column = ?$p")
 				->setParameter($p, $value);
 		}
 
@@ -194,8 +194,8 @@ class DoctrineDataSource implements IDataSource
 	{
 		$p = $this->getPlaceholder();
 
-		foreach ($filter->getCondition() as $key => $value) {
-			$this->data_source->andWhere("$key = ?$p")
+		foreach ($filter->getCondition() as $column => $value) {
+			$this->data_source->andWhere("$column = ?$p")
 				->setParameter($p, $value);
 		}
 	}
@@ -203,6 +203,19 @@ class DoctrineDataSource implements IDataSource
 
 	public function applyFilterDate(Filter\FilterDate $filter)
 	{
+		$p1 = $this->getPlaceholder();
+		$p2 = $this->getPlaceholder();
+
+		foreach ($filter->getCondition() as $column => $value) {
+			$date = \DateTime::createFromFormat($filter->getPhpFormat(), $value);
+
+			$this->data_source
+				->andWhere("$column >= ?$p1")
+				->andWhere("$column <= ?$p2")
+				->setParameter($p1, $date->format('Y-m-d 00:00:00'))
+				->setParameter($p2, $date->format('Y-m-d 23:59:59'));
+		}
+
 		return $this;
 	}
 
