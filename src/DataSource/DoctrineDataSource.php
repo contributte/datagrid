@@ -123,7 +123,14 @@ class DoctrineDataSource implements IDataSource
 	 */
 	public function filterOne(array $filter)
 	{
-		$this->data_source->where($filter);
+		$p = $this->getPlaceholder();
+
+		foreach ($filter->getCondition() as $key => $value) {
+			$this->data_source->andWhere("$key = ?$p")
+				->setParameter($p, $value);
+		}
+
+		$this->data_source->limit(1);
 
 		return $this;
 	}
