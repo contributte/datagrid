@@ -33,6 +33,11 @@ class DoctrineDataSource implements IDataSource
 	 */
 	protected $primary_key;
 
+	/**
+	 * @var int
+	 */
+	protected $placeholder = 0;
+
 
 	public function __construct($data_source, $primary_key)
 	{
@@ -132,7 +137,21 @@ class DoctrineDataSource implements IDataSource
 
 	public function applyFilterRange(Filter\FilterRange $filter)
 	{
-		return $this;
+		$conditions = $filter->getCondition();
+		$column = $filter->getColumn();
+
+		$value_from = $conditions[$filter->getColumn()]['from'];
+		$value_to   = $conditions[$filter->getColumn()]['to'];
+
+		if ($value_from) {
+			$p = $this->getPlaceholder();
+			$this->data_source->andWhere("$column >= ?$p")->setParameter($p, $value_from);
+		}
+
+		if ($value_to) {
+			$p = $this->getPlaceholder();
+			$this->data_source->andWhere("$column <= ?$p")->setParameter($p, $value_to);
+		}
 	}
 
 
@@ -169,9 +188,11 @@ class DoctrineDataSource implements IDataSource
 
 	public function applyFilterSelect(Filter\FilterSelect $filter)
 	{
+		$p = $this->getPlaceholder();
+
 		foreach ($filter->getCondition() as $key => $value) {
-			$this->data_source->where("$key = ?1")
-				->setParameters([1 => $value]);
+			$this->data_source->andWhere("$key = ?$p")
+				->setParameter($p, $value);
 		}
 	}
 
@@ -213,6 +234,14 @@ class DoctrineDataSource implements IDataSource
 		}
 
 		return $this;
+	}
+
+
+	public function getPlaceholder()
+	{
+		$this->placeholder++;
+
+		return $this->placeholder;
 	}
 
 }
