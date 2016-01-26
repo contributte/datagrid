@@ -138,7 +138,29 @@ class DoctrineDataSource implements IDataSource
 
 	public function applyFilterDateRange(Filter\FilterDateRange $filter)
 	{
-		return $this;
+		$conditions = $filter->getCondition();
+		$column = $filter->getColumn();
+
+		$value_from = $conditions[$filter->getColumn()]['from'];
+		$value_to   = $conditions[$filter->getColumn()]['to'];
+
+		if ($value_from) {
+			$date_from = \DateTime::createFromFormat($filter->getPhpFormat(), $value_from);
+			$date_from->setTime(0, 0, 0);
+
+			$p = $this->getPlaceholder();
+
+			$this->data_source->andWhere("$column >= ?$p")->setParameter($p, $date_from->format('Y-m-d H:i:s'));
+		}
+
+		if ($value_to) {
+			$date_to = \DateTime::createFromFormat($filter->getPhpFormat(), $value_to);
+			$date_to->setTime(23, 59, 59);
+
+			$p = $this->getPlaceholder();
+
+			$this->data_source->andWhere("$column <= ?$p")->setParameter($p, $date_to->format('Y-m-d H:i:s'));
+		}
 	}
 
 
