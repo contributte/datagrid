@@ -170,10 +170,11 @@ class DoctrineDataSource implements IDataSource
 			$words = explode(' ', $value);
 
 			foreach ($words as $word) {
-				//$escaped = $this->data_source->getConnection()->getDriver()->escapeLike($word, 0);
+				$exprs[] = $this->data_source->expr()->like($column, $this->data_source->expr()->literal("%$word%"));
 
-				$or[] = $this->data_source->expr()->like($column, $word);
-
+				/**
+				 * @todo Manage somehow COLLATE statement in DQL
+				 */
 				/*if (preg_match("/[\x80-\xFF]/", $word)) {
 					$or[] = "$column LIKE $escaped COLLATE utf8_bin";
 				} else {
@@ -183,13 +184,9 @@ class DoctrineDataSource implements IDataSource
 			}
 		}
 
-		/*if (sizeof($or) > 1) {
-			foreach ($or as $o) {
-				$this->data_source->orWhere($o);
-			}
-		} else {
-			$this->data_source->where($or);
-		}*/
+		$or = call_user_func_array([$this->data_source->expr(), 'orX'], $exprs);
+
+		$this->data_source->andWhere($or);
 	}
 
 
