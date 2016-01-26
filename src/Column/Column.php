@@ -321,10 +321,12 @@ abstract class Column extends Nette\Object
 	}
 
 
-	public function getSortOpposite()
+	public function getSortNext()
 	{
 		if ($this->sort == 'ASC') {
 			return [$this->column => 'DESC'];
+		} else if ($this->sort == 'DESC') {
+			return [$this->column => NULL];
 		}
 
 		return [$this->column => 'ASC'];

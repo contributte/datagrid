@@ -65,7 +65,7 @@
 							{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
 							<th class="col-{$column->getColumnName()} text-{$align}">
 								{if $column->isSortable()}
-									<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortOpposite()">
+									<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()">
 										{$column->getName()}
 										{if $column->isSortedBy()}
 											<span n:class="$column->isSortAsc() ? 'fa-caret-up' : 'fa-caret-down', 'fa'"></span>
