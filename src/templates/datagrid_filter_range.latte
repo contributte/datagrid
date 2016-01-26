@@ -7,19 +7,23 @@
 
 {if $outer}
 	<div class="row">
-		{label $container['from'] class => 'col-sm-3 control-label' /}
+		{label $container['from'], class => 'col-sm-3 control-label' /}
 		<div class="col-sm-4">
-			{input $container['from'] class => 'form-control input-sm', data-autosubmit => TRUE}
+			{input $container['from'], class => 'form-control input-sm', data-autosubmit => TRUE}
 		</div>
-		{label $container['to'] class => 'col-sm-1 control-label' /}
+		{label $container['to'], class => 'filter-range-delimiter col-sm-1 control-label' /}
 		<div class="col-sm-4">
-			{input $container['to'] class => 'form-control input-sm', data-autosubmit => TRUE}
+			{input $container['to'], class => 'form-control input-sm', data-autosubmit => TRUE}
 		</div>
 	</div>
 {else}
 	<div class="datagrid-col-filter-range form-inline">
-		{input $container['from'] class => 'form-control input-sm', data-autosubmit => TRUE}
-		-
-		{input $container['to'] class => 'form-control input-sm', data-autosubmit => TRUE}
-	</span>
+		<div class="form-group">
+			<div class="input-group">
+				{input $container['from'], class => 'form-control input-sm', data-autosubmit => TRUE}
+				<div class="input-group-addon">-</div>
+				{input $container['to'], class => 'form-control input-sm', data-autosubmit => TRUE}
+			</div>
+		</div>
+	</div>
 {/if}
