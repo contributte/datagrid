@@ -2,6 +2,8 @@
  * @param array    $columns           Available columns
  * @param array    $actions           Available actions
  * @param array    $exports           Available exports
+ * @param array    $filters           Available filters
+ * @param Form     $filter            Walkaround for latte (does not know $form in snippet in foreach, etc)
  * @param array    $items             List of items from data source
  * @param DataGrid $control           Parent (DataGrid)
  * @param string   $original_template Original template file path
@@ -129,20 +131,19 @@
 									</span>
 								</td>
 							</tr>
-						
 						{/foreach}
-
-							<tr n:if="!$items">
-								<td colspan="{sizeof($columns) + ($actions || $control->isSortable() ? 1 : 0) + ($control->hasGroupActions() ? 1 : 0)}">
-									{if $filter_active}
-										{_'No items found. You can reset the filter'} <a class="link ajax" n:href="resetFilter!">{_'zde'}</a>.
-									{else}
-										{_'No items found.'}
-									{/if}
-								</td>
-							</tr>
+						<tr n:if="!$items">
+							<td colspan="{sizeof($columns) + ($actions || $control->isSortable() ? 1 : 0) + ($control->hasGroupActions() ? 1 : 0)}">
+								{if $filter_active}
+									{_'No items found. You can reset the filter'} <a class="link ajax" n:href="resetFilter!">{_'zde'}</a>.
+								{else}
+									{_'No items found.'}
+								{/if}
+							</td>
+						</tr>
 					{/snippetArea}
 				</tbody>
+				{block tfoot}{/block}
 			</table>
 		{/form}
 	{/snippetArea}
