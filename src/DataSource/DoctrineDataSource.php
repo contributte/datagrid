@@ -130,8 +130,6 @@ class DoctrineDataSource implements IDataSource
 				->setParameter($p, $value);
 		}
 
-		$this->data_source->limit(1);
-
 		return $this;
 	}
 
