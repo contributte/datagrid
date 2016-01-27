@@ -23,6 +23,10 @@
   margin-bottom: 0.5em;
 }
 
+.datagrid .filter-range-delimiter {
+  text-align: center;
+}
+
 .datagrid table {
   margin: 0;
 }
@@ -41,9 +45,17 @@
   margin: 8px -8px;
 }
 
-.datagrid table thead tr th .datagrid-col-filter-date-range input,
-.datagrid table thead tr th .datagrid-col-filter-range input {
-  width: 48%;
+.datagrid table thead tr th .datagrid-col-filter-date-range .form-group .input-group .form-control,
+.datagrid table thead tr th .datagrid-col-filter-range .form-group .input-group .form-control {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.datagrid table thead tr th .datagrid-col-filter-date-range .input-group-addon,
+.datagrid table thead tr th .datagrid-col-filter-range .input-group-addon {
+  background-color: inherit;
+  border: none;
 }
 
 .datagrid table tbody td {
@@ -54,13 +66,24 @@
   display: table;
 }
 
+.datagrid table tbody tr.row-item-detail {
+  display: none;
+}
+
+.datagrid table tbody tr.row-item-detail.toggled {
+  display: table-row;
+}
+
+.datagrid table tbody tr.row-item-detail .item-detail-content {
+  display: none;
+}
+
 .datagrid table th.col-checkbox,
 .datagrid table td.col-checkbox {
   padding: 0;
   width: 2.1em;
   text-align: center;
   vertical-align: middle;
-  background-color: #f9f9f9;
 }
 
 .datagrid table th.col-checkbox .happy-checkbox,
@@ -71,6 +94,10 @@
 .datagrid table th.col-checkbox.col-checkbox-first,
 .datagrid table td.col-checkbox.col-checkbox-first {
   border-top-color: transparent;
+}
+
+.datagrid table th.col-checkbox {
+  background-color: #f9f9f9;
 }
 
 .datagrid table th.col-action,

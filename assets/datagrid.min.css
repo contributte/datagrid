@@ -4,16 +4,22 @@
 .datagrid .exports .btn{margin-left:1em}
 .datagrid .row-reset-filter{text-align:right;margin-bottom:.5em}
 .datagrid .row-filters>div{margin-bottom:.5em}
+.datagrid .filter-range-delimiter{text-align:center}
 .datagrid table{margin:0}
 .datagrid table thead tr.row-group-actions th{border-bottom-width:0!important;background-color:#f9f9f9}
 .datagrid table thead tr th{font-size:90%;vertical-align:top}
 .datagrid table thead tr th hr{margin:8px -8px}
-.datagrid table thead tr th .datagrid-col-filter-date-range input,.datagrid table thead tr th .datagrid-col-filter-range input{width:48%}
+.datagrid table thead tr th .datagrid-col-filter-date-range .form-group .input-group .form-control,.datagrid table thead tr th .datagrid-col-filter-range .form-group .input-group .form-control{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px}
+.datagrid table thead tr th .datagrid-col-filter-date-range .input-group-addon,.datagrid table thead tr th .datagrid-col-filter-range .input-group-addon{background-color:inherit;border:none}
 .datagrid table tbody td{vertical-align:middle}
 .datagrid table tbody tr.ui-sortable-helper{display:table}
-.datagrid table td.col-checkbox,.datagrid table th.col-checkbox{padding:0;width:2.1em;text-align:center;vertical-align:middle;background-color:#f9f9f9}
+.datagrid table tbody tr.row-item-detail{display:none}
+.datagrid table tbody tr.row-item-detail.toggled{display:table-row}
+.datagrid table tbody tr.row-item-detail .item-detail-content{display:none}
+.datagrid table td.col-checkbox,.datagrid table th.col-checkbox{padding:0;width:2.1em;text-align:center;vertical-align:middle}
 .datagrid table td.col-checkbox .happy-checkbox,.datagrid table th.col-checkbox .happy-checkbox{margin-right:0}
 .datagrid table td.col-checkbox.col-checkbox-first,.datagrid table th.col-checkbox.col-checkbox-first{border-top-color:transparent}
+.datagrid table th.col-checkbox{background-color:#f9f9f9}
 .datagrid table td.col-action,.datagrid table th.col-action{white-space:nowrap;width:10px}
 .datagrid .datagrid-tree>.datagrid-tree-item{margin-left:20px}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content{display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:space-between;border-bottom:1px solid #ddd;box-sizing:border-box;height:37px}
