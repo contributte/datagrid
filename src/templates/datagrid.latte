@@ -159,6 +159,7 @@
 								</tr>
 							{/if}
 						{/foreach}
+						{block noItems}
 						<tr n:if="!$items">
 							<td colspan="{$column_count}">
 								{if $filter_active}
@@ -168,6 +169,7 @@
 								{/if}
 							</td>
 						</tr>
+						{/block}
 					{/snippetArea}
 				</tbody>
 				{block tfoot}{/block}
