@@ -32,11 +32,10 @@
 					</div>
 				</div>
 			{/if}
-			<table class="table table-striped table-hover table-bordered" n:snippet="table" n:block="data">
+			<table class="table table-hover table-bordered" n:snippet="table" n:block="data">
 				<thead>
 					<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports">
-						{var $columns_count = sizeof($columns) + (int) $control->hasGroupActions() + (int) $actions}
-						<th colspan="{$columns_count}" class="form-inline">
+						<th colspan="{$control->getColumnsCount()}" class="form-inline">
 							{if $control->hasGroupActions()}
 								{block group_actions}
 									{_'Group actions:'}
@@ -83,7 +82,7 @@
 								{/if}
 							</th>
 						{/foreach}
-						<th n:if="$actions || $control->isSortable()" class="col-action text-center">
+						<th n:if="$actions || $control->isSortable() || $items_detail" class="col-action text-center">
 							{_'Action'}
 						</th>
 					</tr>
@@ -118,7 +117,7 @@
 										{/if}
 									</td>
 								{/foreach}
-								<td n:if="$actions || $control->isSortable()" class="col-action">
+								<td n:if="$actions || $control->isSortable() || $items_detail" class="col-action">
 									{foreach $actions as $action}
 										{if $action->hasTemplate()}
 											{include $action->getTemplate(), item => $item}
@@ -129,11 +128,39 @@
 									<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
 										<span class="{$icon_prefix}arrows"></span>
 									</span>
+									{if $items_detail}
+										{!$items_detail->renderButton($item)}
+									{/if}
 								</td>
 							</tr>
+
+							{**
+							 * Item detail
+							 *}
+							{if $items_detail}
+								<tr class="row-item-detail item-detail-{$id_value}" n:snippet="item-{$id_value}-detail">
+									{if isset($toggle_detail) && $toggle_detail == $id_value}
+										{ifset #detail}
+											<td colspan="{$control->getColumnsCount()}">
+												<div class="item-detail-content">{include #detail, item => $item}</div>
+											</td>
+										{elseif $items_detail}
+											<td colspan="{$control->getColumnsCount()}">
+												<div class="item-detail-content">
+													{if $items_detail->type == 'template'}
+														{include $items_detail->template, item => $item}
+													{else}
+														{!$items_detail->renderer($item)}
+													{/if}
+												</div>
+											</td>
+										{/ifset}
+									{/if}
+								</tr>
+							{/if}
 						{/foreach}
 						<tr n:if="!$items">
-							<td colspan="{sizeof($columns) + ($actions || $control->isSortable() ? 1 : 0) + ($control->hasGroupActions() ? 1 : 0)}">
+							<td colspan="{$column_count}">
 								{if $filter_active}
 									{_'No items found. You can reset the filter'} <a class="link ajax" n:href="resetFilter!">{_'zde'}</a>.
 								{else}

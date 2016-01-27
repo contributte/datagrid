@@ -30,7 +30,7 @@ class Action extends Column
 	protected $icon;
 
 	/**
-	 * @var Giatn\DataGrid\DataGrid
+	 * @var DataGrid
 	 */
 	protected $grid;
 
@@ -53,6 +53,7 @@ class Action extends Column
 	 * @var array
 	 */
 	protected $confirm;
+
 
 	public function __construct($grid, $href, $name, $params)
 	{
@@ -115,7 +116,7 @@ class Action extends Column
 
 	/**
 	 * Get attribute title
-	 * @param string $title
+	 * @return string
 	 */
 	public function getTitle()
 	{
@@ -137,7 +138,7 @@ class Action extends Column
 
 	/**
 	 * Get attribute class
-	 * @param string $class
+	 * @return string
 	 */
 	public function getClass()
 	{
@@ -159,7 +160,7 @@ class Action extends Column
 
 	/**
 	 * Get icon
-	 * @param string $icon
+	 * @return string
 	 */
 	public function getIcon()
 	{
