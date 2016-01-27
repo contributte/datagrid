@@ -179,7 +179,7 @@
 	{**
 	 * Bottom row
 	 *}
-	<div n:snippet="pagination" n:if="!$control->isTreeView()" class="row-grid-bottom">
+	<div n:block="pagination" n:snippet="pagination" n:if="!$control->isTreeView()" class="row-grid-bottom">
 		<div class="col-items">
 			<small class="text-muted" n:if="$control->isPaginated()">
 				({var $paginator = $control['paginator']->getPaginator()}
