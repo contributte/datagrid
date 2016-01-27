@@ -162,7 +162,7 @@
 						<tr n:if="!$items">
 							<td colspan="{$column_count}">
 								{if $filter_active}
-									{_'No items found. You can reset the filter'} <a class="link ajax" n:href="resetFilter!">{_'zde'}</a>.
+									{_'No items found. You can reset the filter'} <a class="link ajax" n:href="resetFilter!">{_'here'}</a>.
 								{else}
 									{_'No items found.'}
 								{/if}
@@ -202,7 +202,7 @@
 			{**
 			* Items per page form (display only besie paginated grido)
 			*}
-			<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">Zrušit filtr</a>
+			<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'Remove filter'}</a>
 			{if $control->isPaginated()}
 				{form perPage, class => 'ajax'}
 					{input per_page, data-autosubmit => TRUE, class => 'form-control input-sm'}
