@@ -7,7 +7,7 @@ use Tester\TestCase,
 	Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../files/XTestingDataGridFactory.php';
+require __DIR__ . '/../Files/XTestingDataGridFactory.php';
 
 final class ColumnDateTimeTest extends TestCase
 {
