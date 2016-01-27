@@ -38,19 +38,19 @@ final class ColumnLinkTest extends TestCase
 		$link = $this->grid->addColumnLink('name', 'Href');
 		Assert::same('<a href="name?id=1">John</a>', $this->render($link));
 
-		$link = $this->grid->addColumnLink('name2', 'Href', 'name');
-		Assert::same('<a href="name2?id=1">John</a>', $this->render($link));
+		$link = $this->grid->addColumnLink('name2', 'Href', 'edit', 'name');
+		Assert::same('<a href="edit?id=1">John</a>', $this->render($link));
 
-		$link = $this->grid->addColumnLink('name3', 'Href', 'id', 'edit');
+		$link = $this->grid->addColumnLink('name3', 'Href', 'edit', 'id');
 		Assert::same('<a href="edit?id=1">1</a>', $this->render($link));
 
-		$link = $this->grid->addColumnLink('name4', 'Href', 'id', 'edit', ['name']);
+		$link = $this->grid->addColumnLink('name4', 'Href', 'edit', 'id', ['name']);
 		Assert::same('<a href="edit?name=John">1</a>', $this->render($link));
 
-		$link = $this->grid->addColumnLink('name5', 'Href', 'id', 'edit', ['name', 'id']);
+		$link = $this->grid->addColumnLink('name5', 'Href', 'edit', 'id', ['name', 'id']);
 		Assert::same('<a href="edit?name=John&amp;id=1">1</a>', $this->render($link));
 
-		$link = $this->grid->addColumnLink('name6', 'Href', 'id', 'edit', [
+		$link = $this->grid->addColumnLink('name6', 'Href', 'edit', 'id', [
 			'name' => 'id',
 			'id' => 'name'
 		]);
