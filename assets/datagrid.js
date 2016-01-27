@@ -85,7 +85,7 @@ window.datagridSerializeUrl = function(obj, prefix) {
 ;
 
 datagridSortable = function() {
-  return $('.datagrid [data-sortable]').sortable({
+  $('.datagrid [data-sortable]').sortable({
     handle: '.handle-sort',
     items: 'tr',
     update: function(event, ui) {
@@ -105,6 +105,33 @@ datagridSortable = function() {
         type: 'GET',
         url: url,
         error: function(jqXHR, textStatus, errorThrown) {
+          return alert(jqXHR.statusText);
+        }
+      });
+    }
+  });
+  return $('.datagrid .datagrid-tree[data-sortable-tree]').sortable({
+    handle: '.handle-sort',
+    items: '.datagrid-tree-item',
+    connectedWith: '.datagrid .datagrid-tree[data-sortable-tree]',
+    update: function(event, ui) {
+      var sort, url;
+      sort = $(this).sortable('serialize', {
+        key: "sort[]",
+        attribute: 'data-id',
+        expression: /(.+)/
+      });
+      url = $(this).data('sortable-url');
+      if (url.match(/\?/)) {
+        url = url + '&' + sort;
+      } else {
+        url = url + '?' + sort;
+      }
+      return $.nette.ajax({
+        type: 'GET',
+        url: url,
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.log(jqXHR.statusText);
           return alert(jqXHR.statusText);
         }
       });

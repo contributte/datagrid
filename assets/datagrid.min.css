@@ -22,6 +22,7 @@
 .datagrid table th.col-checkbox{background-color:#f9f9f9}
 .datagrid table td.col-action,.datagrid table th.col-action{white-space:nowrap;width:10px}
 .datagrid .datagrid-tree>.datagrid-tree-item{margin-left:20px}
+.datagrid .datagrid-tree .datagrid-tree-item.ui-sortable-placeholder{visibility:visible!important;background-color:pink!important}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content{display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:space-between;border-bottom:1px solid #ddd;box-sizing:border-box;height:37px}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left,.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right{display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:space-between;align-items:center}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left{order:1}

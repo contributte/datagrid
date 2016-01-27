@@ -66,17 +66,20 @@
 							{/foreach}
 						</div>
 						<div class="datagrid-tree-item-right-actions">
-							<div class="datagrid-tree-item-right-actions-action" n:foreach="$actions as $action">
-								{if $action->hasTemplate()}
-									{include $action->getTemplate(), item => $item}
-								{else}
-									{!$action->render($item)}
-								{/if}
+							<div class="datagrid-tree-item-right-actions-action">
+								{foreach $actions as $action}
+									{if $action->hasTemplate()}
+										{include $action->getTemplate(), item => $item}
+									{else}
+										{!$action->render($item)}
+									{/if}
+								{/foreach}
+
+								<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
+									<span class="{$icon_prefix}arrows"></span>
+								</span>
 							</div>
 						</div>
-						<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
-							<span class="{$icon_prefix}arrows"></span>
-						</span>
 					</div>
 				</div>
 				<div class="datagrid-tree-item-children" style="display: none;">

@@ -150,7 +150,7 @@
 													{if $items_detail->type == 'template'}
 														{include $items_detail->template, item => $item}
 													{else}
-														{!$items_detail->renderer($item)}
+														{!$items_detail->render($item)}
 													{/if}
 												</div>
 											</td>

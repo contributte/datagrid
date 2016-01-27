@@ -99,6 +99,12 @@ class ItemDetail extends Nette\Object
 	}
 
 
+	public function render($item)
+	{
+		return call_user_func($this->getRenderer(), $item);
+	}
+
+
 	public function getPrimaryWhereColumn()
 	{
 		return $this->primary_where_column;
@@ -239,11 +245,11 @@ class ItemDetail extends Nette\Object
 
 	/**
 	 * Set item detail renderer
-	 * @param string $renderer
+	 * @param callable $renderer
 	 */
 	public function setRenderer($renderer)
 	{
-		$this->renderer = (string) $renderer;
+		$this->renderer = $renderer;
 
 		return $this;
 	}
@@ -251,7 +257,7 @@ class ItemDetail extends Nette\Object
 
 	/**
 	 * Get item detail renderer
-	 * @return string
+	 * @return callable
 	 */
 	public function getRenderer()
 	{
