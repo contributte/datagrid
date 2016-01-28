@@ -203,7 +203,7 @@
 			{**
 			* Items per page form (display only besie paginated grido)
 			*}
-			<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'Remove filter'}</a>
+			<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'Reset filter'}</a>
 			{if $control->isPaginated()}
 				{form perPage, class => 'ajax'}
 					{input per_page, data-autosubmit => TRUE, class => 'form-control input-sm'}
