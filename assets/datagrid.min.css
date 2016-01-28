@@ -1,4 +1,7 @@
 @charset "UTF-8";
+@keyframes edited{0%{background-color:#A6E2A9}
+100%{background-color:transparent}
+}
 .pagination{display:inline-block}
 .datagrid{background-color:#fff;padding:1em;box-sizing:border-box}
 .datagrid .exports .btn{margin-left:1em}
@@ -16,6 +19,8 @@
 .datagrid table tbody tr.row-item-detail{display:none}
 .datagrid table tbody tr.row-item-detail.toggled{display:table-row}
 .datagrid table tbody tr.row-item-detail .item-detail-content{display:none}
+.datagrid table tbody tr td[data-datagrid-editable-url].editing textarea{padding:0;margin:-3px}
+.datagrid table tbody tr td[data-datagrid-editable-url].edited{animation-name:edited;animation-duration:1.2s;animation-delay:0}
 .datagrid table td.col-checkbox,.datagrid table th.col-checkbox{padding:0;width:2.1em;text-align:center;vertical-align:middle}
 .datagrid table td.col-checkbox .happy-checkbox,.datagrid table th.col-checkbox .happy-checkbox{margin-right:0}
 .datagrid table td.col-checkbox.col-checkbox-first,.datagrid table th.col-checkbox.col-checkbox-first{border-top-color:transparent}

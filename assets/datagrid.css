@@ -1,5 +1,15 @@
 @charset "UTF-8";
 
+@keyframes edited {
+  0% {
+    background-color: #A6E2A9;
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}
+
 .pagination {
   display: inline-block;
 }
@@ -76,6 +86,17 @@
 
 .datagrid table tbody tr.row-item-detail .item-detail-content {
   display: none;
+}
+
+.datagrid table tbody tr td[data-datagrid-editable-url].editing textarea {
+  padding: 0;
+  margin: -3px;
+}
+
+.datagrid table tbody tr td[data-datagrid-editable-url].edited {
+  animation-name: edited;
+  animation-duration: 1.2s;
+  animation-delay: 0;
 }
 
 .datagrid table th.col-checkbox,

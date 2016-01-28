@@ -274,3 +274,40 @@ $.nette.ext('datagrid.tree', {
     }
   }
 });
+
+$(document).on('click', '[data-datagrid-editable-url]', function(event) {
+  var cell, cell_height, cell_lines, cell_padding, cell_width, line_height, text_height, textarea, value;
+  cell = $(this);
+  if (!cell.hasClass('editing')) {
+    cell.addClass('editing');
+    value = cell.html().trim().replace('<br>', '\n');
+    cell.data('value', value);
+    textarea = $('<textarea class="form-control">' + value + '</textarea>');
+    cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10);
+    cell_height = cell.outerHeight();
+    cell_width = cell.outerWidth();
+    text_height = cell_height - cell_padding;
+    line_height = Math.round(parseFloat(cell.css('line-height')));
+    cell_lines = (cell_height - (2 * cell_padding)) / line_height;
+    textarea.attr('rows', Math.round(cell_lines));
+    textarea.css('width', cell_width);
+    cell.removeClass('edited');
+    cell.html(textarea);
+    return cell.find('textarea').focus().on('blur', function() {
+      value = $(this).val();
+      if (value !== cell.data('value')) {
+        $.nette.ajax({
+          url: cell.data('datagrid-editable-url'),
+          data: {
+            value: value
+          },
+          method: 'POST'
+        }).success(function() {
+          return cell.addClass('edited');
+        });
+      }
+      cell.removeClass('editing');
+      return cell.html(value);
+    });
+  }
+});
