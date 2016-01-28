@@ -168,9 +168,9 @@ $.nette.ext('datagrid.url', {
       if (window.history.pushState) {
         host = window.location.protocol + "//" + window.location.host;
         path = window.location.pathname;
-        query = window.datagridSerializeUrl(payload.state);
+        query = window.datagridSerializeUrl(payload.state).replace(/&+$/gm, '');
         if (query) {
-          url = host + path + "?" + query.replace(/\&$/, '');
+          url = host + path + "?" + query.replace(/\&*$/, '');
         } else {
           url = host + path;
         }
