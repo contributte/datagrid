@@ -185,13 +185,6 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		parent::__construct($parent, $name);
-
-		$this->grid_session = $this->getPresenter()->getSession($this->getName());
-
-		/**
-		 * Try to find previous filters/pagination/sort in session
-		 */
-		$this->findSessionFilters();
 	}
 
 
@@ -201,12 +194,17 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function render()
 	{
-		$this->template->setTranslator($this->getTranslator());
-		/**
-		 * Check whether grido has set some columns, initiated data source, atc
-		 */
-		$this->initCheck();
+		if (!($this->dataModel instanceof DataModel)) {
+			throw new DataGridException('You have to set a data source first.');
+		}
 
+		if (empty($this->columns)) {
+			throw new DataGridException('You have to add at least one column.');
+		}
+
+		$this->template->setTranslator($this->getTranslator());
+
+		
 		/**
 		 * Invoke some possible events
 		 */
@@ -255,18 +253,18 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * Just check whether there are some columns to show etd
 	 * @return void
 	 */
-	public function initCheck()
+	public function attached($presenter)
 	{
-		if (!($this->dataModel instanceof DataModel)) {
-			throw new DataGridException('You have to set a data source first.');
-		}
+    parent::attached($presenter);
 
-		if (empty($this->columns)) {
-			throw new DataGridException('You have to add at least one column.');
-		}
+		$this->grid_session = $this->getPresenter()->getSession($this->getName());
+
+		/**
+		 * Try to find previous filters/pagination/sort in session
+		 */
+		$this->findSessionFilters();
 	}
 
 
