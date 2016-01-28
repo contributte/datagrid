@@ -64,6 +64,11 @@ abstract class Column extends Nette\Object
 	 */
 	protected $template_variables;
 
+	/**
+	 * @var callable
+	 */
+	protected $editable_callback;
+
 
 	public function __construct($column, $name)
 	{
@@ -354,6 +359,38 @@ abstract class Column extends Nette\Object
 	public function getAlign()
 	{
 		return $this->align;
+	}
+
+
+	/**
+	 * Set callback that will be called after inline editing
+	 * @param callable $editable_callback
+	 */
+	public function setEditableCallback(callable $editable_callback)
+	{
+		$this->editable_callback = $editable_callback;
+
+		return $this;
+	}
+
+
+	/**
+	 * Return callback that is used after inline editing
+	 * @return callable
+	 */
+	public function getEditableCallback()
+	{
+		return $this->editable_callback;
+	}
+
+
+	/**
+	 * Is column editable?
+	 * @return boolean
+	 */
+	public function isEditable()
+	{
+		return (bool) $this->getEditableCallback();
 	}
 
 

@@ -101,7 +101,8 @@
 									{var $col = 'col-' . $key}
 									{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
 
-									<td class="{$col} text-{$align}">
+									<td class="{$col} text-{$align}"
+										{if $column->isEditable()} data-datagrid-editable-url={link edit!, key => $key, id => $id_value}{/if}>
 										{if $column->hasTemplate()}
 											{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
 										{else}

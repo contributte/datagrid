@@ -1124,6 +1124,15 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	public function handleEdit($id, $key)
+	{
+		$column = $this->getColumn($key);
+		$value = $this->getPresenter()->getRequest()->getPost('value');
+
+		call_user_func_array($column->getEditableCallback(), [$id, $value]);
+	}
+
+
 	/**
 	 * Redraw $this
 	 * @return void
