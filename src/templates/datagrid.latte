@@ -182,36 +182,38 @@
 	{**
 	 * Bottom row
 	 *}
-	<div n:block="pagination" n:snippet="pagination" n:if="!$control->isTreeView()" class="row-grid-bottom">
-		<div class="col-items">
-			<small class="text-muted" n:if="$control->isPaginated()">
-				({var $paginator = $control['paginator']->getPaginator()}
+	{block pagination}
+		<div n:snippet="pagination" n:if="!$control->isTreeView()" class="row-grid-bottom">
+			<div class="col-items">
+				<small class="text-muted" n:if="$control->isPaginated()">
+					({var $paginator = $control['paginator']->getPaginator()}
 
-				{if $control->getPerPage() === 'all'}
-					{_'Items'}: {_'all'}
-				{else}
-					{_'Items'}: {$paginator->getOffset() + 1} - {sizeof($items) + $paginator->getOffset()}
-					{_'from'} {$paginator->getItemCount()}
-				{/if})
-			</small>
+					{if $control->getPerPage() === 'all'}
+						{_'Items'}: {_'all'}
+					{else}
+						{_'Items'}: {$paginator->getOffset() + 1} - {sizeof($items) + $paginator->getOffset()}
+						{_'from'} {$paginator->getItemCount()}
+					{/if})
+				</small>
+			</div>
+			<div class="col-pagination text-center">
+				{**
+				* Pagination
+				*}
+				{control paginator}
+			</div>
+			<div class="col-per-page text-right">
+				{**
+				* Items per page form (display only besie paginated grido)
+				*}
+				<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'Reset filter'}</a>
+				{if $control->isPaginated()}
+					{form perPage, class => 'ajax'}
+						{input per_page, data-autosubmit => TRUE, class => 'form-control input-sm'}
+						{input submit, class => 'hidden'}
+					{/form}
+				{/if}
+			</div>
 		</div>
-		<div class="col-pagination text-center">
-			{**
-			* Pagination
-			*}
-			{control paginator}
-		</div>
-		<div class="col-per-page text-right">
-			{**
-			* Items per page form (display only besie paginated grido)
-			*}
-			<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'Reset filter'}</a>
-			{if $control->isPaginated()}
-				{form perPage, class => 'ajax'}
-					{input per_page, data-autosubmit => TRUE, class => 'form-control input-sm'}
-					{input submit, class => 'hidden'}
-				{/form}
-			{/if}
-		</div>
-	</div>
+	{/block}
 </div>
