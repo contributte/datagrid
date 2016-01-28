@@ -186,12 +186,18 @@ class DataGrid extends Nette\Application\UI\Control
 
 		parent::__construct($parent, $name);
 
-		$this->grid_session = $this->getPresenter()->getSession($this->getName());
+		$this->grid_session = $this->getPresenter()->getSession($this->getSessionSectionName());
 
 		/**
 		 * Try to find previous filters/pagination/sort in session
 		 */
 		$this->findSessionFilters();
+	}
+
+
+	public function getSessionSectionName()
+	{
+		return $this->getPresenter()->getName() . ':' . $this->getName();
 	}
 
 
