@@ -89,7 +89,7 @@
 }
 
 .datagrid table tbody tr td[data-datagrid-editable-url].editing textarea {
-  padding: 0;
+  padding: 2px;
   margin: -3px;
 }
 

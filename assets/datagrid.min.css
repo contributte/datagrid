@@ -19,7 +19,7 @@
 .datagrid table tbody tr.row-item-detail{display:none}
 .datagrid table tbody tr.row-item-detail.toggled{display:table-row}
 .datagrid table tbody tr.row-item-detail .item-detail-content{display:none}
-.datagrid table tbody tr td[data-datagrid-editable-url].editing textarea{padding:0;margin:-3px}
+.datagrid table tbody tr td[data-datagrid-editable-url].editing textarea{padding:2px;margin:-3px}
 .datagrid table tbody tr td[data-datagrid-editable-url].edited{animation-name:edited;animation-duration:1.2s;animation-delay:0}
 .datagrid table td.col-checkbox,.datagrid table th.col-checkbox{padding:0;width:2.1em;text-align:center;vertical-align:middle}
 .datagrid table td.col-checkbox .happy-checkbox,.datagrid table th.col-checkbox .happy-checkbox{margin-right:0}
