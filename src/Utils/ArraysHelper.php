@@ -45,7 +45,7 @@ final class ArraysHelper extends Nette\Object
 	{
 		foreach ($a as $value) {
 			if (is_array($value) || $value instanceof \Traversable) {
-				if ($this->isArrayTruthy($value)) {
+				if (self::testTruthy($value)) {
 					return TRUE;
 				}
 			} else {
