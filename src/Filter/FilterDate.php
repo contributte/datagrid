@@ -43,24 +43,41 @@ class FilterDate extends Filter
 	}
 
 
+	/**
+	 * Get filter condition
+	 * @return array
+	 */
 	public function getCondition()
 	{
 		return [$this->column => $this->getValue()];
 	}
 
 
+	/**
+	 * Set format for datepicker etc
+	 * @param string $php_format
+	 * @param string $js_format
+	 */
 	public function setFormat($php_format, $js_format)
 	{
 		$this->format = [$php_format, $js_format];
 	}
 
 
+	/**
+	 * Get php format for datapicker
+	 * @return string
+	 */
 	public function getPhpFormat()
 	{
 		return $this->format[0];
 	}
 
 
+	/**
+	 * Get js format for datepicker
+	 * @return string
+	 */
 	public function getJsFormat()
 	{
 		return $this->format[1];

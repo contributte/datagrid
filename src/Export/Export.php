@@ -11,10 +11,9 @@ namespace Ublaboo\DataGrid\Export;
 use Ublaboo\DataGrid\DataGridException,
 	Ublaboo\DataGrid\DataGrid,
 	Nette\Utils\Callback,
-	Nette\Utils\Html,
-	Nette;
+	Nette\Utils\Html;
 
-class Export extends Nette\Object
+class Export extends Ublaboo\DataGrid\Object
 {
 
 	/**
@@ -63,6 +62,11 @@ class Export extends Nette\Object
 	protected $columns = [];
 
 
+	/**
+	 * @param string   $text
+	 * @param callable $callback
+	 * @param mixed    $filtered
+	 */
 	public function __construct($text, $callback, $filtered)
 	{
 		$this->text = $text;
@@ -72,6 +76,10 @@ class Export extends Nette\Object
 	}
 
 
+	/**
+	 * Render export button
+	 * @return Html
+	 */
 	public function render()
 	{
 		$a = Html::el('a', [
@@ -98,6 +106,11 @@ class Export extends Nette\Object
 	}
 
 
+	/**
+	 * Tell export which columns to use when exporting data
+	 * @param array $columns
+	 * @return self
+	 */
 	public function setColumns($columns)
 	{
 		$this->columns = $columns;
@@ -106,12 +119,21 @@ class Export extends Nette\Object
 	}
 
 
+	/**
+	 * Get columns for export
+	 * @return array
+	 */
 	public function getColumns()
 	{
 		return $this->columns;
 	}
 
 
+	/**
+	 * Export signal url
+	 * @param string $link
+	 * @return self
+	 */
 	public function setLink($link)
 	{
 		$this->link = $link;
@@ -120,6 +142,11 @@ class Export extends Nette\Object
 	}
 
 
+	/**
+	 * Set button class
+	 * @param string $class
+	 * @return self
+	 */
 	public function setClass($class)
 	{
 		$this->class = $class;
@@ -128,6 +155,11 @@ class Export extends Nette\Object
 	}
 
 
+	/**
+	 * Set export icon
+	 * @param string $icon
+	 * @return self
+	 */
 	public function setIcon($icon)
 	{
 		$this->icon = $icon;
@@ -136,12 +168,21 @@ class Export extends Nette\Object
 	}
 
 
+	/**
+	 * Get export icon
+	 * @param string $icon
+	 */
 	public function getIcon()
 	{
 		return $this->icon;
 	}
 
 
+	/**
+	 * Set export title
+	 * @param string $title
+	 * @return self
+	 */
 	public function setTitle($title)
 	{
 		$this->title = $title;
@@ -150,12 +191,20 @@ class Export extends Nette\Object
 	}
 
 
+	/**
+	 * Get export title
+	 * @return string
+	 */
 	public function getTitle()
 	{
 		return $this->title;
 	}
 
 
+	/**
+	 * Tell export whether to be called via ajax or not
+	 * @param bool $ajax
+	 */
 	public function setAjax($ajax = TRUE)
 	{
 		$this->ajax = (bool) $ajax;
@@ -164,31 +213,35 @@ class Export extends Nette\Object
 	}
 
 
+	/**
+	 * Is export called via ajax?
+	 * @return bool
+	 */
 	public function isAjax()
 	{
 		return $this->ajax;
 	}
 
 
+	/**
+	 * Is export filtered?
+	 * @return bool
+	 */
 	public function isFiltered()
 	{
 		return $this->filtered;
 	}
 
 
+	/**
+	 * Call export callback
+	 * @param  array    $data
+	 * @param  DataGrid $grid
+	 * @return void
+	 */
 	public function invoke(array $data, DataGrid $grid)
 	{
 		Callback::invokeArgs($this->callback, [$data, $grid]);
-	}
-
-
-	public function __call($name, $args)
-	{
-		$set_method = 'set' . ucfirst($name);
-
-		if (method_exists($this, $set_method)) {
-			return Nette\Utils\Callback::invokeArgs([$this, $set_method], $args);
-		}
 	}
 
 }

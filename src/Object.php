@@ -14,7 +14,7 @@ class Object extends Nette\Object
 {
 
 	/**
-	 * Allow calling $column->icon() instead of $column->setIcon (Same for title, class, ...)
+	 * Allows calling $column->icon() instead of $column->setIcon (Same for title, class, ...)
 	 * @param  string $name
 	 * @param  array  $args
 	 * @return mixed
@@ -24,7 +24,7 @@ class Object extends Nette\Object
 		$method_setter = 'set' . ucfirst($name);
 
 		if (method_exists($this, $method_setter)) {
-			return call_user_func_array([$this, $method_setter], $args);
+			return Nette\Utils\Callback::invokeArgs([$this, $method_setter], $args);
 		}
 
 		parent::__call($name, $args);

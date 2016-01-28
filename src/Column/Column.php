@@ -9,9 +9,9 @@
 namespace Ublaboo\DataGrid\Column;
 
 use Ublaboo\DataGrid\DataGridException,
-	Nette;
+	Ublaboo;
 
-abstract class Column extends Nette\Object
+abstract class Column extends Ublaboo\DataGrid\Object
 {
 
 	/**
@@ -70,6 +70,10 @@ abstract class Column extends Nette\Object
 	protected $editable_callback;
 
 
+	/**
+	 * @param stirng $column
+	 * @param stirng $name
+	 */
 	public function __construct($column, $name)
 	{
 		$this->column = $column;
@@ -77,6 +81,11 @@ abstract class Column extends Nette\Object
 	}
 
 
+	/**
+	 * Render item into template
+	 * @param  mixed $item
+	 * @return mixed
+	 */
 	public function render($item)
 	{
 		/**
@@ -282,6 +291,10 @@ abstract class Column extends Nette\Object
 	}
 
 
+	/**
+	 * Column can have variables that will be passed to custom template scope
+	 * @return array
+	 */
 	public function getTemplateVariables()
 	{
 		return $this->template_variables;
@@ -318,6 +331,10 @@ abstract class Column extends Nette\Object
 	}
 
 
+	/**
+	 * Tell column his sorting options
+	 * @param array $sort
+	 */
 	public function setSort(array $sort)
 	{
 		$this->sort = $sort[$this->column];
@@ -326,6 +343,10 @@ abstract class Column extends Nette\Object
 	}
 
 
+	/**
+	 * What sorting will be applied after next click?
+	 * @return array
+	 */
 	public function getSortNext()
 	{
 		if ($this->sort == 'ASC') {
@@ -338,24 +359,42 @@ abstract class Column extends Nette\Object
 	}
 
 
+	/**
+	 * Is sorting ascending?
+	 * @return boolean
+	 */
 	public function isSortAsc()
 	{
 		return $this->sort == 'ASC';
 	}
 
 
+	/**
+	 * Set column alignment
+	 * @param string $align
+	 */
 	public function setAlign($align)
 	{
 		$this->align = (string) $align;
+
+		return $this;
 	}
 
 
+	/**
+	 * Has column some alignment?
+	 * @return boolean [description]
+	 */
 	public function hasAlign()
 	{
 		return (bool) $this->align;
 	}
 
 
+	/**
+	 * Get column alignment
+	 * @return string
+	 */
 	public function getAlign()
 	{
 		return $this->align;
@@ -391,18 +430,6 @@ abstract class Column extends Nette\Object
 	public function isEditable()
 	{
 		return (bool) $this->getEditableCallback();
-	}
-
-
-	public function __call($name, $args)
-	{
-		$set_method = 'set' . ucfirst($name);
-
-		if (method_exists($this, $set_method)) {
-			return Nette\Utils\Callback::invokeArgs([$this, $set_method], $args);
-		}
-
-		parent::__call($name, $args);
 	}
 
 }

@@ -13,9 +13,17 @@ use DateTime;
 class ColumnDateTime extends Column
 {
 
+	/**
+	 * @var string
+	 */
 	protected $format = 'j. n. Y';
 
 
+	/**
+	 * Format item value as DateTime
+	 * @param  mixed $item
+	 * @return mixed
+	 */
 	public function getColumnValue($item)
 	{
 		$value = parent::getColumnValue($item);
@@ -66,6 +74,10 @@ class ColumnDateTime extends Column
 	}
 
 
+	/**
+	 * Set DateTime format
+	 * @param string $format
+	 */
 	public function setFormat($format)
 	{
 		$this->format = $format;

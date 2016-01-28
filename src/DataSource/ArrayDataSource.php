@@ -8,8 +8,7 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use DibiFluent,
-	Ublaboo\DataGrid\Filter\Filter,
+use Ublaboo\DataGrid\Filter\Filter,
 	Nette\Utils\Callback,
 	Nette\Utils\Strings;
 
@@ -22,7 +21,10 @@ class ArrayDataSource
 	protected $data = [];
 
 
-	public function __construct($data_source)
+	/**
+	 * @param array $data_source
+	 */
+	public function __construct(array $data_source)
 	{
 		$this->data = $data_source;
 	}
@@ -34,6 +36,7 @@ class ArrayDataSource
 
 
 	/**
+	 * Get count of data
 	 * @return int
 	 */
 	public function getCount()
@@ -43,6 +46,8 @@ class ArrayDataSource
 
 
 	/**
+	 * Get the data
+	 * @return array
 	 * @return array
 	 */
 	public function getData()
@@ -52,7 +57,9 @@ class ArrayDataSource
 
 
 	/**
+	 * Filter data
 	 * @param array $filters
+	 * @return self
 	 */
 	public function filter(array $filters)
 	{
@@ -78,6 +85,7 @@ class ArrayDataSource
 
 
 	/**
+	 * Filter data - get one row
 	 * @param array $condition
 	 * @return void
 	 */
@@ -94,8 +102,10 @@ class ArrayDataSource
 
 
 	/**
+	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
+	 * @return self
 	 */
 	public function limit($offset, $limit)
 	{
@@ -105,7 +115,9 @@ class ArrayDataSource
 	}
 
 	/**
+	 * Order data
 	 * @param array $sorting
+	 * @return self
 	 */
 	public function sort(array $sorting)
 	{

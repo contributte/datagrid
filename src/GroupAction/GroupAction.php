@@ -41,6 +41,7 @@ class GroupAction extends Nette\Object
 
 
 	/**
+	 * Get action title
 	 * @return string
 	 */
 	public function getTitle()
@@ -50,6 +51,7 @@ class GroupAction extends Nette\Object
 
 
 	/**
+	 * Get action options
 	 * @return array
 	 */
 	public function getOptions()
@@ -59,6 +61,7 @@ class GroupAction extends Nette\Object
 
 
 	/**
+	 * Has the aciton some options?
 	 * @return boolean
 	 */
 	public function hasOptions()

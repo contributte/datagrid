@@ -34,6 +34,12 @@ class FilterDateRange extends Filter
 	protected $format = ['j. n. Y', 'd. m. yyyy'];
 
 
+	/**
+	 * @param string $key
+	 * @param string $name
+	 * @param string $column
+	 * @param string $name_second
+	 */
 	public function __construct($key, $name, $column, $name_second)
 	{
 		parent::__construct($key, $name, $column);
@@ -94,6 +100,10 @@ class FilterDateRange extends Filter
 	}
 
 
+	/**
+	 * Get filter condition
+	 * @return array
+	 */
 	public function getCondition()
 	{
 		$value = $this->getValue();
@@ -105,18 +115,31 @@ class FilterDateRange extends Filter
 	}
 
 
+	/**
+	 * Set format for datepicker etc
+	 * @param string $php_format
+	 * @param string $js_format
+	 */
 	public function setFormat($php_format, $js_format)
 	{
 		$this->format = [$php_format, $js_format];
 	}
 
 
+	/**
+	 * Get php format for datapicker
+	 * @return string
+	 */
 	public function getPhpFormat()
 	{
 		return $this->format[0];
 	}
 
 
+	/**
+	 * Get js format for datepicker
+	 * @return string
+	 */
 	public function getJsFormat()
 	{
 		return $this->format[1];

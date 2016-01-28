@@ -13,6 +13,11 @@ use Nette;
 final class ArraysHelper extends Nette\Object
 {
 
+	/**
+	 * Test recursively whether given array is empty
+	 * @param  array $array
+	 * @return bool
+	 */
 	public static function testEmpty($array)
 	{
 		foreach ($array as $key => $value) {
@@ -28,6 +33,29 @@ final class ArraysHelper extends Nette\Object
 		}
 
 		return TRUE;
+	}
+
+
+	/**
+	 * Is array and its values truthy?
+	 * @param  array   $a
+	 * @return boolean
+	 */
+	public static function testTruthy($a)
+	{
+		foreach ($a as $value) {
+			if (is_array($value) || $value instanceof \Traversable) {
+				if ($this->isArrayTruthy($value)) {
+					return TRUE;
+				}
+			} else {
+				if ($value !== '' && $value !== NULL) {
+					return TRUE;
+				}
+			}
+		}
+
+		return FALSE;
 	}
 
 }

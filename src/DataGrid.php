@@ -176,6 +176,10 @@ class DataGrid extends Nette\Application\UI\Control
 	private $items_detail = [];
 
 
+	/**
+	 * @param Nette\ComponentModel\IContainer|null $parent
+	 * @param string                               $name
+	 */
 	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
 		if (!$parent) {
@@ -195,6 +199,10 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Find some unique session key name
+	 * @return string
+	 */
 	public function getSessionSectionName()
 	{
 		return $this->getPresenter()->getName() . ':' . $this->getName();
@@ -350,27 +358,9 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function isFilterActive()
 	{
-		$is_filter = $this->isArrayTruthy($this->filter);
+		$is_filter = ArraysHelper::testTruthy($this->filter);
 
 		return ($is_filter) || $this->force_filter_active;
-	}
-
-
-	public function isArrayTruthy($a)
-	{
-		foreach ($a as $value) {
-			if (is_array($value) || $value instanceof \Traversable) {
-				if ($this->isArrayTruthy($value)) {
-					return TRUE;
-				}
-			} else {
-				if ($value !== '' && $value !== NULL) {
-					return TRUE;
-				}
-			}
-		}
-
-		return FALSE;
 	}
 
 
@@ -500,6 +490,11 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Setting tree view
+	 * @param callable $get_children_callback
+	 * @param string   $tree_view_has_children_column
+	 */
 	public function setTreeView($get_children_callback, $tree_view_has_children_column = 'has_children')
 	{
 		if (!is_callable($get_children_callback)) {
@@ -1116,6 +1111,11 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Handler for getting item detail
+	 * @param  mixed $id
+	 * @return void
+	 */
 	public function handleGetItemDetail($id)
 	{
 		$this->template->toggle_detail = $id;
@@ -1130,6 +1130,12 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Handler for inline editing
+	 * @param  mixed $id
+	 * @param  mixed $key
+	 * @return void
+	 */
 	public function handleEdit($id, $key)
 	{
 		$column = $this->getColumn($key);
@@ -1351,24 +1357,40 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Get primary key of datagrid data source
+	 * @return string
+	 */
 	public function getPrimaryKey()
 	{
 		return $this->primary_key;
 	}
 
 
+	/**
+	 * Get set of set columns
+	 * @return array
+	 */
 	public function getColumns()
 	{
 		return $this->columns;
 	}
 
 
+	/**
+	 * Has datagrid some group actions?
+	 * @return boolean
+	 */
 	public function hasGroupActions()
 	{
 		return (bool) $this->group_action_collection;
 	}
 
 
+	/**
+	 * Get translator for datagrid
+	 * @return Nette\Localization\ITranslator
+	 */
 	public function getTranslator()
 	{
 		if (!$this->translator) {
@@ -1379,6 +1401,10 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Set datagrid translator
+	 * @param Nette\Localization\ITranslator $translator
+	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator)
 	{
 		$this->translator = $translator;
@@ -1387,18 +1413,30 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Should be datagrid filters rendered separately?
+	 * @param boolean $out
+	 */
 	public function setOuterFilterRendering($out = TRUE)
 	{
 		$this->outer_filter_rendering = (bool) $out;
 	}
 
 
+	/**
+	 * Are datagrid filters rendered separately?
+	 * @return boolean
+	 */
 	public function hasOuterFilterRendering()
 	{
 		return $this->outer_filter_rendering;
 	}
 
 
+	/**
+	 * Set order of datagrid columns
+	 * @param array $order
+	 */
 	public function setColumnsOrder($order)
 	{
 		$new_order = [];
@@ -1417,13 +1455,21 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	public function setRememberState($remember)
+	/**
+	 * Should datagrid remember its filters/pagination/etc using session?
+	 * @param bool $remember
+	 */
+	public function setRememberState($remember = TRUE)
 	{
 		$this->remember_state = (bool) $remember;
 	}
 
 
-	public function setRefreshUrl($refresh)
+	/**
+	 * Should datagrid refresh url using history API?
+	 * @param bool $refresh
+	 */
+	public function setRefreshUrl($refresh = TRUE)
 	{
 		$this->refresh_url = (bool) $refresh;
 	}

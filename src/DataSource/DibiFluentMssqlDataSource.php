@@ -31,7 +31,11 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	protected $primary_key;
 
 
-	public function __construct($data_source, $primary_key)
+	/**
+	 * @param DibiFluent $data_source
+	 * @param string $primary_key
+	 */
+	public function __construct(DibiFluent $data_source, $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
@@ -44,6 +48,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 
 	/**
+	 * Get count of data
 	 * @return int
 	 */
 	public function getCount()
@@ -56,8 +61,9 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 
 	/**
+	 * Get the data
 	 * @param array $condition
-	 * @return void
+	 * @return self
 	 */
 	public function filterOne(array $condition)
 	{
@@ -67,6 +73,11 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	}
 
 
+	/**
+	 * Filter by date
+	 * @param  Filter\FilterDate $filter
+	 * @return void
+	 */
 	public function applyFilterDate(Filter\FilterDate $filter)
 	{
 		$conditions = $filter->getCondition();
@@ -79,6 +90,11 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	}
 
 
+	/**
+	 * Filter by date range
+	 * @param  Filter\FilterDateRange $filter
+	 * @return void
+	 */
 	public function applyFilterDateRange(Filter\FilterDateRange $filter)
 	{
 		$conditions = $filter->getCondition();
@@ -96,6 +112,11 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	}
 
 
+	/**
+	 * Filter by date
+	 * @param  Filter\FilterDate $filter
+	 * @return void
+	 */
 	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$condition = $filter->getCondition();
@@ -113,9 +134,10 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 
 	/**
+	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
-	 * @return void
+	 * @return self
 	 */
 	public function limit($offset, $limit)
 	{

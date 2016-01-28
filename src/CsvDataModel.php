@@ -22,6 +22,10 @@ class CsvDataModel
 	protected $columns;
 
 
+	/**
+	 * @param array $data
+	 * @param array $columns
+	 */
 	public function __construct(array $data, array $columns)
 	{
 		$this->data = $data;
@@ -30,6 +34,7 @@ class CsvDataModel
 
 
 	/**
+	 * Get data with header and "body"
 	 * @return array
 	 */
 	public function getSimpleData($include_header = TRUE)
@@ -48,6 +53,10 @@ class CsvDataModel
 	}
 
 
+	/**
+	 * Get data header
+	 * @return array
+	 */
 	public function getHeader()
 	{
 		$header = [];
@@ -60,6 +69,11 @@ class CsvDataModel
 	}
 
 
+	/**
+	 * Get item values saved into row
+	 * @param  mixed $item
+	 * @return array
+	 */
 	public function getRow($item)
 	{
 		$row = [];

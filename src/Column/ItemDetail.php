@@ -9,10 +9,10 @@
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html,
-	Nette,
-	Ublaboo\DataGrid\DataGrid;
+	Ublaboo\DataGrid\DataGrid,
+	Ublaboo;
 
-class ItemDetail extends Nette\Object
+class ItemDetail extends Ublaboo\DataGrid\Object
 {
 
 	/**
@@ -62,6 +62,10 @@ class ItemDetail extends Nette\Object
 	protected $primary_where_column;
 
 
+	/**
+	 * @param DataGrid $grid
+	 * @param string   $primary_where_column
+	 */
 	public function __construct(DataGrid $grid, $primary_where_column)
 	{
 		$this->grid = $grid;
@@ -69,6 +73,11 @@ class ItemDetail extends Nette\Object
 	}
 
 
+	/**
+	 * Render item detail button
+	 * @param  mixed $item
+	 * @return Html
+	 */
 	public function renderButton($item)
 	{
 		if (is_object($item)) {
@@ -99,12 +108,21 @@ class ItemDetail extends Nette\Object
 	}
 
 
+	/**
+	 * Render item detail
+	 * @param  mixed $item
+	 * @return mixed
+	 */
 	public function render($item)
 	{
 		return call_user_func($this->getRenderer(), $item);
 	}
 
 
+	/**
+	 * Get primary column for where clause
+	 * @return string
+	 */
 	public function getPrimaryWhereColumn()
 	{
 		return $this->primary_where_column;

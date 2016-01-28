@@ -24,6 +24,12 @@ class FilterSelect extends Filter
 	protected $template = 'datagrid_filter_select.latte';
 
 
+	/**
+	 * @param string $key
+	 * @param string $name
+	 * @param string $optionas
+	 * @param string $column
+	 */
 	public function __construct($key, $name, array $options, $column)
 	{
 		parent::__construct($key, $name, $column);
@@ -42,6 +48,10 @@ class FilterSelect extends Filter
 	}
 
 
+	/**
+	 * Get filter condition
+	 * @return array
+	 */
 	public function getCondition()
 	{
 		return [$this->column => $this->getValue()];

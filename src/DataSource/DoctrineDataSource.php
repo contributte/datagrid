@@ -9,7 +9,7 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use DibiFluent,
+use Doctrine\ORM\QueryBuilder,
 	Ublaboo\DataGrid\Filter,
 	Nette\Utils\Callback,
 	Nette\Utils\Strings,
@@ -19,7 +19,7 @@ class DoctrineDataSource implements IDataSource
 {
 
 	/**
-	 * @var Doctrine\ORM\QueryBuilder
+	 * @var QueryBuilder
 	 */
 	protected $data_source;
 
@@ -39,11 +39,16 @@ class DoctrineDataSource implements IDataSource
 	protected $placeholder = 0;
 
 
-	public function __construct($data_source, $primary_key)
+	/**
+	 * @param QueryBuilder $data_source
+	 * @param string       $primary_key
+	 */
+	public function __construct(QueryBuilder $data_source, $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
 	}
+
 
 	/**
 	 * @return Doctrine\ORM\Query
@@ -60,6 +65,7 @@ class DoctrineDataSource implements IDataSource
 
 
 	/**
+	 * Get count of data
 	 * @return int
 	 */
 	public function getCount()
@@ -71,6 +77,7 @@ class DoctrineDataSource implements IDataSource
 	}
 
 	/**
+	 * Get the data
 	 * @return array
 	 */
 	public function getData()
@@ -83,8 +90,9 @@ class DoctrineDataSource implements IDataSource
 
 
 	/**
+	 * Filter data
 	 * @param array $filters
-	 * @return void
+	 * @return self
 	 */
 	public function filter(array $filters)
 	{
@@ -118,8 +126,9 @@ class DoctrineDataSource implements IDataSource
 
 
 	/**
+	 * Filter data - get one row
 	 * @param array $condition
-	 * @return void
+	 * @return self
 	 */
 	public function filterOne(array $condition)
 	{
@@ -134,6 +143,35 @@ class DoctrineDataSource implements IDataSource
 	}
 
 
+	/**
+	 * Filter by date
+	 * @param  Filter\FilterDate $filter
+	 * @return void
+	 */
+	public function applyFilterDate(Filter\FilterDate $filter)
+	{
+		$p1 = $this->getPlaceholder();
+		$p2 = $this->getPlaceholder();
+
+		foreach ($filter->getCondition() as $column => $value) {
+			$date = \DateTime::createFromFormat($filter->getPhpFormat(), $value);
+
+			$this->data_source
+				->andWhere("$column >= ?$p1")
+				->andWhere("$column <= ?$p2")
+				->setParameter($p1, $date->format('Y-m-d 00:00:00'))
+				->setParameter($p2, $date->format('Y-m-d 23:59:59'));
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Filter by date range
+	 * @param  Filter\FilterDateRange $filter
+	 * @return void
+	 */
 	public function applyFilterDateRange(Filter\FilterDateRange $filter)
 	{
 		$conditions = $filter->getCondition();
@@ -162,6 +200,11 @@ class DoctrineDataSource implements IDataSource
 	}
 
 
+	/**
+	 * Filter by range
+	 * @param  Filter\FilterRange $filter
+	 * @return void
+	 */
 	public function applyFilterRange(Filter\FilterRange $filter)
 	{
 		$conditions = $filter->getCondition();
@@ -182,6 +225,11 @@ class DoctrineDataSource implements IDataSource
 	}
 
 
+	/**
+	 * Filter by keyword
+	 * @param  Filter\FilterText $filter
+	 * @return void
+	 */
 	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$condition = $filter->getCondition();
@@ -210,6 +258,11 @@ class DoctrineDataSource implements IDataSource
 	}
 
 
+	/**
+	 * Filter by select value
+	 * @param  Filter\FilterSelect $filter
+	 * @return void
+	 */
 	public function applyFilterSelect(Filter\FilterSelect $filter)
 	{
 		$p = $this->getPlaceholder();
@@ -221,29 +274,11 @@ class DoctrineDataSource implements IDataSource
 	}
 
 
-	public function applyFilterDate(Filter\FilterDate $filter)
-	{
-		$p1 = $this->getPlaceholder();
-		$p2 = $this->getPlaceholder();
-
-		foreach ($filter->getCondition() as $column => $value) {
-			$date = \DateTime::createFromFormat($filter->getPhpFormat(), $value);
-
-			$this->data_source
-				->andWhere("$column >= ?$p1")
-				->andWhere("$column <= ?$p2")
-				->setParameter($p1, $date->format('Y-m-d 00:00:00'))
-				->setParameter($p2, $date->format('Y-m-d 23:59:59'));
-		}
-
-		return $this;
-	}
-
-
 	/**
+	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
-	 * @return void
+	 * @return self
 	 */
 	public function limit($offset, $limit)
 	{
@@ -253,6 +288,11 @@ class DoctrineDataSource implements IDataSource
 	}
 
 
+	/**
+	 * Order data
+	 * @param  array  $sorting
+	 * @return self
+	 */
 	public function sort(array $sorting)
 	{
 		$alias = current($this->data_source->getDQLPart('from'))->getAlias();
@@ -274,6 +314,10 @@ class DoctrineDataSource implements IDataSource
 	}
 
 
+	/**
+	 * Get unique int value for each instance class (self)
+	 * @return int
+	 */
 	public function getPlaceholder()
 	{
 		$this->placeholder++;

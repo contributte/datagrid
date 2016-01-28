@@ -8,16 +8,21 @@
 
 namespace Ublaboo\DataGrid;
 
+use Ublaboo\DataGrid\DataSource\IDataSource;
+
 class DataModel
 {
 
 	/**
-	 * @var DataSource\IDataSource
+	 * @var IDataSource
 	 */
 	protected $data_source;
 
 
-	public function __construct($data_source)
+	/**
+	 * @param IDataSource $data_source
+	 */
+	public function __construct(IDataSource $data_source)
 	{
 		$this->data_source = $data_source;
 	}
@@ -25,7 +30,7 @@ class DataModel
 
 	/**
 	 * Return dat asource
-	 * @return DataSource\IDataSource
+	 * @return IDataSource
 	 */
 	public function getDataSource()
 	{
@@ -64,6 +69,11 @@ class DataModel
 	}
 
 
+	/**
+	 * Filter one row
+	 * @param  array  $condition
+	 * @return mixed
+	 */
 	public function filterRow(array $condition)
 	{
 		return $this->data_source->filterOne($condition)->getData();

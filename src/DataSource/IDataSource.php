@@ -12,18 +12,21 @@ interface IDataSource
 {
 
 	/**
+	 * Get count of data
 	 * @return int
 	 */
 	public function getCount();
 
 
 	/**
+	 * Get the data
 	 * @return array
 	 */
 	public function getData();
 
 
 	/**
+	 * Filter data
 	 * @param array $filters
 	 * @return void
 	 */
@@ -31,6 +34,7 @@ interface IDataSource
 
 
 	/**
+	 * Filter data - get one row
 	 * @param array $filter
 	 * @return void
 	 */
@@ -38,6 +42,7 @@ interface IDataSource
 
 
 	/**
+	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
 	 * @return void
@@ -46,6 +51,7 @@ interface IDataSource
 
 
 	/**
+	 * Order data
 	 * @param array $sorting
 	 * @return void
 	 */

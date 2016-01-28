@@ -8,7 +8,8 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette\Utils\Html;
+use Nette\Utils\Html,
+	Ublaboo\DataGrid\DataGrid;
 
 class ColumnLink extends Column
 {
@@ -24,7 +25,7 @@ class ColumnLink extends Column
 	protected $class;
 
 	/**
-	 * @var Giatn\DataGrid\DataGrid
+	 * @var DataGrid
 	 */
 	protected $grid;
 
@@ -39,7 +40,14 @@ class ColumnLink extends Column
 	protected $href;
 
 
-	public function __construct($grid, $column, $name, $href, $params)
+	/**
+	 * @param DataGrid $grid
+	 * @param string $column
+	 * @param string $name
+	 * @param string $href
+	 * @param array $params
+	 */
+	public function __construct(DataGrid $grid, $column, $name, $href, $params)
 	{
 		parent::__construct($column, $name);
 
@@ -49,6 +57,11 @@ class ColumnLink extends Column
 	}
 
 
+	/**
+	 * Render link for item
+	 * @param  mixed $item
+	 * @return mixed
+	 */
 	public function render($item)
 	{
 		/**

@@ -25,6 +25,10 @@ class Renderer extends Nette\Object
 	protected $condition_callback;
 
 
+	/**
+	 * @param callable      $callback
+	 * @param callable|NULL $condition_callback
+	 */
 	public function __construct($callback, $condition_callback)
 	{
 		$this->callback = $callback;
@@ -32,12 +36,20 @@ class Renderer extends Nette\Object
 	}
 
 
+	/**
+	 * Get custom renderer callback
+	 * @return callable
+	 */
 	public function getCallback()
 	{
 		return $this->callback;
 	}
 
 
+	/**
+	 * Get custom renderer condition callback
+	 * @return callable|NULL
+	 */
 	public function getConditionCallback()
 	{
 		return $this->condition_callback;

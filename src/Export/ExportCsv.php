@@ -31,6 +31,11 @@ class ExportCsv extends Export
 	protected $name;
 
 
+	/**
+	 * @param string $text
+	 * @param string $csv_file_name
+	 * @param bool   $filtered
+	 */
 	public function __construct($text, $csv_file_name, $filtered)
 	{
 		$this->text = $text;
@@ -39,6 +44,12 @@ class ExportCsv extends Export
 	}
 
 
+	/**
+	 * Call export callback
+	 * @param  array    $data
+	 * @param  DataGrid $grid
+	 * @return void
+	 */
 	public function invoke(array $data, DataGrid $grid)
 	{
 		$columns = $this->getColumns() ?: $grid->getColumns();

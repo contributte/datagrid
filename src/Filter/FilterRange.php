@@ -29,6 +29,12 @@ class FilterRange extends Filter
 	protected $template = 'datagrid_filter_range.latte';
 
 
+	/**
+	 * @param string $key
+	 * @param string $name
+	 * @param string $column
+	 * @param string $name_second
+	 */
 	public function __construct($key, $name, $column, $name_second)
 	{
 		parent::__construct($key, $name, $column);
@@ -79,6 +85,10 @@ class FilterRange extends Filter
 	}
 
 
+	/**
+	 * Get filter condition
+	 * @return array
+	 */
 	public function getCondition()
 	{
 		$value = $this->getValue();

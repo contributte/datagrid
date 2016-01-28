@@ -19,6 +19,9 @@ class SimpleTranslator extends Nette\Object implements Nette\Localization\ITrans
 	private $dictionary;
 
 
+	/**
+	 * @param array $dictionary
+	 */
 	public function __construct($dictionary = NULL)
 	{
 		if (is_array($dictionary)) {
@@ -41,6 +44,10 @@ class SimpleTranslator extends Nette\Object implements Nette\Localization\ITrans
 	}
 
 
+	/**
+	 * Set translator dictionary
+	 * @param array $dictionary
+	 */
 	public function setDictionary(array $dictionary)
 	{
 		$this->dictionary = $dictionary;

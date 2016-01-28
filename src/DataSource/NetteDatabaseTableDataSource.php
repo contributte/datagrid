@@ -8,16 +8,16 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use DibiFluent,
+use Nette\Database\Table\Selection,
 	Nette\Utils\Callback,
 	Nette\Utils\Strings,
 	Ublaboo\DataGrid\Filter;
 
-class NetteDatabaseTableDataSource
+class NetteDatabaseTableDataSource implements IDataSource
 {
 
 	/**
-	 * @var DibiFluent
+	 * @var Selection
 	 */
 	protected $data_source;
 
@@ -32,7 +32,11 @@ class NetteDatabaseTableDataSource
 	protected $primary_key;
 
 
-	public function __construct($data_source, $primary_key)
+	/**
+	 * @param Selection $data_source
+	 * @param string $primary_key
+	 */
+	public function __construct(Selection $data_source, $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
@@ -45,6 +49,7 @@ class NetteDatabaseTableDataSource
 
 
 	/**
+	 * Get count of data
 	 * @return int
 	 */
 	public function getCount()
@@ -54,6 +59,7 @@ class NetteDatabaseTableDataSource
 
 
 	/**
+	 * Get the data
 	 * @return array
 	 */
 	public function getData()
@@ -63,8 +69,9 @@ class NetteDatabaseTableDataSource
 
 
 	/**
+	 * Filter data
 	 * @param array $filters
-	 * @return void
+	 * @return self
 	 */
 	public function filter(array $filters)
 	{
@@ -98,8 +105,9 @@ class NetteDatabaseTableDataSource
 
 
 	/**
+	 * Filter data - get one row
 	 * @param array $condition
-	 * @return void
+	 * @return self
 	 */
 	public function filterOne(array $condition)
 	{
@@ -109,6 +117,26 @@ class NetteDatabaseTableDataSource
 	}
 
 
+	/**
+	 * Filter by date
+	 * @param  Filter\FilterDate $filter
+	 * @return void
+	 */
+	public function applyFilterDate(Filter\FilterDate $filter)
+	{
+		$conditions = $filter->getCondition();
+
+		$date = \DateTime::createFromFormat($filter->getPhpFormat(), $conditions[$filter->getColumn()]);
+
+		$this->data_source->where("DATE({$filter->getColumn()}) = ?", $date->format('Y-m-d'));
+	}
+
+
+	/**
+	 * Filter by date range
+	 * @param  Filter\FilterDateRange $filter
+	 * @return void
+	 */
 	public function applyFilterDateRange(Filter\FilterDateRange $filter)
 	{
 		$conditions = $filter->getCondition();
@@ -132,6 +160,11 @@ class NetteDatabaseTableDataSource
 	}
 
 
+	/**
+	 * Filter by range
+	 * @param  Filter\FilterRange $filter
+	 * @return void
+	 */
 	public function applyFilterRange(Filter\FilterRange $filter)
 	{
 		$conditions = $filter->getCondition();
@@ -149,6 +182,11 @@ class NetteDatabaseTableDataSource
 	}
 
 
+	/**
+	 * Filter by keyword
+	 * @param  Filter\FilterText $filter
+	 * @return void
+	 */
 	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$or = [];
@@ -196,23 +234,19 @@ class NetteDatabaseTableDataSource
 	}
 
 
+	/**
+	 * Filter by select value
+	 * @param  Filter\FilterSelect $filter
+	 * @return void
+	 */
 	public function applyFilterSelect(Filter\FilterSelect $filter)
 	{
 		$this->data_source->where($filter->getCondition());
 	}
 
 
-	public function applyFilterDate(Filter\FilterDate $filter)
-	{
-		$conditions = $filter->getCondition();
-
-		$date = \DateTime::createFromFormat($filter->getPhpFormat(), $conditions[$filter->getColumn()]);
-
-		$this->data_source->where("DATE({$filter->getColumn()}) = ?", $date->format('Y-m-d'));
-	}
-
-
 	/**
+	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
 	 * @return void
@@ -225,6 +259,11 @@ class NetteDatabaseTableDataSource
 	}
 
 
+	/**
+	 * Order data
+	 * @param  array  $sorting
+	 * @return self
+	 */
 	public function sort(array $sorting)
 	{
 		if ($sorting) {

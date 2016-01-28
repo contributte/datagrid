@@ -55,6 +55,11 @@ abstract class Filter extends Nette\Object
 	protected $template;
 
 
+	/**
+	 * @param string $key
+	 * @param string $name
+	 * @param string $column
+	 */
 	public function __construct($key, $name, $column)
 	{
 		$this->key = $key;
@@ -63,12 +68,20 @@ abstract class Filter extends Nette\Object
 	}
 
 
+	/**
+	 * Get filter key
+	 * @return mixed
+	 */
 	public function getKey()
 	{
 		return $this->key;
 	}
 
 
+	/**
+	 * Get filter name
+	 * @return string
+	 */
 	public function getName()
 	{
 		return $this->name;

@@ -55,7 +55,13 @@ class Action extends Column
 	protected $confirm;
 
 
-	public function __construct($grid, $href, $name, $params)
+	/**
+	 * @param DataGrid $grid
+	 * @param string   $href
+	 * @param string   $name
+	 * @param array    $params
+	 */
+	public function __construct(DataGrid $grid, $href, $name, $params)
 	{
 		$this->grid = $grid;
 		$this->href = $href;
@@ -66,6 +72,11 @@ class Action extends Column
 	}
 
 
+	/**
+	 * Render action for item into template
+	 * @param  mixed $item
+	 * @return mixed
+	 */
 	public function render($item)
 	{
 		/**

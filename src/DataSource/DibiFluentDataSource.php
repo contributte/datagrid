@@ -13,7 +13,7 @@ use DibiFluent,
 	Nette\Utils\Strings,
 	Ublaboo\DataGrid\Filter;
 
-class DibiFluentDataSource
+class DibiFluentDataSource implements IDataSource
 {
 
 	/**
@@ -32,7 +32,11 @@ class DibiFluentDataSource
 	protected $primary_key;
 
 
-	public function __construct($data_source, $primary_key)
+	/**
+	 * @param DibiFluent $data_source
+	 * @param string $primary_key
+	 */
+	public function __construct(DibiFluent $data_source, $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
@@ -45,6 +49,7 @@ class DibiFluentDataSource
 
 
 	/**
+	 * Get count of data
 	 * @return int
 	 */
 	public function getCount()
@@ -54,6 +59,7 @@ class DibiFluentDataSource
 
 
 	/**
+	 * Get the data
 	 * @return array
 	 */
 	public function getData()
@@ -63,8 +69,9 @@ class DibiFluentDataSource
 
 
 	/**
+	 * Filter data
 	 * @param array $filters
-	 * @return void
+	 * @return self
 	 */
 	public function filter(array $filters)
 	{
@@ -98,8 +105,9 @@ class DibiFluentDataSource
 
 
 	/**
+	 * Filter data - get one row
 	 * @param array $condition
-	 * @return void
+	 * @return self
 	 */
 	public function filterOne(array $condition)
 	{
@@ -109,6 +117,26 @@ class DibiFluentDataSource
 	}
 
 
+	/**
+	 * Filter by date
+	 * @param  Filter\FilterDate $filter
+	 * @return void
+	 */
+	public function applyFilterDate(Filter\FilterDate $filter)
+	{
+		$conditions = $filter->getCondition();
+
+		$date = \DateTime::createFromFormat($filter->getPhpFormat(), $conditions[$filter->getColumn()]);
+
+		$this->data_source->where('DATE(%n) = ?', $filter->getColumn(), $date->format('Y-m-d'));
+	}
+
+
+	/**
+	 * Filter by date range
+	 * @param  Filter\FilterDateRange $filter
+	 * @return void
+	 */
 	public function applyFilterDateRange(Filter\FilterDateRange $filter)
 	{
 		$conditions = $filter->getCondition();
@@ -132,6 +160,11 @@ class DibiFluentDataSource
 	}
 
 
+	/**
+	 * Filter by range
+	 * @param  Filter\FilterRange $filter
+	 * @return void
+	 */
 	public function applyFilterRange(Filter\FilterRange $filter)
 	{
 		$conditions = $filter->getCondition();
@@ -149,6 +182,11 @@ class DibiFluentDataSource
 	}
 
 
+	/**
+	 * Filter by keyword
+	 * @param  Filter\FilterText $filter
+	 * @return void
+	 */
 	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$condition = $filter->getCondition();
@@ -176,26 +214,22 @@ class DibiFluentDataSource
 	}
 
 
+	/**
+	 * Filter by select value
+	 * @param  Filter\FilterSelect $filter
+	 * @return void
+	 */
 	public function applyFilterSelect(Filter\FilterSelect $filter)
 	{
 		$this->data_source->where($filter->getCondition());
 	}
 
 
-	public function applyFilterDate(Filter\FilterDate $filter)
-	{
-		$conditions = $filter->getCondition();
-
-		$date = \DateTime::createFromFormat($filter->getPhpFormat(), $conditions[$filter->getColumn()]);
-
-		$this->data_source->where('DATE(%n) = ?', $filter->getColumn(), $date->format('Y-m-d'));
-	}
-
-
 	/**
+	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
-	 * @return void
+	 * @return self
 	 */
 	public function limit($offset, $limit)
 	{
@@ -205,6 +239,11 @@ class DibiFluentDataSource
 	}
 
 
+	/**
+	 * Order data
+	 * @param  array  $sorting
+	 * @return self
+	 */
 	public function sort(array $sorting)
 	{
 		if ($sorting) {

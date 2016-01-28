@@ -11,6 +11,9 @@ namespace Ublaboo\DataGrid\Column;
 class ColumnNumber extends Column
 {
 
+	/**
+	 * @var array
+	 */
 	protected $number_format = [
 		0,   // Decimals
 		'.', // Decimal point
@@ -18,6 +21,11 @@ class ColumnNumber extends Column
 	];
 
 
+	/**
+	 * Formatitem value
+	 * @param  mixd  $item
+	 * @return mixed
+	 */
 	public function getColumnValue($item)
 	{
 		$value = parent::getColumnValue($item);
@@ -35,6 +43,12 @@ class ColumnNumber extends Column
 	}
 
 
+	/**
+	 * Set number format
+	 * @param int    $decimals
+	 * @param string $dec_point
+	 * @param string $thousands_sep
+	 */
 	public function setFormat($decimals = 0, $dec_point = '.', $thousands_sep = ' ')
 	{
 		$this->number_format = [$decimals, $dec_point, $thousands_sep];
