@@ -160,7 +160,7 @@
 							{/if}
 						{/foreach}
 						<tr n:if="!$items">
-							<td colspan="{$column_count}">
+							<td colspan="{$control->getColumnsCount()}">
 								{if $filter_active}
 									{_'No items found. You can reset the filter'} <a class="link ajax" n:href="resetFilter!">{_'zde'}</a>.
 								{else}
