@@ -122,23 +122,27 @@ datagridSortable = function() {
     toleranceElement: '> .datagrid-tree-item-content',
     connectedWith: '.datagrid .datagrid-tree[data-sortable-tree]',
     update: function(event, ui) {
-      var sort, url;
-      sort = $(this).sortable('serialize', {
-        key: "sort[]",
-        attribute: 'data-id',
-        expression: /(.+)/
-      });
-      url = $(this).data('sortable-url');
-      if (url.match(/\?/)) {
-        url = url + '&' + sort;
-      } else {
-        url = url + '?' + sort;
+      var id, next_id, prev_id, row, url;
+      row = ui.item.closest('.datagrid-tree-item[data-id]');
+      id = row.data('id');
+      prev_id = null;
+      next_id = null;
+      if (row.prev().length) {
+        prev_id = row.prev().data('id');
       }
+      if (row.next().length) {
+        next_id = row.next().data('id');
+      }
+      url = $(this).data('sortable-url');
       return $.nette.ajax({
         type: 'GET',
         url: url,
+        data: {
+          id: id,
+          prev_id: prev_id,
+          next_id: next_id
+        },
         error: function(jqXHR, textStatus, errorThrown) {
-          console.log(jqXHR.statusText);
           return alert(jqXHR.statusText);
         }
       });
