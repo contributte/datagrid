@@ -4769,6 +4769,8 @@ datagridSortable = function() {
   return $('.datagrid .datagrid-tree[data-sortable-tree]').sortable({
     handle: '.handle-sort',
     items: '.datagrid-tree-item',
+    connectWith: '.datagrid-tree-item-children',
+    toleranceElement: '> .datagrid-tree-item-content',
     connectedWith: '.datagrid .datagrid-tree[data-sortable-tree]',
     update: function(event, ui) {
       var sort, url;
@@ -4792,7 +4794,7 @@ datagridSortable = function() {
         }
       });
     }
-  });
+  }).disableSelection();
 };
 
 datagridSortable();
