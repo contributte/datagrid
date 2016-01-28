@@ -185,6 +185,9 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		parent::__construct($parent, $name);
+    $this->monitor('Nette\Application\UI\Presenter');
+
+
 	}
 
 
@@ -204,7 +207,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->template->setTranslator($this->getTranslator());
 
-		
+
 		/**
 		 * Invoke some possible events
 		 */
@@ -255,16 +258,18 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @return void
 	 */
-	public function attached($presenter)
+	protected function attached($presenter)
 	{
-    parent::attached($presenter);
+		if ($presenter instanceof Nette\Application\UI\Presenter) {
+			$this->grid_session = $this->getPresenter()->getSession($this->getName());
 
-		$this->grid_session = $this->getPresenter()->getSession($this->getName());
+			/**
+			 * Try to find previous filters/pagination/sort in session
+			 */
+			$this->findSessionFilters();
+		}
 
-		/**
-		 * Try to find previous filters/pagination/sort in session
-		 */
-		$this->findSessionFilters();
+		parent::attached($presenter);
 	}
 
 
