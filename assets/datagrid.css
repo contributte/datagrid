@@ -133,7 +133,7 @@
 
 .datagrid .datagrid-tree .datagrid-tree-item.ui-sortable-placeholder {
   visibility: visible !important;
-  background-color: pink !important;
+  background-color: rgba(70, 83, 93, 0.1);
 }
 
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content {

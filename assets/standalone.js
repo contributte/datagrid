@@ -4773,16 +4773,21 @@ datagridSortable = function() {
     toleranceElement: '> .datagrid-tree-item-content',
     connectedWith: '.datagrid .datagrid-tree[data-sortable-tree]',
     update: function(event, ui) {
-      var id, next_id, prev_id, row, url;
+      var id, next_id, parent, parent_id, prev_id, row, url;
       row = ui.item.closest('.datagrid-tree-item[data-id]');
       id = row.data('id');
       prev_id = null;
       next_id = null;
+      parent_id = null;
       if (row.prev().length) {
         prev_id = row.prev().data('id');
       }
       if (row.next().length) {
         next_id = row.next().data('id');
+      }
+      parent = row.parent().closest('.datagrid-tree-item');
+      if (parent.length) {
+        parent_id = parent.data('id');
       }
       url = $(this).data('sortable-url');
       return $.nette.ajax({
@@ -4791,12 +4796,16 @@ datagridSortable = function() {
         data: {
           id: id,
           prev_id: prev_id,
-          next_id: next_id
+          next_id: next_id,
+          parent_id: parent_id
         },
         error: function(jqXHR, textStatus, errorThrown) {
           return alert(jqXHR.statusText);
         }
       });
+    },
+    start: function(event, ui) {
+      return console.log(ui.item);
     }
   }).disableSelection();
 };
