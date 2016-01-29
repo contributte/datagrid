@@ -197,8 +197,6 @@ class DataGrid extends Nette\Application\UI\Control
 		parent::attached($presenter);
 
 		if ($presenter instanceof Nette\Application\UI\Presenter) {
-			$this->loadState($presenter->popGlobalParameters($this->getUniqueId()));
-
 			/**
 			 * Get session
 			 */
