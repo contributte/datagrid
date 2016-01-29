@@ -176,19 +176,9 @@ class DataGrid extends Nette\Application\UI\Control
 	private $items_detail = [];
 
 
-	/**
-	 * @param Nette\ComponentModel\IContainer|null $parent
-	 * @param string                               $name
-	 */
-	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
+	public function attached($presenter)
 	{
-		if (!$parent) {
-			throw new DataGridException(
-				'Please create instance of DataGrid throw factory, or with [$parent] in constructor argument'
-			);
-		}
-
-		parent::__construct($parent, $name);
+		parent::attached($presenter);
 
 		$this->grid_session = $this->getPresenter()->getSession($this->getSessionSectionName());
 
@@ -215,11 +205,18 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function render()
 	{
-		$this->template->setTranslator($this->getTranslator());
 		/**
-		 * Check whether grido has set some columns, initiated data source, atc
+		 * Check whether datagrid has set some columns, initiated data source, etc
 		 */
-		$this->initCheck();
+		if (!($this->dataModel instanceof DataModel)) {
+			throw new DataGridException('You have to set a data source first.');
+		}
+
+		if (empty($this->columns)) {
+			throw new DataGridException('You have to add at least one column.');
+		}
+
+		$this->template->setTranslator($this->getTranslator());
 
 		/**
 		 * Invoke some possible events
@@ -265,22 +262,6 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Set template file and render it
 		 */
 		$this->template->setFile($this->getTemplateFile())->render();
-	}
-
-
-	/**
-	 * Just check whether there are some columns to show etd
-	 * @return void
-	 */
-	public function initCheck()
-	{
-		if (!($this->dataModel instanceof DataModel)) {
-			throw new DataGridException('You have to set a data source first.');
-		}
-
-		if (empty($this->columns)) {
-			throw new DataGridException('You have to add at least one column.');
-		}
 	}
 
 
