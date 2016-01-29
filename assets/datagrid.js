@@ -123,6 +123,7 @@ datagridSortable = function() {
     connectedWith: '.datagrid .datagrid-tree[data-sortable-tree]',
     update: function(event, ui) {
       var id, next_id, parent, parent_id, prev_id, row, url;
+      $('.toggle-tree-to-delete').remove();
       row = ui.item.closest('.datagrid-tree-item[data-id]');
       id = row.data('id');
       prev_id = null;
@@ -153,8 +154,17 @@ datagridSortable = function() {
         }
       });
     },
+    stop: function() {
+      return $('.toggle-tree-to-delete').removeClass('toggle-tree-to-delete');
+    },
     start: function(event, ui) {
-      return console.log(ui.item);
+      var parent;
+      parent = ui.item.parent().closest('.datagrid-tree-item');
+      if (parent.length) {
+        if (parent.find('.datagrid-tree-item').length === 2) {
+          return parent.find('[data-toggle-tree]').addClass('toggle-tree-to-delete');
+        }
+      }
     }
   }).disableSelection();
 };
