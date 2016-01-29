@@ -176,16 +176,39 @@ class DataGrid extends Nette\Application\UI\Control
 	private $items_detail = [];
 
 
+	/**
+	 * @param Nette\ComponentModel\IContainer|NULL $parent
+	 * @param string                               $name
+	 */
+	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
+	{
+		parent::__construct($parent, $name);
+
+		$this->monitor('Nette\Application\UI\Presenter');
+	}
+
+
+	/**
+	 * {inheritDoc}
+	 * @return void
+	 */
 	public function attached($presenter)
 	{
 		parent::attached($presenter);
 
-		$this->grid_session = $this->getPresenter()->getSession($this->getSessionSectionName());
+		if ($presenter instanceof Nette\Application\UI\Presenter) {
+			$this->loadState($presenter->popGlobalParameters($this->getUniqueId()));
 
-		/**
-		 * Try to find previous filters/pagination/sort in session
-		 */
-		$this->findSessionFilters();
+			/**
+			 * Get session
+			 */
+			$this->grid_session = $this->getPresenter()->getSession($this->getSessionSectionName());
+
+			/**
+			 * Try to find previous filters/pagination/sort in session
+			 */
+			$this->findSessionFilters();
+		}
 	}
 
 
