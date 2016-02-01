@@ -836,6 +836,8 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		foreach ($this->filter as $key => $value) {
 			if (!isset($this->filters[$key])) {
+				$this->deleteSesssionData($key);
+
 				continue;
 			}
 
