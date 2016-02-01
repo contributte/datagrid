@@ -42,12 +42,12 @@ class DataGridPaginator extends Nette\Application\UI\Control
 
 	public function getTemplateFile()
 	{
-		return $this->template_file ?: __DIR__ . '/templates/data_grid_paginator.latte';
+		return $this->template_file ?: __DIR__.'/templates/data_grid_paginator.latte';
 	}
 
 
 	/**
-	 * @return Nette\Paginator
+	 * @return Nette\Utils\Paginator
 	 */
 	public function getPaginator()
 	{

@@ -8,8 +8,8 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette\Utils\Html,
-	Ublaboo\DataGrid\DataGrid;
+use Nette\Utils\Html;
+use Ublaboo\DataGrid\DataGrid;
 
 class ColumnLink extends Column
 {
@@ -105,7 +105,6 @@ class ColumnLink extends Column
 
 	/**
 	 * Get attribute title
-	 * @param string $title
 	 */
 	public function getTitle()
 	{
@@ -127,7 +126,6 @@ class ColumnLink extends Column
 
 	/**
 	 * Get attribute class
-	 * @param string $class
 	 */
 	public function getClass()
 	{

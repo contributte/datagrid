@@ -35,7 +35,6 @@ class SimpleTranslator extends Nette\Object implements Nette\Localization\ITrans
 	 * 
 	 * @param  string
 	 * @param  int
-	 * @param  array $args
 	 * @return string
 	 */
 	public function translate($message, $count = NULL)
