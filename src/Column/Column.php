@@ -8,8 +8,8 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Ublaboo\DataGrid\DataGridException,
-	Ublaboo;
+use Ublaboo\DataGrid\DataGridException;
+use Ublaboo;
 
 abstract class Column extends Ublaboo\DataGrid\Object
 {
@@ -71,8 +71,8 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 
 	/**
-	 * @param stirng $column
-	 * @param stirng $name
+	 * @param string $column
+	 * @param string $name
 	 */
 	public function __construct($column, $name)
 	{
@@ -187,7 +187,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	/**
 	 * Set column replacements
 	 * @param  array $replacements
-	 * @return void
+	 * @return Column
 	 */
 	public function setReplacement(array $replacements)
 	{
@@ -235,19 +235,19 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	public function setRenderer($renderer, $condition_callback = NULL)
 	{
 		if ($this->hasReplacements()) {
-			throw new DataGridException (
+			throw new DataGridException(
 				"Use either Column::setReplacement() or Column::setRenderer, not both."
 			);
 		}
 
 		if (!is_callable($renderer)) {
-			throw new DataGridException (
+			throw new DataGridException(
 				"Renderer (method Column::setRenderer()) must be callable."
 			);
 		}
 
 		if (NULL != $condition_callback && !is_callable($condition_callback)) {
-			throw new DataGridException (
+			throw new DataGridException(
 				"Renderer (method Column::setRenderer()) must be callable."
 			);
 		}
@@ -270,7 +270,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Return custom renderer callback
-	 * @return callable
+	 * @return Renderer|null
 	 */
 	public function getRenderer()
 	{

@@ -8,9 +8,8 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use DibiFluent,
-	Nette\Utils\Callback,
-	Ublaboo\DataGrid\Filter;
+use DibiFluent;
+use Ublaboo\DataGrid\Filter;
 
 class DibiFluentMssqlDataSource extends DibiFluentDataSource
 {
@@ -114,7 +113,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 	/**
 	 * Filter by date
-	 * @param  Filter\FilterDate $filter
+	 * @param  Filter\FilterText $filter
 	 * @return void
 	 */
 	public function applyFilterText(Filter\FilterText $filter)

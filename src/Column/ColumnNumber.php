@@ -15,7 +15,7 @@ class ColumnNumber extends Column
 	 * @var array
 	 */
 	protected $number_format = [
-		0,   // Decimals
+		0, // Decimals
 		'.', // Decimal point
 		' '  // Thousands separator
 	];

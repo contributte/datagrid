@@ -8,11 +8,10 @@
 
 namespace Ublaboo\DataGrid\Export;
 
-use Ublaboo\DataGrid\DataGridException,
-	Ublaboo\DataGrid\DataGrid,
-	Nette\Utils\Callback,
-	Nette\Utils\Html,
-	Ublaboo;
+use Ublaboo\DataGrid\DataGrid;
+use Nette\Utils\Callback;
+use Nette\Utils\Html;
+use Ublaboo;
 
 class Export extends Ublaboo\DataGrid\Object
 {
@@ -66,7 +65,7 @@ class Export extends Ublaboo\DataGrid\Object
 	/**
 	 * @param string   $text
 	 * @param callable $callback
-	 * @param mixed    $filtered
+	 * @param boolean    $filtered
 	 */
 	public function __construct($text, $callback, $filtered)
 	{
@@ -90,7 +89,7 @@ class Export extends Ublaboo\DataGrid\Object
 		]);
 
 		if ($this->icon) {
-			$a->add(Html::el('span')->class(DataGrid::$icon_prefix . $this->icon));
+			$a->add(Html::el('span')->class(DataGrid::$icon_prefix.$this->icon));
 
 			if (strlen($this->text)) {
 				$a->add('&nbsp;');
@@ -171,7 +170,6 @@ class Export extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Get export icon
-	 * @param string $icon
 	 */
 	public function getIcon()
 	{

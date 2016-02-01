@@ -8,9 +8,9 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Ublaboo\DataGrid\Filter\Filter,
-	Nette\Utils\Callback,
-	Nette\Utils\Strings;
+use Ublaboo\DataGrid\Filter\Filter;
+use Nette\Utils\Callback;
+use Nette\Utils\Strings;
 
 class ArrayDataSource
 {
@@ -87,7 +87,7 @@ class ArrayDataSource
 	/**
 	 * Filter data - get one row
 	 * @param array $condition
-	 * @return void
+	 * @return ArrayDataSource
 	 */
 	public function filterOne(array $condition)
 	{
@@ -143,8 +143,8 @@ class ArrayDataSource
 			}
 
 			$this->data = array();
-			foreach($data as $i) {
-				foreach($i as $item) {
+			foreach ($data as $i) {
+				foreach ($i as $item) {
 					$this->data[] = $item;
 				}
 			}

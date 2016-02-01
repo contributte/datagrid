@@ -21,7 +21,7 @@ class Object extends Nette\Object
 	 */
 	public function __call($name, $args)
 	{
-		$method_setter = 'set' . ucfirst($name);
+		$method_setter = 'set'.ucfirst($name);
 
 		if (method_exists($this, $method_setter)) {
 			return Nette\Utils\Callback::invokeArgs([$this, $method_setter], $args);

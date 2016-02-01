@@ -27,7 +27,7 @@ class FilterSelect extends Filter
 	/**
 	 * @param string $key
 	 * @param string $name
-	 * @param string $optionas
+	 * @param string $options
 	 * @param string $column
 	 */
 	public function __construct($key, $name, array $options, $column)
