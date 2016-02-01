@@ -25,7 +25,7 @@
 					{var $i = 0}
 					<div class="col-sm-6" n:foreach="$filters as $f">
 						{**
-						 * Each fitlers are rendered separately in their own templates
+						 * Each fitler is rendered separately in its own template
 						 *}
 						{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
 						{var $i = $i+1}
@@ -60,25 +60,35 @@
 						<th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
 							<input class="happy gray-border primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
-						{foreach $columns as $column_key => $column}
+						{foreach $columns as $key => $column}
 							{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
 							<th class="col-{$column->getColumnName()} text-{$align}">
-								{if $column->isSortable()}
-									<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()">
-										{$column->getName()}
-										{if $column->isSortedBy()}
-											<span n:class="$column->isSortAsc() ? 'fa-caret-up' : 'fa-caret-down', 'fa'"></span>
-										{else}
-											<span class="fa fa-sort"></span>
-										{/if}
-									</a>
+								{var $col_header = 'col-' . $key . '-header'}
+
+								{**
+								 * Column header can be defined also with block {col-<key>-header}
+								 *}
+								{ifset #$col_header}
+									{include #$col_header, column => $column}
 								{else}
-									{$column->getName()}
-								{/if}
-								{if !$control->hasOuterFilterRendering() && isset($filters[$column_key])}
+									{if $column->isSortable()}
+										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()">
+											{$column->getName()}
+											{if $column->isSortedBy()}
+												<span n:class="$column->isSortAsc() ? 'fa-caret-up' : 'fa-caret-down', 'fa'"></span>
+											{else}
+												<span class="fa fa-sort"></span>
+											{/if}
+										</a>
+									{else}
+										{$column->getName()}
+									{/if}
+								{/ifset}
+
+								{if !$control->hasOuterFilterRendering() && isset($filters[$key])}
 									<hr>
-									{var $i = $filter['filter'][$column_key]}
-									{include $filters[$column_key]->getTemplate(), filter => $filters[$column_key], input => $i, outer => FALSE}
+									{var $i = $filter['filter'][$key]}
+									{include $filters[$key]->getTemplate(), filter => $filters[$key], input => $i, outer => FALSE}
 								{/if}
 							</th>
 						{/foreach}
