@@ -835,6 +835,10 @@ class DataGrid extends Nette\Application\UI\Control
 	public function assableFilters()
 	{
 		foreach ($this->filter as $key => $value) {
+			if (!isset($this->filters[$key])) {
+				continue;
+			}
+
 			if (is_array($value) || $value instanceof \Traversable) {
 				if (!ArraysHelper::testEmpty($value)) {
 					$this->filters[$key]->setValue($value);
