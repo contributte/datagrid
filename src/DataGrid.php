@@ -247,7 +247,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Prepare data for rendering (datagrid may render just one item)
 		 */
-		if ($this->redraw_item) {
+		if (!empty($this->redraw_item)) {
 			$this->template->items = $this->dataModel->filterRow($this->redraw_item);
 		} else {
 			$this->template->items = Nette\Utils\Callback::invokeArgs(
@@ -1172,6 +1172,7 @@ class DataGrid extends Nette\Application\UI\Control
 			foreach ($snippets as $snippet) {
 				$this->redrawControl($snippet);
 			}
+
 			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 		} else {
 			$this->getPresenter()->redirect('this');
@@ -1296,8 +1297,10 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$values = $form->getValues();
 
-		if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
-			return;
+		if ($this->getPresenter()->isAjax()) {
+			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
+				return;
+			}
 		}
 
 		$values = $values['filter'];

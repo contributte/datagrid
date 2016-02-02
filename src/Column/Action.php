@@ -181,7 +181,7 @@ class Action extends Column
 
 	/**
 	 * Set confirm dialog
-	 * @param string $messgae
+	 * @param string $message
 	 * @param string $column
 	 */
 	public function setConfirm($message, $column = NULL)

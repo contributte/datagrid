@@ -4649,7 +4649,7 @@ document.addEventListener('DOMContentLoaded', function() {
   return window.happy.init();
 });
 
-var datagridSortable;
+var datagridSortable, datagridSortableTree;
 
 $(document).on('change', 'select[data-autosubmit]', function() {
   return $(this).closest('form').submit();
@@ -4736,7 +4736,7 @@ window.datagridSerializeUrl = function(obj, prefix) {
 ;
 
 datagridSortable = function() {
-  $('.datagrid [data-sortable]').sortable({
+  return $('.datagrid [data-sortable]').sortable({
     handle: '.handle-sort',
     items: 'tr',
     update: function(event, ui) {
@@ -4766,12 +4766,27 @@ datagridSortable = function() {
       });
     }
   });
-  return $('.datagrid .datagrid-tree[data-sortable-tree]').sortable({
+};
+
+datagridSortable();
+
+
+/*datagridSortableTree = ->
+	$('.datagrid-tree-items').sortable({
+		handle: '.handle-sort',
+		items: '.datagrid-tree-item',
+		connectWith: '.datagrid-tree-items'
+	})
+
+datagridSortableTree()
+ */
+
+datagridSortableTree = function() {
+  return $('.datagrid-tree-item-children').sortable({
     handle: '.handle-sort',
     items: '.datagrid-tree-item',
-    connectWith: '.datagrid-tree-item-children',
     toleranceElement: '> .datagrid-tree-item-content',
-    connectedWith: '.datagrid .datagrid-tree[data-sortable-tree]',
+    connectWith: '.datagrid-tree-item-children',
     update: function(event, ui) {
       var id, next_id, parent, parent_id, prev_id, row, url;
       $('.toggle-tree-to-delete').remove();
@@ -4791,6 +4806,7 @@ datagridSortable = function() {
         parent_id = parent.data('id');
       }
       url = $(this).data('sortable-url');
+      datagridSortableTree;
       return $.nette.ajax({
         type: 'GET',
         url: url,
@@ -4820,11 +4836,40 @@ datagridSortable = function() {
   }).disableSelection();
 };
 
-datagridSortable();
+datagridSortableTree();
 
 $.nette.ext('datagrid.happy', {
   success: function() {
-    return window.happy.reset();
+    var c, checked_rows, class_selector, classes, event, grid, grids, i, input, j, len, len1, results;
+    window.happy.reset();
+    grids = $('.datagrid');
+    results = [];
+    for (i = 0, len = grids.length; i < len; i++) {
+      grid = grids[i];
+      classes = grid.classList;
+      class_selector = '';
+      for (j = 0, len1 = classes.length; j < len1; j++) {
+        c = classes[j];
+        class_selector = class_selector + '.' + c;
+      }
+      checked_rows = document.querySelectorAll(class_selector + ' ' + 'input[data-check]:checked');
+      if (checked_rows.length === 1 && checked_rows[0].getAttribute('name') === 'toggle-all') {
+        input = document.querySelector(class_selector + ' input[name=toggle-all]');
+        console.log(class_selector + ' input[name=toggle-all]');
+        if (input) {
+          input.checked = false;
+          event = new Event('change', {
+            'bubbles': true
+          });
+          results.push(input.dispatchEvent(event));
+        } else {
+          results.push(void 0);
+        }
+      } else {
+        results.push(void 0);
+      }
+    }
+    return results;
   }
 });
 

@@ -79,7 +79,7 @@ class GroupActionCollection extends Nette\Object
 		$values = $form->getValues();
 		$values = $values['group_action'];
 
-		if ($values->group_action === 0) {
+		if ($values->group_action === 0 || is_null($values->group_action)) {
 			return;
 		}
 
