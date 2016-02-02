@@ -175,6 +175,14 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	private $items_detail = [];
 
+	/**
+	 * @var array
+	 */
+	private $row_conditions = [
+		'group_action' => FALSE,
+		'action' => []
+	];
+
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -226,6 +234,8 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function render()
 	{
+		$rows = [];
+
 		/**
 		 * Check whether datagrid has set some columns, initiated data source, etc
 		 */
@@ -248,9 +258,9 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Prepare data for rendering (datagrid may render just one item)
 		 */
 		if (!empty($this->redraw_item)) {
-			$this->template->items = $this->dataModel->filterRow($this->redraw_item);
+			$items = $this->dataModel->filterRow($this->redraw_item);
 		} else {
-			$this->template->items = Nette\Utils\Callback::invokeArgs(
+			$items = Nette\Utils\Callback::invokeArgs(
 				[$this->dataModel, 'filterData'],
 				[
 					$this->getPaginator(),
@@ -260,9 +270,15 @@ class DataGrid extends Nette\Application\UI\Control
 			);
 		}
 
+		foreach ($items as $item) {
+			$rows[] = new Row($this, $item, $this->getPrimaryKey());
+		}
+
 		if ($this->isTreeView()) {
 			$this->template->tree_view_has_children_column = $this->tree_view_has_children_column;
 		}
+
+		$this->template->rows = $rows;
 
 		$this->template->columns = $this->columns;
 		$this->template->actions = $this->actions;
@@ -275,7 +291,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->template->items_detail = $this->items_detail;
 
 		/**
-		 * Walkaround for Latte (does not know $form in snippet in {form} atc)
+		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
 		 */
 		$this->template->filter = $this['filter'];
 
@@ -1597,6 +1613,34 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return $count;
+	}
+
+
+	public function allowRowsGroupAction(callable $condition)
+	{
+		$this->row_conditions['group_action'] = $condition;
+	}
+
+
+	public function allowRowsAction($key, callable $condition)
+	{
+		$this->row_conditions['action'][$key] = $condition;
+	}
+
+
+	public function getRowCondition($name, $key = NULL)
+	{
+		if (!isset($this->row_conditions[$name])) {
+			return FALSE;
+		}
+
+		$condition = $this->row_conditions[$name];
+
+		if (!$key) {
+			return $condition;
+		}
+
+		return isset($condition[$key]) ? $condition[$key] : FALSE;
 	}
 
 }

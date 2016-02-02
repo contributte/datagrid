@@ -4,7 +4,7 @@
  * @param array    $exports           Available exports
  * @param array    $filters           Available filters
  * @param Form     $filter            Walkaround for latte (does not know $form in snippet in foreach, etc)
- * @param array    $items             List of items from data source
+ * @param Row[]    $rows              List of rows (each contain a item from data source)
  * @param DataGrid $control           Parent (DataGrid)
  * @param string   $original_template Original template file path
  * @param string   $icon_prefix       Icon prefix (fa fa-)
@@ -100,19 +100,20 @@
 
 				<tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink sort!}"{/}>
 					{snippetArea items}
-						{foreach $items as $item}
-							{var $id_value = is_object($item) ? $item->{$control->getPrimaryKey()} : $item[$control->getPrimaryKey()]}
-
-							<tr data-id="{$id_value}" n:snippet="item-{$id_value}">
+						{foreach $rows as $row}
+							{var $item = $row->getItem()}
+							<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}">
 								<td n:if="$control->hasGroupActions()" class="col-checkbox">
-									<input class="happy gray-border primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$id_value}]">
+									{if $row->hasGroupAction()}
+										<input class="happy gray-border primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$row->getId()}]">
+									{/if}
 								</td>
 								{foreach $columns as $key => $column}
 									{var $col = 'col-' . $key}
 									{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
 
 									<td class="{$col} text-{$align}"
-										{if $column->isEditable()} data-datagrid-editable-url={link edit!, key => $key, id => $id_value}{/if}>
+										{if $column->isEditable()} data-datagrid-editable-url={link edit!, key => $key, id => $row->getId()}{/if}>
 										{if $column->hasTemplate()}
 											{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
 										{else}
@@ -129,11 +130,13 @@
 									</td>
 								{/foreach}
 								<td n:if="$actions || $control->isSortable() || $items_detail" class="col-action">
-									{foreach $actions as $action}
-										{if $action->hasTemplate()}
-											{include $action->getTemplate(), item => $item}
-										{else}
-											{!$action->render($item)}
+									{foreach $actions as $key => $action}
+										{if $row->hasAction($key)}
+											{if $action->hasTemplate()}
+												{include $action->getTemplate(), item => $item}
+											{else}
+												{!$action->render($item)}
+											{/if}
 										{/if}
 									{/foreach}
 									<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
@@ -149,8 +152,8 @@
 							 * Item detail
 							 *}
 							{if $items_detail}
-								<tr class="row-item-detail item-detail-{$id_value}" n:snippet="item-{$id_value}-detail">
-									{if isset($toggle_detail) && $toggle_detail == $id_value}
+								<tr class="row-item-detail item-detail-{$row->getId()}" n:snippet="item-{$row->getId()}-detail">
+									{if isset($toggle_detail) && $toggle_detail == $row->getId()}
 										{ifset #detail}
 											<td colspan="{$control->getColumnsCount()}">
 												<div class="item-detail-content">{include #detail, item => $item}</div>
@@ -171,7 +174,7 @@
 							{/if}
 						{/foreach}
 						{block noItems}
-						<tr n:if="!$items">
+						<tr n:if="!$rows">
 							<td colspan="{$control->getColumnsCount()}">
 								{if $filter_active}
 									{_'No items found. You can reset the filter'} <a class="link ajax" n:href="resetFilter!">{_'here'}</a>.
@@ -201,7 +204,7 @@
 					{if $control->getPerPage() === 'all'}
 						{_'Items'}: {_'all'}
 					{else}
-						{_'Items'}: {$paginator->getOffset() + 1} - {sizeof($items) + $paginator->getOffset()}
+						{_'Items'}: {$paginator->getOffset() + 1} - {sizeof($rows) + $paginator->getOffset()}
 						{_'from'} {$paginator->getItemCount()}
 					{/if})
 				</small>
