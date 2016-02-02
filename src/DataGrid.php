@@ -8,9 +8,9 @@
 
 namespace Ublaboo\DataGrid;
 
-use Nette,
-	Ublaboo\DataGrid\Utils\ArraysHelper,
-	Nette\Application\UI\Form;
+use Nette;
+use Ublaboo\DataGrid\Utils\ArraysHelper;
+use Nette\Application\UI\Form;
 
 class DataGrid extends Nette\Application\UI\Control
 {
@@ -216,7 +216,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getSessionSectionName()
 	{
-		return $this->getPresenter()->getName() . ':' . $this->getName();
+		return $this->getPresenter()->getName().':'.$this->getName();
 	}
 
 
@@ -340,7 +340,7 @@ class DataGrid extends Nette\Application\UI\Control
 		} else if ($source instanceof Nette\Database\Table\Selection) {
 			$data_source = new DataSource\NetteDatabaseTableDataSource($source, $this->primary_key);
 
-		}  else if ($source instanceof \Kdyby\Doctrine\QueryBuilder) {
+		} else if ($source instanceof \Kdyby\Doctrine\QueryBuilder) {
 			$data_source = new DataSource\DoctrineDataSource($source, $this->primary_key);
 
 		} else {
@@ -430,7 +430,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getOriginalTemplateFile()
 	{
-		return __DIR__ . '/templates/datagrid.latte';
+		return __DIR__.'/templates/datagrid.latte';
 	}
 
 
@@ -517,7 +517,7 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Set tree view template file
 		 */
 		if (!$this->template_file) {
-			$this->setTemplateFile(__DIR__ . '/templates/datagrid_tree.latte');
+			$this->setTemplateFile(__DIR__.'/templates/datagrid_tree.latte');
 		}
 
 		return $this;
@@ -830,7 +830,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Fill array of Filter\Filter[] with values from $this->filter persistent parameter
 	 * Fill array of Column\Column[] with values from $this->sort   persistent parameter
-	 * @return array $this->filters === Filter\Filter[]
+	 * @return Filter\Filter[] $this->filters === Filter\Filter[]
 	 */
 	public function assableFilters()
 	{
@@ -982,7 +982,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Get collection of all group actions
-	 * @return array
+	 * @return GroupAction\GroupActionCollection
 	 */
 	public function getGroupActionCollection()
 	{
@@ -1188,7 +1188,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function redrawItem($id, $primary_where_column = NULL)
 	{
-		$this->redraw_item = [($primary_where_column?: $this->primary_key) => $id];
+		$this->redraw_item = [($primary_where_column ?: $this->primary_key) => $id];
 
 		$this->redrawControl('items');
 		$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
@@ -1290,7 +1290,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set $this->filter values after filter form submitted
 	 * @param  Form $form
-	 * @param  Nette\Utils\ArrayHash     $values
 	 * @return void
 	 */
 	public function filterSucceeded(Form $form)
@@ -1380,7 +1379,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Get set of set columns
-	 * @return array
+	 * @return Column\IColumn[]
 	 */
 	public function getColumns()
 	{

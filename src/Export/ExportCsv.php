@@ -8,9 +8,9 @@
 
 namespace Ublaboo\DataGrid\Export;
 
-use Ublaboo\DataGrid\CsvDataModel,
-	Ublaboo\DataGrid\DataGrid,
-	Ublaboo\Responses\CSVResponse;
+use Ublaboo\DataGrid\CsvDataModel;
+use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\Responses\CSVResponse;
 
 class ExportCsv extends Export
 {

@@ -8,10 +8,9 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Nette\Database\Table\Selection,
-	Nette\Utils\Callback,
-	Nette\Utils\Strings,
-	Ublaboo\DataGrid\Filter;
+use Nette\Database\Table\Selection;
+use Nette\Utils\Callback;
+use Ublaboo\DataGrid\Filter;
 
 class NetteDatabaseTableDataSource implements IDataSource
 {
@@ -201,7 +200,7 @@ class NetteDatabaseTableDataSource implements IDataSource
 				
 			$property_reflection = $reflection->getProperty('context');
 			$property_reflection->setAccessible(TRUE);
-			$context =  $property_reflection->getValue($this->data_source);
+			$context = $property_reflection->getValue($this->data_source);
 			$driver = $context->getConnection()->getSupplementalDriver();
 			$formatLike = [$driver, 'formatLike'];
 
@@ -213,7 +212,7 @@ class NetteDatabaseTableDataSource implements IDataSource
 				$args[] = "%$word%";
 			}
 
-			$like = substr($like, 0, strlen($like) - 4) . ')';
+			$like = substr($like, 0, strlen($like) - 4).')';
 
 			$or[] = $like;
 			$big_or .= "$like OR ";
@@ -223,7 +222,7 @@ class NetteDatabaseTableDataSource implements IDataSource
 		$query = array_merge($or, $args);
 
 		if (sizeof($or) > 1) {
-			$big_or = substr($big_or, 0, strlen($big_or) - 4) . ')';
+			$big_or = substr($big_or, 0, strlen($big_or) - 4).')';
 
 			$query = array_merge([$big_or], $big_or_args);
 
@@ -249,7 +248,7 @@ class NetteDatabaseTableDataSource implements IDataSource
 	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
-	 * @return void
+	 * @return NetteDatabaseTableDataSource
 	 */
 	public function limit($offset, $limit)
 	{

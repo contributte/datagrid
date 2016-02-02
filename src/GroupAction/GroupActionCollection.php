@@ -8,8 +8,8 @@
 
 namespace Ublaboo\DataGrid\GroupAction;
 
-use Nette,
-	Nette\Application\UI\Form;
+use Nette;
+use Nette\Application\UI\Form;
 
 class GroupActionCollection extends Nette\Object
 {
@@ -26,6 +26,8 @@ class GroupActionCollection extends Nette\Object
 	/**
 	 * Get assambled form
 	 * @param  Nette\Forms\Container $group_action_container
+	 * @param Form $form
+	 * @param Nette\Localization\ITranslator $translator
 	 * @return void
 	 */
 	public function addToFormContainer($group_action_container, $form, $translator = NULL)
@@ -46,13 +48,13 @@ class GroupActionCollection extends Nette\Object
 		foreach ($this->group_actions as $id => $action) {
 			if ($action->hasOptions()) {
 				$group_action_container->addSelect($id, '', $action->getOptions())
-					->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id);
+					->setAttribute('id', static::ID_ATTRIBUTE_PREFIX.$id);
 			}
 		}
 
 		foreach ($this->group_actions as $id => $action) {
 			$group_action_container['group_action']->addCondition(Form::EQUAL, $id)
-				->toggle(static::ID_ATTRIBUTE_PREFIX . $id);
+				->toggle(static::ID_ATTRIBUTE_PREFIX.$id);
 		}
 
 		$group_action_container['group_action']->addCondition(Form::FILLED)

@@ -8,9 +8,9 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette\Utils\Html,
-	Ublaboo\DataGrid\DataGrid,
-	Ublaboo;
+use Nette\Utils\Html;
+use Ublaboo\DataGrid\DataGrid;
+use Ublaboo;
 
 class ItemDetail extends Ublaboo\DataGrid\Object
 {
@@ -92,7 +92,7 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 			->data('toggle-detail-grid', $this->grid->getName());
 
 		if ($this->icon) {
-			$a->add(Html::el('span')->class(DataGrid::$icon_prefix . $this->icon));
+			$a->add(Html::el('span')->class(DataGrid::$icon_prefix.$this->icon));
 			
 			if (strlen($this->text)) {
 				$a->add('&nbsp;');
@@ -275,7 +275,7 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Get item detail renderer
-	 * @return callable
+	 * @return string
 	 */
 	public function getRenderer()
 	{

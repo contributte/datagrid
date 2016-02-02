@@ -8,8 +8,8 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette\Utils\Html,
-	Ublaboo\DataGrid\DataGrid;
+use Nette\Utils\Html;
+use Ublaboo\DataGrid\DataGrid;
 
 class Action extends Column
 {
@@ -96,7 +96,7 @@ class Action extends Column
 			->href($this->grid->getPresenter()->link($this->href, $this->getItemParams($item)));
 
 		if ($this->icon) {
-			$a->add(Html::el('span')->class(DataGrid::$icon_prefix . $this->icon));
+			$a->add(Html::el('span')->class(DataGrid::$icon_prefix.$this->icon));
 			
 			if (strlen($this->name)) {
 				$a->add('&nbsp;');

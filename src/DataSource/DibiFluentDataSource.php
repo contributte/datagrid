@@ -8,10 +8,10 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use DibiFluent,
-	Nette\Utils\Callback,
-	Nette\Utils\Strings,
-	Ublaboo\DataGrid\Filter;
+use DibiFluent;
+use Nette\Utils\Callback;
+use Nette\Utils\Strings;
+use Ublaboo\DataGrid\Filter;
 
 class DibiFluentDataSource implements IDataSource
 {
