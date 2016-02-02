@@ -4813,6 +4813,7 @@ datagridSortableTree = function() {
       if (!url) {
         return;
       }
+      parent.find('[data-toggle-tree]').first().removeClass('hidden');
       return $.nette.ajax({
         type: 'GET',
         url: url,

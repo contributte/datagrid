@@ -208,6 +208,10 @@
   z-index: 2;
 }
 
+.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .dropdown-menu {
+  z-index: 1000;
+}
+
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .btn {
   margin-top: -3px;
 }

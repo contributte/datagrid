@@ -38,6 +38,7 @@
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left>.chevron.toggle-rotate{transform:rotate(90deg)}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left>.chevron .fa{font-size:10px;transform:translate(1px,0)}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right{order:2;z-index:2}
+.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .dropdown-menu{z-index:1000}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .btn{margin-top:-3px}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns{white-space:nowrap;display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:space-between;align-items:center}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns .datagrid-tree-item-right-columns-column{padding:0 7px;margin-right:4px}
