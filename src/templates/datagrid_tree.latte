@@ -9,13 +9,13 @@
 
 {extends $original_template}
 
-<div class="datagrid-tree" n:snippet="table" n:block="data" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink sort!}"{/}>
+<div class="datagrid-tree-item-children datagrid-tree" n:snippet="table" n:block="data" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink sort!}"{/}>
 	{snippetArea items}
 		{foreach $items as $item}
 			{var $id_value = is_object($item) ? $item->{$control->getPrimaryKey()} : $item[$control->getPrimaryKey()]}
 			{var $has_children = is_object($item) ? $item->{$tree_view_has_children_column} : $item[$tree_view_has_children_column]}
 
-			<div class="datagrid-tree-item" data-id="{$id_value}" n:snippet="item-{$id_value}">
+			<div n:class="$has_children ? has-children, 'datagrid-tree-item'" data-id="{$id_value}" n:snippet="item-{$id_value}">
 				<div class="datagrid-tree-item-content" data-id="{$id_value}">
 					<div class="datagrid-tree-item-left">
 						<a n:href="getChildren! parent => $id_value" data-toggle-tree="true" n:if="$has_children" class="chevron ajax">
@@ -82,9 +82,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="datagrid-tree-item-children" style="display: none;">
-					
-				</div>
+				<div class="datagrid-tree-item-children" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink sort!}"{/}></div>
 			</div>
 		{/foreach}
 		{if !$items}

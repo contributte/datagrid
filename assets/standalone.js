@@ -4803,10 +4803,16 @@ datagridSortableTree = function() {
       }
       parent = row.parent().closest('.datagrid-tree-item');
       if (parent.length) {
+        parent.find('.datagrid-tree-item-children').css({
+          display: 'block'
+        });
+        parent.addClass('has-children');
         parent_id = parent.data('id');
       }
       url = $(this).data('sortable-url');
-      datagridSortableTree;
+      if (!url) {
+        return;
+      }
       return $.nette.ajax({
         type: 'GET',
         url: url,
@@ -4817,7 +4823,9 @@ datagridSortableTree = function() {
           parent_id: parent_id
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          return alert(jqXHR.statusText);
+          if (errorThrown !== 'abort') {
+            return alert(jqXHR.statusText);
+          }
         }
       });
     },
@@ -4855,7 +4863,6 @@ $.nette.ext('datagrid.happy', {
       checked_rows = document.querySelectorAll(class_selector + ' ' + 'input[data-check]:checked');
       if (checked_rows.length === 1 && checked_rows[0].getAttribute('name') === 'toggle-all') {
         input = document.querySelector(class_selector + ' input[name=toggle-all]');
-        console.log(class_selector + ' input[name=toggle-all]');
         if (input) {
           input.checked = false;
           event = new Event('change', {
@@ -4996,8 +5003,9 @@ $.nette.ext('datagrid.tree', {
       }
       children_block.addClass('loaded');
       children_block.slideToggle('fast');
-      return $.nette.load();
+      $.nette.load();
     }
+    return datagridSortableTree();
   }
 });
 
