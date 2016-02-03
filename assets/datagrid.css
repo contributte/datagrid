@@ -125,6 +125,7 @@
 .datagrid table td.col-action {
   white-space: nowrap;
   width: 10px;
+  text-align: right;
 }
 
 .datagrid .datagrid-tree > .datagrid-tree-item {

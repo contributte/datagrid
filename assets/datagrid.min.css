@@ -25,7 +25,7 @@
 .datagrid table td.col-checkbox .happy-checkbox,.datagrid table th.col-checkbox .happy-checkbox{margin-right:0}
 .datagrid table td.col-checkbox.col-checkbox-first,.datagrid table th.col-checkbox.col-checkbox-first{border-top-color:transparent}
 .datagrid table th.col-checkbox{background-color:#f9f9f9}
-.datagrid table td.col-action,.datagrid table th.col-action{white-space:nowrap;width:10px}
+.datagrid table td.col-action,.datagrid table th.col-action{white-space:nowrap;width:10px;text-align:right}
 .datagrid .datagrid-tree>.datagrid-tree-item{margin-left:20px}
 .datagrid .datagrid-tree .datagrid-tree-item{position:relative}
 .datagrid .datagrid-tree .datagrid-tree-item.ui-sortable-placeholder{visibility:visible!important;background-color:rgba(70,83,93,.1)}
