@@ -89,9 +89,9 @@ datagridSortable = function() {
     handle: '.handle-sort',
     items: 'tr',
     update: function(event, ui) {
-      var id, next_id, prev_id, row, url;
+      var item_id, next_id, prev_id, row, url;
       row = ui.item.closest('tr[data-id]');
-      id = row.data('id');
+      item_id = row.data('id');
       prev_id = null;
       next_id = null;
       if (row.prev().length) {
@@ -105,7 +105,7 @@ datagridSortable = function() {
         type: 'GET',
         url: url,
         data: {
-          id: id,
+          item_id: item_id,
           prev_id: prev_id,
           next_id: next_id
         },
@@ -137,10 +137,10 @@ datagridSortableTree = function() {
     toleranceElement: '> .datagrid-tree-item-content',
     connectWith: '.datagrid-tree-item-children',
     update: function(event, ui) {
-      var id, next_id, parent, parent_id, prev_id, row, url;
+      var item_id, next_id, parent, parent_id, prev_id, row, url;
       $('.toggle-tree-to-delete').remove();
       row = ui.item.closest('.datagrid-tree-item[data-id]');
-      id = row.data('id');
+      item_id = row.data('id');
       prev_id = null;
       next_id = null;
       parent_id = null;
@@ -167,7 +167,7 @@ datagridSortableTree = function() {
         type: 'GET',
         url: url,
         data: {
-          id: id,
+          item_id: item_id,
           prev_id: prev_id,
           next_id: next_id,
           parent_id: parent_id
