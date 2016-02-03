@@ -28,9 +28,9 @@ final class ColumnTextTest extends TestCase
 	public function render($column, $id = 1)
 	{
 		if ($id == 1) {
-			$item = ['id' => 1, 'name' => 'John'];
+			$item = new Ublaboo\DataGrid\Row($this->grid, ['id' => 1, 'name' => 'John'], 'id');
 		} else {
-			$item = ['id' => $id, 'name' => 'Susie'];
+			$item = new Ublaboo\DataGrid\Row($this->grid, ['id' => $id, 'name' => 'Susie'], 'id');
 		}
 
 		return (string) $column->render($item);

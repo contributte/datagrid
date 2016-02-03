@@ -27,7 +27,7 @@ final class ColumnNumberTest extends TestCase
 
 	public function render($column)
 	{
-		$item = ['id' => 1, 'name' => 'John', 'amount' => 345678.567];
+		$item = new Ublaboo\DataGrid\Row($this->grid, ['id' => 1, 'name' => 'John', 'amount' => 345678.567], 'id');
 
 		return (string) $column->render($item);
 	}

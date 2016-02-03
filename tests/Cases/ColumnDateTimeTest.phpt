@@ -28,7 +28,7 @@ final class ColumnDateTimeTest extends TestCase
 	public function render($column)
 	{
 		$datetime = \DateTime::createFromFormat('Y-m-d H:i:s', '2015-12-15 22:58:42');
-		$item = ['id' => 1, 'name' => 'John', 'date' => $datetime];
+		$item = new Ublaboo\DataGrid\Row($this->grid, ['id' => 1, 'name' => 'John', 'date' => $datetime], 'id');
 
 		return (string) $column->render($item);
 	}
