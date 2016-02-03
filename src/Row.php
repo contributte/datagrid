@@ -11,6 +11,7 @@ namespace Ublaboo\DataGrid;
 use Nette;
 use LeanMapper;
 use DibiRow;
+use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
 class Row extends Nette\Object
 {
@@ -60,10 +61,15 @@ class Row extends Nette\Object
 	}
 
 
+	/**
+	 * Get item value of key
+	 * @param  mixed $key
+	 * @return mixed
+	 */
 	public function getValue($key)
 	{
 		if ($this->item instanceof LeanMapper\Entity) {
-			return $this->getEntityProperty($this->item, $key);
+			return $this->getLeanMapperEntityProperty($this->item, $key);
 
 		} else if ($this->item instanceof DibiRow) {
 			return $this->item->{$key};
@@ -78,13 +84,19 @@ class Row extends Nette\Object
 			/**
 			 * Doctrine entity
 			 */
-			return $this->getEntityProperty($this->item, $key);
+			return $this->getDoctrineEntityProperty($this->item, $key);
 
 		}
 	}
 
 
-	public function getEntityProperty($item, $key)
+	/**
+	 * LeanMapper: Access object properties to get a item value
+	 * @param  LeanMapper\Entity $item
+	 * @param  mixed             $key
+	 * @return mixed
+	 */
+	public function getLeanMapperEntityProperty(LeanMapper\Entity $item, $key)
 	{
 		$properties = explode('.', $key);
 		$value = $item;
@@ -109,6 +121,37 @@ class Row extends Nette\Object
 
 
 	/**
+	 * Doctrine: Access object properties to get a item value
+	 * @param  mixed $item
+	 * @param  mixed $key
+	 * @return mixed
+	 */
+	public function getDoctrineEntityProperty($item, $key)
+	{
+		$properties = explode('.', $key);
+		$value = $item;
+		$accessor = PropertyAccessHelper::getAccessor();
+
+		while ($property = array_shift($properties)) {
+			if (!is_object($value) && !$value) {
+				if ($this->datagrid->strict_entity_property) {
+					throw new DataGridException(sprintf(
+						'Target Property [%s] is not an object or is empty, trying to get [%s]',
+						$value, str_replace('.', '->', $key)
+					));
+				}
+
+				return NULL;
+			}
+
+			$value = $accessor->getValue($value, $property);
+		}
+
+		return $value;
+	}
+
+
+	/**
 	 * Get original item
 	 * @return mixed
 	 */
@@ -118,6 +161,10 @@ class Row extends Nette\Object
 	}
 
 
+	/**
+	 * Has particular row group actions allowed?
+	 * @return bool
+	 */
 	public function hasGroupAction()
 	{
 		$condition = $this->datagrid->getRowCondition('group_action');
@@ -126,6 +173,11 @@ class Row extends Nette\Object
 	}
 
 
+	/**
+	 * Has particular row and action allowed?
+	 * @param  mixed  $key
+	 * @return bool
+	 */
 	public function hasAction($key)
 	{
 		$condition = $this->datagrid->getRowCondition('action', $key);
