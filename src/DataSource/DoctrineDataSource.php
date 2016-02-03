@@ -85,7 +85,7 @@ class DoctrineDataSource implements IDataSource
 		/**
 		 * Paginator is better if the query uses ManyToMany associations
 		 */
-		return $this->data ?: $this->data_source->getQuery()->getResult(Doctrine\ORM\Query::HYDRATE_ARRAY);
+		return $this->data ?: $this->data_source->getQuery()->getResult();
 	}
 
 

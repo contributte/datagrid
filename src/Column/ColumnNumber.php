@@ -8,6 +8,8 @@
 
 namespace Ublaboo\DataGrid\Column;
 
+use Ublaboo\DataGrid\Row;
+
 class ColumnNumber extends Column
 {
 
@@ -22,13 +24,13 @@ class ColumnNumber extends Column
 
 
 	/**
-	 * Formatitem value
-	 * @param  mixd  $item
+	 * Format row item value
+	 * @param  Row   $row
 	 * @return mixed
 	 */
-	public function getColumnValue($item)
+	public function getColumnValue(Row $row)
 	{
-		$value = parent::getColumnValue($item);
+		$value = parent::getColumnValue($row);
 
 		if (!is_numeric($value)) {
 			return $value;

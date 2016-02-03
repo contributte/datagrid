@@ -22,6 +22,13 @@ class DataGrid extends Nette\Application\UI\Control
 	public static $icon_prefix = 'fa fa-';
 
 	/**
+	 * When set to TRUE, datagrid throws an exception
+	 * 	when tring to get related entity within join and entity does not exist
+	 * @var bool
+	 */
+	public $strict_entity_property = FALSE;
+
+	/**
 	 * @var int
 	 * @persistent
 	 */
@@ -234,8 +241,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function render()
 	{
-		$rows = [];
-
 		/**
 		 * Check whether datagrid has set some columns, initiated data source, etc
 		 */
@@ -257,6 +262,8 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Prepare data for rendering (datagrid may render just one item)
 		 */
+		$rows = [];
+
 		if (!empty($this->redraw_item)) {
 			$items = $this->dataModel->filterRow($this->redraw_item);
 		} else {
@@ -1101,11 +1108,21 @@ class DataGrid extends Nette\Application\UI\Control
 			throw new DataGridException('You have to set a data source first.');
 		}
 
-		$data = Nette\Utils\Callback::invokeArgs(
+		$rows = [];
+
+		$items = Nette\Utils\Callback::invokeArgs(
 			[$this->dataModel, 'filterData'], [NULL, $sort, $filter]
 		);
 
-		$export->invoke($data, $this);
+		foreach ($items as $item) {
+			$rows[] = new Row($this, $item, $this->getPrimaryKey());
+		}
+
+		if ($export instanceof Export\ExportCsv) {
+			$export->invoke($rows, $this);
+		} else {
+			$export->invoke($items, $this);
+		}
 
 		if ($export->isAjax()) {
 			$this->reload();

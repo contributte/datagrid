@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Row;
 
 class Action extends Column
 {
@@ -73,27 +74,27 @@ class Action extends Column
 
 
 	/**
-	 * Render action for item into template
-	 * @param  mixed $item
+	 * Render row item into template
+	 * @param  Row   $row
 	 * @return mixed
 	 */
-	public function render($item)
+	public function render(Row $row)
 	{
 		/**
 		 * Renderer function may be used
 		 */
 		if ($renderer = $this->getRenderer()) {
 			if (!$renderer->getConditionCallback()) {
-				return call_user_func_array($renderer->getCallback(), [$item]);
+				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
 			}
 
-			if (call_user_func_array($this->getRenderer(), [$item])) {
-				return call_user_func_array($renderer->getCallback(), [$item]);
+			if (call_user_func_array($this->getRenderer(), [$row->getItem()])) {
+				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
 			}
 		}
 
 		$a = Html::el('a')
-			->href($this->grid->getPresenter()->link($this->href, $this->getItemParams($item)));
+			->href($this->grid->getPresenter()->link($this->href, $this->getItemParams($row)));
 
 		if ($this->icon) {
 			$a->add(Html::el('span')->class(DataGrid::$icon_prefix.$this->icon));
@@ -107,7 +108,7 @@ class Action extends Column
 
 		if ($this->title) { $a->title($this->title); }
 		if ($this->class) { $a->class($this->class); }
-		if ($confirm = $this->getConfirm($item)) { $a->data('confirm', $confirm); }
+		if ($confirm = $this->getConfirm($row)) { $a->data('confirm', $confirm); }
 
 		return $a;
 	}
@@ -193,10 +194,10 @@ class Action extends Column
 
 
 	/**
-	 * Get confirm dialog for particular item
-	 * @param string $item
+	 * Get confirm dialog for particular row item
+	 * @param Row $row
 	 */
-	public function getConfirm($item)
+	public function getConfirm(Row $row)
 	{
 		if (!$this->confirm) {
 			return NULL;
@@ -206,29 +207,21 @@ class Action extends Column
 			return $this->confirm[0];
 		}
 
-		if (is_object($item)) {
-			return str_replace('%s', $item->{$this->confirm[1]}, $this->confirm[0]);
-		} else {
-			return str_replace('%s', $item[$this->confirm[1]], $this->confirm[0]);
-		}
+		return str_replace('%s', $row->getValue($this->confirm[1]), $this->confirm[0]);
 	}
 
 
 	/**
-	 * Get item params (E.g. action may be called id => $item->id, name => $item->name, ...)
-	 * @param  mixed $item
+	 * Get row item params (E.g. action may be called id => $item->id, name => $item->name, ...)
+	 * @param  Row   $row
 	 * @return array
 	 */
-	protected function getItemParams($item)
+	protected function getItemParams(Row $row)
 	{
 		$return = [];
 
 		foreach ($this->params as $param_name => $param) {
-			if (is_object($item)) {
-				$return[is_string($param_name) ? $param_name : $param] = $item->{$param};
-			} else {
-				$return[is_string($param_name) ? $param_name : $param] = $item[$param];
-			}
+			$return[is_string($param_name) ? $param_name : $param] = $row->getValue($param);
 		}
 
 		return $return;

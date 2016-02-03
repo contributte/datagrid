@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\Column;
 
 use DateTime;
+use Ublaboo\DataGrid\Row;
 
 class ColumnDateTime extends Column
 {
@@ -20,13 +21,13 @@ class ColumnDateTime extends Column
 
 
 	/**
-	 * Format item value as DateTime
-	 * @param  mixed $item
+	 * Format row item value as DateTime
+	 * @param  Row   $row
 	 * @return mixed
 	 */
-	public function getColumnValue($item)
+	public function getColumnValue(Row $row)
 	{
-		$value = parent::getColumnValue($item);
+		$value = parent::getColumnValue($row);
 
 		if (!($value instanceof DateTime)) {
 			/**

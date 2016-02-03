@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Row;
 
 class ColumnLink extends Column
 {
@@ -58,28 +59,28 @@ class ColumnLink extends Column
 
 
 	/**
-	 * Render link for item
-	 * @param  mixed $item
+	 * Render row item into template
+	 * @param  Row   $row
 	 * @return mixed
 	 */
-	public function render($item)
+	public function render(Row $row)
 	{
 		/**
 		 * Renderer function may be used
 		 */
 		if ($renderer = $this->getRenderer()) {
 			if (!$renderer->getConditionCallback()) {
-				return call_user_func_array($renderer->getCallback(), [$item]);
+				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
 			}
 
-			if (call_user_func_array($renderer->getConditionCallback(), [$item])) {
-				return call_user_func_array($renderer->getCallback(), [$item]);
+			if (call_user_func_array($renderer->getConditionCallback(), [$row->getItem()])) {
+				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
 			}
 		}
 
-		$value = parent::render($item);
+		$value = parent::render($row);
 
-		$href = $this->grid->getPresenter()->link($this->href, $this->getItemParams($item));
+		$href = $this->grid->getPresenter()->link($this->href, $this->getItemParams($row));
 		$a = Html::el('a')
 			->href($href)
 			->setText($value);
@@ -134,19 +135,15 @@ class ColumnLink extends Column
 
 	/**
 	 * Get item params (E.g. action may be called id => $item->id, name => $item->name, ...)
-	 * @param  mixed $item
+	 * @param  Row   $row
 	 * @return array
 	 */
-	protected function getItemParams($item)
+	protected function getItemParams(Row $row)
 	{
 		$return = [];
 
 		foreach ($this->params as $param_name => $param) {
-			if (is_object($item)) {
-				$return[is_string($param_name) ? $param_name : $param] = $item->{$param};
-			} else {
-				$return[is_string($param_name) ? $param_name : $param] = $item[$param];
-			}
+			$return[is_string($param_name) ? $param_name : $param] = $row->getValue($param);
 		}
 
 		return $return;

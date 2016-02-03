@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid\Column;
 
 use Ublaboo\DataGrid\DataGridException;
 use Ublaboo;
+use Ublaboo\DataGrid\Row;
 
 abstract class Column extends Ublaboo\DataGrid\Object
 {
@@ -82,34 +83,34 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 
 	/**
-	 * Render item into template
-	 * @param  mixed $item
+	 * Render row item into template
+	 * @param  Row   $row
 	 * @return mixed
 	 */
-	public function render($item)
+	public function render(Row $row)
 	{
 		/**
 		 * Renderer function may be used
 		 */
 		if ($renderer = $this->getRenderer()) {
 			if (!$renderer->getConditionCallback()) {
-				return call_user_func_array($renderer->getCallback(), [$item]);
+				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
 			}
 
-			if (call_user_func_array($renderer->getConditionCallback(), [$item])) {
-				return call_user_func_array($renderer->getCallback(), [$item]);
+			if (call_user_func_array($renderer->getConditionCallback(), [$row->getItem()])) {
+				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
 			}
 		}
 
 		/**
 		 * Or replacements may be applied
 		 */
-		list($do_replace, $replaced) = $this->applyReplacements($item);
+		list($do_replace, $replaced) = $this->applyReplacements($row);
 		if ($do_replace) {
 			return $replaced;
 		}
 
-		return $this->getColumnValue($item);
+		return $this->getColumnValue($row);
 	}
 
 
@@ -164,17 +165,13 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 
 	/**
-	 * Get column value of item
-	 * @param  mixed $item
+	 * Get column value of row item
+	 * @param  Row   $row
 	 * @return mixed
 	 */
-	public function getColumnValue($item)
+	public function getColumnValue(Row $row)
 	{
-		if (is_object($item)) {
-			return $item->{$this->column};
-		}
-
-		return $item[$this->column];
+		return $row->getValue($this->column);
 	}
 
 
@@ -208,17 +205,13 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 
 	/**
-	 * apply replacements
-	 * @param  mixed $item
+	 * Apply replacements
+	 * @param  Row   $row
 	 * @return array
 	 */
-	public function applyReplacements($item)
+	public function applyReplacements(Row $row)
 	{
-		if (is_object($item)) {
-			$value = $item->{$this->column};
-		} else {
-			$value = $item[$this->column];
-		}
+		$value = $row->getValue($this->column);
 
 		if ((is_scalar($value) || is_null($value)) && isset($this->replacements[$value])) {
 			return [TRUE, $this->replacements[$value]];

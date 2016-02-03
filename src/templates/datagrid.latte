@@ -121,9 +121,9 @@
 												{include #$col, item => $item}
 											{else}
 												{if $column->isTemplateEscaped()}
-													{$column->render($item)}
+													{$column->render($row)}
 												{else}
-													{!$column->render($item)}
+													{!$column->render($row)}
 												{/if}
 											{/ifset}
 										{/if}
@@ -135,7 +135,7 @@
 											{if $action->hasTemplate()}
 												{include $action->getTemplate(), item => $item}
 											{else}
-												{!$action->render($item)}
+												{!$action->render($row)}
 											{/if}
 										{/if}
 									{/foreach}
@@ -143,7 +143,7 @@
 										<span class="{$icon_prefix}arrows"></span>
 									</span>
 									{if $items_detail}
-										{!$items_detail->renderButton($item)}
+										{!$items_detail->renderButton($row)}
 									{/if}
 								</td>
 							</tr>

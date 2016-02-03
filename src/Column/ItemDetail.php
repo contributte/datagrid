@@ -74,21 +74,15 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 
 
 	/**
-	 * Render item detail button
-	 * @param  mixed $item
+	 * Render row item detail button
+	 * @param  Row $row
 	 * @return Html
 	 */
-	public function renderButton($item)
+	public function renderButton($row)
 	{
-		if (is_object($item)) {
-			$id_value = $item->{$this->grid->getPrimaryKey()};
-		} else {
-			$id_value = $item[$this->grid->getPrimaryKey()];
-		}
-
 		$a = Html::el('a')
-			->href($this->grid->link('getItemDetail!', ['id' => $id_value]))
-			->data('toggle-detail', $id_value)
+			->href($this->grid->link('getItemDetail!', ['id' => $row->getId()]))
+			->data('toggle-detail', $row->getId())
 			->data('toggle-detail-grid', $this->grid->getName());
 
 		if ($this->icon) {

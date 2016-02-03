@@ -9,6 +9,8 @@
 namespace Ublaboo\DataGrid;
 
 use Nette;
+use LeanMapper;
+use DibiRow;
 
 class Row extends Nette\Object
 {
@@ -55,6 +57,54 @@ class Row extends Nette\Object
 	public function getId()
 	{
 		return $this->id;
+	}
+
+
+	public function getValue($key)
+	{
+		if ($this->item instanceof LeanMapper\Entity) {
+			return $this->getEntityProperty($this->item, $key);
+
+		} else if ($this->item instanceof DibiRow) {
+			return $this->item->{$key};
+
+		} else if ($this->item instanceof Nette\Database\Table\ActiveRow) {
+			return $this->item->{$key};
+
+		} else if (is_array($this->item)) {
+			return $this->item[$key];
+
+		} else {
+			/**
+			 * Doctrine entity
+			 */
+			return $this->getEntityProperty($this->item, $key);
+
+		}
+	}
+
+
+	public function getEntityProperty($item, $key)
+	{
+		$properties = explode('.', $key);
+		$value = $item;
+
+		while ($property = array_shift($properties)) {
+			if (!isset($value->{$property})) {
+				if ($this->datagrid->strict_entity_property) {
+					throw new DataGridException(sprintf(
+						'Target Property [%s] is not an object or is empty, trying to get [%s]',
+						$value, str_replace('.', '->', $key)
+					));
+				}
+
+				return NULL;
+			}
+
+			$value = $value->{$property};
+		}
+
+		return $value;
 	}
 
 
