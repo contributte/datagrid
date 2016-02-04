@@ -46,8 +46,7 @@ class Row extends Nette\Object
 		$this->datagrid = $datagrid;
 		$this->item = $item;
 		$this->primary_key = $primary_key;
-
-		$this->id = is_object($item) ? $item->{$primary_key} : $item[$primary_key];
+		$this->id = $this->getValue($primary_key);
 	}
 
 
