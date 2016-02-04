@@ -56,16 +56,16 @@
 								{foreach $exports as $export}{$export->render()}{/foreach}
 							</span>
 
-                            <span class="pull-right settings" n:block="settings">
-                                <div class="btn-group">
-                                  <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-gear"></i>
-                                  </button>
-                                  <ul class="dropdown-menu dropdown-menu--grid">
-                                    <li><a href="#" data-column-show-all> <i class="fa fa-eye"></i> {_'Show all columns'}</a></li>
-                                  </ul>
-                                </div>
-                            </span>
+							<span class="pull-right settings" n:block="settings">
+								<div class="btn-group">
+								  <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<i class="fa fa-gear"></i>
+								  </button>
+								  <ul class="dropdown-menu dropdown-menu--grid">
+									<li><a href="#" data-column-show-all> <i class="fa fa-eye"></i> {_'Show all columns'}</a></li>
+								  </ul>
+								</div>
+							</span>
 						</th>
 					</tr>
 					<tr n:block="header">
@@ -88,17 +88,17 @@
 									{$column->getName()}
 								{/if}
 
-                                <span class="column-settings-menu pull-right">
-                                    <div class="btn-group">
-                                      <a type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa  fa-caret-down"></i>
-                                      </a>
-                                      <ul class="dropdown-menu dropdown-menu--grid">
-                                        <li><a href="#" data-column-hide="col-{$column->getColumnName()}"> <i class="fa fa-eye-slash"></i> {_'Hide column'}</a></li>
-                                      </ul>
-                                    </div>
+								<span class="column-settings-menu pull-right">
+									<div class="btn-group">
+									  <a type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<i class="fa  fa-caret-down"></i>
+									  </a>
+									  <ul class="dropdown-menu dropdown-menu--grid">
+										<li><a href="#" data-column-hide="col-{$column->getColumnName()}"> <i class="fa fa-eye-slash"></i> {_'Hide column'}</a></li>
+									  </ul>
+									</div>
 
-                                </span>
+								</span>
 
 								{if !$control->hasOuterFilterRendering() && isset($filters[$column_key])}
 									<hr>
@@ -110,7 +110,7 @@
 							</th>
 						{/foreach}
 						<th n:if="$actions || $control->isSortable() || $items_detail" class="col-action text-center">
-                            {_'Action'}
+							{_'Action'}
 						</th>
 					</tr>
 				</thead>
