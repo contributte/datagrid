@@ -1463,6 +1463,8 @@ class DataGrid extends Nette\Application\UI\Control
 	public function setOuterFilterRendering($out = TRUE)
 	{
 		$this->outer_filter_rendering = (bool) $out;
+
+		return $this;
 	}
 
 
@@ -1495,6 +1497,8 @@ class DataGrid extends Nette\Application\UI\Control
 		} else {
 			throw new DataGridException('When changing columns order, you have to specify all columns');
 		}
+
+		return $this;
 	}
 
 
@@ -1515,6 +1519,9 @@ class DataGrid extends Nette\Application\UI\Control
 	public function setRefreshUrl($refresh = TRUE)
 	{
 		$this->refresh_url = (bool) $refresh;
+
+
+		return $this;
 	}
 
 
