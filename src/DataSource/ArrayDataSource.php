@@ -12,7 +12,7 @@ use Ublaboo\DataGrid\Filter\Filter;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 
-class ArrayDataSource
+class ArrayDataSource implements IDataSource
 {
 
 	/**
