@@ -110,6 +110,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $csv_export = TRUE;
 
+    /**
+     * @var bool
+     */
+    protected $can_hide_columns = FALSE;
+
 	/**
 	 * @var bool
 	 */
@@ -1594,6 +1599,29 @@ class DataGrid extends Nette\Application\UI\Control
 
 		return $count;
 	}
+
+
+    /**
+     * Can datagrid hide colums?
+     * @return boolean
+     */
+    public function canHideColumns()
+    {
+        return (bool) $this->can_hide_columns;
+    }
+
+
+    /**
+     * Order Grid to set columns hideable.
+     * @param bool $do
+     */
+    public function setColumnsHideable()
+    {
+        $this->can_hide_columns = TRUE;
+
+        return $this;
+    }
+
 
 }
 

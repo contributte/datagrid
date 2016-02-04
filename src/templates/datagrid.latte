@@ -24,6 +24,7 @@
 				<div class="row row-filters">
 					{var $i = 0}
 					<div class="col-sm-6" n:foreach="$filters as $f">
+
 						{**
 						 * Each fitlers are rendered separately in their own templates
 						 *}
@@ -34,7 +35,7 @@
 			{/if}
 			<table class="table table-hover table-bordered" n:snippet="table" n:block="data">
 				<thead>
-					<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports">
+					<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports || $control->canHideColumns()">
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
 							{if $control->hasGroupActions()}
 								{block group_actions}
@@ -54,6 +55,20 @@
 							<span class="pull-right exports" n:if="$exports" n:block="exports">
 								{foreach $exports as $export}{$export->render()}{/foreach}
 							</span>
+
+                            <span class="pull-right settings" n:block="settings">
+                                <div class="btn-group">
+                                  <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-gear"></i>
+                                  </button>
+                                  <ul class="dropdown-menu dropdown-menu--grid">
+                                    <li><a href="#" data-column-show-all> <i class="fa fa-eye"></i> Show all columns</a></li>
+                                  </ul>
+                                </div>
+                            </span>
+
+
+
 						</th>
 					</tr>
 					<tr n:block="header">
@@ -75,15 +90,30 @@
 								{else}
 									{$column->getName()}
 								{/if}
+
+                                <span class="column-settings-menu pull-right">
+                                    <div class="btn-group">
+                                      <a type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa  fa-caret-down"></i>
+                                      </a>
+                                      <ul class="dropdown-menu dropdown-menu--grid">
+                                        <li><a href="#" data-column-hide="col-{$column->getColumnName()}"> <i class="fa fa-eye-slash"></i> Hide column</a></li>
+                                      </ul>
+                                    </div>
+
+                                </span>
+
 								{if !$control->hasOuterFilterRendering() && isset($filters[$column_key])}
 									<hr>
 									{var $i = $filter['filter'][$column_key]}
 									{include $filters[$column_key]->getTemplate(), filter => $filters[$column_key], input => $i, outer => FALSE}
 								{/if}
+
+
 							</th>
 						{/foreach}
 						<th n:if="$actions || $control->isSortable() || $items_detail" class="col-action text-center">
-							{_'Action'}
+                            {_'Action'}
 						</th>
 					</tr>
 				</thead>
