@@ -1505,6 +1505,8 @@ class DataGrid extends Nette\Application\UI\Control
 	public function setRememberState($remember = TRUE)
 	{
 		$this->remember_state = (bool) $remember;
+
+		return $this;
 	}
 
 
