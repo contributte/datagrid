@@ -41,7 +41,7 @@ class DataModel
 	/**
 	 * Filter/paginate/limit/order data source and return reset of data in array
 	 * @param  Components\DataGridPaginator\DataGridPaginator $paginator_component
-	 * @param  sting                                          $sort
+	 * @param  string                                          $sort
 	 * @param  array                                          $filters
 	 * @return array
 	 */
