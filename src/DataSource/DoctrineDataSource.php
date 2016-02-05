@@ -12,7 +12,6 @@ namespace Ublaboo\DataGrid\DataSource;
 use Doctrine\ORM\QueryBuilder,
 	Ublaboo\DataGrid\Filter,
 	Nette\Utils\Callback,
-	Nette\Utils\Strings,
 	Doctrine;
 
 class DoctrineDataSource implements IDataSource
