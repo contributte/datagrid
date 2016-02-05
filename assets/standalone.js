@@ -5000,6 +5000,9 @@ $.nette.ext('datagrid.tree', {
         template = $('<div class="datagrid-tree-item" id="' + name + '">');
         template.attr('data-id', content.attr('data-id'));
         template.append(content);
+        if (content.data('has-children')) {
+          template.addClass('has-children');
+        }
         children_block.append(template);
       }
       children_block.addClass('loaded');
