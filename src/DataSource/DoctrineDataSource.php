@@ -146,7 +146,7 @@ class DoctrineDataSource implements IDataSource
 	/**
 	 * Filter by date
 	 * @param  Filter\FilterDate $filter
-	 * @return void
+	 * @return self
 	 */
 	public function applyFilterDate(Filter\FilterDate $filter)
 	{
