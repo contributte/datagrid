@@ -16,6 +16,11 @@ class DataGrid extends Nette\Application\UI\Control
 {
 
 	/**
+	 * @var callable[]
+	 */
+	public $onRedraw;
+
+	/**
 	 * @var string
 	 * @todo Tell about this on github
 	 */
@@ -1146,6 +1151,8 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->getPresenter()->payload->_datagrid_tree = $parent;
 
 			$this->redrawControl('items');
+
+			$this->onRedraw();
 		} else {
 			$this->getPresenter()->redirect('this');
 		}
@@ -1165,6 +1172,8 @@ class DataGrid extends Nette\Application\UI\Control
 		if ($this->getPresenter()->isAjax()) {
 			$this->getPresenter()->payload->_datagrid_toggle_detail = $id;
 			$this->redrawControl('items');
+
+			$this->onRedraw();
 		} else {
 			$this->getPresenter()->redirect('this');
 		}
@@ -1207,6 +1216,8 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 
 			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
+
+			$this->onRedraw();
 		} else {
 			$this->getPresenter()->redirect('this');
 		}
@@ -1225,6 +1236,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->redrawControl('items');
 		$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
+
+		$this->onRedraw();
 	}
 
 
