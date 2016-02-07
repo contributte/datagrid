@@ -76,8 +76,6 @@ class NetteDatabaseTableDataSource implements IDataSource
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
-				$or = [];
-
 				if ($filter->hasConditionCallback()) {
 					Callback::invokeArgs(
 						$filter->getConditionCallback(),
@@ -200,9 +198,6 @@ class NetteDatabaseTableDataSource implements IDataSource
 				
 			$property_reflection = $reflection->getProperty('context');
 			$property_reflection->setAccessible(TRUE);
-			$context = $property_reflection->getValue($this->data_source);
-			$driver = $context->getConnection()->getSupplementalDriver();
-			$formatLike = [$driver, 'formatLike'];
 
 			$like = '(';
 			$args = [];

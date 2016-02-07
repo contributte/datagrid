@@ -60,7 +60,7 @@ class GroupActionCollection extends Nette\Object
 		$group_action_container['group_action']->addCondition(Form::FILLED)
 			->toggle('group_action_submit');
 
-		$group_action_container->addSubmit('submit', 'Provést')
+		$group_action_container->addSubmit('submit', $translator ? $translator->translate('Do') : 'Do')
 			->setAttribute('id', 'group_action_submit');
 
 		$form->onSubmit[] = [$this, 'submitted'];

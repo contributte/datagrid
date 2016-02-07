@@ -12,7 +12,6 @@ namespace Ublaboo\DataGrid\DataSource;
 use Doctrine\ORM\QueryBuilder,
 	Ublaboo\DataGrid\Filter,
 	Nette\Utils\Callback,
-	Nette\Utils\Strings,
 	Doctrine;
 
 class DoctrineDataSource implements IDataSource
@@ -98,8 +97,6 @@ class DoctrineDataSource implements IDataSource
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
-				$or = [];
-
 				if ($filter->hasConditionCallback()) {
 					Callback::invokeArgs(
 						$filter->getConditionCallback(),
@@ -146,7 +143,7 @@ class DoctrineDataSource implements IDataSource
 	/**
 	 * Filter by date
 	 * @param  Filter\FilterDate $filter
-	 * @return void
+	 * @return self
 	 */
 	public function applyFilterDate(Filter\FilterDate $filter)
 	{
