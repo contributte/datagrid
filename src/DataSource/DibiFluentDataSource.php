@@ -77,8 +77,6 @@ class DibiFluentDataSource implements IDataSource
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
-				$or = [];
-
 				if ($filter->hasConditionCallback()) {
 					Callback::invokeArgs(
 						$filter->getConditionCallback(),

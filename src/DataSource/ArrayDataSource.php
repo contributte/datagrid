@@ -65,8 +65,6 @@ class ArrayDataSource implements IDataSource
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
-				$or = [];
-
 				if ($filter->hasConditionCallback()) {
 					$this->data = Callback::invokeArgs(
 						$filter->getConditionCallback(),

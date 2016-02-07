@@ -8,8 +8,7 @@
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Ublaboo\DataGrid\DataGridException,
-	Nette;
+use Nette;
 
 abstract class Filter extends Nette\Object
 {

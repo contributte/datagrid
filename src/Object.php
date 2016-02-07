@@ -27,7 +27,7 @@ class Object extends Nette\Object
 			return Nette\Utils\Callback::invokeArgs([$this, $method_setter], $args);
 		}
 
-		parent::__call($name, $args);
+		return parent::__call($name, $args);
 	}
 
 }
