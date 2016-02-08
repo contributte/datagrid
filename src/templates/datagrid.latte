@@ -98,7 +98,7 @@
 					</tr>
 				</thead>
 
-				<tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandle()}"{/}>
+				<tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandler()}"{/}>
 					{snippetArea items}
 						{foreach $rows as $row}
 							{var $item = $row->getItem()}

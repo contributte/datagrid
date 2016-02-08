@@ -10,7 +10,7 @@
 
 {extends $original_template}
 
-<div class="datagrid-tree-item-children datagrid-tree" n:snippet="table" n:block="data" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink sort!}"{/}>
+<div class="datagrid-tree-item-children datagrid-tree" n:snippet="table" n:block="data" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink $control->getSortableHandler()}"{/}>
 	{snippetArea items}
 		{foreach $rows as $row}
 			{var $has_children = $row->getValue($tree_view_has_children_column)}
@@ -83,7 +83,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="datagrid-tree-item-children" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink sort!}"{/}></div>
+				<div class="datagrid-tree-item-children" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink $control->getSortableHandler()}"{/}></div>
 			</div>
 		{/foreach}
 		{if !$rows}
