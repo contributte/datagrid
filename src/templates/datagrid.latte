@@ -102,7 +102,7 @@
 					{snippetArea items}
 						{foreach $rows as $row}
 							{var $item = $row->getItem()}
-							<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}">
+							<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
 								<td n:if="$control->hasGroupActions()" class="col-checkbox">
 									{if $row->hasGroupAction()}
 										<input class="happy gray-border primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$row->getId()}]">

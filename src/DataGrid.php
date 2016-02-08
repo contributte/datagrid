@@ -63,6 +63,11 @@ class DataGrid extends Nette\Application\UI\Control
 	public $onRender = [];
 
 	/**
+	 * @var Callable[]
+	 */
+	protected $rowCallback;
+
+	/**
 	 * @var array
 	 */
 	protected $items_per_page_list = [10, 20, 50];
@@ -292,8 +297,14 @@ class DataGrid extends Nette\Application\UI\Control
 			);
 		}
 
+		$callback = $this->rowCallback ?: NULL;
+
 		foreach ($items as $item) {
-			$rows[] = new Row($this, $item, $this->getPrimaryKey());
+			$rows[] = $row = new Row($this, $item, $this->getPrimaryKey());
+
+			if ($callback) {
+				$callback($item, $row->getControl());
+			}
 		}
 
 		if ($this->isTreeView()) {
@@ -321,6 +332,17 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Set template file and render it
 		 */
 		$this->template->setFile($this->getTemplateFile())->render();
+	}
+
+
+	/**
+	 * @param  callable  $callback
+	 * @return static
+	 */
+	public function setRowCallback(callable $callback)
+	{
+		$this->rowCallback = $callback;
+		return $this;
 	}
 
 

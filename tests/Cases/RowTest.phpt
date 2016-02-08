@@ -2,6 +2,7 @@
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
+use Nette\Utils\Html;
 use Tester\TestCase,
 	Tester\Assert,
 	Ublaboo,
@@ -24,6 +25,21 @@ final class RowTest extends TestCase
 	{
 		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
 		$this->grid = $factory->createXTestingDataGrid();
+	}
+
+
+	public function testControl()
+	{
+		$item = ['id' => 20, 'name' => 'John Doe'];
+		$callback = function ($item, Html $row) {
+			$row->addClass('bg-warning');
+		};
+
+		$row = new Ublaboo\DataGrid\Row($this->grid, $item, 'id');
+		$callback($item, $row->getControl());
+
+		Assert::same(20, $row->getId());
+		Assert::same('bg-warning', $row->getControlClass());
 	}
 
 
