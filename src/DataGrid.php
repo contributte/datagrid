@@ -131,6 +131,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @var bool
 	 */
 	protected $sortable = FALSE;
+	
+	/**
+	 * @var string
+	 */
+	protected $sortableHandle = 'sort!';
 
 	/**
 	 * @var string
@@ -506,12 +511,33 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Set sortable handle
+	 * @param string $handle
+	 */
+	public function setSortableHandle($handle = 'sort!')
+	{
+		$this->sortableHandle = (string) $handle;
+
+		return $this;
+	}
+
+
+	/**
 	 * Tell whether DataGrid is sortable
 	 * @return bool
 	 */
 	public function isSortable()
 	{
 		return $this->sortable;
+	}
+
+	/**
+	 * Return sortable handle name
+	 * @return string
+	 */
+	public function getSortableHandle()
+	{
+		return $this->sortableHandle;
 	}
 
 
