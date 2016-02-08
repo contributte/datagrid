@@ -89,11 +89,17 @@ class ArrayDataSource implements IDataSource
 	 */
 	public function filterOne(array $condition)
 	{
-		$this->data = array_filter($this->data, function($row) use ($condition) {
-			return $this->applyFilter($row, $condition);
-		});
+		foreach ($this->data as $item) {
+			foreach ($condition as $key => $value) {
+				if ($item[$key] == $value) {
+					$this->data = [$item];
 
-		$this->data = $this->data ? reset($this->data) : [];
+					return $this;
+				}
+			}
+		}
+
+		$this->data = [];
 
 		return $this;
 	}
