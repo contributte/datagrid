@@ -168,6 +168,11 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $outer_filter_rendering = FALSE;
 
 	/**
+	 * @var array
+	 */
+	protected $columns_export_order = [];
+
+	/**
 	 * @var bool
 	 */
 	private $remember_state = TRUE;
@@ -1099,6 +1104,10 @@ class DataGrid extends Nette\Application\UI\Control
 			throw new Nette\Application\ForbiddenRequestException;
 		}
 
+		if ($this->columns_export_order) {
+			$this->setColumnsOrder($this->columns_export_order);
+		}
+
 		$export = $this->exports[$id];
 
 		if ($export->isFiltered()) {
@@ -1512,6 +1521,16 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return $this;
+	}
+
+
+	/**
+	 * Columns order may be different for export and normal grid
+	 * @param array $order
+	 */
+	public function setColumnsExportOrder($order)
+	{
+		$this->columns_export_order = (array) $order;
 	}
 
 
