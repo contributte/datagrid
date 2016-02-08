@@ -1437,7 +1437,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$list[$key] = $key;
 		}
 
-		$list['all'] = $this->getTranslator()->translate('Vše');
+		$list['all'] = $this->getTranslator()->translate('All');
 
 		return $list;
 	}
