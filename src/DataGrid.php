@@ -1079,15 +1079,10 @@ class DataGrid extends Nette\Application\UI\Control
 		foreach ($this->getSessionData() as $key => $value) {
 			if (!in_array($key, ['_grid_per_page', '_grid_sort', '_grid_page'])) {
 				$this->deleteSesssionData($key);
-				if ($value instanceof \Traversable) {
-					foreach ($value as $key2 => $value2) {
-						$this->filter[$key][$key2] = NULL;
-					}
-				} else {
-					$this->filter[$key] = NULL;
-				}
 			}
 		}
+
+		$this->filter = [];
 
 		$this->reload(['grid']);
 	}
@@ -1567,7 +1562,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function getSessionData($key = NULL)
 	{
 		if (!$this->remember_state) {
-			return NULL;
+			return $key ? NULL : [];
 		}
 
 		return $key ? $this->grid_session->{$key} : $this->grid_session;
