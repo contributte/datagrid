@@ -12,6 +12,7 @@ use Nette;
 use LeanMapper;
 use DibiRow;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
+use Nette\Utils\Html;
 
 class Row extends Nette\Object
 {
@@ -36,6 +37,11 @@ class Row extends Nette\Object
 	 */
 	protected $id;
 
+	/**
+	 * @var Html
+	 */
+	protected $control;
+
 
 	/**
 	 * @param mixed  $item
@@ -43,6 +49,7 @@ class Row extends Nette\Object
 	 */
 	public function __construct(DataGrid $datagrid, $item, $primary_key)
 	{
+		$this->control = Html::el('tr');
 		$this->datagrid = $datagrid;
 		$this->item = $item;
 		$this->primary_key = $primary_key;
@@ -86,6 +93,28 @@ class Row extends Nette\Object
 			return $this->getDoctrineEntityProperty($this->item, $key);
 
 		}
+	}
+
+
+	/**
+	 * @return Html
+	 */
+	public function getControl()
+	{
+		return $this->control;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getControlClass()
+	{
+		if (!$class = $this->control->class) {
+			return '';
+		}
+
+		return implode(' ', array_keys($class));
 	}
 
 
