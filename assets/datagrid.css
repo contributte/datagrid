@@ -24,6 +24,15 @@
   margin-left: 1em;
 }
 
+.datagrid .settings {
+  margin-left: 1em;
+  margin-top: .35em;
+}
+
+.datagrid .settings .dropdown-menu--grid {
+  font-size: 12px;
+}
+
 .datagrid .row-reset-filter {
   text-align: right;
   margin-bottom: 0.5em;
@@ -39,6 +48,15 @@
 
 .datagrid table {
   margin: 0;
+}
+
+.datagrid table thead tr .column-settings-menu {
+  display: none;
+  cursor: pointer;
+}
+
+.datagrid table thead tr .column-settings-menu .dropdown-menu {
+  font-size: 12px;
 }
 
 .datagrid table thead tr.row-group-actions th {
@@ -66,6 +84,10 @@
 .datagrid table thead tr th .datagrid-col-filter-range .input-group-addon {
   background-color: inherit;
   border: none;
+}
+
+.datagrid table thead tr th:hover > .column-settings-menu {
+  display: inline-block;
 }
 
 .datagrid table tbody td {

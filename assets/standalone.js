@@ -4649,16 +4649,13 @@ document.addEventListener('DOMContentLoaded', function() {
   return window.happy.init();
 });
 
-var datagridSortable, datagridSortableTree;
+var datagridSortable, datagridSortableTree, hiddenColumns;
 
 $(document).on('change', 'select[data-autosubmit]', function() {
   return $(this).closest('form').submit();
-}).on('change', 'input[data-autosubmit], textarea[data-autosubmit]', function(e) {
+}).on('change', 'input[data-autosubmit][data-autosubmit-change]', function(e) {
   var $this, code;
   code = e.which || e.keyCode || 0;
-  if ((code !== 13) && ((code >= 9 && code <= 40) || (code >= 112 && code <= 123))) {
-    return;
-  }
   clearTimeout(window.datagrid_autosubmit_timer);
   $this = $(this);
   return window.datagrid_autosubmit_timer = setTimeout((function(_this) {
@@ -4666,7 +4663,7 @@ $(document).on('change', 'select[data-autosubmit]', function() {
       return $this.closest('form').submit();
     };
   })(this), 200);
-}).on('keyup', 'input[data-autosubmit], textarea[data-autosubmit]', function(e) {
+}).on('keyup', 'input[data-autosubmit]', function(e) {
   var $this, code;
   code = e.which || e.keyCode || 0;
   if ((code !== 13) && ((code >= 9 && code <= 40) || (code >= 112 && code <= 123))) {

@@ -8,11 +8,11 @@
 		{label $input class => 'col-sm-3 control-label' /}
 		<div class="col-sm-9">
 			<div class="input-group">
-				{input $input, class => 'form-control input-sm', data-autosubmit => TRUE}
+				{input $input, class => 'form-control input-sm', data-autosubmit => TRUE, data-autosubmit-change => TRUE}
 				<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
 			</div>
 		</div>
 	</div>
 {else}
-	{input $input, class => 'form-control input-sm', data-autosubmit => TRUE}
+	{input $input, class => 'form-control input-sm', data-autosubmit => TRUE, data-autosubmit-change => TRUE}
 {/if}

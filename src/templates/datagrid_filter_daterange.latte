@@ -10,14 +10,14 @@
 		{label $container['from'], class => 'col-sm-3 control-label' /}
 		<div class="col-sm-4">
 			<div class="input-group">
-				{input $container['from'], class => 'form-control input-sm', data-autosubmit => TRUE}
+				{input $container['from'], class => 'form-control input-sm', data-autosubmit => TRUE, data-autosubmit-change => TRUE}
 				<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
 			</div>
 		</div>
 		{label $container['to'], class => 'filter-range-delimiter col-sm-1 control-label' /}
 		<div class="col-sm-4">
 			<div class="input-group">
-				{input $container['to'], class => 'form-control input-sm', data-autosubmit => TRUE}
+				{input $container['to'], class => 'form-control input-sm', data-autosubmit => TRUE, data-autosubmit-change => TRUE}
 				<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
 			</div>
 		</div>
@@ -26,9 +26,9 @@
 	<div class="datagrid-col-filter-date-range form-inline">
 		<div class="form-group">
 			<div class="input-group">
-				{input $container['from'], class => 'form-control input-sm', data-autosubmit => TRUE}
+				{input $container['from'], class => 'form-control input-sm', data-autosubmit => TRUE, data-autosubmit-change => TRUE}
 				<div class="input-group-addon">-</div>
-				{input $container['to'], class => 'form-control input-sm', data-autosubmit => TRUE}
+				{input $container['to'], class => 'form-control input-sm', data-autosubmit => TRUE, data-autosubmit-change => TRUE}
 			</div>
 		</div>
 	</div>
