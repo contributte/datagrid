@@ -342,7 +342,22 @@ class DataGrid extends Nette\Application\UI\Control
 	public function setRowCallback(callable $callback)
 	{
 		$this->rowCallback = $callback;
+
 		return $this;
+	}
+
+
+	/**
+	 * Set default sorting
+	 * @param aray $sort
+	 */
+	public function setDefaultSort($sort)
+	{
+		if (empty($this->sort)) {
+			$this->sort = (array) $sort;
+
+			$this->saveSessionData('_grid_sort', $this->sort);
+		}
 	}
 
 
