@@ -469,6 +469,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 			$this->saveSessionData('_grid_sort', $this->sort);
 		}
+
+		return $this;
 	}
 
 
