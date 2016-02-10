@@ -22,8 +22,8 @@ class ColumnDateTime extends Column
 
 	/**
 	 * Format row item value as DateTime
-	 * @param  Row   $row
-	 * @return mixed
+	 * @param  Row $row
+	 * @return string
 	 */
 	public function getColumnValue(Row $row)
 	{
@@ -78,6 +78,7 @@ class ColumnDateTime extends Column
 	/**
 	 * Set DateTime format
 	 * @param string $format
+	 * @return static
 	 */
 	public function setFormat($format)
 	{

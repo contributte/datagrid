@@ -136,7 +136,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @var bool
 	 */
 	protected $sortable = FALSE;
-	
+
 	/**
 	 * @var string
 	 */
@@ -539,7 +539,8 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Setting tree view
 	 * @param callable $get_children_callback
-	 * @param string   $tree_view_has_children_column
+	 * @param string $tree_view_has_children_column
+	 * @return DataGrid
 	 */
 	public function setTreeView($get_children_callback, $tree_view_has_children_column = 'has_children')
 	{
@@ -578,7 +579,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param  string      $key
 	 * @param  string      $name
 	 * @param  string|null $column
-	 * @return Column\Column
+	 * @return Column\ColumnText
 	 */
 	public function addColumnText($key, $name, $column = NULL)
 	{
@@ -594,7 +595,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param  string      $key
 	 * @param  string      $name
 	 * @param  string|null $column
-	 * @return Column\Column
+	 * @return Column\ColumnLink
 	 */
 	public function addColumnLink($key, $name, $href = NULL, $column = NULL, array $params = NULL)
 	{
@@ -615,7 +616,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param  string      $key
 	 * @param  string      $name
 	 * @param  string|null $column
-	 * @return Column\Column
+	 * @return Column\ColumnNumber
 	 */
 	public function addColumnNumber($key, $name, $column = NULL)
 	{
@@ -631,7 +632,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param  string      $key
 	 * @param  string      $name
 	 * @param  string|null $column
-	 * @return Column\Column
+	 * @return Column\ColumnDateTime
 	 */
 	public function addColumnDateTime($key, $name, $column = NULL)
 	{
@@ -936,7 +937,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Tell that filter is active from whatever reasons
-	 * return self
+	 * return static
 	 */
 	public function setFilterActive()
 	{
@@ -949,6 +950,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * If we want to sent some initial filter
 	 * @param array $filter
+	 * @return static
 	 */
 	public function setFilter(array $filter)
 	{
@@ -1030,6 +1032,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Should be datagrid filters rendered separately?
 	 * @param boolean $out
+	 * @return static
 	 */
 	public function setOuterFilterRendering($out = TRUE)
 	{
@@ -1090,9 +1093,10 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Add export of type callback
-	 * @param string   $text
+	 * @param string $text
 	 * @param callable $callback
-	 * @param boolean  $filtered
+	 * @param boolean $filtered
+	 * @return Export\Export
 	 */
 	public function addExportCallback($text, $callback, $filtered = FALSE)
 	{
@@ -1108,6 +1112,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Add already implemented csv export
 	 * @param string $text
 	 * @param string $csv_file_name
+	 * @return Export\Export
 	 */
 	public function addExportCsv($text, $csv_file_name)
 	{
@@ -1119,6 +1124,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Add already implemented csv export, but for filtered data
 	 * @param string $text
 	 * @param string $csv_file_name
+	 * @return Export\Export
 	 */
 	public function addExportCsvFiltered($text, $csv_file_name)
 	{
@@ -1129,6 +1135,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Add export to array
 	 * @param Export\Export $export
+	 * @return Export\Export
 	 */
 	protected function addToExports(Export\Export $export)
 	{
@@ -1212,6 +1219,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Handler for sorting
+	 * @param array $sort
 	 * @return void
 	 */
 	public function handleSort(array $sort)
@@ -1551,6 +1559,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Order Grid to "be paginated"
 	 * @param bool $do
+	 * @return static
 	 */
 	public function setPagination($do)
 	{
@@ -1592,6 +1601,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set datagrid translator
 	 * @param Nette\Localization\ITranslator $translator
+	 * @return static
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator)
 	{
@@ -1623,6 +1633,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set order of datagrid columns
 	 * @param array $order
+	 * @return static
 	 */
 	public function setColumnsOrder($order)
 	{
@@ -1672,6 +1683,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Should datagrid remember its filters/pagination/etc using session?
 	 * @param bool $remember
+	 * @return static
 	 */
 	public function setRememberState($remember = TRUE)
 	{
@@ -1684,6 +1696,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Should datagrid refresh url using history API?
 	 * @param bool $refresh
+	 * @return static
 	 */
 	public function setRefreshUrl($refresh = TRUE)
 	{
@@ -1751,6 +1764,8 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Items can have thair detail - toggled
 	 * @param mixed $detail callable|string|bool
+	 * @param bool|NULL $primary_where_column
+	 * @return Column\ItemDetail
 	 */
 	public function setItemsDetail($detail = TRUE, $primary_where_column = NULL)
 	{
@@ -1844,6 +1859,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Order Grid to set columns hideable.
 	 * @param bool $do
+	 * @return static
 	 */
 	public function setColumnsHideable()
 	{
