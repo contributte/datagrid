@@ -94,11 +94,11 @@ class Action extends Column
 		}
 
 		$a = Html::el('a')
-			->href($this->grid->getPresenter()->link($this->href, $this->getItemParams($row)));
+			->href($this->grid->getParent()->link($this->href, $this->getItemParams($row)));
 
 		if ($this->icon) {
 			$a->add(Html::el('span')->class(DataGrid::$icon_prefix.$this->icon));
-			
+
 			if (strlen($this->name)) {
 				$a->add('&nbsp;');
 			}
