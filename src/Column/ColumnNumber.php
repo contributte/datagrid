@@ -12,6 +12,10 @@ use Ublaboo\DataGrid\Row;
 
 class ColumnNumber extends Column
 {
+	/**
+	 * @var string
+	 */
+	protected $align = 'right';
 
 	/**
 	 * @var array

@@ -13,6 +13,10 @@ use Ublaboo\DataGrid\Row;
 
 class ColumnDateTime extends Column
 {
+	/**
+	 * @var string
+	 */
+	protected $align = 'right';
 
 	/**
 	 * @var string
