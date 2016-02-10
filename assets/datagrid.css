@@ -150,6 +150,10 @@
   text-align: right;
 }
 
+.datagrid .datagrid-tree > .datagrid-tree-header .datagrid-tree-item-right-actions-action {
+  opacity: 0;
+}
+
 .datagrid .datagrid-tree > .datagrid-tree-item {
   margin-left: 20px;
 }
@@ -221,6 +225,11 @@
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right {
   order: 2;
   z-index: 2;
+  flex-basis: 50%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  flex-direction: row;
 }
 
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .dropdown-menu {
@@ -234,15 +243,16 @@
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns {
   white-space: nowrap;
   display: flex;
+  flex-basis: 70%;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-end;
 }
 
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns .datagrid-tree-item-right-columns-column {
   padding: 0 7px;
   margin-right: 4px;
+  flex-basis: 25%;
 }
 
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns .datagrid-tree-item-right-columns-column:last-child {
@@ -281,6 +291,42 @@
 
 .datagrid .datagrid-tree .datagrid-tree-item.has-children > .datagrid-tree-item-children {
   display: none;
+}
+
+.datagrid .datagrid-tree .datagrid-tree-item.has-children > .datagrid-tree-item-children .datagrid-tree-item-right {
+  flex-basis: calc(50% + 14px);
+}
+
+.datagrid .datagrid-tree-item-children .datagrid-tree-item-right {
+  flex-basis: calc(50% + 14px);
+}
+
+.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+  flex-basis: calc(50% + 28px) !important;
+}
+
+.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+  flex-basis: calc(50% + 42px) !important;
+}
+
+.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+  flex-basis: calc(50% + 56px) !important;
+}
+
+.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+  flex-basis: calc(50% + 74px) !important;
+}
+
+.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+  flex-basis: calc(50% + 88px) !important;
+}
+
+.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+  flex-basis: calc(50% + 102px) !important;
+}
+
+.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+  flex-basis: calc(50% + 116px) !important;
 }
 
 .datagrid .btn {
