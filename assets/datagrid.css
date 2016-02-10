@@ -231,17 +231,13 @@
 }
 
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right {
+  position: relative;
   order: 2;
-  z-index: 2;
   flex-basis: 50%;
   display: flex;
   flex-wrap: nowrap;
   justify-content: flex-end;
   flex-direction: row;
-}
-
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .dropdown-menu {
-  z-index: 1000;
 }
 
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .btn {
@@ -292,9 +288,8 @@
   box-sizing: border-box;
   position: relative;
   width: calc(100% - 28px);
-  min-height: 17px;
-  margin-top: -17px;
-  z-index: 1;
+  min-height: 9px;
+  margin-top: -9px;
 }
 
 .datagrid .datagrid-tree .datagrid-tree-item.has-children > .datagrid-tree-item-children {

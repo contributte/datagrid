@@ -4800,7 +4800,7 @@ datagridSortableTree = function() {
       }
       parent = row.parent().closest('.datagrid-tree-item');
       if (parent.length) {
-        parent.find('.datagrid-tree-item-children').css({
+        parent.find('.datagrid-tree-item-children').first().css({
           display: 'block'
         });
         parent.addClass('has-children');

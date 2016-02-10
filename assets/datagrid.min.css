@@ -43,8 +43,7 @@
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left>.chevron:hover{-webkit-box-shadow:0 0 3px 0 #b4b4b4;-moz-box-shadow:0 0 3px 0 #b4b4b4;box-shadow:0 0 3px 0 #b4b4b4}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left>.chevron.toggle-rotate{transform:rotate(90deg)}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left>.chevron .fa{font-size:10px;transform:translate(1px,0)}
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right{order:2;z-index:2;flex-basis:50%;display:flex;flex-wrap:nowrap;justify-content:flex-end;flex-direction:row}
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .dropdown-menu{z-index:1000}
+.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right{position:relative;order:2;flex-basis:50%;display:flex;flex-wrap:nowrap;justify-content:flex-end;flex-direction:row}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .btn{margin-top:-3px}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns{white-space:nowrap;display:flex;flex-basis:70%;flex-direction:row;flex-wrap:nowrap;justify-content:flex-end}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns .datagrid-tree-item-right-columns-column{padding:0 7px;margin-right:4px;flex-basis:25%}
@@ -53,7 +52,7 @@
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-actions .datagrid-tree-item-right-actions-action{margin-right:4px}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-actions .datagrid-tree-item-right-actions-action:last-child{margin-right:0}
 .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-children:not(.datagrid-tree){margin-left:28px}
-.datagrid .datagrid-tree .datagrid-tree-item:not(.has-children)>.datagrid-tree-item-children{box-sizing:border-box;position:relative;width:calc(100% - 28px);min-height:17px;margin-top:-17px;z-index:1}
+.datagrid .datagrid-tree .datagrid-tree-item:not(.has-children)>.datagrid-tree-item-children{box-sizing:border-box;position:relative;width:calc(100% - 28px);min-height:9px;margin-top:-9px}
 .datagrid .datagrid-tree .datagrid-tree-item.has-children>.datagrid-tree-item-children{display:none}
 .datagrid .datagrid-tree .datagrid-tree-item.has-children>.datagrid-tree-item-children .datagrid-tree-item-right,.datagrid .datagrid-tree-item-children .datagrid-tree-item-right{flex-basis:calc(50% + 14px)}
 .datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right{flex-basis:calc(50% + 28px)!important}
