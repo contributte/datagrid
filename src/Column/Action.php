@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\DataGridHasToBeAttachedToPresenterComponentException;
 use Ublaboo\DataGrid\Row;
 
 class Action extends Column
@@ -93,12 +94,18 @@ class Action extends Column
 			}
 		}
 
+		try {
+			$parent = $this->grid->getParent();
+		} catch (DataGridHasToBeAttachedToPresenterComponentException $e) {
+			$parent = $this->grid->getPresenter();
+		}
+
 		$a = Html::el('a')
-			->href($this->grid->getPresenter()->link($this->href, $this->getItemParams($row)));
+			->href($parent->link($this->href, $this->getItemParams($row)));
 
 		if ($this->icon) {
 			$a->add(Html::el('span')->class(DataGrid::$icon_prefix.$this->icon));
-			
+
 			if (strlen($this->name)) {
 				$a->add('&nbsp;');
 			}

@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid;
 
 use Nette;
+use Nette\Application\UI\PresenterComponent;
 use Ublaboo\DataGrid\Utils\ArraysHelper;
 use Nette\Application\UI\Form;
 
@@ -1915,6 +1916,23 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return $this->columns;
+	}
+
+
+
+	/**
+	 * @return PresenterComponent
+	 */
+	public function getParent()
+	{
+		$parent = parent::getParent();
+		if (!$parent instanceof PresenterComponent) {
+			throw new DataGridHasToBeAttachedToPresenterComponentException(
+				"DataGrid is attached to: '" . get_class($parent) . "', but instance of PresenterComponent is needed."
+			);
+		}
+
+		return $parent;
 	}
 
 }
