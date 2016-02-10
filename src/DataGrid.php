@@ -210,6 +210,11 @@ class DataGrid extends Nette\Application\UI\Control
 		'action' => []
 	];
 
+	/**
+	 * @var bool
+	 */
+	protected $can_hide_columns = FALSE;
+
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -245,14 +250,9 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Find some unique session key name
-	 * @return string
-	 */
-	public function getSessionSectionName()
-	{
-		return $this->getPresenter()->getName().':'.$this->getName();
-	}
+	/********************************************************************************
+	 *                                  RENDERING                                   *
+	 ********************************************************************************/
 
 
 	/**
@@ -335,7 +335,13 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/********************************************************************************
+	 *                                 ROW CALLBACK                                 *
+	 ********************************************************************************/
+
+
 	/**
+	 * Each row can be modified with user callback
 	 * @param  callable  $callback
 	 * @return static
 	 */
@@ -347,35 +353,13 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Set default sorting
-	 * @param aray $sort
-	 */
-	public function setDefaultSort($sort)
-	{
-		if (empty($this->sort)) {
-			$this->sort = (array) $sort;
-
-			$this->saveSessionData('_grid_sort', $this->sort);
-		}
-	}
+	/********************************************************************************
+	 *                                 DATA SOURCE                                  *
+	 ********************************************************************************/
 
 
 	/**
-	 * Return current paginator class
-	 * @return NULL|Components\DataGridPaginator\DataGridPaginator
-	 */
-	public function getPaginator()
-	{
-		if ($this->isPaginated() && $this->per_page !== 'all') {
-			return $this['paginator'];
-		}
-
-		return NULL;
-	}
-
-
-	/**
+	 * By default ID, you can change that
 	 * @param string $primary_key
 	 */
 	public function setPrimaryKey($primary_key)
@@ -429,52 +413,9 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Is filter active?
-	 * @return boolean
-	 */
-	public function isFilterActive()
-	{
-		$is_filter = ArraysHelper::testTruthy($this->filter);
-
-		return ($is_filter) || $this->force_filter_active;
-	}
-
-
-	/**
-	 * Tell that filter is active from whatever reasons
-	 * return self
-	 */
-	public function setFilterActive()
-	{
-		$this->force_filter_active = TRUE;
-
-		return $this;
-	}
-
-
-	/**
-	 * If we want to sent some initial filter
-	 * @param array $filter
-	 */
-	public function setFilter(array $filter)
-	{
-		$this->filter = $filter;
-
-		return $this;
-	}
-
-
-	/**
-	 * Set options of select "items_per_page"
-	 * @param array $items_per_page_list
-	 */
-	public function setItemsPerPageList(array $items_per_page_list)
-	{
-		$this->items_per_page_list = $items_per_page_list;
-
-		return $this;
-	}
+	/********************************************************************************
+	 *                                  TEMPLATING                                  *
+	 ********************************************************************************/
 
 
 	/**
@@ -509,25 +450,22 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Order Grid to "be paginated"
-	 * @param bool $do
-	 */
-	public function setPagination($do)
-	{
-		$this->do_paginate = (bool) $do;
-
-		return $this;
-	}
+	/********************************************************************************
+	 *                                   SORTING                                    *
+	 ********************************************************************************/
 
 
 	/**
-	 * Tell whether Grid is paginated
-	 * @return bool
+	 * Set default sorting
+	 * @param aray $sort
 	 */
-	public function isPaginated()
+	public function setDefaultSort($sort)
 	{
-		return $this->do_paginate;
+		if (empty($this->sort)) {
+			$this->sort = (array) $sort;
+
+			$this->saveSessionData('_grid_sort', $this->sort);
+		}
 	}
 
 
@@ -578,6 +516,11 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/********************************************************************************
+	 *                                  TREE VIEW                                   *
+	 ********************************************************************************/
+
+
 	/**
 	 * Is tree view set?
 	 * @return boolean
@@ -621,7 +564,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/********************************************************************************
-	 *                                    Columns                                   *
+	 *                                    COLUMNS                                   *
 	 ********************************************************************************/
 
 
@@ -735,7 +678,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/********************************************************************************
-	 *                                    Actions                                   *
+	 *                                    ACTIONS                                   *
 	 ********************************************************************************/
 
 
@@ -800,7 +743,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/********************************************************************************
-	 *                                    Filters                                   *
+	 *                                    FILTERS                                   *
 	 ********************************************************************************/
 
 
@@ -959,6 +902,149 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Remove filter
+	 * @param string $key
+	 * @return void
+	 */
+	public function removeFilter($key)
+	{
+		unset($this->filters[$key]);
+	}
+
+
+	/********************************************************************************
+	 *                                  FILTERING                                   *
+	 ********************************************************************************/
+
+
+	/**
+	 * Is filter active?
+	 * @return boolean
+	 */
+	public function isFilterActive()
+	{
+		$is_filter = ArraysHelper::testTruthy($this->filter);
+
+		return ($is_filter) || $this->force_filter_active;
+	}
+
+
+	/**
+	 * Tell that filter is active from whatever reasons
+	 * return self
+	 */
+	public function setFilterActive()
+	{
+		$this->force_filter_active = TRUE;
+
+		return $this;
+	}
+
+
+	/**
+	 * If we want to sent some initial filter
+	 * @param array $filter
+	 */
+	public function setFilter(array $filter)
+	{
+		$this->filter = $filter;
+
+		return $this;
+	}
+
+
+	/**
+	 * FilterAndGroupAction form factory
+	 * @return Form
+	 */
+	public function createComponentFilter()
+	{
+		$form = new Form($this, 'filter');
+
+		$form->setMethod('get');
+
+		/**
+		 * Filter part
+		 */
+		$filter_container = $form->addContainer('filter');
+
+		foreach ($this->filters as $filter) {
+			$filter->addToFormContainer($filter_container, $filter_container);
+		}
+
+		/**
+		 * Group action part
+		 */
+		$group_action_container = $form->addContainer('group_action');
+
+		if ($this->hasGroupActions()) {
+			$this->getGroupActionCollection()->addToFormContainer($group_action_container, $form, $this->getTranslator());
+		}
+
+		$form->setDefaults(['filter' => $this->filter]);
+
+		$form->onSubmit[] = [$this, 'filterSucceeded'];
+
+		return $form;
+	}
+
+
+	/**
+	 * Set $this->filter values after filter form submitted
+	 * @param  Form $form
+	 * @return void
+	 */
+	public function filterSucceeded(Form $form)
+	{
+		$values = $form->getValues();
+
+		if ($this->getPresenter()->isAjax()) {
+			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
+				return;
+			}
+		}
+
+		$values = $values['filter'];
+
+		foreach ($values as $key => $value) {
+			/**
+			 * Session stuff
+			 */
+			$this->saveSessionData($key, $value);
+
+			/**
+			 * Other stuff
+			 */
+			$this->filter[$key] = $value;
+		}
+
+		$this->reload();
+	}
+
+
+	/**
+	 * Should be datagrid filters rendered separately?
+	 * @param boolean $out
+	 */
+	public function setOuterFilterRendering($out = TRUE)
+	{
+		$this->outer_filter_rendering = (bool) $out;
+
+		return $this;
+	}
+
+
+	/**
+	 * Are datagrid filters rendered separately?
+	 * @return boolean
+	 */
+	public function hasOuterFilterRendering()
+	{
+		return $this->outer_filter_rendering;
+	}
+
+
+	/**
 	 * Try to restore session stuff
 	 * @return void
 	 */
@@ -992,19 +1078,8 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Remove filter
-	 * @param string $key
-	 * @return void
-	 */
-	public function removeFilter($key)
-	{
-		unset($this->filters[$key]);
-	}
-
-
 	/********************************************************************************
-	 *                                    Exports                                   *
+	 *                                    EXPORTS                                   *
 	 ********************************************************************************/
 
 
@@ -1060,8 +1135,16 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	public function resetExportsLinks()
+	{
+		foreach ($this->exports as $id => $export) {
+			$export->setLink($this->link('export!', ['id' => $id]));
+		}
+	}
+
+
 	/********************************************************************************
-	 *                                 Group actions                                *
+	 *                                 GROUP ACTIONS                                *
 	 ********************************************************************************/
 
 
@@ -1090,8 +1173,18 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Has datagrid some group actions?
+	 * @return boolean
+	 */
+	public function hasGroupActions()
+	{
+		return (bool) $this->group_action_collection;
+	}
+
+
 	/********************************************************************************
-	 *                                    Signals                                   *
+	 *                                   HANDLERS                                   *
 	 ********************************************************************************/
 
 
@@ -1309,8 +1402,20 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/********************************************************************************
-	 *                                  Components                                  *
+	 *                                  PAGINATION                                  *
 	 ********************************************************************************/
+
+
+	/**
+	 * Set options of select "items_per_page"
+	 * @param array $items_per_page_list
+	 */
+	public function setItemsPerPageList(array $items_per_page_list)
+	{
+		$this->items_per_page_list = $items_per_page_list;
+
+		return $this;
+	}
 
 
 	/**
@@ -1365,88 +1470,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * FilterAndGroupAction form factory
-	 * @return Form
-	 */
-	public function createComponentFilter()
-	{
-		$form = new Form($this, 'filter');
-
-		$form->setMethod('get');
-
-		/**
-		 * Filter part
-		 */
-		$filter_container = $form->addContainer('filter');
-
-		foreach ($this->filters as $filter) {
-			$filter->addToFormContainer($filter_container, $filter_container);
-		}
-
-		/**
-		 * Group action part
-		 */
-		$group_action_container = $form->addContainer('group_action');
-
-		if ($this->hasGroupActions()) {
-			$this->getGroupActionCollection()->addToFormContainer($group_action_container, $form, $this->getTranslator());
-		}
-
-		$form->setDefaults(['filter' => $this->filter]);
-
-		$form->onSubmit[] = [$this, 'filterSucceeded'];
-
-		return $form;
-	}
-
-
-	/**
-	 * Set $this->filter values after filter form submitted
-	 * @param  Form $form
-	 * @return void
-	 */
-	public function filterSucceeded(Form $form)
-	{
-		$values = $form->getValues();
-
-		if ($this->getPresenter()->isAjax()) {
-			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
-				return;
-			}
-		}
-
-		$values = $values['filter'];
-
-		foreach ($values as $key => $value) {
-			/**
-			 * Session stuff
-			 */
-			$this->saveSessionData($key, $value);
-
-			/**
-			 * Other stuff
-			 */
-			$this->filter[$key] = $value;
-		}
-
-		$this->reload();
-	}
-
-
-	/********************************************************************************
-	 *                               Support functions                              *
-	 ********************************************************************************/
-
-
-	public function resetExportsLinks()
-	{
-		foreach ($this->exports as $id => $export) {
-			$export->setLink($this->link('export!', ['id' => $id]));
-		}
-	}
-
-
-	/**
 	 * Get parameter per_page
 	 * @return int
 	 */
@@ -1481,32 +1504,55 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * Get primary key of datagrid data source
-	 * @return string
+	 * Order Grid to "be paginated"
+	 * @param bool $do
 	 */
-	public function getPrimaryKey()
+	public function setPagination($do)
 	{
-		return $this->primary_key;
+		$this->do_paginate = (bool) $do;
+
+		return $this;
 	}
 
 
 	/**
-	 * Get set of set columns
-	 * @return Column\IColumn[]
+	 * Tell whether Grid is paginated
+	 * @return bool
 	 */
-	public function getColumns()
+	public function isPaginated()
 	{
-		return $this->columns;
+		return $this->do_paginate;
 	}
 
 
 	/**
-	 * Has datagrid some group actions?
-	 * @return boolean
+	 * Return current paginator class
+	 * @return NULL|Components\DataGridPaginator\DataGridPaginator
 	 */
-	public function hasGroupActions()
+	public function getPaginator()
 	{
-		return (bool) $this->group_action_collection;
+		if ($this->isPaginated() && $this->per_page !== 'all') {
+			return $this['paginator'];
+		}
+
+		return NULL;
+	}
+
+
+	/********************************************************************************
+	 *                                     I18N                                     *
+	 ********************************************************************************/
+
+
+	/**
+	 * Set datagrid translator
+	 * @param Nette\Localization\ITranslator $translator
+	 */
+	public function setTranslator(Nette\Localization\ITranslator $translator)
+	{
+		$this->translator = $translator;
+
+		return $this;
 	}
 
 
@@ -1524,38 +1570,9 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Set datagrid translator
-	 * @param Nette\Localization\ITranslator $translator
-	 */
-	public function setTranslator(Nette\Localization\ITranslator $translator)
-	{
-		$this->translator = $translator;
-
-		return $this;
-	}
-
-
-	/**
-	 * Should be datagrid filters rendered separately?
-	 * @param boolean $out
-	 */
-	public function setOuterFilterRendering($out = TRUE)
-	{
-		$this->outer_filter_rendering = (bool) $out;
-
-		return $this;
-	}
-
-
-	/**
-	 * Are datagrid filters rendered separately?
-	 * @return boolean
-	 */
-	public function hasOuterFilterRendering()
-	{
-		return $this->outer_filter_rendering;
-	}
+	/********************************************************************************
+	 *                                 COLUMNS ORDER                                *
+	 ********************************************************************************/
 
 
 	/**
@@ -1589,6 +1606,21 @@ class DataGrid extends Nette\Application\UI\Control
 	public function setColumnsExportOrder($order)
 	{
 		$this->columns_export_order = (array) $order;
+	}
+
+
+	/********************************************************************************
+	 *                                SESSION & URL                                 *
+	 ********************************************************************************/
+
+
+	/**
+	 * Find some unique session key name
+	 * @return string
+	 */
+	public function getSessionSectionName()
+	{
+		return $this->getPresenter()->getName().':'.$this->getName();
 	}
 
 
@@ -1657,6 +1689,11 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/********************************************************************************
+	 *                                  ITEM DETAIL                                 *
+	 ********************************************************************************/
+
+
 	/**
 	 * Get items detail parameters
 	 * @return array
@@ -1712,24 +1749,9 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Get cont of columns
-	 * @return int
-	 */
-	public function getColumnsCount()
-	{
-		$count = sizeof($this->columns);
-
-		if ($this->actions || $this->isSortable() || $this->getItemsDetail()) {
-			$count++;
-		}
-
-		if ($this->hasGroupActions()) {
-			$count++;
-		}
-
-		return $count;
-	}
+	/********************************************************************************
+	 *                                ROW PRIVILEGES                                *
+	 ********************************************************************************/
 
 
 	public function allowRowsGroupAction(callable $condition)
@@ -1757,6 +1779,78 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return isset($condition[$key]) ? $condition[$key] : FALSE;
+	}
+
+
+	/********************************************************************************
+	 *                               HIDEABLE COLUMNS                               *
+	 ********************************************************************************/
+
+
+	/**
+	 * Can datagrid hide colums?
+	 * @return boolean
+	 */
+	public function canHideColumns()
+	{
+		return (bool) $this->can_hide_columns;
+	}
+
+
+	/**
+	 * Order Grid to set columns hideable.
+	 * @param bool $do
+	 */
+	public function setColumnsHideable()
+	{
+		$this->can_hide_columns = TRUE;
+
+		return $this;
+	}
+
+
+	/********************************************************************************
+	 *                                   INTERNAL                                   *
+	 ********************************************************************************/
+
+
+	/**
+	 * Get cont of columns
+	 * @return int
+	 */
+	public function getColumnsCount()
+	{
+		$count = sizeof($this->columns);
+
+		if ($this->actions || $this->isSortable() || $this->getItemsDetail()) {
+			$count++;
+		}
+
+		if ($this->hasGroupActions()) {
+			$count++;
+		}
+
+		return $count;
+	}
+
+
+	/**
+	 * Get primary key of datagrid data source
+	 * @return string
+	 */
+	public function getPrimaryKey()
+	{
+		return $this->primary_key;
+	}
+
+
+	/**
+	 * Get set of set columns
+	 * @return Column\IColumn[]
+	 */
+	public function getColumns()
+	{
+		return $this->columns;
 	}
 
 }
