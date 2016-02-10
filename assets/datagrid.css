@@ -33,6 +33,10 @@
   font-size: 12px;
 }
 
+.datagrid .settings .dropdown-menu--grid li .fa {
+  margin-right: 0.5em;
+}
+
 .datagrid .row-reset-filter {
   text-align: right;
   margin-bottom: 0.5em;
@@ -51,12 +55,16 @@
 }
 
 .datagrid table thead tr .column-settings-menu {
-  display: none;
+  opacity: 0;
   cursor: pointer;
 }
 
 .datagrid table thead tr .column-settings-menu .dropdown-menu {
   font-size: 12px;
+}
+
+.datagrid table thead tr .column-settings-menu .dropdown-menu li .fa {
+  margin-right: 0.5em;
 }
 
 .datagrid table thead tr.row-group-actions th {
@@ -87,7 +95,7 @@
 }
 
 .datagrid table thead tr th:hover > .column-settings-menu {
-  display: inline-block;
+  opacity: 1;
 }
 
 .datagrid table tbody td {

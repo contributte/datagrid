@@ -313,7 +313,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->template->rows = $rows;
 
-		$this->template->columns = $this->columns;
+		$this->template->columns = $this->getColumns();
 		$this->template->actions = $this->actions;
 		$this->template->exports = $this->exports;
 		$this->template->filters = $this->filters;
@@ -1071,7 +1071,7 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		foreach ($this->getSessionData() as $key => $value) {
-			if (!in_array($key, ['_grid_per_page', '_grid_sort', '_grid_page'])) {
+			if (!in_array($key, ['_grid_per_page', '_grid_sort', '_grid_page', '_grid_hidden_columns'])) {
 				$this->filter[$key] = $value;
 			}
 		}
@@ -1401,6 +1401,46 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Tell datagrid to display all columns
+	 * @return void
+	 */
+	public function handleShowAllColumns()
+	{
+		$this->deleteSesssionData('_grid_hidden_columns');
+
+		$this->redrawControl();
+
+		$this->onRedraw();
+	}
+
+
+	/**
+	 * Notice datagrid to not display particular columns
+	 * @param  string $column
+	 * @return void
+	 */
+	public function handleHideColumn($column)
+	{
+		/**
+		 * Store info about hiding a column to session
+		 */
+		$columns = $this->getSessionData('_grid_hidden_columns');
+
+		if (empty($columns)) {
+			$columns = [$column];
+		} else if (!in_array($column, $columns)) {
+			array_push($columns, $column);
+		}
+
+		$this->saveSessionData('_grid_hidden_columns', $columns);
+
+		$this->redrawControl();
+
+		$this->onRedraw();
+	}
+
+
 	/********************************************************************************
 	 *                                  PAGINATION                                  *
 	 ********************************************************************************/
@@ -1654,13 +1694,13 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param  string $key
 	 * @return mixed
 	 */
-	public function getSessionData($key = NULL)
+	public function getSessionData($key = NULL, $default_value = NULL)
 	{
 		if (!$this->remember_state) {
-			return $key ? NULL : [];
+			return $key ? $default_value : [];
 		}
 
-		return $key ? $this->grid_session->{$key} : $this->grid_session;
+		return ($key ? $this->grid_session->{$key} : $this->grid_session) ?: $default_value;
 	}
 
 
@@ -1672,7 +1712,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function saveSessionData($key, $value)
 	{
-
 		if ($this->remember_state) {
 			$this->grid_session->{$key} = $value;
 		}
@@ -1820,7 +1859,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getColumnsCount()
 	{
-		$count = sizeof($this->columns);
+		$count = sizeof($this->getColumns());
 
 		if ($this->actions || $this->isSortable() || $this->getItemsDetail()) {
 			$count++;
@@ -1850,6 +1889,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getColumns()
 	{
+		foreach ($this->getSessionData('_grid_hidden_columns', []) as $column) {
+			$this->removeColumn($column);
+		}
+
 		return $this->columns;
 	}
 

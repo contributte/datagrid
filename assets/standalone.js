@@ -4649,7 +4649,7 @@ document.addEventListener('DOMContentLoaded', function() {
   return window.happy.init();
 });
 
-var datagridSortable, datagridSortableTree, hiddenColumns;
+var datagridSortable, datagridSortableTree;
 
 $(document).on('change', 'select[data-autosubmit]', function() {
   return $(this).closest('form').submit();

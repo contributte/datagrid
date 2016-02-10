@@ -34,7 +34,7 @@
 			{/if}
 			<table class="table table-hover table-bordered" n:snippet="table" n:block="data">
 				<thead>
-					<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports">
+					<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports || $control->canHideColumns()">
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
 							{if $control->hasGroupActions()}
 								{block group_actions}
@@ -53,6 +53,19 @@
 
 							<span class="pull-right exports" n:if="$exports" n:block="exports">
 								{foreach $exports as $export}{$export->render()}{/foreach}
+							</span>
+
+							<span class="pull-right settings" n:block="settings" n:if="$control->canHideColumns()">
+								<div class="btn-group">
+									<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<i class="{$icon_prefix}gear"></i>
+									</button>
+									<ul class="dropdown-menu dropdown-menu--grid">
+										<li>
+											<a n:href="showAllColumns!" class="ajax"><i class="{$icon_prefix}eye"></i> {_'Show all columns'}</a>
+										</li>
+									</ul>
+								</div>
 							</span>
 						</th>
 					</tr>
@@ -75,14 +88,28 @@
 										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()">
 											{_$column->getName()}
 											{if $column->isSortedBy()}
-												<span n:class="$column->isSortAsc() ? 'fa-caret-up' : 'fa-caret-down', 'fa'"></span>
+												<span n:class="$column->isSortAsc() ? $icon_prefix . 'up' : $icon_prefix . 'down', 'fa'"></span>
 											{else}
-												<span class="fa fa-sort"></span>
+												<span class="{$icon_prefix}sort"></span>
 											{/if}
 										</a>
 									{else}
 										{_$column->getName()}
 									{/if}
+
+									<span class="column-settings-menu pull-right" n:if="$control->canHideColumns()">
+										<div class="btn-group">
+											<a type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+												<i class="{$icon_prefix}caret-down"></i>
+											</a>
+											<ul class="dropdown-menu dropdown-menu--grid">
+												<li>
+													<a n:href="hideColumn!, column => $key" class="ajax">
+														<i class="{$icon_prefix}eye-slash"></i> {_'Hide column'}</a>
+												</li>
+											</ul>
+										</div>
+									</span>
 								{/ifset}
 
 								{if !$control->hasOuterFilterRendering() && isset($filters[$key])}

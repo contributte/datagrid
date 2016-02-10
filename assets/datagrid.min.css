@@ -7,17 +7,19 @@
 .datagrid{background-color:#fff;padding:1em;box-sizing:border-box}
 .datagrid .exports .btn{margin-left:1em}
 .datagrid .settings{margin-left:1em;margin-top:.35em}
+.datagrid .settings .dropdown-menu--grid li .fa{margin-right:.5em}
 .datagrid .row-reset-filter{text-align:right;margin-bottom:.5em}
 .datagrid .row-filters>div{margin-bottom:.5em}
 .datagrid .filter-range-delimiter{text-align:center}
 .datagrid table{margin:0}
-.datagrid table thead tr .column-settings-menu{display:none;cursor:pointer}
+.datagrid table thead tr .column-settings-menu{opacity:0;cursor:pointer}
+.datagrid table thead tr .column-settings-menu .dropdown-menu li .fa{margin-right:.5em}
 .datagrid table thead tr.row-group-actions th{border-bottom-width:0!important;background-color:#f9f9f9}
 .datagrid table thead tr th{font-size:90%;vertical-align:top}
 .datagrid table thead tr th hr{margin:8px -8px}
 .datagrid table thead tr th .datagrid-col-filter-date-range .form-group .input-group .form-control,.datagrid table thead tr th .datagrid-col-filter-range .form-group .input-group .form-control{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px}
 .datagrid table thead tr th .datagrid-col-filter-date-range .input-group-addon,.datagrid table thead tr th .datagrid-col-filter-range .input-group-addon{background-color:inherit;border:none}
-.datagrid table thead tr th:hover>.column-settings-menu{display:inline-block}
+.datagrid table thead tr th:hover>.column-settings-menu{opacity:1}
 .datagrid table tbody td{vertical-align:middle}
 .datagrid table tbody tr.ui-sortable-helper{display:table}
 .datagrid table tbody tr.row-item-detail{display:none}
