@@ -378,7 +378,10 @@ class DataGrid extends Nette\Application\UI\Control
 	public function setDataSource($source)
 	{
 		if ($source instanceof DataSource\IDataSource) {
-			// $source is ready for interact
+			/**
+			 * Custom user datasource is ready for use
+			 */
+			$data_source = $source;
 
 		} else if (is_array($source)) {
 			$data_source = new DataSource\ArrayDataSource($source);
