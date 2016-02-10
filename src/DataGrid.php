@@ -136,7 +136,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @var bool
 	 */
 	protected $sortable = FALSE;
-	
+
 	/**
 	 * @var string
 	 */
@@ -379,6 +379,7 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		if ($source instanceof DataSource\IDataSource) {
 			// $source is ready for interact
+			$data_source = $source;
 
 		} else if (is_array($source)) {
 			$data_source = new DataSource\ArrayDataSource($source);
