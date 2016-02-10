@@ -4839,7 +4839,7 @@ datagridSortableTree = function() {
         }
       }
     }
-  }).disableSelection();
+  });
 };
 
 datagridSortableTree();

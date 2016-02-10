@@ -188,7 +188,7 @@ datagridSortableTree = function() {
         }
       }
     }
-  }).disableSelection();
+  });
 };
 
 datagridSortableTree();
