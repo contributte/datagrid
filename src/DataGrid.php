@@ -695,6 +695,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param string     $name
 	 * @param string     $href
 	 * @param array|null $params
+	 * @return Column\Action
 	 */
 	public function addAction($key, $name = '', $href = NULL, array $params = NULL)
 	{
@@ -759,6 +760,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param string       $key
 	 * @param string       $name
 	 * @param array|string $columns
+	 * @return Filter\FilterText
 	 * @throws DataGridException
 	 */
 	public function addFilterText($key, $name, $columns = NULL)
@@ -781,6 +783,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param string $name
 	 * @param array  $options
 	 * @param string $column
+	 * @return Filter\FilterSelect
 	 * @throws DataGridException
 	 */
 	public function addFilterSelect($key, $name, $options, $column = NULL)
@@ -802,6 +805,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param string $key
 	 * @param string $name
 	 * @param string $column
+	 * @return Filter\FilterDate
 	 * @throws DataGridException
 	 */
 	public function addFilterDate($key, $name, $column = NULL)
@@ -823,6 +827,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param string $key
 	 * @param string $name
 	 * @param string $column
+	 * @return Filter\FilterRange
 	 * @throws DataGridException
 	 */
 	public function addFilterRange($key, $name, $column = NULL, $name_second = '-')
@@ -844,6 +849,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param string $key
 	 * @param string $name
 	 * @param string $column
+	 * @return Filter\FilterDateRange
 	 * @throws DataGridException
 	 */
 	public function addFilterDateRange($key, $name, $column = NULL, $name_second = '-')
@@ -1165,6 +1171,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Add group actino
 	 * @param string $title
 	 * @param array  $options
+	 * @return GroupAction\GroupAction
 	 */
 	public function addGroupAction($title, $options = [])
 	{
