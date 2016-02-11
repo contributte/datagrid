@@ -9,8 +9,8 @@
 .datagrid .settings{margin-left:1em;margin-top:.35em}
 .datagrid .settings .dropdown-menu--grid li .fa{margin-right:.5em}
 .datagrid .row-reset-filter{text-align:right;margin-bottom:.5em}
+.datagrid .filter-range-delimiter,.datagrid table th.col-action{text-align:center}
 .datagrid .row-filters>div{margin-bottom:.5em}
-.datagrid .filter-range-delimiter{text-align:center}
 .datagrid table{margin:0}
 .datagrid table thead tr .column-settings-menu{opacity:0;cursor:pointer}
 .datagrid table thead tr .column-settings-menu .dropdown-menu li .fa{margin-right:.5em}
@@ -31,7 +31,8 @@
 .datagrid table td.col-checkbox .happy-checkbox,.datagrid table th.col-checkbox .happy-checkbox{margin-right:0}
 .datagrid table td.col-checkbox.col-checkbox-first,.datagrid table th.col-checkbox.col-checkbox-first{border-top-color:transparent}
 .datagrid table th.col-checkbox{background-color:#f9f9f9}
-.datagrid table td.col-action,.datagrid table th.col-action{white-space:nowrap;width:10px;text-align:right}
+.datagrid table td.col-action,.datagrid table th.col-action{white-space:nowrap;width:10px}
+.datagrid table td.col-action{text-align:right}
 .datagrid .datagrid-tree>.datagrid-tree-header .datagrid-tree-item-right-actions-action{opacity:0}
 .datagrid .datagrid-tree>.datagrid-tree-item{margin-left:20px}
 .datagrid .datagrid-tree .datagrid-tree-item{position:relative}

@@ -155,6 +155,13 @@
 .datagrid table td.col-action {
   white-space: nowrap;
   width: 10px;
+}
+
+.datagrid table th.col-action {
+  text-align: center;
+}
+
+.datagrid table td.col-action {
   text-align: right;
 }
 
