@@ -373,7 +373,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set Grid data source
-	 * @param DataSource\IDataSource|array|\DibiFluent $source
+	 * @param DataSource\IDataSource|array|\DibiFluent|Nette\Database\Table\Selection|\Kdyby\Doctrine\QueryBuilder $source
 	 * @return DataGrid
 	 */
 	public function setDataSource($source)
