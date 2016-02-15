@@ -12,6 +12,7 @@ namespace Ublaboo\DataGrid\DataSource;
 use Doctrine\ORM\QueryBuilder,
 	Ublaboo\DataGrid\Filter,
 	Nette\Utils\Callback,
+	Nette\Utils\Strings,
 	Doctrine;
 
 class DoctrineDataSource implements IDataSource
@@ -55,6 +56,16 @@ class DoctrineDataSource implements IDataSource
 	public function getQuery()
 	{
 		return $this->data_source->getQuery();
+	}
+
+
+	private function checkAliases($column)
+	{
+		if (Strings::contains($column, ".")) {
+			return $column;
+		}
+
+		return current($this->data_source->getRootAliases()) . '.' . $column;
 	}
 
 
@@ -132,7 +143,9 @@ class DoctrineDataSource implements IDataSource
 		$p = $this->getPlaceholder();
 
 		foreach ($condition as $column => $value) {
-			$this->data_source->andWhere("$column = ?$p")
+			$c = $this->checkAliases($column);
+
+			$this->data_source->andWhere("$c = ?$p")
 				->setParameter($p, $value);
 		}
 
@@ -152,10 +165,11 @@ class DoctrineDataSource implements IDataSource
 
 		foreach ($filter->getCondition() as $column => $value) {
 			$date = \DateTime::createFromFormat($filter->getPhpFormat(), $value);
+			$c = $this->checkAliases($column);
 
 			$this->data_source
-				->andWhere("$column >= ?$p1")
-				->andWhere("$column <= ?$p2")
+				->andWhere("$c >= ?$p1")
+				->andWhere("$c <= ?$p2")
 				->setParameter($p1, $date->format('Y-m-d 00:00:00'))
 				->setParameter($p2, $date->format('Y-m-d 23:59:59'));
 		}
@@ -172,7 +186,7 @@ class DoctrineDataSource implements IDataSource
 	public function applyFilterDateRange(Filter\FilterDateRange $filter)
 	{
 		$conditions = $filter->getCondition();
-		$column = $filter->getColumn();
+		$c = $this->checkAliases($filter->getColumn());
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
 		$value_to   = $conditions[$filter->getColumn()]['to'];
@@ -183,7 +197,7 @@ class DoctrineDataSource implements IDataSource
 
 			$p = $this->getPlaceholder();
 
-			$this->data_source->andWhere("$column >= ?$p")->setParameter($p, $date_from->format('Y-m-d H:i:s'));
+			$this->data_source->andWhere("$c >= ?$p")->setParameter($p, $date_from->format('Y-m-d H:i:s'));
 		}
 
 		if ($value_to) {
@@ -192,7 +206,7 @@ class DoctrineDataSource implements IDataSource
 
 			$p = $this->getPlaceholder();
 
-			$this->data_source->andWhere("$column <= ?$p")->setParameter($p, $date_to->format('Y-m-d H:i:s'));
+			$this->data_source->andWhere("$c <= ?$p")->setParameter($p, $date_to->format('Y-m-d H:i:s'));
 		}
 	}
 
@@ -205,19 +219,19 @@ class DoctrineDataSource implements IDataSource
 	public function applyFilterRange(Filter\FilterRange $filter)
 	{
 		$conditions = $filter->getCondition();
-		$column = $filter->getColumn();
+		$c = $this->checkAliases($filter->getColumn());
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
 			$p = $this->getPlaceholder();
-			$this->data_source->andWhere("$column >= ?$p")->setParameter($p, $value_from);
+			$this->data_source->andWhere("$c >= ?$p")->setParameter($p, $value_from);
 		}
 
 		if ($value_to) {
 			$p = $this->getPlaceholder();
-			$this->data_source->andWhere("$column <= ?$p")->setParameter($p, $value_to);
+			$this->data_source->andWhere("$c <= ?$p")->setParameter($p, $value_to);
 		}
 	}
 
@@ -233,18 +247,19 @@ class DoctrineDataSource implements IDataSource
 
 		foreach ($condition as $column => $value) {
 			$words = explode(' ', $value);
+			$c = $this->checkAliases($column);
 
 			foreach ($words as $word) {
-				$exprs[] = $this->data_source->expr()->like($column, $this->data_source->expr()->literal("%$word%"));
+				$exprs[] = $this->data_source->expr()->like($c, $this->data_source->expr()->literal("%$word%"));
 
 				/**
 				 * @todo Manage somehow COLLATE statement in DQL
 				 */
 				/*if (preg_match("/[\x80-\xFF]/", $word)) {
-					$or[] = "$column LIKE $escaped COLLATE utf8_bin";
+					$or[] = "$c LIKE $escaped COLLATE utf8_bin";
 				} else {
 					$escaped = Strings::toAscii($escaped);
-					$or[] = "$column LIKE $escaped COLLATE utf8_general_ci";
+					$or[] = "$c LIKE $escaped COLLATE utf8_general_ci";
 				}*/
 			}
 		}
@@ -265,7 +280,9 @@ class DoctrineDataSource implements IDataSource
 		$p = $this->getPlaceholder();
 
 		foreach ($filter->getCondition() as $column => $value) {
-			$this->data_source->andWhere("$column = ?$p")
+			$c = $this->checkAliases($column);
+
+			$this->data_source->andWhere("$c = ?$p")
 				->setParameter($p, $value);
 		}
 	}
