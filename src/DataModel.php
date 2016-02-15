@@ -22,7 +22,8 @@ class DataModel
 
 
 	/**
-	 * @param DataSource\IDataSource|array|\DibiFluent|Nette\Database\Table\Selection|\Kdyby\Doctrine\QueryBuilder $source
+	 * @param IDataSource|array|\DibiFluent|Nette\Database\Table\Selection|\Kdyby\Doctrine\QueryBuilder $source
+	 * @param string $primary_key
 	 */
 	public function __construct($source, $primary_key)
 	{
