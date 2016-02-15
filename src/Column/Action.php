@@ -55,6 +55,11 @@ class Action extends Column
 	 * @var array
 	 */
 	protected $confirm;
+	
+	/**
+	 * @var callable|NULL
+	 */
+	protected $disable_callback;
 
 
 	/**
@@ -81,6 +86,13 @@ class Action extends Column
 	 */
 	public function render(Row $row)
 	{
+		/**
+		 * Disable function may be used (user may not have permission to see this action)
+		 */
+		if ($this->disable_callback && call_user_func_array($this->disable_callback, [$row->getItem()])) {
+			return;
+		}
+		
 		/**
 		 * Renderer function may be used
 		 */
@@ -221,7 +233,32 @@ class Action extends Column
 
 		return str_replace('%s', $row->getValue($this->confirm[1]), $this->confirm[0]);
 	}
+	
+	
+	
+	/**
+	 * Get callback for disable
+	 * @return callable|NULL
+	 */
+	public function getDisable() 
+	{
+		return $this->disable_callback;
+	}
 
+	
+	/**
+	 * Set callback for disable.
+	 * If callback returns TRUE, action will not be rendered
+	 * @param callable $callback
+	 * @return static
+	 */
+	public function setDisable($callback) 
+	{
+		$this->disable_callback = $callback;
+		return $this;
+	}
+
+	
 
 	/**
 	 * Get row item params (E.g. action may be called id => $item->id, name => $item->name, ...)
