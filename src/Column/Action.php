@@ -124,6 +124,7 @@ class Action extends Column
 	/**
 	 * Set attribute title
 	 * @param string $title
+	 * @return static
 	 */
 	public function setTitle($title)
 	{
@@ -146,6 +147,7 @@ class Action extends Column
 	/**
 	 * Set attribute class
 	 * @param string $class
+	 * @return static
 	 */
 	public function setClass($class)
 	{
@@ -168,6 +170,7 @@ class Action extends Column
 	/**
 	 * Set icon
 	 * @param string $icon
+	 * @return static
 	 */
 	public function setIcon($icon)
 	{
@@ -191,6 +194,7 @@ class Action extends Column
 	 * Set confirm dialog
 	 * @param string $message
 	 * @param string $column
+	 * @return static
 	 */
 	public function setConfirm($message, $column = NULL)
 	{
@@ -203,6 +207,7 @@ class Action extends Column
 	/**
 	 * Get confirm dialog for particular row item
 	 * @param Row $row
+	 * @return string
 	 */
 	public function getConfirm(Row $row)
 	{
