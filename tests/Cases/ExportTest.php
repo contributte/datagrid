@@ -67,7 +67,7 @@ final class ExportTest extends TestCase
 
 		Assert::exception(
 			$trigger,
-			'Ublaboo\DataGrid\DataGridException',
+			'Ublaboo\DataGrid\Exception\DataGridException',
 			'You have to set a data source first.'
 		);
 
@@ -96,7 +96,7 @@ final class ExportTest extends TestCase
 
 		Assert::exception(
 			$trigger,
-			'Ublaboo\DataGrid\DataGridException',
+			'Ublaboo\DataGrid\Exception\DataGridException',
 			'You have to set a data source first.'
 		);
 

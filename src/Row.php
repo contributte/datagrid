@@ -13,6 +13,7 @@ use LeanMapper;
 use DibiRow;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 use Nette\Utils\Html;
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 class Row extends Nette\Object
 {

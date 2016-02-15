@@ -46,7 +46,7 @@ final class ColumnActionTest extends TestCase
 
 		Assert::exception(
 			$add_action,
-			'Ublaboo\DataGrid\DataGridException',
+			'Ublaboo\DataGrid\Exception\DataGridException',
 			'There is already action at key [action] defined.'
 		);
 	}

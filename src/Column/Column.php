@@ -8,9 +8,9 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Ublaboo\DataGrid\DataGridException;
 use Ublaboo;
 use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 abstract class Column extends Ublaboo\DataGrid\Object
 {

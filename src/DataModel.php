@@ -8,7 +8,9 @@
 
 namespace Ublaboo\DataGrid;
 
+use Nette;
 use Ublaboo\DataGrid\DataSource\IDataSource;
+use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
 
 class DataModel
 {
@@ -20,11 +22,46 @@ class DataModel
 
 
 	/**
-	 * @param IDataSource $data_source
+	 * @param DataSource\IDataSource|array|\DibiFluent|Nette\Database\Table\Selection|\Kdyby\Doctrine\QueryBuilder $source
 	 */
-	public function __construct(IDataSource $data_source)
+	public function __construct($source, $primary_key)
 	{
-		$this->data_source = $data_source;
+		if ($source instanceof IDataSource) {
+			/**
+			 * Custom user datasource is ready for use
+			 */
+			$source = $source;
+
+		} else if (is_array($source)) {
+			$source = new DataSource\ArrayDataSource($source);
+
+		} else if ($source instanceof \DibiFluent) {
+			$driver = $source->getConnection()->getDriver();
+
+			if ($driver instanceof \DibiOdbcDriver) {
+				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
+
+			} else if ($driver instanceof \DibiMsSqlDriver) {
+				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
+
+			} else {
+				$source = new DataSource\DibiFluentDataSource($source, $primary_key);
+			}
+
+		} else if ($source instanceof Nette\Database\Table\Selection) {
+			$source = new DataSource\NetteDatabaseTableDataSource($source, $primary_key);
+
+		} else if ($source instanceof \Kdyby\Doctrine\QueryBuilder) {
+			$source = new DataSource\DoctrineDataSource($source, $primary_key);
+
+		} else {
+			throw new DataGridWrongDataSourceException(sprintf(
+				"DataGrid can not take [%s] as data source.",
+				is_object($source) ? get_class($source) : 'NULL'
+			));
+		}
+
+		$this->data_source = $source;
 	}
 
 

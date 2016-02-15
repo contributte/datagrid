@@ -12,6 +12,8 @@ use Nette;
 use Nette\Application\UI\PresenterComponent;
 use Ublaboo\DataGrid\Utils\ArraysHelper;
 use Nette\Application\UI\Form;
+use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 
 class DataGrid extends Nette\Application\UI\Control
 {
@@ -378,40 +380,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function setDataSource($source)
 	{
-		if ($source instanceof DataSource\IDataSource) {
-			/**
-			 * Custom user datasource is ready for use
-			 */
-			$data_source = $source;
-
-		} else if (is_array($source)) {
-			$data_source = new DataSource\ArrayDataSource($source);
-
-		} else if ($source instanceof \DibiFluent) {
-			$driver = $source->getConnection()->getDriver();
-
-			if ($driver instanceof \DibiOdbcDriver) {
-				$data_source = new DataSource\DibiFluentMssqlDataSource($source, $this->primary_key);
-
-			} else if ($driver instanceof \DibiMsSqlDriver) {
-				$data_source = new DataSource\DibiFluentMssqlDataSource($source, $this->primary_key);
-
-			} else {
-				$data_source = new DataSource\DibiFluentDataSource($source, $this->primary_key);
-			}
-
-		} else if ($source instanceof Nette\Database\Table\Selection) {
-			$data_source = new DataSource\NetteDatabaseTableDataSource($source, $this->primary_key);
-
-		} else if ($source instanceof \Kdyby\Doctrine\QueryBuilder) {
-			$data_source = new DataSource\DoctrineDataSource($source, $this->primary_key);
-
-		} else {
-			$data_source_class = $source ? get_class($source) : 'NULL';
-			throw new DataGridException("DataGrid can not take [$data_source_class] as data source.");
-		}
-
-		$this->dataModel = new DataModel($data_source);
+		$this->dataModel = new DataModel($source, $this->primary_key);
 
 		return $this;
 	}
@@ -1942,9 +1911,4 @@ class DataGrid extends Nette\Application\UI\Control
 		return $parent;
 	}
 
-}
-
-
-class DataGridException extends \Exception
-{
 }

@@ -11,6 +11,7 @@ namespace Ublaboo\DataGrid\DataSource;
 use Ublaboo\DataGrid\Filter\Filter;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 class ArrayDataSource implements IDataSource
 {
@@ -130,7 +131,7 @@ class ArrayDataSource implements IDataSource
 		 * @todo Not tested yet
 		 */
 		if (sizeof($sorting) > 1) {
-			throw new Ublaboo\DataGrid\DataGridException('Multi-column sorting is not implemented yet.');
+			throw new DataGridException('Multi-column sorting is not implemented yet.');
 		}
 
 		foreach ($sorting as $column => $sort) {
