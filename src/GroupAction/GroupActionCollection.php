@@ -30,7 +30,7 @@ class GroupActionCollection extends Nette\Object
 	 * @param Nette\Localization\ITranslator $translator
 	 * @return void
 	 */
-	public function addToFormContainer($group_action_container, $form, $translator = NULL)
+	public function addToFormContainer($group_action_container, $form, $translator)
 	{
 		/**
 		 * First foreach for filling "main" select
@@ -40,7 +40,7 @@ class GroupActionCollection extends Nette\Object
 		}
 
 		$group_action_container->addSelect('group_action', '', $main_options)
-			->setPrompt($translator ? $translator->translate('Choose') : 'Choose');
+			->setPrompt($translator->translate('ublaboo_datagrid.choose'));
 
 		/**
 		 * Second for creating select for each "sub"-action
@@ -60,7 +60,7 @@ class GroupActionCollection extends Nette\Object
 		$group_action_container['group_action']->addCondition(Form::FILLED)
 			->toggle('group_action_submit');
 
-		$group_action_container->addSubmit('submit', $translator ? $translator->translate('Do') : 'Do')
+		$group_action_container->addSubmit('submit', $translator->translate('ublaboo_datagrid.execute'))
 			->setAttribute('id', 'group_action_submit');
 
 		$form->onSubmit[] = [$this, 'submitted'];

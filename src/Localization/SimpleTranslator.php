@@ -16,7 +16,23 @@ class SimpleTranslator extends Nette\Object implements Nette\Localization\ITrans
 	/**
 	 * @var array
 	 */
-	private $dictionary;
+	private $dictionary = [
+		'ublaboo_datagrid.no_item_found_reset' => 'No items found. You can reset the filter',
+		'ublaboo_datagrid.no_item_found' => 'No items found.',
+		'ublaboo_datagrid.here' => 'here',
+		'ublaboo_datagrid.items' => 'Items',
+		'ublaboo_datagrid.all' => 'all',
+		'ublaboo_datagrid.from' => 'from',
+		'ublaboo_datagrid.reset_filter' => 'Reset filter',
+		'ublaboo_datagrid.group_actions' => 'Group actions',
+		'ublaboo_datagrid.show_all_columns' => 'Show all columns',
+		'ublaboo_datagrid.hide_column' => 'Hide column',
+		'ublaboo_datagrid.action' => 'Action',
+		'ublaboo_datagrid.previous' => 'Previous',
+		'ublaboo_datagrid.next' => 'Next',
+		'ublaboo_datagrid.choose' => 'Choose',
+		'ublaboo_datagrid.execute' => 'Execute',
+	];
 
 
 	/**

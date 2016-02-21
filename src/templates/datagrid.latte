@@ -38,7 +38,7 @@
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
 							{if $control->hasGroupActions()}
 								{block group_actions}
-									{_'Group actions:'}
+									{_'ublaboo_datagrid.group_actions'}:
 									{foreach $filter['group_action']->getControls() as $form_control}
 										{if $form_control instanceof \Nette\Forms\Controls\SubmitButton}
 											{input $form_control, class => 'btn btn-primary btn-sm', style => 'display:none'}
@@ -62,7 +62,7 @@
 									</button>
 									<ul class="dropdown-menu dropdown-menu--grid">
 										<li>
-											<a n:href="showAllColumns!" class="ajax"><i class="{$icon_prefix}eye"></i> {_'Show all columns'}</a>
+											<a n:href="showAllColumns!" class="ajax"><i class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
 										</li>
 									</ul>
 								</div>
@@ -105,7 +105,7 @@
 											<ul class="dropdown-menu dropdown-menu--grid">
 												<li>
 													<a n:href="hideColumn!, column => $key" class="ajax">
-														<i class="{$icon_prefix}eye-slash"></i> {_'Hide column'}</a>
+														<i class="{$icon_prefix}eye-slash"></i> {_'ublaboo_datagrid.hide_column'}</a>
 												</li>
 											</ul>
 										</div>
@@ -120,7 +120,7 @@
 							</th>
 						{/foreach}
 						<th n:if="$actions || $control->isSortable() || $items_detail" class="col-action text-center">
-							{_'Action'}
+							{_'ublaboo_datagrid.action'}
 						</th>
 					</tr>
 				</thead>
@@ -204,9 +204,9 @@
 						<tr n:if="!$rows">
 							<td colspan="{$control->getColumnsCount()}">
 								{if $filter_active}
-									{_'No items found. You can reset the filter'} <a class="link ajax" n:href="resetFilter!">{_'here'}</a>.
+									{_'ublaboo_datagrid.no_item_found'} <a class="link ajax" n:href="resetFilter!">{_'ublaboo_datagrid.here'}</a>.
 								{else}
-									{_'No items found.'}
+									{_'ublaboo_datagrid.no_item_found'}
 								{/if}
 							</td>
 						</tr>
@@ -229,10 +229,10 @@
 					({var $paginator = $control['paginator']->getPaginator()}
 
 					{if $control->getPerPage() === 'all'}
-						{_'Items'}: {_'all'}
+						{_'ublaboo_datagrid.items'}: {_'ublaboo_datagrid.all'}
 					{else}
-						{_'Items'}: {$paginator->getOffset() + 1} - {sizeof($rows) + $paginator->getOffset()}
-						{_'from'} {$paginator->getItemCount()}
+						{_'ublaboo_datagrid.items'}: {$paginator->getOffset() + 1} - {sizeof($rows) + $paginator->getOffset()}
+						{_'ublaboo_datagrid.from'} {$paginator->getItemCount()}
 					{/if})
 				</small>
 			</div>
@@ -246,7 +246,7 @@
 				{**
 				* Items per page form (display only besie paginated grido)
 				*}
-				<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'Reset filter'}</a>
+				<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'ublaboo_datagrid.reset_filter'}</a>
 				{if $control->isPaginated()}
 					{form perPage, class => 'ajax'}
 						{input per_page, data-autosubmit => TRUE, class => 'form-control input-sm'}

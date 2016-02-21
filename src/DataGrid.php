@@ -1538,7 +1538,7 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		if (array_key_exists('all', $list)) {
-			$list['all'] = $this->getTranslator()->translate('All');
+			$list['all'] = $this->getTranslator()->translate('blaboo_datagrid.all');
 		}
 
 		return $list;
