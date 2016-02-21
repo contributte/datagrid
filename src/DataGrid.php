@@ -73,7 +73,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var array
 	 */
-	protected $items_per_page_list = [10, 20, 50];
+	protected $items_per_page_list;
 
 	/**
 	 * @var string
@@ -1440,9 +1440,13 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Set options of select "items_per_page"
 	 * @param array $items_per_page_list
 	 */
-	public function setItemsPerPageList(array $items_per_page_list)
+	public function setItemsPerPageList(array $items_per_page_list, $include_all = TRUE)
 	{
 		$this->items_per_page_list = $items_per_page_list;
+
+		if ($include_all) {
+			$this->items_per_page_list[] = 'all';
+		}
 
 		return $this;
 	}
@@ -1505,10 +1509,12 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getPerPage()
 	{
-		$per_page = $this->per_page ?: reset($this->items_per_page_list);
+		$items_per_page_list = $this->getItemsPerPageList();
 
-		if ($per_page !== 'all' && !in_array($this->per_page, $this->items_per_page_list)) {
-			$per_page = reset($this->items_per_page_list);
+		$per_page = $this->per_page ?: reset($items_per_page_list);
+
+		if ($per_page !== 'all' && !in_array($this->per_page, $items_per_page_list)) {
+			$per_page = reset($items_per_page_list);
 		}
 
 		return $per_page;
@@ -1521,13 +1527,19 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getItemsPerPageList()
 	{
+		if (!$this->items_per_page_list) {
+			$this->setItemsPerPageList([10, 20, 50], TRUE);
+		}
+
 		$list = array_flip($this->items_per_page_list);
 
 		foreach ($list as $key => $value) {
 			$list[$key] = $key;
 		}
 
-		$list['all'] = $this->getTranslator()->translate('All');
+		if (array_key_exists('all', $list)) {
+			$list['all'] = $this->getTranslator()->translate('All');
+		}
 
 		return $list;
 	}
