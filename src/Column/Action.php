@@ -122,11 +122,11 @@ class Action extends Column
 			}
 		}
 
-		$a->add($this->name);
+		$a->add($this->translate($this->name));
 
-		if ($this->title) { $a->title($this->title); }
+		if ($this->title) { $a->title($this->translate($this->title)); }
 		if ($this->class) { $a->class($this->class); }
-		if ($confirm = $this->getConfirm($row)) { $a->data('confirm', $confirm); }
+		if ($confirm = $this->getConfirm($row)) { $a->data('confirm', $this->translate($confirm)); }
 
 		return $a;
 	}
@@ -235,6 +235,17 @@ class Action extends Column
 
 
 	/**
+	 * Setting data attributes
+	 * @param string $key
+	 * @param mixed $value
+	 */
+	public function setDataAttribute($key, $value)
+	{
+		$this->data_attributes[$key] = $value;
+	}
+
+
+	/**
 	 * Get row item params (E.g. action may be called id => $item->id, name => $item->name, ...)
 	 * @param  Row   $row
 	 * @return array
@@ -252,13 +263,13 @@ class Action extends Column
 
 
 	/**
-	 * Setting data attributes
-	 * @param string $key
-	 * @param mixed $value
+	 * Translator helper
+	 * @param  string $message
+	 * @return string
 	 */
-	public function setDataAttribute($key, $value)
+	protected function translate($message)
 	{
-		$this->data_attributes[$key] = $value;
+		return $this->grid->getTranslator()->translate($message);
 	}
 
 }
