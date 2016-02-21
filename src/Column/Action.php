@@ -56,6 +56,11 @@ class Action extends Column
 	 */
 	protected $confirm;
 
+	/**
+	 * @var array
+	 */
+	protected $data_attributes = [];
+
 
 	/**
 	 * @param DataGrid $grid
@@ -108,6 +113,12 @@ class Action extends Column
 
 			if (strlen($this->name)) {
 				$a->add('&nbsp;');
+			}
+		}
+
+		if ($this->data_attributes) {
+			foreach ($this->data_attributes as $key => $value) {
+				$a->data($key, $value);
 			}
 		}
 
@@ -237,6 +248,17 @@ class Action extends Column
 		}
 
 		return $return;
+	}
+
+
+	/**
+	 * Setting data attributes
+	 * @param string $key
+	 * @param mixed $value
+	 */
+	public function setDataAttribute($key, $value)
+	{
+		$this->data_attributes[$key] = $value;
 	}
 
 }
