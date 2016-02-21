@@ -313,7 +313,7 @@ class DoctrineDataSource implements IDataSource
 
 		if ($sorting) {
 			foreach ($sorting as $column => $sort) {
-				$this->data_source->orderBy("{$alias}.{$column}", $sort);
+				$this->data_source->addOrderBy("{$alias}.{$column}", $sort);
 			}
 		} else {
 			/**
