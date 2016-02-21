@@ -160,7 +160,7 @@
 									{foreach $actions as $key => $action}
 										{if $row->hasAction($key)}
 											{if $action->hasTemplate()}
-												{include $action->getTemplate(), item => $item}
+												{include $action->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
 											{else}
 												{!$action->render($row)}
 											{/if}
