@@ -12,6 +12,9 @@ use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Row;
 
+/**
+ * @method void onClick(mixed $id)
+ */
 class ActionCallback extends Action
 {
 
