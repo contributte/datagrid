@@ -689,12 +689,22 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param string     $name
 	 * @return Column\Action
 	 */
-	public function addActionCallback($key, $name)
+	public function addActionCallback($key, $name, $callback = NULL)
 	{
 		$this->addActionCheck($key);
 		$params = ['__id' => $this->primary_key];
 
-		return $this->actions[$key] = new Column\ActionCallback($this, $key, $name, $params);
+		$this->actions[$key] = $action = new Column\ActionCallback($this, $key, $name, $params);
+
+		if ($callback) {
+			if (!is_callable($callback)) {
+				throw new DataGridException('ActionCallback callback has to be callable.');
+			}
+
+			$action->onClick[] = $callback;
+		}
+
+		return $action;
 	}
 
 
