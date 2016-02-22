@@ -670,7 +670,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param array|null $params
 	 * @return Column\Action
 	 */
-	public function addAction($key, $name = '', $href = NULL, array $params = NULL)
+	public function addAction($key, $name, $href = NULL, array $params = NULL)
 	{
 		$this->addActionCheck($key);
 		$href = $href ?: $key;
@@ -680,6 +680,21 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return $this->actions[$key] = new Column\Action($this, $href, $name, $params);
+	}
+
+
+	/**
+	 * Create action callback
+	 * @param string     $key
+	 * @param string     $name
+	 * @return Column\Action
+	 */
+	public function addActionCallback($key, $name)
+	{
+		$this->addActionCheck($key);
+		$params = ['__id' => $this->primary_key];
+
+		return $this->actions[$key] = new Column\ActionCallback($this, $key, $name, $params);
 	}
 
 
@@ -1432,6 +1447,18 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->redrawControl();
 
 		$this->onRedraw();
+	}
+
+
+	public function handleActionCallback($__key, $__id)
+	{
+		$action = $this->getAction($__key);
+
+		if (!($action instanceof Column\ActionCallback)) {
+			throw new DataGridException("Action [$__key] does not exist or is not an callback aciton.");
+		}
+
+		$action->onClick($__id);
 	}
 
 
