@@ -88,7 +88,7 @@
 										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()">
 											{_$column->getName()}
 											{if $column->isSortedBy()}
-												<span n:class="$column->isSortAsc() ? $icon_prefix . 'up' : $icon_prefix . 'down', 'fa'"></span>
+												<span n:class="$column->isSortAsc() ? $icon_prefix . 'caret-up' : $icon_prefix . 'caret-down', 'fa'"></span>
 											{else}
 												<span class="{$icon_prefix}sort"></span>
 											{/if}
