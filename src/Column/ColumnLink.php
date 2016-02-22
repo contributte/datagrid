@@ -80,7 +80,13 @@ class ColumnLink extends Column
 
 		$value = parent::render($row);
 
-		$href = $this->grid->getPresenter()->link($this->href, $this->getItemParams($row));
+		try {
+			$parent = $this->grid->getParent();
+		} catch (DataGridHasToBeAttachedToPresenterComponentException $e) {
+			$parent = $this->grid->getPresenter();
+		}
+
+		$href = $parent->link($this->href, $this->getItemParams($row));
 		$a = Html::el('a')
 			->href($href)
 			->setText($value);
