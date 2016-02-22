@@ -367,6 +367,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function setPrimaryKey($primary_key)
 	{
+		if ($this->dataModel instanceof DataModel) {
+			throw new DataGridException('Please set datagrid primary key before setting datasource.');
+		}
+
 		$this->primary_key = $primary_key;
 
 		return $this;
