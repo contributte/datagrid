@@ -7,8 +7,8 @@
   ],
   "description": "Assets for php package ublaboo/datagrid",
   "main": [
-    "./assets/datagrid.js",
-    "./assets/datagrid.css"
+    "./assets/dist/datagrid.js",
+    "./assets/dist/datagrid.css"
   ],
   "keywords": [
     "datagrid",
