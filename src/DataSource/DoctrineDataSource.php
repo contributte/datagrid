@@ -309,18 +309,16 @@ class DoctrineDataSource implements IDataSource
 	 */
 	public function sort(array $sorting)
 	{
-		$alias = current($this->data_source->getDQLPart('from'))->getAlias();
-
 		if ($sorting) {
 			foreach ($sorting as $column => $sort) {
-				$this->data_source->addOrderBy("{$alias}.{$column}", $sort);
+				$this->data_source->addOrderBy($this->checkAliases($column), $sort);
 			}
 		} else {
 			/**
 			 * Has the statement already a order by clause?
 			 */
 			if (!$this->data_source->getDQLPart('orderBy')) {
-				$this->data_source->orderBy("{$alias}.{$this->primary_key}");
+				$this->data_source->orderBy($this->checkAliases($this->primary_key));
 			}
 		}
 
