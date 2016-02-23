@@ -71,7 +71,7 @@
 					</tr>
 					<tr n:block="header">
 						<th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
-							<input class="happy gray-border primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
+							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $key => $column}
 							{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
@@ -132,7 +132,7 @@
 							<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
 								<td n:if="$control->hasGroupActions()" class="col-checkbox">
 									{if $row->hasGroupAction()}
-										<input class="happy gray-border primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$row->getId()}]">
+										<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$row->getId()}]">
 									{/if}
 								</td>
 								{foreach $columns as $key => $column}
@@ -223,6 +223,7 @@
 	 * Bottom row
 	 *}
 	{block pagination}
+		{* {control $control:pagination} *}
 		<div n:snippet="pagination" n:if="!$control->isTreeView()" class="row-grid-bottom">
 			<div class="col-items">
 				<small class="text-muted" n:if="$control->isPaginated()">
