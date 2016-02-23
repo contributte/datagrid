@@ -1,0 +1,26 @@
+{
+  "name": "ublaboo-datagrid",
+  "version": "1.3.5",
+  "homepage": "https://github.com/ublaboo/datagrid",
+  "authors": [
+    "Pavel Janda <me@paveljanda.com>"
+  ],
+  "description": "Assets for php package ublaboo/datagrid",
+  "main": "./assets/datagrid.js",
+  "keywords": [
+    "datagrid",
+    "ublaboo"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">= 1.11.0",
+    "happy": ">=1.0.0"
+  }
+}
