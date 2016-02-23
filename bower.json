@@ -17,6 +17,7 @@
     "node_modules",
     "bower_components",
     "src",
+    "composer.json",
     "tests"
   ],
   "dependencies": {
