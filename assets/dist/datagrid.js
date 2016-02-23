@@ -82,6 +82,9 @@ window.datagridSerializeUrl = function(obj, prefix) {
 ;
 
 datagridSortable = function() {
+  if (typeof $('.datagrid [data-sortable]').sortable === 'undefined') {
+    return;
+  }
   return $('.datagrid [data-sortable]').sortable({
     handle: '.handle-sort',
     items: 'tr',
@@ -116,18 +119,10 @@ datagridSortable = function() {
 
 datagridSortable();
 
-
-/*datagridSortableTree = ->
-	$('.datagrid-tree-items').sortable({
-		handle: '.handle-sort',
-		items: '.datagrid-tree-item',
-		connectWith: '.datagrid-tree-items'
-	})
-
-datagridSortableTree()
- */
-
 datagridSortableTree = function() {
+  if (typeof $('.datagrid-tree-item-children').sortable === 'undefined') {
+    return;
+  }
   return $('.datagrid-tree-item-children').sortable({
     handle: '.handle-sort',
     items: '.datagrid-tree-item',

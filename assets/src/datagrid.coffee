@@ -70,6 +70,9 @@ window.datagridSerializeUrl = function(obj, prefix) {
 `
 
 datagridSortable = ->
+	if typeof $('.datagrid [data-sortable]').sortable == 'undefined'
+		return
+
 	$('.datagrid [data-sortable]').sortable({
 		handle: '.handle-sort',
 		items: 'tr',
@@ -99,16 +102,10 @@ datagridSortable = ->
 
 datagridSortable()
 
-###datagridSortableTree = ->
-	$('.datagrid-tree-items').sortable({
-		handle: '.handle-sort',
-		items: '.datagrid-tree-item',
-		connectWith: '.datagrid-tree-items'
-	})
-
-datagridSortableTree()###
-
 datagridSortableTree = ->
+	if typeof $('.datagrid-tree-item-children').sortable == 'undefined'
+		return
+
 	$('.datagrid-tree-item-children').sortable({
 		handle: '.handle-sort',
 		items: '.datagrid-tree-item',
