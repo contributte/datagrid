@@ -25,7 +25,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @var string
-	 * @todo Tell about this on github
 	 */
 	public static $icon_prefix = 'fa fa-';
 
@@ -64,6 +63,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @var Callable[]
 	 */
 	public $onRender = [];
+
+	/**
+	 * @var bool
+	 */
+	protected $use_happy_components = TRUE;
 
 	/**
 	 * @var Callable[]
@@ -424,6 +428,21 @@ class DataGrid extends Nette\Application\UI\Control
 	public function getOriginalTemplateFile()
 	{
 		return __DIR__.'/templates/datagrid.latte';
+	}
+
+
+	/**
+	 * Tell datagrid wheteher to use or not happy components
+	 * @param  boolean|NULL $use If not given, return value of static::$use_happy_components
+	 * @return void|bool
+	 */
+	public function useHappyComponents($use = NULL)
+	{
+		if (NULL === $use) {
+			return $this->use_happy_components;
+		}
+
+		$this->use_happy_components = (bool) $use;
 	}
 
 
