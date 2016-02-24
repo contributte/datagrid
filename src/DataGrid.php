@@ -516,7 +516,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set sortable handle
-	 * @param string $handle
+	 * @param string $handler
 	 * @return static
 	 */
 	public function setSortableHandler($handler = 'sort!')
