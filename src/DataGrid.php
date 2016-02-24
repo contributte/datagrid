@@ -374,6 +374,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * By default ID, you can change that
 	 * @param string $primary_key
+	 * @return static
 	 */
 	public function setPrimaryKey($primary_key)
 	{
@@ -390,7 +391,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set Grid data source
 	 * @param DataSource\IDataSource|array|\DibiFluent|Nette\Database\Table\Selection|\Kdyby\Doctrine\QueryBuilder $source
-	 * @return DataGrid
+	 * @return static
 	 */
 	public function setDataSource($source)
 	{
@@ -408,6 +409,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set custom template file to render
 	 * @param string $template_file
+	 * @return static
 	 */
 	public function setTemplateFile($template_file)
 	{
@@ -420,6 +422,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Get DataGrid template file
 	 * @return string
+	 * @return static
 	 */
 	public function getTemplateFile()
 	{
@@ -460,6 +463,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set default sorting
 	 * @param array $sort
+	 * @return static
 	 */
 	public function setDefaultSort($sort)
 	{
@@ -496,6 +500,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set grido to be sortable
 	 * @param bool $sortable
+	 * @return static
 	 */
 	public function setSortable($sortable = TRUE)
 	{
@@ -512,6 +517,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set sortable handle
 	 * @param string $handle
+	 * @return static
 	 */
 	public function setSortableHandler($handler = 'sort!')
 	{
@@ -559,7 +565,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Setting tree view
 	 * @param callable $get_children_callback
 	 * @param string $tree_view_has_children_column
-	 * @return DataGrid
+	 * @return static
 	 */
 	public function setTreeView($get_children_callback, $tree_view_has_children_column = 'has_children')
 	{
@@ -1527,6 +1533,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set options of select "items_per_page"
 	 * @param array $items_per_page_list
+	 * @return static
 	 */
 	public function setItemsPerPageList(array $items_per_page_list, $include_all = TRUE)
 	{
