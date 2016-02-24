@@ -135,7 +135,7 @@ class Action extends Column
 	 */
 	public function setTitle($title)
 	{
-		if (!is_string($title) && !is_callable($title)) {
+		if (!is_string($title) && !is_callable($title) && !is_null($title)) {
 			throw new DataGridException(
 				'Action title has to be either string or callback, that will return string'
 			);
@@ -178,7 +178,7 @@ class Action extends Column
 	 */
 	public function setClass($class)
 	{
-		if (!is_string($class) && !is_callable($class)) {
+		if (!is_string($class) && !is_callable($class) && !is_null($class)) {
 			throw new DataGridException(
 				'Action class has to be either string or callback, that will return string'
 			);
@@ -221,7 +221,7 @@ class Action extends Column
 	 */
 	public function setIcon($icon)
 	{
-		if (!is_string($icon) && !is_callable($icon)) {
+		if (!is_string($icon) && !is_callable($icon) && !is_null($icon)) {
 			throw new DataGridException(
 				'Action icon has to be either string or callback, that will return string'
 			);
@@ -265,7 +265,7 @@ class Action extends Column
 	 */
 	public function setConfirm($message, $column = NULL)
 	{
-		if (!is_string($message) && !is_callable($message)) {
+		if (!is_string($message) && !is_callable($message) && !is_null($message)) {
 			throw new DataGridException(
 				'Action message has to be either string or callback, that will return string'
 			);
