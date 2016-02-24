@@ -40,11 +40,15 @@ class FilterSelect extends Filter
 
 	/**
 	 * Adds select box to filter form
-	 * @param Nette\Application\UI\Form $form
+	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer($form)
+	public function addToFormContainer($container)
 	{
-		$form->addSelect($this->key, $this->name, $this->options);
+		$form = $container->lookup('Nette\Application\UI\Form');
+		$translator = $form->getTranslator();
+
+		$container->addSelect($this->key, $translator->translate($this->name), $this->options)
+			->setTranslator(NULL);
 	}
 
 

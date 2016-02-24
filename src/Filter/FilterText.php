@@ -21,14 +21,14 @@ class FilterText extends Filter
 
 	/**
 	 * Adds text field to filter form
-	 * @param Nette\Application\UI\Form $form
+	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer($form)
+	public function addToFormContainer($container)
 	{
-		$form->addText($this->key, $this->name);
+		$container->addText($this->key, $this->name);
 
 		if ($this->getPlaceholder()) {
-			$form[$this->key]->setAttribute('placeholder', $this->getPlaceholder());
+			$container[$this->key]->setAttribute('placeholder', $this->getPlaceholder());
 		}
 	}
 

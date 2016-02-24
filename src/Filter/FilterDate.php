@@ -26,11 +26,11 @@ class FilterDate extends Filter
 
 	/**
 	 * Adds select box to filter form
-	 * @param Nette\Application\UI\Form $form
+	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer($form)
+	public function addToFormContainer($container)
 	{
-		$form->addText($this->key, $this->name)
+		$container->addText($this->key, $this->name)
 			->setAttribute('data-provide', 'datepicker')
 			->setAttribute('data-date-orientation', 'bottom')
 			->setAttribute('data-date-format', $this->getJsFormat())
@@ -38,7 +38,7 @@ class FilterDate extends Filter
 			->setAttribute('data-date-autoclose', 'true');
 
 		if ($this->getPlaceholder()) {
-			$form[$this->key]->setAttribute('placeholder', $this->getPlaceholder());
+			$container[$this->key]->setAttribute('placeholder', $this->getPlaceholder());
 		}
 	}
 

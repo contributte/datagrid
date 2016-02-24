@@ -992,6 +992,8 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$form = new Form($this, 'filter');
 
+		$form->setTranslator($this->getTranslator());
+
 		$form->setMethod('get');
 
 		/**
@@ -1000,7 +1002,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$filter_container = $form->addContainer('filter');
 
 		foreach ($this->filters as $filter) {
-			$filter->addToFormContainer($filter_container, $filter_container);
+			$filter->addToFormContainer($filter_container);
 		}
 
 		/**
@@ -1009,7 +1011,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$group_action_container = $form->addContainer('group_action');
 
 		if ($this->hasGroupActions()) {
-			$this->getGroupActionCollection()->addToFormContainer($group_action_container, $form, $this->getTranslator());
+			$this->getGroupActionCollection()->addToFormContainer($group_action_container);
 		}
 
 		$form->setDefaults(['filter' => $this->filter]);

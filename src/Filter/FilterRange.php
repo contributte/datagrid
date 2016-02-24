@@ -45,11 +45,11 @@ class FilterRange extends Filter
 
 	/**
 	 * Adds select box to filter form
-	 * @param Nette\Application\UI\Form $form
+	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer($form)
+	public function addToFormContainer($container)
 	{
-		$container = $form->addContainer($this->key);
+		$container = $container->addContainer($this->key);
 
 		$container->addText('from', $this->name);
 
@@ -57,11 +57,11 @@ class FilterRange extends Filter
 
 		if ($placeholder = $this->getPlaceholder()) {
 			if ($text_from = reset($placeholder)) {
-				$form[$this->key]['from']->setAttribute('placeholder', $text_from);
+				$container[$this->key]['from']->setAttribute('placeholder', $text_from);
 			}
 
 			if ($text_to = end($placeholder) && $text_to != $text_from) {
-				$form[$this->key]['to']->setAttribute('placeholder', $text_to);
+				$container[$this->key]['to']->setAttribute('placeholder', $text_to);
 			}
 		}
 	}

@@ -25,13 +25,14 @@ class GroupActionCollection extends Nette\Object
 
 	/**
 	 * Get assambled form
-	 * @param  Nette\Forms\Container $group_action_container
-	 * @param Form $form
-	 * @param Nette\Localization\ITranslator $translator
+	 * @param Nette\Forms\Container $container
 	 * @return void
 	 */
-	public function addToFormContainer($group_action_container, $form, $translator)
+	public function addToFormContainer($container)
 	{
+		$form = $container->lookup('Nette\Application\UI\Form');
+		$translator = $form->getTranslator();
+
 		/**
 		 * First foreach for filling "main" select
 		 */
@@ -39,7 +40,7 @@ class GroupActionCollection extends Nette\Object
 			$main_options[$id] = $action->getTitle();
 		}
 
-		$group_action_container->addSelect('group_action', '', $main_options)
+		$container->addSelect('group_action', '', $main_options)
 			->setPrompt($translator->translate('ublaboo_datagrid.choose'));
 
 		/**
@@ -47,20 +48,20 @@ class GroupActionCollection extends Nette\Object
 		 */
 		foreach ($this->group_actions as $id => $action) {
 			if ($action->hasOptions()) {
-				$group_action_container->addSelect($id, '', $action->getOptions())
+				$container->addSelect($id, '', $action->getOptions())
 					->setAttribute('id', static::ID_ATTRIBUTE_PREFIX.$id);
 			}
 		}
 
 		foreach ($this->group_actions as $id => $action) {
-			$group_action_container['group_action']->addCondition(Form::EQUAL, $id)
+			$container['group_action']->addCondition(Form::EQUAL, $id)
 				->toggle(static::ID_ATTRIBUTE_PREFIX.$id);
 		}
 
-		$group_action_container['group_action']->addCondition(Form::FILLED)
+		$container['group_action']->addCondition(Form::FILLED)
 			->toggle('group_action_submit');
 
-		$group_action_container->addSubmit('submit', $translator->translate('ublaboo_datagrid.execute'))
+		$container->addSubmit('submit', $translator->translate('ublaboo_datagrid.execute'))
 			->setAttribute('id', 'group_action_submit');
 
 		$form->onSubmit[] = [$this, 'submitted'];
