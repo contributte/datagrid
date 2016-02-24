@@ -55,6 +55,11 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @var array
+	 */
+	public $default_sort = [];
+
+	/**
+	 * @var array
 	 * @persistent
 	 */
 	public $filter = [];
@@ -200,7 +205,7 @@ class DataGrid extends Nette\Application\UI\Control
 	private $refresh_url = TRUE;
 
 	/**
-	 * @var Nette\Http\SessionSection|NULL
+	 * @var Nette\Http\SessionSection
 	 */
 	private $grid_session;
 
@@ -253,6 +258,7 @@ class DataGrid extends Nette\Application\UI\Control
 			 * Try to find previous filters/pagination/sort in session
 			 */
 			$this->findSessionFilters();
+			$this->findDefaultSort();
 		}
 	}
 
@@ -453,17 +459,37 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set default sorting
-	 * @param aray $sort
+	 * @param array $sort
 	 */
 	public function setDefaultSort($sort)
 	{
-		if (empty($this->sort)) {
-			$this->sort = (array) $sort;
-
-			$this->saveSessionData('_grid_sort', $this->sort);
+		if (is_string($sort)) {
+			$sort = [$sort => 'ASC'];
+		} else {
+			$sort = (array) $sort;
 		}
 
+		$this->default_sort = $sort;
+
 		return $this;
+	}
+
+
+	/**
+	 * User may set default sorting, apply it
+	 * @return void
+	 */
+	public function findDefaultSort()
+	{
+		if (!empty($this->sort)) {
+			return;
+		}
+
+		if ($this->default_sort) {
+			$this->sort = $this->default_sort;
+		}
+
+		$this->saveSessionData('_grid_sort', $this->sort);
 	}
 
 
@@ -1781,7 +1807,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function saveSessionData($key, $value)
 	{
-		if ($this->remember_state && $this->grid_session !== NULL) {
+		if ($this->remember_state) {
 			$this->grid_session->{$key} = $value;
 		}
 	}
