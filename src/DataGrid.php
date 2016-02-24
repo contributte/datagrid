@@ -200,7 +200,7 @@ class DataGrid extends Nette\Application\UI\Control
 	private $refresh_url = TRUE;
 
 	/**
-	 * @var Nette\Http\SessionSection
+	 * @var Nette\Http\SessionSection|NULL
 	 */
 	private $grid_session;
 
@@ -1781,7 +1781,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function saveSessionData($key, $value)
 	{
-		if ($this->remember_state) {
+		if ($this->remember_state && $this->grid_session !== NULL) {
 			$this->grid_session->{$key} = $value;
 		}
 	}
