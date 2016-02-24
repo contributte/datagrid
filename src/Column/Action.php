@@ -10,24 +10,25 @@ namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\DataGridHasToBeAttachedToPresenterComponentException;
+use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
+use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Row;
 
 class Action extends Column
 {
 
 	/**
-	 * @var string
+	 * @var string|callable
 	 */
 	protected $title;
 
 	/**
-	 * @var string
+	 * @var string|callable
 	 */
 	protected $class;
 
 	/**
-	 * @var string
+	 * @var string|callable
 	 */
 	protected $icon;
 
@@ -52,7 +53,7 @@ class Action extends Column
 	protected $params;
 
 	/**
-	 * @var array
+	 * @var array|callable
 	 */
 	protected $confirm;
 
@@ -104,7 +105,7 @@ class Action extends Column
 		$a = Html::el('a')->href($link);
 
 		if ($this->icon) {
-			$a->add(Html::el('span')->class(DataGrid::$icon_prefix.$this->icon));
+			$a->add(Html::el('span')->class(DataGrid::$icon_prefix.$this->getIcon($row)));
 
 			if (strlen($this->name)) {
 				$a->add('&nbsp;');
@@ -119,8 +120,8 @@ class Action extends Column
 
 		$a->add($this->translate($this->name));
 
-		if ($this->title) { $a->title($this->translate($this->title)); }
-		if ($this->class) { $a->class($this->class); }
+		if ($this->title) { $a->title($this->translate($this->getTitle($row))); }
+		if ($this->class) { $a->class($this->getClass($row)); }
 		if ($confirm = $this->getConfirm($row)) { $a->data('confirm', $this->translate($confirm)); }
 
 		return $a;
@@ -129,11 +130,17 @@ class Action extends Column
 
 	/**
 	 * Set attribute title
-	 * @param string $title
+	 * @param string|callable $title
 	 * @return static
 	 */
 	public function setTitle($title)
 	{
+		if (!is_string($title) && !is_callable($title)) {
+			throw new DataGridException(
+				'Action title has to be either string or callback, that will return string'
+			);
+		}
+
 		$this->title = $title;
 
 		return $this;
@@ -142,21 +149,41 @@ class Action extends Column
 
 	/**
 	 * Get attribute title
+	 * @param Row $row
 	 * @return string
 	 */
-	public function getTitle()
+	public function getTitle(Row $row)
 	{
+		/**
+		 * If user callback was used for setting action title, it has to return string
+		 */
+		if (is_callable($this->title)) {
+			$title = call_user_func($this->title, $row->getItem());
+
+			if (!is_string($title)) {
+				throw new DataGridException('Action class callback has to return string');
+			}
+
+			return $title;
+		}
+
 		return $this->title;
 	}
 
 
 	/**
 	 * Set attribute class
-	 * @param string $class
+	 * @param string|callable $class
 	 * @return static
 	 */
 	public function setClass($class)
 	{
+		if (!is_string($class) && !is_callable($class)) {
+			throw new DataGridException(
+				'Action class has to be either string or callback, that will return string'
+			);
+		}
+
 		$this->class = $class;
 
 		return $this;
@@ -165,21 +192,41 @@ class Action extends Column
 
 	/**
 	 * Get attribute class
+	 * @param Row $row
 	 * @return string
 	 */
-	public function getClass()
+	public function getClass(Row $row)
 	{
+		/**
+		 * If user callback was used for setting action class, it has to return string
+		 */
+		if (is_callable($this->class)) {
+			$class = call_user_func($this->class, $row->getItem());
+
+			if (!is_string($class)) {
+				throw new DataGridException('Action class callback has to return string');
+			}
+
+			return $class;
+		}
+
 		return $this->class;
 	}
 
 
 	/**
 	 * Set icon
-	 * @param string $icon
-	 * @return static
+	 * @param string|callable $icon
+	 * @return static|callable
 	 */
 	public function setIcon($icon)
 	{
+		if (!is_string($icon) && !is_callable($icon)) {
+			throw new DataGridException(
+				'Action icon has to be either string or callback, that will return string'
+			);
+		}
+
 		$this->icon = $icon;
 
 		return $this;
@@ -188,22 +235,42 @@ class Action extends Column
 
 	/**
 	 * Get icon
+	 * @param Row $row
 	 * @return string
 	 */
-	public function getIcon()
+	public function getIcon(Row $row)
 	{
+		/**
+		 * If user callback was used for setting action icon, it has to return string
+		 */
+		if (is_callable($this->icon)) {
+			$icon = call_user_func($this->icon, $row->getItem());
+
+			if (!is_string($icon)) {
+				throw new DataGridException('Action icon callback has to return string');
+			}
+
+			return $icon;
+		}
+
 		return $this->icon;
 	}
 
 
 	/**
 	 * Set confirm dialog
-	 * @param string $message
+	 * @param string|callable $message
 	 * @param string $column
 	 * @return static
 	 */
 	public function setConfirm($message, $column = NULL)
 	{
+		if (!is_string($message) && !is_callable($message)) {
+			throw new DataGridException(
+				'Action message has to be either string or callback, that will return string'
+			);
+		}
+
 		$this->confirm = [$message, $column];
 
 		return $this;
@@ -221,11 +288,24 @@ class Action extends Column
 			return NULL;
 		}
 
-		if (!$this->confirm[1]) {
-			return $this->confirm[0];
+		$question = $this->confirm[0];
+
+		/**
+		 * If user callback was used for setting action confirmation dialog, it has to return string
+		 */
+		if (is_callable($question)) {
+			$question = call_user_func($question, $row->getItem());
+
+			if (!is_string($question)) {
+				throw new DataGridException('Action confirmation dialog callback has to return string');
+			}
 		}
 
-		return str_replace('%s', $row->getValue($this->confirm[1]), $this->confirm[0]);
+		if (!$this->confirm[1]) {
+			return $question;
+		}
+
+		return str_replace('%s', $row->getValue($this->confirm[1]), $question);
 	}
 
 

@@ -11,6 +11,7 @@ namespace Ublaboo\DataGrid\Column;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 
 class ColumnLink extends Column
 {
