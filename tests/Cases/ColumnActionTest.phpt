@@ -89,7 +89,7 @@ final class ColumnActionTest extends TestCase
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!');
 
 		DataGrid::$icon_prefix = 'icon-';
-		$action->icon('user');
+		$action->setIcon('user');
 
 		Assert::same(
 			'<a href="doStuff!?id=1" class="btn btn-xs btn-default"><span class="icon-user"></span>&nbsp;Do</a>',
@@ -112,7 +112,7 @@ final class ColumnActionTest extends TestCase
 
 	public function testActionTitle()
 	{
-		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->title('hello');
+		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->setTitle('hello');
 
 		Assert::same(
 			'<a href="doStuff!?id=1" title="hello" class="btn btn-xs btn-default">Do</a>',
@@ -123,7 +123,7 @@ final class ColumnActionTest extends TestCase
 
 	public function testActionConfirm()
 	{
-		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->confirm('Really?');
+		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->setConfirm('Really?');
 
 		Assert::same(
 			'<a href="doStuff!?id=1" class="btn btn-xs btn-default" data-confirm="Really?">Do</a>',
