@@ -453,7 +453,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set default sorting
-	 * @param aray $sort
+	 * @param array $sort
+	 * @return static
 	 */
 	public function setDefaultSort($sort)
 	{
@@ -470,6 +471,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set grido to be sortable
 	 * @param bool $sortable
+	 * @return static
 	 */
 	public function setSortable($sortable = TRUE)
 	{
@@ -485,7 +487,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set sortable handle
-	 * @param string $handle
+	 * @param string $handler
+	 * @return static
 	 */
 	public function setSortableHandler($handler = 'sort!')
 	{
