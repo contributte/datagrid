@@ -78,9 +78,9 @@ final class ArrayDataSourceTest extends TestCase
 	{
 		$this->setUp();
 
-		$this->ds->filterOne(['id' => 4]);
+		$this->ds->filterOne(['id' => 8]);
 
-		Assert::same([$this->data[4]], $this->ds->getData());
+		Assert::same([$this->data[3]], array_values($this->ds->getData()));
 	}
 
 
@@ -101,11 +101,11 @@ final class ArrayDataSourceTest extends TestCase
 		$this->ds->sort(['name' => 'DESC']);
 
 		Assert::same([
-			$this->data[1],
-			$this->data[4],
-			$this->data[0],
+			$this->data[2],
 			$this->data[3],
-			$this->data[2]
+			$this->data[0],
+			$this->data[4],
+			$this->data[1]
 		], array_values($this->ds->getData()));
 	}
 
