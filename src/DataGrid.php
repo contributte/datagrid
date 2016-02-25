@@ -210,9 +210,9 @@ class DataGrid extends Nette\Application\UI\Control
 	private $grid_session;
 
 	/**
-	 * @var array
+	 * @var Column\ItemDetail
 	 */
-	private $items_detail = [];
+	private $items_detail;
 
 	/**
 	 * @var array
