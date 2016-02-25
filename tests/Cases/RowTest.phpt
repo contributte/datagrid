@@ -164,8 +164,8 @@ class XTestingDDataGridEntity extends Nette\Object
 	private $name;
 
 	/**
-	 * @ORM\Column(type="int")
-	 * @var int
+	 * @ORM\Column(type="integer")
+	 * @var integer
 	 */
 	private $age;
 
