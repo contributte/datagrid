@@ -2002,14 +2002,14 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-
 	/**
 	 * @return PresenterComponent
 	 */
 	public function getParent()
 	{
 		$parent = parent::getParent();
-		if (!$parent instanceof PresenterComponent) {
+
+		if (!($parent instanceof PresenterComponent)) {
 			throw new DataGridHasToBeAttachedToPresenterComponentException(
 				"DataGrid is attached to: '" . get_class($parent) . "', but instance of PresenterComponent is needed."
 			);

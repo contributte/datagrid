@@ -49,13 +49,15 @@ class ActionCallback extends Action
 
 	/**
 	 * Create link to datagrid::handleActionCallback() to fire custom callback
-	 * @param  Row    $row
+	 * @param  string $href
+	 * @param  array  $params
 	 * @return string
 	 * @throws DataGridHasToBeAttachedToPresenterComponentException
+	 * @throws InvalidArgumentException
 	 */
-	protected function createLink(Row $row)
+	protected function createLink($href, $params)
 	{
-		$params = $this->getItemParams($row) + ['__key' => $this->key];
+		$params = $params + ['__key' => $this->key];
 
 		return $this->grid->link('actionCallback!', $params);
 	}
