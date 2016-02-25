@@ -32,7 +32,7 @@
 					</div>
 				</div>
 			{/if}
-			<table class="table table-hover table-bordered" n:snippet="table" n:block="data">
+			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
 				<thead>
 					<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports || $control->canHideColumns()">
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
@@ -129,51 +129,54 @@
 					{snippetArea items}
 						{foreach $rows as $row}
 							{var $item = $row->getItem()}
-							<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()" n:if="!isset($toggle_detail)">
-								<td n:if="$control->hasGroupActions()" class="col-checkbox">
-									{if $row->hasGroupAction()}
-										<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$row->getId()}]">
-									{/if}
-								</td>
-								{foreach $columns as $key => $column}
-									{var $col = 'col-' . $key}
-									{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
 
-									<td class="{$col} text-{$align}"
-										{if $column->isEditable()} data-datagrid-editable-url={link edit!, key => $key, id => $row->getId()}{/if}>
-										{if $column->hasTemplate()}
-											{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
-										{else}
-											{ifset #$col}
-												{include #$col, item => $item}
-											{else}
-												{if $column->isTemplateEscaped()}
-													{$column->render($row)}
-												{else}
-													{!$column->render($row)}
-												{/if}
-											{/ifset}
+							{if !isset($toggle_detail)}
+								<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
+									<td n:if="$control->hasGroupActions()" class="col-checkbox">
+										{if $row->hasGroupAction()}
+											<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$row->getId()}]">
 										{/if}
 									</td>
-								{/foreach}
-								<td n:if="$actions || $control->isSortable() || $items_detail" class="col-action">
-									{foreach $actions as $key => $action}
-										{if $row->hasAction($key)}
-											{if $action->hasTemplate()}
-												{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables()}
+									{foreach $columns as $key => $column}
+										{var $col = 'col-' . $key}
+										{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
+
+										<td class="{$col} text-{$align}"
+											{if $column->isEditable()} data-datagrid-editable-url={link edit!, key => $key, id => $row->getId()}{/if}>
+											{if $column->hasTemplate()}
+												{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
 											{else}
-												{!$action->render($row)}
+												{ifset #$col}
+													{include #$col, item => $item}
+												{else}
+													{if $column->isTemplateEscaped()}
+														{$column->render($row)}
+													{else}
+														{!$column->render($row)}
+													{/if}
+												{/ifset}
 											{/if}
-										{/if}
+										</td>
 									{/foreach}
-									<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
-										<span class="{$icon_prefix}arrows"></span>
-									</span>
-									{if $items_detail}
-										{!$items_detail->renderButton($row)}
-									{/if}
-								</td>
-							</tr>
+									<td n:if="$actions || $control->isSortable() || $items_detail" class="col-action">
+										{foreach $actions as $key => $action}
+											{if $row->hasAction($key)}
+												{if $action->hasTemplate()}
+													{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables()}
+												{else}
+													{!$action->render($row)}
+												{/if}
+											{/if}
+										{/foreach}
+										<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
+											<span class="{$icon_prefix}arrows"></span>
+										</span>
+										{if $items_detail}
+											{!$items_detail->renderButton($row)}
+										{/if}
+									</td>
+								</tr>
+							{/if}
 
 							{**
 							 * Item detail
@@ -198,6 +201,7 @@
 										{/ifset}
 									{/if}
 								</tr>
+								<tr class="row-item-detail-helper"</tr>
 							{/if}
 						{/foreach}
 						{block noItems}
@@ -223,7 +227,6 @@
 	 * Bottom row
 	 *}
 	{block pagination}
-		{* {control $control:pagination} *}
 		<div n:snippet="pagination" n:if="!$control->isTreeView()" class="row-grid-bottom">
 			<div class="col-items">
 				<small class="text-muted" n:if="$control->isPaginated()">
@@ -245,7 +248,7 @@
 			</div>
 			<div class="col-per-page text-right">
 				{**
-				* Items per page form (display only besie paginated grido)
+				* Items per page form (display only beside paginated grido)
 				*}
 				<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'ublaboo_datagrid.reset_filter'}</a>
 				{if $control->isPaginated()}

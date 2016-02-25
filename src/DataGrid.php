@@ -210,9 +210,9 @@ class DataGrid extends Nette\Application\UI\Control
 	private $grid_session;
 
 	/**
-	 * @var array
+	 * @var Column\ItemDetail
 	 */
-	private $items_detail = [];
+	private $items_detail;
 
 	/**
 	 * @var array
@@ -321,25 +321,25 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		if ($this->isTreeView()) {
-			$this->template->tree_view_has_children_column = $this->tree_view_has_children_column;
+			$this->template->add('tree_view_has_children_column', $this->tree_view_has_children_column);
 		}
 
-		$this->template->rows = $rows;
+		$this->template->add('rows', $rows);
 
-		$this->template->columns = $this->getColumns();
-		$this->template->actions = $this->actions;
-		$this->template->exports = $this->exports;
-		$this->template->filters = $this->filters;
+		$this->template->add('columns', $this->getColumns());
+		$this->template->add('actions', $this->actions);
+		$this->template->add('exports', $this->exports);
+		$this->template->add('filters', $this->filters);
 
-		$this->template->filter_active = $this->isFilterActive();
-		$this->template->original_template = $this->getOriginalTemplateFile();
-		$this->template->icon_prefix = static::$icon_prefix;
-		$this->template->items_detail = $this->items_detail;
+		$this->template->add('filter_active', $this->isFilterActive());
+		$this->template->add('original_template', $this->getOriginalTemplateFile());
+		$this->template->add('icon_prefix', static::$icon_prefix);
+		$this->template->add('items_detail', $this->items_detail);
 
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
 		 */
-		$this->template->filter = $this['filter'];
+		$this->template->add('filter', $this['filter']);
 
 		/**
 		 * Set template file and render it
@@ -1398,7 +1398,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function handleGetItemDetail($id)
 	{
-		$this->template->toggle_detail = $id;
+		$this->template->add('toggle_detail', $id);
 		$this->redraw_item = [$this->items_detail->getPrimaryWhereColumn() => $id];
 
 		if ($this->getPresenter()->isAjax()) {
@@ -2002,14 +2002,14 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-
 	/**
 	 * @return PresenterComponent
 	 */
 	public function getParent()
 	{
 		$parent = parent::getParent();
-		if (!$parent instanceof PresenterComponent) {
+
+		if (!($parent instanceof PresenterComponent)) {
 			throw new DataGridHasToBeAttachedToPresenterComponentException(
 				"DataGrid is attached to: '" . get_class($parent) . "', but instance of PresenterComponent is needed."
 			);

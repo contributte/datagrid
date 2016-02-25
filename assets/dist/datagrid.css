@@ -118,6 +118,10 @@
   display: none;
 }
 
+.datagrid table tbody tr.row-item-detail-helper {
+  display: none;
+}
+
 .datagrid table tbody tr td[data-datagrid-editable-url].editing textarea {
   padding: 2px;
   margin: -3px;

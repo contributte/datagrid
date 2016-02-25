@@ -100,7 +100,7 @@ class Action extends Column
 			}
 		}
 
-		$link = $this->createLink($row);
+		$link = $this->createLink($this->href, $this->getItemParams($row));
 
 		$a = Html::el('a')->href($link);
 
@@ -317,24 +317,6 @@ class Action extends Column
 	public function setDataAttribute($key, $value)
 	{
 		$this->data_attributes[$key] = $value;
-	}
-
-
-	/**
-	 * Create link to custom destination
-	 * @param  Row    $row
-	 * @return string
-	 * @throws DataGridHasToBeAttachedToPresenterComponentException
-	 */
-	protected function createLink(Row $row)
-	{
-		try {
-			$parent = $this->grid->getParent();
-		} catch (DataGridHasToBeAttachedToPresenterComponentException $e) {
-			$parent = $this->grid->getPresenter();
-		}
-
-		return $parent->link($this->href, $this->getItemParams($row));
 	}
 
 

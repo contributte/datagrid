@@ -225,15 +225,6 @@ $.nette.ext('datagrid.confirm', {
 })
 
 
-$(document).on('click', '.datagrid [data-toggle-detail]', ->
-	id = $(this).attr('data-toggle-detail')
-	grid = $(this).attr('data-toggle-detail-grid')
-
-	row = $('.' + grid + ' .item-detail-' + id)
-
-
-)
-
 $.nette.ext('datargid.item_detail', {
 	before: (xhr, settings) ->
 		if settings.nette and settings.nette.el.attr('data-toggle-detail')

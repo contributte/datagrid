@@ -138,6 +138,10 @@
 					}
 				}
 
+				&.row-item-detail-helper {
+					display: none;
+				}
+
 				td {
 					&[data-datagrid-editable-url] {
 						&.editing {

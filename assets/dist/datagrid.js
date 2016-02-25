@@ -270,13 +270,6 @@ $.nette.ext('datagrid.confirm', {
   }
 });
 
-$(document).on('click', '.datagrid [data-toggle-detail]', function() {
-  var grid, id, row;
-  id = $(this).attr('data-toggle-detail');
-  grid = $(this).attr('data-toggle-detail-grid');
-  return row = $('.' + grid + ' .item-detail-' + id);
-});
-
 $.nette.ext('datargid.item_detail', {
   before: function(xhr, settings) {
     var id, row_detail;
