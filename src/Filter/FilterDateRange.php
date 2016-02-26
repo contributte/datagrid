@@ -10,18 +10,8 @@ namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
 
-class FilterDateRange extends Filter
+class FilterDateRange extends FilterRange
 {
-
-	/**
-	 * @var array
-	 */
-	private $placeholder;
-
-	/**
-	 * @var string
-	 */
-	private $name_second;
 
 	/**
 	 * @var string
@@ -32,20 +22,6 @@ class FilterDateRange extends Filter
 	 * @var array
 	 */
 	protected $format = ['j. n. Y', 'd. m. yyyy'];
-
-
-	/**
-	 * @param string $key
-	 * @param string $name
-	 * @param string $column
-	 * @param string $name_second
-	 */
-	public function __construct($key, $name, $column, $name_second)
-	{
-		parent::__construct($key, $name, $column);
-
-		$this->name_second = $name_second;
-	}
 
 
 	/**
@@ -70,48 +46,19 @@ class FilterDateRange extends Filter
 			->setAttribute('data-date-today-highlight', 'true')
 			->setAttribute('data-date-autoclose', 'true');
 
-		if ($placeholder = $this->getPlaceholder()) {
-			if ($text_from = reset($placeholder)) {
+		if ($placeholder_array = $this->getPlaceholder()) {
+			$text_from = reset($placeholder_array);
+
+			if ($text_from) {
 				$container[$this->key]['from']->setAttribute('placeholder', $text_from);
 			}
 
-			if ($text_to = end($placeholder) && $text_to != $text_from) {
+			$text_to = end($placeholder_array);
+
+			if ($text_to && ($text_to != $text_from)) {
 				$container[$this->key]['to']->setAttribute('placeholder', $text_to);
 			}
 		}
-	}
-
-
-	/**
-	 * Set html attr placeholder of both fields
-	 * @param string $placeholder
-	 */
-	public function setPlaceholder($placeholder)
-	{
-		if (!is_array($placeholder)) {
-			throw new FilterDateRangeException(
-				'FilterDateRange::setPlaceholder can only accept array of placeholders'
-			);
-		}
-
-		$this->placeholder = $placeholder;
-
-		return $this;
-	}
-
-
-	/**
-	 * Get filter condition
-	 * @return array
-	 */
-	public function getCondition()
-	{
-		$value = $this->getValue();
-
-		return [$this->column => [
-			'from' => isset($value['from']) ? $value['from'] : '',
-			'to' => isset($value['to']) ? $value['to'] : ''
-		]];
 	}
 
 
@@ -145,9 +92,4 @@ class FilterDateRange extends Filter
 		return $this->format[1];
 	}
 
-}
-
-
-class FilterDateRangeException extends \Exception
-{
 }

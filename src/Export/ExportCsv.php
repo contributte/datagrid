@@ -11,6 +11,7 @@ namespace Ublaboo\DataGrid\Export;
 use Ublaboo\DataGrid\CsvDataModel;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\Responses\CSVResponse;
+use Nette;
 
 class ExportCsv extends Export
 {
@@ -56,12 +57,14 @@ class ExportCsv extends Export
 
 		$csv_data_model = new CsvDataModel($data, $columns);
 
-		$grid->getPresenter()->sendResponse(new CSVResponse(
-			$csv_data_model->getSimpleData(),
-			$this->name
-		));
+		if ($grid->getPresenter() instanceof Nette\Application\UI\Presenter) {
+			$grid->getPresenter()->sendResponse(new CSVResponse(
+				$csv_data_model->getSimpleData(),
+				$this->name
+			));
 
-		exit(0);
+			exit(0);
+		}
 	}
 
 }

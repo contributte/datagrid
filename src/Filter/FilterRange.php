@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
+use Ublaboo\DataGrid\Exception\DataGridFilterRangeException;
 
 class FilterRange extends Filter
 {
@@ -16,12 +17,12 @@ class FilterRange extends Filter
 	/**
 	 * @var array
 	 */
-	private $placeholder;
+	protected $placeholder_array;
 
 	/**
 	 * @var string
 	 */
-	private $name_second;
+	protected $name_second;
 
 	/**
 	 * @var string
@@ -55,12 +56,16 @@ class FilterRange extends Filter
 
 		$container->addText('to', $this->name_second);
 
-		if ($placeholder = $this->getPlaceholder()) {
-			if ($text_from = reset($placeholder)) {
+		if ($placeholder_array = $this->getPlaceholder()) {
+			$text_from = reset($placeholder_array);
+
+			if ($text_from) {
 				$container[$this->key]['from']->setAttribute('placeholder', $text_from);
 			}
 
-			if ($text_to = end($placeholder) && $text_to != $text_from) {
+			$text_to = end($placeholder_array);
+
+			if ($text_to && ($text_to != $text_from)) {
 				$container[$this->key]['to']->setAttribute('placeholder', $text_to);
 			}
 		}
@@ -68,18 +73,19 @@ class FilterRange extends Filter
 
 
 	/**
-	 * Set html attr placeholder of both fields
-	 * @param string $placeholder
+	 * Set html attr placeholder of both inputs
+	 * @param string $placeholder_array
+	 * @return static
 	 */
-	public function setPlaceholder($placeholder)
+	public function setPlaceholder($placeholder_array)
 	{
-		if (!is_array($placeholder)) {
-			throw new FilterRangeException(
+		if (!is_array($placeholder_array)) {
+			throw new DataGridFilterRangeException(
 				'FilterRange::setPlaceholder can only accept array of placeholders'
 			);
 		}
 
-		$this->placeholder = $placeholder;
+		$this->placeholder_array = $placeholder_array;
 
 		return $this;
 	}
@@ -99,9 +105,4 @@ class FilterRange extends Filter
 		]];
 	}
 
-}
-
-
-class FilterRangeException extends \Exception
-{
 }

@@ -20,7 +20,7 @@ class Export extends Ublaboo\DataGrid\Object
 	use Traits\ButtonIconTrait;
 
 	/**
-	 * @var bool
+	 * @var string
 	 */
 	protected $text;
 

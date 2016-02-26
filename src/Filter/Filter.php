@@ -130,7 +130,8 @@ abstract class Filter extends Nette\Object
 
 	/**
 	 * Set html attr placeholder
-	 * @param string $placeholder
+	 * @param  string $placeholder
+	 * @return static
 	 */
 	public function setPlaceholder($placeholder)
 	{
@@ -161,6 +162,16 @@ abstract class Filter extends Nette\Object
 
 
 	/**
+	 * Get filter condition
+	 * @return array
+	 */
+	public function getCondition()
+	{
+		return [$this->column => $this->getValue()];
+	}
+
+
+	/**
 	 * Tell whether custom condition_callback on filter is set
 	 * @return bool
 	 */
@@ -182,7 +193,8 @@ abstract class Filter extends Nette\Object
 
 	/**
 	 * Filter may have its own template
-	 * @param string $template
+	 * @param  string $template
+	 * @return static
 	 */
 	public function setTemplate($template)
 	{
