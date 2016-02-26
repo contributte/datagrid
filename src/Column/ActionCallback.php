@@ -24,28 +24,6 @@ class ActionCallback extends Action
 	 */
 	public $onClick = [];
 
-	/**
-	 * @var string
-	 */
-	protected $key;
-
-
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $key
-	 * @param string   $name
-	 * @param array    $params
-	 */
-	public function __construct(DataGrid $grid, $key, $name, $params)
-	{
-		$this->grid = $grid;
-		$this->key = $key;
-		$this->name = $name;
-		$this->params = $params;
-
-		$this->class = 'btn btn-xs btn-default';
-	}
-
 
 	/**
 	 * Create link to datagrid::handleActionCallback() to fire custom callback
@@ -57,7 +35,10 @@ class ActionCallback extends Action
 	 */
 	protected function createLink($href, $params)
 	{
-		$params = $params + ['__key' => $this->key];
+		/**
+		 * Int case of ActionCallback, $this->href is a identifier of user callback
+		 */
+		$params = $params + ['__key' => $this->href];
 
 		return $this->grid->link('actionCallback!', $params);
 	}

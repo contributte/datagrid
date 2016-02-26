@@ -12,6 +12,7 @@ use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
+use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 
 class ColumnLink extends Column
 {
@@ -69,20 +70,14 @@ class ColumnLink extends Column
 		/**
 		 * Renderer function may be used
 		 */
-		if ($renderer = $this->getRenderer()) {
-			if (!$renderer->getConditionCallback()) {
-				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
-			}
-
-			if (call_user_func_array($renderer->getConditionCallback(), [$row->getItem()])) {
-				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
-			}
-		}
+		try {
+			return $this->useRenderer($row);
+		} catch (DataGridColumnRendererException $e) {}
 
 		$value = parent::render($row);
 
 		$a = Html::el('a')
-			->href($this->createLink($this->href, $this->getItemParams($row)))
+			->href($this->createLink($this->href, $this->getItemParams($row, $this->params)))
 			->setText($value);
 
 		if ($this->title) { $a->title($this->title); }
@@ -131,22 +126,6 @@ class ColumnLink extends Column
 	public function getClass()
 	{
 		return $this->class;
-	}
-
-	/**
-	 * Get item params (E.g. action may be called id => $item->id, name => $item->name, ...)
-	 * @param  Row   $row
-	 * @return array
-	 */
-	protected function getItemParams(Row $row)
-	{
-		$return = [];
-
-		foreach ($this->params as $param_name => $param) {
-			$return[is_string($param_name) ? $param_name : $param] = $row->getValue($param);
-		}
-
-		return $return;
 	}
 
 }

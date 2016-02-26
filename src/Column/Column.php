@@ -12,6 +12,7 @@ use Nette\InvalidArgumentException;
 use Ublaboo;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 
 abstract class Column extends Ublaboo\DataGrid\Object
 {
@@ -93,15 +94,9 @@ abstract class Column extends Ublaboo\DataGrid\Object
 		/**
 		 * Renderer function may be used
 		 */
-		if ($renderer = $this->getRenderer()) {
-			if (!$renderer->getConditionCallback()) {
-				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
-			}
-
-			if (call_user_func_array($renderer->getConditionCallback(), [$row->getItem()])) {
-				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
-			}
-		}
+		try {
+			return $this->useRenderer($row);
+		} catch (DataGridColumnRendererException $e) {}
 
 		/**
 		 * Or replacements may be applied
@@ -112,6 +107,31 @@ abstract class Column extends Ublaboo\DataGrid\Object
 		}
 
 		return $this->getColumnValue($row);
+	}
+
+
+	/**
+	 * Try to render item with custom renderer
+	 * @param  Row   $row
+	 * @return mixed
+	 */
+	public function useRenderer(Row $row)
+	{
+		$renderer = $this->getRenderer();
+
+		if (!$renderer) {
+			throw new DataGridColumnRendererException;
+		}
+
+		if ($renderer->getConditionCallback()) {
+			if (!call_user_func_array($renderer->getConditionCallback(), [$row->getItem()])) {
+				throw new DataGridColumnRendererException;
+			}
+
+			return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
+		}
+
+		return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
 	}
 
 
@@ -450,6 +470,24 @@ abstract class Column extends Ublaboo\DataGrid\Object
 		}
 
 		return $parent->link($href, $params);
+	}
+
+
+	/**
+	 * Get row item params (E.g. action may be called id => $item->id, name => $item->name, ...)
+	 * @param  Row   $row
+	 * @param  array $params_list
+	 * @return array
+	 */
+	protected function getItemParams(Row $row, array $params_list)
+	{
+		$return = [];
+
+		foreach ($params_list as $param_name => $param) {
+			$return[is_string($param_name) ? $param_name : $param] = $row->getValue($param);
+		}
+
+		return $return;
 	}
 
 }

@@ -11,9 +11,12 @@ namespace Ublaboo\DataGrid\Column;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo;
+use Ublaboo\DataGrid\Traits;
 
 class ItemDetail extends Ublaboo\DataGrid\Object
 {
+
+	use Traits\ButtonIconTrait;
 
 	/**
 	 * (renderer | template | block)
@@ -85,13 +88,7 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 			->data('toggle-detail', $row->getId())
 			->data('toggle-detail-grid', $this->grid->getName());
 
-		if ($this->icon) {
-			$a->add(Html::el('span')->class(DataGrid::$icon_prefix.$this->icon));
-			
-			if (strlen($this->text)) {
-				$a->add('&nbsp;');
-			}
-		}
+		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
 		$a->add($this->text);
 
