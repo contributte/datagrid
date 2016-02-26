@@ -10,9 +10,11 @@ namespace Ublaboo\DataGrid\Column;
 
 use Nette\InvalidArgumentException;
 use Ublaboo;
+use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
+use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 
 abstract class Column extends Ublaboo\DataGrid\Object
 {
@@ -71,6 +73,11 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	 * @var callable
 	 */
 	protected $editable_callback;
+
+	/**
+	 * @var DataGrid
+	 */
+	protected $grid;
 
 
 	/**

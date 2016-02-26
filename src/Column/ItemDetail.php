@@ -30,7 +30,7 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 	protected $template;
 
 	/**
-	 * @var string
+	 * @var callable
 	 */
 	protected $renderer;
 
@@ -266,7 +266,7 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Get item detail renderer
-	 * @return string
+	 * @return callable
 	 */
 	public function getRenderer()
 	{

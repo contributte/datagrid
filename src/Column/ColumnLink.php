@@ -28,11 +28,6 @@ class ColumnLink extends Column
 	protected $class;
 
 	/**
-	 * @var DataGrid
-	 */
-	protected $grid;
-
-	/**
 	 * @var array
 	 */
 	protected $params;
