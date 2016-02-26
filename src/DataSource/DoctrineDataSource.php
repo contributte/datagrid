@@ -15,7 +15,7 @@ use Doctrine\ORM\QueryBuilder,
 	Nette\Utils\Strings,
 	Doctrine;
 
-class DoctrineDataSource implements IDataSource
+class DoctrineDataSource extends FilterableDataSource implements IDataSource
 {
 
 	/**
@@ -100,43 +100,9 @@ class DoctrineDataSource implements IDataSource
 
 
 	/**
-	 * Filter data
-	 * @param array $filters
-	 * @return self
-	 */
-	public function filter(array $filters)
-	{
-		foreach ($filters as $filter) {
-			if ($filter->isValueSet()) {
-				if ($filter->hasConditionCallback()) {
-					Callback::invokeArgs(
-						$filter->getConditionCallback(),
-						[$this->data_source, $filter->getValue()]
-					);
-				} else {
-					if ($filter instanceof Filter\FilterText) {
-						$this->applyFilterText($filter);
-					} else if ($filter instanceof Filter\FilterSelect) {
-						$this->applyFilterSelect($filter);
-					} else if ($filter instanceof Filter\FilterDate) {
-						$this->applyFilterDate($filter);
-					} else if ($filter instanceof Filter\FilterDateRange) {
-						$this->applyFilterDateRange($filter);
-					} else if ($filter instanceof Filter\FilterRange) {
-						$this->applyFilterRange($filter);
-					}
-				}
-			}
-		}
-
-		return $this;
-	}
-
-
-	/**
 	 * Filter data - get one row
 	 * @param array $condition
-	 * @return self
+	 * @return static
 	 */
 	public function filterOne(array $condition)
 	{
@@ -156,7 +122,7 @@ class DoctrineDataSource implements IDataSource
 	/**
 	 * Filter by date
 	 * @param  Filter\FilterDate $filter
-	 * @return self
+	 * @return static
 	 */
 	public function applyFilterDate(Filter\FilterDate $filter)
 	{
@@ -244,6 +210,7 @@ class DoctrineDataSource implements IDataSource
 	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$condition = $filter->getCondition();
+		$exprs = [];
 
 		foreach ($condition as $column => $value) {
 			$words = explode(' ', $value);
@@ -251,16 +218,6 @@ class DoctrineDataSource implements IDataSource
 
 			foreach ($words as $word) {
 				$exprs[] = $this->data_source->expr()->like($c, $this->data_source->expr()->literal("%$word%"));
-
-				/**
-				 * @todo Manage somehow COLLATE statement in DQL
-				 */
-				/*if (preg_match("/[\x80-\xFF]/", $word)) {
-					$or[] = "$c LIKE $escaped COLLATE utf8_bin";
-				} else {
-					$escaped = Strings::toAscii($escaped);
-					$or[] = "$c LIKE $escaped COLLATE utf8_general_ci";
-				}*/
 			}
 		}
 
@@ -292,7 +249,7 @@ class DoctrineDataSource implements IDataSource
 	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
-	 * @return self
+	 * @return static
 	 */
 	public function limit($offset, $limit)
 	{
@@ -305,11 +262,11 @@ class DoctrineDataSource implements IDataSource
 	/**
 	 * Order data
 	 * @param  array  $sorting
-	 * @return self
+	 * @return static
 	 */
 	public function sort(array $sorting)
 	{
-		if ($sorting) {
+		if (!empty($sorting)) {
 			foreach ($sorting as $column => $sort) {
 				$this->data_source->addOrderBy($this->checkAliases($column), $sort);
 			}

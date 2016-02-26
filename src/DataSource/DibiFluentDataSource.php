@@ -13,7 +13,7 @@ use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
 
-class DibiFluentDataSource implements IDataSource
+class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 {
 
 	/**
@@ -54,7 +54,7 @@ class DibiFluentDataSource implements IDataSource
 	 */
 	public function getCount()
 	{
-		return $this->data_source->count($this->primary_key);
+		return $this->data_source->count();
 	}
 
 
@@ -69,43 +69,9 @@ class DibiFluentDataSource implements IDataSource
 
 
 	/**
-	 * Filter data
-	 * @param array $filters
-	 * @return self
-	 */
-	public function filter(array $filters)
-	{
-		foreach ($filters as $filter) {
-			if ($filter->isValueSet()) {
-				if ($filter->hasConditionCallback()) {
-					Callback::invokeArgs(
-						$filter->getConditionCallback(),
-						[$this->data_source, $filter->getValue()]
-					);
-				} else {
-					if ($filter instanceof Filter\FilterText) {
-						$this->applyFilterText($filter);
-					} else if ($filter instanceof Filter\FilterSelect) {
-						$this->applyFilterSelect($filter);
-					} else if ($filter instanceof Filter\FilterDate) {
-						$this->applyFilterDate($filter);
-					} else if ($filter instanceof Filter\FilterDateRange) {
-						$this->applyFilterDateRange($filter);
-					} else if ($filter instanceof Filter\FilterRange) {
-						$this->applyFilterRange($filter);
-					}
-				}
-			}
-		}
-
-		return $this;
-	}
-
-
-	/**
 	 * Filter data - get one row
 	 * @param array $condition
-	 * @return self
+	 * @return static
 	 */
 	public function filterOne(array $condition)
 	{
@@ -188,6 +154,7 @@ class DibiFluentDataSource implements IDataSource
 	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$condition = $filter->getCondition();
+		$or = [];
 
 		foreach ($condition as $column => $value) {
 			$words = explode(' ', $value);
@@ -227,7 +194,7 @@ class DibiFluentDataSource implements IDataSource
 	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
-	 * @return self
+	 * @return static
 	 */
 	public function limit($offset, $limit)
 	{
@@ -240,11 +207,11 @@ class DibiFluentDataSource implements IDataSource
 	/**
 	 * Order data
 	 * @param  array  $sorting
-	 * @return self
+	 * @return static
 	 */
 	public function sort(array $sorting)
 	{
-		if ($sorting) {
+		if (!empty($sorting)) {
 			$this->data_source->removeClause('ORDER BY');
 			$this->data_source->orderBy($sorting);
 		} else {

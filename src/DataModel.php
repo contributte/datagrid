@@ -9,6 +9,11 @@
 namespace Ublaboo\DataGrid;
 
 use Nette;
+use DibiFluent;
+use DibiOdbcDriver;
+use DibiMsSqlDriver;
+use Nette\Database\Table\Selection;
+use Kdyby\Doctrine\QueryBuilder;
 use Ublaboo\DataGrid\DataSource\IDataSource;
 use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
 
@@ -22,7 +27,7 @@ class DataModel
 
 
 	/**
-	 * @param IDataSource|array|\DibiFluent|Nette\Database\Table\Selection|\Kdyby\Doctrine\QueryBuilder $source
+	 * @param IDataSource|array|DibiFluent|Selection|QueryBuilder $source
 	 * @param string $primary_key
 	 */
 	public function __construct($source, $primary_key)
@@ -30,29 +35,30 @@ class DataModel
 		if ($source instanceof IDataSource) {
 			/**
 			 * Custom user datasource is ready for use
+			 *
+			 * $source = $source;
 			 */
-			$source = $source;
 
 		} else if (is_array($source)) {
 			$source = new DataSource\ArrayDataSource($source);
 
-		} else if ($source instanceof \DibiFluent) {
+		} else if (class_exists(DibiFluent::class) && $source instanceof DibiFluent) {
 			$driver = $source->getConnection()->getDriver();
 
-			if ($driver instanceof \DibiOdbcDriver) {
+			if ($driver instanceof DibiOdbcDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
-			} else if ($driver instanceof \DibiMsSqlDriver) {
+			} else if ($driver instanceof DibiMsSqlDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
 			} else {
 				$source = new DataSource\DibiFluentDataSource($source, $primary_key);
 			}
 
-		} else if ($source instanceof Nette\Database\Table\Selection) {
+		} else if (class_exists(Selection::class) && $source instanceof Selection) {
 			$source = new DataSource\NetteDatabaseTableDataSource($source, $primary_key);
 
-		} else if ($source instanceof \Kdyby\Doctrine\QueryBuilder) {
+		} else if (class_exists(QueryBuilder::class) && $source instanceof QueryBuilder) {
 			$source = new DataSource\DoctrineDataSource($source, $primary_key);
 
 		} else {
@@ -79,7 +85,7 @@ class DataModel
 	/**
 	 * Filter/paginate/limit/order data source and return reset of data in array
 	 * @param  Components\DataGridPaginator\DataGridPaginator $paginator_component
-	 * @param  string                                          $sort
+	 * @param  array                                          $sort
 	 * @param  array                                          $filters
 	 * @return array
 	 */

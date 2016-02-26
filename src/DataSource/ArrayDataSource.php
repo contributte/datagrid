@@ -60,14 +60,14 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * Filter data
 	 * @param Filter[] $filters
-	 * @return self
+	 * @return static
 	 */
 	public function filter(array $filters)
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
 				if ($filter->hasConditionCallback()) {
-					$this->data = Callback::invokeArgs(
+					$this->data = call_user_func_array(
 						$filter->getConditionCallback(),
 						[$this->data, $filter->getValue()]
 					);
@@ -110,7 +110,7 @@ class ArrayDataSource implements IDataSource
 	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
-	 * @return self
+	 * @return static
 	 */
 	public function limit($offset, $limit)
 	{
@@ -122,7 +122,7 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * Order data
 	 * @param array $sorting
-	 * @return self
+	 * @return static
 	 */
 	public function sort(array $sorting)
 	{
