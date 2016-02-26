@@ -15,13 +15,34 @@
 
 namespace Ublaboo\DataGrid\Components\DataGridPaginator;
 
+use Ublaboo\DataGrid\DataGrid;
 use Nette;
+use Nette\ComponentModel\IContainer;
 
 /**
  * Visual paginator control.
+ *
+ * @property-read Nette\Application\UI\ITemplate $template
  */
 class DataGridPaginator extends Nette\Application\UI\Control
 {
+
+	/**
+	 * @var Nette\Localization\ITranslator
+	 */
+	private $translator;
+
+
+	public function __construct(
+		Nette\Localization\ITranslator $translator,
+		IContainer $parent = NULL,
+		$name = NULL
+	) {
+		parent::__construct($parent, $name);
+
+		$this->translator = $translator;
+	}
+
 
 	/**
 	 * @var Nette\Utils\Paginator
@@ -90,12 +111,12 @@ class DataGridPaginator extends Nette\Application\UI\Control
 		}
 
 		$this->template->add('parent_name', $this->getParent()->getName());
-		$this->template->setTranslator($this->getParent()->getTranslator());
+		$this->template->setTranslator($this->translator);
 
 		$this->template->add('steps', $steps);
 		$this->template->add('paginator', $paginator);
 		
-		$this->template->render($this->getTemplateFile());
+		$this->template->setFile($this->getTemplateFile())->render();
 	}
 
 
@@ -107,7 +128,10 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	public function loadState(array $params)
 	{
 		parent::loadState($params);
-		$this->getPaginator()->page = $this->getParent()->page;
+
+		if ($this->getParent() instanceof DataGrid) {
+			$this->getPaginator()->page = $this->getParent()->page;
+		}
 	}
 
 }
