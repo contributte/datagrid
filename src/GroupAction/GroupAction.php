@@ -10,6 +10,9 @@ namespace Ublaboo\DataGrid\GroupAction;
 
 use Nette;
 
+/**
+ * @method void onSelect()
+ */
 class GroupAction extends Nette\Object
 {
 

@@ -14,6 +14,7 @@ use DibiRow;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use Nette\Database\Table\ActiveRow;
 
 class Row extends Nette\Object
 {
@@ -75,13 +76,13 @@ class Row extends Nette\Object
 	 */
 	public function getValue($key)
 	{
-		if ($this->item instanceof LeanMapper\Entity) {
+		if (class_exists(LeanMapper\Entity::class) && $this->item instanceof LeanMapper\Entity) {
 			return $this->getLeanMapperEntityProperty($this->item, $key);
 
-		} else if ($this->item instanceof DibiRow) {
+		} else if (class_exists(DibiRow::class) && $this->item instanceof DibiRow) {
 			return $this->item->{$key};
 
-		} else if ($this->item instanceof Nette\Database\Table\ActiveRow) {
+		} else if (class_exists(ActiveRow::class) && $this->item instanceof ActiveRow) {
 			return $this->item->{$key};
 
 		} else if (is_array($this->item)) {

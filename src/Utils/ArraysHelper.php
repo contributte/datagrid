@@ -38,7 +38,7 @@ final class ArraysHelper extends Nette\Object
 
 	/**
 	 * Is array and its values truthy?
-	 * @param  array   $a
+	 * @param  array|\Traversable $a
 	 * @return boolean
 	 */
 	public static function testTruthy($a)

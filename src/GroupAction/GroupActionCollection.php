@@ -32,6 +32,7 @@ class GroupActionCollection extends Nette\Object
 	{
 		$form = $container->lookup('Nette\Application\UI\Form');
 		$translator = $form->getTranslator();
+		$main_options = [];
 
 		/**
 		 * First foreach for filling "main" select
@@ -64,7 +65,9 @@ class GroupActionCollection extends Nette\Object
 		$container->addSubmit('submit', $translator->translate('ublaboo_datagrid.execute'))
 			->setAttribute('id', 'group_action_submit');
 
-		$form->onSubmit[] = [$this, 'submitted'];
+		if ($form instanceof Nette\ComponentModel\IComponent) {
+			$form->onSubmit[] = [$this, 'submitted'];
+		}
 	}
 
 
