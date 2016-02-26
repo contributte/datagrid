@@ -109,7 +109,7 @@ class DataModel
 
 	/**
 	 * Filter one row
-	 * @param  array  $condition
+	 * @param  array $condition
 	 * @return mixed
 	 */
 	public function filterRow(array $condition)

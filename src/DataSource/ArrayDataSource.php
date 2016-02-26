@@ -59,7 +59,7 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Filter data
-	 * @param array $filters
+	 * @param Filter[] $filters
 	 * @return self
 	 */
 	public function filter(array $filters)
@@ -168,9 +168,16 @@ class ArrayDataSource implements IDataSource
 	protected function applyFilter($row, Filter $filter)
 	{
 		if (is_array($row) || $row instanceof \Traversable) {
-			foreach ($row as $key => $value) {
-				if (FALSE !== strpos(Strings::toAscii($value), Strings::toAscii($filter->getValue()))) {
-					return $row;
+			$condition = $filter->getCondition();
+
+			foreach ($condition as $column => $value) {
+				$words = explode(' ', $value);
+				$row_value = strtolower(Strings::toAscii($row[$column]));
+
+				foreach ($words as $word) {
+					if (FALSE !== strpos($row_value, strtolower(Strings::toAscii($value)))) {
+						return $row;
+					}
 				}
 			}
 		}
