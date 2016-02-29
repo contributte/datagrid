@@ -261,10 +261,13 @@ class Action extends Column
 	 * Setting data attributes
 	 * @param string $key
 	 * @param mixed $value
+	 * @return static
 	 */
 	public function setDataAttribute($key, $value)
 	{
 		$this->data_attributes[$key] = $value;
+		
+		return $this;
 	}
 
 
