@@ -9,9 +9,12 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Ublaboo\DataGrid\Filter\Filter;
+use Ublaboo\DataGrid\Filter\FilterDate;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
+use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 
 class ArrayDataSource implements IDataSource
 {
@@ -168,6 +171,10 @@ class ArrayDataSource implements IDataSource
 	protected function applyFilter($row, Filter $filter)
 	{
 		if (is_array($row) || $row instanceof \Traversable) {
+			if ($filter instanceof FilterDate) {
+				return $this->applyFilterDate($row, $filter);
+			}
+
 			$condition = $filter->getCondition();
 
 			foreach ($condition as $column => $value) {
@@ -183,6 +190,41 @@ class ArrayDataSource implements IDataSource
 		}
 
 		return FALSE;
+	}
+
+
+	/**
+	 * Apply fitler date and tell whether row value matches or not
+	 * @param  mixed  $row
+	 * @param  Filter $filter
+	 * @return mixed
+	 */
+	protected function applyFilterDate($row, FilterDate $filter)
+	{
+		$format = $filter->getPhpFormat();
+		$condition = $filter->getCondition();
+
+		foreach ($condition as $column => $value) {
+			$row_value = $row[$column];
+
+			$date = \DateTime::createFromFormat($format, $value);
+
+			if (!($row_value instanceof DateTime)) {
+				/**
+				 * Try to convert string to DateTime object
+				 */
+				try {
+					$row_value = DateTimeHelper::tryConvertToDateTime($row_value);
+				} catch (DataGridDateTimeHelperException $e) {
+					/**
+					 * Otherwise just return raw string
+					 */
+					return FALSE;
+				}
+			}
+
+			return $row_value->format($format) == $date->format($format);
+		}
 	}
 
 }
