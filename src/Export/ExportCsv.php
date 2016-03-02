@@ -55,7 +55,7 @@ class ExportCsv extends Export
 	{
 		$columns = $this->getColumns() ?: $grid->getColumns();
 
-		$csv_data_model = new CsvDataModel($data, $columns);
+		$csv_data_model = new CsvDataModel($data, $columns, $grid->getTranslator());
 
 		if ($grid->getPresenter() instanceof Nette\Application\UI\Presenter) {
 			$grid->getPresenter()->sendResponse(new CSVResponse(
