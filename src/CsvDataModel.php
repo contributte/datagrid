@@ -8,6 +8,9 @@
 
 namespace Ublaboo\DataGrid;
 
+use Nette;
+
+
 class CsvDataModel
 {
 
@@ -21,15 +24,19 @@ class CsvDataModel
 	 */
 	protected $columns;
 
+	/** @var Nette\Localization\ITranslator */
+	protected $translator;
+
 
 	/**
 	 * @param array $data
 	 * @param array $columns
 	 */
-	public function __construct(array $data, array $columns)
+	public function __construct(array $data, array $columns, Nette\Localization\ITranslator $translator)
 	{
 		$this->data = $data;
 		$this->columns = $columns;
+		$this->translator = $translator;
 	}
 
 
@@ -62,7 +69,7 @@ class CsvDataModel
 		$header = [];
 
 		foreach ($this->columns as $column) {
-			$header[] = $column->getName();
+			$header[] = $this->translator->translate($column->getName());
 		}
 
 		return $header;
