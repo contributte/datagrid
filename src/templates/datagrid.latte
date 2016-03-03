@@ -74,8 +74,8 @@
 							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $key => $column}
-							{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
-							<th class="col-{$column->getColumnName()} text-{$align}">
+							{var $th = $column->getElementPrototype('th', $key)}
+							{!$th->startTag()}
 								{var $col_header = 'col-' . $key . '-header'}
 
 								{**
@@ -117,7 +117,7 @@
 									{var $i = $filter['filter'][$key]}
 									{include $filters[$key]->getTemplate(), filter => $filters[$key], input => $i, outer => FALSE}
 								{/if}
-							</th>
+							{!$th->endTag()}
 						{/foreach}
 						<th n:if="$actions || $control->isSortable() || $items_detail" class="col-action text-center">
 							{_'ublaboo_datagrid.action'}
@@ -139,10 +139,9 @@
 									</td>
 									{foreach $columns as $key => $column}
 										{var $col = 'col-' . $key}
-										{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
 
-										<td class="{$col} text-{$align}"
-											{if $column->isEditable()} data-datagrid-editable-url={link edit!, key => $key, id => $row->getId()}{/if}>
+										{var $td = $column->getElementPrototype('td', $key, $row)}
+										{!$td->startTag()}
 											{if $column->hasTemplate()}
 												{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
 											{else}
@@ -156,7 +155,7 @@
 													{/if}
 												{/ifset}
 											{/if}
-										</td>
+										{!$td->endTag()}
 									{/foreach}
 									<td n:if="$actions || $control->isSortable() || $items_detail" class="col-action">
 										{foreach $actions as $key => $action}
@@ -205,15 +204,15 @@
 							{/if}
 						{/foreach}
 						{block noItems}
-						<tr n:if="!$rows">
-							<td colspan="{$control->getColumnsCount()}">
-								{if $filter_active}
-									{_'ublaboo_datagrid.no_item_found'} <a class="link ajax" n:href="resetFilter!">{_'ublaboo_datagrid.here'}</a>.
-								{else}
-									{_'ublaboo_datagrid.no_item_found'}
-								{/if}
-							</td>
-						</tr>
+							<tr n:if="!$rows">
+								<td colspan="{$control->getColumnsCount()}">
+									{if $filter_active}
+										{_'ublaboo_datagrid.no_item_found'} <a class="link ajax" n:href="resetFilter!">{_'ublaboo_datagrid.here'}</a>.
+									{else}
+										{_'ublaboo_datagrid.no_item_found'}
+									{/if}
+								</td>
+							</tr>
 						{/block}
 					{/snippetArea}
 				</tbody>

@@ -15,6 +15,7 @@ use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
+use Nette\Utils\Html;
 
 abstract class Column extends Ublaboo\DataGrid\Object
 {
@@ -79,13 +80,21 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	 */
 	protected $grid;
 
+	/**
+	 * Cached html elements
+	 * @var array
+	 */
+	protected $el_cache = [];
+
 
 	/**
-	 * @param string $column
-	 * @param string $name
+	 * @param DataGrid $grid
+	 * @param string   $column
+	 * @param string   $name
 	 */
-	public function __construct($column, $name)
+	public function __construct(DataGrid $grid, $column, $name)
 	{
+		$this->grid = $grid;
 		$this->column = $column;
 		$this->name = $name;
 	}
@@ -418,7 +427,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	 */
 	public function getAlign()
 	{
-		return $this->align;
+		return $this->align ?: 'left';
 	}
 
 
@@ -451,6 +460,67 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	public function isEditable()
 	{
 		return (bool) $this->getEditableCallback();
+	}
+
+
+	/**
+	 * Set attributes for both th and td element
+	 * @param array $attrs
+	 * @return static
+	 */
+	public function addAttributes(array $attrs)
+	{
+		$this->getElementPrototype('td')->addAttributes($attrs);
+		$this->getElementPrototype('th')->addAttributes($attrs);
+
+		return $this;
+	}
+
+
+	/**
+	 * Get th/td column element
+	 * @param  string   $tag th|td
+	 * @param  string   $key
+	 * @param  Row|NULL $row
+	 * @return Html
+	 */
+	public function getElementPrototype($tag, $key = NULL, Row $row = NULL)
+	{
+		/**
+		 * Get cached element
+		 */
+		if (empty($this->el_cache[$tag])) {
+			$this->el_cache[$tag] = $el = $el = Html::el($tag);
+		} else {
+			$el = $this->el_cache[$tag];
+		}
+
+		/**
+		 * Method called from datagrid template, set appropriate classes and another attributes
+		 */
+		if ($key) {
+			/**
+			 * If class was set by user via $el->class = '', fix it
+			 */
+			if (!empty($el->class) && is_string($el->class)) {
+				$class = $el->class;
+				unset($el->class);
+
+				$el->class[] = $class;
+			}
+
+			$el->class[] = "col-{$key} text-{$this->getAlign()}";
+
+			if ($tag == 'td') {
+				if ($this->isEditable()) {
+					$link = $this->grid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
+
+					$el->data('datagrid-editable-url', $link);
+				}
+			}
+		}
+
+		return $el;
 	}
 
 

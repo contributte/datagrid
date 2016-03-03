@@ -614,7 +614,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->addColumnCheck($key);
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new Column\ColumnText($column, $name));
+		return $this->addColumn($key, new Column\ColumnText($this, $column, $name));
 	}
 
 
@@ -651,7 +651,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->addColumnCheck($key);
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new Column\ColumnNumber($column, $name));
+		return $this->addColumn($key, new Column\ColumnNumber($this, $column, $name));
 	}
 
 
@@ -667,7 +667,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->addColumnCheck($key);
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new Column\ColumnDateTime($column, $name));
+		return $this->addColumn($key, new Column\ColumnDateTime($this, $column, $name));
 	}
 
 
@@ -679,6 +679,7 @@ class DataGrid extends Nette\Application\UI\Control
 	protected function addColumn($key, Column\Column $column)
 	{
 		$this->onColumnAdd($key, $column);
+
 		return $this->columns[$key] = $column;
 	}
 
