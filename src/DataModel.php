@@ -107,9 +107,11 @@ class DataModel
 				$paginator->getOffset(),
 				$paginator->getItemsPerPage()
 			);
+
+			return $this->data_source->getData();
 		}
 
-		return $this->data_source->getData();
+		return $this->data_source->sort($sort)->getData();
 	}
 
 
