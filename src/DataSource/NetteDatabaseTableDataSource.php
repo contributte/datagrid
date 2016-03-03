@@ -53,7 +53,9 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 */
 	public function getCount()
 	{
-		return $this->data_source->count($this->primary_key);
+		return $this->data_source->count(
+			$this->data_source->getName() . '.' . $this->data_source->getPrimary()
+		);
 	}
 
 
