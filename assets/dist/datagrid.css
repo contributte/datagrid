@@ -57,6 +57,7 @@
 .datagrid table thead tr .column-settings-menu {
   opacity: 0;
   cursor: pointer;
+  margin-left: 2px;
 }
 
 .datagrid table thead tr .column-settings-menu .dropdown-menu {
