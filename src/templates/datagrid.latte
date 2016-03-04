@@ -58,11 +58,11 @@
 							<span class="pull-right settings" n:block="settings" n:if="$control->canHideColumns()">
 								<div class="btn-group">
 									<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<i class="{$icon_prefix}gear"></i>
+										<span class="{$icon_prefix}gear"></span>
 									</button>
 									<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
 										<li>
-											<a n:href="showAllColumns!" class="ajax"><i class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
+											<a n:href="showAllColumns!" class="ajax"><span class="{$icon_prefix}eye"></span> {_'ublaboo_datagrid.show_all_columns'}</a>
 										</li>
 									</ul>
 								</div>
@@ -100,12 +100,12 @@
 									<span class="column-settings-menu pull-right" n:if="$control->canHideColumns()">
 										<div class="btn-group">
 											<a type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<i class="{$icon_prefix}caret-down"></i>
+												<span class="{$icon_prefix}caret-down"></span>
 											</a>
 											<ul class="dropdown-menu dropdown-menu--grid">
 												<li>
 													<a n:href="hideColumn!, column => $key" class="ajax">
-														<i class="{$icon_prefix}eye-slash"></i> {_'ublaboo_datagrid.hide_column'}</a>
+														<span class="{$icon_prefix}eye-slash"></span> {_'ublaboo_datagrid.hide_column'}</a>
 												</li>
 											</ul>
 										</div>

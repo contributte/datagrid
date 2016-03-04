@@ -1,0 +1,22 @@
+$.nette.ext('ublaboo-spinners', {
+	before: (xhr, settings) ->
+		if settings.nette
+			el = settings.nette.el
+			spinner_template = $('<div class="ublaboo-spinner ublaboo-spinner-small"><i></i><i></i><i></i><i></i></div>')
+
+			if el.is('.datagrid #group_action_submit')
+				el.after(spinner_template)
+
+			else if el.is('.datagrid a') and el.data('toggle-detail')
+				el.addClass('ublaboo-spinner-icon')
+
+			else if el.is('.datagrid .pagination a')
+				el.closest('.row-grid-bottom').find('select[name=per_page]').before(spinner_template)
+
+			else if el.is('.datagrid .dropdown-menu a')
+				el.addClass('ublaboo-spinner-icon')
+
+	success: ->
+		$('.ublaboo-spinner').remove()
+		$('.ublaboo-spinner-icon').removeClass('ublaboo-spinner-icon')
+})
