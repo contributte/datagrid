@@ -60,7 +60,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		}
 
 		return $this->data_source->count(
-			$this->data_source->getName() . '.' . is_array($primary) ? reset($primary) : $primary
+			$this->data_source->getName() . '.' . (is_array($primary) ? reset($primary) : $primary)
 		);
 	}
 
