@@ -1353,7 +1353,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$sort      = $this->sort;
 			$filter    = $this->assableFilters();
 		} else {
-			$sort      = $this->primary_key;
+			$sort      = [$this->primary_key => 'ASC'];
 			$filter    = [];
 		}
 
