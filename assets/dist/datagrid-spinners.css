@@ -151,6 +151,7 @@
   animation-iteration-count: 1;
   animation-timing-function: ease-in;
   animation-name: ublaboo-spinner-in;
+  animation-fill-mode: forwards;
 }
 
 .ublaboo-spinner > i {

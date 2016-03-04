@@ -16,7 +16,8 @@ $.nette.ext('ublaboo-spinners', {
 			else if el.is('.datagrid .dropdown-menu a')
 				el.addClass('ublaboo-spinner-icon')
 
-	success: ->
+	complete: ->
+		console.log('s');
 		$('.ublaboo-spinner').remove()
 		$('.ublaboo-spinner-icon').removeClass('ublaboo-spinner-icon')
 })

@@ -15,7 +15,8 @@ $.nette.ext('ublaboo-spinners', {
       }
     }
   },
-  success: function() {
+  complete: function() {
+    console.log('s');
     $('.ublaboo-spinner').remove();
     return $('.ublaboo-spinner-icon').removeClass('ublaboo-spinner-icon');
   }

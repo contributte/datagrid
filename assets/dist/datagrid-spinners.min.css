@@ -35,7 +35,7 @@
 @-webkit-keyframes ublaboo-spinner-in{0%{opacity:0}
 100%{opacity:1}
 }
-.ublaboo-spinner{line-height:0;display:inline-block;position:relative;margin:0 1em -11px;top:1px;opacity:0;animation-duration:150ms;animation-delay:0;animation-iteration-count:1;animation-timing-function:ease-in;animation-name:ublaboo-spinner-in}
+.ublaboo-spinner{line-height:0;display:inline-block;position:relative;margin:0 1em -11px;top:1px;opacity:0;animation-duration:150ms;animation-delay:0;animation-iteration-count:1;animation-timing-function:ease-in;animation-name:ublaboo-spinner-in;animation-fill-mode:forwards}
 .ublaboo-spinner>i{position:absolute;background-color:#37434f;left:0;top:0;animation-duration:6s;animation-delay:0;animation-iteration-count:infinite;animation-timing-function:ease}
 .ublaboo-spinner>i:nth-of-type(2){animation-delay:-1.5s}
 .ublaboo-spinner>i:nth-of-type(3){animation-delay:-3s}
