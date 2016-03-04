@@ -13,7 +13,7 @@ use DibiFluent;
 use DibiOdbcDriver;
 use DibiMsSqlDriver;
 use Nette\Database\Table\Selection;
-use Kdyby\Doctrine\QueryBuilder;
+use Doctrine\ORM\QueryBuilder;
 use Ublaboo\DataGrid\DataSource\IDataSource;
 use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
 
