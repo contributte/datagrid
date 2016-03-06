@@ -68,7 +68,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	/**
 	 * @var array
 	 */
-	protected $template_variables;
+	protected $template_variables = [];
 
 	/**
 	 * @var callable

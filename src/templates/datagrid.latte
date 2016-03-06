@@ -143,7 +143,11 @@
 										{var $td = $column->getElementPrototype('td', $key, $row)}
 										{!$td->startTag()}
 											{if $column->hasTemplate()}
-												{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
+												{if $column instanceof Ublaboo\DataGrid\Column\ColumnStatus}
+													{include $column->getTemplate(), row => $row, status => $column}
+												{else}
+													{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
+												{/if}
 											{else}
 												{ifset #$col}
 													{include #$col, item => $item}

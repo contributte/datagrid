@@ -672,6 +672,22 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Add column status
+	 * @param  string      $key
+	 * @param  string      $name
+	 * @param  string|null $column
+	 * @return Column\ColumnStatus
+	 */
+	public function addColumnStatus($key, $name, $column = NULL)
+	{
+		$this->addColumnCheck($key);
+		$column = $column ?: $key;
+
+		return $this->addColumn($key, new Column\ColumnStatus($this, $key, $column, $name));
+	}
+
+
+	/**
 	 * @param string $key
 	 * @param Column\Column $column
 	 * @return Column\Column
@@ -1468,6 +1484,27 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->onRedraw();
 		} else {
 			$this->getPresenter()->redirect('this');
+		}
+	}
+
+
+	/**
+	 * Handler for column status
+	 * @param  string $id
+	 * @param  string $key
+	 * @param  string $value
+	 * @return void
+	 */
+	public function handleChangeStatus($id, $key, $value)
+	{
+		if (empty($this->columns[$key])) {
+			throw new DataGridException("ColumnStatus[$key] does not exist");
+		}
+
+		$this->columns[$key]->onChange($id, $value);
+
+		if ($this->getPresenter()->isAjax()) {
+			$this->redrawItem($id);
 		}
 	}
 
