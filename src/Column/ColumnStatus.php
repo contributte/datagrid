@@ -120,7 +120,8 @@ class ColumnStatus extends Column
 		return array_merge($this->template_variables, [
 			'options' => $this->getOptions(),
 			'column'  => $this->getColumn(),
-			'key'     => $this->getKey()
+			'key'     => $this->getKey(),
+			'status'  => $this
 		]);
 	}
 
