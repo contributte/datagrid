@@ -8,7 +8,11 @@ $.nette.ext('ublaboo-spinners', {
 				el.after(spinner_template)
 
 			else if el.is('.datagrid a') and el.data('toggle-detail')
-				el.addClass('ublaboo-spinner-icon')
+				id = settings.nette.el.attr('data-toggle-detail')
+				row_detail = $('.item-detail-' + id)
+
+				if not row_detail.hasClass('loaded')
+					el.addClass('ublaboo-spinner-icon')
 
 			else if el.is('.datagrid .pagination a')
 				el.closest('.row-grid-bottom').find('select[name=per_page]').before(spinner_template)
