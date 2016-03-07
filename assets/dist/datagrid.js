@@ -28,7 +28,7 @@ $(document).on('change', 'select[data-autosubmit]', function() {
 });
 
 document.addEventListener('change', function(e) {
-  var at_least_one, event, grid, i, input, inputs, len, results, select;
+  var at_least_one, event, grid, i, ie, input, inputs, len, results, select;
   grid = e.target.getAttribute('data-check');
   if (grid) {
     at_least_one = document.querySelector('.datagrid-' + grid + ' input[data-check]:checked');
@@ -41,9 +41,15 @@ document.addEventListener('change', function(e) {
         select.value = "";
       }
     }
-    event = new Event('change', {
-      'bubbles': true
-    });
+    ie = window.navigator.userAgent.indexOf("MSIE ");
+    if (ie) {
+      event = document.createEvent('Event');
+      event.initEvent('change', true, true);
+    } else {
+      event = new Event('change', {
+        'bubbles': true
+      });
+    }
     if (select) {
       select.dispatchEvent(event);
     }
@@ -55,9 +61,15 @@ document.addEventListener('change', function(e) {
     for (i = 0, len = inputs.length; i < len; i++) {
       input = inputs[i];
       input.checked = e.target.checked;
-      event = new Event('change', {
-        'bubbles': true
-      });
+      ie = window.navigator.userAgent.indexOf("MSIE ");
+      if (ie) {
+        event = document.createEvent('Event');
+        event.initEvent('change', true, true);
+      } else {
+        event = new Event('change', {
+          'bubbles': true
+        });
+      }
       results.push(input.dispatchEvent(event));
     }
     return results;
@@ -190,7 +202,7 @@ datagridSortableTree();
 
 $.nette.ext('datagrid.happy', {
   success: function() {
-    var c, checked_rows, class_selector, classes, event, grid, grids, i, input, j, len, len1, results;
+    var c, checked_rows, class_selector, classes, event, grid, grids, i, ie, input, j, len, len1, results;
     window.happy.reset();
     grids = $('.datagrid');
     results = [];
@@ -207,9 +219,15 @@ $.nette.ext('datagrid.happy', {
         input = document.querySelector(class_selector + ' input[name=toggle-all]');
         if (input) {
           input.checked = false;
-          event = new Event('change', {
-            'bubbles': true
-          });
+          ie = window.navigator.userAgent.indexOf("MSIE ");
+          if (ie) {
+            event = document.createEvent('Event');
+            event.initEvent('change', true, true);
+          } else {
+            event = new Event('change', {
+              'bubbles': true
+            });
+          }
           results.push(input.dispatchEvent(event));
         } else {
           results.push(void 0);

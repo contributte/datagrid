@@ -36,7 +36,13 @@ document.addEventListener 'change', (e) ->
 				select.disabled = true
 				select.value = ""
 
-		event = new Event('change', {'bubbles': true})
+		ie = window.navigator.userAgent.indexOf("MSIE ")
+
+		if ie
+			event = document.createEvent('Event')
+			event.initEvent('change', true, true);
+		else
+			event = new Event('change', {'bubbles': true})
 
 		if select
 			select.dispatchEvent(event)
@@ -49,7 +55,15 @@ document.addEventListener 'change', (e) ->
 
 		for input in inputs
 			input.checked = e.target.checked
-			event = new Event('change', {'bubbles': true})
+
+			ie = window.navigator.userAgent.indexOf("MSIE ")
+
+			if ie
+				event = document.createEvent('Event')
+				event.initEvent('change', true, true);
+			else
+				event = new Event('change', {'bubbles': true})
+
 			input.dispatchEvent(event)
 
 `
@@ -183,7 +197,14 @@ $.nette.ext('datagrid.happy', {
 
 				if input
 					input.checked = false
-					event = new Event('change', {'bubbles': true})
+					ie = window.navigator.userAgent.indexOf("MSIE ")
+
+					if ie
+						event = document.createEvent('Event')
+						event.initEvent('change', true, true);
+					else
+						event = new Event('change', {'bubbles': true})
+
 					input.dispatchEvent(event)
 })
 
