@@ -1502,10 +1502,6 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$this->columns[$key]->onChange($id, $value);
-
-		if ($this->getPresenter()->isAjax()) {
-			$this->redrawItem($id);
-		}
 	}
 
 

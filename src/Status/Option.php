@@ -42,7 +42,7 @@ class Option extends Nette\Object
 	/**
 	 * @var string
 	 */
-	protected $class_secondary = 'ajax btn btn-default btn-xs';
+	protected $class_secondary = 'ajax btn btn-xs';
 
 	/**
 	 * @var string|callable
@@ -127,6 +127,15 @@ class Option extends Nette\Object
 	public function getClass()
 	{
 		return $this->class;
+	}
+
+
+	/**
+	 * @param string $class_secondary
+	 */
+	public function setClassSecondary($class_secondary)
+	{
+		$this->class_secondary = (string) $class_secondary;
 	}
 
 

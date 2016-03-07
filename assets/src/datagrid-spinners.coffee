@@ -13,11 +13,13 @@ $.nette.ext('ublaboo-spinners', {
 			else if el.is('.datagrid .pagination a')
 				el.closest('.row-grid-bottom').find('select[name=per_page]').before(spinner_template)
 
-			else if el.is('.datagrid .dropdown-menu a')
-				el.addClass('ublaboo-spinner-icon')
+			else if el.is('.datagrid form')
+				select = el.find('select[name=per_page]')
+
+				if select.length
+					el.closest('.row-grid-bottom').find('select[name=per_page]').before(spinner_template)
 
 	complete: ->
-		console.log('s');
 		$('.ublaboo-spinner').remove()
 		$('.ublaboo-spinner-icon').removeClass('ublaboo-spinner-icon')
 })

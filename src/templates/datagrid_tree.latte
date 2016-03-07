@@ -90,7 +90,7 @@
 									{var $col = 'col-' . $key}
 
 									{if $column->hasTemplate()}
-										{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
+										{include $column->getTemplate(), row => $row, item => $item, (expand) $column->getTemplateVariables()}
 									{else}
 										{ifset #$col}
 											{include #$col, item => $item}
