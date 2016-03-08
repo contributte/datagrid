@@ -203,7 +203,9 @@ datagridSortableTree();
 $.nette.ext('datagrid.happy', {
   success: function() {
     var c, checked_rows, class_selector, classes, event, grid, grids, i, ie, input, j, len, len1, results;
-    window.happy.reset();
+    if (window.happy) {
+      window.happy.reset();
+    }
     grids = $('.datagrid');
     results = [];
     for (i = 0, len = grids.length; i < len; i++) {

@@ -178,7 +178,8 @@ datagridSortableTree();
 
 $.nette.ext('datagrid.happy', {
 	success: ->
-		window.happy.reset()
+		if window.happy
+			window.happy.reset()
 
 		grids = $('.datagrid')
 
