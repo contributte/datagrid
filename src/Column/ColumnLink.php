@@ -40,14 +40,15 @@ class ColumnLink extends Column
 
 	/**
 	 * @param DataGrid $grid
+	 * @param string $key
 	 * @param string $column
 	 * @param string $name
 	 * @param string $href
-	 * @param array $params
+	 * @param array  $params
 	 */
-	public function __construct(DataGrid $grid, $column, $name, $href, $params)
+	public function __construct(DataGrid $grid, $key, $column, $name, $href, $params)
 	{
-		parent::__construct($grid, $column, $name);
+		parent::__construct($grid, $key, $column, $name);
 
 		$this->href   = $href;
 		$this->params = $params;

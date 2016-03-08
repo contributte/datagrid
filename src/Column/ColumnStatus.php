@@ -44,7 +44,7 @@ class ColumnStatus extends Column
 	 */
 	public function __construct(DataGrid $grid, $key, $column, $name)
 	{
-		parent::__construct($grid, $column, $name);
+		parent::__construct($grid, $key, $column, $name);
 
 		$this->key = $key;
 

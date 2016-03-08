@@ -614,7 +614,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->addColumnCheck($key);
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new Column\ColumnText($this, $column, $name));
+		return $this->addColumn($key, new Column\ColumnText($this, $key, $column, $name));
 	}
 
 
@@ -635,7 +635,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$params = [$this->primary_key];
 		}
 
-		return $this->addColumn($key, new Column\ColumnLink($this, $column, $name, $href, $params));
+		return $this->addColumn($key, new Column\ColumnLink($this, $key, $column, $name, $href, $params));
 	}
 
 
@@ -651,7 +651,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->addColumnCheck($key);
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new Column\ColumnNumber($this, $column, $name));
+		return $this->addColumn($key, new Column\ColumnNumber($this, $key, $column, $name));
 	}
 
 
@@ -667,7 +667,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->addColumnCheck($key);
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new Column\ColumnDateTime($this, $column, $name));
+		return $this->addColumn($key, new Column\ColumnDateTime($this, $key, $column, $name));
 	}
 
 
@@ -986,7 +986,7 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		foreach ($this->columns as $column) {
-			if (isset($this->sort[$column->getColumnName()])) {
+			if (isset($this->sort[$column->getSortingColumn()])) {
 				$column->setSort($this->sort);
 			}
 		}
@@ -1315,10 +1315,24 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function handleSort(array $sort)
 	{
+		$new_sort = [];
+
+		/**
+		 * Find apropirate column
+		 */
+		foreach ($sort as $key => $value) {
+			if (empty($this->columns[$key])) {
+				throw new DataGridException("Column <$key> not found");
+			}
+
+			$column = $this->columns[$key];
+			$new_sort = [$column->getSortingColumn() => $value];
+		}
+
 		/**
 		 * Session stuff
 		 */
-		$this->sort = $sort;
+		$this->sort = $new_sort;
 		$this->saveSessionData('_grid_sort', $this->sort);
 
 		$this->reload(['table']);

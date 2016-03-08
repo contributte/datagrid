@@ -28,6 +28,11 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	/**
 	 * @var string
 	 */
+	protected $key;
+
+	/**
+	 * @var string
+	 */
 	protected $name;
 
 	/**
@@ -48,7 +53,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	/**
 	 * @var boolean
 	 */
-	protected $is_sortable = FALSE;
+	protected $sortable = FALSE;
 
 	/**
 	 * @var array
@@ -89,12 +94,14 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * @param DataGrid $grid
+	 * @param string   $key
 	 * @param string   $column
 	 * @param string   $name
 	 */
-	public function __construct(DataGrid $grid, $column, $name)
+	public function __construct(DataGrid $grid, $key, $column, $name)
 	{
 		$this->grid = $grid;
+		$this->key = $key;
 		$this->column = $column;
 		$this->name = $name;
 	}
@@ -171,11 +178,11 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Set column sortable or not
-	 * @param bool $sortable
+	 * @param bool|string $sortable
 	 */
 	public function setSortable($sortable = TRUE)
 	{
-		$this->is_sortable = (bool) $sortable;
+		$this->sortable = is_string($sortable) ? $sortable : (bool) $sortable;
 
 		return $this;
 	}
@@ -187,7 +194,13 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	 */
 	public function isSortable()
 	{
-		return $this->is_sortable;
+		return (bool) $this->sortable;
+	}
+
+
+	public function getSortingColumn()
+	{
+		return is_string($this->sortable) ? $this->sortable : $this->column;
 	}
 
 
@@ -367,7 +380,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	 */
 	public function setSort(array $sort)
 	{
-		$this->sort = $sort[$this->column];
+		$this->sort = $sort[$this->getSortingColumn()];
 
 		return $this;
 	}
@@ -380,12 +393,12 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	public function getSortNext()
 	{
 		if ($this->sort == 'ASC') {
-			return [$this->column => 'DESC'];
+			return [$this->key => 'DESC'];
 		} else if ($this->sort == 'DESC') {
-			return [$this->column => NULL];
+			return [$this->key => NULL];
 		}
 
-		return [$this->column => 'ASC'];
+		return [$this->key => 'ASC'];
 	}
 
 
