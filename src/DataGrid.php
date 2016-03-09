@@ -180,6 +180,11 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $tree_view_children_callback;
 
 	/**
+	 * @var callable
+	 */
+	protected $tree_view_has_children_callback;
+
+	/**
 	 * @var string
 	 */
 	protected $tree_view_has_children_column;
@@ -567,7 +572,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Setting tree view
 	 * @param callable $get_children_callback
-	 * @param string $tree_view_has_children_column
+	 * @param string|callable $tree_view_has_children_column
 	 * @return static
 	 */
 	public function setTreeView($get_children_callback, $tree_view_has_children_column = 'has_children')
@@ -576,6 +581,11 @@ class DataGrid extends Nette\Application\UI\Control
 			throw new DataGridException(
 				'Parameters to method DataGrid::setTreeView must be of type callable'
 			);
+		}
+
+		if (is_callable($tree_view_has_children_column)) {
+			$this->tree_view_has_children_callback = $tree_view_has_children_column;
+			$tree_view_has_children_column = null;
 		}
 
 		$this->tree_view_children_callback = $get_children_callback;
@@ -594,6 +604,24 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Is tree view children callback set?
+	 * @return boolean
+	 */
+	public function hasTreeViewChildrenCallback()
+	{
+		return is_callable($this->tree_view_has_children_callback);
+	}
+
+	/**
+	 * @param $primary_key
+	 * @return boolean
+	 */
+	public function treeViewChildrenCallback($primary_key)
+	{
+		return call_user_func($this->tree_view_has_children_callback, $primary_key);
 	}
 
 

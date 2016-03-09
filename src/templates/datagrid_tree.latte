@@ -52,7 +52,7 @@
 		</div>
 
 		{foreach $rows as $row}
-			{var $has_children = $row->getValue($tree_view_has_children_column)}
+			{var $has_children = $control->hasTreeViewChildrenCallback() ? $control->treeViewChildrenCallback($row->getId()) : $row->getValue($tree_view_has_children_column)}
 			{var $item = $row->getItem()}
 
 			<div n:class="$has_children ? has-children, 'datagrid-tree-item'" data-id="{$row->getId()}" n:snippet="item-{$row->getId()}">
