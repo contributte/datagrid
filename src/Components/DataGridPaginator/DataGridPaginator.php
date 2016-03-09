@@ -116,7 +116,8 @@ class DataGridPaginator extends Nette\Application\UI\Control
 		$this->template->add('steps', $steps);
 		$this->template->add('paginator', $paginator);
 		
-		$this->template->setFile($this->getTemplateFile())->render();
+		$this->template->setFile($this->getTemplateFile());
+		$this->template->render();
 	}
 
 

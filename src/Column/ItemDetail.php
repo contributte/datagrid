@@ -60,7 +60,7 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 	protected $grid;
 
 	/**
-	 * @var string
+	 * @var string|bool
 	 */
 	protected $primary_where_column;
 
@@ -112,7 +112,7 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Get primary column for where clause
-	 * @return string
+	 * @return string|bool
 	 */
 	public function getPrimaryWhereColumn()
 	{

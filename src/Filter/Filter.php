@@ -10,6 +10,9 @@ namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
 
+/**
+ * @method void addToFormContainer(Nette\Forms\Container $container)
+ */
 abstract class Filter extends Nette\Object
 {
 
@@ -57,7 +60,7 @@ abstract class Filter extends Nette\Object
 	/**
 	 * @param string $key
 	 * @param string $name
-	 * @param string $column
+	 * @param string|array $column
 	 */
 	public function __construct($key, $name, $column)
 	{

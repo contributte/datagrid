@@ -70,7 +70,7 @@ class ArrayDataSource implements IDataSource
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
 				if ($filter->hasConditionCallback()) {
-					$this->data = call_user_func_array(
+					$this->data = (array) call_user_func_array(
 						$filter->getConditionCallback(),
 						[$this->data, $filter->getValue()]
 					);
@@ -209,7 +209,7 @@ class ArrayDataSource implements IDataSource
 
 			$date = \DateTime::createFromFormat($format, $value);
 
-			if (!($row_value instanceof DateTime)) {
+			if (!($row_value instanceof \DateTime)) {
 				/**
 				 * Try to convert string to DateTime object
 				 */

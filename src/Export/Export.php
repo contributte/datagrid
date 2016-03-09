@@ -167,6 +167,7 @@ class Export extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Get export icon
+	 * @return string
 	 */
 	public function getIcon()
 	{

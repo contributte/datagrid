@@ -42,7 +42,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public $page = 1;
 
 	/**
-	 * @var int
+	 * @var int|string
 	 * @persistent
 	 */
 	public $per_page;
@@ -75,7 +75,7 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $use_happy_components = TRUE;
 
 	/**
-	 * @var Callable[]
+	 * @var callable
 	 */
 	protected $rowCallback;
 
@@ -255,7 +255,7 @@ class DataGrid extends Nette\Application\UI\Control
 			/**
 			 * Get session
 			 */
-			$this->grid_session = $this->getPresenter()->getSession($this->getSessionSectionName());
+			$this->grid_session = $presenter->getSession($this->getSessionSectionName());
 
 			/**
 			 * Try to find previous filters/pagination/sort in session
@@ -347,7 +347,8 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Set template file and render it
 		 */
-		$this->template->setFile($this->getTemplateFile())->render();
+		$this->template->setFile($this->getTemplateFile());
+		$this->template->render();
 	}
 
 
@@ -492,7 +493,7 @@ class DataGrid extends Nette\Application\UI\Control
 			return;
 		}
 
-		if ($this->default_sort) {
+		if (!empty($this->default_sort)) {
 			$this->sort = $this->default_sort;
 		}
 
@@ -584,7 +585,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * TUrn off pagination
 		 */
-		$this->setPagination(NULL);
+		$this->setPagination(FALSE);
 
 		/**
 		 * Set tree view template file
@@ -1148,7 +1149,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function findSessionFilters()
 	{
-		if ($this->filter || ($this->page != 1) || $this->sort || $this->per_page) {
+		if ($this->filter || ($this->page != 1) || !empty($this->sort) || $this->per_page) {
 			return;
 		}
 
@@ -1373,7 +1374,7 @@ class DataGrid extends Nette\Application\UI\Control
 			throw new Nette\Application\ForbiddenRequestException;
 		}
 
-		if ($this->columns_export_order) {
+		if (!empty($this->columns_export_order)) {
 			$this->setColumnsOrder($this->columns_export_order);
 		}
 
@@ -1687,7 +1688,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getItemsPerPageList()
 	{
-		if (!$this->items_per_page_list) {
+		if (empty($this->items_per_page_list)) {
 			$this->setItemsPerPageList([10, 20, 50], TRUE);
 		}
 
@@ -2007,7 +2008,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Order Grid to set columns hideable.
-	 * @param bool $do
 	 * @return static
 	 */
 	public function setColumnsHideable()
@@ -2031,7 +2031,7 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$count = sizeof($this->getColumns());
 
-		if ($this->actions || $this->isSortable() || $this->getItemsDetail()) {
+		if (!empty($this->actions) || $this->isSortable() || $this->getItemsDetail()) {
 			$count++;
 		}
 

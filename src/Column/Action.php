@@ -96,7 +96,11 @@ class Action extends Column
 		 */
 		try {
 			return $this->useRenderer($row);
-		} catch (DataGridColumnRendererException $e) {}
+		} catch (DataGridColumnRendererException $e) {
+			/**
+			 * Do not use renderer
+			 */
+		}
 
 		$link = $this->createLink($this->href, $this->getItemParams($row, $this->params));
 
@@ -290,9 +294,9 @@ class Action extends Column
 	/**
 	 * Check whether given property is string or callable
 	 * 	in that case call callback and check property and return it
-	 * @param  Row         $row
-	 * @param  string|NULL $property
-	 * @param  string      $name
+	 * @param  Row                  $row
+	 * @param  string|callable|null $property
+	 * @param  string               $name
 	 * @return string
 	 * @throws DataGridException
 	 */

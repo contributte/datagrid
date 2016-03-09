@@ -67,7 +67,11 @@ class ColumnLink extends Column
 		 */
 		try {
 			return $this->useRenderer($row);
-		} catch (DataGridColumnRendererException $e) {}
+		} catch (DataGridColumnRendererException $e) {
+			/**
+			 * Do not use renderer
+			 */
+		}
 
 		$value = parent::render($row);
 

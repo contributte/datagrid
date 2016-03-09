@@ -18,7 +18,7 @@ trait ButtonIconTrait
 	/**
 	 * Should the element has an icon?
 	 * @param  Html            $el
-	 * @param  string|callable $icon
+	 * @param  string|null     $icon
 	 * @param  string          $name
 	 * @return void
 	 */

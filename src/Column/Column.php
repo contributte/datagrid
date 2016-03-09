@@ -51,7 +51,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	protected $template;
 
 	/**
-	 * @var boolean
+	 * @var bool|string
 	 */
 	protected $sortable = FALSE;
 
@@ -119,7 +119,11 @@ abstract class Column extends Ublaboo\DataGrid\Object
 		 */
 		try {
 			return $this->useRenderer($row);
-		} catch (DataGridColumnRendererException $e) {}
+		} catch (DataGridColumnRendererException $e) {
+			/**
+			 * Do not use renderer
+			 */
+		}
 
 		/**
 		 * Or replacements may be applied
@@ -160,7 +164,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Should be column values escaped in latte?
-	 * @param boolean $template_escaping
+	 * @param bool $template_escaping
 	 */
 	public function setTemplateEscaping($template_escaping = TRUE)
 	{
@@ -190,7 +194,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Tell whether column is sortable
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isSortable()
 	{
@@ -198,6 +202,10 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	}
 
 
+	/**
+	 * Get column to sort by
+	 * @return string
+	 */
 	public function getSortingColumn()
 	{
 		return is_string($this->sortable) ? $this->sortable : $this->column;
@@ -225,6 +233,9 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	}
 
 
+	/**
+	 * @return string
+	 */
 	public function getName()
 	{
 		return $this->name;
@@ -246,7 +257,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Tell whether columns has replacements
-	 * @return boolean
+	 * @return bool
 	 */
 	public function hasReplacements()
 	{
@@ -366,7 +377,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Tell whether data source is sorted by this collumn
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isSortedBy()
 	{
@@ -404,7 +415,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Is sorting ascending?
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isSortAsc()
 	{
@@ -426,7 +437,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Has column some alignment?
-	 * @return boolean [description]
+	 * @return bool [description]
 	 */
 	public function hasAlign()
 	{
@@ -468,7 +479,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Is column editable?
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isEditable()
 	{
@@ -511,7 +522,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 		/**
 		 * Method called from datagrid template, set appropriate classes and another attributes
 		 */
-		if ($key) {
+		if ($key !== NULL && $row !== NULL) {
 			/**
 			 * If class was set by user via $el->class = '', fix it
 			 */

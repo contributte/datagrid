@@ -113,8 +113,8 @@ class Option extends Nette\Object
 	{
 		$this->class = (string) $class;
 
-		if ($class_secondary) {
-			$this->class_secondary = $class_secondary;
+		if ($class_secondary !== NULL) {
+			$this->class_secondary = (string) $class_secondary;
 		}
 
 		return $this;
