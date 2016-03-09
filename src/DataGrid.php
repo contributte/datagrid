@@ -586,7 +586,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if (is_callable($tree_view_has_children_column)) {
 			$this->tree_view_has_children_callback = $tree_view_has_children_column;
-			$tree_view_has_children_column = null;
+			$tree_view_has_children_column = NULL;
 		}
 
 		$this->tree_view_children_callback = $get_children_callback;
@@ -607,6 +607,7 @@ class DataGrid extends Nette\Application\UI\Control
 		return $this;
 	}
 
+
 	/**
 	 * Is tree view children callback set?
 	 * @return boolean
@@ -616,13 +617,14 @@ class DataGrid extends Nette\Application\UI\Control
 		return is_callable($this->tree_view_has_children_callback);
 	}
 
+
 	/**
-	 * @param $primary_key
+	 * @param  mixed $item
 	 * @return boolean
 	 */
-	public function treeViewChildrenCallback($primary_key)
+	public function treeViewChildrenCallback($item)
 	{
-		return call_user_func($this->tree_view_has_children_callback, $primary_key);
+		return call_user_func($this->tree_view_has_children_callback, $item);
 	}
 
 
