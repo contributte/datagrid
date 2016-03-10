@@ -1856,7 +1856,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getSessionSectionName()
 	{
-		return $this->getPresenter()->getName().':'.$this->getName();
+		return $this->getPresenter()->getName().':'.$this->getUniqueId();
 	}
 
 
