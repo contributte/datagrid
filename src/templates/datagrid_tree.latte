@@ -59,7 +59,7 @@
 				<div n:class="datagrid-tree-item-content, $row->getControlClass()" data-id="{$row->getId()}" data-has-children="{$has_children ? true : false}">
 					<div class="datagrid-tree-item-left">
 						<a n:href="getChildren! parent => $row->getId()" data-toggle-tree="true" n:class="!$has_children ? hidden, 'chevron ajax'">
-							<i class="fa fa-chevron-right"></i>
+							<i n:block="chevron-cion" class="{$icon_prefix}chevron-right"></i>
 						</a>
 						{foreach $columns as $key => $column}
 							{var $col = 'col-' . $key}
