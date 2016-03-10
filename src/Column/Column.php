@@ -520,20 +520,22 @@ abstract class Column extends Ublaboo\DataGrid\Object
 		}
 
 		/**
+		 * If class was set by user via $el->class = '', fix it
+		 */
+		if (!empty($el->class) && is_string($el->class)) {
+			$class = $el->class;
+			unset($el->class);
+
+			$el->class[] = $class;
+		}
+
+		$el->class[] = "text-{$this->getAlign()}";
+
+		/**
 		 * Method called from datagrid template, set appropriate classes and another attributes
 		 */
 		if ($key !== NULL && $row !== NULL) {
-			/**
-			 * If class was set by user via $el->class = '', fix it
-			 */
-			if (!empty($el->class) && is_string($el->class)) {
-				$class = $el->class;
-				unset($el->class);
-
-				$el->class[] = $class;
-			}
-
-			$el->class[] = "col-{$key} text-{$this->getAlign()}";
+			$el->class[] = "col-{$key}";
 
 			if ($tag == 'td') {
 				if ($this->isEditable()) {
