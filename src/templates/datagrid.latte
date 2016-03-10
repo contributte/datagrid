@@ -58,11 +58,11 @@
 							<span class="pull-right settings" n:block="settings" n:if="$control->canHideColumns()">
 								<div class="btn-group">
 									<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<span class="{$icon_prefix}gear"></span>
+										<i class="{$icon_prefix}gear"></i>
 									</button>
 									<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
 										<li>
-											<a n:href="showAllColumns!" class="ajax"><span class="{$icon_prefix}eye"></span> {_'ublaboo_datagrid.show_all_columns'}</a>
+											<a n:href="showAllColumns!" class="ajax"><i class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
 										</li>
 									</ul>
 								</div>
@@ -90,7 +90,7 @@
 											{if $column->isSortedBy()}
 												<span n:class="$column->isSortAsc() ? $icon_prefix . 'caret-up' : $icon_prefix . 'caret-down', 'fa'"></span>
 											{else}
-												<span class="{$icon_prefix}sort"></span>
+												<i class="{$icon_prefix}sort"></i>
 											{/if}
 										</a>
 									{else}
@@ -100,12 +100,12 @@
 									<span class="column-settings-menu pull-right" n:if="$control->canHideColumns()">
 										<div class="btn-group">
 											<a type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<span class="{$icon_prefix}caret-down"></span>
+												<i class="{$icon_prefix}caret-down"></i>
 											</a>
 											<ul class="dropdown-menu dropdown-menu--grid">
 												<li>
 													<a n:href="hideColumn!, column => $key" class="ajax">
-														<span class="{$icon_prefix}eye-slash"></span> {_'ublaboo_datagrid.hide_column'}</a>
+														<i class="{$icon_prefix}eye-slash"></i> {_'ublaboo_datagrid.hide_column'}</a>
 												</li>
 											</ul>
 										</div>
@@ -168,7 +168,7 @@
 											{/if}
 										{/foreach}
 										<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
-											<span class="{$icon_prefix}arrows"></span>
+											<i class="{$icon_prefix}arrows"></i>
 										</span>
 										{if $items_detail}
 											{!$items_detail->renderButton($row)}
