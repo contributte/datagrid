@@ -88,9 +88,13 @@
 										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()">
 											{_$column->getName()}
 											{if $column->isSortedBy()}
-												<span n:class="$column->isSortAsc() ? $icon_prefix . 'caret-up' : $icon_prefix . 'caret-down', 'fa'"></span>
+												{if $column->isSortAsc()}
+													<i n:block="icon-sort-up" class="{$icon_prefix}caret-up"></i>
+												{else}
+													<i n:block="icon-sort-down" class="{$icon_prefix}caret-down"></i>
+												{/if}
 											{else}
-												<i class="{$icon_prefix}sort"></i>
+												<i n:block="icon-sort" class="{$icon_prefix}sort"></i>
 											{/if}
 										</a>
 									{else}
@@ -100,7 +104,7 @@
 									<span class="column-settings-menu pull-right" n:if="$control->canHideColumns()">
 										<div class="btn-group">
 											<a type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<i class="{$icon_prefix}caret-down"></i>
+												<i n:block="icon-caret-down" class="{$icon_prefix}caret-down"></i>
 											</a>
 											<ul class="dropdown-menu dropdown-menu--grid">
 												<li>
