@@ -1358,6 +1358,11 @@ class DataGrid extends Nette\Application\UI\Control
 
 			$column = $this->columns[$key];
 			$new_sort = [$column->getSortingColumn() => $value];
+
+			if ($column->sortableResetPagination()) {
+				$this->page = 1;
+				$this->saveSessionData('_grid_page', 1);
+			}
 		}
 
 		/**

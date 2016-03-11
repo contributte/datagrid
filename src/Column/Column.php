@@ -56,6 +56,11 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	protected $sortable = FALSE;
 
 	/**
+	 * @var bool
+	 */
+	protected $sortable_reset_pagination = FALSE;
+
+	/**
 	 * @var array
 	 */
 	protected $sort;
@@ -199,6 +204,29 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	public function isSortable()
 	{
 		return (bool) $this->sortable;
+	}
+
+
+	/**
+	 * Shoud be the pagination reseted after sorting?
+	 * @param bool $sortable_reset_pagination
+	 * @return static
+	 */
+	public function setSortableResetPagination($sortable_reset_pagination = TRUE)
+	{
+		$this->sortable_reset_pagination = (bool) $sortable_reset_pagination;
+
+		return $this;
+	}
+
+
+	/**
+	 * DO reset pagination after sorting?
+	 * @return bool
+	 */
+	public function sortableResetPagination()
+	{
+		return $this->sortable_reset_pagination;
 	}
 
 
