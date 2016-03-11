@@ -12,6 +12,7 @@ use DibiFluent;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Utils\Sorting;
 
 class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 {
@@ -205,15 +206,27 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 
 
 	/**
-	 * Order data
-	 * @param  array  $sorting
+	 * Sort data
+	 * @param  Sorting $sorting
 	 * @return static
 	 */
-	public function sort(array $sorting)
+	public function sort(Sorting $sorting)
 	{
-		if (!empty($sorting)) {
+		if (is_callable($sorting->getSortCallback())) {
+			call_user_func(
+				$sorting->getSortCallback(),
+				$this->data_source,
+				$sorting->getSort()
+			);
+
+			return $this;
+		}
+
+		$sort = $sorting->getSort();
+
+		if (!empty($sort)) {
 			$this->data_source->removeClause('ORDER BY');
-			$this->data_source->orderBy($sorting);
+			$this->data_source->orderBy($sort);
 		} else {
 			/**
 			 * Has the statement already a order by clause?

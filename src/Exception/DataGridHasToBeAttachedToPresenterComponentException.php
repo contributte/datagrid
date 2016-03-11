@@ -2,6 +2,6 @@
 
 namespace Ublaboo\DataGrid\Exception;
 
-class DataGridHasToBeAttachedToPresenterComponentException extends \LogicException
+class DataGridHasToBeAttachedToPresenterComponentException extends \Exception
 {
 }

@@ -8,6 +8,8 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Ublaboo\DataGrid\Utils\Sorting;
+
 interface IDataSource
 {
 
@@ -51,10 +53,10 @@ interface IDataSource
 
 
 	/**
-	 * Order data
-	 * @param array $sorting
+	 * Sort data
+	 * @param Sorting $sorting
 	 * @return static
 	 */
-	public function sort(array $sorting);
+	public function sort(Sorting $sorting);
 
 }

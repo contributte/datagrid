@@ -2,6 +2,6 @@
 
 namespace Ublaboo\DataGrid\Exception;
 
-class DataGridDateTimeHelperException extends \LogicException
+class DataGridDateTimeHelperException extends \Exception
 {
 }

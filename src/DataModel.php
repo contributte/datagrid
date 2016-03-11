@@ -16,6 +16,7 @@ use Nette\Database\Table\Selection;
 use Doctrine\ORM\QueryBuilder;
 use Ublaboo\DataGrid\DataSource\IDataSource;
 use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
+use Ublaboo\DataGrid\Utils\Sorting;
 
 class DataModel
 {
@@ -85,13 +86,13 @@ class DataModel
 	/**
 	 * Filter/paginate/limit/order data source and return reset of data in array
 	 * @param  Components\DataGridPaginator\DataGridPaginator $paginator_component
-	 * @param  array                                          $sort
+	 * @param  Sorting                                        $sorting
 	 * @param  array                                          $filters
 	 * @return array
 	 */
 	public function filterData(
 		Components\DataGridPaginator\DataGridPaginator $paginator_component = NULL,
-		$sort,
+		Sorting $sorting,
 		array $filters
 	) {
 		$this->data_source->filter($filters);
@@ -103,7 +104,7 @@ class DataModel
 			$paginator = $paginator_component->getPaginator();
 			$paginator->setItemCount($this->data_source->getCount());
 
-			$this->data_source->sort($sort)->limit(
+			$this->data_source->sort($sorting)->limit(
 				$paginator->getOffset(),
 				$paginator->getItemsPerPage()
 			);
@@ -111,7 +112,7 @@ class DataModel
 			return $this->data_source->getData();
 		}
 
-		return $this->data_source->sort($sort)->getData();
+		return $this->data_source->sort($sorting)->getData();
 	}
 
 

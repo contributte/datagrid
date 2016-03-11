@@ -2,6 +2,6 @@
 
 namespace Ublaboo\DataGrid\Exception;
 
-class DataGridException extends \LogicException
+class DataGridException extends \Exception
 {
 }

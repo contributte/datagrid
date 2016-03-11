@@ -2,6 +2,6 @@
 
 namespace Ublaboo\DataGrid\Exception;
 
-class DataGridFilterRangeException extends \LogicException
+class DataGridFilterRangeException extends \Exception
 {
 }

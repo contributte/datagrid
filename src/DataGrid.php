@@ -14,6 +14,7 @@ use Ublaboo\DataGrid\Utils\ArraysHelper;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
+use Ublaboo\DataGrid\Utils\Sorting;
 
 class DataGrid extends Nette\Application\UI\Control
 {
@@ -68,6 +69,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @var Callable[]
 	 */
 	public $onRender = [];
+
+	/**
+	 * @var callable|null
+	 */
+	protected $sort_callback = NULL;
 
 	/**
 	 * @var bool
@@ -312,7 +318,7 @@ class DataGrid extends Nette\Application\UI\Control
 				[$this->dataModel, 'filterData'],
 				[
 					$this->getPaginator(),
-					$this->sort,
+					new Sorting($this->sort, $this->sort_callback),
 					$this->assableFilters()
 				]
 			);
@@ -1359,9 +1365,19 @@ class DataGrid extends Nette\Application\UI\Control
 			$column = $this->columns[$key];
 			$new_sort = [$column->getSortingColumn() => $value];
 
+			/**
+			 * Pagination may be reseted after sorting
+			 */
 			if ($column->sortableResetPagination()) {
 				$this->page = 1;
 				$this->saveSessionData('_grid_page', 1);
+			}
+
+			/**
+			 * Custom sorting callback may be applied
+			 */
+			if ($column->getSortableCallback()) {
+				$this->sort_callback = $column->getSortableCallback();
 			}
 		}
 
@@ -1430,7 +1446,11 @@ class DataGrid extends Nette\Application\UI\Control
 		$rows = [];
 
 		$items = Nette\Utils\Callback::invokeArgs(
-			[$this->dataModel, 'filterData'], [NULL, $sort, $filter]
+			[$this->dataModel, 'filterData'], [
+				NULL,
+				new Sorting($this->sort, $this->sort_callback),
+				$filter
+			]
 		);
 
 		foreach ($items as $item) {

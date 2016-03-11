@@ -61,6 +61,11 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	protected $sortable_reset_pagination = FALSE;
 
 	/**
+	 * @var null|callable
+	 */
+	protected $sortable_callback = NULL;
+
+	/**
 	 * @var array
 	 */
 	protected $sort;
@@ -227,6 +232,29 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	public function sortableResetPagination()
 	{
 		return $this->sortable_reset_pagination;
+	}
+
+
+	/**
+	 * Set custom ORDER BY clause
+	 * @param callable $sortable_callback
+	 * @return static
+	 */
+	public function setSortableCallback(callable $sortable_callback)
+	{
+		$this->sortable_callback = $sortable_callback;
+
+		return $this;
+	}
+
+
+	/**
+	 * Get custom ORDER BY clause
+	 * @return callable|null
+	 */
+	public function getSortableCallback()
+	{
+		return $this->sortable_callback;
 	}
 
 

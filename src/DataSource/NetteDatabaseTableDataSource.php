@@ -11,6 +11,7 @@ namespace Ublaboo\DataGrid\DataSource;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Callback;
 use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Utils\Sorting;
 
 class NetteDatabaseTableDataSource extends FilterableDataSource implements IDataSource
 {
@@ -229,17 +230,29 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 
 	/**
-	 * Order data
-	 * @param  array  $sorting
+	 * Sort data
+	 * @param  Sorting $sorting
 	 * @return static
 	 */
-	public function sort(array $sorting)
+	public function sort(Sorting $sorting)
 	{
-		if (!empty($sorting)) {
+		if (is_callable($sorting->getSortCallback())) {
+			call_user_func(
+				$sorting->getSortCallback(),
+				$this->data_source,
+				$sorting->getSort()
+			);
+
+			return $this;
+		}
+
+		$sort = $sorting->getSort();
+
+		if (!empty($sort)) {
 			$this->data_source->getSqlBuilder()->setOrder([], []);
 
-			foreach ($sorting as $column => $sort) {
-				$this->data_source->order("$column $sort");
+			foreach ($sort as $column => $order) {
+				$this->data_source->order("$column $order");
 			}
 		} else {
 			/**

@@ -13,8 +13,10 @@ use Ublaboo\DataGrid\Filter\FilterDate;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\DataGrid\Exception\DataGridArrayDataSourceException;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
+use Ublaboo\DataGrid\Utils\Sorting;
 
 class ArrayDataSource implements IDataSource
 {
@@ -122,45 +124,6 @@ class ArrayDataSource implements IDataSource
 		return $this;
 	}
 
-	/**
-	 * Order data
-	 * @param array $sorting
-	 * @return static
-	 */
-	public function sort(array $sorting)
-	{
-		/**
-		 * Taken from Grido
-		 * @todo Not tested yet
-		 */
-		if (sizeof($sorting) > 1) {
-			throw new DataGridException('Multi-column sorting is not implemented yet.');
-		}
-
-		foreach ($sorting as $column => $sort) {
-			$data = array();
-			foreach ($this->data as $item) {
-				$sorter = (string) $item[$column];
-				$data[$sorter][] = $item;
-			}
-
-			if ($sort === 'ASC') {
-				ksort($data);
-			} else {
-				krsort($data);
-			}
-
-			$this->data = array();
-			foreach ($data as $i) {
-				foreach ($i as $item) {
-					$this->data[] = $item;
-				}
-			}
-		}
-
-		return $this;
-	}
-
 
 	/**
 	 * Apply fitler and tell whether row passes conditions or not
@@ -225,6 +188,56 @@ class ArrayDataSource implements IDataSource
 
 			return $row_value->format($format) == $date->format($format);
 		}
+	}
+
+
+	/**
+	 * Sort data
+	 * @param  Sorting $sorting
+	 * @return static
+	 */
+	public function sort(Sorting $sorting)
+	{
+		if (is_callable($sorting->getSortCallback())) {
+			$this->data = call_user_func(
+				$sorting->getSortCallback(),
+				$this->data,
+				$sorting->getSort()
+			);
+
+			if (!is_array($this->data)) {
+				throw new DataGridArrayDataSourceException('Sorting callback has to return array');
+			}
+
+			return $this;
+		}
+
+		$sort = $sorting->getSort();
+
+		foreach ($sort as $column => $order) {
+			$data = [];
+
+			foreach ($this->data as $item) {
+				$sort_by = (string) $item[$column];
+				$data[$sort_by][] = $item;
+			}
+
+			if ($order === 'ASC') {
+				ksort($data);
+			} else {
+				krsort($data);
+			}
+
+			$this->data = [];
+
+			foreach ($data as $i) {
+				foreach ($i as $item) {
+					$this->data[] = $item;
+				}
+			}
+		}
+
+		return $this;
 	}
 
 }

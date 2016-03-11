@@ -9,11 +9,12 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Doctrine\ORM\QueryBuilder,
-	Ublaboo\DataGrid\Filter,
-	Nette\Utils\Callback,
-	Nette\Utils\Strings,
-	Doctrine;
+use Doctrine\ORM\QueryBuilder;
+use Ublaboo\DataGrid\Filter;
+use Nette\Utils\Callback;
+use Nette\Utils\Strings;
+use Doctrine;
+use Ublaboo\DataGrid\Utils\Sorting;
 
 class DoctrineDataSource extends FilterableDataSource implements IDataSource
 {
@@ -260,15 +261,27 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 
 	/**
-	 * Order data
-	 * @param  array  $sorting
+	 * Sort data
+	 * @param  Sorting $sorting
 	 * @return static
 	 */
-	public function sort(array $sorting)
+	public function sort(Sorting $sorting)
 	{
-		if (!empty($sorting)) {
-			foreach ($sorting as $column => $sort) {
-				$this->data_source->addOrderBy($this->checkAliases($column), $sort);
+		if (is_callable($sorting->getSortCallback())) {
+			call_user_func(
+				$sorting->getSortCallback(),
+				$this->data_source,
+				$sorting->getSort()
+			);
+
+			return $this;
+		}
+
+		$sort = $sorting->getSort();
+
+		if (!empty($sort)) {
+			foreach ($sort as $column => $order) {
+				$this->data_source->addOrderBy($this->checkAliases($column), $order);
 			}
 		} else {
 			/**
