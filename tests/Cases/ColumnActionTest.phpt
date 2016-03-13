@@ -126,7 +126,7 @@ final class ColumnActionTest extends TestCase
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->setConfirm('Really?');
 
 		Assert::same(
-			'<a href="doStuff!?id=1" class="btn btn-xs btn-default" data-confirm="Really?">Do</a>',
+			'<a href="doStuff!?id=1" class="btn btn-xs btn-default" data-datagrid-confirm="Really?">Do</a>',
 			$this->render($action)
 		);
 	}
