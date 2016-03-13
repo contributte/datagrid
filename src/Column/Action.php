@@ -118,7 +118,7 @@ class Action extends Column
 
 		if ($this->title) { $a->title($this->translate($this->getTitle($row))); }
 		if ($this->class) { $a->class($this->getClass($row)); }
-		if ($confirm = $this->getConfirm($row)) { $a->data('confirm', $this->translate($confirm)); }
+		if ($confirm = $this->getConfirm($row)) { $a->data('datagrid-confirm', $this->translate($confirm)); }
 
 		return $a;
 	}

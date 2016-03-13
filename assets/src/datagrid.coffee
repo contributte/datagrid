@@ -1,3 +1,22 @@
+# Non-ajax confirmation
+#
+$(document).on('click', '[data-datagrid-confirm]', (e) ->
+	if not confirm($(e.target).closest('a').attr('data-datagrid-confirm'))
+		e.stopPropagation()
+		e.preventDefault()
+)
+
+# Ajax confirmation
+#
+$.nette.ext('datagrid.confirm', {
+	before: (xhr, settings) ->
+		if settings.nette
+			confirm_message = settings.nette.el.data('datagrid-confirm')
+			if confirm_message
+				return confirm(confirm_message)
+})
+
+
 $(document).on('change', 'select[data-autosubmit]', ->
 	$(this).closest('form').submit();
 ).on('change', 'input[data-autosubmit][data-autosubmit-change]', (e) ->
@@ -236,14 +255,6 @@ $.nette.ext('datagrid.url', {
 				url += window.location.hash
 
 				window.history.pushState({path: url}, '', url)
-})
-
-$.nette.ext('datagrid.confirm', {
-	before: (xhr, settings) ->
-		if settings.nette
-			confirm_message = settings.nette.el.data('confirm')
-			if confirm_message
-				return confirm(confirm_message)
 })
 
 

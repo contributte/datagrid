@@ -1,5 +1,24 @@
 var datagridSortable, datagridSortableTree;
 
+$(document).on('click', '[data-datagrid-confirm]', function(e) {
+  if (!confirm($(e.target).closest('a').attr('data-datagrid-confirm'))) {
+    e.stopPropagation();
+    return e.preventDefault();
+  }
+});
+
+$.nette.ext('datagrid.confirm', {
+  before: function(xhr, settings) {
+    var confirm_message;
+    if (settings.nette) {
+      confirm_message = settings.nette.el.data('datagrid-confirm');
+      if (confirm_message) {
+        return confirm(confirm_message);
+      }
+    }
+  }
+});
+
 $(document).on('change', 'select[data-autosubmit]', function() {
   return $(this).closest('form').submit();
 }).on('change', 'input[data-autosubmit][data-autosubmit-change]', function(e) {
@@ -273,18 +292,6 @@ $.nette.ext('datagrid.url', {
         return window.history.pushState({
           path: url
         }, '', url);
-      }
-    }
-  }
-});
-
-$.nette.ext('datagrid.confirm', {
-  before: function(xhr, settings) {
-    var confirm_message;
-    if (settings.nette) {
-      confirm_message = settings.nette.el.data('confirm');
-      if (confirm_message) {
-        return confirm(confirm_message);
       }
     }
   }
