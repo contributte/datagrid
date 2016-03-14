@@ -302,17 +302,23 @@ class Action extends Column
 	 */
 	public function getPropertyStringOrCallableGetString(Row $row, $property, $name)
 	{
-		if (is_callable($property)) {
-			$value = call_user_func($property, $row->getItem());
-
-			if (!is_string($value)) {
-				throw new DataGridException("Action {$name} callback has to return a string");
-			}
-
-			return $value;
+		/**
+		 * String
+		 */
+		if (is_string($property)) {
+			return $property;
 		}
 
-		return $property;
+		/**
+		 * Callable
+		 */
+		$value = call_user_func($property, $row->getItem());
+
+		if (!is_string($value)) {
+			throw new DataGridException("Action {$name} callback has to return a string");
+		}
+
+		return $value;
 	}
 
 
