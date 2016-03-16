@@ -14,7 +14,7 @@ use Nette\Utils\Html;
 use Ublaboo;
 use Ublaboo\DataGrid\Traits;
 
-class Export extends Ublaboo\DataGrid\Object
+class Export
 {
 
 	use Traits\ButtonIconTrait;

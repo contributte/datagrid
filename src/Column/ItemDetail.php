@@ -13,7 +13,7 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo;
 use Ublaboo\DataGrid\Traits;
 
-class ItemDetail extends Ublaboo\DataGrid\Object
+class ItemDetail
 {
 
 	use Traits\ButtonIconTrait;

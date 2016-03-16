@@ -17,7 +17,7 @@ use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 use Nette\Utils\Html;
 
-abstract class Column extends Ublaboo\DataGrid\Object
+abstract class Column
 {
 
 	/**
