@@ -18,12 +18,12 @@
 	</div>
 {else}
 	<div class="datagrid-col-filter-range form-inline">
-		<div class="form-group">
-			<div class="input-group">
-				{input $container['from'], class => 'form-control input-sm', data-autosubmit => TRUE}
-				<div class="input-group-addon">-</div>
-				{input $container['to'], class => 'form-control input-sm', data-autosubmit => TRUE}
-			</div>
+		<div class="input-group">
+			{input $container['from'], class => 'form-control input-sm', data-autosubmit => TRUE}
+
+			<div class="input-group-addon datagrid-col-filter-datte-range-delimiter">-</div>
+
+			{input $container['to'], class => 'form-control input-sm', data-autosubmit => TRUE}
 		</div>
 	</div>
 {/if}

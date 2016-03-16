@@ -17,23 +17,8 @@ use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 use Nette\Utils\Html;
 
-abstract class Column
+abstract class Column extends FilterableColumn
 {
-
-	/**
-	 * @var string
-	 */
-	protected $column;
-
-	/**
-	 * @var string
-	 */
-	protected $key;
-
-	/**
-	 * @var string
-	 */
-	protected $name;
 
 	/**
 	 * @var array
@@ -91,30 +76,10 @@ abstract class Column
 	protected $editable_callback;
 
 	/**
-	 * @var DataGrid
-	 */
-	protected $grid;
-
-	/**
 	 * Cached html elements
 	 * @var array
 	 */
 	protected $el_cache = [];
-
-
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $key
-	 * @param string   $column
-	 * @param string   $name
-	 */
-	public function __construct(DataGrid $grid, $key, $column, $name)
-	{
-		$this->grid = $grid;
-		$this->key = $key;
-		$this->column = $column;
-		$this->name = $name;
-	}
 
 
 	/**

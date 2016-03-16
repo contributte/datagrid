@@ -904,7 +904,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @return Filter\FilterSelect
 	 * @throws DataGridException
 	 */
-	public function addFilterSelect($key, $name, $options, $column = NULL)
+	public function addFilterSelect($key, $name, array $options, $column = NULL)
 	{
 		$column = $column ?: $key;
 

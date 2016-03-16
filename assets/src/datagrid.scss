@@ -4,6 +4,12 @@
 	border-radius: $r;
 }
 
+@mixin border-radius-complete($r1, $r2, $r3, $r4) {
+	-webkit-border-radius: $r1 $r2 $r3 $r4;
+	-moz-border-radius: $r1 $r2 $r3 $r4;
+	border-radius: $r1 $r2 $r3 $r4;
+}
+
 @keyframes edited {
 	0% {
 		background-color: #A6E2A9;
@@ -28,18 +34,18 @@
 		}
 	}
 
-    .settings {
-        margin-left: 1em;
-        margin-top: .35em;
+	.settings {
+		margin-left: 1em;
+		margin-top: .35em;
 
-        .dropdown-menu--grid {
-            font-size: 12px;
+		.dropdown-menu--grid {
+			font-size: 12px;
 
-            li .fa {
-            	margin-right: 0.5em;
-            }
-        }
-    }
+			li .fa {
+				margin-right: 0.5em;
+			}
+		}
+	}
 
 	.row-reset-filter {
 		text-align: right;
@@ -61,19 +67,19 @@
 
 		thead {
 			tr {
-                .column-settings-menu {
-                    opacity: 0;
-                    cursor: pointer;
-                    margin-left: 2px;
+				.column-settings-menu {
+					opacity: 0;
+					cursor: pointer;
+					margin-left: 2px;
 
-                    .dropdown-menu {
-                        font-size: 12px;
+					.dropdown-menu {
+						font-size: 12px;
 
-                        li .fa {
-            				margin-right: 0.5em;
-            			}
-                    }
-                }
+						li .fa {
+							margin-right: 0.5em;
+						}
+					}
+				}
 
 				&.row-group-actions {
 					th {
@@ -91,27 +97,34 @@
 					}
 
 					.datagrid-col-filter-date-range, .datagrid-col-filter-range {
-						.form-group {
-							.input-group {
-								.form-control {
-									@include border-radius(3px);
-								}
+						.input-group {
+							.datagrid-filter-date-range-last {
+								@include border-radius-complete(3px, 0, 0, 3px);
 							}
-						}
 
-						.input-group-addon {
-							background-color: inherit;
-							border: none;
+							.input-group-addon-first {
+								@include border-radius-complete(0, 3px, 3px, 0);
+								border-left: 0;
+							}
+
+							.datagrid-col-filter-datte-range-delimiter {
+								background-color: inherit;
+								border: none;
+							}
 						}
 					}
 
+					.datagrid-col-filter-range {
+						.form-control {
+							@include border-radius(3px);
+						}
+					}
 
-
-                    &:hover {
-                       > .column-settings-menu {
-                            opacity: 1;
-                        }
-                    }
+					&:hover {
+						> .column-settings-menu {
+							opacity: 1;
+						}
+					}
 
 				}
 			}
@@ -183,7 +196,7 @@
 
 		th.col-action, td.col-action {
 			white-space: nowrap;
-    		width: 10px;
+			width: 10px;
 		}
 
 		th.col-action {
@@ -284,7 +297,7 @@
 						flex-basis: 70%;
 						flex-direction: row;
 						flex-wrap: nowrap;
-	 					justify-content: flex-end;
+						justify-content: flex-end;
 
 						.datagrid-tree-item-right-columns-column {
 							padding: 0 7px;
