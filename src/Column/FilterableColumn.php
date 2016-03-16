@@ -56,6 +56,10 @@ abstract class FilterableColumn
 	}
 
 
+	/**
+	 * @param string|array|null $columns
+	 * @return Ublaboo\DataGrid\Filter\FilterText
+	 */
 	public function setFilterText($columns = NULL)
 	{
 		if (NULL === $columns) {
@@ -68,6 +72,11 @@ abstract class FilterableColumn
 	}
 
 
+	/**
+	 * @param array       $options
+	 * @param string|null $column
+	 * @return Ublaboo\DataGrid\Filter\FilterSelect
+	 */
 	public function setFilterSelect(array $options, $column = NULL)
 	{
 		$column = $column === NULL ? $this->column : $column;
@@ -76,6 +85,10 @@ abstract class FilterableColumn
 	}
 
 
+	/**
+	 * @param string|null $column
+	 * @return Ublaboo\DataGrid\Filter\FilterDate
+	 */
 	public function setFilterDate($column = NULL)
 	{
 		$column = $column === NULL ? $this->column : $column;
@@ -84,6 +97,11 @@ abstract class FilterableColumn
 	}
 
 
+	/**
+	 * @param string|null $column
+	 * @param string|null $name_second
+	 * @return Ublaboo\DataGrid\Filter\FilterRange
+	 */
 	public function setFilterRange($column = NULL, $name_second = '-')
 	{
 		$column = $column === NULL ? $this->column : $column;
@@ -92,6 +110,11 @@ abstract class FilterableColumn
 	}
 
 
+	/**
+	 * @param string|null $column
+	 * @param string|null $name_second
+	 * @return Ublaboo\DataGrid\Filter\FilterDateRange
+	 */
 	public function setFilterDateRange($column = NULL, $name_second = '-')
 	{
 		$column = $column === NULL ? $this->column : $column;
