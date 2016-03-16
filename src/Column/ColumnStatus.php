@@ -11,6 +11,7 @@ namespace Ublaboo\DataGrid\Column;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Status\Option;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 
 class ColumnStatus extends Column
 {
@@ -103,6 +104,10 @@ class ColumnStatus extends Column
 	 */
 	public function addOption($value, $text)
 	{
+		if (!is_scalar($value)) {
+			throw new DataGridColumnStatusException('Option value has to be scalar');
+		}
+
 		$option = new Option($this, $value, $text);
 
 		$this->options[] = $option;
