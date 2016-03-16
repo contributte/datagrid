@@ -60,7 +60,7 @@ final class ColumnLinkTest extends TestCase
 
 	public function testLinkClass()
 	{
-		$link = $this->grid->addColumnLink('name', 'Href')->class('btn');
+		$link = $this->grid->addColumnLink('name', 'Href')->setClass('btn');
 		Assert::same('<a href="name?id=1" class="btn">John</a>', $this->render($link));
 
 		$link->setClass(NULL);
@@ -70,7 +70,7 @@ final class ColumnLinkTest extends TestCase
 
 	public function testLinkTitle()
 	{
-		$link = $this->grid->addColumnLink('name', 'Href')->title('Hello');
+		$link = $this->grid->addColumnLink('name', 'Href')->setTitle('Hello');
 		Assert::same('<a href="name?id=1" title="Hello">John</a>', $this->render($link));
 	}
 

@@ -100,7 +100,7 @@ final class ColumnActionTest extends TestCase
 
 	public function testActionClass()
 	{
-		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->class('btn');
+		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->setClass('btn');
 
 		Assert::same('<a href="doStuff!?id=1" class="btn">Do</a>', $this->render($action));
 

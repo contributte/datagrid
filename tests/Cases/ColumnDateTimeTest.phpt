@@ -42,7 +42,7 @@ final class ColumnDateTimeTest extends TestCase
 		$datetime = $this->grid->addColumnDateTime('date', 'Date');
 		Assert::same('15. 12. 2015', $this->render($datetime));
 
-		$datetime->format('H:i:s');
+		$datetime->setFormat('H:i:s');
 		Assert::same('22:58:42', $this->render($datetime));
 	}
 
