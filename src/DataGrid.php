@@ -71,6 +71,11 @@ class DataGrid extends Nette\Application\UI\Control
 	public $onRender = [];
 
 	/**
+	 * @var callable[]
+	 */
+	public $onColumnAdd;
+
+	/**
 	 * @var callable|null
 	 */
 	protected $sort_callback = NULL;
@@ -208,27 +213,27 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var bool
 	 */
-	private $remember_state = TRUE;
+	protected $remember_state = TRUE;
 
 	/**
 	 * @var bool
 	 */
-	private $refresh_url = TRUE;
+	protected $refresh_url = TRUE;
 
 	/**
 	 * @var Nette\Http\SessionSection
 	 */
-	private $grid_session;
+	protected $grid_session;
 
 	/**
 	 * @var Column\ItemDetail
 	 */
-	private $items_detail;
+	protected $items_detail;
 
 	/**
 	 * @var array
 	 */
-	private $row_conditions = [
+	protected $row_conditions = [
 		'group_action' => FALSE,
 		'action' => []
 	];
@@ -238,8 +243,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $can_hide_columns = FALSE;
 
-	/** @var callable[] */
-	public $onColumnAdd;
+	/**
+	 * @var array
+	 */
+	protected $columns_visibility = [];
 
 
 	/**
@@ -349,6 +356,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->template->add('original_template', $this->getOriginalTemplateFile());
 		$this->template->add('icon_prefix', static::$icon_prefix);
 		$this->template->add('items_detail', $this->items_detail);
+		$this->template->add('columns_visibility', $this->columns_visibility);
 
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
@@ -732,6 +740,11 @@ class DataGrid extends Nette\Application\UI\Control
 	protected function addColumn($key, Column\Column $column)
 	{
 		$this->onColumnAdd($key, $column);
+
+		$this->columns_visibility[$key] = [
+			'visible' => TRUE,
+			'name' => $column->getName()
+		];
 
 		return $this->columns[$key] = $column;
 	}
@@ -1607,6 +1620,31 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Reveal particular column
+	 * @param  string $column
+	 * @return void
+	 */
+	public function handleShowColumn($column)
+	{
+		$columns = $this->getSessionData('_grid_hidden_columns');
+
+		if (!empty($columns)) {
+			$pos = array_search($column, $columns);
+
+			if ($pos !== FALSE) {
+				unset($columns[$pos]);
+			}
+		}
+
+		$this->saveSessionData('_grid_hidden_columns', $columns);
+
+		$this->redrawControl();
+
+		$this->onRedraw();
+	}
+
+
+	/**
 	 * Notice datagrid to not display particular columns
 	 * @param  string $column
 	 * @return void
@@ -2115,6 +2153,13 @@ class DataGrid extends Nette\Application\UI\Control
 	public function getColumns()
 	{
 		foreach ($this->getSessionData('_grid_hidden_columns', []) as $column) {
+			if (!empty($this->columns[$column])) {
+				$this->columns_visibility[$column] = [
+					'visible' => FALSE,
+					'name' => $this->columns[$column]->getName()
+				];
+			}
+
 			$this->removeColumn($column);
 		}
 

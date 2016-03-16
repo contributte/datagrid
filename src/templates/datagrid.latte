@@ -1,13 +1,14 @@
 {**
- * @param array    $columns           Available columns
- * @param array    $actions           Available actions
- * @param array    $exports           Available exports
- * @param array    $filters           Available filters
- * @param Form     $filter            Walkaround for latte (does not know $form in snippet in foreach, etc)
- * @param Row[]    $rows              List of rows (each contain a item from data source)
- * @param DataGrid $control           Parent (DataGrid)
- * @param string   $original_template Original template file path
- * @param string   $icon_prefix       Icon prefix (fa fa-)
+ * @param array    $columns            Available columns
+ * @param array    $actions            Available actions
+ * @param array    $exports            Available exports
+ * @param array    $filters            Available filters
+ * @param Form     $filter             Walkaround for latte (does not know $form in snippet in foreach, etc)
+ * @param Row[]    $rows               List of rows (each contain a item from data source)
+ * @param DataGrid $control            Parent (DataGrid)
+ * @param string   $original_template  Original template file path
+ * @param string   $icon_prefix        Icon prefix (fa fa-)
+ * @param array    $columns_visibility What columns are visible
  *}
 
 <div class="datagrid card card-1 primary datagrid-{!$control->getName()}">
@@ -61,6 +62,21 @@
 										<i class="{$icon_prefix}gear"></i>
 									</button>
 									<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
+									{dump $columns_visibility}
+										<li n:foreach="$columns_visibility as $v_key => $visibility">
+											{if $visibility['visible']}
+												<a n:href="hideColumn!, column => $v_key" class="ajax">
+													<i class="{$icon_prefix}check-square-o"></i> 
+													{$visibility['name']}
+												</a>
+											{else}
+												<a n:href="showColumn!, column => $v_key" class="ajax">
+													<i class="{$icon_prefix}square-o"></i> 
+													{$visibility['name']}
+												</a>
+											{/if}
+										</li>
+										<li role="separator" class="divider"></li>
 										<li>
 											<a n:href="showAllColumns!" class="ajax"><i class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
 										</li>
