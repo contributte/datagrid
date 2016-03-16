@@ -170,11 +170,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		foreach ($condition as $column => $value) {
 			$words = explode(' ', $value);
 
-			$reflection = new \ReflectionClass(get_class($this->data_source));
-				
-			$property_reflection = $reflection->getProperty('context');
-			$property_reflection->setAccessible(TRUE);
-
 			$like = '(';
 			$args = [];
 
