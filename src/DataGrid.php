@@ -16,6 +16,9 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 use Ublaboo\DataGrid\Utils\Sorting;
 
+/**
+ * @method onRedraw()
+ */
 class DataGrid extends Nette\Application\UI\Control
 {
 

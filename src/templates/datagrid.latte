@@ -62,7 +62,6 @@
 										<i class="{$icon_prefix}gear"></i>
 									</button>
 									<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
-									{dump $columns_visibility}
 										<li n:foreach="$columns_visibility as $v_key => $visibility">
 											{if $visibility['visible']}
 												<a n:href="hideColumn!, column => $v_key" class="ajax">
