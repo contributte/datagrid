@@ -60,7 +60,7 @@
 									<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										<i class="{$icon_prefix}gear"></i>
 									</button>
-									<ul class="dropdown-menu dropdown-menu--grid">
+									<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
 										<li>
 											<a n:href="showAllColumns!" class="ajax"><i class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
 										</li>
@@ -74,8 +74,8 @@
 							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $key => $column}
-							{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
-							<th class="col-{$column->getColumnName()} text-{$align}">
+							{var $th = $column->getElementPrototype('th', $key)}
+							{!$th->startTag()}
 								{var $col_header = 'col-' . $key . '-header'}
 
 								{**
@@ -88,9 +88,13 @@
 										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()">
 											{_$column->getName()}
 											{if $column->isSortedBy()}
-												<span n:class="$column->isSortAsc() ? $icon_prefix . 'caret-up' : $icon_prefix . 'caret-down', 'fa'"></span>
+												{if $column->isSortAsc()}
+													<i n:block="icon-sort-up" class="{$icon_prefix}caret-up"></i>
+												{else}
+													<i n:block="icon-sort-down" class="{$icon_prefix}caret-down"></i>
+												{/if}
 											{else}
-												<span class="{$icon_prefix}sort"></span>
+												<i n:block="icon-sort" class="{$icon_prefix}sort"></i>
 											{/if}
 										</a>
 									{else}
@@ -100,7 +104,7 @@
 									<span class="column-settings-menu pull-right" n:if="$control->canHideColumns()">
 										<div class="btn-group">
 											<a type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<i class="{$icon_prefix}caret-down"></i>
+												<i n:block="icon-caret-down" class="{$icon_prefix}caret-down"></i>
 											</a>
 											<ul class="dropdown-menu dropdown-menu--grid">
 												<li>
@@ -117,7 +121,7 @@
 									{var $i = $filter['filter'][$key]}
 									{include $filters[$key]->getTemplate(), filter => $filters[$key], input => $i, outer => FALSE}
 								{/if}
-							</th>
+							{!$th->endTag()}
 						{/foreach}
 						<th n:if="$actions || $control->isSortable() || $items_detail" class="col-action text-center">
 							{_'ublaboo_datagrid.action'}
@@ -139,12 +143,11 @@
 									</td>
 									{foreach $columns as $key => $column}
 										{var $col = 'col-' . $key}
-										{var $align = $column->hasAlign() ? $column->getAlign() : 'left'}
 
-										<td class="{$col} text-{$align}"
-											{if $column->isEditable()} data-datagrid-editable-url={link edit!, key => $key, id => $row->getId()}{/if}>
+										{var $td = $column->getElementPrototype('td', $key, $row)}
+										{!$td->startTag()}
 											{if $column->hasTemplate()}
-												{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
+												{include $column->getTemplate(), row => $row, item => $item, (expand) $column->getTemplateVariables()}
 											{else}
 												{ifset #$col}
 													{include #$col, item => $item}
@@ -156,7 +159,7 @@
 													{/if}
 												{/ifset}
 											{/if}
-										</td>
+										{!$td->endTag()}
 									{/foreach}
 									<td n:if="$actions || $control->isSortable() || $items_detail" class="col-action">
 										{foreach $actions as $key => $action}
@@ -169,7 +172,7 @@
 											{/if}
 										{/foreach}
 										<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
-											<span class="{$icon_prefix}arrows"></span>
+											<i class="{$icon_prefix}arrows"></i>
 										</span>
 										{if $items_detail}
 											{!$items_detail->renderButton($row)}
@@ -201,19 +204,19 @@
 										{/ifset}
 									{/if}
 								</tr>
-								<tr class="row-item-detail-helper"</tr>
+								<tr class="row-item-detail-helper"></tr>
 							{/if}
 						{/foreach}
 						{block noItems}
-						<tr n:if="!$rows">
-							<td colspan="{$control->getColumnsCount()}">
-								{if $filter_active}
-									{_'ublaboo_datagrid.no_item_found'} <a class="link ajax" n:href="resetFilter!">{_'ublaboo_datagrid.here'}</a>.
-								{else}
-									{_'ublaboo_datagrid.no_item_found'}
-								{/if}
-							</td>
-						</tr>
+							<tr n:if="!$rows">
+								<td colspan="{$control->getColumnsCount()}">
+									{if $filter_active}
+										{_'ublaboo_datagrid.no_item_found'} <a class="link ajax" n:href="resetFilter!">{_'ublaboo_datagrid.here'}</a>.
+									{else}
+										{_'ublaboo_datagrid.no_item_found'}
+									{/if}
+								</td>
+							</tr>
 						{/block}
 					{/snippetArea}
 				</tbody>

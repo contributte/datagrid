@@ -9,7 +9,7 @@ use Tester\TestCase,
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/XTestingDataGridFactory.php';
 
-final class ColumnTextTest extends TestCase
+final class ColumnStatusTest extends TestCase
 {
 
 	/**
@@ -25,47 +25,40 @@ final class ColumnTextTest extends TestCase
 	}
 
 
-	public function render($column, $id = 1)
+	public function testStatus()
 	{
-		if ($id == 1) {
-			$item = new Ublaboo\DataGrid\Row($this->grid, ['id' => 1, 'name' => 'John'], 'id');
-		} else {
-			$item = new Ublaboo\DataGrid\Row($this->grid, ['id' => $id, 'name' => 'Susie'], 'id');
-		}
+		$grid = $this->grid;
 
-		return (string) $column->render($item);
-	}
+		$grid->addColumnStatus('status', 'Status')
+			->setCaret(FALSE)
+			->addOption(1, 'Online')
+				->setIcon('check')
+				->setClass('btn-success')
+				->endOption()
+			->addOption(2, 'Standby')
+				->setIcon('user')
+				->setClass('btn-primary')
+				->endOption()
+			->addOption(3, 'Offline')
+				->setIcon('close')
+				->setClass('btn-danger')
+				->endOption()
+			->onChange[] = [$this, 'statusChange'];
 
+		$status = $grid->getColumn('status');
 
-	public function testSimpleOutput()
-	{
-		$text = $this->grid->addColumnText('name', 'Name');
-		Assert::same('John', $this->render($text));
-	}
+		Assert::same('status', $status->getKey());
+		Assert::same(3, sizeof($status->getOptions()));
 
+		$row = new Ublaboo\DataGrid\Row($grid, ['id' => 10, 'status' => 2], 'id');
 
-	public function testReplacement()
-	{
-		$text = $this->grid->addColumnText('name', 'Name')
-			->setReplacement(['John' => 'Joe']);
+		$current_option = $status->getCurrentOption($row);
 
-		Assert::same('Joe', $this->render($text));
-		Assert::same('Susie', $this->render($text, 2));
-	}
-
-
-	public function testRenderer()
-	{
-		$text = $this->grid->addColumnText('name', 'Name')
-			->setRenderer(function($item) {
-				return str_repeat($item['name'], 2);
-			});
-
-		Assert::same('JohnJohn', $this->render($text));
+		Assert::same(2, $current_option->getValue());
 	}
 
 }
 
 
-$test_case = new ColumnTextTest;
+$test_case = new ColumnStatusTest;
 $test_case->run();

@@ -11,8 +11,9 @@ namespace Ublaboo\DataGrid\DataSource;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Callback;
 use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Utils\Sorting;
 
-class NetteDatabaseTableDataSource implements IDataSource
+class NetteDatabaseTableDataSource extends FilterableDataSource implements IDataSource
 {
 
 	/**
@@ -53,7 +54,15 @@ class NetteDatabaseTableDataSource implements IDataSource
 	 */
 	public function getCount()
 	{
-		return $this->data_source->count($this->primary_key);
+		try {
+			$primary = $this->data_source->getPrimary();
+		} catch (\LogicException $e) {
+			return $this->data_source->count('*');
+		}
+
+		return $this->data_source->count(
+			$this->data_source->getName() . '.' . (is_array($primary) ? reset($primary) : $primary)
+		);
 	}
 
 
@@ -68,43 +77,9 @@ class NetteDatabaseTableDataSource implements IDataSource
 
 
 	/**
-	 * Filter data
-	 * @param array $filters
-	 * @return self
-	 */
-	public function filter(array $filters)
-	{
-		foreach ($filters as $filter) {
-			if ($filter->isValueSet()) {
-				if ($filter->hasConditionCallback()) {
-					Callback::invokeArgs(
-						$filter->getConditionCallback(),
-						[$this->data_source, $filter->getValue()]
-					);
-				} else {
-					if ($filter instanceof Filter\FilterText) {
-						$this->applyFilterText($filter);
-					} else if ($filter instanceof Filter\FilterSelect) {
-						$this->applyFilterSelect($filter);
-					} else if ($filter instanceof Filter\FilterDate) {
-						$this->applyFilterDate($filter);
-					} else if ($filter instanceof Filter\FilterDateRange) {
-						$this->applyFilterDateRange($filter);
-					} else if ($filter instanceof Filter\FilterRange) {
-						$this->applyFilterRange($filter);
-					}
-				}
-			}
-		}
-
-		return $this;
-	}
-
-
-	/**
 	 * Filter data - get one row
 	 * @param array $condition
-	 * @return self
+	 * @return static
 	 */
 	public function filterOne(array $condition)
 	{
@@ -187,6 +162,7 @@ class NetteDatabaseTableDataSource implements IDataSource
 	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$or = [];
+		$args = [];
 		$big_or = '(';
 		$big_or_args = [];
 		$condition = $filter->getCondition();
@@ -214,8 +190,6 @@ class NetteDatabaseTableDataSource implements IDataSource
 			$big_or_args = array_merge($big_or_args, $args);
 		}
 
-		$query = array_merge($or, $args);
-
 		if (sizeof($or) > 1) {
 			$big_or = substr($big_or, 0, strlen($big_or) - 4).')';
 
@@ -223,6 +197,8 @@ class NetteDatabaseTableDataSource implements IDataSource
 
 			call_user_func_array([$this->data_source, 'where'], $query);
 		} else {
+			$query = array_merge($or, $args);
+
 			call_user_func_array([$this->data_source, 'where'], $query);
 		}
 	}
@@ -243,7 +219,7 @@ class NetteDatabaseTableDataSource implements IDataSource
 	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
-	 * @return NetteDatabaseTableDataSource
+	 * @return static
 	 */
 	public function limit($offset, $limit)
 	{
@@ -254,17 +230,29 @@ class NetteDatabaseTableDataSource implements IDataSource
 
 
 	/**
-	 * Order data
-	 * @param  array  $sorting
-	 * @return self
+	 * Sort data
+	 * @param  Sorting $sorting
+	 * @return static
 	 */
-	public function sort(array $sorting)
+	public function sort(Sorting $sorting)
 	{
-		if ($sorting) {
+		if (is_callable($sorting->getSortCallback())) {
+			call_user_func(
+				$sorting->getSortCallback(),
+				$this->data_source,
+				$sorting->getSort()
+			);
+
+			return $this;
+		}
+
+		$sort = $sorting->getSort();
+
+		if (!empty($sort)) {
 			$this->data_source->getSqlBuilder()->setOrder([], []);
 
-			foreach ($sorting as $column => $sort) {
-				$this->data_source->order("$column $sort");
+			foreach ($sort as $column => $order) {
+				$this->data_source->order("$column $order");
 			}
 		} else {
 			/**

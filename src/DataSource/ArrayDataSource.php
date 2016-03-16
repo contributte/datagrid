@@ -9,9 +9,14 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Ublaboo\DataGrid\Filter\Filter;
+use Ublaboo\DataGrid\Filter\FilterDate;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\DataGrid\Exception\DataGridArrayDataSourceException;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
+use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
+use Ublaboo\DataGrid\Utils\Sorting;
 
 class ArrayDataSource implements IDataSource
 {
@@ -60,14 +65,14 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * Filter data
 	 * @param Filter[] $filters
-	 * @return self
+	 * @return static
 	 */
 	public function filter(array $filters)
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
 				if ($filter->hasConditionCallback()) {
-					$this->data = Callback::invokeArgs(
+					$this->data = (array) call_user_func_array(
 						$filter->getConditionCallback(),
 						[$this->data, $filter->getValue()]
 					);
@@ -110,50 +115,11 @@ class ArrayDataSource implements IDataSource
 	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
-	 * @return self
+	 * @return static
 	 */
 	public function limit($offset, $limit)
 	{
 		$this->data = array_slice($this->data, $offset, $limit);
-
-		return $this;
-	}
-
-	/**
-	 * Order data
-	 * @param array $sorting
-	 * @return self
-	 */
-	public function sort(array $sorting)
-	{
-		/**
-		 * Taken from Grido
-		 * @todo Not tested yet
-		 */
-		if (sizeof($sorting) > 1) {
-			throw new DataGridException('Multi-column sorting is not implemented yet.');
-		}
-
-		foreach ($sorting as $column => $sort) {
-			$data = array();
-			foreach ($this->data as $item) {
-				$sorter = (string) $item[$column];
-				$data[$sorter][] = $item;
-			}
-
-			if ($sort === 'ASC') {
-				ksort($data);
-			} else {
-				krsort($data);
-			}
-
-			$this->data = array();
-			foreach ($data as $i) {
-				foreach ($i as $item) {
-					$this->data[] = $item;
-				}
-			}
-		}
 
 		return $this;
 	}
@@ -168,6 +134,10 @@ class ArrayDataSource implements IDataSource
 	protected function applyFilter($row, Filter $filter)
 	{
 		if (is_array($row) || $row instanceof \Traversable) {
+			if ($filter instanceof FilterDate) {
+				return $this->applyFilterDate($row, $filter);
+			}
+
 			$condition = $filter->getCondition();
 
 			foreach ($condition as $column => $value) {
@@ -183,6 +153,91 @@ class ArrayDataSource implements IDataSource
 		}
 
 		return FALSE;
+	}
+
+
+	/**
+	 * Apply fitler date and tell whether row value matches or not
+	 * @param  mixed  $row
+	 * @param  Filter $filter
+	 * @return mixed
+	 */
+	protected function applyFilterDate($row, FilterDate $filter)
+	{
+		$format = $filter->getPhpFormat();
+		$condition = $filter->getCondition();
+
+		foreach ($condition as $column => $value) {
+			$row_value = $row[$column];
+
+			$date = \DateTime::createFromFormat($format, $value);
+
+			if (!($row_value instanceof \DateTime)) {
+				/**
+				 * Try to convert string to DateTime object
+				 */
+				try {
+					$row_value = DateTimeHelper::tryConvertToDateTime($row_value);
+				} catch (DataGridDateTimeHelperException $e) {
+					/**
+					 * Otherwise just return raw string
+					 */
+					return FALSE;
+				}
+			}
+
+			return $row_value->format($format) == $date->format($format);
+		}
+	}
+
+
+	/**
+	 * Sort data
+	 * @param  Sorting $sorting
+	 * @return static
+	 */
+	public function sort(Sorting $sorting)
+	{
+		if (is_callable($sorting->getSortCallback())) {
+			$this->data = call_user_func(
+				$sorting->getSortCallback(),
+				$this->data,
+				$sorting->getSort()
+			);
+
+			if (!is_array($this->data)) {
+				throw new DataGridArrayDataSourceException('Sorting callback has to return array');
+			}
+
+			return $this;
+		}
+
+		$sort = $sorting->getSort();
+
+		foreach ($sort as $column => $order) {
+			$data = [];
+
+			foreach ($this->data as $item) {
+				$sort_by = (string) $item[$column];
+				$data[$sort_by][] = $item;
+			}
+
+			if ($order === 'ASC') {
+				ksort($data);
+			} else {
+				krsort($data);
+			}
+
+			$this->data = [];
+
+			foreach ($data as $i) {
+				foreach ($i as $item) {
+					$this->data[] = $item;
+				}
+			}
+		}
+
+		return $this;
 	}
 
 }

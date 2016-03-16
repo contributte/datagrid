@@ -12,6 +12,7 @@ use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterRange;
 use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Filter\FilterSelect;
+use Ublaboo\DataGrid\Utils\Sorting;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/XTestingDataGridFactory.php';
@@ -98,7 +99,7 @@ final class ArrayDataSourceTest extends TestCase
 	{
 		$this->setUp();
 
-		$this->ds->sort(['name' => 'DESC']);
+		$this->ds->sort(new Sorting(['name' => 'DESC']));
 
 		Assert::same([
 			$this->data[2],

@@ -10,6 +10,8 @@ namespace Ublaboo\DataGrid\Column;
 
 use DateTime;
 use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
+use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 
 class ColumnDateTime extends Column
 {
@@ -35,44 +37,18 @@ class ColumnDateTime extends Column
 
 		if (!($value instanceof DateTime)) {
 			/**
-			 * Try to convert string Y-m-d to DateTime object
+			 * Try to convert string to DateTime object
 			 */
-			$date = \DateTime::createFromFormat('Y-m-d', $value);
-			if ($date) {
-				return $date->format($this->format);
-			}
-
-			/**
-			 * Try to convert string Y-m-d H:i:s to DateTime object
-			 */
-			$date = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
-			if ($date) {
-				return $date->format($this->format);
-			}
-
-			/**
-			 * Try to convert string Y-m-d H:i:s.u to DateTime object
-			 */
-			$date = \DateTime::createFromFormat('Y-m-d H:i:s.u', $value);
-			if ($date) {
-				return $date->format($this->format);
-			}
-
-			/**
-			 * Try strtotime
-			 */
-			$timestamp = strtotime($value);
-			if (FALSE !== $timestamp) {
-				$date = new \DateTime;
-				$date->setTimestamp($timestamp);
+			try {
+				$date = DateTimeHelper::tryConvertToDateTime($value);
 
 				return $date->format($this->format);
+			} catch (DataGridDateTimeHelperException $e) {
+				/**
+				 * Otherwise just return raw string
+				 */
+				return $value;
 			}
-
-			/**
-			 * Otherwise just return raw string
-			 */
-			return $value;
 		}
 
 		return $value->format($this->format);

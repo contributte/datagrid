@@ -43,7 +43,7 @@
 							{/foreach}
 
 							<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
-								<span class="{$icon_prefix}arrows"></span>
+								<i class="{$icon_prefix}arrows"></i>
 							</span>
 						</div>
 					</div>
@@ -52,14 +52,14 @@
 		</div>
 
 		{foreach $rows as $row}
-			{var $has_children = $row->getValue($tree_view_has_children_column)}
+			{var $has_children = $control->hasTreeViewChildrenCallback() ? $control->treeViewChildrenCallback($row->getItem()) : $row->getValue($tree_view_has_children_column)}
 			{var $item = $row->getItem()}
 
 			<div n:class="$has_children ? has-children, 'datagrid-tree-item'" data-id="{$row->getId()}" n:snippet="item-{$row->getId()}">
 				<div n:class="datagrid-tree-item-content, $row->getControlClass()" data-id="{$row->getId()}" data-has-children="{$has_children ? true : false}">
 					<div class="datagrid-tree-item-left">
 						<a n:href="getChildren! parent => $row->getId()" data-toggle-tree="true" n:class="!$has_children ? hidden, 'chevron ajax'">
-							<i class="fa fa-chevron-right"></i>
+							<i n:block="icon-chevron" class="{$icon_prefix}chevron-right"></i>
 						</a>
 						{foreach $columns as $key => $column}
 							{var $col = 'col-' . $key}
@@ -90,7 +90,7 @@
 									{var $col = 'col-' . $key}
 
 									{if $column->hasTemplate()}
-										{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
+										{include $column->getTemplate(), row => $row, item => $item, (expand) $column->getTemplateVariables()}
 									{else}
 										{ifset #$col}
 											{include #$col, item => $item}
@@ -116,7 +116,7 @@
 								{/foreach}
 
 								<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
-									<span class="{$icon_prefix}arrows"></span>
+									<i class="{$icon_prefix}arrows"></i>
 								</span>
 							</div>
 						</div>

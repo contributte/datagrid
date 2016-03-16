@@ -62,7 +62,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	/**
 	 * Get the data
 	 * @param array $condition
-	 * @return self
+	 * @return static
 	 */
 	public function filterOne(array $condition)
 	{
@@ -119,6 +119,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$condition = $filter->getCondition();
+		$or = [];
 
 		foreach ($condition as $column => $value) {
 			$or[] = "$column LIKE \"%$value%\"";
@@ -136,7 +137,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
-	 * @return self
+	 * @return static
 	 */
 	public function limit($offset, $limit)
 	{

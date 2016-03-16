@@ -11,9 +11,12 @@ namespace Ublaboo\DataGrid\Column;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo;
+use Ublaboo\DataGrid\Traits;
 
 class ItemDetail extends Ublaboo\DataGrid\Object
 {
+
+	use Traits\ButtonIconTrait;
 
 	/**
 	 * (renderer | template | block)
@@ -27,7 +30,7 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 	protected $template;
 
 	/**
-	 * @var string
+	 * @var callable
 	 */
 	protected $renderer;
 
@@ -57,7 +60,7 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 	protected $grid;
 
 	/**
-	 * @var string
+	 * @var string|bool
 	 */
 	protected $primary_where_column;
 
@@ -85,13 +88,7 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 			->data('toggle-detail', $row->getId())
 			->data('toggle-detail-grid', $this->grid->getName());
 
-		if ($this->icon) {
-			$a->add(Html::el('span')->class(DataGrid::$icon_prefix.$this->icon));
-			
-			if (strlen($this->text)) {
-				$a->add('&nbsp;');
-			}
-		}
+		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
 		$a->add($this->text);
 
@@ -115,7 +112,7 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Get primary column for where clause
-	 * @return string
+	 * @return string|bool
 	 */
 	public function getPrimaryWhereColumn()
 	{
@@ -269,7 +266,7 @@ class ItemDetail extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Get item detail renderer
-	 * @return string
+	 * @return callable
 	 */
 	public function getRenderer()
 	{

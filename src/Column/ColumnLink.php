@@ -12,6 +12,7 @@ use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
+use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 
 class ColumnLink extends Column
 {
@@ -27,11 +28,6 @@ class ColumnLink extends Column
 	protected $class;
 
 	/**
-	 * @var DataGrid
-	 */
-	protected $grid;
-
-	/**
 	 * @var array
 	 */
 	protected $params;
@@ -44,17 +40,17 @@ class ColumnLink extends Column
 
 	/**
 	 * @param DataGrid $grid
+	 * @param string $key
 	 * @param string $column
 	 * @param string $name
 	 * @param string $href
-	 * @param array $params
+	 * @param array  $params
 	 */
-	public function __construct(DataGrid $grid, $column, $name, $href, $params)
+	public function __construct(DataGrid $grid, $key, $column, $name, $href, $params)
 	{
-		parent::__construct($column, $name);
+		parent::__construct($grid, $key, $column, $name);
 
 		$this->href   = $href;
-		$this->grid   = $grid;
 		$this->params = $params;
 	}
 
@@ -69,20 +65,18 @@ class ColumnLink extends Column
 		/**
 		 * Renderer function may be used
 		 */
-		if ($renderer = $this->getRenderer()) {
-			if (!$renderer->getConditionCallback()) {
-				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
-			}
-
-			if (call_user_func_array($renderer->getConditionCallback(), [$row->getItem()])) {
-				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
-			}
+		try {
+			return $this->useRenderer($row);
+		} catch (DataGridColumnRendererException $e) {
+			/**
+			 * Do not use renderer
+			 */
 		}
 
 		$value = parent::render($row);
 
 		$a = Html::el('a')
-			->href($this->createLink($this->href, $this->getItemParams($row)))
+			->href($this->createLink($this->href, $this->getItemParams($row, $this->params)))
 			->setText($value);
 
 		if ($this->title) { $a->title($this->title); }
@@ -131,22 +125,6 @@ class ColumnLink extends Column
 	public function getClass()
 	{
 		return $this->class;
-	}
-
-	/**
-	 * Get item params (E.g. action may be called id => $item->id, name => $item->name, ...)
-	 * @param  Row   $row
-	 * @return array
-	 */
-	protected function getItemParams(Row $row)
-	{
-		$return = [];
-
-		foreach ($this->params as $param_name => $param) {
-			$return[is_string($param_name) ? $param_name : $param] = $row->getValue($param);
-		}
-
-		return $return;
 	}
 
 }

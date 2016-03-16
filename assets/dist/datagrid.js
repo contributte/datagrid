@@ -1,5 +1,24 @@
 var datagridSortable, datagridSortableTree;
 
+$(document).on('click', '[data-datagrid-confirm]', function(e) {
+  if (!confirm($(e.target).closest('a').attr('data-datagrid-confirm'))) {
+    e.stopPropagation();
+    return e.preventDefault();
+  }
+});
+
+$.nette.ext('datagrid.confirm', {
+  before: function(xhr, settings) {
+    var confirm_message;
+    if (settings.nette) {
+      confirm_message = settings.nette.el.data('datagrid-confirm');
+      if (confirm_message) {
+        return confirm(confirm_message);
+      }
+    }
+  }
+});
+
 $(document).on('change', 'select[data-autosubmit]', function() {
   return $(this).closest('form').submit();
 }).on('change', 'input[data-autosubmit][data-autosubmit-change]', function(e) {
@@ -28,7 +47,7 @@ $(document).on('change', 'select[data-autosubmit]', function() {
 });
 
 document.addEventListener('change', function(e) {
-  var at_least_one, event, grid, i, input, inputs, len, results, select;
+  var at_least_one, event, grid, i, ie, input, inputs, len, results, select;
   grid = e.target.getAttribute('data-check');
   if (grid) {
     at_least_one = document.querySelector('.datagrid-' + grid + ' input[data-check]:checked');
@@ -41,9 +60,15 @@ document.addEventListener('change', function(e) {
         select.value = "";
       }
     }
-    event = new Event('change', {
-      'bubbles': true
-    });
+    ie = window.navigator.userAgent.indexOf("MSIE ");
+    if (ie) {
+      event = document.createEvent('Event');
+      event.initEvent('change', true, true);
+    } else {
+      event = new Event('change', {
+        'bubbles': true
+      });
+    }
     if (select) {
       select.dispatchEvent(event);
     }
@@ -55,9 +80,15 @@ document.addEventListener('change', function(e) {
     for (i = 0, len = inputs.length; i < len; i++) {
       input = inputs[i];
       input.checked = e.target.checked;
-      event = new Event('change', {
-        'bubbles': true
-      });
+      ie = window.navigator.userAgent.indexOf("MSIE ");
+      if (ie) {
+        event = document.createEvent('Event');
+        event.initEvent('change', true, true);
+      } else {
+        event = new Event('change', {
+          'bubbles': true
+        });
+      }
       results.push(input.dispatchEvent(event));
     }
     return results;
@@ -190,8 +221,10 @@ datagridSortableTree();
 
 $.nette.ext('datagrid.happy', {
   success: function() {
-    var c, checked_rows, class_selector, classes, event, grid, grids, i, input, j, len, len1, results;
-    window.happy.reset();
+    var c, checked_rows, class_selector, classes, event, grid, grids, i, ie, input, j, len, len1, results;
+    if (window.happy) {
+      window.happy.reset();
+    }
     grids = $('.datagrid');
     results = [];
     for (i = 0, len = grids.length; i < len; i++) {
@@ -207,9 +240,15 @@ $.nette.ext('datagrid.happy', {
         input = document.querySelector(class_selector + ' input[name=toggle-all]');
         if (input) {
           input.checked = false;
-          event = new Event('change', {
-            'bubbles': true
-          });
+          ie = window.navigator.userAgent.indexOf("MSIE ");
+          if (ie) {
+            event = document.createEvent('Event');
+            event.initEvent('change', true, true);
+          } else {
+            event = new Event('change', {
+              'bubbles': true
+            });
+          }
           results.push(input.dispatchEvent(event));
         } else {
           results.push(void 0);
@@ -253,18 +292,6 @@ $.nette.ext('datagrid.url', {
         return window.history.pushState({
           path: url
         }, '', url);
-      }
-    }
-  }
-});
-
-$.nette.ext('datagrid.confirm', {
-  before: function(xhr, settings) {
-    var confirm_message;
-    if (settings.nette) {
-      confirm_message = settings.nette.el.data('confirm');
-      if (confirm_message) {
-        return confirm(confirm_message);
       }
     }
   }

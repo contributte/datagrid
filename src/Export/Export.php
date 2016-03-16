@@ -12,12 +12,15 @@ use Ublaboo\DataGrid\DataGrid;
 use Nette\Utils\Callback;
 use Nette\Utils\Html;
 use Ublaboo;
+use Ublaboo\DataGrid\Traits;
 
 class Export extends Ublaboo\DataGrid\Object
 {
 
+	use Traits\ButtonIconTrait;
+
 	/**
-	 * @var bool
+	 * @var string
 	 */
 	protected $text;
 
@@ -88,13 +91,7 @@ class Export extends Ublaboo\DataGrid\Object
 			'href'  => $this->link
 		]);
 
-		if ($this->icon) {
-			$a->add(Html::el('span')->class(DataGrid::$icon_prefix.$this->icon));
-
-			if (strlen($this->text)) {
-				$a->add('&nbsp;');
-			}
-		}
+		$this->tryAddIcon($a, $this->getIcon(), $this->getTitle());
 
 		$a->add($this->text);
 
@@ -170,6 +167,7 @@ class Export extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Get export icon
+	 * @return string
 	 */
 	public function getIcon()
 	{

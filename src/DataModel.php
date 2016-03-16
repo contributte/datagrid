@@ -9,8 +9,14 @@
 namespace Ublaboo\DataGrid;
 
 use Nette;
+use DibiFluent;
+use DibiOdbcDriver;
+use DibiMsSqlDriver;
+use Nette\Database\Table\Selection;
+use Doctrine\ORM\QueryBuilder;
 use Ublaboo\DataGrid\DataSource\IDataSource;
 use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
+use Ublaboo\DataGrid\Utils\Sorting;
 
 class DataModel
 {
@@ -22,7 +28,7 @@ class DataModel
 
 
 	/**
-	 * @param IDataSource|array|\DibiFluent|Nette\Database\Table\Selection|\Kdyby\Doctrine\QueryBuilder $source
+	 * @param IDataSource|array|DibiFluent|Selection|QueryBuilder $source
 	 * @param string $primary_key
 	 */
 	public function __construct($source, $primary_key)
@@ -30,29 +36,30 @@ class DataModel
 		if ($source instanceof IDataSource) {
 			/**
 			 * Custom user datasource is ready for use
+			 *
+			 * $source = $source;
 			 */
-			$source = $source;
 
 		} else if (is_array($source)) {
 			$source = new DataSource\ArrayDataSource($source);
 
-		} else if ($source instanceof \DibiFluent) {
+		} else if (class_exists(DibiFluent::class) && $source instanceof DibiFluent) {
 			$driver = $source->getConnection()->getDriver();
 
-			if ($driver instanceof \DibiOdbcDriver) {
+			if ($driver instanceof DibiOdbcDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
-			} else if ($driver instanceof \DibiMsSqlDriver) {
+			} else if ($driver instanceof DibiMsSqlDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
 			} else {
 				$source = new DataSource\DibiFluentDataSource($source, $primary_key);
 			}
 
-		} else if ($source instanceof Nette\Database\Table\Selection) {
+		} else if (class_exists(Selection::class) && $source instanceof Selection) {
 			$source = new DataSource\NetteDatabaseTableDataSource($source, $primary_key);
 
-		} else if ($source instanceof \Kdyby\Doctrine\QueryBuilder) {
+		} else if (class_exists(QueryBuilder::class) && $source instanceof QueryBuilder) {
 			$source = new DataSource\DoctrineDataSource($source, $primary_key);
 
 		} else {
@@ -79,13 +86,13 @@ class DataModel
 	/**
 	 * Filter/paginate/limit/order data source and return reset of data in array
 	 * @param  Components\DataGridPaginator\DataGridPaginator $paginator_component
-	 * @param  string                                          $sort
+	 * @param  Sorting                                        $sorting
 	 * @param  array                                          $filters
 	 * @return array
 	 */
 	public function filterData(
 		Components\DataGridPaginator\DataGridPaginator $paginator_component = NULL,
-		$sort,
+		Sorting $sorting,
 		array $filters
 	) {
 		$this->data_source->filter($filters);
@@ -97,13 +104,15 @@ class DataModel
 			$paginator = $paginator_component->getPaginator();
 			$paginator->setItemCount($this->data_source->getCount());
 
-			$this->data_source->sort($sort)->limit(
+			$this->data_source->sort($sorting)->limit(
 				$paginator->getOffset(),
 				$paginator->getItemsPerPage()
 			);
+
+			return $this->data_source->getData();
 		}
 
-		return $this->data_source->getData();
+		return $this->data_source->sort($sorting)->getData();
 	}
 
 

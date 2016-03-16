@@ -8,6 +8,8 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Ublaboo\DataGrid\Utils\Sorting;
+
 interface IDataSource
 {
 
@@ -28,7 +30,7 @@ interface IDataSource
 	/**
 	 * Filter data
 	 * @param array $filters
-	 * @return void
+	 * @return static
 	 */
 	public function filter(array $filters);
 
@@ -36,7 +38,7 @@ interface IDataSource
 	/**
 	 * Filter data - get one row
 	 * @param array $filter
-	 * @return void
+	 * @return static
 	 */
 	public function filterOne(array $filter);
 
@@ -45,16 +47,16 @@ interface IDataSource
 	 * Apply limit and offet on data
 	 * @param int $offset
 	 * @param int $limit
-	 * @return void
+	 * @return static
 	 */
 	public function limit($offset, $limit);
 
 
 	/**
-	 * Order data
-	 * @param array $sorting
-	 * @return void
+	 * Sort data
+	 * @param Sorting $sorting
+	 * @return static
 	 */
-	public function sort(array $sorting);
+	public function sort(Sorting $sorting);
 
 }

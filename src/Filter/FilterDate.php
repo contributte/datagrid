@@ -44,16 +44,6 @@ class FilterDate extends Filter
 
 
 	/**
-	 * Get filter condition
-	 * @return array
-	 */
-	public function getCondition()
-	{
-		return [$this->column => $this->getValue()];
-	}
-
-
-	/**
 	 * Set format for datepicker etc
 	 * @param string $php_format
 	 * @param string $js_format

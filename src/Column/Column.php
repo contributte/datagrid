@@ -10,8 +10,12 @@ namespace Ublaboo\DataGrid\Column;
 
 use Nette\InvalidArgumentException;
 use Ublaboo;
+use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
+use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
+use Nette\Utils\Html;
 
 abstract class Column extends Ublaboo\DataGrid\Object
 {
@@ -20,6 +24,11 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	 * @var string
 	 */
 	protected $column;
+
+	/**
+	 * @var string
+	 */
+	protected $key;
 
 	/**
 	 * @var string
@@ -42,9 +51,19 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	protected $template;
 
 	/**
-	 * @var boolean
+	 * @var bool|string
 	 */
-	protected $is_sortable = FALSE;
+	protected $sortable = FALSE;
+
+	/**
+	 * @var bool
+	 */
+	protected $sortable_reset_pagination = FALSE;
+
+	/**
+	 * @var null|callable
+	 */
+	protected $sortable_callback = NULL;
 
 	/**
 	 * @var array
@@ -64,20 +83,35 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	/**
 	 * @var array
 	 */
-	protected $template_variables;
+	protected $template_variables = [];
 
 	/**
 	 * @var callable
 	 */
 	protected $editable_callback;
 
+	/**
+	 * @var DataGrid
+	 */
+	protected $grid;
 
 	/**
-	 * @param string $column
-	 * @param string $name
+	 * Cached html elements
+	 * @var array
 	 */
-	public function __construct($column, $name)
+	protected $el_cache = [];
+
+
+	/**
+	 * @param DataGrid $grid
+	 * @param string   $key
+	 * @param string   $column
+	 * @param string   $name
+	 */
+	public function __construct(DataGrid $grid, $key, $column, $name)
 	{
+		$this->grid = $grid;
+		$this->key = $key;
 		$this->column = $column;
 		$this->name = $name;
 	}
@@ -93,14 +127,12 @@ abstract class Column extends Ublaboo\DataGrid\Object
 		/**
 		 * Renderer function may be used
 		 */
-		if ($renderer = $this->getRenderer()) {
-			if (!$renderer->getConditionCallback()) {
-				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
-			}
-
-			if (call_user_func_array($renderer->getConditionCallback(), [$row->getItem()])) {
-				return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
-			}
+		try {
+			return $this->useRenderer($row);
+		} catch (DataGridColumnRendererException $e) {
+			/**
+			 * Do not use renderer
+			 */
 		}
 
 		/**
@@ -116,8 +148,33 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 
 	/**
+	 * Try to render item with custom renderer
+	 * @param  Row   $row
+	 * @return mixed
+	 */
+	public function useRenderer(Row $row)
+	{
+		$renderer = $this->getRenderer();
+
+		if (!$renderer) {
+			throw new DataGridColumnRendererException;
+		}
+
+		if ($renderer->getConditionCallback()) {
+			if (!call_user_func_array($renderer->getConditionCallback(), [$row->getItem()])) {
+				throw new DataGridColumnRendererException;
+			}
+
+			return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
+		}
+
+		return call_user_func_array($renderer->getCallback(), [$row->getItem()]);
+	}
+
+
+	/**
 	 * Should be column values escaped in latte?
-	 * @param boolean $template_escaping
+	 * @param bool $template_escaping
 	 */
 	public function setTemplateEscaping($template_escaping = TRUE)
 	{
@@ -135,11 +192,11 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Set column sortable or not
-	 * @param bool $sortable
+	 * @param bool|string $sortable
 	 */
 	public function setSortable($sortable = TRUE)
 	{
-		$this->is_sortable = (bool) $sortable;
+		$this->sortable = is_string($sortable) ? $sortable : (bool) $sortable;
 
 		return $this;
 	}
@@ -147,11 +204,67 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Tell whether column is sortable
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isSortable()
 	{
-		return $this->is_sortable;
+		return (bool) $this->sortable;
+	}
+
+
+	/**
+	 * Shoud be the pagination reseted after sorting?
+	 * @param bool $sortable_reset_pagination
+	 * @return static
+	 */
+	public function setSortableResetPagination($sortable_reset_pagination = TRUE)
+	{
+		$this->sortable_reset_pagination = (bool) $sortable_reset_pagination;
+
+		return $this;
+	}
+
+
+	/**
+	 * DO reset pagination after sorting?
+	 * @return bool
+	 */
+	public function sortableResetPagination()
+	{
+		return $this->sortable_reset_pagination;
+	}
+
+
+	/**
+	 * Set custom ORDER BY clause
+	 * @param callable $sortable_callback
+	 * @return static
+	 */
+	public function setSortableCallback(callable $sortable_callback)
+	{
+		$this->sortable_callback = $sortable_callback;
+
+		return $this;
+	}
+
+
+	/**
+	 * Get custom ORDER BY clause
+	 * @return callable|null
+	 */
+	public function getSortableCallback()
+	{
+		return $this->sortable_callback;
+	}
+
+
+	/**
+	 * Get column to sort by
+	 * @return string
+	 */
+	public function getSortingColumn()
+	{
+		return is_string($this->sortable) ? $this->sortable : $this->column;
 	}
 
 
@@ -176,6 +289,9 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	}
 
 
+	/**
+	 * @return string
+	 */
 	public function getName()
 	{
 		return $this->name;
@@ -197,7 +313,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Tell whether columns has replacements
-	 * @return boolean
+	 * @return bool
 	 */
 	public function hasReplacements()
 	{
@@ -317,7 +433,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Tell whether data source is sorted by this collumn
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isSortedBy()
 	{
@@ -331,7 +447,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	 */
 	public function setSort(array $sort)
 	{
-		$this->sort = $sort[$this->column];
+		$this->sort = $sort[$this->getSortingColumn()];
 
 		return $this;
 	}
@@ -344,18 +460,18 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	public function getSortNext()
 	{
 		if ($this->sort == 'ASC') {
-			return [$this->column => 'DESC'];
+			return [$this->key => 'DESC'];
 		} else if ($this->sort == 'DESC') {
-			return [$this->column => NULL];
+			return [$this->key => NULL];
 		}
 
-		return [$this->column => 'ASC'];
+		return [$this->key => 'ASC'];
 	}
 
 
 	/**
 	 * Is sorting ascending?
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isSortAsc()
 	{
@@ -377,7 +493,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Has column some alignment?
-	 * @return boolean [description]
+	 * @return bool [description]
 	 */
 	public function hasAlign()
 	{
@@ -391,7 +507,7 @@ abstract class Column extends Ublaboo\DataGrid\Object
 	 */
 	public function getAlign()
 	{
-		return $this->align;
+		return $this->align ?: 'left';
 	}
 
 
@@ -419,11 +535,74 @@ abstract class Column extends Ublaboo\DataGrid\Object
 
 	/**
 	 * Is column editable?
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isEditable()
 	{
 		return (bool) $this->getEditableCallback();
+	}
+
+
+	/**
+	 * Set attributes for both th and td element
+	 * @param array $attrs
+	 * @return static
+	 */
+	public function addAttributes(array $attrs)
+	{
+		$this->getElementPrototype('td')->addAttributes($attrs);
+		$this->getElementPrototype('th')->addAttributes($attrs);
+
+		return $this;
+	}
+
+
+	/**
+	 * Get th/td column element
+	 * @param  string   $tag th|td
+	 * @param  string   $key
+	 * @param  Row|NULL $row
+	 * @return Html
+	 */
+	public function getElementPrototype($tag, $key = NULL, Row $row = NULL)
+	{
+		/**
+		 * Get cached element
+		 */
+		if (empty($this->el_cache[$tag])) {
+			$this->el_cache[$tag] = $el = $el = Html::el($tag);
+		} else {
+			$el = $this->el_cache[$tag];
+		}
+
+		/**
+		 * If class was set by user via $el->class = '', fix it
+		 */
+		if (!empty($el->class) && is_string($el->class)) {
+			$class = $el->class;
+			unset($el->class);
+
+			$el->class[] = $class;
+		}
+
+		$el->class[] = "text-{$this->getAlign()}";
+
+		/**
+		 * Method called from datagrid template, set appropriate classes and another attributes
+		 */
+		if ($key !== NULL && $row !== NULL) {
+			$el->class[] = "col-{$key}";
+
+			if ($tag == 'td') {
+				if ($this->isEditable()) {
+					$link = $this->grid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
+
+					$el->data('datagrid-editable-url', $link);
+				}
+			}
+		}
+
+		return $el;
 	}
 
 
@@ -450,6 +629,24 @@ abstract class Column extends Ublaboo\DataGrid\Object
 		}
 
 		return $parent->link($href, $params);
+	}
+
+
+	/**
+	 * Get row item params (E.g. action may be called id => $item->id, name => $item->name, ...)
+	 * @param  Row   $row
+	 * @param  array $params_list
+	 * @return array
+	 */
+	protected function getItemParams(Row $row, array $params_list)
+	{
+		$return = [];
+
+		foreach ($params_list as $param_name => $param) {
+			$return[is_string($param_name) ? $param_name : $param] = $row->getValue($param);
+		}
+
+		return $return;
 	}
 
 }
