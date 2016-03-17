@@ -40,5 +40,5 @@
 .ublaboo-spinner>i:nth-of-type(2){animation-delay:-1.5s}
 .ublaboo-spinner>i:nth-of-type(3){animation-delay:-3s}
 .ublaboo-spinner>i:nth-of-type(4){animation-delay:-4.5s}
-.ublaboo-spinner.ublaboo-spinner-small{width:30px;height:30px}
+.ublaboo-spinner.ublaboo-spinner-small{width:28px;height:28px}
 .ublaboo-spinner.ublaboo-spinner-small>i{width:4px;height:4px;border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px;animation-name:ublaboo-spinner-small}

@@ -156,6 +156,15 @@
 					display: none;
 				}
 
+				.datagrid-inline-edit {
+					.form-control {
+						margin: -3px;
+						padding-bottom: 4px;
+						padding-top: 4px;
+						height: 28px;
+					}
+				}
+
 				td {
 					&[data-datagrid-editable-url] {
 						&.editing {
@@ -164,12 +173,12 @@
 								margin: -3px;
 							}
 						}
+					}
 
-						&.edited {
-							animation-name: edited;
-							animation-duration: 1.2s;
-							animation-delay: 0;
-						}
+					&.edited {
+						animation-name: edited;
+						animation-duration: 1.2s;
+						animation-delay: 0;
 					}
 				}
 			}
@@ -205,6 +214,12 @@
 
 		td.col-action {
 			text-align: right;
+		}
+
+		.col-action-inline-edit {
+			.btn {
+				width: 50%;
+			}
 		}
 	}
 

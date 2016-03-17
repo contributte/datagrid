@@ -16,7 +16,8 @@ $.nette.ext('datagrid.confirm', {
 				return confirm(confirm_message)
 })
 
-
+# Datagrid autosubmit
+#
 $(document).on('change', 'select[data-autosubmit]', ->
 	$(this).closest('form').submit();
 ).on('change', 'input[data-autosubmit][data-autosubmit-change]', (e) ->
@@ -368,3 +369,11 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 			cell.html(value)
 		)
 )
+
+# Datagrid after big inline edit notification
+#
+$.nette.ext('datagrid.after_inline_edit', {
+	success: (payload) ->
+		if payload._datagrid_inline_edited
+			$('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited')
+})

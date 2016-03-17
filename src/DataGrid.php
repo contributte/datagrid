@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 use Ublaboo\DataGrid\Utils\Sorting;
+use Ublaboo\DataGrid\InlineEdit\InlineEdit;
 
 /**
  * @method onRedraw()
@@ -251,6 +252,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $columns_visibility = [];
 
+	/**
+	 * @var InlineEdit
+	 */
+	protected $inlineEdit;
+
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -360,6 +366,8 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->template->add('icon_prefix', static::$icon_prefix);
 		$this->template->add('items_detail', $this->items_detail);
 		$this->template->add('columns_visibility', $this->columns_visibility);
+
+		$this->template->add('inlineEdit', $this->inlineEdit);
 
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
@@ -1109,9 +1117,21 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$form = new Form($this, 'filter');
 
+		$form->setMethod('get');
+
 		$form->setTranslator($this->getTranslator());
 
-		$form->setMethod('get');
+		/**
+		 * InlineEdit part
+		 */
+		$inline_edit_container = $form->addContainer('inline_edit');
+
+		if ($this->inlineEdit instanceof InlineEdit) {
+			$inline_edit_container->addSubmit('submit', 'Save');
+			$inline_edit_container->addSubmit('cancel', 'Cancel');
+
+			$this->inlineEdit->onControlAdd($inline_edit_container);
+		}
 
 		/**
 		 * Filter part
@@ -1150,6 +1170,30 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if ($this->getPresenter()->isAjax()) {
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
+				return;
+			}
+		}
+
+		if (isset($form['inline_edit'])) {
+			$inline_edit = $form['inline_edit'];
+
+			if ($inline_edit['submit']->isSubmittedBy() || $inline_edit['cancel']->isSubmittedBy()) {
+				$id = $form->getHttpData(Form::DATA_LINE, 'inline_edit[_id]');
+				$primary_where_column = $form->getHttpData(
+					Form::DATA_LINE,
+					'inline_edit[_primary_where_column]'
+				);
+
+				if ($inline_edit['submit']->isSubmittedBy()) {
+					$this->inlineEdit->onSubmit($values->inline_edit);
+
+					if ($this->getPresenter()->isAjax()) {
+						$this->getPresenter()->payload->_datagrid_inline_edited = $id;
+					}
+				}
+
+				$this->redrawItem($id, $primary_where_column);
+
 				return;
 			}
 		}
@@ -2084,6 +2128,46 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return isset($condition[$key]) ? $condition[$key] : FALSE;
+	}
+
+
+	/********************************************************************************
+	 *                                 INLINE EDIT                                  *
+	 ********************************************************************************/
+
+
+	/**
+	 * @return InlineEdit
+	 */
+	public function addInlineEdit($primary_where_column = NULL)
+	{
+		$this->inlineEdit = new InlineEdit($this, $primary_where_column ?: $this->primary_key);
+
+		return $this->inlineEdit;
+	}
+
+
+	/**
+	 * @return InlineEdit|null
+	 */
+	public function getInlineEdit()
+	{
+		return $this->inlineEdit;
+	}
+
+
+	public function handleInlineEdit($id)
+	{
+		if ($this->inlineEdit) {
+			$this->inlineEdit->setItemId($id);
+
+			$primary_where_column = $this->inlineEdit->getPrimaryWhereColumn();
+
+			$this['filter']['inline_edit']->addHidden('_id', $id);
+			$this['filter']['inline_edit']->addHidden('_primary_where_column', $primary_where_column);
+
+			$this->redrawItem($id, $primary_where_column);
+		}
 	}
 
 

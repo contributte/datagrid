@@ -408,3 +408,11 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
     });
   }
 });
+
+$.nette.ext('datagrid.after_inline_edit', {
+  success: function(payload) {
+    if (payload._datagrid_inline_edited) {
+      return $('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited');
+    }
+  }
+});

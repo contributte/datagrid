@@ -137,12 +137,19 @@
   display: none;
 }
 
+.datagrid table tbody tr .datagrid-inline-edit .form-control {
+  margin: -3px;
+  padding-bottom: 4px;
+  padding-top: 4px;
+  height: 28px;
+}
+
 .datagrid table tbody tr td[data-datagrid-editable-url].editing textarea {
   padding: 2px;
   margin: -3px;
 }
 
-.datagrid table tbody tr td[data-datagrid-editable-url].edited {
+.datagrid table tbody tr td.edited {
   animation-name: edited;
   animation-duration: 1.2s;
   animation-delay: 0;
@@ -182,6 +189,10 @@
 
 .datagrid table td.col-action {
   text-align: right;
+}
+
+.datagrid table .col-action-inline-edit .btn {
+  width: 50%;
 }
 
 .datagrid .datagrid-tree > .datagrid-tree-header .datagrid-tree-item-right-actions-action {

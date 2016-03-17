@@ -27,14 +27,16 @@
 .datagrid table tbody tr.row-item-detail{display:none}
 .datagrid table tbody tr.row-item-detail.toggled{display:table-row}
 .datagrid table tbody tr.row-item-detail .item-detail-content,.datagrid table tbody tr.row-item-detail-helper{display:none}
+.datagrid table tbody tr .datagrid-inline-edit .form-control{margin:-3px;padding-bottom:4px;padding-top:4px;height:28px}
 .datagrid table tbody tr td[data-datagrid-editable-url].editing textarea{padding:2px;margin:-3px}
-.datagrid table tbody tr td[data-datagrid-editable-url].edited{animation-name:edited;animation-duration:1.2s;animation-delay:0}
+.datagrid table tbody tr td.edited{animation-name:edited;animation-duration:1.2s;animation-delay:0}
 .datagrid table td.col-checkbox,.datagrid table th.col-checkbox{padding:0;width:2.1em;text-align:center;vertical-align:middle}
 .datagrid table td.col-checkbox .happy-checkbox,.datagrid table th.col-checkbox .happy-checkbox{margin-right:0}
 .datagrid table td.col-checkbox.col-checkbox-first,.datagrid table th.col-checkbox.col-checkbox-first{border-top-color:transparent}
 .datagrid table th.col-checkbox{background-color:#f9f9f9}
 .datagrid table td.col-action,.datagrid table th.col-action{white-space:nowrap;width:10px}
 .datagrid table td.col-action{text-align:right}
+.datagrid table .col-action-inline-edit .btn{width:50%}
 .datagrid .datagrid-tree>.datagrid-tree-header .datagrid-tree-item-right-actions-action{opacity:0}
 .datagrid .datagrid-tree>.datagrid-tree-item{margin-left:20px}
 .datagrid .datagrid-tree .datagrid-tree-item{position:relative}

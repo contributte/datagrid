@@ -1,14 +1,15 @@
 {**
- * @param array    $columns            Available columns
- * @param array    $actions            Available actions
- * @param array    $exports            Available exports
- * @param array    $filters            Available filters
- * @param Form     $filter             Walkaround for latte (does not know $form in snippet in foreach, etc)
- * @param Row[]    $rows               List of rows (each contain a item from data source)
- * @param DataGrid $control            Parent (DataGrid)
- * @param string   $original_template  Original template file path
- * @param string   $icon_prefix        Icon prefix (fa fa-)
- * @param array    $columns_visibility What columns are visible
+ * @param array           $columns            Available columns
+ * @param array           $actions            Available actions
+ * @param array           $exports            Available exports
+ * @param array           $filters            Available filters
+ * @param Form            $filter             Walkaround for latte (does not know $form in snippet in foreach, etc)
+ * @param Row[]           $rows               List of rows (each contain a item from data source)
+ * @param DataGrid        $control            Parent (DataGrid)
+ * @param string          $original_template  Original template file path
+ * @param string          $icon_prefix        Icon prefix (fa fa-)
+ * @param array           $columns_visibility What columns are visible
+ * @param InlineEdit|null $inlineEdit  Inline editing data
  *}
 
 <div class="datagrid card card-1 primary datagrid-{!$control->getName()}">
@@ -138,7 +139,7 @@
 								{/if}
 							{!$th->endTag()}
 						{/foreach}
-						<th n:if="$actions || $control->isSortable() || $items_detail" class="col-action text-center">
+						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit" class="col-action text-center">
 							{_'ublaboo_datagrid.action'}
 						</th>
 					</tr>
@@ -150,50 +151,80 @@
 							{var $item = $row->getItem()}
 
 							{if !isset($toggle_detail)}
-								<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
-									<td n:if="$control->hasGroupActions()" class="col-checkbox">
-										{if $row->hasGroupAction()}
-											<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$row->getId()}]">
-										{/if}
-									</td>
-									{foreach $columns as $key => $column}
-										{var $col = 'col-' . $key}
+								{if $inlineEdit && $inlineEdit->getItemId() == $row->getId()}
+									{? $inlineEdit->onSetDefaults($filter['inline_edit'], $item); }
 
-										{var $td = $column->getElementPrototype('td', $key, $row)}
-										{!$td->startTag()}
-											{if $column->hasTemplate()}
-												{include $column->getTemplate(), row => $row, item => $item, (expand) $column->getTemplateVariables()}
-											{else}
-												{ifset #$col}
-													{include #$col, item => $item}
-												{else}
-													{if $column->isTemplateEscaped()}
-														{$column->render($row)}
-													{else}
-														{!$column->render($row)}
-													{/if}
-												{/ifset}
-											{/if}
-										{!$td->endTag()}
-									{/foreach}
-									<td n:if="$actions || $control->isSortable() || $items_detail" class="col-action">
-										{foreach $actions as $key => $action}
-											{if $row->hasAction($key)}
-												{if $action->hasTemplate()}
-													{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables()}
-												{else}
-													{!$action->render($row)}
+									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
+										<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+
+										{foreach $columns as $key => $column}
+											{var $col = 'col-' . $key}
+
+											{var $td = $column->getElementPrototype('td', $key, $row)}
+											{var $td->class[] = 'datagrid-inline-edit'}
+											{!$td->startTag()}
+												{if isset($filter['inline_edit'][$key])}
+													{input $filter['inline_edit'][$key], class => 'form-control input-sm'}
 												{/if}
-											{/if}
+											{!$td->endTag()}
 										{/foreach}
-										<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
-											<i class="{$icon_prefix}arrows"></i>
-										</span>
-										{if $items_detail}
-											{!$items_detail->renderButton($row)}
-										{/if}
-									</td>
-								</tr>
+
+										<td class="col-action col-action-inline-edit">
+											{input $filter['inline_edit']['cancel'], class => 'btn btn-xs btn-danger'}
+											{input $filter['inline_edit']['submit'], class => 'btn btn-xs btn-primary'}
+											{input $filter['inline_edit']['_id']}
+											{input $filter['inline_edit']['_primary_where_column']}
+										</td>
+									</tr>
+								{else}
+									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
+										<td n:if="$control->hasGroupActions()" class="col-checkbox">
+											{if $row->hasGroupAction()}
+												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$row->getId()}]">
+											{/if}
+										</td>
+										{foreach $columns as $key => $column}
+											{var $col = 'col-' . $key}
+
+											{var $td = $column->getElementPrototype('td', $key, $row)}
+											{!$td->startTag()}
+												{if $column->hasTemplate()}
+													{include $column->getTemplate(), row => $row, item => $item, (expand) $column->getTemplateVariables()}
+												{else}
+													{ifset #$col}
+														{include #$col, item => $item}
+													{else}
+														{if $column->isTemplateEscaped()}
+															{$column->render($row)}
+														{else}
+															{!$column->render($row)}
+														{/if}
+													{/ifset}
+												{/if}
+											{!$td->endTag()}
+										{/foreach}
+										<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit" class="col-action">
+											{foreach $actions as $key => $action}
+												{if $row->hasAction($key)}
+													{if $action->hasTemplate()}
+														{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables()}
+													{else}
+														{!$action->render($row)}
+													{/if}
+												{/if}
+											{/foreach}
+											<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
+												<i class="{$icon_prefix}arrows"></i>
+											</span>
+											{if $inlineEdit}
+												{!$inlineEdit->renderButton($row)}
+											{/if}
+											{if $items_detail}
+												{!$items_detail->renderButton($row)}
+											{/if}
+										</td>
+									</tr>
+								{/if}
 							{/if}
 
 							{**
