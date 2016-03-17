@@ -191,10 +191,6 @@
   text-align: right;
 }
 
-.datagrid table .col-action-inline-edit .btn {
-  width: 50%;
-}
-
 .datagrid .datagrid-tree > .datagrid-tree-header .datagrid-tree-item-right-actions-action {
   opacity: 0;
 }
