@@ -16,8 +16,9 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 use Nette\Utils\Html;
+use Nette;
 
-abstract class FilterableColumn
+abstract class FilterableColumn extends Nette\Object
 {
 
 	/**
