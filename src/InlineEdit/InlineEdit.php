@@ -14,6 +14,11 @@ use Ublaboo\DataGrid\DataGrid;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\Traits;
 
+/**
+ * @method onSubmit($id, Nette\Utils\ArrayHash $values)
+ * @method onControlAdd(Nette\Forms\Container $container)
+ * @method onSetDefaults(Nette\Forms\Container $container, $item)
+ */
 class InlineEdit extends Nette\Object
 {
 

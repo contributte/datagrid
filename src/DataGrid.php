@@ -1185,7 +1185,7 @@ class DataGrid extends Nette\Application\UI\Control
 				);
 
 				if ($inline_edit['submit']->isSubmittedBy()) {
-					$this->inlineEdit->onSubmit($values->inline_edit);
+					$this->inlineEdit->onSubmit($id, $values->inline_edit);
 
 					if ($this->getPresenter()->isAjax()) {
 						$this->getPresenter()->payload->_datagrid_inline_edited = $id;
