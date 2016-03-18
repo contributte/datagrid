@@ -1174,9 +1174,9 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
-		if (isset($form['inline_edit'])) {
-			$inline_edit = $form['inline_edit'];
+		$inline_edit = $form['inline_edit'];
 
+		if (isset($inline_edit) && isset($inline_edit['submit']) && isset($inline_edit['cancel'])) {
 			if ($inline_edit['submit']->isSubmittedBy() || $inline_edit['cancel']->isSubmittedBy()) {
 				$id = $form->getHttpData(Form::DATA_LINE, 'inline_edit[_id]');
 				$primary_where_column = $form->getHttpData(
