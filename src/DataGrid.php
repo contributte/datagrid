@@ -1127,8 +1127,8 @@ class DataGrid extends Nette\Application\UI\Control
 		$inline_edit_container = $form->addContainer('inline_edit');
 
 		if ($this->inlineEdit instanceof InlineEdit) {
-			$inline_edit_container->addSubmit('submit', 'Save');
-			$inline_edit_container->addSubmit('cancel', 'Cancel');
+			$inline_edit_container->addSubmit('submit', 'ublaboo_datagrid.save');
+			$inline_edit_container->addSubmit('cancel', 'ublaboo_datagrid.cancel');
 
 			$this->inlineEdit->onControlAdd($inline_edit_container);
 		}
