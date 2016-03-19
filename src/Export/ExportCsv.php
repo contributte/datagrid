@@ -31,17 +31,42 @@ class ExportCsv extends Export
 	 */
 	protected $name;
 
+	/**
+	 * @var string
+	 */
+	protected $output_encoding = 'utf-8';
 
 	/**
-	 * @param string $text
-	 * @param string $csv_file_name
-	 * @param bool   $filtered
+	 * @var string
 	 */
-	public function __construct($text, $csv_file_name, $filtered)
-	{
+	protected $delimiter = ';';
+
+
+	/**
+	 * @param string      $text
+	 * @param string      $csv_file_name
+	 * @param bool        $filtered
+	 * @param string|null $output_encoding
+	 * @param string|null $delimiter
+	 */
+	public function __construct(
+		$text,
+		$csv_file_name,
+		$filtered,
+		$output_encoding = NULL,
+		$delimiter = NULL
+	) {
 		$this->text = $text;
 		$this->filtered = (bool) $filtered;
 		$this->name = strpos($csv_file_name, '.csv') !== FALSE ? $csv_file_name : "$csv_file_name.csv";
+
+		if ($output_encoding) {
+			$this->output_encoding = $output_encoding;
+		}
+
+		if ($delimiter) {
+			$this->delimiter = $delimiter;
+		}
 	}
 
 
@@ -60,7 +85,9 @@ class ExportCsv extends Export
 		if ($grid->getPresenter() instanceof Nette\Application\UI\Presenter) {
 			$grid->getPresenter()->sendResponse(new CSVResponse(
 				$csv_data_model->getSimpleData(),
-				$this->name
+				$this->name,
+				$this->output_encoding,
+				$this->delimiter
 			));
 
 			exit(0);

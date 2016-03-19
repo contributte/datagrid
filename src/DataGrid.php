@@ -1297,25 +1297,41 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Add already implemented csv export
-	 * @param string $text
-	 * @param string $csv_file_name
+	 * @param string      $text
+	 * @param string      $csv_file_name
+	 * @param string|null $output_encoding
+	 * @param string|null $delimiter
 	 * @return Export\Export
 	 */
-	public function addExportCsv($text, $csv_file_name)
+	public function addExportCsv($text, $csv_file_name, $output_encoding = NULL, $delimiter = NULL)
 	{
-		return $this->addToExports(new Export\ExportCsv($text, $csv_file_name, FALSE));
+		return $this->addToExports(new Export\ExportCsv(
+			$text,
+			$csv_file_name,
+			FALSE,
+			$output_encoding,
+			$delimiter
+		));
 	}
 
 
 	/**
 	 * Add already implemented csv export, but for filtered data
-	 * @param string $text
-	 * @param string $csv_file_name
+	 * @param string      $text
+	 * @param string      $csv_file_name
+	 * @param string|null $output_encoding
+	 * @param string|null $delimiter
 	 * @return Export\Export
 	 */
-	public function addExportCsvFiltered($text, $csv_file_name)
+	public function addExportCsvFiltered($text, $csv_file_name, $output_encoding = NULL, $delimiter = NULL)
 	{
-		return $this->addToExports(new Export\ExportCsv($text, $csv_file_name, TRUE));
+		return $this->addToExports(new Export\ExportCsv(
+			$text,
+			$csv_file_name,
+			TRUE,
+			$output_encoding,
+			$delimiter
+		));
 	}
 
 
