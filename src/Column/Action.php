@@ -22,6 +22,11 @@ class Action extends Column
 	use Traits\ButtonIconTrait;
 
 	/**
+	 * @var string
+	 */
+	public static $data_confirm_attribute_name = 'datagrid-confirm';
+
+	/**
 	 * @var string|callable
 	 */
 	protected $title;
@@ -116,9 +121,17 @@ class Action extends Column
 
 		$a->add($this->translate($this->getName()));
 
-		if ($this->title) { $a->title($this->translate($this->getTitle($row))); }
-		if ($this->class) { $a->class($this->getClass($row)); }
-		if ($confirm = $this->getConfirm($row)) { $a->data('datagrid-confirm', $this->translate($confirm)); }
+		if ($this->title) {
+			$a->title($this->translate($this->getTitle($row)));
+		}
+
+		if ($this->class) {
+			$a->class($this->getClass($row));
+		}
+
+		if ($confirm = $this->getConfirm($row)) {
+			$a->data(static::$data_confirm_attribute_name, $this->translate($confirm));
+		}
 
 		return $a;
 	}
