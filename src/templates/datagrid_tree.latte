@@ -34,11 +34,13 @@
 						<div class="datagrid-tree-item-right-actions-action">
 							{var $tmp_row = reset($rows)}
 
-							{foreach $actions as $action}
-								{if $action->hasTemplate()}
-									{include $action->getTemplate(), item => $tmp_row->getItem()}
-								{else}
-									{!$action->render($tmp_row)}
+							{foreach $actions as $key => $action}
+								{if $tmp_row->hasAction($key)}
+									{if $action->hasTemplate()}
+										{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables()}
+									{else}
+										{!$action->render($tmp_row)}
+									{/if}
 								{/if}
 							{/foreach}
 
@@ -107,11 +109,13 @@
 						</div>
 						<div class="datagrid-tree-item-right-actions">
 							<div class="datagrid-tree-item-right-actions-action">
-								{foreach $actions as $action}
-									{if $action->hasTemplate()}
-										{include $action->getTemplate(), item => $item}
-									{else}
-										{!$action->render($row)}
+								{foreach $actions as $key => $action}
+									{if $row->hasAction($key)}
+										{if $action->hasTemplate()}
+											{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables()}
+										{else}
+											{!$action->render($row)}
+										{/if}
 									{/if}
 								{/foreach}
 
