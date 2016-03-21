@@ -247,7 +247,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 
 	/**
-	 * Apply limit and offet on data
+	 * Apply limit and offset on data
 	 * @param int $offset
 	 * @param int $limit
 	 * @return static

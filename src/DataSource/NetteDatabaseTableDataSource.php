@@ -9,7 +9,6 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Nette\Database\Table\Selection;
-use Nette\Utils\Callback;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\Sorting;
 
@@ -211,7 +210,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 
 	/**
-	 * Apply limit and offet on data
+	 * Apply limit and offset on data
 	 * @param int $offset
 	 * @param int $limit
 	 * @return static

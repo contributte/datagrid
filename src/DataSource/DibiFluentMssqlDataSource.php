@@ -134,7 +134,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 
 	/**
-	 * Apply limit and offet on data
+	 * Apply limit and offset on data
 	 * @param int $offset
 	 * @param int $limit
 	 * @return static
@@ -150,6 +150,5 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 		return $this;
 	}
-
 
 }
