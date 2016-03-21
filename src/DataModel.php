@@ -17,6 +17,8 @@ use Doctrine\ORM\QueryBuilder;
 use Ublaboo\DataGrid\DataSource\IDataSource;
 use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
 use Ublaboo\DataGrid\Utils\Sorting;
+use Ublaboo\DataGrid\Utils\NetteDatabaseSelectionHelper;
+use Nette\Database\Drivers as NDBDrivers;
 
 class DataModel
 {
@@ -57,7 +59,13 @@ class DataModel
 			}
 
 		} else if (class_exists(Selection::class) && $source instanceof Selection) {
-			$source = new DataSource\NetteDatabaseTableDataSource($source, $primary_key);
+			$driver = NetteDatabaseSelectionHelper::getDriver($source);
+
+			if ($driver instanceof NDBDrivers\MsSqlDriver || $driver instanceof NDBDrivers\SqlsrvDriver) {
+				$source = new DataSource\NetteDatabaseTableMssqlDataSource($source, $primary_key);
+			} else {
+				$source = new DataSource\NetteDatabaseTableDataSource($source, $primary_key);
+			}
 
 		} else if (class_exists(QueryBuilder::class) && $source instanceof QueryBuilder) {
 			$source = new DataSource\DoctrineDataSource($source, $primary_key);
