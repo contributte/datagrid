@@ -91,8 +91,9 @@ class ColumnLink extends Column
 
 		if ($this->title) { $a->title($this->title); }
 		if ($this->class) { $a->class($this->class); }
+		
 		$element = $a;
-
+		
 		if($this->icon != NULL) {
 			$emptyEl = Html::el('span');
 
@@ -105,7 +106,7 @@ class ColumnLink extends Column
 			$element = $emptyEl;
 		}
 
-		return $a;
+		return $element;
 	}
 
 
