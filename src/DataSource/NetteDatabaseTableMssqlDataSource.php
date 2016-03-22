@@ -65,31 +65,4 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 		}
 	}
 
-
-	/**
-	 * Apply limit and offset on data
-	 * @param int $offset
-	 * @param int $limit
-	 * @return static
-	 */
-	public function limit($offset, $limit)
-	{
-		$context = NetteDatabaseSelectionHelper::getContext($this->data_source);
-
-		$sql = (string) $this->data_source->getSql();
-
-		$params = $this->data_source->getSqlBuilder()->getParameters();
-
-		$params[] = $offset;
-		$params[] = $limit;
-
-		array_unshift($params, "$sql OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-
-		$result = call_user_func_array([$context, 'query'], $params);
-
-		$this->data = $result->fetchAll();
-
-		return $this;
-	}
-
 }
