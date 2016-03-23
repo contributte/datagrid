@@ -88,6 +88,8 @@ class ColumnLink extends Column
 		$a = Html::el('a')
 			->href($this->createLink($this->href, $this->getItemParams($row, $this->params)))
 			->setText($value);
+			
+		$a->addAttributes($this->data_attributes);
 
 		if ($this->title) { $a->title($this->title); }
 		if ($this->class) { $a->class($this->class); }
