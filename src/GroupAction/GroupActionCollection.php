@@ -16,12 +16,10 @@ class GroupActionCollection extends Nette\Object
 
 	const ID_ATTRIBUTE_PREFIX = 'group_action_item_';
 
-
 	/**
 	 * @var GroupAction[]
 	 */
 	protected $group_actions = [];
-
 
 	/**
 	 * Get assambled form
@@ -30,6 +28,7 @@ class GroupActionCollection extends Nette\Object
 	 */
 	public function addToFormContainer($container)
 	{
+		/** @var Nette\Application\UI\Form $form */
 		$form = $container->lookup('Nette\Application\UI\Form');
 		$translator = $form->getTranslator();
 		$main_options = [];
@@ -48,9 +47,16 @@ class GroupActionCollection extends Nette\Object
 		 * Second for creating select for each "sub"-action
 		 */
 		foreach ($this->group_actions as $id => $action) {
-			if ($action->hasOptions()) {
-				$container->addSelect($id, '', $action->getOptions())
-					->setAttribute('id', static::ID_ATTRIBUTE_PREFIX.$id);
+			if ($action instanceof GroupSelectAction) {
+				if ($action->hasOptions()) {
+					$container->addSelect($id, '', $action->getOptions())
+						->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id);
+				}
+			} else if ($action instanceof GroupTextAction) {
+				$container->addText($id, '')
+					->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id)
+					->addConditionOn($container['group_action'], Form::EQUAL, $id)
+						->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
 			}
 		}
 
@@ -103,15 +109,32 @@ class GroupActionCollection extends Nette\Object
 
 
 	/**
-	 * Add one group action to collection of actions
+	 * Add one group action (select box) to collection of actions
+	 *
 	 * @param string $title
-	 * @param array $options
+	 * @param array  $options
+	 *
+	 * @return GroupAction
 	 */
-	public function addGroupAction($title, $options)
+	public function addGroupSelectAction($title, $options)
 	{
 		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
 
-		return $this->group_actions[$id] = new GroupAction($title, $options);
+		return $this->group_actions[$id] = new GroupSelectAction($title, $options);
+	}
+
+	/**
+	 * Add one group action (text input) to collection of actions
+	 *
+	 * @param string $title
+	 *
+	 * @return GroupAction
+	 */
+	public function addGroupTextAction($title)
+	{
+		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
+
+		return $this->group_actions[$id] = new GroupTextAction($title);
 	}
 
 }

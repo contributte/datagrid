@@ -11,37 +11,27 @@ namespace Ublaboo\DataGrid\GroupAction;
 use Nette;
 
 /**
- * @method void onSelect()
+ * @method void onSelect(array $ids, string $value)
  */
-class GroupAction extends Nette\Object
+abstract class GroupAction extends Nette\Object
 {
-
 	/**
 	 * @var callable[]
 	 */
 	public $onSelect = [];
 
 	/**
-	 * @var array
-	 */
-	protected $options;
-
-	/**
 	 * @var string
 	 */
 	protected $title;
 
-
 	/**
 	 * @param string $title
-	 * @param array $options
 	 */
-	public function __construct($title, $options)
+	public function __construct($title)
 	{
 		$this->title = $title;
-		$this->options = $options;
 	}
-
 
 	/**
 	 * Get action title
@@ -51,25 +41,4 @@ class GroupAction extends Nette\Object
 	{
 		return $this->title;
 	}
-
-
-	/**
-	 * Get action options
-	 * @return array
-	 */
-	public function getOptions()
-	{
-		return $this->options;
-	}
-
-
-	/**
-	 * Has the aciton some options?
-	 * @return boolean
-	 */
-	public function hasOptions()
-	{
-		return (bool) $this->options;
-	}
-
 }

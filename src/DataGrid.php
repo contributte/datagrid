@@ -1364,16 +1364,36 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * Add group actino
+	 * Alias for add group select action
 	 * @param string $title
 	 * @param array  $options
 	 * @return GroupAction\GroupAction
 	 */
 	public function addGroupAction($title, $options = [])
 	{
-		return $this->getGroupActionCollection()->addGroupAction($title, $options);
+		return $this->getGroupActionCollection()->addGroupSelectAction($title, $options);
 	}
 
+	/**
+	 * Add group action (select box)
+	 * @param string $title
+	 * @param array  $options
+	 * @return GroupAction\GroupAction
+	 */
+	public function addGroupSelectAction($title, $options = [])
+	{
+		return $this->getGroupActionCollection()->addGroupSelectAction($title, $options);
+	}
+
+	/**
+	 * Add group action (text input)
+	 * @param string $title
+	 * @return GroupAction\GroupAction
+	 */
+	public function addGroupTextAction($title)
+	{
+		return $this->getGroupActionCollection()->addGroupTextAction($title);
+	}
 
 	/**
 	 * Get collection of all group actions
