@@ -240,7 +240,7 @@
 										{elseif $items_detail}
 											<td colspan="{$control->getColumnsCount()}">
 												<div class="item-detail-content">
-													{if $items_detail->type == 'template'}
+													{if $items_detail->getType() == 'template'}
 														{include $items_detail->template, item => $item}
 													{else}
 														{!$items_detail->render($item)}
