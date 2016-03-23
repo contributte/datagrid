@@ -86,8 +86,7 @@ class ColumnLink extends Column
 		$value = parent::render($row);
 
 		$a = Html::el('a')
-			->href($this->createLink($this->href, $this->getItemParams($row, $this->params)))
-			->setText($value);
+			->href($this->createLink($this->href, $this->getItemParams($row, $this->params)));
 			
 		if (!empty($this->data_attributes)) {
 			foreach ($this->data_attributes as $key => $value) {
@@ -100,17 +99,15 @@ class ColumnLink extends Column
 		
 		$element = $a;
 		
-		if($this->icon != NULL) {
-			$emptyEl = Html::el('span');
+		if ($this->icon) {
+			$a->add(Html::el('span')->class(DataGrid::$icon_prefix . $this->icon));
 
-			$span = Html::el('span')->addAttributes(array("class" => $this->icon));
-			$span->setHtml("&nbsp");
-
-			$emptyEl->add($span);
-			$emptyEl->add($a);
-
-			$element = $emptyEl;
+			if (strlen($value)) {
+				$a->add('&nbsp;');
+			}
 		}
+
+		$a->add($value);
 
 		return $element;
 	}
@@ -118,12 +115,12 @@ class ColumnLink extends Column
 
 	/**
 	 * Set icon before simple link
-	 * @param string $class
+	 * @param string      $icon
 	 * @return ColumnLink
 	 */
-	public function setIcon($class = NULL)
+	public function setIcon($icon = NULL)
 	{
-		$this->icon = $class;
+		$this->icon = $icon;
 
 		return $this;
 	}
@@ -132,7 +129,7 @@ class ColumnLink extends Column
 	/**
 	 * Setting data attributes
 	 * @param string $key
-	 * @param mixed $value
+	 * @param mixed  $value
 	 * @return static
 	 */
 	public function setDataAttribute($key, $value)
