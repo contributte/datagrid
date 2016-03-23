@@ -67,12 +67,12 @@
 											{if $visibility['visible']}
 												<a n:href="hideColumn!, column => $v_key" class="ajax">
 													<i class="{$icon_prefix}check-square-o"></i> 
-													{$visibility['name']}
+													{_$visibility['name']}
 												</a>
 											{else}
 												<a n:href="showColumn!, column => $v_key" class="ajax">
 													<i class="{$icon_prefix}square-o"></i> 
-													{$visibility['name']}
+													{_$visibility['name']}
 												</a>
 											{/if}
 										</li>
