@@ -243,6 +243,11 @@ class DataGrid extends Nette\Application\UI\Control
 	];
 
 	/**
+	 * @var array
+	 */
+	protected $column_callbacks = [];
+
+	/**
 	 * @var bool
 	 */
 	protected $can_hide_columns = FALSE;
@@ -2119,18 +2124,32 @@ class DataGrid extends Nette\Application\UI\Control
 	 ********************************************************************************/
 
 
+	/**
+	 * @param  callable $condition
+	 * @return void
+	 */
 	public function allowRowsGroupAction(callable $condition)
 	{
 		$this->row_conditions['group_action'] = $condition;
 	}
 
 
+	/**
+	 * @param  string   $key
+	 * @param  callable $condition
+	 * @return void
+	 */
 	public function allowRowsAction($key, callable $condition)
 	{
 		$this->row_conditions['action'][$key] = $condition;
 	}
 
 
+	/**
+	 * @param  string      $name
+	 * @param  string|null $key
+	 * @return bool|callable
+	 */
 	public function getRowCondition($name, $key = NULL)
 	{
 		if (!isset($this->row_conditions[$name])) {
@@ -2144,6 +2163,32 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return isset($condition[$key]) ? $condition[$key] : FALSE;
+	}
+
+
+	/********************************************************************************
+	 *                               COLUMN CALLBACK                                *
+	 ********************************************************************************/
+
+
+	/**
+	 * @param  string   $key
+	 * @param  callable $callback
+	 * @return void
+	 */
+	public function addColumnCallback($key, callable $callback)
+	{
+		$this->column_callbacks[$key] = $callback;
+	}
+
+
+	/**
+	 * @param  string $key
+	 * @return callable|null
+	 */
+	public function getColumnCallback($key)
+	{
+		return empty($this->column_callbacks[$key]) ? NULL : $this->column_callbacks[$key];
 	}
 
 

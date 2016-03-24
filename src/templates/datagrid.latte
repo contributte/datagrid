@@ -185,6 +185,7 @@
 										</td>
 										{foreach $columns as $key => $column}
 											{var $col = 'col-' . $key}
+											{? $column = $row->applyColumnCallback($key, clone $column)}
 
 											{var $td = $column->getElementPrototype('td', $key, $row)}
 											{!$td->startTag()}

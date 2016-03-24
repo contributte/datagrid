@@ -215,4 +215,21 @@ class Row extends Nette\Object
 		return $condition ? $condition($this->item) : TRUE;
 	}
 
+
+	/**
+	 * @param  string        $key
+	 * @param  Column\Column $column
+	 * @return void
+	 */
+	public function applyColumnCallback($key, Column\Column $column)
+	{
+		$callback = $this->datagrid->getColumnCallback($key);
+
+		if ($callback !== NULL) {
+			call_user_func($callback, $column, $this->getItem());
+		}
+
+		return $column;
+	}
+
 }
