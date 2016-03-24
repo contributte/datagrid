@@ -117,6 +117,20 @@ class ColumnStatus extends Column
 
 
 	/**
+	 * @param  mixed $value
+	 * @return void
+	 */
+	public function removeOption($value)
+	{
+		foreach ($this->options as $key => $option) {
+			if ($option->getValue() == $value) {
+				unset($this->options[$key]);
+			}
+		}
+	}
+
+
+	/**
 	 * Column can have variables that will be passed to custom template scope
 	 * @return array
 	 */
