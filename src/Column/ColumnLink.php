@@ -85,6 +85,10 @@ class ColumnLink extends Column
 
 		$value = parent::render($row);
 
+		if (!$value && !$this->icon) {
+			return NULL;
+		}
+
 		$a = Html::el('a')
 			->href($this->createLink($this->href, $this->getItemParams($row, $this->params)));
 			
@@ -98,7 +102,7 @@ class ColumnLink extends Column
 		if ($this->class) { $a->class($this->class); }
 		
 		$element = $a;
-		
+
 		if ($this->icon) {
 			$a->add(Html::el('span')->class(DataGrid::$icon_prefix . $this->icon));
 
@@ -107,7 +111,11 @@ class ColumnLink extends Column
 			}
 		}
 
-		$a->add($value);
+		if ($this->isTemplateEscaped()) {
+			$a->add(htmlspecialchars((string) $value, ENT_NOQUOTES, 'UTF-8'));
+		} else {
+			$a->add($value);
+		}
 
 		return $element;
 	}
