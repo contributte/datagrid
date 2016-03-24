@@ -331,6 +331,8 @@ class Action extends Column
 			if (!is_string($value)) {
 				throw new DataGridException("Action {$name} callback has to return a string");
 			}
+
+			return $value;
 		}
 
 		return $property;
