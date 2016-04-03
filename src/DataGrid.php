@@ -1133,7 +1133,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if ($this->inlineEdit instanceof InlineEdit) {
 			$inline_edit_container->addSubmit('submit', 'ublaboo_datagrid.save');
-			$inline_edit_container->addSubmit('cancel', 'ublaboo_datagrid.cancel');
+			$inline_edit_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
+				->setValidationScope(FALSE);
 
 			$this->inlineEdit->onControlAdd($inline_edit_container);
 		}
@@ -2272,7 +2273,7 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$count = sizeof($this->getColumns());
 
-		if (!empty($this->actions) || $this->isSortable() || $this->getItemsDetail()) {
+		if (!empty($this->actions) || $this->isSortable() || $this->getItemsDetail() || $this->getInlineEdit()) {
 			$count++;
 		}
 
