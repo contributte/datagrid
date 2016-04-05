@@ -31,6 +31,7 @@ class SimpleTranslator extends Nette\Object implements Nette\Localization\ITrans
 		'ublaboo_datagrid.previous' => 'Previous',
 		'ublaboo_datagrid.next' => 'Next',
 		'ublaboo_datagrid.choose' => 'Choose',
+		'ublaboo_datagrid.choose_input_required' => 'Group action text not allow empty value',
 		'ublaboo_datagrid.execute' => 'Execute',
 		'ublaboo_datagrid.save' => 'Save',
 		'ublaboo_datagrid.cancel' => 'Cancel',
