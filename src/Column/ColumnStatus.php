@@ -101,6 +101,7 @@ class ColumnStatus extends Column
 	 * Add option to status select
 	 * @param mixed $value
 	 * @param string $text
+	 * @return Option
 	 */
 	public function addOption($value, $text)
 	{
