@@ -8,12 +8,13 @@
 
 namespace Ublaboo\DataGrid\Column;
 
+use Nette\Object;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo;
 use Ublaboo\DataGrid\Traits;
 
-class ItemDetail
+class ItemDetail extends Object
 {
 
 	use Traits\ButtonIconTrait;
