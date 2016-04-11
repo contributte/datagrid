@@ -47,7 +47,7 @@ class InlineEdit extends Nette\Object
 	/**
 	 * @var string
 	 */
-	protected $title;
+	protected $title = 'edit';
 
 	/**
 	 * @var string

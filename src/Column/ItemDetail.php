@@ -37,7 +37,7 @@ class ItemDetail
 	/**
 	 * @var string
 	 */
-	protected $title;
+	protected $title = 'show';
 
 	/**
 	 * @var string
