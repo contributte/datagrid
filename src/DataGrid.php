@@ -1218,6 +1218,18 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->filter[$key] = $value;
 		}
 
+		if ($this->getPresenter()->isAjax()) {
+			$this->getPresenter()->payload->_datagrid_sort = [];
+
+			foreach ($this->columns as $key => $column) {
+				if ($column->isSortable()) {
+					$this->getPresenter()->payload->_datagrid_sort[$key] = $this->link('sort!', [
+						'sort' => $column->getSortNext()
+					]);
+				}
+			}
+		}
+
 		$this->reload();
 	}
 

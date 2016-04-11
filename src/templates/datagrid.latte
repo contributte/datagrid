@@ -101,7 +101,7 @@
 									{include #$col_header, column => $column}
 								{else}
 									{if $column->isSortable()}
-										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()">
+										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()" id="datagrid-sort-{$key}">
 											{_$column->getName()}
 											{if $column->isSortedBy()}
 												{if $column->isSortAsc()}

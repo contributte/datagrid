@@ -258,6 +258,12 @@ $.nette.ext('datagrid.url', {
 				window.history.pushState({path: url}, '', url)
 })
 
+$.nette.ext('datagrid.sort', {
+	success: (payload) ->
+		if payload._datagrid_sort
+			for key, href of payload._datagrid_sort
+				$('#datagrid-sort-' + key).attr('href', href)
+})
 
 $.nette.ext('datargid.item_detail', {
 	before: (xhr, settings) ->
