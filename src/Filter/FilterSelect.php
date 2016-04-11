@@ -19,6 +19,11 @@ class FilterSelect extends Filter
 	private $options;
 
 	/**
+	 * @var bool
+	 */
+	private $translateOptions = FALSE;
+
+	/**
 	 * @var string
 	 */
 	protected $template = 'datagrid_filter_select.latte';
@@ -47,8 +52,31 @@ class FilterSelect extends Filter
 		$form = $container->lookup('Nette\Application\UI\Form');
 		$translator = $form->getTranslator();
 
-		$container->addSelect($this->key, $translator->translate($this->name), $this->options)
-			->setTranslator(NULL);
+		$select = $container->addSelect($this->key, $translator->translate($this->name), $this->options);
+
+		if (!$this->translateOptions) {
+			$select->setTranslator(NULL);
+		}
+	}
+
+
+	/**
+	 * @param  bool  $translateOptions
+	 * @return static
+	 */
+	public function setTranslateOptions($translateOptions)
+	{
+		$this->translateOptions = (bool) $translateOptions;
+		return $this;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function getTranslateOptions()
+	{
+		return $this->translateOptions;
 	}
 
 
