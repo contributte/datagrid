@@ -45,7 +45,7 @@ class DataModel
 		} else if (is_array($source)) {
 			$source = new DataSource\ArrayDataSource($source);
 
-		} else if (class_exists(DibiFluent::class) && $source instanceof DibiFluent) {
+		} else if (class_exists('DibiFluent') && $source instanceof DibiFluent) {
 			$driver = $source->getConnection()->getDriver();
 
 			if ($driver instanceof DibiOdbcDriver) {
@@ -58,7 +58,7 @@ class DataModel
 				$source = new DataSource\DibiFluentDataSource($source, $primary_key);
 			}
 
-		} else if (class_exists(Selection::class) && $source instanceof Selection) {
+		} else if (class_exists('Nette\Database\Table\Selection') && $source instanceof Selection) {
 			$driver = NetteDatabaseSelectionHelper::getDriver($source);
 
 			if ($driver instanceof NDBDrivers\MsSqlDriver || $driver instanceof NDBDrivers\SqlsrvDriver) {
@@ -67,7 +67,7 @@ class DataModel
 				$source = new DataSource\NetteDatabaseTableDataSource($source, $primary_key);
 			}
 
-		} else if (class_exists(QueryBuilder::class) && $source instanceof QueryBuilder) {
+		} else if (class_exists('Doctrine\ORM\QueryBuilder') && $source instanceof QueryBuilder) {
 			$source = new DataSource\DoctrineDataSource($source, $primary_key);
 
 		} else {
