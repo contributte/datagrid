@@ -137,10 +137,13 @@ class Option extends Nette\Object
 
 	/**
 	 * @param string $class_secondary
+	 * @return static
 	 */
 	public function setClassSecondary($class_secondary)
 	{
 		$this->class_secondary = (string) $class_secondary;
+
+		return $this;
 	}
 
 
@@ -155,10 +158,13 @@ class Option extends Nette\Object
 
 	/**
 	 * @param string $class_in_dropdown
+	 * @return static
 	 */
 	public function setClassInDropdown($class_in_dropdown)
 	{
 		$this->class_in_dropdown = (string) $class_in_dropdown;
+
+		return $this;
 	}
 
 
