@@ -287,13 +287,15 @@ class DataGrid extends Nette\Application\UI\Control
 			/**
 			 * Get session
 			 */
-			$this->grid_session = $presenter->getSession($this->getSessionSectionName());
+			if ($this->remember_state) {
+				$this->grid_session = $presenter->getSession($this->getSessionSectionName());
 
-			/**
-			 * Try to find previous filters/pagination/sort in session
-			 */
-			$this->findSessionFilters();
-			$this->findDefaultSort();
+				/**
+				 * Try to find previous filters/pagination/sort in session
+				 */
+				$this->findSessionFilters();
+				$this->findDefaultSort();
+			}
 		}
 	}
 
