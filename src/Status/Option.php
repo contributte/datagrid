@@ -42,7 +42,12 @@ class Option extends Nette\Object
 	/**
 	 * @var string
 	 */
-	protected $class_secondary = 'ajax btn btn-xs';
+	protected $class_secondary = 'btn btn-xs';
+
+	/**
+	 * @var string
+	 */
+	protected $class_in_dropdown = 'ajax';
 
 	/**
 	 * @var string|callable
@@ -145,6 +150,24 @@ class Option extends Nette\Object
 	public function getClassSecondary()
 	{
 		return $this->class_secondary;
+	}
+
+
+	/**
+	 * @param string $class_in_dropdown
+	 */
+	public function setClassInDropdown($class_in_dropdown)
+	{
+		$this->class_in_dropdown = (string) $class_in_dropdown;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getClassInDropdown()
+	{
+		return $this->class_in_dropdown;
 	}
 
 

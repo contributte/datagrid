@@ -16,7 +16,7 @@
 	{/if}
 	<ul class="dropdown-menu">
 		<li n:foreach="$status->getOptions() as $option">
-			<a class="ajax" n:href="changeStatus!, id => $row->getId(), key => $status->getKey(), value => $option->getValue()">
+			<a class="{$option->getClassInDropdown()}" n:href="changeStatus!, id => $row->getId(), key => $status->getKey(), value => $option->getValue()">
 				{_$option->getText()}
 			</a>
 		</li>
