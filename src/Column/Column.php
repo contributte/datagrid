@@ -81,6 +81,11 @@ abstract class Column extends FilterableColumn
 	 */
 	protected $el_cache = [];
 
+	/**
+	 * @var bool
+	 */
+	protected $default_hide = FALSE;
+
 
 	/**
 	 * Render row item into template
@@ -568,6 +573,24 @@ abstract class Column extends FilterableColumn
 		}
 
 		return $el;
+	}
+
+
+	/**
+	 * @param bool $default_hide
+	 * @return static
+	 */
+	public function setDefaultHide($default_hide = TRUE)
+	{
+		$this->default_hide = (bool) $default_hide;
+
+		return $this;
+	}
+
+
+	public function getDefaultHide()
+	{
+		return $this->default_hide;
 	}
 
 

@@ -1286,7 +1286,15 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		foreach ($this->getSessionData() as $key => $value) {
-			if (!in_array($key, ['_grid_per_page', '_grid_sort', '_grid_page', '_grid_hidden_columns'])) {
+			$other_session_keys = [
+				'_grid_per_page',
+				'_grid_sort',
+				'_grid_page',
+				'_grid_hidden_columns',
+				'_grid_hidden_columns_manipulated'
+			];
+
+			if (!in_array($key, $other_session_keys)) {
 				$this->filter[$key] = $value;
 			}
 		}
@@ -1715,6 +1723,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function handleShowAllColumns()
 	{
 		$this->deleteSesssionData('_grid_hidden_columns');
+		$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
 
 		$this->redrawControl();
 
@@ -1740,6 +1749,7 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$this->saveSessionData('_grid_hidden_columns', $columns);
+		$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
 
 		$this->redrawControl();
 
@@ -1766,6 +1776,7 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$this->saveSessionData('_grid_hidden_columns', $columns);
+		$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
 
 		$this->redrawControl();
 
@@ -2335,15 +2346,32 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getColumns()
 	{
-		foreach ($this->getSessionData('_grid_hidden_columns', []) as $column) {
+		if (!$this->getSessionData('_grid_hidden_columns_manipulated', FALSE)) {
+			$columns_to_hide = [];
+
+			foreach ($this->columns as $key => $column) {
+				if ($column->getDefaultHide()) {
+					$columns_to_hide[] = $key;
+				}
+			}
+
+			if (!empty($columns_to_hide)) {
+				$this->saveSessionData('_grid_hidden_columns', $columns_to_hide);
+				$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
+			}
+		}
+
+		$hidden_columns = $this->getSessionData('_grid_hidden_columns', []);
+		
+		foreach ($hidden_columns as $column) {
 			if (!empty($this->columns[$column])) {
 				$this->columns_visibility[$column] = [
 					'visible' => FALSE,
 					'name' => $this->columns[$column]->getName()
 				];
-			}
 
-			$this->removeColumn($column);
+				$this->removeColumn($column);
+			}
 		}
 
 		return $this->columns;
