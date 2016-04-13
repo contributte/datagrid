@@ -19,6 +19,8 @@ use Ublaboo\DataGrid\InlineEdit\InlineEdit;
 
 /**
  * @method onRedraw()
+ * @method onRender()
+ * @method onColumnAdd()
  */
 class DataGrid extends Nette\Application\UI\Control
 {
@@ -27,6 +29,16 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @var callable[]
 	 */
 	public $onRedraw;
+
+	/**
+	 * @var callable[]
+	 */
+	public $onRender = [];
+
+	/**
+	 * @var callable[]
+	 */
+	public $onColumnAdd;
 
 	/**
 	 * @var string
@@ -68,16 +80,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @persistent
 	 */
 	public $filter = [];
-
-	/**
-	 * @var Callable[]
-	 */
-	public $onRender = [];
-
-	/**
-	 * @var callable[]
-	 */
-	public $onColumnAdd;
 
 	/**
 	 * @var callable|null
@@ -272,6 +274,12 @@ class DataGrid extends Nette\Application\UI\Control
 		parent::__construct($parent, $name);
 
 		$this->monitor('Nette\Application\UI\Presenter');
+
+		/**
+		 * Try to find previous filters/pagination/sort in session
+		 */
+		$this->onRender[] = [$this, 'findSessionFilters'];
+		$this->onRender[] = [$this, 'findDefaultSort'];
 	}
 
 
@@ -289,12 +297,6 @@ class DataGrid extends Nette\Application\UI\Control
 			 */
 			if ($this->remember_state) {
 				$this->grid_session = $presenter->getSession($this->getSessionSectionName());
-
-				/**
-				 * Try to find previous filters/pagination/sort in session
-				 */
-				$this->findSessionFilters();
-				$this->findDefaultSort();
 			}
 		}
 	}
@@ -325,7 +327,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->template->setTranslator($this->getTranslator());
 
 		/**
-		 * Invoke some possible events
+		 * Invoke possible events
 		 */
 		$this->onRender($this);
 
