@@ -77,6 +77,11 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @var array
+	 */
+	public $components = [];
+
+	/**
+	 * @var array
 	 * @persistent
 	 */
 	public $filter = [];
@@ -2164,6 +2169,18 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return $this->items_detail;
+	}
+
+
+	/**
+	 * Factory for components from callback
+	 * @return Nette\ComponentModel\IComponent
+	 */
+	protected function createComponent($name)
+	{
+		return (isset($this->components[$name]))
+			? $this->components[$name]()
+			: parent::createComponent($name);
 	}
 
 
