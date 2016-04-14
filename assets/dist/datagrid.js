@@ -392,6 +392,9 @@ $.nette.ext('datagrid.tree', {
 $(document).on('click', '[data-datagrid-editable-url]', function(event) {
   var cell, cell_height, cell_lines, cell_padding, line_height, text_height, textarea, value;
   cell = $(this);
+  if (cell.hasClass('datagrid-inline-edit')) {
+    return;
+  }
   if (!cell.hasClass('editing')) {
     cell.addClass('editing');
     value = cell.html().trim().replace('<br>', '\n');

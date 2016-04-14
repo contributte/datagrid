@@ -340,6 +340,9 @@ $.nette.ext('datagrid.tree', {
 $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 	cell = $(this)
 
+	if cell.hasClass('datagrid-inline-edit')
+		return
+
 	if !cell.hasClass('editing')
 		cell.addClass('editing')
 		value = cell.html().trim().replace('<br>', '\n')
