@@ -390,7 +390,7 @@ $.nette.ext('datagrid.tree', {
 });
 
 $(document).on('click', '[data-datagrid-editable-url]', function(event) {
-  var cell, cell_height, cell_lines, cell_padding, line_height, text_height, textarea, value;
+  var attr_name, attr_value, attrs, cell, cell_height, cell_lines, cell_padding, input, line_height, submit, value;
   cell = $(this);
   if (cell.hasClass('datagrid-inline-edit')) {
     return;
@@ -399,17 +399,26 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
     cell.addClass('editing');
     value = cell.html().trim().replace('<br>', '\n');
     cell.data('value', value);
-    textarea = $('<textarea class="form-control">' + value + '</textarea>');
-    cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10);
-    cell_height = cell.outerHeight();
-    text_height = cell_height - cell_padding;
-    line_height = Math.round(parseFloat(cell.css('line-height')));
-    cell_lines = (cell_height - (2 * cell_padding)) / line_height;
-    textarea.attr('rows', Math.round(cell_lines));
+    if (cell.data('datagrid-editable-type') === 'textarea') {
+      input = $('<textarea>' + value + '</textarea>');
+      cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10);
+      cell_height = cell.outerHeight();
+      line_height = Math.round(parseFloat(cell.css('line-height')));
+      cell_lines = (cell_height - (2 * cell_padding)) / line_height;
+      input.attr('rows', Math.round(cell_lines));
+    } else {
+      input = $('<input type="' + cell.data('datagrid-editable-type') + '">');
+      input.val(value);
+    }
+    attrs = cell.data('datagrid-editable-attrs');
+    for (attr_name in attrs) {
+      attr_value = attrs[attr_name];
+      input.attr(attr_name, attr_value);
+    }
     cell.removeClass('edited');
-    cell.html(textarea);
-    return cell.find('textarea').focus().on('blur', function() {
-      value = $(this).val();
+    cell.html(input);
+    submit = function(cell, el) {
+      value = el.val();
       if (value !== cell.data('value')) {
         $.nette.ajax({
           url: cell.data('datagrid-editable-url'),
@@ -423,6 +432,17 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
       }
       cell.removeClass('editing');
       return cell.html(value);
+    };
+    return cell.find('input,textarea').focus().on('blur', function() {
+      return submit(cell, $(this));
+    }).on('keydown', function(e) {
+      if (cell.data('datagrid-editable-type') !== 'textarea') {
+        if (e.which === 13) {
+          e.stopPropagation();
+          e.preventDefault();
+          return submit(cell, $(this));
+        }
+      }
     });
   }
 });

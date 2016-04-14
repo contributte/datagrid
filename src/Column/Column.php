@@ -76,6 +76,11 @@ abstract class Column extends FilterableColumn
 	protected $editable_callback;
 
 	/**
+	 * @var array
+	 */
+	protected $editable_element = ['textarea', ['class' => 'form-control']];
+
+	/**
 	 * Cached html elements
 	 * @var array
 	 */
@@ -514,6 +519,30 @@ abstract class Column extends FilterableColumn
 
 
 	/**
+	 * Element is by default textarea, user can chchge that
+	 * @param string $el_type
+	 * @param array  $attrs
+	 * @return static
+	 */
+	public function setEditableInputType($el_type, array $attrs = [])
+	{
+		$this->editable_element = [$el_type, $attrs];
+
+		return $this;
+	}
+
+
+	/**
+	 * [getEditableInputType description]
+	 * @return array
+	 */
+	public function getEditableInputType()
+	{
+		return $this->editable_element;
+	}
+
+
+	/**
 	 * Set attributes for both th and td element
 	 * @param array $attrs
 	 * @return static
@@ -568,6 +597,9 @@ abstract class Column extends FilterableColumn
 					$link = $this->grid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
 
 					$el->data('datagrid-editable-url', $link);
+
+					$el->data('datagrid-editable-type', $this->editable_element[0]);
+					$el->data('datagrid-editable-attrs', json_encode($this->editable_element[1]));
 				}
 			}
 		}

@@ -347,22 +347,32 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 		cell.addClass('editing')
 		value = cell.html().trim().replace('<br>', '\n')
 		cell.data('value', value)
-		textarea = $('<textarea class="form-control">' + value + '</textarea>');
 
-		cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10)
-		cell_height = cell.outerHeight()
-		text_height = cell_height - cell_padding
-		line_height = Math.round(parseFloat(cell.css('line-height')))
+		if cell.data('datagrid-editable-type') == 'textarea'
+			input = $('<textarea>' + value + '</textarea>')
 
-		cell_lines = (cell_height - (2 * cell_padding)) / line_height
+			cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10)
+			cell_height = cell.outerHeight()
+			line_height = Math.round(parseFloat(cell.css('line-height')))
 
-		textarea.attr('rows', Math.round((cell_lines)))
+			cell_lines = (cell_height - (2 * cell_padding)) / line_height
+
+			input.attr('rows', Math.round((cell_lines)))
+
+		else
+			input = $('<input type="' + cell.data('datagrid-editable-type') + '">')
+			input.val(value)
+
+		attrs = cell.data('datagrid-editable-attrs')
+
+		for attr_name, attr_value of attrs
+			input.attr(attr_name, attr_value)
 
 		cell.removeClass('edited')
-		cell.html(textarea)
+		cell.html(input)
 
-		cell.find('textarea').focus().on('blur', ->
-			value = $(this).val()
+		submit = (cell, el) ->
+			value = el.val()
 
 			if value != cell.data('value')
 				$.nette.ajax({
@@ -376,6 +386,16 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 
 			cell.removeClass('editing')
 			cell.html(value)
+
+		cell.find('input,textarea').focus().on('blur', ->
+			submit(cell, $(this))
+		).on('keydown', (e) ->
+			if cell.data('datagrid-editable-type') != 'textarea'
+				if e.which == 13
+					e.stopPropagation()
+					e.preventDefault()
+
+					submit(cell, $(this))
 		)
 )
 
