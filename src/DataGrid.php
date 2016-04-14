@@ -1966,6 +1966,12 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$this->translator = $translator;
 
+		foreach ($this->getComponents(true) as $component) {
+			if (method_exists($component, 'setTranslator')) {
+				$component->setTranslator($translator);
+			}
+		}
+
 		return $this;
 	}
 
