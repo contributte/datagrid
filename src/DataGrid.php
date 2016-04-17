@@ -1653,7 +1653,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 			$this->onRedraw();
 		} else {
-			//$this->getPresenter()->redirect('this');
+			$this->getPresenter()->redirect('this');
 		}
 	}
 
