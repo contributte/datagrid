@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
+use Ublaboo\DataGrid\Utils\ItemDetailForm;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo;
 use Ublaboo\DataGrid\Traits;
@@ -63,6 +64,11 @@ class ItemDetail
 	 * @var string|bool
 	 */
 	protected $primary_where_column;
+
+	/**
+	 * @var ItemDetailForm
+	 */
+	protected $form;
 
 
 	/**
@@ -271,6 +277,27 @@ class ItemDetail
 	public function getRenderer()
 	{
 		return $this->renderer;
+	}
+
+
+	/**
+	 * @param ItemDetailForm $form
+	 * @return static
+	 */
+	public function setForm(ItemDetailForm $form)
+	{
+		$this->form = $form;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return ItemDetailForm
+	 */
+	public function getForm()
+	{
+		return $this->form;
 	}
 
 }

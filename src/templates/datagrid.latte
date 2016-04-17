@@ -248,15 +248,23 @@
 							{if $items_detail}
 								<tr class="row-item-detail item-detail-{$row->getId()}" n:snippet="item-{$row->getId()}-detail">
 									{if isset($toggle_detail) && $toggle_detail == $row->getId()}
+										{var $item_detail_params = ['item' => $item, '_form' => $filter]}
+
+										{if isset($filter['items_detail_form'])}
+											{var $item_detail_params['items_detail_form'] = $filter['items_detail_form']}
+										{/if}
+
 										{ifset #detail}
 											<td colspan="{$control->getColumnsCount()}">
-												<div class="item-detail-content">{include #detail, item => $item}</div>
+												<div class="item-detail-content">
+													{include #detail, (expand) $item_detail_params}
+												</div>
 											</td>
 										{elseif $items_detail}
 											<td colspan="{$control->getColumnsCount()}">
 												<div class="item-detail-content">
 													{if $items_detail->getType() == 'template'}
-														{include $items_detail->getTemplate(), item => $item}
+														{include $items_detail->getTemplate(), (expand) $item_detail_params}
 													{else}
 														{!$items_detail->render($item)}
 													{/if}

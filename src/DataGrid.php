@@ -264,6 +264,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $inlineEdit;
 
+	/**
+	 * @var bool
+	 */
+	protected $snippets_set = FALSE;
+
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -1144,6 +1149,15 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		/**
+		 * ItemDetail form part
+		 */
+		$items_detail_form = $this->getItemDetailForm();
+
+		if ($items_detail_form instanceof Nette\Forms\Container) {
+			$form['items_detail_form'] = $items_detail_form;
+		}
+
+		/**
 		 * Filter part
 		 */
 		$filter_container = $form->addContainer('filter');
@@ -1176,6 +1190,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function filterSucceeded(Form $form)
 	{
+		if ($this->snippets_set) {
+			return;
+		}
+
 		$values = $form->getValues();
 
 		if ($this->getPresenter()->isAjax()) {
@@ -1635,7 +1653,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 			$this->onRedraw();
 		} else {
-			$this->getPresenter()->redirect('this');
+			//$this->getPresenter()->redirect('this');
 		}
 	}
 
@@ -1709,6 +1727,8 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function redrawItem($id, $primary_where_column = NULL)
 	{
+		$this->snippets_set = TRUE;
+
 		$this->redraw_item = [($primary_where_column ?: $this->primary_key) => $id];
 
 		$this->redrawControl('items');
@@ -2164,6 +2184,37 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return $this->items_detail;
+	}
+
+
+	/**
+	 * @param callable $callable_set_container 
+	 * @return static
+	 */
+	public function setItemsDetailForm(callable $callable_set_container)
+	{
+		if ($this->items_detail instanceof Column\ItemDetail) {
+			$this->items_detail->setForm(
+				new Utils\ItemDetailForm($callable_set_container)
+			);
+
+			return $this;
+		}
+
+		throw new DataGridException('Please set the ItemDetail first.');
+	}
+
+
+	/**
+	 * @return Nette\Forms\Container|NULL
+	 */
+	public function getItemDetailForm()
+	{
+		if ($this->items_detail instanceof Column\ItemDetail) {
+			return $this->items_detail->getForm();
+		}
+
+		return NULL;
 	}
 
 
