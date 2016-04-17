@@ -29,7 +29,13 @@
 						{**
 						 * Each fitler is rendered separately in its own template
 						 *}
-						{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+						{var $filter_block = 'filter-' . $f->getKey()}
+
+						{ifset #$filter_block}
+							{include #$filter_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+						{else}
+							{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+						{/ifset}
 						{var $i = $i+1}
 					</div>
 				</div>
@@ -135,7 +141,15 @@
 								{if !$control->hasOuterFilterRendering() && isset($filters[$key])}
 									<hr>
 									{var $i = $filter['filter'][$key]}
-									{include $filters[$key]->getTemplate(), filter => $filters[$key], input => $i, outer => FALSE}
+
+									{var $filter_block = 'filter-' . $filters[$key]->getKey()}
+
+									{ifset #$filter_block}
+										{include #$filter_block, filter => $filters[$key], input => $i, outer => FALSE}
+									{else}
+										{include $filters[$key]->getTemplate(), filter => $filters[$key], input => $i, outer => FALSE}
+									{/ifset}
+
 								{/if}
 							{!$th->endTag()}
 						{/foreach}
