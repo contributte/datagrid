@@ -463,7 +463,7 @@ $(document).on('click', '[data-datagrid-toggle-inline-add]', function(e) {
   if (row.hasClass('datagrid-row-inline-add-hidden')) {
     row.removeClass('datagrid-row-inline-add-hidden');
   }
-  return row.find('input,textarea').first().focus();
+  return row.find('input:not([readonly]),textarea:not([readonly])').first().focus();
 });
 
 $(document).on('mousedown', '[data-datagrid-cancel-inline-add]', function(e) {

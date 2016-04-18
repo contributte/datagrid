@@ -419,7 +419,7 @@ $(document).on('click', '[data-datagrid-toggle-inline-add]', (e) ->
 	if row.hasClass('datagrid-row-inline-add-hidden')
 		row.removeClass('datagrid-row-inline-add-hidden')
 
-	row.find('input,textarea').first().focus()
+	row.find('input:not([readonly]),textarea:not([readonly])').first().focus()
 )
 
 $(document).on('mousedown', '[data-datagrid-cancel-inline-add]', (e) ->
