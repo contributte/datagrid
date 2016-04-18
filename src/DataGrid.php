@@ -2386,7 +2386,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @return InlineAdd
+	 * @return InlineEdit
 	 */
 	public function addInlineAdd()
 	{
@@ -2401,7 +2401,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @return inlineAdd|null
+	 * @return InlineEdit|null
 	 */
 	public function getInlineAdd()
 	{
