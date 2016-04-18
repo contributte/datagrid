@@ -13,11 +13,11 @@ $.nette.ext('ublaboo-spinners', {
           return el.addClass('ublaboo-spinner-icon');
         }
       } else if (el.is('.datagrid .pagination a')) {
-        return el.closest('.row-grid-bottom').find('select[name=per_page]').before(spinner_template);
+        return el.closest('.row-grid-bottom').find('.col-per-page').prepend(spinner_template);
       } else if (el.is('.datagrid form')) {
         select = el.find('select[name=per_page]');
         if (select.length) {
-          return el.closest('.row-grid-bottom').find('select[name=per_page]').before(spinner_template);
+          return el.closest('.row-grid-bottom').find('.col-per-page').prepend(spinner_template);
         }
       }
     }

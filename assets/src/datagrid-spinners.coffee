@@ -15,13 +15,13 @@ $.nette.ext('ublaboo-spinners', {
 					el.addClass('ublaboo-spinner-icon')
 
 			else if el.is('.datagrid .pagination a')
-				el.closest('.row-grid-bottom').find('select[name=per_page]').before(spinner_template)
+				el.closest('.row-grid-bottom').find('.col-per-page').prepend(spinner_template)
 
 			else if el.is('.datagrid form')
 				select = el.find('select[name=per_page]')
 
 				if select.length
-					el.closest('.row-grid-bottom').find('select[name=per_page]').before(spinner_template)
+					el.closest('.row-grid-bottom').find('.col-per-page').prepend(spinner_template)
 
 	complete: ->
 		$('.ublaboo-spinner').remove()
