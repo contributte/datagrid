@@ -28,15 +28,24 @@
 	padding: 1em;
 	box-sizing: border-box;
 
-	.exports {
+	.datagrid-row-inline-add {
+		&.datagrid-row-inline-add-hidden {
+			display: none;
+		}
+	}
+
+	.datagrid-exports {
+		float: right;
+
 		.btn {
 			margin-left: 1em;
 		}
 	}
 
-	.settings {
+	.datagrid-settings {
 		margin-left: 1em;
 		margin-top: .35em;
+		float: right;
 
 		.dropdown-menu--grid {
 			font-size: 12px;

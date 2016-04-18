@@ -265,6 +265,11 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $inlineEdit;
 
 	/**
+	 * @var InlineEdit
+	 */
+	protected $inlineAdd;
+
+	/**
 	 * @var bool
 	 */
 	protected $snippets_set = FALSE;
@@ -382,6 +387,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->template->add('columns_visibility', $this->columns_visibility);
 
 		$this->template->add('inlineEdit', $this->inlineEdit);
+		$this->template->add('inlineAdd', $this->inlineAdd);
 
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
@@ -1149,6 +1155,20 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		/**
+		 * InlineAdd part
+		 */
+		$inline_add_container = $form->addContainer('inline_add');
+
+		if ($this->inlineAdd instanceof InlineEdit) {
+			$inline_add_container->addSubmit('submit', 'ublaboo_datagrid.save');
+			$inline_add_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
+				->setValidationScope(FALSE)
+				->setAttribute('data-datagrid-cancel-inline-add', TRUE);
+
+			$this->inlineAdd->onControlAdd($inline_add_container);
+		}
+
+		/**
 		 * ItemDetail form part
 		 */
 		$items_detail_form = $this->getItemDetailForm();
@@ -1202,6 +1222,9 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
+		/**
+		 * Inline edit
+		 */
 		$inline_edit = $form['inline_edit'];
 
 		if (isset($inline_edit) && isset($inline_edit['submit']) && isset($inline_edit['cancel'])) {
@@ -1226,6 +1249,28 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
+		/**
+		 * Inline add
+		 */
+		$inline_add = $form['inline_add'];
+
+		if (isset($inline_add) && isset($inline_add['submit']) && isset($inline_add['cancel'])) {
+			if ($inline_add['submit']->isSubmittedBy() || $inline_add['cancel']->isSubmittedBy()) {
+				if ($inline_add['submit']->isSubmittedBy()) {
+					$this->inlineAdd->onSubmit($values->inline_add);
+
+					if ($this->getPresenter()->isAjax()) {
+						$this->getPresenter()->payload->_datagrid_inline_added = TRUE;
+					}
+				}
+
+				return;
+			}
+		}
+
+		/**
+		 * Filter itself
+		 */
 		$values = $values['filter'];
 
 		foreach ($values as $key => $value) {
@@ -2316,6 +2361,10 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * @param  mixed $id
+	 * @return void
+	 */
 	public function handleInlineEdit($id)
 	{
 		if ($this->inlineEdit) {
@@ -2328,6 +2377,35 @@ class DataGrid extends Nette\Application\UI\Control
 
 			$this->redrawItem($id, $primary_where_column);
 		}
+	}
+
+
+	/********************************************************************************
+	 *                                  INLINE ADD                                  *
+	 ********************************************************************************/
+
+
+	/**
+	 * @return InlineAdd
+	 */
+	public function addInlineAdd()
+	{
+		$this->inlineAdd = new InlineEdit($this);
+
+		$this->inlineAdd
+			->setIcon('plus')
+			->setClass('btn btn-xs btn-default');
+
+		return $this->inlineAdd;
+	}
+
+
+	/**
+	 * @return inlineAdd|null
+	 */
+	public function getInlineAdd()
+	{
+		return $this->inlineAdd;
 	}
 
 

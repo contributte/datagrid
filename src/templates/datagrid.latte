@@ -10,6 +10,7 @@
  * @param string          $icon_prefix        Icon prefix (fa fa-)
  * @param array           $columns_visibility What columns are visible
  * @param InlineEdit|null $inlineEdit  Inline editing data
+ * @param InlineEdit|null $inlineAdd   Inline add data
  *}
 
 <div class="datagrid card card-1 primary datagrid-{!$control->getName()}">
@@ -59,13 +60,23 @@
 								{/block}
 							{/if}
 
-							<span class="pull-right exports" n:if="$exports" n:block="exports">
+							<span class="datagrid-exports" n:if="$exports" n:block="exports">
 								{foreach $exports as $export}{$export->render()}{/foreach}
 							</span>
 
-							<span class="pull-right settings" n:block="settings" n:if="$control->canHideColumns()">
+							<span class="datagrid-settings" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
+								{**
+								 * Inline add
+								 *}
+								{if $inlineAdd}
+									{$inlineAdd->renderButtonAdd()}
+								{/if}
+
+								{**
+								 * Hideable columns
+								 *}
 								<div class="btn-group">
-									<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
 										<i class="{$icon_prefix}gear"></i>
 									</button>
 									<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
@@ -153,7 +164,7 @@
 								{/if}
 							{!$th->endTag()}
 						{/foreach}
-						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit" class="col-action text-center">
+						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-center">
 							{_'ublaboo_datagrid.action'}
 						</th>
 					</tr>
@@ -218,7 +229,7 @@
 												{/if}
 											{!$td->endTag()}
 										{/foreach}
-										<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit" class="col-action">
+										<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
 											{foreach $actions as $key => $action}
 												{if $row->hasAction($key)}
 													{if $action->hasTemplate()}
@@ -276,6 +287,32 @@
 								<tr class="row-item-detail-helper"></tr>
 							{/if}
 						{/foreach}
+
+						{if $inlineAdd}
+							{? $inlineAdd->onSetDefaults($filter['inline_add']); }
+
+							<tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden">
+								<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+
+								{foreach $columns as $key => $column}
+									{var $col = 'col-' . $key}
+
+									{var $td = $column->getElementPrototype('td', $key)}
+									{var $td->class[] = 'datagrid-inline-edit'}
+									{!$td->startTag()}
+										{if isset($filter['inline_add'][$key])}
+											{input $filter['inline_add'][$key], class => 'form-control input-sm'}
+										{/if}
+									{!$td->endTag()}
+								{/foreach}
+
+								<td class="col-action col-action-inline-edit">
+									{input $filter['inline_add']['cancel'], class => 'btn btn-xs btn-danger'}
+									{input $filter['inline_add']['submit'], class => 'btn btn-xs btn-primary'}
+								</td>
+							</tr>
+						{/if}
+
 						{block noItems}
 							<tr n:if="!$rows">
 								<td colspan="{$control->getColumnsCount()}">

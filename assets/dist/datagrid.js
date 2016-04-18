@@ -454,3 +454,30 @@ $.nette.ext('datagrid.after_inline_edit', {
     }
   }
 });
+
+$(document).on('click', '[data-datagrid-toggle-inline-add]', function(e) {
+  var row;
+  e.stopPropagation();
+  e.preventDefault();
+  row = $('.datagrid-row-inline-add');
+  if (row.hasClass('datagrid-row-inline-add-hidden')) {
+    row.removeClass('datagrid-row-inline-add-hidden');
+  }
+  return row.find('input,textarea').first().focus();
+});
+
+$(document).on('mousedown', '[data-datagrid-cancel-inline-add]', function(e) {
+  e.stopPropagation();
+  e.preventDefault();
+  return $('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden');
+});
+
+$.nette.ext('datagrid-toggle-inline-add', {
+  success: function(payload) {
+    if (payload._datagrid_inline_added) {
+      $('.datagrid-row-inline-add').find('textarea').html('');
+      $('.datagrid-row-inline-add').find('input[type!=submit]').val('');
+      return $('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden');
+    }
+  }
+});

@@ -25,6 +25,9 @@ final class ItemDetailForm extends Container
 	private $http_post;
 
 
+	/**
+	 * @param callable $callable_set_container
+	 */
 	public function __construct(callable $callable_set_container)
 	{
 		parent::__construct();

@@ -20,20 +20,29 @@
   box-sizing: border-box;
 }
 
-.datagrid .exports .btn {
+.datagrid .datagrid-row-inline-add.datagrid-row-inline-add-hidden {
+  display: none;
+}
+
+.datagrid .datagrid-exports {
+  float: right;
+}
+
+.datagrid .datagrid-exports .btn {
   margin-left: 1em;
 }
 
-.datagrid .settings {
+.datagrid .datagrid-settings {
   margin-left: 1em;
   margin-top: .35em;
+  float: right;
 }
 
-.datagrid .settings .dropdown-menu--grid {
+.datagrid .datagrid-settings .dropdown-menu--grid {
   font-size: 12px;
 }
 
-.datagrid .settings .dropdown-menu--grid li .fa {
+.datagrid .datagrid-settings .dropdown-menu--grid li .fa {
   margin-right: 0.5em;
 }
 

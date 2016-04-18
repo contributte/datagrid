@@ -16,6 +16,7 @@ use Ublaboo\DataGrid\Traits;
 
 /**
  * @method onSubmit($id, Nette\Utils\ArrayHash $values)
+ * @method onSubmit(Nette\Utils\ArrayHash $values)
  * @method onControlAdd(Nette\Forms\Container $container)
  * @method onSetDefaults(Nette\Forms\Container $container, $item)
  */
@@ -70,16 +71,16 @@ class InlineEdit extends Nette\Object
 	protected $grid;
 
 	/**
-	 * @var string
+	 * @var string|NULL
 	 */
 	protected $primary_where_column;
 
 
 	/**
 	 * @param DataGrid $grid
-	 * @param string   $primary_where_column
+	 * @param string|NULL   $primary_where_column
 	 */
-	public function __construct(DataGrid $grid, $primary_where_column)
+	public function __construct(DataGrid $grid, $primary_where_column = NULL)
 	{
 		$this->grid = $grid;
 		$this->primary_where_column = $primary_where_column;
@@ -122,6 +123,25 @@ class InlineEdit extends Nette\Object
 	{
 		$a = Html::el('a')
 			->href($this->grid->link('inlineEdit!', ['id' => $row->getId()]));
+
+		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
+
+		$a->add($this->text);
+
+		if ($this->title) { $a->title($this->title); }
+		if ($this->class) { $a->class($this->class); }
+
+		return $a;
+	}
+
+
+	/**
+	 * Render row item detail button
+	 * @return Html
+	 */
+	public function renderButtonAdd()
+	{
+		$a = Html::el('a')->data('datagrid-toggle-inline-add', TRUE);
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 

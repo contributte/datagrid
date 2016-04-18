@@ -406,3 +406,34 @@ $.nette.ext('datagrid.after_inline_edit', {
 		if payload._datagrid_inline_edited
 			$('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited')
 })
+
+
+# Inline add
+#
+$(document).on('click', '[data-datagrid-toggle-inline-add]', (e) ->
+	e.stopPropagation()
+	e.preventDefault()
+
+	row = $('.datagrid-row-inline-add')
+
+	if row.hasClass('datagrid-row-inline-add-hidden')
+		row.removeClass('datagrid-row-inline-add-hidden')
+
+	row.find('input,textarea').first().focus()
+)
+
+$(document).on('mousedown', '[data-datagrid-cancel-inline-add]', (e) ->
+	e.stopPropagation()
+	e.preventDefault()
+
+	$('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden')
+)
+
+$.nette.ext('datagrid-toggle-inline-add', {
+	success: (payload) ->
+		if payload._datagrid_inline_added
+			$('.datagrid-row-inline-add').find('textarea').html('')
+			$('.datagrid-row-inline-add').find('input[type!=submit]').val('')
+
+			$('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden')
+})
