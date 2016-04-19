@@ -251,7 +251,7 @@
 												{/if}
 											{/foreach}
 											<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
-												<i class="{$icon_prefix}arrows"></i>
+												<i class="{$icon_prefix}arrows" data-sortable-arrow="{$icon_prefix}arrows" data-sortable-replace-arrow="{$icon_prefix}arrows-v"></i>
 											</span>
 											{if $inlineEdit}
 												{!$inlineEdit->renderButton($row)}

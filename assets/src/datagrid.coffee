@@ -104,12 +104,13 @@ window.datagridSerializeUrl = function(obj, prefix) {
 `
 
 datagridSortable = ->
-	if typeof $('.datagrid [data-sortable]').sortable == 'undefined'
+	if typeof $.fn.sortable == 'undefined'
 		return
 
 	$('.datagrid [data-sortable]').sortable({
 		handle: '.handle-sort',
 		items: 'tr',
+		axis: 'y'
 		update: (event, ui) ->
 			row = ui.item.closest('tr[data-id]')
 
@@ -132,9 +133,26 @@ datagridSortable = ->
 				error: (jqXHR, textStatus, errorThrown) ->
 					alert(jqXHR.statusText)
 			})
+		,
+		start: (event, ui) ->
+			arrows = ui.item.find('[data-sortable-arrow]')
+			arrows.removeClass(arrows.data('sortable-arrow'))
+			arrows.addClass(arrows.data('sortable-replace-arrow'))
+		,
+		stop: (event, ui) ->
+			arrows = ui.item.find('[data-sortable-arrow]')
+			arrows.removeClass(arrows.data('sortable-replace-arrow'))
+			arrows.addClass(arrows.data('sortable-arrow'))
+		,
+		helper: (e, ui) ->
+			ui.children().each ->
+				$(this).width($(this).width())
+
+			return ui;
 	})
 
-datagridSortable()
+$ ->
+	datagridSortable()
 
 datagridSortableTree = ->
 	if typeof $('.datagrid-tree-item-children').sortable == 'undefined'
@@ -184,17 +202,31 @@ datagridSortableTree = ->
 					if errorThrown != 'abort'
 						alert(jqXHR.statusText)
 			})
-	, stop: ->
+	, stop: (event, ui) ->
 		$('.toggle-tree-to-delete').removeClass('toggle-tree-to-delete')
+
+		arrows = ui.item.find('[data-sortable-arrow]')
+		arrows.removeClass(arrows.data('sortable-replace-arrow'))
+		arrows.addClass(arrows.data('sortable-arrow'))
 	, start: (event, ui) ->
+		arrows = ui.item.find('[data-sortable-arrow]')
+		arrows.removeClass(arrows.data('sortable-arrow'))
+		arrows.addClass(arrows.data('sortable-replace-arrow'))
+
 		parent = ui.item.parent().closest('.datagrid-tree-item')
+
 		if parent.length
 			if parent.find('.datagrid-tree-item').length == 2
 				parent.find('[data-toggle-tree]').addClass('toggle-tree-to-delete')
+	, helper: (e, ui) ->
+			ui.children().each ->
+				$(this).width($(this).width())
 
+			return ui;
 	})
 
-datagridSortableTree();
+$ ->
+	datagridSortableTree();
 
 $.nette.ext('datagrid.happy', {
 	success: ->
