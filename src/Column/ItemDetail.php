@@ -13,6 +13,7 @@ use Ublaboo\DataGrid\Utils\ItemDetailForm;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo;
 use Ublaboo\DataGrid\Traits;
+use Ublaboo\DataGrid\Exception\DataGridItemDetailException;
 
 class ItemDetail
 {
@@ -112,6 +113,12 @@ class ItemDetail
 	 */
 	public function render($item)
 	{
+		if ($this->getType() == 'block') {
+			throw new DataGridItemDetailException(
+				'ItemDetail is set to render as block, but block #detail is not defined'
+			);
+		}
+
 		return call_user_func($this->getRenderer(), $item);
 	}
 
