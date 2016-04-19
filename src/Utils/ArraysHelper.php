@@ -29,6 +29,10 @@ final class ArraysHelper extends Nette\Object
 				if ($value) {
 					return FALSE;
 				}
+
+				if (in_array($value, [0, '0', FALSE], TRUE)) {
+					return FALSE;
+				}
 			}
 		}
 

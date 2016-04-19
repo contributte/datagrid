@@ -953,12 +953,35 @@ class DataGrid extends Nette\Application\UI\Control
 		$column = $column ?: $key;
 
 		if (!is_string($column)) {
-			throw new DataGridException("Filter Select can only filter through one column.");
+			throw new DataGridException("Filter Select can only filter in one column.");
 		}
 
 		$this->addFilterCheck($key);
 
 		return $this->filters[$key] = new Filter\FilterSelect($key, $name, $options, $column);
+	}
+
+
+	/**
+	 * Add multi select box filter
+	 * @param string $key
+	 * @param string $name
+	 * @param array  $options
+	 * @param string $column
+	 * @return Filter\FilterSelect
+	 * @throws DataGridException
+	 */
+	public function addFilterMultiSelect($key, $name, array $options, $column = NULL)
+	{
+		$column = $column ?: $key;
+
+		if (!is_string($column)) {
+			throw new DataGridException("Filter MultiSelect can only filter in one column.");
+		}
+
+		$this->addFilterCheck($key);
+
+		return $this->filters[$key] = new Filter\FilterMultiSelect($key, $name, $options, $column);
 	}
 
 
@@ -975,7 +998,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$column = $column ?: $key;
 
 		if (!is_string($column)) {
-			throw new DataGridException("FilterDate can only filter through one column.");
+			throw new DataGridException("FilterDate can only filter in one column.");
 		}
 
 		$this->addFilterCheck($key);
@@ -997,7 +1020,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$column = $column ?: $key;
 
 		if (!is_string($column)) {
-			throw new DataGridException("FilterRange can only filter through one column.");
+			throw new DataGridException("FilterRange can only filter in one column.");
 		}
 
 		$this->addFilterCheck($key);
@@ -1019,7 +1042,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$column = $column ?: $key;
 
 		if (!is_string($column)) {
-			throw new DataGridException("FilterDateRange can only filter through one column.");
+			throw new DataGridException("FilterDateRange can only filter in one column.");
 		}
 
 		$this->addFilterCheck($key);
@@ -1084,6 +1107,21 @@ class DataGrid extends Nette\Application\UI\Control
 	public function removeFilter($key)
 	{
 		unset($this->filters[$key]);
+	}
+
+
+	/**
+	 * Get defined filter
+	 * @param  string $key
+	 * @return Filter\Filter
+	 */
+	public function getFilter($key)
+	{
+		if (!isset($this->filters[$key])) {
+			throw new DataGridException("Filter [{$key}] is not defined");
+		}
+
+		return $this->filters[$key];
 	}
 
 

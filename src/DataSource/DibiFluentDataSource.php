@@ -181,6 +181,39 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 
 
 	/**
+	 * Filter by multi select value
+	 * @param  Filter\FilterMultiSelect $filter
+	 * @return void
+	 */
+	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter)
+	{
+		$condition = $filter->getCondition();
+		$values = $condition[$filter->getColumn()];
+		$or = [];
+
+		if (sizeof($values) > 1) {
+			$value1 = array_shift($values);
+			$length = sizeof($values);
+			$i = 1;
+
+			$this->data_source->where('(%n = ?', $filter->getColumn(), $value1);
+
+			foreach ($values as $value) {
+				if ($i == $length) {
+					$this->data_source->or('%n = ?)', $filter->getColumn(), $value);
+				} else {
+					$this->data_source->or('%n = ?', $filter->getColumn(), $value);
+				}
+
+				$i++;
+			}
+		} else {
+			$this->data_source->where('%n = ?', $filter->getColumn(), reset($values));
+		}
+	}
+
+
+	/**
 	 * Filter by select value
 	 * @param  Filter\FilterSelect $filter
 	 * @return void

@@ -33,6 +33,8 @@ abstract class FilterableDataSource
 				} else {
 					if ($filter instanceof Filter\FilterText) {
 						$this->applyFilterText($filter);
+					} else if ($filter instanceof Filter\FilterMultiSelect) {
+						$this->applyFilterMultiSelect($filter);
 					} else if ($filter instanceof Filter\FilterSelect) {
 						$this->applyFilterSelect($filter);
 					} else if ($filter instanceof Filter\FilterDate) {

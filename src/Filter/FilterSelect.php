@@ -16,12 +16,12 @@ class FilterSelect extends Filter
 	/**
 	 * @var array
 	 */
-	private $options;
+	protected $options;
 
 	/**
 	 * @var bool
 	 */
-	private $translateOptions = FALSE;
+	protected $translateOptions = FALSE;
 
 	/**
 	 * @var string
@@ -57,10 +57,17 @@ class FilterSelect extends Filter
 		$form = $container->lookup('Nette\Application\UI\Form');
 		$translator = $form->getTranslator();
 
-		$select = $container->addSelect($this->key, $translator->translate($this->name), $this->options);
-
 		if (!$this->translateOptions) {
+			$select = $this->addControl(
+				$container,
+				$this->key,
+				$translator->translate($this->name),
+				$this->options
+			);
+
 			$select->setTranslator(NULL);
+		} else {
+			$select = $this->addControl($container, $this->key, $this->name, $this->options);
 		}
 	}
 
@@ -92,6 +99,19 @@ class FilterSelect extends Filter
 	public function getCondition()
 	{
 		return [$this->column => $this->getValue()];
+	}
+
+
+	/**
+	 * @param Nette\Forms\Container $container
+	 * @param string                $key
+	 * @param string                $name
+	 * @param array                $options
+	 * @return Nette\Forms\Controls\SelectBox
+	 */
+	protected function addControl(Nette\Forms\Container $container, $key, $name, $options)
+	{
+		return $container->addSelect($key, $name, $options);
 	}
 
 }
