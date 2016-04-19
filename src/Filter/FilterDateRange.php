@@ -23,6 +23,11 @@ class FilterDateRange extends FilterRange
 	 */
 	protected $format = ['j. n. Y', 'd. m. yyyy'];
 
+	/**
+	 * @var string
+	 */
+	protected $type = 'date-range';
+
 
 	/**
 	 * Adds select box to filter form

@@ -28,6 +28,11 @@ class FilterSelect extends Filter
 	 */
 	protected $template = 'datagrid_filter_select.latte';
 
+	/**
+	 * @var string
+	 */
+	protected $type = 'select';
+
 
 	/**
 	 * @param string $key

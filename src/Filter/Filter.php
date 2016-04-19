@@ -56,6 +56,11 @@ abstract class Filter extends Nette\Object
 	 */
 	protected $template;
 
+	/**
+	 * @var string
+	 */
+	protected $type;
+
 
 	/**
 	 * @param string $key
@@ -214,6 +219,15 @@ abstract class Filter extends Nette\Object
 	public function getTemplate()
 	{
 		return $this->template;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getType()
+	{
+		return $this->type;
 	}
 
 }

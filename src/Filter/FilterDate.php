@@ -23,6 +23,11 @@ class FilterDate extends Filter
 	 */
 	protected $format = ['j. n. Y', 'd. m. yyyy'];
 
+	/**
+	 * @var string
+	 */
+	protected $type = 'date';
+
 
 	/**
 	 * Adds select box to filter form

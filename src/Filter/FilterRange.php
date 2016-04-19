@@ -29,6 +29,11 @@ class FilterRange extends Filter
 	 */
 	protected $template = 'datagrid_filter_range.latte';
 
+	/**
+	 * @var string
+	 */
+	protected $type = 'range';
+
 
 	/**
 	 * @param string $key

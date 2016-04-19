@@ -18,6 +18,11 @@ class FilterText extends Filter
 	 */
 	protected $template = 'datagrid_filter_text.latte';
 
+	/**
+	 * @var string
+	 */
+	protected $type = 'text';
+
 
 	/**
 	 * Adds text field to filter form

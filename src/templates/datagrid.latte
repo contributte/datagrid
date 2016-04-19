@@ -31,11 +31,16 @@
 						 * Each fitler is rendered separately in its own template
 						 *}
 						{var $filter_block = 'filter-' . $f->getKey()}
+						{var $filter_type_block = 'filtertype-' . $f->getType()}
 
 						{ifset #$filter_block}
 							{include #$filter_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
 						{else}
-							{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+							{ifset #$filter_type_block}
+								{include #$filter_type_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+								{else}
+									{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+							{/ifset}
 						{/ifset}
 						{var $i = $i+1}
 					</div>
@@ -154,11 +159,17 @@
 									{var $i = $filter['filter'][$key]}
 
 									{var $filter_block = 'filter-' . $filters[$key]->getKey()}
+									{var $filter_type_block = 'filtertype-' . $filters[$key]->getType()}
+									{dump $filter_type_block}
 
 									{ifset #$filter_block}
 										{include #$filter_block, filter => $filters[$key], input => $i, outer => FALSE}
 									{else}
-										{include $filters[$key]->getTemplate(), filter => $filters[$key], input => $i, outer => FALSE}
+										{ifset #$filter_type_block}
+											{include #$filter_type_block, filter => $filters[$key], input => $i, outer => FALSE}
+										{else}
+											{include $filters[$key]->getTemplate(), filter => $filters[$key], input => $i, outer => FALSE}
+										{/ifset}
 									{/ifset}
 
 								{/if}
