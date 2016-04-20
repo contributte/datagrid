@@ -199,6 +199,40 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 
 	/**
+	 * Filter by multi select value
+	 * @param  Filter\FilterMultiSelect $filter
+	 * @return void
+	 */
+	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter)
+	{
+		$condition = $filter->getCondition();
+		$values = $condition[$filter->getColumn()];
+		$or = '(';
+
+		if (sizeof($values) > 1) {
+			$length = sizeof($values);
+			$i = 1;
+		
+			foreach ($values as $value) {
+				if ($i == $length) {
+					$or .= $filter->getColumn() . ' = ?)';
+				} else {
+					$or .= $filter->getColumn() . ' = ? OR ';
+				}
+
+				$i++;
+			}
+
+			array_unshift($values, $or);
+
+			call_user_func_array([$this->data_source, 'where'], $values);
+		} else {
+			$this->data_source->where($filter->getColumn() . ' = ?', reset($values));
+		}
+	}
+
+
+	/**
 	 * Filter by select value
 	 * @param  Filter\FilterSelect $filter
 	 * @return void
