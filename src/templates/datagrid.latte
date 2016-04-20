@@ -320,49 +320,50 @@
 						{/block}
 					{/snippetArea}
 				</tbody>
-				{block tfoot}{/block}
+				{block tfoot}
+					<tfoot n:snippet="pagination">
+						{if $control->isPaginated() || $filter_active}
+							<tr n:block="pagination">
+								<td colspan="{$control->getColumnsCount()}" n:if="!$control->isTreeView()" class="row-grid-bottom">
+									<div class="col-items">
+										<small class="text-muted" n:if="$control->isPaginated()">
+											({var $paginator = $control['paginator']->getPaginator()}
+
+											{if $control->getPerPage() === 'all'}
+												{_'ublaboo_datagrid.items'}: {_'ublaboo_datagrid.all'}
+											{else}
+												{_'ublaboo_datagrid.items'}: {$paginator->getOffset() + 1} - {sizeof($rows) + $paginator->getOffset()}
+												{_'ublaboo_datagrid.from'} {$paginator->getItemCount()}
+											{/if})
+										</small>
+									</div>
+									<div class="col-pagination text-center">
+										{**
+										* Pagination
+										*}
+										{control paginator}
+									</div>
+									<div class="col-per-page text-right">
+										{**
+										* Items per page form (display only beside paginated grido)
+										*}
+										<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'ublaboo_datagrid.reset_filter'}</a>
+										{if $control->isPaginated()}
+											{form perPage, class => 'ajax'}
+												{input per_page, data-autosubmit => TRUE, class => 'form-control input-sm'}
+												{input submit, class => 'hidden'}
+											{/form}
+										{/if}
+									</div>
+								</td>
+							</tr>
+						{/if}
+					</tfoot>
+				{/block}
 			</table>
 		{/form}
 	{/snippetArea}
 	</div>
-
-	{**
-	 * Bottom row
-	 *}
-	{block pagination}
-		<div n:snippet="pagination" n:if="!$control->isTreeView()" class="row-grid-bottom">
-			<div class="col-items">
-				<small class="text-muted" n:if="$control->isPaginated()">
-					({var $paginator = $control['paginator']->getPaginator()}
-
-					{if $control->getPerPage() === 'all'}
-						{_'ublaboo_datagrid.items'}: {_'ublaboo_datagrid.all'}
-					{else}
-						{_'ublaboo_datagrid.items'}: {$paginator->getOffset() + 1} - {sizeof($rows) + $paginator->getOffset()}
-						{_'ublaboo_datagrid.from'} {$paginator->getItemCount()}
-					{/if})
-				</small>
-			</div>
-			<div class="col-pagination text-center">
-				{**
-				* Pagination
-				*}
-				{control paginator}
-			</div>
-			<div class="col-per-page text-right">
-				{**
-				* Items per page form (display only beside paginated grido)
-				*}
-				<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'ublaboo_datagrid.reset_filter'}</a>
-				{if $control->isPaginated()}
-					{form perPage, class => 'ajax'}
-						{input per_page, data-autosubmit => TRUE, class => 'form-control input-sm'}
-						{input submit, class => 'hidden'}
-					{/form}
-				{/if}
-			</div>
-		</div>
-	{/block}
 </div>
 
 

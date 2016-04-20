@@ -19,10 +19,6 @@
 	}
 }
 
-.pagination {
-	display: inline-block;
-}
-
 .datagrid {
 	background-color: #fff;
 	padding: 1em;
@@ -476,9 +472,6 @@
 	}
 
 	.pagination {
-		margin: 0;
-		display: inline-block;
-
 		&.active > span {
 			color: #fff;
 		}
