@@ -7,7 +7,7 @@
 {var $arrow_left = '<i class="fa fa-arrow-left"></i>'}
 {var $arrow_right = '<i class="fa fa-arrow-right"></i>'}
 
-<div class="pagination" n:if="$paginator->pageCount > 1">
+<div n:if="$paginator->pageCount > 1">
 	{if $paginator->isFirst()}
 		<a class="first btn btn-sm btn-default disabled">{!$arrow_left} {_'ublaboo_datagrid.previous'}</a>
 	{else}
