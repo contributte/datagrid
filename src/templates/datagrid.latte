@@ -160,7 +160,6 @@
 
 									{var $filter_block = 'filter-' . $filters[$key]->getKey()}
 									{var $filter_type_block = 'filtertype-' . $filters[$key]->getType()}
-									{dump $filter_type_block}
 
 									{ifset #$filter_block}
 										{include #$filter_block, filter => $filters[$key], input => $i, outer => FALSE}
