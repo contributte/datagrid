@@ -72,6 +72,22 @@
 
 		thead {
 			tr {
+				.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+					width: auto;
+
+					.btn {
+						padding: 5px 25px 5px 10px;
+						font-size: 12px;
+						line-height: 1.5;
+						border-radius: 3px;
+						width: auto;
+					}
+
+					.dropdown-menu li {
+						font-size: 13px;
+					}
+				}
+
 				.column-settings-menu {
 					opacity: 0;
 					cursor: pointer;

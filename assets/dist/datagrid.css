@@ -10,10 +10,6 @@
   }
 }
 
-.pagination {
-  display: inline-block;
-}
-
 .datagrid {
   background-color: #fff;
   padding: 1em;
@@ -61,6 +57,22 @@
 
 .datagrid table {
   margin: 0;
+}
+
+.datagrid table thead tr .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+  width: auto;
+}
+
+.datagrid table thead tr .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) .btn {
+  padding: 5px 25px 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+  width: auto;
+}
+
+.datagrid table thead tr .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) .dropdown-menu li {
+  font-size: 13px;
 }
 
 .datagrid table thead tr .column-settings-menu {
@@ -416,11 +428,6 @@
 
 .datagrid .row-grid-bottom .col-per-page .form-control {
   width: auto;
-  display: inline-block;
-}
-
-.datagrid .pagination {
-  margin: 0;
   display: inline-block;
 }
 

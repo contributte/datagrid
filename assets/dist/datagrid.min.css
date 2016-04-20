@@ -1,20 +1,23 @@
 @charset "UTF-8";
-.datagrid .datagrid-settings .dropdown-menu--grid,.datagrid table thead tr .column-settings-menu .dropdown-menu{font-size:12px}
 @keyframes edited{0%{background-color:#A6E2A9}
 100%{background-color:transparent}
 }
-.pagination{display:inline-block}
 .datagrid{background-color:#fff;padding:1em;box-sizing:border-box}
 .datagrid .datagrid-row-inline-add.datagrid-row-inline-add-hidden{display:none}
 .datagrid .datagrid-exports{float:right}
 .datagrid .datagrid-exports .btn{margin-left:1em}
 .datagrid .datagrid-settings{margin-left:1em;margin-top:.35em;float:right}
+.datagrid .datagrid-settings .dropdown-menu--grid{font-size:12px}
 .datagrid .datagrid-settings .dropdown-menu--grid li .fa{margin-right:.5em}
 .datagrid .row-reset-filter{text-align:right;margin-bottom:.5em}
 .datagrid .filter-range-delimiter,.datagrid table th.col-action{text-align:center}
 .datagrid .row-filters>div{margin-bottom:.5em}
 .datagrid table{margin:0}
+.datagrid table thead tr .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn){width:auto}
+.datagrid table thead tr .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) .btn{padding:5px 25px 5px 10px;font-size:12px;line-height:1.5;border-radius:3px;width:auto}
+.datagrid table thead tr .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) .dropdown-menu li{font-size:13px}
 .datagrid table thead tr .column-settings-menu{opacity:0;cursor:pointer;margin-left:2px}
+.datagrid table thead tr .column-settings-menu .dropdown-menu{font-size:12px}
 .datagrid table thead tr .column-settings-menu .dropdown-menu li .fa{margin-right:.5em}
 .datagrid table thead tr.row-group-actions th{border-bottom-width:0!important;background-color:#f9f9f9}
 .datagrid table thead tr th{font-size:90%;vertical-align:top}
@@ -76,7 +79,6 @@
 .datagrid .row-grid-bottom .col-per-page{font-size:14px;display:inline-block;width:25%}
 .datagrid .row-grid-bottom .col-per-page form{display:inline-block}
 .datagrid .row-grid-bottom .col-per-page .form-control{width:auto;display:inline-block}
-.datagrid .pagination{margin:0;display:inline-block}
 .datagrid .pagination.active>span{color:#fff}
 .datagrid .pagination>a.disabled{color:#989898;cursor:not-allowed}
 .datagrid .pagination>a.active{pointer-events:none;cursor:default}
