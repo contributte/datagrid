@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid\DataSource;
 
 use Ublaboo\DataGrid\Filter\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
+use Ublaboo\DataGrid\Filter\FilterMultiSelect;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -136,6 +137,8 @@ class ArrayDataSource implements IDataSource
 		if (is_array($row) || $row instanceof \Traversable) {
 			if ($filter instanceof FilterDate) {
 				return $this->applyFilterDate($row, $filter);
+			} else if ($filter instanceof FilterMultiSelect) {
+				return $this->applyFilterMultiSelect($row, $filter);
 			}
 
 			$condition = $filter->getCondition();
@@ -153,6 +156,21 @@ class ArrayDataSource implements IDataSource
 		}
 
 		return FALSE;
+	}
+
+
+	/**
+	 * Filter by multi select value
+	 * @param  mixed  $row
+	 * @param  FilterMultiSelect $filter
+	 * @return void
+	 */
+	public function applyFilterMultiSelect($row, FilterMultiSelect $filter)
+	{
+		$condition = $filter->getCondition();
+		$values = $condition[$filter->getColumn()];
+
+		return in_array($row[$filter->getColumn()], $values);
 	}
 
 
