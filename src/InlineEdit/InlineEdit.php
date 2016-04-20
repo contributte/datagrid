@@ -75,6 +75,12 @@ class InlineEdit extends Nette\Object
 	 */
 	protected $primary_where_column;
 
+	/**
+	 * Inline adding - render on the top or in the bottom?
+	 * @var bool
+	 */
+	protected $position_top = FALSE;
+
 
 	/**
 	 * @param DataGrid $grid
@@ -239,6 +245,38 @@ class InlineEdit extends Nette\Object
 	public function getText()
 	{
 		return $this->text;
+	}
+
+
+	/**
+	 * Setter for inline adding position
+	 * @param bool $position_top
+	 * @return static
+	 */
+	public function setPositionTop($position_top = TRUE)
+	{
+		$this->position_top = (bool) $position_top;
+
+		return $this;
+	}
+
+
+	/**
+	 * Getter for inline adding
+	 * @return bool
+	 */
+	public function isPositionTop()
+	{
+		return $this->position_top;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function isPositionBottom()
+	{
+		return !$this->position_top;
 	}
 
 }

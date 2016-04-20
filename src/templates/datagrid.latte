@@ -183,6 +183,10 @@
 
 				<tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandler()}"{/}>
 					{snippetArea items}
+						{if $inlineAdd && $inlineAdd->isPositionTop()}
+							{include inlineAddRow, columns => $columns}
+						{/if}
+
 						{foreach $rows as $row}
 							{var $item = $row->getItem()}
 
@@ -299,29 +303,8 @@
 							{/if}
 						{/foreach}
 
-						{if $inlineAdd}
-							{? $inlineAdd->onSetDefaults($filter['inline_add']); }
-
-							<tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden">
-								<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
-
-								{foreach $columns as $key => $column}
-									{var $col = 'col-' . $key}
-
-									{var $td = $column->getElementPrototype('td', $key)}
-									{var $td->class[] = 'datagrid-inline-edit'}
-									{!$td->startTag()}
-										{if isset($filter['inline_add'][$key])}
-											{input $filter['inline_add'][$key], class => 'form-control input-sm'}
-										{/if}
-									{!$td->endTag()}
-								{/foreach}
-
-								<td class="col-action col-action-inline-edit">
-									{input $filter['inline_add']['cancel'], class => 'btn btn-xs btn-danger'}
-									{input $filter['inline_add']['submit'], class => 'btn btn-xs btn-primary'}
-								</td>
-							</tr>
+						{if $inlineAdd && $inlineAdd->isPositionBottom()}
+							{include inlineAddRow, columns => $columns}
 						{/if}
 
 						{block noItems}
@@ -381,3 +364,29 @@
 		</div>
 	{/block}
 </div>
+
+
+{define inlineAddRow}
+	{? $inlineAdd->onSetDefaults($filter['inline_add']); }
+
+	<tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden">
+		<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+
+		{foreach $columns as $key => $column}
+			{var $col = 'col-' . $key}
+
+			{var $td = $column->getElementPrototype('td', $key)}
+			{var $td->class[] = 'datagrid-inline-edit'}
+			{!$td->startTag()}
+				{if isset($filter['inline_add'][$key])}
+					{input $filter['inline_add'][$key], class => 'form-control input-sm'}
+				{/if}
+			{!$td->endTag()}
+		{/foreach}
+
+		<td class="col-action col-action-inline-edit">
+			{input $filter['inline_add']['cancel'], class => 'btn btn-xs btn-danger'}
+			{input $filter['inline_add']['submit'], class => 'btn btn-xs btn-primary'}
+		</td>
+	</tr>
+{/define}
