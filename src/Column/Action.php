@@ -130,7 +130,11 @@ class Action extends Column
 		}
 
 		if ($confirm = $this->getConfirm($row)) {
-			$a->data(static::$data_confirm_attribute_name, $this->translate($confirm));
+			$confirm = $this->translate($confirm);
+			if ($this->confirm[1] !== NULL) {
+				$confirm = str_replace('%s', $row->getValue($this->confirm[1]), $confirm);
+			}
+			$a->data(static::$data_confirm_attribute_name, $confirm);
 		}
 
 		return $a;
@@ -266,11 +270,7 @@ class Action extends Column
 		 */
 		$question = $this->getPropertyStringOrCallableGetString($row, $question, 'confirmation dialog');
 
-		if (!$this->confirm[1]) {
-			return $question;
-		}
-
-		return str_replace('%s', $row->getValue($this->confirm[1]), $question);
+		return $question;
 	}
 
 

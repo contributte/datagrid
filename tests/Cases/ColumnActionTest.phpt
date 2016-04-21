@@ -5,6 +5,8 @@ namespace Ublaboo\DataGrid\Tests\Cases;
 use Tester\TestCase,
 	Tester\Assert,
 	Mockery,
+	Mockery\MockInterface,
+	Nette\Localization\ITranslator,
 	Ublaboo\DataGrid\DataGrid,
 	Ublaboo;
 
@@ -127,6 +129,38 @@ final class ColumnActionTest extends TestCase
 
 		Assert::same(
 			'<a href="doStuff!?id=1" class="btn btn-xs btn-default" data-datagrid-confirm="Really?">Do</a>',
+			$this->render($action)
+		);
+	}
+
+
+	public function testActionConfirmWithValue()
+	{
+		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->setConfirm('Really %s?', 'name');
+
+		Assert::same(
+			'<a href="doStuff!?id=1" class="btn btn-xs btn-default" data-datagrid-confirm="Really John?">Do</a>',
+			$this->render($action)
+		);
+	}
+
+
+	public function testActionConfirmWithValueTranslated()
+	{
+		/** @var ITranslator|MockInterface $translator */
+		$translator = Mockery::mock(ITranslator::class);
+		$translator->shouldReceive('translate')
+			->with('confirm.translation.key')
+			->andReturn('Really %s?');
+		$translator->shouldReceive('translate')
+			->with('Do')
+			->andReturn('Do');
+		$this->grid->setTranslator($translator);
+
+		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->setConfirm('confirm.translation.key', 'name');
+
+		Assert::same(
+			'<a href="doStuff!?id=1" class="btn btn-xs btn-default" data-datagrid-confirm="Really John?">Do</a>',
 			$this->render($action)
 		);
 	}
