@@ -134,16 +134,6 @@ datagridSortable = ->
 					alert(jqXHR.statusText)
 			})
 		,
-		start: (event, ui) ->
-			arrows = ui.item.find('[data-sortable-arrow]')
-			arrows.removeClass(arrows.data('sortable-arrow'))
-			arrows.addClass(arrows.data('sortable-replace-arrow'))
-		,
-		stop: (event, ui) ->
-			arrows = ui.item.find('[data-sortable-arrow]')
-			arrows.removeClass(arrows.data('sortable-replace-arrow'))
-			arrows.addClass(arrows.data('sortable-arrow'))
-		,
 		helper: (e, ui) ->
 			ui.children().each ->
 				$(this).width($(this).width())
@@ -204,25 +194,12 @@ datagridSortableTree = ->
 			})
 	, stop: (event, ui) ->
 		$('.toggle-tree-to-delete').removeClass('toggle-tree-to-delete')
-
-		arrows = ui.item.find('[data-sortable-arrow]')
-		arrows.removeClass(arrows.data('sortable-replace-arrow'))
-		arrows.addClass(arrows.data('sortable-arrow'))
 	, start: (event, ui) ->
-		arrows = ui.item.find('[data-sortable-arrow]')
-		arrows.removeClass(arrows.data('sortable-arrow'))
-		arrows.addClass(arrows.data('sortable-replace-arrow'))
-
 		parent = ui.item.parent().closest('.datagrid-tree-item')
 
 		if parent.length
 			if parent.find('.datagrid-tree-item').length == 2
 				parent.find('[data-toggle-tree]').addClass('toggle-tree-to-delete')
-	, helper: (e, ui) ->
-			ui.children().each ->
-				$(this).width($(this).width())
-
-			return ui;
 	})
 
 $ ->
@@ -302,7 +279,9 @@ $.nette.ext('datargid.item_detail', {
 		if settings.nette and settings.nette.el.attr('data-toggle-detail')
 			id = settings.nette.el.attr('data-toggle-detail')
 			row_detail = $('.item-detail-' + id)
+			#row = row_detail.closest('.datagrid').find('tr[data-id=' + id + ']')
 
+			#if row_detail.hasClass('loaded') and row.hasClass('detail-loaded')
 			if row_detail.hasClass('loaded')
 				if not row_detail.find('.item-detail-content').size()
 					row_detail.removeClass('toggled')
@@ -319,6 +298,7 @@ $.nette.ext('datargid.item_detail', {
 
 				return false
 			else
+				#row.addClass('detail-loaded')
 				row_detail.addClass('loaded')
 
 	success: (payload) ->

@@ -146,18 +146,6 @@ datagridSortable = function() {
         }
       });
     },
-    start: function(event, ui) {
-      var arrows;
-      arrows = ui.item.find('[data-sortable-arrow]');
-      arrows.removeClass(arrows.data('sortable-arrow'));
-      return arrows.addClass(arrows.data('sortable-replace-arrow'));
-    },
-    stop: function(event, ui) {
-      var arrows;
-      arrows = ui.item.find('[data-sortable-arrow]');
-      arrows.removeClass(arrows.data('sortable-replace-arrow'));
-      return arrows.addClass(arrows.data('sortable-arrow'));
-    },
     helper: function(e, ui) {
       ui.children().each(function() {
         return $(this).width($(this).width());
@@ -224,29 +212,16 @@ datagridSortableTree = function() {
       });
     },
     stop: function(event, ui) {
-      var arrows;
-      $('.toggle-tree-to-delete').removeClass('toggle-tree-to-delete');
-      arrows = ui.item.find('[data-sortable-arrow]');
-      arrows.removeClass(arrows.data('sortable-replace-arrow'));
-      return arrows.addClass(arrows.data('sortable-arrow'));
+      return $('.toggle-tree-to-delete').removeClass('toggle-tree-to-delete');
     },
     start: function(event, ui) {
-      var arrows, parent;
-      arrows = ui.item.find('[data-sortable-arrow]');
-      arrows.removeClass(arrows.data('sortable-arrow'));
-      arrows.addClass(arrows.data('sortable-replace-arrow'));
+      var parent;
       parent = ui.item.parent().closest('.datagrid-tree-item');
       if (parent.length) {
         if (parent.find('.datagrid-tree-item').length === 2) {
           return parent.find('[data-toggle-tree]').addClass('toggle-tree-to-delete');
         }
       }
-    },
-    helper: function(e, ui) {
-      ui.children().each(function() {
-        return $(this).width($(this).width());
-      });
-      return ui;
     }
   });
 };
