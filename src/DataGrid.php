@@ -2487,7 +2487,11 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$count = sizeof($this->getColumns());
 
-		if (!empty($this->actions) || $this->isSortable() || $this->getItemsDetail() || $this->getInlineEdit()) {
+		if (!empty($this->actions)
+			|| $this->isSortable()
+			|| $this->getItemsDetail()
+			|| $this->getInlineEdit()
+			|| $this->getInlineAdd()) {
 			$count++;
 		}
 
