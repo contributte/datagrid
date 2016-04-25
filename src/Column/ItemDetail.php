@@ -71,6 +71,11 @@ class ItemDetail
 	 */
 	protected $form;
 
+	/**
+	 * @var array
+	 */
+	protected $template_parameters = [];
+
 
 	/**
 	 * @param DataGrid $grid
@@ -305,6 +310,24 @@ class ItemDetail
 	public function getForm()
 	{
 		return $this->form;
+	}
+
+
+	/**
+	 * @param array $template_parameters
+	 * @return static
+	 */
+	public function setTemplateParameters(array $template_parameters)
+	{
+		$this->template_parameters = $template_parameters;
+
+		return $this;
+	}
+
+
+	public function getTemplateVariables()
+	{
+		return $this->template_parameters;
 	}
 
 }
