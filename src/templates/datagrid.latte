@@ -375,7 +375,7 @@
 		{foreach $columns as $key => $column}
 			{var $col = 'col-' . $key}
 
-			{var $td = $column->getElementPrototype('td', $key)}
+			{var $td = clone $column->getElementPrototype('td', $key)}
 			{var $td->class[] = 'datagrid-inline-edit'}
 			{!$td->startTag()}
 				{if isset($filter['inline_add'][$key])}
