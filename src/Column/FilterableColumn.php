@@ -87,6 +87,19 @@ abstract class FilterableColumn extends Nette\Object
 
 
 	/**
+	 * @param array       $options
+	 * @param string|null $column
+	 * @return Ublaboo\DataGrid\Filter\FilterMultiSelect
+	 */
+	public function setFilterMultiSelect(array $options, $column = NULL)
+	{
+		$column = $column === NULL ? $this->column : $column;
+
+		return $this->grid->addFilterMultiSelect($this->key, $this->name, $options, $column);
+	}
+
+
+	/**
 	 * @param string|null $column
 	 * @return Ublaboo\DataGrid\Filter\FilterDate
 	 */
