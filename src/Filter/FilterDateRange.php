@@ -28,6 +28,15 @@ class FilterDateRange extends FilterRange
 	 */
 	protected $type = 'date-range';
 
+	/**
+	 * @var array
+	 */
+	protected $attributes = [
+		['class', 'form-control input-sm'],
+		['data-autosubmit', TRUE],
+		['data-autosubmit-change', TRUE]
+	];
+
 
 	/**
 	 * Adds select box to filter form
@@ -50,6 +59,9 @@ class FilterDateRange extends FilterRange
 			->setAttribute('data-date-format', $this->getJsFormat())
 			->setAttribute('data-date-today-highlight', 'true')
 			->setAttribute('data-date-autoclose', 'true');
+
+		$this->addAttributes($container['from']);
+		$this->addAttributes($container['to']);
 
 		if ($placeholder_array = $this->getPlaceholder()) {
 			$text_from = reset($placeholder_array);

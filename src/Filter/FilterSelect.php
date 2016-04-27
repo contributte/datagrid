@@ -33,14 +33,6 @@ class FilterSelect extends Filter
 	 */
 	protected $type = 'select';
 
-	/**
-	 * @var array
-	 */
-	protected $attributes = [
-		['class', 'form-control input-sm'],
-		['data-autosubmit', TRUE]
-	];
-
 
 	/**
 	 * @param string $key

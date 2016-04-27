@@ -64,7 +64,10 @@ abstract class Filter extends Nette\Object
 	/**
 	 * @var array
 	 */
-	protected $attributes = [];
+	protected $attributes = [
+		['class', 'form-control input-sm'],
+		['data-autosubmit', TRUE]
+	];
 
 
 	/**

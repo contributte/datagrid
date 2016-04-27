@@ -28,6 +28,15 @@ class FilterDate extends Filter
 	 */
 	protected $type = 'date';
 
+	/**
+	 * @var array
+	 */
+	protected $attributes = [
+		['class', 'form-control input-sm'],
+		['data-autosubmit', TRUE],
+		['data-autosubmit-change', TRUE]
+	];
+
 
 	/**
 	 * Adds select box to filter form
@@ -41,6 +50,8 @@ class FilterDate extends Filter
 			->setAttribute('data-date-format', $this->getJsFormat())
 			->setAttribute('data-date-today-highlight', 'true')
 			->setAttribute('data-date-autoclose', 'true');
+
+		$this->addAttributes($container[$this->key]);
 
 		if ($this->getPlaceholder()) {
 			$container[$this->key]->setAttribute('placeholder', $this->getPlaceholder());

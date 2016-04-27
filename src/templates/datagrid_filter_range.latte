@@ -9,21 +9,21 @@
 	<div class="row">
 		{label $container['from'], class => 'col-sm-3 control-label' /}
 		<div class="col-sm-4">
-			{input $container['from'], class => 'form-control input-sm', data-autosubmit => TRUE}
+			{input $container['from']}
 		</div>
 		{label $container['to'], class => 'filter-range-delimiter col-sm-1 control-label' /}
 		<div class="col-sm-4">
-			{input $container['to'], class => 'form-control input-sm', data-autosubmit => TRUE}
+			{input $container['to']}
 		</div>
 	</div>
 {else}
 	<div class="datagrid-col-filter-range form-inline">
 		<div class="input-group">
-			{input $container['from'], class => 'form-control input-sm', data-autosubmit => TRUE}
+			{input $container['from']}
 
 			<div class="input-group-addon datagrid-col-filter-datte-range-delimiter">-</div>
 
-			{input $container['to'], class => 'form-control input-sm', data-autosubmit => TRUE}
+			{input $container['to']}
 		</div>
 	</div>
 {/if}

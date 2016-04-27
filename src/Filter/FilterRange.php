@@ -61,6 +61,9 @@ class FilterRange extends Filter
 
 		$container->addText('to', $this->name_second);
 
+		$this->addAttributes($container['from']);
+		$this->addAttributes($container['to']);
+
 		if ($placeholder_array = $this->getPlaceholder()) {
 			$text_from = reset($placeholder_array);
 

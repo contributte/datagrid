@@ -32,6 +32,8 @@ class FilterText extends Filter
 	{
 		$container->addText($this->key, $this->name);
 
+		$this->addAttributes($container[$this->key]);
+
 		if ($this->getPlaceholder()) {
 			$container[$this->key]->setAttribute('placeholder', $this->getPlaceholder());
 		}
