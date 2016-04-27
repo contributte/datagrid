@@ -102,7 +102,7 @@
 										<li>
 											<a n:href="showAllColumns!" class="ajax"><i class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
 										</li>
-										<li>
+										<li n:if="$control->hasSomeColumnDefaultHide()">
 											<a n:href="showDefaultColumns!" class="ajax"><i class="{$icon_prefix}repeat"></i> {_'ublaboo_datagrid.show_default_columns'}</a>
 										</li>
 									</ul>

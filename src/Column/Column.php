@@ -616,6 +616,10 @@ abstract class Column extends FilterableColumn
 	{
 		$this->default_hide = (bool) $default_hide;
 
+		if ($default_hide) {
+			$this->grid->setSomeColumnDefaultHide($default_hide);
+		}
+
 		return $this;
 	}
 

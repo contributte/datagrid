@@ -76,7 +76,7 @@ class FilterSelect extends Filter
 	 * @param  bool  $translateOptions
 	 * @return static
 	 */
-	public function setTranslateOptions($translateOptions)
+	public function setTranslateOptions($translateOptions = TRUE)
 	{
 		$this->translateOptions = (bool) $translateOptions;
 		return $this;

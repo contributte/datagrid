@@ -274,6 +274,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $snippets_set = FALSE;
 
+	/**
+	 * @var bool
+	 */
+	protected $some_column_default_hide = FALSE;
+
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -2580,6 +2585,25 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		return $parent;
+	}
+
+
+	/**
+	 * Some of datagrid columns is hidden by default
+	 * @param bool $default_hide
+	 */
+	public function setSomeColumnDefaultHide($default_hide)
+	{
+		$this->some_column_default_hide = $default_hide;
+	}
+
+
+	/**
+	 * Are some of columns hidden bydefault?
+	 */
+	public function hasSomeColumnDefaultHide()
+	{
+		return $this->some_column_default_hide;
 	}
 
 }
