@@ -1837,6 +1837,21 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Tell datagrid to display default columns
+	 * @return void
+	 */
+	public function handleShowDefaultColumns()
+	{
+		$this->deleteSesssionData('_grid_hidden_columns');
+		$this->saveSessionData('_grid_hidden_columns_manipulated', FALSE);
+
+		$this->redrawControl();
+
+		$this->onRedraw();
+	}
+
+
+	/**
 	 * Reveal particular column
 	 * @param  string $column
 	 * @return void
