@@ -1,4 +1,4 @@
-var datagridSortable, datagridSortableTree;
+var datagridFitlerMultiSelect, datagridSortable, datagridSortableTree;
 
 $(document).on('click', '[data-datagrid-confirm]', function(e) {
   if (!confirm($(e.target).closest('a').attr('data-datagrid-confirm'))) {
@@ -490,5 +490,26 @@ $.nette.ext('datagrid-toggle-inline-add', {
       $('.datagrid-row-inline-add').find('input[type!=submit]').val('');
       return $('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden');
     }
+  }
+});
+
+datagridFitlerMultiSelect = function() {
+  var select;
+  select = $('.selectpicker').first();
+  return $.fn.selectpicker.defaults = {
+    countSelectedText: select.data('i18n-selected'),
+    iconBase: '',
+    tickIcon: select.data('selected-icon-check')
+  };
+};
+
+$(function() {
+  return datagridFitlerMultiSelect();
+});
+
+$.nette.ext('datagrid.fitlerMultiSelect', {
+  success: function() {
+    datagridFitlerMultiSelect();
+    return $('.selectpicker').selectpicker();
   }
 });

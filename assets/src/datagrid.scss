@@ -72,10 +72,10 @@
 
 		thead {
 			tr {
-				.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+				.bootstrap-select:not([class*=col-]):not(.input-group-btn) {
 					width: auto;
 
-					.btn {
+					& > .btn {
 						padding: 5px 25px 5px 10px;
 						font-size: 12px;
 						line-height: 1.5;

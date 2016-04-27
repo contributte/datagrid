@@ -33,6 +33,14 @@ class FilterSelect extends Filter
 	 */
 	protected $type = 'select';
 
+	/**
+	 * @var array
+	 */
+	protected $attributes = [
+		['class', 'form-control input-sm'],
+		['data-autosubmit', TRUE]
+	];
+
 
 	/**
 	 * @param string $key
@@ -111,7 +119,9 @@ class FilterSelect extends Filter
 	 */
 	protected function addControl(Nette\Forms\Container $container, $key, $name, $options)
 	{
-		return $container->addSelect($key, $name, $options);
+		$input = $container->addSelect($key, $name, $options);
+
+		return $this->addAttributes($input);
 	}
 
 }

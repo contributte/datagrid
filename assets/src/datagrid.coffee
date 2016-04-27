@@ -449,3 +449,26 @@ $.nette.ext('datagrid-toggle-inline-add', {
 
 			$('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden')
 })
+
+
+# FilterMultiSelect
+#
+
+datagridFitlerMultiSelect = ->
+	select = $('.selectpicker').first()
+
+	$.fn.selectpicker.defaults = {
+		countSelectedText: select.data('i18n-selected'),
+		iconBase: '',
+		tickIcon: select.data('selected-icon-check')
+	}
+
+$ ->
+	datagridFitlerMultiSelect()
+
+
+$.nette.ext('datagrid.fitlerMultiSelect', {
+	success: ->
+		datagridFitlerMultiSelect()
+		$('.selectpicker').selectpicker()
+})

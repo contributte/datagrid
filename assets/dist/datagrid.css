@@ -59,11 +59,11 @@
   margin: 0;
 }
 
-.datagrid table thead tr .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+.datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) {
   width: auto;
 }
 
-.datagrid table thead tr .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) .btn {
+.datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) >  .btn {
   padding: 5px 25px 5px 10px;
   font-size: 12px;
   line-height: 1.5;
@@ -71,7 +71,7 @@
   width: auto;
 }
 
-.datagrid table thead tr .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) .dropdown-menu li {
+.datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) .dropdown-menu li {
   font-size: 13px;
 }
 

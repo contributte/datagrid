@@ -61,6 +61,11 @@ abstract class Filter extends Nette\Object
 	 */
 	protected $type;
 
+	/**
+	 * @var array
+	 */
+	protected $attributes = [];
+
 
 	/**
 	 * @param string $key
@@ -228,6 +233,41 @@ abstract class Filter extends Nette\Object
 	public function getType()
 	{
 		return $this->type;
+	}
+
+
+	/**
+	 * @param string $name
+	 * @param mixed $value
+	 */
+	public function addAttribute($name, $value)
+	{
+		$this->attributes[] = [(string) $name, $value];
+
+		return $this;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getAttribtues()
+	{
+		return $this->attributes;
+	}
+
+
+	/**
+	 * @param Nette\Forms\Controls\BaseControl $input
+	 * @return Nette\Forms\Controls\BaseControl
+	 */
+	protected function addAttributes($input)
+	{
+		foreach ($this->attributes as $attribute) {
+			$input->setAttribute($attribute[0], $attribute[1]);
+		}
+
+		return $input;
 	}
 
 }
