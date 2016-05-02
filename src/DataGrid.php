@@ -354,6 +354,12 @@ class DataGrid extends Nette\Application\UI\Control
 		if (!empty($this->redraw_item)) {
 			$items = $this->dataModel->filterRow($this->redraw_item);
 		} else {
+			if (empty($this->sort_callback) && !empty($this->sort)) {
+				$column = $this->getColumn(array_keys($this->sort)[0]);
+				if ($column->isSortable() AND Nette\Utils\Validators::isCallable($column->getSortableCallback()))
+					$this->sort_callback = $column->getSortableCallback();
+			}
+
 			$items = Nette\Utils\Callback::invokeArgs(
 				[$this->dataModel, 'filterData'],
 				[
