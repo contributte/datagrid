@@ -13,7 +13,7 @@
  * @param InlineEdit|null $inlineAdd   Inline add data
  *}
 
-<div class="datagrid datagrid-{!$control->getName()}">
+<div class="datagrid datagrid-{$control->getName()}">
 	{**
 	 * Own data
 	 *}
@@ -48,7 +48,7 @@
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
 				<thead>
-					<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports || $control->canHideColumns() || $inlineAdd">
+					<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
 							{if $control->hasGroupActions()}
 								{block group_actions}
@@ -112,11 +112,11 @@
 					</tr>
 					<tr n:block="header">
 						<th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
-							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
+							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="toggle-all" type="checkbox" data-check="{$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementPrototype('th', $key)}
-							{!$th->startTag()}
+							{$th->startTag()|noescape}
 								{var $col_header = 'col-' . $key . '-header'}
 
 								{**
@@ -175,7 +175,7 @@
 									{/ifset}
 
 								{/if}
-							{!$th->endTag()}
+							{$th->endTag()|noescape}
 						{/foreach}
 						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-center">
 							{_'ublaboo_datagrid.action'}
@@ -204,11 +204,11 @@
 
 											{var $td = $column->getElementPrototype('td', $key, $row)}
 											{var $td->class[] = 'datagrid-inline-edit'}
-											{!$td->startTag()}
+											{$td->startTag()|noescape}
 												{if isset($filter['inline_edit'][$key])}
 													{input $filter['inline_edit'][$key], class => 'form-control input-sm'}
 												{/if}
-											{!$td->endTag()}
+											{$td->endTag()|noescape}
 										{/foreach}
 
 										<td class="col-action col-action-inline-edit">
@@ -222,7 +222,7 @@
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
 										<td n:if="$control->hasGroupActions()" class="col-checkbox">
 											{if $row->hasGroupAction()}
-												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$row->getId()}]">
+												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getName()}" data-check-all-{$control->getName()|noescape} name="group_action_item[{$row->getId()}]">
 											{/if}
 										</td>
 										{foreach $columns as $key => $column}
@@ -230,7 +230,7 @@
 											{? $column = $row->applyColumnCallback($key, clone $column)}
 
 											{var $td = $column->getElementPrototype('td', $key, $row)}
-											{!$td->startTag()}
+											{$td->startTag()|noescape}
 												{if $column->hasTemplate()}
 													{include $column->getTemplate(), row => $row, item => $item, (expand) $column->getTemplateVariables()}
 												{else}
@@ -240,11 +240,11 @@
 														{if $column->isTemplateEscaped()}
 															{$column->render($row)}
 														{else}
-															{!$column->render($row)}
+															{$column->render($row)|noescape}
 														{/if}
 													{/ifset}
 												{/if}
-											{!$td->endTag()}
+											{$td->endTag()|noescape}
 										{/foreach}
 										<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
 											{foreach $actions as $key => $action}
@@ -252,7 +252,7 @@
 													{if $action->hasTemplate()}
 														{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables()}
 													{else}
-														{!$action->render($row)}
+														{$action->render($row)|noescape}
 													{/if}
 												{/if}
 											{/foreach}
@@ -260,10 +260,10 @@
 												<i class="{$icon_prefix}arrows-v"></i>
 											</span>
 											{if $inlineEdit}
-												{!$inlineEdit->renderButton($row)}
+												{$inlineEdit->renderButton($row)|noescape}
 											{/if}
 											{if $items_detail}
-												{!$items_detail->renderButton($row)}
+												{$items_detail->renderButton($row)|noescape}
 											{/if}
 										</td>
 									</tr>
@@ -294,7 +294,7 @@
 													{if $items_detail->getType() == 'template'}
 														{include $items_detail->getTemplate(), (expand) $item_detail_params}
 													{else}
-														{!$items_detail->render($item)}
+														{$items_detail->render($item)|noescape}
 													{/if}
 												</div>
 											</td>
@@ -380,11 +380,11 @@
 
 			{var $td = clone $column->getElementPrototype('td', $key)}
 			{var $td->class[] = 'datagrid-inline-edit'}
-			{!$td->startTag()}
+			{$td->startTag()|noescape}
 				{if isset($filter['inline_add'][$key])}
 					{input $filter['inline_add'][$key], class => 'form-control input-sm'}
 				{/if}
-			{!$td->endTag()}
+			{$td->endTag()|noescape}
 		{/foreach}
 
 		<td class="col-action col-action-inline-edit">
