@@ -1406,6 +1406,19 @@ class DataGrid extends Nette\Application\UI\Control
 				$this->filter[$key] = $value;
 			}
 		}
+
+		/**
+		 * When column is sorted via custom callback, apply it
+		 */
+		if (empty($this->sort_callback) && !empty($this->sort)) {
+			foreach ($this->sort as $key => $order) {
+				$column = $this->getColumn($key);
+
+				if ($column && $column->isSortable() && is_callable($column->getSortableCallback())) {
+					$this->sort_callback = $column->getSortableCallback();
+				}
+			}
+		}
 	}
 
 
