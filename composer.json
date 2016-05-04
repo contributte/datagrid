@@ -25,15 +25,15 @@
 		}
 	},
 	"require": {
-		"nette/application" : "~2.3.0",
-		"nette/utils"       : "~2.3.0",
-		"nette/forms"       : "~2.3.0",
+		"nette/application" : "^2.3.0",
+		"nette/utils"       : "^2.3.0",
+		"nette/forms"       : "^2.3.0",
 		"ublaboo/responses" : "~1.0.0",
 		"symfony/property-access": "~3.0"
 	},
 	"require-dev": {
-		"nette/tester"     : "~1.6.1",
-		"tracy/tracy"      : "~2.3.0",
+		"nette/tester"     : "^1.6.1",
+		"tracy/tracy"      : "^2.3.0",
 		"mockery/mockery"  : "~0.9",
 		"tharos/leanmapper": "~2.2.0"
 	}
