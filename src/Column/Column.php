@@ -201,7 +201,7 @@ abstract class Column extends FilterableColumn
 
 
 	/**
-	 * DO reset pagination after sorting?
+	 * Do reset pagination after sorting?
 	 * @return bool
 	 */
 	public function sortableResetPagination()

@@ -77,6 +77,16 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @var array
+	 */
+	public $default_filter = [];
+
+	/**
+	 * @var bool
+	 */
+	public $default_filter_use_on_reset = TRUE;
+
+	/**
+	 * @var array
 	 * @persistent
 	 */
 	public $filter = [];
@@ -291,9 +301,18 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->monitor('Nette\Application\UI\Presenter');
 
 		/**
-		 * Try to find previous filters/pagination/sort in session
+		 * Try to find previous filters, pagination, per_page and other values in session
 		 */
-		$this->onRender[] = [$this, 'findSessionFilters'];
+		$this->onRender[] = [$this, 'findSessionValues'];
+
+		/**
+		 * Find default filter values
+		 */
+		$this->onRender[] = [$this, 'findDefaultFilter'];
+
+		/**
+		 * Find default sort
+		 */
 		$this->onRender[] = [$this, 'findDefaultSort'];
 	}
 
@@ -1160,7 +1179,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * If we want to sent some initial filter
+	 * Set filter values (force - overwrite user data)
 	 * @param array $filter
 	 * @return static
 	 */
@@ -1168,7 +1187,79 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$this->filter = $filter;
 
+		$this->saveSessionData('_grid_has_filtered', 1);
+
 		return $this;
+	}
+
+
+	/**
+	 * If we want to sent some initial filter
+	 * @param array $filter
+	 * @param bool  $use_on_reset
+	 * @return static
+	 */
+	public function setDefaultFilter(array $default_filter, $use_on_reset = TRUE)
+	{
+		foreach ($default_filter as $key => $value) {
+			$filter = $this->getFilter($key);
+
+			if (!$filter) {
+				throw new DataGridException("Can not set default value to nonexisting filter [$key]");
+			}
+
+			if ($filter instanceof Filter\FilterMultiSelect && !is_array($value)) {
+				throw new DataGridException(
+					"Default value of filter [$key] - MultiSelect has to be an array"
+				);
+			}
+
+			if ($filter instanceof Filter\FilterRange || $filter instanceof Filter\FilterDateRange) {
+				if (!is_array($value)) {
+					throw new DataGridException(
+						"Default value of filter [$key] - Range/DateRange has to be an array [from/to => ...]"
+					);
+				}
+
+				$temp = $value;
+				unset($temp['from'], $temp['to']);
+
+				if (!empty($temp)) {
+					throw new DataGridException(
+						"Default value of filter [$key] - Range/DateRange can contain only [from/to => ...] values"
+					);
+				}
+			}
+		}
+
+		$this->default_filter = $default_filter;
+		$this->default_filter_use_on_reset = (bool) $use_on_reset;
+
+		return $this;
+	}
+
+
+	/**
+	 * User may set default filter, find it
+	 * @return void
+	 */
+	public function findDefaultFilter()
+	{
+		if (!empty($this->filter)) {
+			return;
+		}
+
+		if ($this->getSessionData('_grid_has_filtered')) {
+			return;
+		}
+
+		if (!empty($this->default_filter)) {
+			$this->filter = $this->default_filter;
+		}
+
+		foreach ($this->filter as $key => $value) {
+			$this->saveSessionData($key, $value);
+		}
 	}
 
 
@@ -1328,6 +1419,10 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->filter[$key] = $value;
 		}
 
+		if (!empty($values)) {
+			$this->saveSessionData('_grid_has_filtered', 1);
+		}
+
 		if ($this->getPresenter()->isAjax()) {
 			$this->getPresenter()->payload->_datagrid_sort = [];
 
@@ -1371,7 +1466,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Try to restore session stuff
 	 * @return void
 	 */
-	public function findSessionFilters()
+	public function findSessionValues()
 	{
 		if ($this->filter || ($this->page != 1) || !empty($this->sort) || $this->per_page) {
 			return;
@@ -1398,6 +1493,7 @@ class DataGrid extends Nette\Application\UI\Control
 				'_grid_per_page',
 				'_grid_sort',
 				'_grid_page',
+				'_grid_has_filtered',
 				'_grid_hidden_columns',
 				'_grid_hidden_columns_manipulated'
 			];
@@ -1647,8 +1743,12 @@ class DataGrid extends Nette\Application\UI\Control
 		 */
 		$this->deleteSesssionData('_grid_page');
 
+		if ($this->default_filter_use_on_reset) {
+			$this->deleteSesssionData('_grid_has_filtered');
+		}
+
 		foreach ($this->getSessionData() as $key => $value) {
-			if (!in_array($key, ['_grid_per_page', '_grid_sort', '_grid_page'])) {
+			if (!in_array($key, ['_grid_per_page', '_grid_sort', '_grid_page', '_grid_has_filtered'])) {
 				$this->deleteSesssionData($key);
 			}
 		}
