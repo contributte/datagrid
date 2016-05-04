@@ -19,6 +19,7 @@ use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
 use Ublaboo\DataGrid\Utils\Sorting;
 use Ublaboo\DataGrid\Utils\NetteDatabaseSelectionHelper;
 use Nette\Database\Drivers as NDBDrivers;
+use Ublaboo\DataGrid\DataSource\ApiDataSource;
 
 class DataModel
 {
@@ -35,7 +36,7 @@ class DataModel
 	 */
 	public function __construct($source, $primary_key)
 	{
-		if ($source instanceof IDataSource) {
+		if ($source instanceof IDataSource || $source instanceof ApiDataSource) {
 			/**
 			 * Custom user datasource is ready for use
 			 *
