@@ -640,6 +640,14 @@ abstract class Column extends FilterableColumn
 	 */
 	protected function createLink($href, $params)
 	{
+		if ($href instanceof \Nette\Application\UI\Link) {
+			foreach ($params as $key => $value) {
+				$href->setParameter($key, $value);
+			}
+
+			return $href;
+		}
+
 		try {
 			$parent = $this->grid->getParent();
 
