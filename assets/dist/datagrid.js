@@ -496,11 +496,13 @@ $.nette.ext('datagrid-toggle-inline-add', {
 datagridFitlerMultiSelect = function() {
   var select;
   select = $('.selectpicker').first();
-  return $.fn.selectpicker.defaults = {
-    countSelectedText: select.data('i18n-selected'),
-    iconBase: '',
-    tickIcon: select.data('selected-icon-check')
-  };
+  if ($.fn.selectpicker) {
+    return $.fn.selectpicker.defaults = {
+      countSelectedText: select.data('i18n-selected'),
+      iconBase: '',
+      tickIcon: select.data('selected-icon-check')
+    };
+  }
 };
 
 $(function() {
@@ -510,6 +512,8 @@ $(function() {
 $.nette.ext('datagrid.fitlerMultiSelect', {
   success: function() {
     datagridFitlerMultiSelect();
-    return $('.selectpicker').selectpicker();
+    if ($.fn.selectpicker) {
+      return $('.selectpicker').selectpicker();
+    }
   }
 });
