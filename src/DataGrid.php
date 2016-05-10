@@ -358,7 +358,7 @@ class DataGrid extends Nette\Application\UI\Control
 			throw new DataGridException('You have to add at least one column.');
 		}
 
-		$this->template->setTranslator($this->getTranslator());
+		$this->getTemplate()->setTranslator($this->getTranslator());
 
 		/**
 		 * Invoke possible events
@@ -394,35 +394,35 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		if ($this->isTreeView()) {
-			$this->template->add('tree_view_has_children_column', $this->tree_view_has_children_column);
+			$this->getTemplate()->add('tree_view_has_children_column', $this->tree_view_has_children_column);
 		}
 
-		$this->template->add('rows', $rows);
+		$this->getTemplate()->add('rows', $rows);
 
-		$this->template->add('columns', $this->getColumns());
-		$this->template->add('actions', $this->actions);
-		$this->template->add('exports', $this->exports);
-		$this->template->add('filters', $this->filters);
+		$this->getTemplate()->add('columns', $this->getColumns());
+		$this->getTemplate()->add('actions', $this->actions);
+		$this->getTemplate()->add('exports', $this->exports);
+		$this->getTemplate()->add('filters', $this->filters);
 
-		$this->template->add('filter_active', $this->isFilterActive());
-		$this->template->add('original_template', $this->getOriginalTemplateFile());
-		$this->template->add('icon_prefix', static::$icon_prefix);
-		$this->template->add('items_detail', $this->items_detail);
-		$this->template->add('columns_visibility', $this->columns_visibility);
+		$this->getTemplate()->add('filter_active', $this->isFilterActive());
+		$this->getTemplate()->add('original_template', $this->getOriginalTemplateFile());
+		$this->getTemplate()->add('icon_prefix', static::$icon_prefix);
+		$this->getTemplate()->add('items_detail', $this->items_detail);
+		$this->getTemplate()->add('columns_visibility', $this->columns_visibility);
 
-		$this->template->add('inlineEdit', $this->inlineEdit);
-		$this->template->add('inlineAdd', $this->inlineAdd);
+		$this->getTemplate()->add('inlineEdit', $this->inlineEdit);
+		$this->getTemplate()->add('inlineAdd', $this->inlineAdd);
 
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
 		 */
-		$this->template->add('filter', $this['filter']);
+		$this->getTemplate()->add('filter', $this['filter']);
 
 		/**
 		 * Set template file and render it
 		 */
-		$this->template->setFile($this->getTemplateFile());
-		$this->template->render();
+		$this->getTemplate()->setFile($this->getTemplateFile());
+		$this->getTemplate()->render();
 	}
 
 
@@ -1359,17 +1359,17 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Inline edit
 		 */
-		$inline_edit = $form['inline_edit'];
+		if (isset($form['inline_edit']) && isset($form['inline_edit']['submit']) && isset($form['inline_edit']['cancel'])) {
+			$edit = $form['inline_edit'];
 
-		if (isset($inline_edit) && isset($inline_edit['submit']) && isset($inline_edit['cancel'])) {
-			if ($inline_edit['submit']->isSubmittedBy() || $inline_edit['cancel']->isSubmittedBy()) {
+			if ($edit['submit']->isSubmittedBy() || $edit['cancel']->isSubmittedBy()) {
 				$id = $form->getHttpData(Form::DATA_LINE, 'inline_edit[_id]');
 				$primary_where_column = $form->getHttpData(
 					Form::DATA_LINE,
 					'inline_edit[_primary_where_column]'
 				);
 
-				if ($inline_edit['submit']->isSubmittedBy()) {
+				if ($edit['submit']->isSubmittedBy()) {
 					$this->inlineEdit->onSubmit($id, $values->inline_edit);
 
 					if ($this->getPresenter()->isAjax()) {
@@ -1386,11 +1386,11 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Inline add
 		 */
-		$inline_add = $form['inline_add'];
+		if (isset($form['inline_add']) && isset($form['inline_add']['submit']) && isset($form['inline_add']['cancel'])) {
+			$add = $form['inline_add'];
 
-		if (isset($inline_add) && isset($inline_add['submit']) && isset($inline_add['cancel'])) {
-			if ($inline_add['submit']->isSubmittedBy() || $inline_add['cancel']->isSubmittedBy()) {
-				if ($inline_add['submit']->isSubmittedBy()) {
+			if ($add['submit']->isSubmittedBy() || $add['cancel']->isSubmittedBy()) {
+				if ($add['submit']->isSubmittedBy()) {
 					$this->inlineAdd->onSubmit($values->inline_add);
 
 					if ($this->getPresenter()->isAjax()) {
@@ -1845,7 +1845,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function handleGetItemDetail($id)
 	{
-		$this->template->add('toggle_detail', $id);
+		$this->getTemplate()->add('toggle_detail', $id);
 		$this->redraw_item = [$this->items_detail->getPrimaryWhereColumn() => $id];
 
 		if ($this->getPresenter()->isAjax()) {
