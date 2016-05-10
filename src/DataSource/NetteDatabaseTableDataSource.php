@@ -82,6 +82,12 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 */
 	public function filterOne(array $condition)
 	{
+		foreach ($condition as $col => $value) {
+			if (strpos($col, '.') === FALSE) {
+				$condition[$this->data_source->getName() . '.' . $col] = $value;
+				unset($condition[$col]);
+			}
+		}
 		$this->data_source->where($condition)->limit(1);
 
 		return $this;
