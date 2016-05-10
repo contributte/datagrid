@@ -361,8 +361,14 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$callback = $this->rowCallback ?: NULL;
 
+		$hasGroupActionOnRows = false;
+
 		foreach ($items as $item) {
 			$rows[] = $row = new Row($this, $item, $this->getPrimaryKey());
+
+			if(!$hasGroupActionOnRows && $row->hasGroupAction()){
+				$hasGroupActionOnRows = true;
+			}
 
 			if ($callback) {
 				$callback($item, $row->getControl());
@@ -372,7 +378,7 @@ class DataGrid extends Nette\Application\UI\Control
 		if ($this->isTreeView()) {
 			$this->template->add('tree_view_has_children_column', $this->tree_view_has_children_column);
 		}
-
+		$this->template->add('hasGroupActionOnRows', $hasGroupActionOnRows);
 		$this->template->add('rows', $rows);
 
 		$this->template->add('columns', $this->getColumns());
@@ -2271,7 +2277,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @param callable $callable_set_container 
+	 * @param callable $callable_set_container
 	 * @return static
 	 */
 	public function setItemsDetailForm(callable $callable_set_container)
@@ -2535,7 +2541,7 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$hidden_columns = $this->getSessionData('_grid_hidden_columns', []);
-		
+
 		foreach ($hidden_columns as $column) {
 			if (!empty($this->columns[$column])) {
 				$this->columns_visibility[$column] = [

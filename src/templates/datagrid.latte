@@ -48,9 +48,9 @@
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
 				<thead>
-					<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports || $control->canHideColumns() || $inlineAdd">
+					<tr class="row-group-actions" n:if="$hasGroupActionOnRows || $exports || $control->canHideColumns() || $inlineAdd">
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
-							{if $control->hasGroupActions()}
+							{if $hasGroupActionOnRows}
 								{block group_actions}
 									{_'ublaboo_datagrid.group_actions'}:
 									{foreach $filter['group_action']->getControls() as $form_control}
@@ -108,7 +108,7 @@
 						</th>
 					</tr>
 					<tr n:block="header">
-						<th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
+						<th n:if="$hasGroupActionOnRows" rowspan="2" class="col-checkbox">
 							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="toggle-all" type="checkbox" data-check="{!$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $key => $column}
@@ -194,7 +194,7 @@
 									{? $inlineEdit->onSetDefaults($filter['inline_edit'], $item); }
 
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
-										<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+										<td n:if="$hasGroupActionOnRows" class="col-checkbox"></td>
 
 										{foreach $columns as $key => $column}
 											{var $col = 'col-' . $key}
@@ -217,7 +217,7 @@
 									</tr>
 								{else}
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
-										<td n:if="$control->hasGroupActions()" class="col-checkbox">
+										<td n:if="$hasGroupActionOnRows" class="col-checkbox">
 											{if $row->hasGroupAction()}
 												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{!$control->getName()}" data-check-all-{!$control->getName()} name="group_action_item[{$row->getId()}]">
 											{/if}
@@ -370,7 +370,7 @@
 	{? $inlineAdd->onSetDefaults($filter['inline_add']); }
 
 	<tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden">
-		<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+		<td n:if="$hasGroupActionOnRows" class="col-checkbox"></td>
 
 		{foreach $columns as $key => $column}
 			{var $col = 'col-' . $key}
