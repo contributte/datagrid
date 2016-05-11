@@ -418,7 +418,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->getTemplate()->add('inlineEdit', $this->inlineEdit);
 		$this->getTemplate()->add('inlineAdd', $this->inlineAdd);
 
-		$this->template->add('hasGroupActionOnRows', $hasGroupActionOnRows);
+		$this->getTemplate()->add('hasGroupActionOnRows', $hasGroupActionOnRows);
 
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
