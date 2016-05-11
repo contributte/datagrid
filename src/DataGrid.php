@@ -384,13 +384,13 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$callback = $this->rowCallback ?: NULL;
-		$hasGroupActionOnRows = false;
+		$hasGroupActionOnRows = FALSE;
 
 		foreach ($items as $item) {
 			$rows[] = $row = new Row($this, $item, $this->getPrimaryKey());
 
 			if(!$hasGroupActionOnRows && $row->hasGroupAction()){
-				$hasGroupActionOnRows = true;
+				$hasGroupActionOnRows = TRUE;
 			}
 
 			if ($callback) {
