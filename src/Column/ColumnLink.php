@@ -93,8 +93,8 @@ class ColumnLink extends Column
 			->href($this->createLink($this->href, $this->getItemParams($row, $this->params)));
 			
 		if (!empty($this->data_attributes)) {
-			foreach ($this->data_attributes as $key => $value) {
-				$a->data($key, $value);
+			foreach ($this->data_attributes as $key => $attr_value) {
+				$a->data($key, $attr_value);
 			}
 		}
 
