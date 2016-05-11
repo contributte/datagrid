@@ -384,9 +384,14 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$callback = $this->rowCallback ?: NULL;
+		$hasGroupActionOnRows = false;
 
 		foreach ($items as $item) {
 			$rows[] = $row = new Row($this, $item, $this->getPrimaryKey());
+
+			if(!$hasGroupActionOnRows && $row->hasGroupAction()){
+				$hasGroupActionOnRows = true;
+			}
 
 			if ($callback) {
 				$callback($item, $row->getControl());
@@ -412,6 +417,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->getTemplate()->add('inlineEdit', $this->inlineEdit);
 		$this->getTemplate()->add('inlineAdd', $this->inlineAdd);
+
+		$this->template->add('hasGroupActionOnRows', $hasGroupActionOnRows);
 
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
