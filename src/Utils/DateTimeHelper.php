@@ -66,4 +66,29 @@ final class DateTimeHelper extends Nette\Object
 		throw new DataGridDateTimeHelperException;
 	}
 
+
+	/**
+	 * Try to convert string into DateTime object from more date formats
+	 * @param  string $value
+	 * @return \DateTime
+	 * @throws DataGridDateTimeHelperException
+	 */
+	public static function tryConvertToDate($value)
+	{
+		$formats = ['Y-m-d', 'j. n. Y'];
+
+		foreach ($formats as $format) {
+			$date = \DateTime::createFromFormat($format, $value);
+
+			if ($date) {
+				return $date;
+			}
+		}
+
+		/**
+		 * Could not convert string to datatime
+		 */
+		throw new DataGridDateTimeHelperException;
+	}
+
 }

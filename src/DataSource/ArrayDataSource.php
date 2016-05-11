@@ -11,6 +11,8 @@ namespace Ublaboo\DataGrid\DataSource;
 use Ublaboo\DataGrid\Filter\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
+use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -139,6 +141,10 @@ class ArrayDataSource implements IDataSource
 				return $this->applyFilterDate($row, $filter);
 			} else if ($filter instanceof FilterMultiSelect) {
 				return $this->applyFilterMultiSelect($row, $filter);
+			} else if ($filter instanceof FilterDateRange) {
+				return $this->applyFilterDateRange($row, $filter);
+			} else if ($filter instanceof FilterRange) {
+				return $this->applyFilterRange($row, $filter);
 			}
 
 			$condition = $filter->getCondition();
@@ -171,6 +177,92 @@ class ArrayDataSource implements IDataSource
 		$values = $condition[$filter->getColumn()];
 
 		return in_array($row[$filter->getColumn()], $values);
+	}
+
+
+	/**
+	 * @param  mixed  $row
+	 * @param  FilterRange $filter
+	 * @return void
+	 */
+	public function applyFilterRange($row, FilterRange $filter)
+	{
+		$condition = $filter->getCondition();
+		$values = $condition[$filter->getColumn()];
+
+		if ($values['from'] !== NULL && $values['from'] !== '') {
+			if ($values['from'] > $row[$filter->getColumn()]) {
+				return FALSE;
+			}
+		}
+
+		if ($values['to'] !== NULL && $values['to'] !== '') {
+			if ($values['to'] < $row[$filter->getColumn()]) {
+				return FALSE;
+			}
+		}
+
+		return TRUE;
+	}
+
+
+	/**
+	 * @param  mixed  $row
+	 * @param  FilterDateRange $filter
+	 * @return void
+	 */
+	public function applyFilterDateRange($row, FilterDateRange $filter)
+	{
+		$format = $filter->getPhpFormat();
+		$condition = $filter->getCondition();
+		$values = $condition[$filter->getColumn()];
+		$row_value = $row[$filter->getColumn()];
+
+		if ($values['from'] !== NULL && $values['from'] !== '') {
+			$date_from = \DateTime::createFromFormat($format, $values['from']);
+
+			if (!($row_value instanceof \DateTime)) {
+				/**
+				 * Try to convert string to DateTime object
+				 */
+				try {
+					$row_value = DateTimeHelper::tryConvertToDate($row_value);
+				} catch (DataGridDateTimeHelperException $e) {
+					/**
+					 * Otherwise just return raw string
+					 */
+					return FALSE;
+				}
+			}
+
+			if ($row_value->getTimeStamp() < $date_from->getTimeStamp()) {
+				return FALSE;
+			}
+		}
+
+		if ($values['to'] !== NULL && $values['to'] !== '') {
+			$date_from = \DateTime::createFromFormat($format, $values['to']);
+
+			if (!($row_value instanceof \DateTime)) {
+				/**
+				 * Try to convert string to DateTime object
+				 */
+				try {
+					$row_value = DateTimeHelper::tryConvertToDate($row_value);
+				} catch (DataGridDateTimeHelperException $e) {
+					/**
+					 * Otherwise just return raw string
+					 */
+					return FALSE;
+				}
+			}
+
+			if ($row_value->getTimeStamp() > $date_from->getTimeStamp()) {
+				return FALSE;
+			}
+		}
+
+		return TRUE;
 	}
 
 
