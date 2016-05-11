@@ -398,6 +398,10 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
+		if($hasGroupActionOnRows){
+			$hasGroupActionOnRows = $this->hasGroupActions();
+		}
+
 		if ($this->isTreeView()) {
 			$this->getTemplate()->add('tree_view_has_children_column', $this->tree_view_has_children_column);
 		}
