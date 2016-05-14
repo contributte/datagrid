@@ -374,7 +374,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->getTemplate()->add('tree_view_has_children_column', $this->tree_view_has_children_column);
 		}
 
-		$this->getTemplate()->add('rows', $this->getRows());
+		$this->getTemplate()->add('rows', $this->getRows(TRUE));
 
 		$this->getTemplate()->add('columns', $this->getColumns());
 		$this->getTemplate()->add('actions', $this->actions);
@@ -407,9 +407,9 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Get all prepared Rows
 	 * @return array
 	 */
-	public function getRows()
+	public function getRows($refresh = FALSE)
 	{
-		if (is_array($this->rows))
+		if (is_array($this->rows) && !$refresh)
 			return $this->rows;
 		/**
 		 * Prepare data for rendering (datagrid may render just one item)
