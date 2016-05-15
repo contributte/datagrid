@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid;
 
 use Nette;
+use Nette\Application\UI\Link;
 use Nette\Application\UI\PresenterComponent;
 use Ublaboo\DataGrid\Utils\ArraysHelper;
 use Nette\Application\UI\Form;
@@ -1589,7 +1590,7 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$id = ($s = sizeof($this->exports)) ? ($s + 1) : 1;
 
-		$export->setLink($this->link('export!', ['id' => $id]));
+		$export->setLink(new Link($this, 'export!', ['id' => $id]));
 
 		return $this->exports[$id] = $export;
 	}
@@ -1598,7 +1599,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function resetExportsLinks()
 	{
 		foreach ($this->exports as $id => $export) {
-			$export->setLink($this->link('export!', ['id' => $id]));
+			$export->setLink(new Link($this, 'export!', ['id' => $id]));
 		}
 	}
 
