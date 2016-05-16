@@ -35,17 +35,7 @@ class ColumnNumber extends Column
 	public function getColumnValue(Row $row)
 	{
 		$value = parent::getColumnValue($row);
-
-		if (!is_numeric($value)) {
-			return $value;
-		}
-
-		return number_format(
-			$value,
-			$this->number_format[0],
-			$this->number_format[1],
-			$this->number_format[2]
-		);
+		return $this->formatValue($value);
 	}
 
 
@@ -60,6 +50,26 @@ class ColumnNumber extends Column
 		$this->number_format = [$decimals, $dec_point, $thousands_sep];
 
 		return $this;
+	}
+
+
+	/**
+	 * Format row value
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
+	public function formatValue($value)
+	{
+		if (!is_numeric($value)) {
+			return $value;
+		}
+
+		return number_format(
+			$value,
+			$this->number_format[0],
+			$this->number_format[1],
+			$this->number_format[2]
+		);
 	}
 
 }
