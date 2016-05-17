@@ -290,6 +290,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $some_column_default_hide = FALSE;
 
+	/**
+	 * @var array|NULL
+	**/
+	protected $rows;
+
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -366,39 +371,11 @@ class DataGrid extends Nette\Application\UI\Control
 		 */
 		$this->onRender($this);
 
-		/**
-		 * Prepare data for rendering (datagrid may render just one item)
-		 */
-		$rows = [];
-
-		if (!empty($this->redraw_item)) {
-			$items = $this->dataModel->filterRow($this->redraw_item);
-		} else {
-			$items = Nette\Utils\Callback::invokeArgs(
-				[$this->dataModel, 'filterData'],
-				[
-					$this->getPaginator(),
-					new Sorting($this->sort, $this->sort_callback),
-					$this->assableFilters()
-				]
-			);
-		}
-
-		$callback = $this->rowCallback ?: NULL;
-
-		foreach ($items as $item) {
-			$rows[] = $row = new Row($this, $item, $this->getPrimaryKey());
-
-			if ($callback) {
-				$callback($item, $row->getControl());
-			}
-		}
-
 		if ($this->isTreeView()) {
 			$this->getTemplate()->add('tree_view_has_children_column', $this->tree_view_has_children_column);
 		}
 
-		$this->getTemplate()->add('rows', $rows);
+		$this->getTemplate()->add('rows', $this->getRows(TRUE));
 
 		$this->getTemplate()->add('columns', $this->getColumns());
 		$this->getTemplate()->add('actions', $this->actions);
@@ -424,6 +401,52 @@ class DataGrid extends Nette\Application\UI\Control
 		 */
 		$this->getTemplate()->setFile($this->getTemplateFile());
 		$this->getTemplate()->render();
+	}
+
+
+	/**
+	 * Get all prepared Rows
+	 * @return array
+	 */
+	public function getRows($refresh = FALSE)
+	{
+		if (is_array($this->rows) && !$refresh)
+			return $this->rows;
+		/**
+		 * Prepare data for rendering (datagrid may render just one item)
+		 */
+		$this->rows = [];
+
+
+		if (!empty($this->redraw_item)) {
+			$items = $this->dataModel->filterRow($this->redraw_item);
+		} else {
+			if (empty($this->sort_callback) && !empty($this->sort)) {
+				$column = $this->getColumn(array_keys($this->sort)[0]);
+				if ($column->isSortable() AND Nette\Utils\Validators::isCallable($column->getSortableCallback()))
+					$this->sort_callback = $column->getSortableCallback();
+			}
+
+			$items = Nette\Utils\Callback::invokeArgs(
+				[$this->dataModel, 'filterData'],
+				[
+					$this->getPaginator(),
+					new Sorting($this->sort, $this->sort_callback),
+					$this->assableFilters()
+				]
+			);
+		}
+
+		$callback = $this->rowCallback ?: NULL;
+
+		foreach ($items as $item) {
+			$this->rows[] = $row = new Row($this, $item, $this->getPrimaryKey());
+
+			if ($callback) {
+				$callback($item, $row->getControl());
+			}
+		}
+		return $this->rows;
 	}
 
 
