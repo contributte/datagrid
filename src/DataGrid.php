@@ -1684,7 +1684,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function getGroupActionCollection()
 	{
 		if (!$this->group_action_collection) {
-			$this->group_action_collection = new GroupAction\GroupActionCollection();
+			$this->group_action_collection = new GroupAction\GroupActionCollection($this);
 		}
 
 		return $this->group_action_collection;

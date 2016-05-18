@@ -112,7 +112,7 @@
 					</tr>
 					<tr n:block="header">
 						<th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
-							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="toggle-all" type="checkbox" data-check="{$control->getName()}" data-check-all="{$control->getName()}">
+							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="{$control->getName()|lower}-toggle-all" type="checkbox" data-check="{$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementPrototype('th', $key)}
@@ -222,7 +222,7 @@
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
 										<td n:if="$control->hasGroupActions()" class="col-checkbox">
 											{if $row->hasGroupAction()}
-												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getName()}" data-check-all-{$control->getName()|noescape} name="group_action_item[{$row->getId()}]">
+												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getName()}" data-check-all-{$control->getName()|noescape} name="{$control->getName()|lower}_group_action_item[{$row->getId()}]">
 											{/if}
 										</td>
 										{foreach $columns as $key => $column}

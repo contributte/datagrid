@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid\GroupAction;
 
 use Nette;
 use Nette\Application\UI\Form;
+use Ublaboo\DataGrid\DataGrid;
 
 class GroupActionCollection extends Nette\Object
 {
@@ -20,6 +21,18 @@ class GroupActionCollection extends Nette\Object
 	 * @var GroupAction[]
 	 */
 	protected $group_actions = [];
+
+	/**
+	 * @var DataGrid
+	 */
+	protected $datagrid;
+
+
+	public function __construct(DataGrid $datagrid)
+	{
+		$this->datagrid = $datagrid;
+	}
+
 
 	/**
 	 * Get assambled form
@@ -98,7 +111,7 @@ class GroupActionCollection extends Nette\Object
 		/**
 		 * @todo Define items IDs
 		 */
-		$http_ids = $form->getHttpData(Form::DATA_LINE|Form::DATA_KEYS, 'group_action_item[]');
+		$http_ids = $form->getHttpData(Form::DATA_LINE|Form::DATA_KEYS, strtolower($this->datagrid) . '_group_action_item[]');
 		$ids = array_keys($http_ids);
 
 		$id = $values->group_action;
