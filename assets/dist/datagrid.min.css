@@ -82,6 +82,7 @@
 .datagrid .row-grid-bottom .col-per-page{font-size:14px;display:inline-block;width:25%}
 .datagrid .row-grid-bottom .col-per-page form{display:inline-block}
 .datagrid .row-grid-bottom .col-per-page .form-control{width:auto;display:inline-block}
+.datagrid .row-grid-bottom .datagrid-per-page-submit{position:absolute;visibility:hidden;width:0;top:-200px}
 .datagrid .pagination.active>span{color:#fff}
 .datagrid .pagination>a.disabled{color:#989898;cursor:not-allowed}
 .datagrid .pagination>a.active{pointer-events:none;cursor:default}

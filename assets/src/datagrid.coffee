@@ -18,8 +18,10 @@ $.nette.ext('datagrid.confirm', {
 
 # Datagrid autosubmit
 #
-$(document).on('change', 'select[data-autosubmit]', ->
-	$(this).closest('form').submit();
+$(document).on('change', 'select[data-autosubmit-per-page]', ->
+	$(this).parent().find('input[type=submit]').click()
+).on('change', 'select[data-autosubmit]', ->
+	$(this).closest('form').submit()
 ).on('change', 'input[data-autosubmit][data-autosubmit-change]', (e) ->
 	code = e.which || e.keyCode || 0
 

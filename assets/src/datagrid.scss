@@ -502,6 +502,13 @@
 				display: inline-block;
 			}
 		}
+
+		.datagrid-per-page-submit {
+			position: absolute;
+			visibility: hidden;
+			width: 0;
+			top: -200px;
+		}
 	}
 
 	.pagination {

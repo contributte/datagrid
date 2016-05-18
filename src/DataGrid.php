@@ -1339,6 +1339,17 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$form->setDefaults(['filter' => $this->filter]);
 
+		/**
+		 * Per page part
+		 */
+		$form->addSelect('per_page', '', $this->getItemsPerPageList());
+
+		if (!$form->isSubmitted()) {
+			$form['per_page']->setValue($this->getPerPage());
+		}
+
+		$form->addSubmit('per_page_submit', '');
+		
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
 
 		return $form;
@@ -1362,6 +1373,24 @@ class DataGrid extends Nette\Application\UI\Control
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
 				return;
 			}
+		}
+
+		/**
+		 * Per page
+		 */
+		if (isset($form['per_page_submit']) && $form['per_page_submit']->isSubmittedBy()) {
+			/**
+			 * Session stuff
+			 */
+			$this->saveSessionData('_grid_per_page', $values->per_page);
+
+			/**
+			 * Other stuff
+			 */
+			$this->per_page = $values->per_page;
+			$this->reload();
+
+			return;
 		}
 
 		/**
@@ -2082,38 +2111,6 @@ class DataGrid extends Nette\Application\UI\Control
 		$paginator->setItemsPerPage($this->getPerPage());
 
 		return $component;
-	}
-
-
-	/**
-	 * PerPage form factory
-	 * @return Form
-	 */
-	public function createComponentPerPage()
-	{
-		$form = new Form;
-
-		$form->addSelect('per_page', '', $this->getItemsPerPageList())
-			->setValue($this->getPerPage());
-
-		$form->addSubmit('submit', '');
-
-		$saveSessionData = [$this, 'saveSessionData'];
-
-		$form->onSuccess[] = function($form, $values) use ($saveSessionData) {
-			/**
-			 * Session stuff
-			 */
-			$saveSessionData('_grid_per_page', $values->per_page);
-
-			/**
-			 * Other stuff
-			 */
-			$this->per_page = $values->per_page;
-			$this->reload();
-		};
-
-		return $form;
 	}
 
 
