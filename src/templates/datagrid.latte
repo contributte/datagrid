@@ -309,6 +309,10 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
+						{if $columnsSummary}
+							{include columnsSummary, columns => $columns}
+						{/if}
+
 						{block noItems}
 							<tr n:if="!$rows">
 								<td colspan="{$control->getColumnsCount()}">
@@ -390,6 +394,24 @@
 		<td class="col-action col-action-inline-edit">
 			{input $filter['inline_add']['cancel'], class => 'btn btn-xs btn-danger'}
 			{input $filter['inline_add']['submit'], class => 'btn btn-xs btn-primary'}
+		</td>
+	</tr>
+{/define}
+
+
+{define columnsSummary}
+	<tr class="datagrid-row-columns-summary" n:if="$columnsSummary->someColumnsExist($columns)">
+		<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+
+		{foreach $columns as $key => $column}
+			{var $td = $column->getElementPrototype('td', $key)}
+
+			{$td->startTag()|noescape}
+				{$columnsSummary->render($key)}
+			{$td->endTag()|noescape}
+		{/foreach}
+
+		<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
 		</td>
 	</tr>
 {/define}
