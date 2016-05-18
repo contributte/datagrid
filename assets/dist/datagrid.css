@@ -20,6 +20,21 @@
   display: none;
 }
 
+.datagrid .datagrid-row-columns-summary td {
+  border-top: 2px solid #bbb;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+  font-weight: bold;
+}
+
+.datagrid .datagrid-row-columns-summary td:first-child {
+  border-left: 1px solid #ddd;
+}
+
+.datagrid .datagrid-row-columns-summary td:last-child {
+  border-right: 1px solid #ddd;
+}
+
 .datagrid .datagrid-exports {
   float: right;
 }

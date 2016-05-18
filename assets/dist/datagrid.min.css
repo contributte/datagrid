@@ -4,6 +4,9 @@
 }
 .datagrid{background-color:#fff;padding:1em;box-sizing:border-box}
 .datagrid .datagrid-row-inline-add.datagrid-row-inline-add-hidden{display:none}
+.datagrid .datagrid-row-columns-summary td{border-top:2px solid #bbb;border-left:1px solid #eee;border-right:1px solid #eee;font-weight:700}
+.datagrid .datagrid-row-columns-summary td:first-child{border-left:1px solid #ddd}
+.datagrid .datagrid-row-columns-summary td:last-child{border-right:1px solid #ddd}
 .datagrid .datagrid-exports{float:right}
 .datagrid .datagrid-exports .btn{margin-left:1em}
 .datagrid .datagrid-settings{margin-left:1em;margin-top:.35em;float:right}
