@@ -271,6 +271,11 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $columns_visibility = [];
 
 	/**
+	 * @var ColumnsSummary\ColumnsSummary
+	 */
+	protected $columns_summary;
+
+	/**
 	 * @var InlineEdit
 	 */
 	protected $inlineEdit;
@@ -389,6 +394,10 @@ class DataGrid extends Nette\Application\UI\Control
 		foreach ($items as $item) {
 			$rows[] = $row = new Row($this, $item, $this->getPrimaryKey());
 
+			if ($this->hasColumnsSummary()) {
+				$this->columns_summary->summarize($row);
+			}
+
 			if ($callback) {
 				$callback($item, $row->getControl());
 			}
@@ -410,6 +419,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->getTemplate()->add('icon_prefix', static::$icon_prefix);
 		$this->getTemplate()->add('items_detail', $this->items_detail);
 		$this->getTemplate()->add('columns_visibility', $this->columns_visibility);
+		$this->getTemplate()->add('columns_summary', $this->columns_summary);
 
 		$this->getTemplate()->add('inlineEdit', $this->inlineEdit);
 		$this->getTemplate()->add('inlineAdd', $this->inlineAdd);
@@ -2609,12 +2619,40 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/********************************************************************************
+	 *                                COLUMNS SUMMARY                               *
+	 ********************************************************************************/
+
+
+	/**
+	 * Will datagrid show summary in the end?
+	 * @return bool
+	 */
+	public function hasColumnsSummary()
+	{
+		return (bool) $this->columns_summary;
+	}
+
+
+	/**
+	 * Set columns to be summarized in the end.
+	 * @param  array|NULL  $columns
+	 * @return static
+	 */
+	public function setColumnsSummary(array $columns = NULL)
+	{
+		$this->columns_summary = !$columns ?: new ColumnsSummary\ColumnsSummary($columns);
+
+		return $this;
+	}
+
+
+	/********************************************************************************
 	 *                                   INTERNAL                                   *
 	 ********************************************************************************/
 
 
 	/**
-	 * Get cont of columns
+	 * Get count of columns
 	 * @return int
 	 */
 	public function getColumnsCount()

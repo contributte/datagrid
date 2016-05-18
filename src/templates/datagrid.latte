@@ -309,6 +309,19 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
+						<tr class="summary" n:snippet="summary" n:if="$columns_summary">
+							<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+
+							{foreach $columns as $key => $column}
+								{var $td = $column->getElementPrototype('th', $key)}
+								{$td->startTag()|noescape}
+								{$columns_summary->getValue($column)}
+								{$td->endTag()|noescape}
+							{/foreach}
+
+							<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action"></td>
+						</tr>
+
 						{block noItems}
 							<tr n:if="!$rows">
 								<td colspan="{$control->getColumnsCount()}">
