@@ -309,7 +309,7 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
-						{if $columnsSummary}
+						{if !empty($rows) && $columnsSummary}
 							{include columnsSummary, columns => $columns}
 						{/if}
 
