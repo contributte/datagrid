@@ -24,26 +24,28 @@
 			 * Filter form
 			 *}
 			{if $control->hasOuterFilterRendering()}
-				<div class="row row-filters">
+				<div class="{block outer-filter-class}row row-filters{/block}">
 					{var $i = 0}
-					<div class="col-sm-6" n:foreach="$filters as $f">
-						{**
-						 * Each fitler is rendered separately in its own template
-						 *}
+					{foreach $filters as $f}
 						{var $filter_block = 'filter-' . $f->getKey()}
+						{var $filter_class_block = 'filter-' . $f->getKey() . '-outer-class'}
 						{var $filter_type_block = 'filtertype-' . $f->getType()}
-
-						{ifset #$filter_block}
-							{include #$filter_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
-						{else}
-							{ifset #$filter_type_block}
-								{include #$filter_type_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+						<div class="{ifset #$filter_class_block}{include #$filter_class_block}{else}col-sm-6{/ifset}">
+							{**
+							 * Each fitler is rendered separately in its own template
+							 *}
+							{ifset #$filter_block}
+								{include #$filter_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+							{else}
+								{ifset #$filter_type_block}
+									{include #$filter_type_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
 								{else}
 									{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+								{/ifset}
 							{/ifset}
-						{/ifset}
-						{var $i = $i+1}
-					</div>
+							{var $i = $i+1}
+						</div>
+					{/foreach}
 				</div>
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
