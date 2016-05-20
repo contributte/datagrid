@@ -79,10 +79,10 @@ class GroupActionCollection extends Nette\Object
 		}
 
 		$container['group_action']->addCondition(Form::FILLED)
-			->toggle('group_action_submit');
+			->toggle(strtolower($this->datagrid->getName()) . 'group_action_submit');
 
 		$container->addSubmit('submit', $translator->translate('ublaboo_datagrid.execute'))
-			->setAttribute('id', 'group_action_submit');
+			->setAttribute('id', strtolower($this->datagrid->getName()) . 'group_action_submit');
 
 		if ($form instanceof Nette\ComponentModel\IComponent) {
 			$form->onSubmit[] = [$this, 'submitted'];
