@@ -92,7 +92,7 @@
 				.bootstrap-select:not([class*=col-]):not(.input-group-btn) {
 					width: auto;
 
-					& > .btn {
+					& > .btn {
 						padding: 5px 25px 5px 10px;
 						font-size: 12px;
 						line-height: 1.5;
@@ -516,7 +516,7 @@
 			color: #fff;
 		}
 
-		& > a {
+		& > a {
 			&.disabled {
 				color: #989898;
 				cursor: not-allowed;
