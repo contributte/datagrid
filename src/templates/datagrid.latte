@@ -82,28 +82,28 @@
 								 *}
 								<div class="btn-group">
 									<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
-										<i class="{$icon_prefix}gear"></i>
+										<i n:block = "icon-gear" class="{$icon_prefix}gear"></i>
 									</button>
 									<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
 										<li n:foreach="$columns_visibility as $v_key => $visibility">
 											{if $visibility['visible']}
 												<a n:href="hideColumn!, column => $v_key" class="ajax">
-													<i class="{$icon_prefix}check-square-o"></i> 
+													<i n:block = "icon-checked" class="{$icon_prefix}check-square-o"></i> 
 													{_$visibility['name']}
 												</a>
 											{else}
 												<a n:href="showColumn!, column => $v_key" class="ajax">
-													<i class="{$icon_prefix}square-o"></i> 
+													<i n:block = "icon-unchecked" class="{$icon_prefix}square-o"></i> 
 													{_$visibility['name']}
 												</a>
 											{/if}
 										</li>
 										<li role="separator" class="divider"></li>
 										<li>
-											<a n:href="showAllColumns!" class="ajax"><i class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
+											<a n:href="showAllColumns!" class="ajax"><i n:block = "icon-eye" class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
 										</li>
 										<li n:if="$control->hasSomeColumnDefaultHide()">
-											<a n:href="showDefaultColumns!" class="ajax"><i class="{$icon_prefix}repeat"></i> {_'ublaboo_datagrid.show_default_columns'}</a>
+											<a n:href="showDefaultColumns!" class="ajax"><i n:block = "icon-repeat" class="{$icon_prefix}repeat"></i> {_'ublaboo_datagrid.show_default_columns'}</a>
 										</li>
 									</ul>
 								</div>
@@ -150,7 +150,7 @@
 											<ul class="dropdown-menu dropdown-menu--grid">
 												<li>
 													<a n:href="hideColumn!, column => $key" class="ajax">
-														<i class="{$icon_prefix}eye-slash"></i> {_'ublaboo_datagrid.hide_column'}</a>
+														<i n:block = "icon-eye-slash" class="{$icon_prefix}eye-slash"></i> {_'ublaboo_datagrid.hide_column'}</a>
 												</li>
 											</ul>
 										</div>
@@ -257,7 +257,7 @@
 												{/if}
 											{/foreach}
 											<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
-												<i class="{$icon_prefix}arrows-v"></i>
+												<i n:block = "icon-arrows-v" class="{$icon_prefix}arrows-v"></i>
 											</span>
 											{if $inlineEdit}
 												{$inlineEdit->renderButton($row)|noescape}
