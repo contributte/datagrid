@@ -219,6 +219,16 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $tree_view_has_children_column;
 
 	/**
+	 * @var boolean
+	 */
+	protected $tree_dynamic;
+
+	/**
+	 * @var boolean
+	 */
+	protected $tree_nodes_opened = FALSE;
+
+	/**
 	 * @var bool
 	 */
 	protected $outer_filter_rendering = FALSE;
@@ -402,6 +412,9 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if ($this->isTreeView()) {
 			$this->getTemplate()->add('tree_view_has_children_column', $this->tree_view_has_children_column);
+			$this->getTemplate()->add('tree_dynamic', $this->tree_dynamic);
+			$this->getTemplate()->add('tree_nodes_opened', $this->tree_nodes_opened);
+			$this->getTemplate()->add('getTreeChildrenRows', $this->getTreeChildrenRows);
 		}
 
 		$this->getTemplate()->add('rows', $rows);
@@ -638,6 +651,35 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Set all tree nodes to be opened by default. Works only along with non-dynamic tree
+	 * @param boolean $tree_nodes_opened
+	 * @return static
+	 */
+	public function setTreeOpenAllNodes($tree_nodes_opened = TRUE)
+	{
+		if (!$this->isTreeView()) {
+			throw new DataGridException('Please call setTreeview before calling setTreeOpenAllNodes');
+		}
+		if ($this->isTreeDynamic()) {
+			throw new DataGridException('Open all nodes can only be used for non-dynamic trees');
+		}
+		$this->tree_nodes_opened = $tree_nodes_opened;
+
+		return $this;
+	}
+
+
+	/**
+	 * Is open all nodes turned on?
+	 * @return boolean
+	 */
+	public function isTreeOpenAllNodes()
+	{
+		return (bool) $this->tree_nodes_opened;
+	}
+
+
+	/**
 	 * Is tree view set?
 	 * @return boolean
 	 */
@@ -648,12 +690,23 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Is tree view dynamic?
+	 * @return boolean
+	 */
+	public function isTreeDynamic()
+	{
+		return (bool) $this->tree_dynamic;
+	}
+
+
+	/**
 	 * Setting tree view
 	 * @param callable $get_children_callback
 	 * @param string|callable $tree_view_has_children_column
+	 * @param  boolean $tree_dynamic should tree be loaded dynamically?
 	 * @return static
 	 */
-	public function setTreeView($get_children_callback, $tree_view_has_children_column = 'has_children')
+	public function setTreeView($get_children_callback, $tree_view_has_children_column = 'has_children', $tree_dynamic = TRUE)
 	{
 		if (!is_callable($get_children_callback)) {
 			throw new DataGridException(
@@ -666,6 +719,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$tree_view_has_children_column = NULL;
 		}
 
+		$this->tree_dynamic = $tree_dynamic;
 		$this->tree_view_children_callback = $get_children_callback;
 		$this->tree_view_has_children_column = $tree_view_has_children_column;
 
@@ -702,6 +756,21 @@ class DataGrid extends Nette\Application\UI\Control
 	public function treeViewChildrenCallback($item)
 	{
 		return call_user_func($this->tree_view_has_children_callback, $item);
+	}
+
+
+	/**
+	 * Returns array of \Ublaboo\DataGrid\Row for all children of given parent
+	 * @param mixed $parent
+	 * @return array
+	 */
+	public function getTreeChildrenRows($parent)
+	{
+		$rows = [];
+		foreach (call_user_func($this->tree_view_children_callback, $parent) as $item) {
+			$rows[] = new Row($this, $item, $this->primary_key);
+		}
+		return $rows;
 	}
 
 
@@ -1856,21 +1925,21 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param  int $parent
 	 * @return void
 	 */
-	public function handleGetChildren($parent)
+	public function handlegetChildren($parent)
 	{
 		$this->setDataSource(
 			call_user_func($this->tree_view_children_callback, $parent)
 		);
-
 		if ($this->getPresenter()->isAjax()) {
 			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 			$this->getPresenter()->payload->_datagrid_tree = $parent;
 
+			$this->redrawControl('includedTreeRows');
 			$this->redrawControl('items');
 
 			$this->onRedraw();
 		} else {
-			$this->getPresenter()->redirect('this');
+			//$this->getPresenter()->redirect('this');
 		}
 	}
 

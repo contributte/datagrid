@@ -1,17 +1,20 @@
 {**
- * @param array    $columns           Available columns
- * @param array    $actions           Available actions
- * @param array    $exports           Available exports
- * @param Row[]    $rows              List of rows (each contain a item from data source)
- * @param DataGrid $control           Parent (DataGrid)
- * @param string   $original_template Original template file path
- * @param string   $icon_prefix       Icon prefix (fa fa-)
+ * @param array    $columns             Available columns
+ * @param array    $actions             Available actions
+ * @param array    $exports             Available exports
+ * @param Row[]    $rows                List of rows (each contain a item from data source)
+ * @param DataGrid $control             Parent (DataGrid)
+ * @param string   $original_template   Original template file path
+ * @param string   $icon_prefix         Icon prefix (fa fa-)
+ * @param callable $getTreeChildrenRows Callback to retrieve children rows
+ * @param boolean  $tree_dynamic        Whether tree nodes are to be loaded dynamically
+ * @param boolean  $tree_nodes_opened   Should all nodes be opened by default
  *}
 
 {extends $original_template}
 
 <div class="datagrid-tree-item-children datagrid-tree" n:snippet="table" n:block="data" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink $control->getSortableHandler()}"{/}>
-	{snippetArea items}
+	
 		<div class="datagrid-tree-item datagrid-tree-header" n:snippet="item-header">
 			<div class="datagrid-tree-item-content" data-has-children="">
 				<div class="datagrid-tree-item-left">
@@ -52,87 +55,10 @@
 				</div>
 			</div>
 		</div>
-
-		{foreach $rows as $row}
-			{var $has_children = $control->hasTreeViewChildrenCallback() ? $control->treeViewChildrenCallback($row->getItem()) : $row->getValue($tree_view_has_children_column)}
-			{var $item = $row->getItem()}
-
-			<div n:class="$has_children ? has-children, 'datagrid-tree-item'" data-id="{$row->getId()}" n:snippet="item-{$row->getId()}">
-				<div n:class="datagrid-tree-item-content, $row->getControlClass()" data-id="{$row->getId()}" data-has-children="{$has_children ? true : false}">
-					<div class="datagrid-tree-item-left">
-						<a n:href="getChildren! parent => $row->getId()" data-toggle-tree="true" n:class="!$has_children ? hidden, 'chevron ajax'">
-							<i n:block="icon-chevron" class="{$icon_prefix}chevron-right"></i>
-						</a>
-						{foreach $columns as $key => $column}
-							{var $col = 'col-' . $key}
-							{? $column = $row->applyColumnCallback($key, clone $column)}
-
-							{if $column->hasTemplate()}
-								{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
-							{else}
-								{ifset #$col}
-									{include #$col, item => $item}
-								{else}
-									{if $column->isTemplateEscaped()}
-										{$column->render($row)}
-									{else}
-										{$column->render($row)|noescape}
-									{/if}
-								{/ifset}
-							{/if}
-
-							{breakIf TRUE}
-						{/foreach}
-					</div>
-					<div class="datagrid-tree-item-right">
-						<div class="datagrid-tree-item-right-columns">
-							{foreach $columns as $key => $column}
-								{continueIf $iterator->isFirst()}
-
-								<div class="datagrid-tree-item-right-columns-column text-{$column->hasAlign() ? $column->getAlign() : 'left'}">
-									{var $col = 'col-' . $key}
-									{? $column = $row->applyColumnCallback($key, clone $column)}
-
-									{if $column->hasTemplate()}
-										{include $column->getTemplate(), row => $row, item => $item, (expand) $column->getTemplateVariables()}
-									{else}
-										{ifset #$col}
-											{include #$col, item => $item}
-										{else}
-											{if $column->isTemplateEscaped()}
-												{$column->render($row)}
-											{else}
-												{$column->render($row)|noescape}
-											{/if}
-										{/ifset}
-									{/if}
-								</div>
-							{/foreach}
-						</div>
-						<div class="datagrid-tree-item-right-actions">
-							<div class="datagrid-tree-item-right-actions-action">
-								{foreach $actions as $key => $action}
-									{if $row->hasAction($key)}
-										{if $action->hasTemplate()}
-											{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables()}
-										{else}
-											{$action->render($row)|noescape}
-										{/if}
-									{/if}
-								{/foreach}
-
-								<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
-									<i n:block = "icon-arrows" class="{$icon_prefix}arrows"></i>
-								</span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="datagrid-tree-item-children" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink $control->getSortableHandler()}"{/}></div>
-			</div>
-		{/foreach}
+		{snippetArea includedTreeRows}
+			{include 'datagrid_tree_rows.latte'}
+		{/snippetArea}
 		{if !$rows}
 			{_'ublaboo_datagrid.no_item_found'}
 		{/if}
-	{/snippetArea}
 </div>
