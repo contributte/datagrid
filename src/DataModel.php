@@ -111,14 +111,15 @@ class DataModel
 		 */
 		if ($paginator_component) {
 			$paginator = $paginator_component->getPaginator();
-			$paginator->setItemCount($this->data_source->getCount());
 
 			$this->data_source->sort($sorting)->limit(
 				$paginator->getOffset(),
 				$paginator->getItemsPerPage()
 			);
 
-			return $this->data_source->getData();
+			$data = $this->data_source->getData();
+			$paginator->setItemCount($this->data_source->getCount());
+			return $data;
 		}
 
 		return $this->data_source->sort($sorting)->getData();
