@@ -2103,7 +2103,8 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Init paginator
 		 */
 		$component = new Components\DataGridPaginator\DataGridPaginator(
-			$this->getTranslator()
+			$this->getTranslator(),
+			static::$icon_prefix
 		);
 		$paginator = $component->getPaginator();
 
