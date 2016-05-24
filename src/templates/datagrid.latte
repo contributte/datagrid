@@ -48,9 +48,9 @@
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
 				<thead>
-					<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
+					<tr class="row-group-actions" n:if="$hasGroupActionOnRows || $exports || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
-							{if $control->hasGroupActions()}
+							{if $hasGroupActionOnRows}
 								{block group_actions}
 									{_'ublaboo_datagrid.group_actions'}:
 									{foreach $filter['group_action']->getControls() as $form_control}
@@ -88,12 +88,12 @@
 										<li n:foreach="$columns_visibility as $v_key => $visibility">
 											{if $visibility['visible']}
 												<a n:href="hideColumn!, column => $v_key" class="ajax">
-													<i n:block = "icon-checked" class="{$icon_prefix}check-square-o"></i> 
+													<i n:block = "icon-checked" class="{$icon_prefix}check-square-o"></i>
 													{_$visibility['name']}
 												</a>
 											{else}
 												<a n:href="showColumn!, column => $v_key" class="ajax">
-													<i n:block = "icon-unchecked" class="{$icon_prefix}square-o"></i> 
+													<i n:block = "icon-unchecked" class="{$icon_prefix}square-o"></i>
 													{_$visibility['name']}
 												</a>
 											{/if}
@@ -111,7 +111,7 @@
 						</th>
 					</tr>
 					<tr n:block="header">
-						<th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
+						<th n:if="$hasGroupActionOnRows" rowspan="2" class="col-checkbox">
 							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="{$control->getName()|lower}-toggle-all" type="checkbox" data-check="{$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $key => $column}
@@ -197,7 +197,7 @@
 									{? $inlineEdit->onSetDefaults($filter['inline_edit'], $item); }
 
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
-										<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+										<td n:if="$hasGroupActionOnRows" class="col-checkbox"></td>
 
 										{foreach $columns as $key => $column}
 											{var $col = 'col-' . $key}
@@ -220,7 +220,7 @@
 									</tr>
 								{else}
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
-										<td n:if="$control->hasGroupActions()" class="col-checkbox">
+										<td n:if="$hasGroupActionOnRows" class="col-checkbox">
 											{if $row->hasGroupAction()}
 												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getName()}" data-check-all-{$control->getName()|noescape} name="{$control->getName()|lower}_group_action_item[{$row->getId()}]">
 											{/if}
@@ -375,7 +375,7 @@
 	{? $inlineAdd->onSetDefaults($filter['inline_add']); }
 
 	<tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden">
-		<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+		<td n:if="$hasGroupActionOnRows" class="col-checkbox"></td>
 
 		{foreach $columns as $key => $column}
 			{var $col = 'col-' . $key}
