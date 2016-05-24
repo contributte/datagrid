@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid;
 
 use Nette;
+use Nette\Application\UI\Link;
 use Nette\Application\UI\PresenterComponent;
 use Ublaboo\DataGrid\Utils\ArraysHelper;
 use Nette\Application\UI\Form;
@@ -16,6 +17,7 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 use Ublaboo\DataGrid\Utils\Sorting;
 use Ublaboo\DataGrid\InlineEdit\InlineEdit;
+use Ublaboo\DataGrid\ColumnsSummary;
 
 /**
  * @method onRedraw()
@@ -289,6 +291,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $some_column_default_hide = FALSE;
 
+	/**
+	 * @var ColumnsSummary
+	 */
+	protected $columnsSummary;
+
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -418,6 +425,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->getTemplate()->add('icon_prefix', static::$icon_prefix);
 		$this->getTemplate()->add('items_detail', $this->items_detail);
 		$this->getTemplate()->add('columns_visibility', $this->columns_visibility);
+		$this->getTemplate()->add('columnsSummary', $this->columnsSummary);
 
 		$this->getTemplate()->add('inlineEdit', $this->inlineEdit);
 		$this->getTemplate()->add('inlineAdd', $this->inlineAdd);
@@ -1342,6 +1350,17 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$form->setDefaults(['filter' => $this->filter]);
 
+		/**
+		 * Per page part
+		 */
+		$form->addSelect('per_page', '', $this->getItemsPerPageList());
+
+		if (!$form->isSubmitted()) {
+			$form['per_page']->setValue($this->getPerPage());
+		}
+
+		$form->addSubmit('per_page_submit', '');
+		
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
 
 		return $form;
@@ -1365,6 +1384,24 @@ class DataGrid extends Nette\Application\UI\Control
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
 				return;
 			}
+		}
+
+		/**
+		 * Per page
+		 */
+		if (isset($form['per_page_submit']) && $form['per_page_submit']->isSubmittedBy()) {
+			/**
+			 * Session stuff
+			 */
+			$this->saveSessionData('_grid_per_page', $values->per_page);
+
+			/**
+			 * Other stuff
+			 */
+			$this->per_page = $values->per_page;
+			$this->reload();
+
+			return;
 		}
 
 		/**
@@ -1600,7 +1637,7 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$id = ($s = sizeof($this->exports)) ? ($s + 1) : 1;
 
-		$export->setLink($this->link('export!', ['id' => $id]));
+		$export->setLink(new Link($this, 'export!', ['id' => $id]));
 
 		return $this->exports[$id] = $export;
 	}
@@ -1609,7 +1646,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function resetExportsLinks()
 	{
 		foreach ($this->exports as $id => $export) {
-			$export->setLink($this->link('export!', ['id' => $id]));
+			$export->setLink(new Link($this, 'export!', ['id' => $id]));
 		}
 	}
 
@@ -1658,7 +1695,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function getGroupActionCollection()
 	{
 		if (!$this->group_action_collection) {
-			$this->group_action_collection = new GroupAction\GroupActionCollection();
+			$this->group_action_collection = new GroupAction\GroupActionCollection($this);
 		}
 
 		return $this->group_action_collection;
@@ -2077,7 +2114,8 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Init paginator
 		 */
 		$component = new Components\DataGridPaginator\DataGridPaginator(
-			$this->getTranslator()
+			$this->getTranslator(),
+			static::$icon_prefix
 		);
 		$paginator = $component->getPaginator();
 
@@ -2085,38 +2123,6 @@ class DataGrid extends Nette\Application\UI\Control
 		$paginator->setItemsPerPage($this->getPerPage());
 
 		return $component;
-	}
-
-
-	/**
-	 * PerPage form factory
-	 * @return Form
-	 */
-	public function createComponentPerPage()
-	{
-		$form = new Form;
-
-		$form->addSelect('per_page', '', $this->getItemsPerPageList())
-			->setValue($this->getPerPage());
-
-		$form->addSubmit('submit', '');
-
-		$saveSessionData = [$this, 'saveSessionData'];
-
-		$form->onSuccess[] = function($form, $values) use ($saveSessionData) {
-			/**
-			 * Session stuff
-			 */
-			$saveSessionData('_grid_per_page', $values->per_page);
-
-			/**
-			 * Other stuff
-			 */
-			$this->per_page = $values->per_page;
-			$this->reload();
-		};
-
-		return $form;
 	}
 
 
@@ -2619,12 +2625,49 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/********************************************************************************
+	 *                                COLUMNS SUMMARY                               *
+	 ********************************************************************************/
+
+
+	/**
+	 * Will datagrid show summary in the end?
+	 * @return bool
+	 */
+	public function hasColumnsSummary()
+	{
+		return $this->columnsSummary instanceof ColumnsSummary;
+	}
+
+
+	/**
+	 * Set columns to be summarized in the end.
+	 * @param  array  $columns
+	 * @return ColumnsSummary
+	 */
+	public function setColumnsSummary(array $columns)
+	{
+		$this->columnsSummary = new ColumnsSummary($this, $columns);
+
+		return $this->columnsSummary;
+	}
+
+
+	/**
+	 * @return ColumnsSummary|NULL
+	 */
+	public function getColumnsSummary()
+	{
+		return $this->columnsSummary;
+	}
+
+
+	/********************************************************************************
 	 *                                   INTERNAL                                   *
 	 ********************************************************************************/
 
 
 	/**
-	 * Get cont of columns
+	 * Get count of columns
 	 * @return int
 	 */
 	public function getColumnsCount()

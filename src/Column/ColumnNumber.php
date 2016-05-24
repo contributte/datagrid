@@ -62,4 +62,17 @@ class ColumnNumber extends Column
 		return $this;
 	}
 
+
+	/**
+	 * @return array
+	 */
+	public function getFormat()
+	{
+		return [
+			$this->number_format[0],
+			$this->number_format[1],
+			$this->number_format[2]
+		];
+	}
+
 }

@@ -46,8 +46,9 @@ class Row extends Nette\Object
 
 
 	/**
-	 * @param mixed  $item
-	 * @param string $primary_key
+	 * @param DataGrid $datagrid
+	 * @param mixed    $item
+	 * @param string   $primary_key
 	 */
 	public function __construct(DataGrid $datagrid, $item, $primary_key)
 	{
@@ -56,6 +57,10 @@ class Row extends Nette\Object
 		$this->item = $item;
 		$this->primary_key = $primary_key;
 		$this->id = $this->getValue($primary_key);
+
+		if ($datagrid->hasColumnsSummary()) {
+			$datagrid->getColumnsSummary()->add($this);
+		}
 	}
 
 

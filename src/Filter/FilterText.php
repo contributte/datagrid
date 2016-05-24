@@ -41,7 +41,7 @@ class FilterText extends Filter
 
 
 	/**
-	 * Return array of conditions to put in result [column1 => value, column2 => value]
+	 * Return array of conditions to put in result [column1 => value, column2 => value]
 	 * 	If more than one column exists in fitler text,
 	 * 	than there is OR clause put betweeen their conditions
 	 * Or callback in case of custom condition callback
