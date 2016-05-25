@@ -113,6 +113,12 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $items_per_page_list;
 
+
+	/**
+	 * @var int
+	 */
+	protected $items_per_page_default;
+
 	/**
 	 * @var string
 	 */
@@ -2093,9 +2099,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param array $items_per_page_list
 	 * @return static
 	 */
-	public function setItemsPerPageList(array $items_per_page_list, $include_all = TRUE)
+	public function setItemsPerPageList(array $items_per_page_list, $include_all = TRUE, $items_per_page_default = NULL)
 	{
 		$this->items_per_page_list = $items_per_page_list;
+		$this->items_per_page_default = $items_per_page_default;
 
 		if ($include_all) {
 			$this->items_per_page_list[] = 'all';
@@ -2135,10 +2142,14 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$items_per_page_list = $this->getItemsPerPageList();
 
-		$per_page = $this->per_page ?: reset($items_per_page_list);
+		$per_page = $this->per_page ?: $this->items_per_page_default ?: reset($items_per_page_list);
+
+		if ($per_page === 0){
+			$per_page = 'all';
+		}
 
 		if ($per_page !== 'all' && !in_array($this->per_page, $items_per_page_list)) {
-			$per_page = reset($items_per_page_list);
+			$per_page = $this->items_per_page_default ?: reset($items_per_page_list) ?: reset($items_per_page_list);
 		}
 
 		return $per_page;
