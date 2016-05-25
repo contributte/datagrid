@@ -20,6 +20,21 @@
   display: none;
 }
 
+.datagrid .datagrid-row-columns-summary td {
+  border-top: 2px solid #bbb;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+  font-weight: bold;
+}
+
+.datagrid .datagrid-row-columns-summary td:first-child {
+  border-left: 1px solid #ddd;
+}
+
+.datagrid .datagrid-row-columns-summary td:last-child {
+  border-right: 1px solid #ddd;
+}
+
 .datagrid .datagrid-exports {
   float: right;
 }
@@ -63,7 +78,7 @@
   width: auto;
 }
 
-.datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) >  .btn {
+.datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) > .btn {
   padding: 5px 25px 5px 10px;
   font-size: 12px;
   line-height: 1.5;
@@ -431,16 +446,23 @@
   display: inline-block;
 }
 
+.datagrid .row-grid-bottom .datagrid-per-page-submit {
+  position: absolute;
+  visibility: hidden;
+  width: 0;
+  top: -200px;
+}
+
 .datagrid .pagination.active > span {
   color: #fff;
 }
 
-.datagrid .pagination >  a.disabled {
+.datagrid .pagination > a.disabled {
   color: #989898;
   cursor: not-allowed;
 }
 
-.datagrid .pagination >  a.active {
+.datagrid .pagination > a.active {
   pointer-events: none;
   cursor: default;
 }

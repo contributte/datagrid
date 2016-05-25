@@ -32,15 +32,21 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	 */
 	private $translator;
 
+	/**
+	 * @var  string
+	 */
+	private $icon_prefix;
 
 	public function __construct(
 		Nette\Localization\ITranslator $translator,
+		$icon_prefix = 'fa fa-',
 		IContainer $parent = NULL,
 		$name = NULL
 	) {
 		parent::__construct($parent, $name);
 
 		$this->translator = $translator;
+		$this->icon_prefix = $icon_prefix;
 	}
 
 
@@ -64,6 +70,16 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	public function getTemplateFile()
 	{
 		return $this->template_file ?: __DIR__.'/templates/data_grid_paginator.latte';
+	}
+
+
+	/**
+	 * Get paginator original template file
+	 * @return string
+	 */
+	public function getOriginalTemplateFile()
+	{
+		return __DIR__.'/templates/data_grid_paginator.latte';
 	}
 
 
@@ -120,6 +136,10 @@ class DataGridPaginator extends Nette\Application\UI\Control
 			$this->template->add('paginator', $paginator);
 		}
 		
+		//$this->template->add('icon_prefix', $this->icon_prefix);
+		$this->template->icon_prefix = $this->icon_prefix;
+		//$this->template->add('original_template', $this->getOriginalTemplateFile());
+		$this->template->original_template = $this->getOriginalTemplateFile();
 		$this->template->setFile($this->getTemplateFile());
 		$this->template->render();
 	}

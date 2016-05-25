@@ -18,8 +18,10 @@ $.nette.ext('datagrid.confirm', {
 
 # Datagrid autosubmit
 #
-$(document).on('change', 'select[data-autosubmit]', ->
-	$(this).closest('form').submit();
+$(document).on('change', 'select[data-autosubmit-per-page]', ->
+	$(this).parent().find('input[type=submit]').click()
+).on('change', 'select[data-autosubmit]', ->
+	$(this).closest('form').submit()
 ).on('change', 'input[data-autosubmit][data-autosubmit-change]', (e) ->
 	code = e.which || e.keyCode || 0
 
@@ -31,7 +33,7 @@ $(document).on('change', 'select[data-autosubmit]', ->
 ).on('keyup', 'input[data-autosubmit]', (e) ->
 	code = e.which || e.keyCode || 0
 
-	if (code !=13) and ((code >= 9 and code <= 40) or (code >= 112 and code <= 123))
+	if (code !=13) and ((code >= 9 and code <= 40) or (code >= 112 and code <= 123))
 		return
 
 	clearTimeout(window.datagrid_autosubmit_timer)

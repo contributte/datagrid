@@ -30,6 +30,23 @@
 		}
 	}
 
+	.datagrid-row-columns-summary {
+		td {
+			border-top: 2px solid #bbb;
+			border-left: 1px solid #eee;
+			border-right: 1px solid #eee;
+			font-weight: bold;
+
+			&:first-child {
+				border-left: 1px solid #ddd;
+			}
+
+			&:last-child {
+				border-right: 1px solid #ddd;
+			}
+		}
+	}
+
 	.datagrid-exports {
 		float: right;
 
@@ -75,7 +92,7 @@
 				.bootstrap-select:not([class*=col-]):not(.input-group-btn) {
 					width: auto;
 
-					& > .btn {
+					& > .btn {
 						padding: 5px 25px 5px 10px;
 						font-size: 12px;
 						line-height: 1.5;
@@ -485,6 +502,13 @@
 				display: inline-block;
 			}
 		}
+
+		.datagrid-per-page-submit {
+			position: absolute;
+			visibility: hidden;
+			width: 0;
+			top: -200px;
+		}
 	}
 
 	.pagination {
@@ -492,7 +516,7 @@
 			color: #fff;
 		}
 
-		& > a {
+		& > a {
 			&.disabled {
 				color: #989898;
 				cursor: not-allowed;

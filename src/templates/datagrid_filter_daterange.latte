@@ -1,6 +1,7 @@
 {**
  * @param Filter                $filter
  * @param Nette\Forms\Container $input
+ * @param string                $icon_prefix       Icon prefix (fa fa-)
  *}
 
 {var $container = $input}
@@ -11,14 +12,14 @@
 		<div class="col-sm-4">
 			<div class="input-group">
 				{input $container['from']}
-				<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+				<span class="input-group-addon"><span class="{$icon_prefix}calendar"></span></span>
 			</div>
 		</div>
 		{label $container['to'], class => 'filter-range-delimiter col-sm-1 control-label' /}
 		<div class="col-sm-4">
 			<div class="input-group">
 				{input $container['to']}
-				<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+				<span class="input-group-addon"><span class="{$icon_prefix}calendar"></span></span>
 			</div>
 		</div>
 	</div>
@@ -26,12 +27,12 @@
 	<div class="datagrid-col-filter-date-range form-inline">
 		<div class="input-group">
 			{input $container['from']}
-			<span class="input-group-addon input-group-addon-first"><span class="fa fa-calendar"></span></span>
+			<span class="input-group-addon input-group-addon-first"><span class="{$icon_prefix}calendar"></span></span>
 
 			<div class="input-group-addon datagrid-col-filter-datte-range-delimiter">-</div>
 
 			{input $container['to'], class => 'form-control input-sm datagrid-filter-date-range-last', data-autosubmit => TRUE}
-			<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+			<span class="input-group-addon"><span class="{$icon_prefix}calendar"></span></span>
 		</div>
 	</div>
 {/if}

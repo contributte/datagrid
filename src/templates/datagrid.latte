@@ -48,9 +48,9 @@
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
 				<thead>
-					<tr class="row-group-actions" n:if="$control->hasGroupActions() || $exports || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
+					<tr class="row-group-actions" n:if="$hasGroupActionOnRows || $exports || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
-							{if $control->hasGroupActions()}
+							{if $hasGroupActionOnRows}
 								{block group_actions}
 									{_'ublaboo_datagrid.group_actions'}:
 									{foreach $filter['group_action']->getControls() as $form_control}
@@ -82,28 +82,28 @@
 								 *}
 								<div class="btn-group">
 									<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
-										<i class="{$icon_prefix}gear"></i>
+										<i n:block = "icon-gear" class="{$icon_prefix}gear"></i>
 									</button>
 									<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
 										<li n:foreach="$columns_visibility as $v_key => $visibility">
 											{if $visibility['visible']}
 												<a n:href="hideColumn!, column => $v_key" class="ajax">
-													<i class="{$icon_prefix}check-square-o"></i> 
+													<i n:block = "icon-checked" class="{$icon_prefix}check-square-o"></i>
 													{_$visibility['name']}
 												</a>
 											{else}
 												<a n:href="showColumn!, column => $v_key" class="ajax">
-													<i class="{$icon_prefix}square-o"></i> 
+													<i n:block = "icon-unchecked" class="{$icon_prefix}square-o"></i>
 													{_$visibility['name']}
 												</a>
 											{/if}
 										</li>
 										<li role="separator" class="divider"></li>
 										<li>
-											<a n:href="showAllColumns!" class="ajax"><i class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
+											<a n:href="showAllColumns!" class="ajax"><i n:block = "icon-eye" class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
 										</li>
 										<li n:if="$control->hasSomeColumnDefaultHide()">
-											<a n:href="showDefaultColumns!" class="ajax"><i class="{$icon_prefix}repeat"></i> {_'ublaboo_datagrid.show_default_columns'}</a>
+											<a n:href="showDefaultColumns!" class="ajax"><i n:block = "icon-repeat" class="{$icon_prefix}repeat"></i> {_'ublaboo_datagrid.show_default_columns'}</a>
 										</li>
 									</ul>
 								</div>
@@ -111,8 +111,8 @@
 						</th>
 					</tr>
 					<tr n:block="header">
-						<th n:if="$control->hasGroupActions()" rowspan="2" class="col-checkbox">
-							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="toggle-all" type="checkbox" data-check="{$control->getName()}" data-check-all="{$control->getName()}">
+						<th n:if="$hasGroupActionOnRows" rowspan="2" class="col-checkbox">
+							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="{$control->getName()|lower}-toggle-all" type="checkbox" data-check="{$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementPrototype('th', $key)}
@@ -150,7 +150,7 @@
 											<ul class="dropdown-menu dropdown-menu--grid">
 												<li>
 													<a n:href="hideColumn!, column => $key" class="ajax">
-														<i class="{$icon_prefix}eye-slash"></i> {_'ublaboo_datagrid.hide_column'}</a>
+														<i n:block = "icon-eye-slash" class="{$icon_prefix}eye-slash"></i> {_'ublaboo_datagrid.hide_column'}</a>
 												</li>
 											</ul>
 										</div>
@@ -197,7 +197,7 @@
 									{? $inlineEdit->onSetDefaults($filter['inline_edit'], $item); }
 
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
-										<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+										<td n:if="$hasGroupActionOnRows" class="col-checkbox"></td>
 
 										{foreach $columns as $key => $column}
 											{var $col = 'col-' . $key}
@@ -220,9 +220,9 @@
 									</tr>
 								{else}
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
-										<td n:if="$control->hasGroupActions()" class="col-checkbox">
+										<td n:if="$hasGroupActionOnRows" class="col-checkbox">
 											{if $row->hasGroupAction()}
-												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getName()}" data-check-all-{$control->getName()|noescape} name="group_action_item[{$row->getId()}]">
+												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getName()}" data-check-all-{$control->getName()|noescape} name="{$control->getName()|lower}_group_action_item[{$row->getId()}]">
 											{/if}
 										</td>
 										{foreach $columns as $key => $column}
@@ -257,7 +257,7 @@
 												{/if}
 											{/foreach}
 											<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
-												<i class="{$icon_prefix}arrows-v"></i>
+												<i n:block = "icon-arrows-v" class="{$icon_prefix}arrows-v"></i>
 											</span>
 											{if $inlineEdit}
 												{$inlineEdit->renderButton($row)|noescape}
@@ -309,6 +309,10 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
+						{if !empty($rows) && $columnsSummary}
+							{include columnsSummary, columns => $columns}
+						{/if}
+
 						{block noItems}
 							<tr n:if="!$rows">
 								<td colspan="{$control->getColumnsCount()}">
@@ -351,10 +355,8 @@
 										*}
 										<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'ublaboo_datagrid.reset_filter'}</a>
 										{if $control->isPaginated()}
-											{form perPage, class => 'ajax'}
-												{input per_page, data-autosubmit => TRUE, class => 'form-control input-sm'}
-												{input submit, class => 'hidden'}
-											{/form}
+											{input $filter['per_page'], data-autosubmit-per-page => TRUE, class => 'form-control input-sm'}
+											{input $filter['per_page_submit'], class => 'datagrid-per-page-submit'}
 										{/if}
 									</div>
 								</td>
@@ -373,7 +375,7 @@
 	{? $inlineAdd->onSetDefaults($filter['inline_add']); }
 
 	<tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden">
-		<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+		<td n:if="$hasGroupActionOnRows" class="col-checkbox"></td>
 
 		{foreach $columns as $key => $column}
 			{var $col = 'col-' . $key}
@@ -390,6 +392,24 @@
 		<td class="col-action col-action-inline-edit">
 			{input $filter['inline_add']['cancel'], class => 'btn btn-xs btn-danger'}
 			{input $filter['inline_add']['submit'], class => 'btn btn-xs btn-primary'}
+		</td>
+	</tr>
+{/define}
+
+
+{define columnsSummary}
+	<tr class="datagrid-row-columns-summary" n:if="$columnsSummary->someColumnsExist($columns)">
+		<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+
+		{foreach $columns as $key => $column}
+			{var $td = $column->getElementPrototype('td', $key)}
+
+			{$td->startTag()|noescape}
+				{$columnsSummary->render($key)}
+			{$td->endTag()|noescape}
+		{/foreach}
+
+		<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
 		</td>
 	</tr>
 {/define}

@@ -19,7 +19,9 @@ $.nette.ext('datagrid.confirm', {
   }
 });
 
-$(document).on('change', 'select[data-autosubmit]', function() {
+$(document).on('change', 'select[data-autosubmit-per-page]', function() {
+  return $(this).parent().find('input[type=submit]').click();
+}).on('change', 'select[data-autosubmit]', function() {
   return $(this).closest('form').submit();
 }).on('change', 'input[data-autosubmit][data-autosubmit-change]', function(e) {
   var $this, code;

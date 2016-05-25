@@ -1,6 +1,7 @@
 {**
  * @param Filter                         $filter
  * @param Nette\Forms\Controls\TextInput $input
+ * @param string                         $icon_prefix       Icon prefix (fa fa-)
  *}
 
 {if $outer}
@@ -9,7 +10,7 @@
 		<div class="col-sm-9">
 			<div class="input-group">
 				{input $input}
-				<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+				<span class="input-group-addon"><span class="{$icon_prefix}calendar"></span></span>
 			</div>
 		</div>
 	</div>
@@ -17,7 +18,7 @@
 	<div class="form-inline">
 		<div class="input-group">
 			{input $input}
-			<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+			<span class="input-group-addon"><span class="{$icon_prefix}calendar"></span></span>
 		</div>
 	</div>
 {/if}

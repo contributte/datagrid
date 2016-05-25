@@ -673,4 +673,13 @@ abstract class Column extends FilterableColumn
 		return $return;
 	}
 
+
+	/**
+	 * @return string
+	 */
+	public function getColumn()
+	{
+		return $this->column;
+	}
+
 }
