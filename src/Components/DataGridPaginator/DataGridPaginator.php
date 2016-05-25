@@ -136,8 +136,10 @@ class DataGridPaginator extends Nette\Application\UI\Control
 			$this->template->add('paginator', $paginator);
 		}
 		
-		$this->template->add('icon_prefix', $this->icon_prefix);
-		$this->template->add('original_template', $this->getOriginalTemplateFile());
+		//$this->template->add('icon_prefix', $this->icon_prefix);
+		$this->template->icon_prefix = $this->icon_prefix;
+		//$this->template->add('original_template', $this->getOriginalTemplateFile());
+		$this->template->original_template = $this->getOriginalTemplateFile();
 		$this->template->setFile($this->getTemplateFile());
 		$this->template->render();
 	}

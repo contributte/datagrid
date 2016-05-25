@@ -422,7 +422,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->getTemplate()->add('filter_active', $this->isFilterActive());
 		$this->getTemplate()->add('original_template', $this->getOriginalTemplateFile());
-		$this->getTemplate()->add('icon_prefix', static::$icon_prefix);
+		//$this->getTemplate()->add('icon_prefix', static::$icon_prefix);
+		$this->getTemplate()->icon_prefix = static::$icon_prefix;
 		$this->getTemplate()->add('items_detail', $this->items_detail);
 		$this->getTemplate()->add('columns_visibility', $this->columns_visibility);
 		$this->getTemplate()->add('columnsSummary', $this->columnsSummary);
