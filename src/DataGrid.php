@@ -1400,9 +1400,6 @@ class DataGrid extends Nette\Application\UI\Control
 			 * Other stuff
 			 */
 			$this->per_page = $values->per_page;
-			$this->reload();
-
-			return;
 		}
 
 		/**
