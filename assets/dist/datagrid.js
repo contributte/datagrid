@@ -46,6 +46,14 @@ $(document).on('change', 'select[data-autosubmit-per-page]', function() {
       return $this.closest('form').submit();
     };
   })(this), 200);
+}).on('keydown', '.datagrid-inline-edit input', function(e) {
+  var code;
+  code = e.which || e.keyCode || 0;
+  if (code === 13) {
+    e.stopPropagation();
+    e.preventDefault();
+    return $(this).closest('tr').find('.col-action-inline-edit [name="inline_edit[submit]"]').click();
+  }
 });
 
 document.addEventListener('change', function(e) {
