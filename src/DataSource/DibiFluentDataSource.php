@@ -157,7 +157,14 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		$condition = $filter->getCondition();
 		$or = [];
 
+		
 		foreach ($condition as $column => $value) {
+
+			if($filter->isExact()){
+				$this->data_source->where("$column = %s", $value);
+				continue;
+			}
+
 			$words = explode(' ', $value);
 
 			foreach ($words as $word) {

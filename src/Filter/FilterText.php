@@ -23,6 +23,16 @@ class FilterText extends Filter
 	 */
 	protected $type = 'text';
 
+	/**
+	 * @var bool
+	 */
+	protected $exact = FALSE;
+
+	public function __construct($key, $name, $column, $exact = FALSE)
+	{
+		parent::__construct($key, $name, $column);
+		$this->exact = $exact;
+	}
 
 	/**
 	 * Adds text field to filter form
@@ -50,6 +60,15 @@ class FilterText extends Filter
 	public function getCondition()
 	{
 		return array_fill_keys($this->column, $this->getValue());
+	}
+
+
+	/**
+	 * @return boolean
+	 */
+	public function isExact()
+	{
+		return $this->exact;
 	}
 
 }

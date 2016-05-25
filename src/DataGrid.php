@@ -949,7 +949,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @return Filter\FilterText
 	 * @throws DataGridException
 	 */
-	public function addFilterText($key, $name, $columns = NULL)
+	public function addFilterText($key, $name, $columns = NULL, $exact = FALSE)
 	{
 		$columns = NULL === $columns ? [$key] : (is_string($columns) ? [$columns] : $columns);
 
@@ -959,7 +959,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new Filter\FilterText($key, $name, $columns);
+		return $this->filters[$key] = new Filter\FilterText($key, $name, $columns, $exact);
 	}
 
 

@@ -167,18 +167,21 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$condition = $filter->getCondition();
 
 		foreach ($condition as $column => $value) {
-			$words = explode(' ', $value);
 
 			$like = '(';
 			$args = [];
 
-			foreach ($words as $word) {
-				$like .= "$column LIKE ? OR ";
-				$args[] = "%$word%";
+			if($filter->isExact()){
+				$like .=  "$column = ? ";
+				$args[] = "$value";
+			} else {
+				$words = explode(' ', $value);
+				foreach ($words as $word) {
+					$like .= "$column LIKE ? OR ";
+					$args[] = "%$word%";
+				}
+				$like = substr($like, 0, strlen($like) - 4) . ')';
 			}
-
-			$like = substr($like, 0, strlen($like) - 4).')';
-
 			$or[] = $like;
 			$big_or .= "$like OR ";
 			$big_or_args = array_merge($big_or_args, $args);
