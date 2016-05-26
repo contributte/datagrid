@@ -41,6 +41,11 @@ class InlineEdit extends Nette\Object
 	public $onSetDefaults;
 
 	/**
+	 * @var callable[]
+	 */
+	public $onCustomRedraw;
+
+	/**
 	 * @var mixed
 	 */
 	protected $item_id;
