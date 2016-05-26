@@ -169,72 +169,74 @@ $(function() {
   return datagridSortable();
 });
 
-datagridSortableTree = function() {
-  if (typeof $('.datagrid-tree-item-children').sortable === 'undefined') {
-    return;
-  }
-  return $('.datagrid-tree-item-children').sortable({
-    handle: '.handle-sort',
-    items: '.datagrid-tree-item',
-    toleranceElement: '> .datagrid-tree-item-content',
-    connectWith: '.datagrid-tree-item-children',
-    update: function(event, ui) {
-      var item_id, next_id, parent, parent_id, prev_id, row, url;
-      $('.toggle-tree-to-delete').remove();
-      row = ui.item.closest('.datagrid-tree-item[data-id]');
-      item_id = row.data('id');
-      prev_id = null;
-      next_id = null;
-      parent_id = null;
-      if (row.prev().length) {
-        prev_id = row.prev().data('id');
-      }
-      if (row.next().length) {
-        next_id = row.next().data('id');
-      }
-      parent = row.parent().closest('.datagrid-tree-item');
-      if (parent.length) {
-        parent.find('.datagrid-tree-item-children').first().css({
-          display: 'block'
+if (typeof datagridSortableTree === 'undefined') {
+  datagridSortableTree = function() {
+    if (typeof $('.datagrid-tree-item-children').sortable === 'undefined') {
+      return;
+    }
+    return $('.datagrid-tree-item-children').sortable({
+      handle: '.handle-sort',
+      items: '.datagrid-tree-item',
+      toleranceElement: '> .datagrid-tree-item-content',
+      connectWith: '.datagrid-tree-item-children',
+      update: function(event, ui) {
+        var item_id, next_id, parent, parent_id, prev_id, row, url;
+        $('.toggle-tree-to-delete').remove();
+        row = ui.item.closest('.datagrid-tree-item[data-id]');
+        item_id = row.data('id');
+        prev_id = null;
+        next_id = null;
+        parent_id = null;
+        if (row.prev().length) {
+          prev_id = row.prev().data('id');
+        }
+        if (row.next().length) {
+          next_id = row.next().data('id');
+        }
+        parent = row.parent().closest('.datagrid-tree-item');
+        if (parent.length) {
+          parent.find('.datagrid-tree-item-children').first().css({
+            display: 'block'
+          });
+          parent.addClass('has-children');
+          parent_id = parent.data('id');
+        }
+        url = $(this).data('sortable-url');
+        if (!url) {
+          return;
+        }
+        parent.find('[data-toggle-tree]').first().removeClass('hidden');
+        return $.nette.ajax({
+          type: 'GET',
+          url: url,
+          data: {
+            item_id: item_id,
+            prev_id: prev_id,
+            next_id: next_id,
+            parent_id: parent_id
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            if (errorThrown !== 'abort') {
+              return alert(jqXHR.statusText);
+            }
+          }
         });
-        parent.addClass('has-children');
-        parent_id = parent.data('id');
-      }
-      url = $(this).data('sortable-url');
-      if (!url) {
-        return;
-      }
-      parent.find('[data-toggle-tree]').first().removeClass('hidden');
-      return $.nette.ajax({
-        type: 'GET',
-        url: url,
-        data: {
-          item_id: item_id,
-          prev_id: prev_id,
-          next_id: next_id,
-          parent_id: parent_id
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-          if (errorThrown !== 'abort') {
-            return alert(jqXHR.statusText);
+      },
+      stop: function(event, ui) {
+        return $('.toggle-tree-to-delete').removeClass('toggle-tree-to-delete');
+      },
+      start: function(event, ui) {
+        var parent;
+        parent = ui.item.parent().closest('.datagrid-tree-item');
+        if (parent.length) {
+          if (parent.find('.datagrid-tree-item').length === 2) {
+            return parent.find('[data-toggle-tree]').addClass('toggle-tree-to-delete');
           }
         }
-      });
-    },
-    stop: function(event, ui) {
-      return $('.toggle-tree-to-delete').removeClass('toggle-tree-to-delete');
-    },
-    start: function(event, ui) {
-      var parent;
-      parent = ui.item.parent().closest('.datagrid-tree-item');
-      if (parent.length) {
-        if (parent.find('.datagrid-tree-item').length === 2) {
-          return parent.find('[data-toggle-tree]').addClass('toggle-tree-to-delete');
-        }
       }
-    }
-  });
-};
+    });
+  };
+}
 
 $(function() {
   return datagridSortableTree();
