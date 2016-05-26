@@ -2478,6 +2478,16 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * @param  callable $condition
+	 * @return void
+	 */
+	public function allowRowsInlineEdit(callable $condition)
+	{
+		$this->row_conditions['inline_edit'] = $condition;
+	}
+
+
+	/**
 	 * @param  string   $key
 	 * @param  callable $condition
 	 * @return void
