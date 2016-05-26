@@ -471,7 +471,10 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
 $.nette.ext('datagrid.after_inline_edit', {
   success: function(payload) {
     if (payload._datagrid_inline_edited) {
-      return $('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited');
+      $('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited');
+      return $('.datagrid-inline-edit-trigger').removeClass('hidden');
+    } else if (payload._datagrid_inline_edit_cancel) {
+      return $('.datagrid-inline-edit-trigger').removeClass('hidden');
     }
   }
 });
@@ -524,6 +527,14 @@ $.nette.ext('datagrid.fitlerMultiSelect', {
     datagridFitlerMultiSelect();
     if ($.fn.selectpicker) {
       return $('.selectpicker').selectpicker();
+    }
+  }
+});
+
+$.nette.ext('datagrid.inline-editing', {
+  success: function(payload) {
+    if (payload._datagrid_inline_editing) {
+      return $('.datagrid-inline-edit-trigger').addClass('hidden');
     }
   }
 });

@@ -48,7 +48,6 @@ $(document).on('change', 'select[data-autosubmit-per-page]', ->
 		e.stopPropagation()
 		e.preventDefault()
 
-
 		$(this).closest('tr').find('.col-action-inline-edit [name="inline_edit[submit]"]').click()
 )
 
@@ -428,6 +427,9 @@ $.nette.ext('datagrid.after_inline_edit', {
 	success: (payload) ->
 		if payload._datagrid_inline_edited
 			$('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited')
+			$('.datagrid-inline-edit-trigger').removeClass('hidden')
+		else if payload._datagrid_inline_edit_cancel
+			$('.datagrid-inline-edit-trigger').removeClass('hidden')
 })
 
 
@@ -485,4 +487,11 @@ $.nette.ext('datagrid.fitlerMultiSelect', {
 
 		if $.fn.selectpicker
 			$('.selectpicker').selectpicker()
+})
+
+
+$.nette.ext('datagrid.inline-editing', {
+	success: (payload) ->
+		if payload._datagrid_inline_editing
+			$('.datagrid-inline-edit-trigger').addClass('hidden')
 })
