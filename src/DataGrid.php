@@ -1398,14 +1398,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Per page
 		 */
-		/**
-		 * Session stuff
-		 */
 		$this->saveSessionData('_grid_per_page', $values->per_page);
-
-		/**
-		 * Other stuff
-		 */
 		$this->per_page = $values->per_page;
 
 		/**
