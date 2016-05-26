@@ -4,7 +4,7 @@ $.nette.ext('ublaboo-spinners', {
 			el = settings.nette.el
 			spinner_template = $('<div class="ublaboo-spinner ublaboo-spinner-small"><i></i><i></i><i></i><i></i></div>')
 
-			if el.is('.datagrid #group_action_submit')
+			if el.is('.datagrid [name="group_action[submit]"]')
 				el.after(spinner_template)
 
 			else if el.is('.datagrid a') and el.data('toggle-detail')
@@ -14,13 +14,10 @@ $.nette.ext('ublaboo-spinners', {
 				if not row_detail.hasClass('loaded')
 					el.addClass('ublaboo-spinner-icon')
 
-			else if el.is('.datagrid .pagination a')
+			else if el.is('.datagrid .col-pagination a')
 				el.closest('.row-grid-bottom').find('.col-per-page').prepend(spinner_template)
 
-			else if el.is('.datagrid form')
-				select = el.find('select[name=per_page]')
-
-				if select.length
+			else if el.is('.datagrid .datagrid-per-page-submit')
 					el.closest('.row-grid-bottom').find('.col-per-page').prepend(spinner_template)
 
 	complete: ->
