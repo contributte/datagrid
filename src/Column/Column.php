@@ -519,7 +519,7 @@ abstract class Column extends FilterableColumn
 
 
 	/**
-	 * Element is by default textarea, user can chchge that
+	 * Element is by default textarea, user can change that
 	 * @param string $el_type
 	 * @param array  $attrs
 	 * @return static
@@ -529,6 +529,27 @@ abstract class Column extends FilterableColumn
 		$this->editable_element = [$el_type, $attrs];
 
 		return $this;
+	}
+
+
+	/**
+	 * Change small inline edit input type to select
+	 * @param array  $options
+	 * @return static
+	 */
+	public function setEditableInputTypeSelect(array $options = [])
+	{
+		$select = Html::el('select');
+
+		foreach ($options as $value => $text) {
+			$select->create('option')
+				->value($value)
+				->setText($text);
+		}
+
+		$this->addAttributes(['data-datagrid-editable-element' => (string) $select]);
+
+		return $this->setEditableInputType('select');
 	}
 
 

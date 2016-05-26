@@ -427,6 +427,13 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
       line_height = Math.round(parseFloat(cell.css('line-height')));
       cell_lines = (cell_height - (2 * cell_padding)) / line_height;
       input.attr('rows', Math.round(cell_lines));
+    } else if (cell.data('datagrid-editable-type') === 'select') {
+      input = $(cell.data('datagrid-editable-element'));
+      input.find('option').each(function() {
+        if ($(this).text() === value) {
+          return input.find('option[value=' + $(this).val() + ']').prop('selected', true);
+        }
+      });
     } else {
       input = $('<input type="' + cell.data('datagrid-editable-type') + '">');
       input.val(value);
@@ -454,7 +461,7 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
       cell.removeClass('editing');
       return cell.html(value);
     };
-    return cell.find('input,textarea').focus().on('blur', function() {
+    cell.find('input,textarea,select').focus().on('blur', function() {
       return submit(cell, $(this));
     }).on('keydown', function(e) {
       if (cell.data('datagrid-editable-type') !== 'textarea') {
@@ -464,6 +471,9 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
           return submit(cell, $(this));
         }
       }
+    });
+    return cell.find('select').on('change', function() {
+      return submit(cell, $(this));
     });
   }
 });

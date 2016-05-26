@@ -381,6 +381,12 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 
 			input.attr('rows', Math.round((cell_lines)))
 
+		else if cell.data('datagrid-editable-type') == 'select'
+			input = $(cell.data('datagrid-editable-element'));
+
+			input.find('option').each ->
+				if $(this).text() == value
+					input.find('option[value=' + $(this).val() + ']').prop('selected', true)
 		else
 			input = $('<input type="' + cell.data('datagrid-editable-type') + '">')
 			input.val(value)
@@ -409,7 +415,7 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 			cell.removeClass('editing')
 			cell.html(value)
 
-		cell.find('input,textarea').focus().on('blur', ->
+		cell.find('input,textarea,select').focus().on('blur', ->
 			submit(cell, $(this))
 		).on('keydown', (e) ->
 			if cell.data('datagrid-editable-type') != 'textarea'
@@ -418,6 +424,9 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 					e.preventDefault()
 
 					submit(cell, $(this))
+		)
+		cell.find('select').on('change', ->
+			submit(cell, $(this))
 		)
 )
 
