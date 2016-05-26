@@ -396,16 +396,24 @@ class DataGrid extends Nette\Application\UI\Control
 		foreach ($items as $item) {
 			$rows[] = $row = new Row($this, $item, $this->getPrimaryKey());
 
-			if(!$hasGroupActionOnRows && $row->hasGroupAction()){
+			if (!$hasGroupActionOnRows && $row->hasGroupAction()){
 				$hasGroupActionOnRows = TRUE;
 			}
 			
 			if ($callback) {
 				$callback($item, $row->getControl());
 			}
+
+			/**
+			 * Walkaround for item snippet - snippet is the <tr> element and its class has to be also updated
+			 */
+			if (!empty($this->redraw_item)) {
+				$this->getPresenter()->payload->_datagrid_redraw_item_class = $row->getControlClass();
+				$this->getPresenter()->payload->_datagrid_redraw_item_id = $row->getId();
+			}
 		}
 
-		if($hasGroupActionOnRows){
+		if ($hasGroupActionOnRows){
 			$hasGroupActionOnRows = $this->hasGroupActions();
 		}
 
@@ -1983,6 +1991,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->redraw_item = [($primary_where_column ?: $this->primary_key) => $id];
 
 		$this->redrawControl('items');
+
 		$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 
 		$this->onRedraw();

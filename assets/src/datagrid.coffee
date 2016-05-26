@@ -495,3 +495,11 @@ $.nette.ext('datagrid.inline-editing', {
 		if payload._datagrid_inline_editing
 			$('.datagrid-inline-edit-trigger').addClass('hidden')
 })
+
+
+$.nette.ext('datagrid.redraw-item', {
+	success: (payload) ->
+		if payload._datagrid_redraw_item_class
+			row = $('tr[data-id=' + payload._datagrid_redraw_item_id + ']')
+			row.attr('class', payload._datagrid_redraw_item_class)
+})
