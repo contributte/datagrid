@@ -449,7 +449,7 @@ $(document).on('click', '[data-datagrid-toggle-inline-add]', (e) ->
 	e.stopPropagation()
 	e.preventDefault()
 
-	row = $('.datagrid-row-inline-add')
+	row = $(this).closest('.datagrid').find('.datagrid-row-inline-add')
 
 	if row.hasClass('datagrid-row-inline-add-hidden')
 		row.removeClass('datagrid-row-inline-add-hidden')
