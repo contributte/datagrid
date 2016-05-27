@@ -72,6 +72,24 @@ class ColumnStatus extends Column
 
 
 	/**
+	 * Get particular option
+	 * @param  mixed $value
+	 * @return Option
+	 * @throws DataGridColumnStatusException
+	 */
+	public function getOption($value)
+	{
+		foreach ($this->options as $option) {
+			if ($option->getValue() === $value) {
+				return $option;
+			}
+		}
+
+		throw new DataGridColumnStatusException("Option [$value] does not exist");
+	}
+
+
+	/**
 	 * @return string
 	 */
 	public function getColumn()
@@ -102,6 +120,7 @@ class ColumnStatus extends Column
 	 * @param mixed $value
 	 * @param string $text
 	 * @return Option
+	 * @throws DataGridColumnStatusException
 	 */
 	public function addOption($value, $text)
 	{
@@ -114,6 +133,21 @@ class ColumnStatus extends Column
 		$this->options[] = $option;
 
 		return $option;
+	}
+
+
+	/**
+	 * Set all options at once
+	 * @param array $options
+	 * @return static
+	 */
+	public function setOptions(array $options)
+	{
+		foreach ($options as $value => $text) {
+			$this->addOption($value, $text);
+		}
+
+		return $this;
 	}
 
 
