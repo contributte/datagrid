@@ -2099,16 +2099,22 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param array $items_per_page_list
 	 * @return static
 	 */
-	public function setItemsPerPageList(array $items_per_page_list, $include_all = TRUE, $items_per_page_default = NULL)
+	public function setItemsPerPageList(array $items_per_page_list, $include_all = TRUE)
 	{
 		$this->items_per_page_list = $items_per_page_list;
-		$this->items_per_page_default = $items_per_page_default;
 
 		if ($include_all) {
 			$this->items_per_page_list[] = 'all';
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @param $count
+	 */
+	public function setDefaultPerPage($count){
+		$this->items_per_page_default = $count;
 	}
 
 
@@ -2128,10 +2134,6 @@ class DataGrid extends Nette\Application\UI\Control
 		$paginator = $component->getPaginator();
 
 		$paginator->setPage($this->page);
-
-		$per_page = $this->getPerPage() === 'all' ? PHP_INT_MAX : $this->getPerPage();
-		$paginator->setItemsPerPage($per_page);
-
 		$paginator->setItemsPerPage($this->getPerPage());
 
 		return $component;
@@ -2209,7 +2211,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getPaginator()
 	{
-		if ($this->isPaginated() && $this->per_page !== 'all') {
+		if ($this->isPaginated() && $this->getPerPage() !== 'all') {
 			return $this['paginator'];
 		}
 
