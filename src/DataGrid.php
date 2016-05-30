@@ -402,16 +402,24 @@ class DataGrid extends Nette\Application\UI\Control
 		foreach ($items as $item) {
 			$rows[] = $row = new Row($this, $item, $this->getPrimaryKey());
 
-			if(!$hasGroupActionOnRows && $row->hasGroupAction()){
+			if (!$hasGroupActionOnRows && $row->hasGroupAction()){
 				$hasGroupActionOnRows = TRUE;
 			}
 			
 			if ($callback) {
 				$callback($item, $row->getControl());
 			}
+
+			/**
+			 * Walkaround for item snippet - snippet is the <tr> element and its class has to be also updated
+			 */
+			if (!empty($this->redraw_item)) {
+				$this->getPresenter()->payload->_datagrid_redraw_item_class = $row->getControlClass();
+				$this->getPresenter()->payload->_datagrid_redraw_item_id = $row->getId();
+			}
 		}
 
-		if($hasGroupActionOnRows){
+		if ($hasGroupActionOnRows){
 			$hasGroupActionOnRows = $this->hasGroupActions();
 		}
 
@@ -1396,20 +1404,8 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Per page
 		 */
-		if (isset($form['per_page_submit']) && $form['per_page_submit']->isSubmittedBy()) {
-			/**
-			 * Session stuff
-			 */
-			$this->saveSessionData('_grid_per_page', $values->per_page);
-
-			/**
-			 * Other stuff
-			 */
-			$this->per_page = $values->per_page;
-			$this->reload();
-
-			return;
-		}
+		$this->saveSessionData('_grid_per_page', $values->per_page);
+		$this->per_page = $values->per_page;
 
 		/**
 		 * Inline edit
@@ -1426,13 +1422,16 @@ class DataGrid extends Nette\Application\UI\Control
 
 				if ($edit['submit']->isSubmittedBy()) {
 					$this->inlineEdit->onSubmit($id, $values->inline_edit);
-
-					if ($this->getPresenter()->isAjax()) {
-						$this->getPresenter()->payload->_datagrid_inline_edited = $id;
-					}
+					$this->getPresenter()->payload->_datagrid_inline_edited = $id;
+				} else {
+					$this->getPresenter()->payload->_datagrid_inline_edit_cancel = $id;
 				}
 
-				$this->redrawItem($id, $primary_where_column);
+				if ($edit['submit']->isSubmittedBy() && !empty($this->inlineEdit->onCustomRedraw)) {
+					$this->inlineEdit->onCustomRedraw();
+				} else {
+					$this->redrawItem($id, $primary_where_column);
+				}
 
 				return;
 			}
@@ -1988,6 +1987,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->redraw_item = [($primary_where_column ?: $this->primary_key) => $id];
 
 		$this->redrawControl('items');
+
 		$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 
 		$this->onRedraw();
@@ -2479,6 +2479,16 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * @param  callable $condition
+	 * @return void
+	 */
+	public function allowRowsInlineEdit(callable $condition)
+	{
+		$this->row_conditions['inline_edit'] = $condition;
+	}
+
+
+	/**
 	 * @param  string   $key
 	 * @param  callable $condition
 	 * @return void
@@ -2574,6 +2584,10 @@ class DataGrid extends Nette\Application\UI\Control
 
 			$this['filter']['inline_edit']->addHidden('_id', $id);
 			$this['filter']['inline_edit']->addHidden('_primary_where_column', $primary_where_column);
+
+			if ($this->getPresenter()->isAjax()) {
+				$this->getPresenter()->payload->_datagrid_inline_editing = TRUE;
+			}
 
 			$this->redrawItem($id, $primary_where_column);
 		}

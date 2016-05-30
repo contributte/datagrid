@@ -41,6 +41,11 @@ class InlineEdit extends Nette\Object
 	public $onSetDefaults;
 
 	/**
+	 * @var callable[]
+	 */
+	public $onCustomRedraw;
+
+	/**
 	 * @var mixed
 	 */
 	protected $item_id;
@@ -135,7 +140,9 @@ class InlineEdit extends Nette\Object
 		$a->add($this->text);
 
 		if ($this->title) { $a->title($this->title); }
-		if ($this->class) { $a->class($this->class); }
+		if ($this->class) { $a->class[] = $this->class; }
+
+		$a->class[] = 'datagrid-inline-edit-trigger';
 
 		return $a;
 	}

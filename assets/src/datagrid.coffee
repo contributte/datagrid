@@ -33,7 +33,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', ->
 ).on('keyup', 'input[data-autosubmit]', (e) ->
 	code = e.which || e.keyCode || 0
 
-	if (code !=13) and ((code >= 9 and code <= 40) or (code >= 112 and code <= 123))
+	if (code != 13) and ((code >= 9 and code <= 40) or (code >= 112 and code <= 123))
 		return
 
 	clearTimeout(window.datagrid_autosubmit_timer)
@@ -41,6 +41,14 @@ $(document).on('change', 'select[data-autosubmit-per-page]', ->
 	window.datagrid_autosubmit_timer = setTimeout =>
 		$this.closest('form').submit()
 	, 200
+).on('keydown', '.datagrid-inline-edit input', (e) ->
+	code = e.which || e.keyCode || 0
+
+	if (code == 13)
+		e.stopPropagation()
+		e.preventDefault()
+
+		$(this).closest('tr').find('.col-action-inline-edit [name="inline_edit[submit]"]').click()
 )
 
 document.addEventListener 'change', (e) ->
@@ -146,63 +154,64 @@ datagridSortable = ->
 $ ->
 	datagridSortable()
 
-datagridSortableTree = ->
-	if typeof $('.datagrid-tree-item-children').sortable == 'undefined'
-		return
+if typeof datagridSortableTree == 'undefined'
+	datagridSortableTree = ->
+		if typeof $('.datagrid-tree-item-children').sortable == 'undefined'
+			return
 
-	$('.datagrid-tree-item-children').sortable({
-		handle: '.handle-sort',
-		items: '.datagrid-tree-item',
-		toleranceElement: '> .datagrid-tree-item-content',
-		connectWith: '.datagrid-tree-item-children',
-		update: (event, ui) ->
-			$('.toggle-tree-to-delete').remove()
+		$('.datagrid-tree-item-children').sortable({
+			handle: '.handle-sort',
+			items: '.datagrid-tree-item',
+			toleranceElement: '> .datagrid-tree-item-content',
+			connectWith: '.datagrid-tree-item-children',
+			update: (event, ui) ->
+				$('.toggle-tree-to-delete').remove()
 
-			row = ui.item.closest('.datagrid-tree-item[data-id]')
+				row = ui.item.closest('.datagrid-tree-item[data-id]')
 
-			item_id = row.data('id')
-			prev_id = null
-			next_id = null
-			parent_id = null
+				item_id = row.data('id')
+				prev_id = null
+				next_id = null
+				parent_id = null
 
-			if row.prev().length
-				prev_id = row.prev().data('id')
+				if row.prev().length
+					prev_id = row.prev().data('id')
 
-			if row.next().length
-				next_id = row.next().data('id')
+				if row.next().length
+					next_id = row.next().data('id')
 
-			parent = row.parent().closest('.datagrid-tree-item')
+				parent = row.parent().closest('.datagrid-tree-item')
+
+				if parent.length
+					parent.find('.datagrid-tree-item-children').first().css({display: 'block'})
+					parent.addClass('has-children')
+
+					parent_id = parent.data('id')
+
+				url = $(this).data('sortable-url')
+
+				if !url
+					return
+
+				parent.find('[data-toggle-tree]').first().removeClass('hidden')
+
+				$.nette.ajax({
+					type: 'GET',
+					url: url,
+					data: {item_id: item_id, prev_id: prev_id, next_id: next_id, parent_id: parent_id},
+					error: (jqXHR, textStatus, errorThrown) ->
+						if errorThrown != 'abort'
+							alert(jqXHR.statusText)
+				})
+		, stop: (event, ui) ->
+			$('.toggle-tree-to-delete').removeClass('toggle-tree-to-delete')
+		, start: (event, ui) ->
+			parent = ui.item.parent().closest('.datagrid-tree-item')
 
 			if parent.length
-				parent.find('.datagrid-tree-item-children').first().css({display: 'block'})
-				parent.addClass('has-children')
-
-				parent_id = parent.data('id')
-
-			url = $(this).data('sortable-url')
-
-			if !url
-				return
-
-			parent.find('[data-toggle-tree]').first().removeClass('hidden')
-
-			$.nette.ajax({
-				type: 'GET',
-				url: url,
-				data: {item_id: item_id, prev_id: prev_id, next_id: next_id, parent_id: parent_id},
-				error: (jqXHR, textStatus, errorThrown) ->
-					if errorThrown != 'abort'
-						alert(jqXHR.statusText)
-			})
-	, stop: (event, ui) ->
-		$('.toggle-tree-to-delete').removeClass('toggle-tree-to-delete')
-	, start: (event, ui) ->
-		parent = ui.item.parent().closest('.datagrid-tree-item')
-
-		if parent.length
-			if parent.find('.datagrid-tree-item').length == 2
-				parent.find('[data-toggle-tree]').addClass('toggle-tree-to-delete')
-	})
+				if parent.find('.datagrid-tree-item').length == 2
+					parent.find('[data-toggle-tree]').addClass('toggle-tree-to-delete')
+		})
 
 $ ->
 	datagridSortableTree();
@@ -373,6 +382,12 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 
 			input.attr('rows', Math.round((cell_lines)))
 
+		else if cell.data('datagrid-editable-type') == 'select'
+			input = $(cell.data('datagrid-editable-element'));
+
+			input.find('option').each ->
+				if $(this).text() == value
+					input.find('option[value=' + $(this).val() + ']').prop('selected', true)
 		else
 			input = $('<input type="' + cell.data('datagrid-editable-type') + '">')
 			input.val(value)
@@ -401,7 +416,7 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 			cell.removeClass('editing')
 			cell.html(value)
 
-		cell.find('input,textarea').focus().on('blur', ->
+		cell.find('input,textarea,select').focus().on('blur', ->
 			submit(cell, $(this))
 		).on('keydown', (e) ->
 			if cell.data('datagrid-editable-type') != 'textarea'
@@ -411,6 +426,9 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 
 					submit(cell, $(this))
 		)
+		cell.find('select').on('change', ->
+			submit(cell, $(this))
+		)
 )
 
 # Datagrid after big inline edit notification
@@ -419,6 +437,9 @@ $.nette.ext('datagrid.after_inline_edit', {
 	success: (payload) ->
 		if payload._datagrid_inline_edited
 			$('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited')
+			$('.datagrid-inline-edit-trigger').removeClass('hidden')
+		else if payload._datagrid_inline_edit_cancel
+			$('.datagrid-inline-edit-trigger').removeClass('hidden')
 })
 
 
@@ -428,7 +449,7 @@ $(document).on('click', '[data-datagrid-toggle-inline-add]', (e) ->
 	e.stopPropagation()
 	e.preventDefault()
 
-	row = $('.datagrid-row-inline-add')
+	row = $(this).closest('.datagrid').find('.datagrid-row-inline-add')
 
 	if row.hasClass('datagrid-row-inline-add-hidden')
 		row.removeClass('datagrid-row-inline-add-hidden')
@@ -476,4 +497,19 @@ $.nette.ext('datagrid.fitlerMultiSelect', {
 
 		if $.fn.selectpicker
 			$('.selectpicker').selectpicker()
+})
+
+
+$.nette.ext('datagrid.inline-editing', {
+	success: (payload) ->
+		if payload._datagrid_inline_editing
+			$('.datagrid-inline-edit-trigger').addClass('hidden')
+})
+
+
+$.nette.ext('datagrid.redraw-item', {
+	success: (payload) ->
+		if payload._datagrid_redraw_item_class
+			row = $('tr[data-id=' + payload._datagrid_redraw_item_id + ']')
+			row.attr('class', payload._datagrid_redraw_item_class)
 })
