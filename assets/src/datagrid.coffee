@@ -275,7 +275,8 @@ $.nette.ext('datagrid.url', {
 
 				url += window.location.hash
 
-				window.history.pushState({path: url}, '', url)
+				if window.location.href != url
+					window.history.pushState({path: url}, '', url)
 })
 
 $.nette.ext('datagrid.sort', {

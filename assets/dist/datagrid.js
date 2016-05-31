@@ -312,9 +312,11 @@ $.nette.ext('datagrid.url', {
           url = host + path;
         }
         url += window.location.hash;
-        return window.history.pushState({
-          path: url
-        }, '', url);
+        if (window.location.href !== url) {
+          return window.history.pushState({
+            path: url
+          }, '', url);
+        }
       }
     }
   }
