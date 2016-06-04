@@ -1362,7 +1362,8 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Per page part
 		 */
-		$form->addSelect('per_page', '', $this->getItemsPerPageList());
+		$form->addSelect('per_page', '', $this->getItemsPerPageList())
+			->setTranslator(NULL);
 
 		if (!$form->isSubmitted()) {
 			$form['per_page']->setValue($this->getPerPage());
