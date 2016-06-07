@@ -87,17 +87,16 @@ class ExportCsv extends Export
 	/**
 	 * Call export callback
 	 * @param  array    $data
-	 * @param  DataGrid $grid
 	 * @return void
 	 */
-	public function invoke(array $data, DataGrid $grid)
+	public function invoke(array $data)
 	{
-		$columns = $this->getColumns() ?: $grid->getColumns();
+		$columns = $this->getColumns() ?: $this->grid->getColumns();
 
-		$csv_data_model = new CsvDataModel($data, $columns, $grid->getTranslator());
+		$csv_data_model = new CsvDataModel($data, $columns, $this->grid->getTranslator());
 
-		if ($grid->getPresenter() instanceof Nette\Application\UI\Presenter) {
-			$grid->getPresenter()->sendResponse(new CSVResponse(
+		if ($this->grid->getPresenter() instanceof Nette\Application\UI\Presenter) {
+			$this->grid->getPresenter()->sendResponse(new CSVResponse(
 				$csv_data_model->getSimpleData(),
 				$this->name,
 				$this->output_encoding,

@@ -165,12 +165,11 @@ class Export
 	/**
 	 * Call export callback
 	 * @param  array    $data
-	 * @param  DataGrid $grid
 	 * @return void
 	 */
-	public function invoke(array $data, DataGrid $grid)
+	public function invoke(array $data)
 	{
-		Callback::invokeArgs($this->callback, [$data, $grid]);
+		Callback::invokeArgs($this->callback, [$data, $this->grid]);
 	}
 
 }

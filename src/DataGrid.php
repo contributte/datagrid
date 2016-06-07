@@ -1885,9 +1885,9 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		if ($export instanceof Export\ExportCsv) {
-			$export->invoke($rows, $this);
+			$export->invoke($rows);
 		} else {
-			$export->invoke($items, $this);
+			$export->invoke($items);
 		}
 
 		if ($export->isAjax()) {
