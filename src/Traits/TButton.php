@@ -16,7 +16,7 @@ trait TButton
 {
 
 	/**
-	 * @var string
+	 * @var string|callable
 	 */
 	protected $title = '';
 
@@ -26,7 +26,7 @@ trait TButton
 	protected $class = 'btn btn-xs btn-default';
 
 	/**
-	 * @var string
+	 * @var string|callable
 	 */
 	protected $icon;
 

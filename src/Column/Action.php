@@ -28,16 +28,6 @@ class Action extends Column
 	public static $data_confirm_attribute_name = 'datagrid-confirm';
 
 	/**
-	 * @var string|callable
-	 */
-	protected $title;
-
-	/**
-	 * @var string|callable
-	 */
-	protected $icon;
-
-	/**
 	 * @var DataGrid
 	 */
 	protected $grid;
