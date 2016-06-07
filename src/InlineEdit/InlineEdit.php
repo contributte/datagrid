@@ -23,7 +23,7 @@ use Ublaboo\DataGrid\Traits;
 class InlineEdit extends Nette\Object
 {
 
-	use Traits\ButtonIconTrait;
+	use Traits\TButton;
 
 	/**
 	 * @var callable[]
@@ -51,26 +51,6 @@ class InlineEdit extends Nette\Object
 	protected $item_id;
 
 	/**
-	 * @var string
-	 */
-	protected $title = 'edit';
-
-	/**
-	 * @var string
-	 */
-	protected $class = 'btn btn-xs btn-default ajax';
-
-	/**
-	 * @var string
-	 */
-	protected $icon = 'pencil';
-
-	/**
-	 * @var string
-	 */
-	protected $text = '';
-
-	/**
 	 * @var DataGrid
 	 */
 	protected $grid;
@@ -95,6 +75,10 @@ class InlineEdit extends Nette\Object
 	{
 		$this->grid = $grid;
 		$this->primary_where_column = $primary_where_column;
+
+		$this->title = 'ublaboo_datagrid.edit';
+		$this->class = 'btn btn-xs btn-default ajax';
+		$this->icon = 'pencil';
 	}
 
 
@@ -164,94 +148,6 @@ class InlineEdit extends Nette\Object
 		if ($this->class) { $a->class($this->class); }
 
 		return $a;
-	}
-
-
-	/**
-	 * Set attribute title
-	 * @param string $title
-	 */
-	public function setTitle($title)
-	{
-		$this->title = $title;
-
-		return $this;
-	}
-
-
-	/**
-	 * Get attribute title
-	 * @return string
-	 */
-	public function getTitle()
-	{
-		return $this->title;
-	}
-
-
-	/**
-	 * Set attribute class
-	 * @param string $class
-	 */
-	public function setClass($class)
-	{
-		$this->class = $class;
-
-		return $this;
-	}
-
-
-	/**
-	 * Get attribute class
-	 * @return string
-	 */
-	public function getClass()
-	{
-		return $this->class;
-	}
-
-
-	/**
-	 * Set icon
-	 * @param string $icon
-	 */
-	public function setIcon($icon)
-	{
-		$this->icon = $icon;
-
-		return $this;
-	}
-
-
-	/**
-	 * Get icon
-	 * @return string
-	 */
-	public function getIcon()
-	{
-		return $this->icon;
-	}
-
-
-	/**
-	 * Set text
-	 * @param string $text
-	 */
-	public function setText($text)
-	{
-		$this->text = $text;
-
-		return $this;
-	}
-
-
-	/**
-	 * Get text
-	 * @return string
-	 */
-	public function getText()
-	{
-		return $this->text;
 	}
 
 

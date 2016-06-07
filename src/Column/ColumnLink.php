@@ -90,7 +90,11 @@ class ColumnLink extends Column
 		}
 
 		$a = Html::el('a')
-			->href($this->createLink($this->href, $this->getItemParams($row, $this->params)));
+			->href($this->createLink(
+				$this->grid,
+				$this->href,
+				$this->getItemParams($row, $this->params)
+			));
 			
 		if (!empty($this->data_attributes)) {
 			foreach ($this->data_attributes as $key => $attr_value) {

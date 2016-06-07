@@ -18,6 +18,7 @@ use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentExcept
 use Ublaboo\DataGrid\Utils\Sorting;
 use Ublaboo\DataGrid\InlineEdit\InlineEdit;
 use Ublaboo\DataGrid\ColumnsSummary;
+use Ublaboo\DataGrid\Toolbar\ToolbarButton;
 
 /**
  * @method onRedraw()
@@ -142,6 +143,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @var Export\Export[]
 	 */
 	protected $exports = [];
+
+	/**
+	 * @var ToolbarButton[]
+	 */
+	protected $toolbar_buttons = [];
 
 	/**
 	 * @var DataModel
@@ -427,6 +433,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->getTemplate()->add('actions', $this->actions);
 		$this->getTemplate()->add('exports', $this->exports);
 		$this->getTemplate()->add('filters', $this->filters);
+		$this->getTemplate()->add('toolbar_buttons', $this->toolbar_buttons);
 
 		$this->getTemplate()->add('filter_active', $this->isFilterActive());
 		$this->getTemplate()->add('original_template', $this->getOriginalTemplateFile());
@@ -1584,7 +1591,7 @@ class DataGrid extends Nette\Application\UI\Control
 			throw new DataGridException("Second parameter of ExportCallback must be callable.");
 		}
 
-		return $this->addToExports(new Export\Export($text, $callback, $filtered));
+		return $this->addToExports(new Export\Export($this, $text, $callback, $filtered));
 	}
 
 
@@ -1599,6 +1606,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function addExportCsv($text, $csv_file_name, $output_encoding = NULL, $delimiter = NULL)
 	{
 		return $this->addToExports(new Export\ExportCsv(
+			$this,
 			$text,
 			$csv_file_name,
 			FALSE,
@@ -1619,6 +1627,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function addExportCsvFiltered($text, $csv_file_name, $output_encoding = NULL, $delimiter = NULL)
 	{
 		return $this->addToExports(new Export\ExportCsv(
+			$this,
 			$text,
 			$csv_file_name,
 			TRUE,
@@ -1648,6 +1657,26 @@ class DataGrid extends Nette\Application\UI\Control
 		foreach ($this->exports as $id => $export) {
 			$export->setLink(new Link($this, 'export!', ['id' => $id]));
 		}
+	}
+
+
+	/********************************************************************************
+	 *                                TOOLBAR BUTTONS                               *
+	 ********************************************************************************/
+
+
+	/**
+	 * Add toolbar button
+	 * @param string $href
+	 * @param string $text
+	 * @param array  $params
+	 * @return ToolbarButton
+	 */
+	public function addToolbarButton($href, $text = '', $params = [])
+	{
+		$button = new ToolbarButton($this, $href, $text, $params);
+
+		return $this->toolbar_buttons[] = $button;
 	}
 
 

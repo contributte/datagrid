@@ -43,6 +43,7 @@ class ExportCsv extends Export
 
 
 	/**
+	 * @param DataGrid    $grid
 	 * @param string      $text
 	 * @param string      $csv_file_name
 	 * @param bool        $filtered
@@ -50,12 +51,14 @@ class ExportCsv extends Export
 	 * @param string|null $delimiter
 	 */
 	public function __construct(
+		DataGrid $grid,
 		$text,
 		$csv_file_name,
 		$filtered,
 		$output_encoding = NULL,
 		$delimiter = NULL
 	) {
+		$this->grid = $grid;
 		$this->text = $text;
 		$this->filtered = (bool) $filtered;
 		$this->name = strpos($csv_file_name, '.csv') !== FALSE ? $csv_file_name : "$csv_file_name.csv";

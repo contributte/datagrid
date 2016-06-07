@@ -8,17 +8,18 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette\InvalidArgumentException;
 use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 use Nette\Utils\Html;
+use Ublaboo\DataGrid\Traits;
 
 abstract class Column extends FilterableColumn
 {
+
+	use Traits\TLink;
 
 	/**
 	 * @var array
@@ -648,32 +649,6 @@ abstract class Column extends FilterableColumn
 	public function getDefaultHide()
 	{
 		return $this->default_hide;
-	}
-
-
-	/**
-	 * Create link to custom destination
-	 * @param  string $href
-	 * @param  array  $params
-	 * @return string
-	 * @throws DataGridHasToBeAttachedToPresenterComponentException
-	 * @throws InvalidArgumentException
-	 */
-	protected function createLink($href, $params)
-	{
-		try {
-			$parent = $this->grid->getParent();
-
-			return $parent->link($href, $params);
-		} catch (DataGridHasToBeAttachedToPresenterComponentException $e) {
-			$parent = $this->grid->getPresenter();
-
-		} catch (InvalidArgumentException $e) {
-			$parent = $this->grid->getPresenter();
-
-		}
-
-		return $parent->link($href, $params);
 	}
 
 

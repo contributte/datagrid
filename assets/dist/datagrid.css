@@ -33,18 +33,21 @@
   border-right: 1px solid #ddd;
 }
 
-.datagrid .datagrid-exports {
+.datagrid .datagrid-toolbar {
+  margin-top: .35em;
   float: right;
+}
+
+.datagrid .datagrid-toolbar > span {
+  margin-left: 1em;
 }
 
 .datagrid .datagrid-exports .btn {
-  margin-left: 1em;
+  margin-left: 0.5em;
 }
 
-.datagrid .datagrid-settings {
-  margin-left: 1em;
-  margin-top: .35em;
-  float: right;
+.datagrid .datagrid-exports .btn:first-child {
+  margin-left: 0;
 }
 
 .datagrid .datagrid-settings .dropdown-menu--grid {

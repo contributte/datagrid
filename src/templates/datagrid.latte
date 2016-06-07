@@ -1,9 +1,10 @@
 {**
- * @param array           $columns            Available columns
- * @param array           $actions            Available actions
- * @param array           $exports            Available exports
- * @param array           $filters            Available filters
- * @param Form            $filter             Walkaround for latte (does not know $form in snippet in foreach, etc)
+ * @param Column[]        $columns            Available columns
+ * @param Action[]        $actions            Available actions
+ * @param Export[]        $exports            Available exports
+ * @param Filter[]        $filters            Available filters
+ * @param ToolBarButton[] $toolbar_buttons    Available toolbar_buttons
+ * @param Form            $filter             Walkaround for latte snippets
  * @param Row[]           $rows               List of rows (each contain a item from data source)
  * @param DataGrid        $control            Parent (DataGrid)
  * @param string          $original_template  Original template file path
@@ -48,7 +49,7 @@
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
 				<thead>
-					<tr class="row-group-actions" n:if="$hasGroupActionOnRows || $exports || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
+					<tr class="row-group-actions" n:if="$hasGroupActionOnRows || $exports || $toolbar_buttons || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
 							{if $hasGroupActionOnRows}
 								{block group_actions}
@@ -65,48 +66,54 @@
 								{/block}
 							{/if}
 
-							<span class="datagrid-settings" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
-								{**
-								 * Inline add
-								 *}
-								{if $inlineAdd}
-									{$inlineAdd->renderButtonAdd()}
-								{/if}
+							<span class="datagrid-toolbar" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbar_buttons">
+								<span n:if="$toolbar_buttons">
+									{foreach $toolbar_buttons as $toolbar_button}{$toolbar_button->renderButton()}{/foreach}
+								</span>
 
-								{**
-								 * Hideable columns
-								 *}
-								<div class="btn-group">
-									<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
-										<i n:block = "icon-gear" class="{$icon_prefix}gear"></i>
-									</button>
-									<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
-										<li n:foreach="$columns_visibility as $v_key => $visibility">
-											{if $visibility['visible']}
-												<a n:href="hideColumn!, column => $v_key" class="ajax">
-													<i n:block = "icon-checked" class="{$icon_prefix}check-square-o"></i>
-													{_$visibility['name']}
-												</a>
-											{else}
-												<a n:href="showColumn!, column => $v_key" class="ajax">
-													<i n:block = "icon-unchecked" class="{$icon_prefix}square-o"></i>
-													{_$visibility['name']}
-												</a>
-											{/if}
-										</li>
-										<li role="separator" class="divider"></li>
-										<li>
-											<a n:href="showAllColumns!" class="ajax"><i n:block = "icon-eye" class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
-										</li>
-										<li n:if="$control->hasSomeColumnDefaultHide()">
-											<a n:href="showDefaultColumns!" class="ajax"><i n:block = "icon-repeat" class="{$icon_prefix}repeat"></i> {_'ublaboo_datagrid.show_default_columns'}</a>
-										</li>
-									</ul>
-								</div>
-							</span>
+								<span class="datagrid-exports" n:if="$exports" n:snippet="exports" n:block="exports">
+									{foreach $exports as $export}{$export->render()}{/foreach}
+								</span>
 
-							<span class="datagrid-exports" n:if="$exports" n:snippet="exports" n:block="exports">
-								{foreach $exports as $export}{$export->render()}{/foreach}
+								<span class="datagrid-settings" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
+									{**
+									 * Inline add
+									 *}
+									{if $inlineAdd}
+										{$inlineAdd->renderButtonAdd()}
+									{/if}
+
+									{**
+									 * Hideable columns
+									 *}
+									<div class="btn-group">
+										<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
+											<i n:block = "icon-gear" class="{$icon_prefix}gear"></i>
+										</button>
+										<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
+											<li n:foreach="$columns_visibility as $v_key => $visibility">
+												{if $visibility['visible']}
+													<a n:href="hideColumn!, column => $v_key" class="ajax">
+														<i n:block = "icon-checked" class="{$icon_prefix}check-square-o"></i>
+														{_$visibility['name']}
+													</a>
+												{else}
+													<a n:href="showColumn!, column => $v_key" class="ajax">
+														<i n:block = "icon-unchecked" class="{$icon_prefix}square-o"></i>
+														{_$visibility['name']}
+													</a>
+												{/if}
+											</li>
+											<li role="separator" class="divider"></li>
+											<li>
+												<a n:href="showAllColumns!" class="ajax"><i n:block = "icon-eye" class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
+											</li>
+											<li n:if="$control->hasSomeColumnDefaultHide()">
+												<a n:href="showDefaultColumns!" class="ajax"><i n:block = "icon-repeat" class="{$icon_prefix}repeat"></i> {_'ublaboo_datagrid.show_default_columns'}</a>
+											</li>
+										</ul>
+									</div>
+								</span>
 							</span>
 						</th>
 					</tr>

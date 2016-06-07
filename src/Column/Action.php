@@ -19,7 +19,8 @@ use Ublaboo\DataGrid\Traits;
 class Action extends Column
 {
 
-	use Traits\ButtonIconTrait;
+	use Traits\TButton;
+	use Traits\TLink;
 
 	/**
 	 * @var string
@@ -30,11 +31,6 @@ class Action extends Column
 	 * @var string|callable
 	 */
 	protected $title;
-
-	/**
-	 * @var string|callable
-	 */
-	protected $class;
 
 	/**
 	 * @var string|callable
@@ -84,8 +80,6 @@ class Action extends Column
 		$this->href = $href;
 		$this->name = $name;
 		$this->params = $params;
-
-		$this->class = 'btn btn-xs btn-default';
 	}
 
 
@@ -107,7 +101,11 @@ class Action extends Column
 			 */
 		}
 
-		$link = $this->createLink($this->href, $this->getItemParams($row, $this->params));
+		$link = $this->createLink(
+			$this->grid,
+			$this->href,
+			$this->getItemParams($row, $this->params)
+		);
 
 		$a = Html::el('a')->href($link);
 

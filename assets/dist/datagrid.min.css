@@ -6,9 +6,10 @@
 .datagrid .datagrid-row-columns-summary td{border-top:2px solid #bbb;border-left:1px solid #eee;border-right:1px solid #eee;font-weight:700}
 .datagrid .datagrid-row-columns-summary td:first-child{border-left:1px solid #ddd}
 .datagrid .datagrid-row-columns-summary td:last-child{border-right:1px solid #ddd}
-.datagrid .datagrid-exports{float:right}
-.datagrid .datagrid-exports .btn{margin-left:1em}
-.datagrid .datagrid-settings{margin-left:1em;margin-top:.35em;float:right}
+.datagrid .datagrid-toolbar{margin-top:.35em;float:right}
+.datagrid .datagrid-toolbar>span{margin-left:1em}
+.datagrid .datagrid-exports .btn{margin-left:.5em}
+.datagrid .datagrid-exports .btn:first-child{margin-left:0}
 .datagrid .datagrid-settings .dropdown-menu--grid{font-size:12px}
 .datagrid .datagrid-settings .dropdown-menu--grid li .fa{margin-right:.5em}
 .datagrid .row-reset-filter{text-align:right;margin-bottom:.5em}

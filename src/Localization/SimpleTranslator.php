@@ -25,6 +25,8 @@ class SimpleTranslator extends Nette\Object implements Nette\Localization\ITrans
 		'ublaboo_datagrid.from' => 'from',
 		'ublaboo_datagrid.reset_filter' => 'Reset filter',
 		'ublaboo_datagrid.group_actions' => 'Group actions',
+		'ublaboo_datagrid.show' => 'Show',
+		'ublaboo_datagrid.edit' => 'Edit',
 		'ublaboo_datagrid.show_all_columns' => 'Show all columns',
 		'ublaboo_datagrid.show_default_columns' => 'Show default columns',
 		'ublaboo_datagrid.hide_column' => 'Hide column',
