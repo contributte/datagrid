@@ -65,10 +65,6 @@
 								{/block}
 							{/if}
 
-							<span class="datagrid-exports" n:if="$exports" n:block="exports">
-								{foreach $exports as $export}{$export->render()}{/foreach}
-							</span>
-
 							<span class="datagrid-settings" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
 								{**
 								 * Inline add
@@ -107,6 +103,10 @@
 										</li>
 									</ul>
 								</div>
+							</span>
+
+							<span class="datagrid-exports" n:if="$exports" n:snippet="exports" n:block="exports">
+								{foreach $exports as $export}{$export->render()}{/foreach}
 							</span>
 						</th>
 					</tr>
