@@ -37,24 +37,31 @@ class ExportCsv extends Export
 	protected $output_encoding = 'utf-8';
 
 	/**
+	 * @var boolean
+	 */
+	protected $include_bom = FALSE;
+
+	/**
 	 * @var string
 	 */
 	protected $delimiter = ';';
 
 
 	/**
-	 * @param string      $text
-	 * @param string      $csv_file_name
-	 * @param bool        $filtered
+	 * @param string $text
+	 * @param string $csv_file_name
+	 * @param bool $filtered
 	 * @param string|null $output_encoding
 	 * @param string|null $delimiter
+	 * @param bool $include_bom
 	 */
 	public function __construct(
 		$text,
 		$csv_file_name,
 		$filtered,
 		$output_encoding = NULL,
-		$delimiter = NULL
+		$delimiter = NULL,
+		$include_bom = FALSE
 	) {
 		$this->text = $text;
 		$this->filtered = (bool) $filtered;
@@ -66,6 +73,10 @@ class ExportCsv extends Export
 
 		if ($delimiter) {
 			$this->delimiter = $delimiter;
+		}
+
+		if ($include_bom) {
+			$this->include_bom = $include_bom;
 		}
 	}
 
@@ -87,7 +98,8 @@ class ExportCsv extends Export
 				$csv_data_model->getSimpleData(),
 				$this->name,
 				$this->output_encoding,
-				$this->delimiter
+				$this->delimiter,
+				$this->include_bom
 			));
 
 			exit(0);
