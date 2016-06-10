@@ -423,7 +423,7 @@ abstract class Column extends FilterableColumn
 	 */
 	public function setSort(array $sort)
 	{
-		$this->sort = $sort[$this->getSortingColumn()];
+		$this->sort = $sort[$this->key];
 
 		return $this;
 	}

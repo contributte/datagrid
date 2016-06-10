@@ -390,7 +390,7 @@ class DataGrid extends Nette\Application\UI\Control
 				[$this->dataModel, 'filterData'],
 				[
 					$this->getPaginator(),
-					new Sorting($this->sort, $this->sort_callback),
+					$this->createSorting($this->sort, $this->sort_callback),
 					$this->assableFilters()
 				]
 			);
@@ -656,6 +656,17 @@ class DataGrid extends Nette\Application\UI\Control
 	public function getSortableHandler()
 	{
 		return $this->sortable_handler;
+	}
+
+
+	protected function createSorting(array $sort, $sort_callback)
+	{
+		foreach ($sort as $key => $order) {
+			$column = $this->columns[$key];
+			$sort = [$column->getSortingColumn() => $order];
+		}
+
+		return new Sorting($sort, $sort_callback);
 	}
 
 
@@ -1148,8 +1159,8 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
-		foreach ($this->columns as $column) {
-			if (isset($this->sort[$column->getSortingColumn()])) {
+		foreach ($this->columns as $key => $column) {
+			if (isset($this->sort[$key])) {
 				$column->setSort($this->sort);
 			}
 		}
@@ -1786,7 +1797,7 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 
 			$column = $this->columns[$key];
-			$new_sort = [$column->getSortingColumn() => $value];
+			$new_sort = [$key => $value];
 
 			/**
 			 * Pagination may be reseted after sorting
@@ -1875,7 +1886,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$items = Nette\Utils\Callback::invokeArgs(
 			[$this->dataModel, 'filterData'], [
 				NULL,
-				new Sorting($this->sort, $this->sort_callback),
+				$this->createSorting($this->sort, $this->sort_callback),
 				$filter
 			]
 		);
