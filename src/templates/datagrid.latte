@@ -134,7 +134,11 @@
 								{else}
 									{if $column->isSortable()}
 										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()" id="datagrid-sort-{$key}">
-											{_$column->getName()}
+											{if $column->isHeaderEscaped()}
+												{_$column->getName()|noescape}
+											{else}
+												{_$column->getName()}
+											{/if}
 											{if $column->isSortedBy()}
 												{if $column->isSortAsc()}
 													<i n:block="icon-sort-up" class="{$icon_prefix}caret-up"></i>
@@ -146,7 +150,11 @@
 											{/if}
 										</a>
 									{else}
-										{_$column->getName()}
+										{if $column->isHeaderEscaped()}
+											{_$column->getName()|noescape}
+										{else}
+											{_$column->getName()}
+										{/if}
 									{/if}
 
 									<span class="column-settings-menu pull-right" n:if="$control->canHideColumns()">
