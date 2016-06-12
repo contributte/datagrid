@@ -62,6 +62,12 @@ abstract class Column extends FilterableColumn
 	protected $template_escaping = TRUE;
 
 	/**
+	 * @var bool
+	 */
+	protected $header_escaping = FALSE;
+
+	
+	/**
 	 * @var string
 	 */
 	protected $align;
@@ -165,7 +171,23 @@ abstract class Column extends FilterableColumn
 		return $this->template_escaping;
 	}
 
+	/**
+	 * Should be column header escaped in latte?
+	 * @param bool $header_escaping
+	 */
+	public function setHeaderEscaping($header_escaping = FALSE)
+	{
+		$this->header_escaping = (bool) $header_escaping;
 
+		return $this;
+	}
+	
+	public function isHeaderEscaped()
+	{
+		return $this->header_escaping;
+	}
+	
+	
 	/**
 	 * Set column sortable or not
 	 * @param bool|string $sortable
