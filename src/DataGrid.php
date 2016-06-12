@@ -49,6 +49,12 @@ class DataGrid extends Nette\Application\UI\Control
 	public static $icon_prefix = 'fa fa-';
 
 	/**
+	 * Default form method
+	 * @var string
+	 */
+	public static $form_method = 'post';
+
+	/**
 	 * When set to TRUE, datagrid throws an exception
 	 * 	when tring to get related entity within join and entity does not exist
 	 * @var bool
@@ -1317,7 +1323,7 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$form = new Form($this, 'filter');
 
-		$form->setMethod('get');
+		$form->setMethod(static::$form_method);
 
 		$form->setTranslator($this->getTranslator());
 
