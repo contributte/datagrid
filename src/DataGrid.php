@@ -2185,7 +2185,8 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param $count
 	 * @return static
 	 */
-	public function setDefaultPerPage($count){
+	public function setDefaultPerPage($count)
+	{
 		$this->default_per_page = $count;
 
 		return $this;
