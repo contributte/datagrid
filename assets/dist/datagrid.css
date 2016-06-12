@@ -42,6 +42,10 @@
   margin-left: 1em;
 }
 
+.datagrid .datagrid-toolbar > span > a {
+  margin-left: 0.5em;
+}
+
 .datagrid .datagrid-exports .btn {
   margin-left: 0.5em;
 }
