@@ -120,11 +120,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $items_per_page_list;
 
-
 	/**
 	 * @var int
 	 */
-	protected $items_per_page_default;
+	protected $default_per_page;
 
 	/**
 	 * @var string
@@ -339,6 +338,11 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Find default sort
 		 */
 		$this->onRender[] = [$this, 'findDefaultSort'];
+
+		/**
+		 * Find default items per page
+		 */
+		$this->onRender[] = [$this, 'findDefaultPerPage'];
 	}
 
 
@@ -2161,11 +2165,34 @@ class DataGrid extends Nette\Application\UI\Control
 		return $this;
 	}
 
+
 	/**
+	 * Set default "items per page" value in pagination select
 	 * @param $count
+	 * @return static
 	 */
 	public function setDefaultPerPage($count){
-		$this->items_per_page_default = $count;
+		$this->default_per_page = $count;
+
+		return $this;
+	}
+
+
+	/**
+	 * User may set default "items per page" value, apply it
+	 * @return void
+	 */
+	public function findDefaultPerPage()
+	{
+		if (!empty($this->per_page)) {
+			return;
+		}
+
+		if (!empty($this->default_per_page)) {
+			$this->per_page = $this->default_per_page;
+		}
+
+		$this->saveSessionData('_grid_per_page', $this->per_page);
 	}
 
 
@@ -2199,10 +2226,10 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$items_per_page_list = $this->getItemsPerPageList();
 
-		$per_page = $this->per_page ?: $this->items_per_page_default ?: reset($items_per_page_list);
+		$per_page = $this->per_page ?: reset($items_per_page_list);
 
 		if ($per_page !== 'all' && !in_array($this->per_page, $items_per_page_list)) {
-			$per_page = $this->items_per_page_default ?: reset($items_per_page_list) ?: reset($items_per_page_list);
+			$per_page = reset($items_per_page_list);
 		}
 
 		return $per_page;
