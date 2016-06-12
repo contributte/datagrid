@@ -37,7 +37,7 @@
 							{foreach $actions as $key => $action}
 								{if $tmp_row->hasAction($key)}
 									{if $action->hasTemplate()}
-										{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables()}
+										{include $action->getTemplate(), item => $tmp_row->getItem(), (expand) $action->getTemplateVariables()}
 									{else}
 										{$action->render($tmp_row)|noescape}
 									{/if}
