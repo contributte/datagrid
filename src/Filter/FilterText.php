@@ -28,7 +28,7 @@ class FilterText extends Filter
 	 * Adds text field to filter form
 	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer($container)
+	public function addToFormContainer(Nette\Forms\Container $container)
 	{
 		$container->addText($this->key, $this->name);
 

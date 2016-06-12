@@ -43,7 +43,7 @@ trait TButton
 	 * @param  string          $name
 	 * @return void
 	 */
-	public function tryAddIcon($el, $icon, $name)
+	public function tryAddIcon(Html $el, $icon, $name)
 	{
 		if ($icon) {
 			$el->add(Html::el('span')->class(DataGrid::$icon_prefix.$icon));

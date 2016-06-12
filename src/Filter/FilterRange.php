@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
 use Ublaboo\DataGrid\Exception\DataGridFilterRangeException;
+use Ublaboo\DataGrid\DataGrid;
 
 class FilterRange extends Filter
 {
@@ -36,14 +37,15 @@ class FilterRange extends Filter
 
 
 	/**
-	 * @param string $key
-	 * @param string $name
-	 * @param string $column
-	 * @param string $name_second
+	 * @param DataGrid $grid
+	 * @param string   $key
+	 * @param string   $name
+	 * @param string   $column
+	 * @param string   $name_second
 	 */
-	public function __construct($key, $name, $column, $name_second)
+	public function __construct($grid, $key, $name, $column, $name_second)
 	{
-		parent::__construct($key, $name, $column);
+		parent::__construct($grid, $key, $name, $column);
 
 		$this->name_second = $name_second;
 	}
@@ -53,7 +55,7 @@ class FilterRange extends Filter
 	 * Adds select box to filter form
 	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer($container)
+	public function addToFormContainer(Nette\Forms\Container $container)
 	{
 		$container = $container->addContainer($this->key);
 

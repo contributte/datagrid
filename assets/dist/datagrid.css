@@ -67,8 +67,19 @@
   margin-bottom: 0.5em;
 }
 
+.datagrid .datagrid-manual-submit {
+  margin-bottom: 0.5em;
+}
+
 .datagrid .filter-range-delimiter {
   text-align: center;
+}
+
+.datagrid .bootstrap-select.input-sm > .btn {
+  padding: 5px 25px 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
 }
 
 .datagrid table {
@@ -80,10 +91,6 @@
 }
 
 .datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) > .btn {
-  padding: 5px 25px 5px 10px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
   width: auto;
 }
 

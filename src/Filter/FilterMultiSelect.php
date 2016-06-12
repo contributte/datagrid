@@ -24,20 +24,20 @@ class FilterMultiSelect extends FilterSelect
 	 */
 	protected $attributes = [
 		['class', 'form-control selectpicker input-sm'],
-		['data-autosubmit', TRUE],
 		['data-selected-text-format', 'count']
 	];
 
 
 	/**
-	 * @param string $key
-	 * @param string $name
-	 * @param string $options
-	 * @param string $column
+	 * @param DataGrid $grid
+	 * @param string   $key
+	 * @param string   $name
+	 * @param string   $options
+	 * @param string   $column
 	 */
-	public function __construct($key, $name, array $options, $column)
+	public function __construct($grid, $key, $name, array $options, $column)
 	{
-		parent::__construct($key, $name, $options, $column);
+		parent::__construct($grid, $key, $name, $options, $column);
 
 		$this->addAttribute('data-selected-icon-check', DataGrid::$icon_prefix . 'check');
 	}

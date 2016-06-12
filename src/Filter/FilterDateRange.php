@@ -32,9 +32,7 @@ class FilterDateRange extends FilterRange
 	 * @var array
 	 */
 	protected $attributes = [
-		['class', 'form-control input-sm'],
-		['data-autosubmit', TRUE],
-		['data-autosubmit-change', TRUE]
+		['class', 'form-control input-sm']
 	];
 
 
@@ -42,7 +40,7 @@ class FilterDateRange extends FilterRange
 	 * Adds select box to filter form
 	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer($container)
+	public function addToFormContainer(Nette\Forms\Container $container)
 	{
 		$container = $container->addContainer($this->key);
 
@@ -62,6 +60,11 @@ class FilterDateRange extends FilterRange
 
 		$this->addAttributes($container['from']);
 		$this->addAttributes($container['to']);
+
+		if ($this->grid->hasAutoSubmit()) {
+			$container['from']->setAttribute('data-autosubmit-change', TRUE);
+			$container['to']->setAttribute('data-autosubmit-change', TRUE);
+		}
 
 		if ($placeholder_array = $this->getPlaceholder()) {
 			$text_from = reset($placeholder_array);

@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
+use Ublaboo\DataGrid\DataGrid;
 
 class FilterSelect extends Filter
 {
@@ -35,14 +36,15 @@ class FilterSelect extends Filter
 
 
 	/**
-	 * @param string $key
-	 * @param string $name
-	 * @param string $options
-	 * @param string $column
+	 * @param DataGrid $grid
+	 * @param string   $key
+	 * @param string   $name
+	 * @param string   $options
+	 * @param string   $column
 	 */
-	public function __construct($key, $name, array $options, $column)
+	public function __construct($grid, $key, $name, array $options, $column)
 	{
-		parent::__construct($key, $name, $column);
+		parent::__construct($grid, $key, $name, $column);
 
 		$this->options = $options;
 	}
@@ -52,7 +54,7 @@ class FilterSelect extends Filter
 	 * Adds select box to filter form
 	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer($container)
+	public function addToFormContainer(Nette\Forms\Container $container)
 	{
 		$form = $container->lookup('Nette\Application\UI\Form');
 		$translator = $form->getTranslator();

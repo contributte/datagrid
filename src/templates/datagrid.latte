@@ -46,6 +46,11 @@
 						{var $i = $i+1}
 					</div>
 				</div>
+				{if !$control->hasAutoSubmit()}
+					<div class="text-right datagrid-manual-submit">
+						{input $filter['filter']['submit']}
+					</div>
+				{/if}
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
 				<thead>
@@ -194,6 +199,10 @@
 						{/foreach}
 						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-center">
 							{_'ublaboo_datagrid.action'}
+							{if !$control->hasAutoSubmit() && !$control->hasOuterFilterRendering()}
+								<hr>
+								{input $filter['filter']['submit']}
+							{/if}
 						</th>
 					</tr>
 				</thead>

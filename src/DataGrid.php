@@ -313,6 +313,16 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $columnsSummary;
 
+	/**
+	 * @var bool
+	 */
+	protected $auto_submit = TRUE;
+
+	/**
+	 * @var Filter\SubmitButton|NULL
+	 */
+	protected $filter_submit_button = NULL;
+
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -1021,7 +1031,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new Filter\FilterText($key, $name, $columns);
+		return $this->filters[$key] = new Filter\FilterText($this, $key, $name, $columns);
 	}
 
 
@@ -1044,7 +1054,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new Filter\FilterSelect($key, $name, $options, $column);
+		return $this->filters[$key] = new Filter\FilterSelect($this, $key, $name, $options, $column);
 	}
 
 
@@ -1067,7 +1077,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new Filter\FilterMultiSelect($key, $name, $options, $column);
+		return $this->filters[$key] = new Filter\FilterMultiSelect($this, $key, $name, $options, $column);
 	}
 
 
@@ -1089,7 +1099,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new Filter\FilterDate($key, $name, $column);
+		return $this->filters[$key] = new Filter\FilterDate($this, $key, $name, $column);
 	}
 
 
@@ -1111,7 +1121,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new Filter\FilterRange($key, $name, $column, $name_second);
+		return $this->filters[$key] = new Filter\FilterRange($this, $key, $name, $column, $name_second);
 	}
 
 
@@ -1133,7 +1143,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new Filter\FilterDateRange($key, $name, $column, $name_second);
+		return $this->filters[$key] = new Filter\FilterDateRange($this, $key, $name, $column, $name_second);
 	}
 
 
@@ -1380,6 +1390,10 @@ class DataGrid extends Nette\Application\UI\Control
 
 		foreach ($this->filters as $filter) {
 			$filter->addToFormContainer($filter_container);
+		}
+
+		if (!$this->hasAutoSubmit()) {
+			$filter_container['submit'] = $this->getFilterSubmitButton();
 		}
 
 		/**
@@ -2764,6 +2778,52 @@ class DataGrid extends Nette\Application\UI\Control
 	public function getColumnsSummary()
 	{
 		return $this->columnsSummary;
+	}
+
+
+	/********************************************************************************
+	 *                                   INTERNAL                                   *
+	 ********************************************************************************/
+
+
+	/**
+	 * Tell grid filters to by submitted automatically
+	 * @param bool $auto
+	 */
+	public function setAutoSubmit($auto = TRUE)
+	{
+		$this->auto_submit = (bool) $auto;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function hasAutoSubmit()
+	{
+		return $this->auto_submit;
+	}
+
+
+	/**
+	 * Submit button when no auto-submitting is used
+	 * @return Filter\SubmitButton
+	 */
+	public function getFilterSubmitButton()
+	{
+		if ($this->hasAutoSubmit()) {
+			throw new DataGridException(
+				'DataGrid has auto-submit. Turn it off before setting filter submit button.'
+			);
+		}
+
+		if ($this->filter_submit_button === NULL) {
+			$this->filter_submit_button = new Filter\SubmitButton($this);
+		}
+
+		return $this->filter_submit_button;
 	}
 
 

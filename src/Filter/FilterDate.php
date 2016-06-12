@@ -32,9 +32,7 @@ class FilterDate extends Filter
 	 * @var array
 	 */
 	protected $attributes = [
-		['class', 'form-control input-sm'],
-		['data-autosubmit', TRUE],
-		['data-autosubmit-change', TRUE]
+		['class', 'form-control input-sm']
 	];
 
 
@@ -42,7 +40,7 @@ class FilterDate extends Filter
 	 * Adds select box to filter form
 	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer($container)
+	public function addToFormContainer(Nette\Forms\Container $container)
 	{
 		$container->addText($this->key, $this->name)
 			->setAttribute('data-provide', 'datepicker')
@@ -52,6 +50,10 @@ class FilterDate extends Filter
 			->setAttribute('data-date-autoclose', 'true');
 
 		$this->addAttributes($container[$this->key]);
+
+		if ($this->grid->hasAutoSubmit()) {
+			$container[$this->key]->setAttribute('data-autosubmit-change', TRUE);
+		}
 
 		if ($this->getPlaceholder()) {
 			$container[$this->key]->setAttribute('placeholder', $this->getPlaceholder());

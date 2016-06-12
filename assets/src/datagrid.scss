@@ -87,8 +87,19 @@
 		}
 	}
 
+	.datagrid-manual-submit {
+		margin-bottom: 0.5em;
+	}
+
 	.filter-range-delimiter {
 		text-align: center;
+	}
+
+	.bootstrap-select.input-sm > .btn {
+		padding: 5px 25px 5px 10px;
+		font-size: 12px;
+		line-height: 1.5;
+		border-radius: 3px;
 	}
 
 	table {
@@ -100,10 +111,6 @@
 					width: auto;
 
 					& > .btn {
-						padding: 5px 25px 5px 10px;
-						font-size: 12px;
-						line-height: 1.5;
-						border-radius: 3px;
 						width: auto;
 					}
 

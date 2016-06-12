@@ -56,6 +56,16 @@ $(document).on('change', 'select[data-autosubmit-per-page]', function() {
   }
 });
 
+$(document).on('keydown', 'input[data-datagrid-manualsubmit]', function(e) {
+  var code;
+  code = e.which || e.keyCode || 0;
+  if (code === 13) {
+    e.stopPropagation();
+    e.preventDefault();
+    return $(this).closest('form').submit();
+  }
+});
+
 document.addEventListener('change', function(e) {
   var at_least_one, event, grid, i, ie, input, inputs, len, results, select;
   grid = e.target.getAttribute('data-check');

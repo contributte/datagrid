@@ -16,7 +16,7 @@ $.nette.ext('datagrid.confirm', {
 				return confirm(confirm_message)
 })
 
-# Datagrid autosubmit
+# Datagrid auto submit
 #
 $(document).on('change', 'select[data-autosubmit-per-page]', ->
 	$(this).parent().find('input[type=submit]').click()
@@ -49,6 +49,19 @@ $(document).on('change', 'select[data-autosubmit-per-page]', ->
 		e.preventDefault()
 
 		$(this).closest('tr').find('.col-action-inline-edit [name="inline_edit[submit]"]').click()
+)
+
+# Datagrid manual submit
+#
+$(document).on('keydown', 'input[data-datagrid-manualsubmit]', (e) ->
+	code = e.which || e.keyCode || 0
+
+	if (code == 13)
+		e.stopPropagation()
+		e.preventDefault()
+
+		
+		$(this).closest('form').submit()
 )
 
 document.addEventListener 'change', (e) ->
