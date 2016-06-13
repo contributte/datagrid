@@ -28,9 +28,9 @@ class FilterText extends Filter
 	 */
 	protected $exact = FALSE;
 
-	public function __construct($key, $name, $column, $exact = FALSE)
+	public function __construct($grid, $key, $name, $column, $exact = FALSE)
 	{
-		parent::__construct($key, $name, $column);
+		parent::__construct($grid, $key, $name, $column);
 		$this->exact = $exact;
 	}
 
