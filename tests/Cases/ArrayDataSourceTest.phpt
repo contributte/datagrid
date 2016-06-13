@@ -29,10 +29,17 @@ final class ArrayDataSourceTest extends TestCase
 		4 => ['id' => 30, 'name' => 'Jackie Blue', 'age' => 80, 'Prague 678'],
 	];
 
+	/**
+	 * @var Ublaboo\DataGrid\DataGrid
+	 */
+	private $grid;
+
 
 	public function setUp()
 	{
 		$this->ds = new Ublaboo\DataGrid\DataSource\ArrayDataSource($this->data);
+		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+		$this->grid = $factory->createXTestingDataGrid();
 	}
 
 
@@ -53,7 +60,7 @@ final class ArrayDataSourceTest extends TestCase
 		/**
 		 * Single column
 		 */
-		$filter = new FilterText('a', 'b', ['name']);
+		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
 		$filter->setValue('lu');
 
 		$this->ds->filter([$filter]);
@@ -63,7 +70,7 @@ final class ArrayDataSourceTest extends TestCase
 		 * Multiple columns
 		 */
 		$this->setUp();
-		$filter = new FilterText('a', 'b', ['name', 'address']);
+		$filter = new FilterText($this->grid, 'a', 'b', ['name', 'address']);
 		$filter->setValue('lu');
 
 		$this->ds->filter([$filter]);

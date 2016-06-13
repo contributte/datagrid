@@ -209,13 +209,25 @@ class Row extends Nette\Object
 
 
 	/**
-	 * Has particular row and action allowed?
+	 * Has particular row a action allowed?
 	 * @param  mixed  $key
 	 * @return bool
 	 */
 	public function hasAction($key)
 	{
 		$condition = $this->datagrid->getRowCondition('action', $key);
+
+		return $condition ? $condition($this->item) : TRUE;
+	}
+
+
+	/**
+	 * Has particular row inlie edit allowed?
+	 * @return bool
+	 */
+	public function hasInlineEdit()
+	{
+		$condition = $this->datagrid->getRowCondition('inline_edit');
 
 		return $condition ? $condition($this->item) : TRUE;
 	}

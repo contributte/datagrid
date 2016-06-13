@@ -47,19 +47,30 @@
 		}
 	}
 
-	.datagrid-exports {
+	.datagrid-toolbar {
+		margin-top: .35em;
 		float: right;
 
-		.btn {
+		& > span {
 			margin-left: 1em;
+
+			& > a {
+				margin-left: 0.5em;
+			}
+		}
+	}
+
+	.datagrid-exports {
+		.btn {
+			margin-left: 0.5em;
+		}
+
+		.btn:first-child {
+			margin-left: 0;
 		}
 	}
 
 	.datagrid-settings {
-		margin-left: 1em;
-		margin-top: .35em;
-		float: right;
-
 		.dropdown-menu--grid {
 			font-size: 12px;
 
@@ -80,8 +91,19 @@
 		}
 	}
 
+	.datagrid-manual-submit {
+		margin-bottom: 0.5em;
+	}
+
 	.filter-range-delimiter {
 		text-align: center;
+	}
+
+	.bootstrap-select.input-sm > .btn {
+		padding: 5px 25px 5px 10px;
+		font-size: 12px;
+		line-height: 1.5;
+		border-radius: 3px;
 	}
 
 	table {
@@ -93,10 +115,6 @@
 					width: auto;
 
 					& > .btn {
-						padding: 5px 25px 5px 10px;
-						font-size: 12px;
-						line-height: 1.5;
-						border-radius: 3px;
 						width: auto;
 					}
 

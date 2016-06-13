@@ -8,17 +8,18 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette\InvalidArgumentException;
 use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 use Nette\Utils\Html;
+use Ublaboo\DataGrid\Traits;
 
 abstract class Column extends FilterableColumn
 {
+
+	use Traits\TLink;
 
 	/**
 	 * @var array
@@ -60,6 +61,12 @@ abstract class Column extends FilterableColumn
 	 */
 	protected $template_escaping = TRUE;
 
+	/**
+	 * @var bool
+	 */
+	protected $header_escaping = FALSE;
+
+	
 	/**
 	 * @var string
 	 */
@@ -164,7 +171,23 @@ abstract class Column extends FilterableColumn
 		return $this->template_escaping;
 	}
 
+	/**
+	 * Should be column header escaped in latte?
+	 * @param bool $header_escaping
+	 */
+	public function setHeaderEscaping($header_escaping = FALSE)
+	{
+		$this->header_escaping = (bool) $header_escaping;
 
+		return $this;
+	}
+	
+	public function isHeaderEscaped()
+	{
+		return $this->header_escaping;
+	}
+	
+	
 	/**
 	 * Set column sortable or not
 	 * @param bool|string $sortable
@@ -422,7 +445,7 @@ abstract class Column extends FilterableColumn
 	 */
 	public function setSort(array $sort)
 	{
-		$this->sort = $sort[$this->getSortingColumn()];
+		$this->sort = $sort[$this->key];
 
 		return $this;
 	}
@@ -519,7 +542,7 @@ abstract class Column extends FilterableColumn
 
 
 	/**
-	 * Element is by default textarea, user can chchge that
+	 * Element is by default textarea, user can change that
 	 * @param string $el_type
 	 * @param array  $attrs
 	 * @return static
@@ -529,6 +552,27 @@ abstract class Column extends FilterableColumn
 		$this->editable_element = [$el_type, $attrs];
 
 		return $this;
+	}
+
+
+	/**
+	 * Change small inline edit input type to select
+	 * @param array  $options
+	 * @return static
+	 */
+	public function setEditableInputTypeSelect(array $options = [])
+	{
+		$select = Html::el('select');
+
+		foreach ($options as $value => $text) {
+			$select->create('option')
+				->value($value)
+				->setText($text);
+		}
+
+		$this->addAttributes(['data-datagrid-editable-element' => (string) $select]);
+
+		return $this->setEditableInputType('select');
 	}
 
 
@@ -627,32 +671,6 @@ abstract class Column extends FilterableColumn
 	public function getDefaultHide()
 	{
 		return $this->default_hide;
-	}
-
-
-	/**
-	 * Create link to custom destination
-	 * @param  string $href
-	 * @param  array  $params
-	 * @return string
-	 * @throws DataGridHasToBeAttachedToPresenterComponentException
-	 * @throws InvalidArgumentException
-	 */
-	protected function createLink($href, $params)
-	{
-		try {
-			$parent = $this->grid->getParent();
-
-			return $parent->link($href, $params);
-		} catch (DataGridHasToBeAttachedToPresenterComponentException $e) {
-			$parent = $this->grid->getPresenter();
-
-		} catch (InvalidArgumentException $e) {
-			$parent = $this->grid->getPresenter();
-
-		}
-
-		return $parent->link($href, $params);
 	}
 
 

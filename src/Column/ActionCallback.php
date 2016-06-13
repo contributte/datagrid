@@ -8,10 +8,7 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 
 /**
  * @method void onClick(mixed $id)
@@ -27,13 +24,12 @@ class ActionCallback extends Action
 
 	/**
 	 * Create link to datagrid::handleActionCallback() to fire custom callback
-	 * @param  string $href
-	 * @param  array  $params
+	 * @param  DataGrid $grid
+	 * @param  string   $href
+	 * @param  array    $params
 	 * @return string
-	 * @throws DataGridHasToBeAttachedToPresenterComponentException
-	 * @throws InvalidArgumentException
 	 */
-	protected function createLink($href, $params)
+	protected function createLink(DataGrid $grid, $href, $params)
 	{
 		/**
 		 * Int case of ActionCallback, $this->href is a identifier of user callback

@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
+use Ublaboo\DataGrid\DataGrid;
 
 /**
  * @method void addToFormContainer(Nette\Forms\Container $container)
@@ -62,21 +63,27 @@ abstract class Filter extends Nette\Object
 	protected $type;
 
 	/**
+	 * @var DataGrid
+	 */
+	protected $grid;
+
+	/**
 	 * @var array
 	 */
 	protected $attributes = [
-		['class', 'form-control input-sm'],
-		['data-autosubmit', TRUE]
+		['class', 'form-control input-sm']
 	];
 
 
 	/**
-	 * @param string $key
-	 * @param string $name
+	 * @param DataGrid     $grid
+	 * @param string       $key
+	 * @param string       $name
 	 * @param string|array $column
 	 */
-	public function __construct($key, $name, $column)
+	public function __construct($grid, $key, $name, $column)
 	{
+		$this->grid = $grid;
 		$this->key = $key;
 		$this->name = $name;
 		$this->column = $column;
@@ -266,6 +273,12 @@ abstract class Filter extends Nette\Object
 	 */
 	protected function addAttributes($input)
 	{
+		if ($this->grid->hasAutoSubmit()) {
+			$input->setAttribute('data-autosubmit', TRUE);
+		} else {
+			$input->setAttribute('data-datagrid-manualsubmit', TRUE);
+		}
+
 		foreach ($this->attributes as $attribute) {
 			$input->setAttribute($attribute[0], $attribute[1]);
 		}

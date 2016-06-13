@@ -17,27 +17,12 @@ use Ublaboo\DataGrid\Traits;
 class Export
 {
 
-	use Traits\ButtonIconTrait;
-
-	/**
-	 * @var string
-	 */
-	protected $text;
+	use Traits\TButton;
 
 	/**
 	 * @var callable
 	 */
 	protected $callback;
-
-	/**
-	 * @var string
-	 */
-	protected $icon;
-
-	/**
-	 * @var string
-	 */
-	protected $title;
 
 	/**
 	 * @var bool
@@ -55,23 +40,25 @@ class Export
 	protected $link;
 
 	/**
-	 * @var string
-	 */
-	protected $class = 'btn btn-sm btn-default';
-
-	/**
 	 * @var array
 	 */
 	protected $columns = [];
 
+	/**
+	 * @var DataGrid
+	 */
+	protected $grid;
+
 
 	/**
-	 * @param string   $text
-	 * @param callable $callback
+	 * @param DataGrid   $grid
+	 * @param string     $text
+	 * @param callable   $callback
 	 * @param boolean    $filtered
 	 */
-	public function __construct($text, $callback, $filtered)
+	public function __construct($grid, $text, $callback, $filtered)
 	{
+		$this->grid = $grid;
 		$this->text = $text;
 		$this->callback = $callback;
 		$this->filtered = (bool) $filtered;
@@ -87,13 +74,17 @@ class Export
 	{
 		$a = Html::el('a', [
 			'class' => [$this->class],
-			'title' => $this->getTitle(),
+			'title' => $this->grid->getTranslator()->translate($this->getTitle()),
 			'href'  => $this->link
 		]);
 
-		$this->tryAddIcon($a, $this->getIcon(), $this->getTitle());
+		$this->tryAddIcon(
+			$a,
+			$this->getIcon(),
+			$this->grid->getTranslator()->translate($this->getTitle())
+		);
 
-		$a->add($this->text);
+		$a->add($this->grid->getTranslator()->translate($this->text));
 
 		if ($this->isAjax()) {
 			$a->class[] = 'ajax';
@@ -140,65 +131,6 @@ class Export
 
 
 	/**
-	 * Set button class
-	 * @param string $class
-	 * @return self
-	 */
-	public function setClass($class)
-	{
-		$this->class = $class;
-
-		return $this;
-	}
-
-
-	/**
-	 * Set export icon
-	 * @param string $icon
-	 * @return self
-	 */
-	public function setIcon($icon)
-	{
-		$this->icon = $icon;
-
-		return $this;
-	}
-
-
-	/**
-	 * Get export icon
-	 * @return string
-	 */
-	public function getIcon()
-	{
-		return $this->icon;
-	}
-
-
-	/**
-	 * Set export title
-	 * @param string $title
-	 * @return self
-	 */
-	public function setTitle($title)
-	{
-		$this->title = $title;
-
-		return $this;
-	}
-
-
-	/**
-	 * Get export title
-	 * @return string
-	 */
-	public function getTitle()
-	{
-		return $this->title;
-	}
-
-
-	/**
 	 * Tell export whether to be called via ajax or not
 	 * @param bool $ajax
 	 */
@@ -233,12 +165,11 @@ class Export
 	/**
 	 * Call export callback
 	 * @param  array    $data
-	 * @param  DataGrid $grid
 	 * @return void
 	 */
-	public function invoke(array $data, DataGrid $grid)
+	public function invoke(array $data)
 	{
-		Callback::invokeArgs($this->callback, [$data, $grid]);
+		Callback::invokeArgs($this->callback, [$data, $this->grid]);
 	}
 
 }

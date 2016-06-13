@@ -37,25 +37,35 @@ class ExportCsv extends Export
 	protected $output_encoding = 'utf-8';
 
 	/**
+	 * @var boolean
+	 */
+	protected $include_bom = FALSE;
+
+	/**
 	 * @var string
 	 */
 	protected $delimiter = ';';
 
 
 	/**
+	 * @param DataGrid    $grid
 	 * @param string      $text
 	 * @param string      $csv_file_name
 	 * @param bool        $filtered
 	 * @param string|null $output_encoding
 	 * @param string|null $delimiter
+	 * @param bool        $include_bom
 	 */
 	public function __construct(
+		DataGrid $grid,
 		$text,
 		$csv_file_name,
 		$filtered,
 		$output_encoding = NULL,
-		$delimiter = NULL
+		$delimiter = NULL,
+		$include_bom = FALSE
 	) {
+		$this->grid = $grid;
 		$this->text = $text;
 		$this->filtered = (bool) $filtered;
 		$this->name = strpos($csv_file_name, '.csv') !== FALSE ? $csv_file_name : "$csv_file_name.csv";
@@ -67,27 +77,31 @@ class ExportCsv extends Export
 		if ($delimiter) {
 			$this->delimiter = $delimiter;
 		}
+
+		if ($include_bom) {
+			$this->include_bom = $include_bom;
+		}
 	}
 
 
 	/**
 	 * Call export callback
 	 * @param  array    $data
-	 * @param  DataGrid $grid
 	 * @return void
 	 */
-	public function invoke(array $data, DataGrid $grid)
+	public function invoke(array $data)
 	{
-		$columns = $this->getColumns() ?: $grid->getColumns();
+		$columns = $this->getColumns() ?: $this->grid->getColumns();
 
-		$csv_data_model = new CsvDataModel($data, $columns, $grid->getTranslator());
+		$csv_data_model = new CsvDataModel($data, $columns, $this->grid->getTranslator());
 
-		if ($grid->getPresenter() instanceof Nette\Application\UI\Presenter) {
-			$grid->getPresenter()->sendResponse(new CSVResponse(
+		if ($this->grid->getPresenter() instanceof Nette\Application\UI\Presenter) {
+			$this->grid->getPresenter()->sendResponse(new CSVResponse(
 				$csv_data_model->getSimpleData(),
 				$this->name,
 				$this->output_encoding,
-				$this->delimiter
+				$this->delimiter,
+				$this->include_bom
 			));
 
 			exit(0);

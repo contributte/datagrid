@@ -1,5 +1,3 @@
-@charset "UTF-8";
-
 @keyframes edited {
   0% {
     background-color: #A6E2A9;
@@ -35,18 +33,25 @@
   border-right: 1px solid #ddd;
 }
 
-.datagrid .datagrid-exports {
+.datagrid .datagrid-toolbar {
+  margin-top: .35em;
   float: right;
+}
+
+.datagrid .datagrid-toolbar > span {
+  margin-left: 1em;
+}
+
+.datagrid .datagrid-toolbar > span > a {
+  margin-left: 0.5em;
 }
 
 .datagrid .datagrid-exports .btn {
-  margin-left: 1em;
+  margin-left: 0.5em;
 }
 
-.datagrid .datagrid-settings {
-  margin-left: 1em;
-  margin-top: .35em;
-  float: right;
+.datagrid .datagrid-exports .btn:first-child {
+  margin-left: 0;
 }
 
 .datagrid .datagrid-settings .dropdown-menu--grid {
@@ -66,8 +71,19 @@
   margin-bottom: 0.5em;
 }
 
+.datagrid .datagrid-manual-submit {
+  margin-bottom: 0.5em;
+}
+
 .datagrid .filter-range-delimiter {
   text-align: center;
+}
+
+.datagrid .bootstrap-select.input-sm > .btn {
+  padding: 5px 25px 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
 }
 
 .datagrid table {
@@ -79,10 +95,6 @@
 }
 
 .datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) > .btn {
-  padding: 5px 25px 5px 10px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
   width: auto;
 }
 
