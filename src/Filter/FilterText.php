@@ -28,11 +28,12 @@ class FilterText extends Filter
 	 */
 	protected $exact = FALSE;
 
-	public function __construct($grid, $key, $name, $column, $exact = FALSE)
+	public function __construct($grid, $key, $name, $column)
 	{
 		parent::__construct($grid, $key, $name, $column);
-		$this->exact = $exact;
 	}
+
+
 
 	/**
 	 * Adds text field to filter form
@@ -69,6 +70,16 @@ class FilterText extends Filter
 	public function isExact()
 	{
 		return $this->exact;
+	}
+
+	/**
+	 * @param boolean $exact
+	 * @return FilterText
+	 */
+	public function setExact($exact = TRUE)
+	{
+		$this->exact = $exact;
+		return $this;
 	}
 
 }

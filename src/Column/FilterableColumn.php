@@ -61,7 +61,7 @@ abstract class FilterableColumn extends Nette\Object
 	 * @param string|array|null $columns
 	 * @return Ublaboo\DataGrid\Filter\FilterText
 	 */
-	public function setFilterText($columns = NULL, $exact = FALSE)
+	public function setFilterText($columns = NULL)
 	{
 		if (NULL === $columns) {
 			$columns = [$this->column];
@@ -69,7 +69,7 @@ abstract class FilterableColumn extends Nette\Object
 			$columns = is_string($columns) ? [$columns] : $columns;
 		}
 
-		return $this->grid->addFilterText($this->key, $this->name, $columns, $exact);
+		return $this->grid->addFilterText($this->key, $this->name, $columns);
 	}
 
 
