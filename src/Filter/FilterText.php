@@ -27,13 +27,7 @@ class FilterText extends Filter
 	 * @var bool
 	 */
 	protected $exact = FALSE;
-
-	public function __construct($grid, $key, $name, $column)
-	{
-		parent::__construct($grid, $key, $name, $column);
-	}
-
-
+	
 
 	/**
 	 * Adds text field to filter form
