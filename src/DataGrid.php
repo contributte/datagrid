@@ -841,12 +841,6 @@ class DataGrid extends Nette\Application\UI\Control
 	protected function addColumn($key, Column\Column $column)
 	{
 		$this->onColumnAdd($key, $column);
-
-		$this->columns_visibility[$key] = [
-			'visible' => TRUE,
-			'name' => $column->getName()
-		];
-
 		return $this->columns[$key] = $column;
 	}
 
@@ -2766,19 +2760,25 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getColumns()
 	{
-		if (!$this->getSessionData('_grid_hidden_columns_manipulated', FALSE)) {
+        $columnManipulated = !$this->getSessionData('_grid_hidden_columns_manipulated', FALSE);
+		if ($columnManipulated)
 			$columns_to_hide = [];
-
-			foreach ($this->columns as $key => $column) {
-				if ($column->getDefaultHide()) {
+		
+		foreach ($this->columns as $key => $column) {
+            if ($columnManipulated) 
+				if ($column->getDefaultHide()) 
 					$columns_to_hide[] = $key;
-				}
-			}
 
-			if (!empty($columns_to_hide)) {
-				$this->saveSessionData('_grid_hidden_columns', $columns_to_hide);
-				$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
-			}
+			$this->columns_visibility[$key] = [
+				'visible' => TRUE,
+				'name' => $column->getName(),
+				'escape' => $column->isHeaderEscaped()
+			];
+		}
+
+		if ($columnManipulated and !empty($columns_to_hide)) {
+			$this->saveSessionData('_grid_hidden_columns', $columns_to_hide);
+			$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
 		}
 
 		$hidden_columns = $this->getSessionData('_grid_hidden_columns', []);
@@ -2787,9 +2787,9 @@ class DataGrid extends Nette\Application\UI\Control
 			if (!empty($this->columns[$column])) {
 				$this->columns_visibility[$column] = [
 					'visible' => FALSE,
-					'name' => $this->columns[$column]->getName()
+					'name' => $this->columns[$column]->getName(),
+					'escape' => $this->columns[$column]->isHeaderEscaped()
 				];
-
 				$this->removeColumn($column);
 			}
 		}
