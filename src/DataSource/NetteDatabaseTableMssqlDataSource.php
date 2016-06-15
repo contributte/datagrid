@@ -27,7 +27,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 		$this->data_source->where(
 			"CONVERT(varchar(10), {$filter->getColumn()}, 112) = ?",
-			$date->format('Y-m-d')
+			$date->format('Ymd')
 		);
 	}
 
@@ -50,7 +50,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 			$this->data_source->where(
 				"CONVERT(varchar(10), {$filter->getColumn()}, 112) >= ?",
-				$date_from->format('Y-m-d')
+				$date_from->format('Ymd')
 			);
 		}
 
@@ -60,7 +60,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 			$this->data_source->where(
 				"CONVERT(varchar(10), {$filter->getColumn()}, 112) <= ?",
-				$date_to->format('Y-m-d')
+				$date_to->format('Ymd')
 			);
 		}
 	}
