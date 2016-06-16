@@ -218,7 +218,7 @@
 
 							{if !isset($toggle_detail)}
 								{if $inlineEdit && $inlineEdit->getItemId() == $row->getId()}
-									{? $inlineEdit->onSetDefaults($filter['inline_edit'], $item); }
+									{php $inlineEdit->onSetDefaults($filter['inline_edit'], $item); }
 
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
 										<td n:if="$hasGroupActionOnRows" class="col-checkbox"></td>
@@ -251,7 +251,7 @@
 										</td>
 										{foreach $columns as $key => $column}
 											{var $col = 'col-' . $key}
-											{? $column = $row->applyColumnCallback($key, clone $column)}
+											{php $column = $row->applyColumnCallback($key, clone $column)}
 
 											{var $td = $column->getElementPrototype('td', $key, $row)}
 											{$td->startTag()|noescape}
@@ -396,7 +396,7 @@
 
 
 {define inlineAddRow}
-	{? $inlineAdd->onSetDefaults($filter['inline_add']); }
+	{php $inlineAdd->onSetDefaults($filter['inline_add']); }
 
 	<tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden">
 		<td n:if="$hasGroupActionOnRows" class="col-checkbox"></td>
