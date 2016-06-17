@@ -46,10 +46,10 @@ trait TButton
 	public function tryAddIcon(Html $el, $icon, $name)
 	{
 		if ($icon) {
-			$el->add(Html::el('span')->class(DataGrid::$icon_prefix.$icon));
+			$el->addHtml(Html::el('span')->class(DataGrid::$icon_prefix.$icon));
 
 			if (strlen($name)) {
-				$el->add('&nbsp;');
+				$el->addHtml('&nbsp;');
 			}
 		}
 	}
