@@ -90,16 +90,9 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function filterOne(array $condition)
 	{
-		/*$p = $this->getPlaceholder();
+		$this->data_source = $this->data_source->findBy($condition);
 
-		foreach ($condition as $column => $value) {
-			$c = $this->checkAliases($column);
-
-			$this->data_source->andWhere("$c = ?$p")
-				->setParameter($p, $value);
-		}
-
-		return $this;*/
+		return $this;
 	}
 
 
