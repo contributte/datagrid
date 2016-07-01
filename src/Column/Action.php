@@ -107,7 +107,7 @@ class Action extends Column
 			}
 		}
 
-		$a->add($this->translate($this->getName()));
+		$a->addText($this->translate($this->getName()));
 
 		if ($this->title) {
 			$a->title($this->translate($this->getTitle($row)));

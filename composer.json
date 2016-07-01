@@ -26,7 +26,7 @@
 	},
 	"require": {
 		"nette/application" : "^2.3.0",
-		"nette/utils"       : "^2.3.0",
+		"nette/utils"       : "^2.3.10",
 		"nette/forms"       : "^2.3.0",
 		"ublaboo/responses" : "~1.0.0",
 		"ublaboo/controls"  : "~1.0.0",

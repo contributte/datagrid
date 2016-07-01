@@ -54,14 +54,14 @@ class SubmitButton extends Nette\Forms\Controls\Button
 		$el->class = $this->getClass();
 
 		if ($this->getIcon()) {
-			$el->add(Html::el('span')->class(DataGrid::$icon_prefix.$this->getIcon()));
+			$el->addHtml(Html::el('span')->class(DataGrid::$icon_prefix.$this->getIcon()));
 
 			if (strlen($this->getText())) {
-				$el->add('&nbsp;');
+				$el->addHtml('&nbsp;');
 			}
 		}
 
-		$el->add($this->grid->getTranslator()->translate($this->getText()));
+		$el->addText($this->grid->getTranslator()->translate($this->getText()));
 
 		return $el;
 	}
