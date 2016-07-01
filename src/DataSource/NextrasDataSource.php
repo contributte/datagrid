@@ -233,14 +233,9 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function applyFilterSelect(Filter\FilterSelect $filter)
 	{
-		/*$p = $this->getPlaceholder();
-
 		foreach ($filter->getCondition() as $column => $value) {
-			$c = $this->checkAliases($column);
-
-			$this->data_source->andWhere("$c = ?$p")
-				->setParameter($p, $value);
-		}*/
+			$this->data_source->getQueryBuilder()->andWhere("%column = %any", $column, $value);
+		}
 	}
 
 
