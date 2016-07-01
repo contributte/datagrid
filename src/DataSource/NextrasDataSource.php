@@ -103,14 +103,16 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function applyFilterDate(Filter\FilterDate $filter)
 	{
-		/*foreach ($filter->getCondition() as $column => $value) {
+		foreach ($filter->getCondition() as $column => $value) {
 			$date = \DateTime::createFromFormat($filter->getPhpFormat(), $value);
-				->andWhere("$c <= ?$p2")
-				->setParameter($p1, $date->format('Y-m-d 00:00:00'))
-				->setParameter($p2, $date->format('Y-m-d 23:59:59'));
+			$date_end = clone $date;
+
+			$this->data_source->getQueryBuilder()
+				->andWhere("%column >= %dt", $column, $date->setTime(0, 0, 0))
+				->andWhere("%column <= %dt", $column, $date_end->setTime(23, 59, 59));
 		}
 
-		return $this;*/
+		return $this;
 	}
 
 
