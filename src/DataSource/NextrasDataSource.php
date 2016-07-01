@@ -154,21 +154,18 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function applyFilterRange(Filter\FilterRange $filter)
 	{
-		/*$conditions = $filter->getCondition();
-		$c = $this->checkAliases($filter->getColumn());
+		$conditions = $filter->getCondition();
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
-			$p = $this->getPlaceholder();
-			$this->data_source->andWhere("$c >= ?$p")->setParameter($p, $value_from);
+			$this->data_source->getQueryBuilder()->andWhere("%column >= %any", $filter->getColumn(), $value_from);
 		}
 
 		if ($value_to) {
-			$p = $this->getPlaceholder();
-			$this->data_source->andWhere("$c <= ?$p")->setParameter($p, $value_to);
-		}*/
+			$this->data_source->getQueryBuilder()->andWhere("%column <= %any", $filter->getColumn(), $value_to);
+		}
 	}
 
 
@@ -288,18 +285,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		}
 
 		return $this;
-	}
-
-
-	/**
-	 * Get unique int value for each instance class (self)
-	 * @return int
-	 */
-	public function getPlaceholder()
-	{
-		$this->placeholder++;
-
-		return $this->placeholder;
 	}
 
 }
