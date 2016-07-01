@@ -108,17 +108,17 @@ class ColumnLink extends Column
 		$element = $a;
 
 		if ($this->icon) {
-			$a->add(Html::el('span')->class(DataGrid::$icon_prefix . $this->icon));
+			$a->addHtml(Html::el('span')->class(DataGrid::$icon_prefix . $this->icon));
 
 			if (strlen($value)) {
-				$a->add('&nbsp;');
+				$a->addHtml('&nbsp;');
 			}
 		}
 
 		if ($this->isTemplateEscaped()) {
-			$a->add(htmlspecialchars((string) $value, ENT_NOQUOTES, 'UTF-8'));
+			$a->addText($value);
 		} else {
-			$a->add($value);
+			$a->addHtml($value);
 		}
 
 		return $element;
