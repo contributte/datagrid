@@ -103,15 +103,8 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function applyFilterDate(Filter\FilterDate $filter)
 	{
-		/*$p1 = $this->getPlaceholder();
-		$p2 = $this->getPlaceholder();
-
-		foreach ($filter->getCondition() as $column => $value) {
+		/*foreach ($filter->getCondition() as $column => $value) {
 			$date = \DateTime::createFromFormat($filter->getPhpFormat(), $value);
-			$c = $this->checkAliases($column);
-
-			$this->data_source
-				->andWhere("$c >= ?$p1")
 				->andWhere("$c <= ?$p2")
 				->setParameter($p1, $date->format('Y-m-d 00:00:00'))
 				->setParameter($p2, $date->format('Y-m-d 23:59:59'));
@@ -186,21 +179,25 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function applyFilterText(Filter\FilterText $filter)
 	{
-		/*$condition = $filter->getCondition();
-		$exprs = [];
+		$condition = $filter->getCondition();
+		$expr = '(';
+		$params = [];
 
 		foreach ($condition as $column => $value) {
 			$words = explode(' ', $value);
-			$c = $this->checkAliases($column);
 
 			foreach ($words as $word) {
-				$exprs[] = $this->data_source->expr()->like($c, $this->data_source->expr()->literal("%$word%"));
+				$expr .= "%column LIKE %s OR ";
+				$params[] = $column;
+				$params[] = "%$word%";
 			}
 		}
 
-		$or = call_user_func_array([$this->data_source->expr(), 'orX'], $exprs);
+		$expr = preg_replace('/ OR $/', ')', $expr);
 
-		$this->data_source->andWhere($or);*/
+		array_unshift($params, $expr);
+
+		call_user_func_array([$this->data_source->getQueryBuilder(), 'andWhere'], $params);
 	}
 
 
