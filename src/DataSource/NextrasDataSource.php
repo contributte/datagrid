@@ -208,18 +208,21 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter)
 	{
-		/*$condition = $filter->getCondition();
+		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
-		$exprs = [];
-		$c = $this->checkAliases($filter->getColumn());
+		$expr = '(';
 
 		foreach ($values as $value) {
-			$exprs[] = $this->data_source->expr()->eq($c, $value);
+			$expr .= "%column = %any OR ";
+			$params[] = $filter->getColumn();
+			$params[] = "$value";
 		}
 
-		$or = call_user_func_array([$this->data_source->expr(), 'orX'], $exprs);
+		$expr = preg_replace('/ OR $/', ')', $expr);
 
-		$this->data_source->andWhere($or);*/
+		array_unshift($params, $expr);
+
+		call_user_func_array([$this->data_source->getQueryBuilder(), 'andWhere'], $params);
 	}
 
 
@@ -285,7 +288,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 			$order = $this->data_source->getQueryBuilder()->getClause('order');
 
 			if (ArraysHelper::testEmpty($order)) {
-				$this->data_source->orderBy($this->primary_key);
+				$this->data_source = $this->data_source->orderBy($this->primary_key);
 			}
 		}
 
