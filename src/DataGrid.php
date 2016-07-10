@@ -1871,7 +1871,15 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		foreach ($this->getSessionData() as $key => $value) {
-			if (!in_array($key, ['_grid_per_page', '_grid_sort', '_grid_page', '_grid_has_filtered'])) {
+			if (!in_array($key, [
+				'_grid_per_page',
+				'_grid_sort',
+				'_grid_page',
+				'_grid_has_filtered',
+				'_grid_hidden_columns',
+				'_grid_hidden_columns_manipulated'
+				])) {
+
 				$this->deleteSesssionData($key);
 			}
 		}
