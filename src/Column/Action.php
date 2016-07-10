@@ -57,6 +57,11 @@ class Action extends Column
 	 */
 	protected $data_attributes = [];
 
+	/**
+	 * @var array
+	 */
+	protected $attributes = [];
+
 
 	/**
 	 * @param DataGrid $grid
@@ -105,6 +110,10 @@ class Action extends Column
 			foreach ($this->data_attributes as $key => $value) {
 				$a->data($key, $value);
 			}
+		}
+
+		if (!empty($this->attributes)) {
+			$a->addAttributes($this->attributes);
 		}
 
 		$a->addText($this->translate($this->getName()));
@@ -276,6 +285,19 @@ class Action extends Column
 	{
 		$this->data_attributes[$key] = $value;
 		
+		return $this;
+	}
+
+
+	/**
+	 * Set attributes for a element
+	 * @param array $attrs
+	 * @return static
+	 */
+	public function addAttributes(array $attrs)
+	{
+		$this->attributes = $this->attributes + $attrs;
+
 		return $this;
 	}
 
