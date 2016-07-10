@@ -1605,7 +1605,15 @@ class DataGrid extends Nette\Application\UI\Control
 		 */
 		if (empty($this->sort_callback) && !empty($this->sort)) {
 			foreach ($this->sort as $key => $order) {
-				$column = $this->getColumn($key);
+				try {
+					$column = $this->getColumn($key);
+
+				} catch (DataGridException $e) {
+					$this->deleteSesssionData('_grid_sort');
+					$this->sort = [];
+
+					return;
+				}
 
 				if ($column && $column->isSortable() && is_callable($column->getSortableCallback())) {
 					$this->sort_callback = $column->getSortableCallback();
