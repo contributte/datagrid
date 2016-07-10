@@ -12,14 +12,14 @@
 		<div class="col-sm-4">
 			<div class="input-group">
 				{input $container['from']}
-				<span class="input-group-addon"><span class="{$icon_prefix}calendar"></span></span>
+				<label n:name="$container['from']" class="input-group-addon"><span class="{$icon_prefix}calendar"></span></label>
 			</div>
 		</div>
 		{label $container['to'], class => 'filter-range-delimiter col-sm-1 control-label' /}
 		<div class="col-sm-4">
 			<div class="input-group">
 				{input $container['to']}
-				<span class="input-group-addon"><span class="{$icon_prefix}calendar"></span></span>
+				<label n:name="$container['to']" class="input-group-addon"><span class="{$icon_prefix}calendar"></span></label>
 			</div>
 		</div>
 	</div>
@@ -27,12 +27,12 @@
 	<div class="datagrid-col-filter-date-range form-inline">
 		<div class="input-group">
 			{input $container['from']}
-			<span class="input-group-addon input-group-addon-first"><span class="{$icon_prefix}calendar"></span></span>
+			<label n:name="$container['from']" class="input-group-addon input-group-addon-first"><span class="{$icon_prefix}calendar"></span></label>
 
 			<div class="input-group-addon datagrid-col-filter-datte-range-delimiter">-</div>
 
 			{input $container['to']}
-			<span class="input-group-addon"><span class="{$icon_prefix}calendar"></span></span>
+			<label n:name="$container['to']" class="input-group-addon"><span class="{$icon_prefix}calendar"></span></label>
 		</div>
 	</div>
 {/if}
