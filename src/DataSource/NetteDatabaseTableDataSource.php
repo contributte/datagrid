@@ -167,7 +167,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$condition = $filter->getCondition();
 
 		foreach ($condition as $column => $value) {
-			if ($filter->isEntire()) {
+			if ($filter->hasSplitWordsSearch() === FALSE) {
 				$words = [$value];
 			} else {
 				$words = explode(' ', $value);

@@ -178,7 +178,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		$params = [];
 
 		foreach ($condition as $column => $value) {
-			if ($filter->isEntire()) {
+			if ($filter->hasSplitWordsSearch() === FALSE) {
 				$words = [$value];
 			} else {
 				$words = explode(' ', $value);

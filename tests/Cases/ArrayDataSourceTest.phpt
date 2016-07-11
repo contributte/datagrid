@@ -68,10 +68,10 @@ final class ArrayDataSourceTest extends TestCase
 		Assert::same([$this->data[0], $this->data[5]], array_values($this->ds->getData()));
 
 		/**
-		 * Single column - entire filter
+		 * Single column - SplitWordsSearch => FALSE
 		 */
 		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
-		$filter->setEntire(TRUE);
+		$filter->setSplitWordsSearch(FALSE);
 		$filter->setValue('John Red');
 
 		$this->ds->filter([$filter]);

@@ -214,7 +214,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		$exprs = [];
 
 		foreach ($condition as $column => $value) {
-			if ($filter->isEntire()) {
+			if ($filter->hasSplitWordsSearch() === FALSE) {
 				$words = [$value];
 			} else {
 				$words = explode(' ', $value);

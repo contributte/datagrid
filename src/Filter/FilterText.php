@@ -24,9 +24,9 @@ class FilterText extends Filter
 	protected $type = 'text';
 
 	/**
-	 * @var string
+	 * @var bool
 	 */
-	protected $entire = FALSE;
+	protected $split_words_search = TRUE;
 
 
 	/**
@@ -59,23 +59,23 @@ class FilterText extends Filter
 
 
 	/**
-	 * @return bool
+	 * @param bool $split_words_search
+	 * @return FilterText
 	 */
-	public function isEntire()
+	public function setSplitWordsSearch($split_words_search)
 	{
-		return $this->entire;
+		$this->split_words_search = (bool) $split_words_search;
+
+		return $this;
 	}
 
 
 	/**
-	 * @param bool $entire
-	 * @return FilterText
+	 * @return bool
 	 */
-	public function setEntire($entire = TRUE)
+	public function hasSplitWordsSearch()
 	{
-		$this->entire = $entire;
-
-		return $this;
+		return $this->split_words_search;
 	}
 
 }
