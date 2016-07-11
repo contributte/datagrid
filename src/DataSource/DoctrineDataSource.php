@@ -214,7 +214,12 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		$exprs = [];
 
 		foreach ($condition as $column => $value) {
-			$words = explode(' ', $value);
+			if ($filter->isEntire()) {
+				$words = [$value];
+			} else {
+				$words = explode(' ', $value);
+			}
+
 			$c = $this->checkAliases($column);
 
 			foreach ($words as $word) {

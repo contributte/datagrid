@@ -23,6 +23,11 @@ class FilterText extends Filter
 	 */
 	protected $type = 'text';
 
+	/**
+	 * @var string
+	 */
+	protected $entire = FALSE;
+
 
 	/**
 	 * Adds text field to filter form
@@ -50,6 +55,27 @@ class FilterText extends Filter
 	public function getCondition()
 	{
 		return array_fill_keys($this->column, $this->getValue());
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function isEntire()
+	{
+		return $this->entire;
+	}
+
+
+	/**
+	 * @param bool $entire
+	 * @return FilterText
+	 */
+	public function setEntire($entire = TRUE)
+	{
+		$this->entire = $entire;
+
+		return $this;
 	}
 
 }
