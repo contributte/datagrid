@@ -175,7 +175,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 				$like .=  "$column = ? ";
 				$args[] = "$value";
 			} else {
-				$words = explode(' ', $value);
+                if ($filter->hasSplitWordsSearch() === FALSE) {
+                    $words = [$value];
+                } else {
+                    $words = explode(' ', $value);
+                }
 				foreach ($words as $word) {
 					$like .= "$column LIKE ? OR ";
 					$args[] = "%$word%";

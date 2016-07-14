@@ -157,7 +157,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		$condition = $filter->getCondition();
 		$or = [];
 
-		
 		foreach ($condition as $column => $value) {
 
 			if($filter->isExact()){
@@ -165,7 +164,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 				continue;
 			}
 
-			$words = explode(' ', $value);
+            if ($filter->hasSplitWordsSearch() === FALSE) {
+                $words = [$value];
+            } else {
+                $words = explode(' ', $value);
+            }
 
 			foreach ($words as $word) {
 				$escaped = $this->data_source->getConnection()->getDriver()->escapeLike($word, 0);

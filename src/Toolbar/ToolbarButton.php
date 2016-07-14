@@ -60,7 +60,7 @@ class ToolbarButton
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
-		$a->add($this->text);
+		$a->addText($this->text);
 
 		if ($this->title) {
 			$a->title($this->grid->getTranslator()->translate($this->title));

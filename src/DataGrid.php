@@ -1605,7 +1605,15 @@ class DataGrid extends Nette\Application\UI\Control
 		 */
 		if (empty($this->sort_callback) && !empty($this->sort)) {
 			foreach ($this->sort as $key => $order) {
-				$column = $this->getColumn($key);
+				try {
+					$column = $this->getColumn($key);
+
+				} catch (DataGridException $e) {
+					$this->deleteSesssionData('_grid_sort');
+					$this->sort = [];
+
+					return;
+				}
 
 				if ($column && $column->isSortable() && is_callable($column->getSortableCallback())) {
 					$this->sort_callback = $column->getSortableCallback();
@@ -1871,7 +1879,15 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		foreach ($this->getSessionData() as $key => $value) {
-			if (!in_array($key, ['_grid_per_page', '_grid_sort', '_grid_page', '_grid_has_filtered'])) {
+			if (!in_array($key, [
+				'_grid_per_page',
+				'_grid_sort',
+				'_grid_page',
+				'_grid_has_filtered',
+				'_grid_hidden_columns',
+				'_grid_hidden_columns_manipulated'
+				])) {
+
 				$this->deleteSesssionData($key);
 			}
 		}

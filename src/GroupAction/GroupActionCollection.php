@@ -54,7 +54,7 @@ class GroupActionCollection extends Nette\Object
 		}
 
 		$container->addSelect('group_action', '', $main_options)
-			->setPrompt($translator->translate('ublaboo_datagrid.choose'));
+			->setPrompt('ublaboo_datagrid.choose');
 
 		/**
 		 * Second for creating select for each "sub"-action
@@ -81,7 +81,7 @@ class GroupActionCollection extends Nette\Object
 		$container['group_action']->addCondition(Form::FILLED)
 			->toggle(strtolower($this->datagrid->getName()) . 'group_action_submit');
 
-		$container->addSubmit('submit', $translator->translate('ublaboo_datagrid.execute'))
+		$container->addSubmit('submit', 'ublaboo_datagrid.execute')
 			->setAttribute('id', strtolower($this->datagrid->getName()) . 'group_action_submit');
 
 		if ($form instanceof Nette\ComponentModel\IComponent) {

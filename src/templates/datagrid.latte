@@ -139,11 +139,8 @@
 								{else}
 									{if $column->isSortable()}
 										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()" id="datagrid-sort-{$key}">
-											{if $column->isHeaderEscaped()}
-												{_$column->getName()|noescape}
-											{else}
-												{_$column->getName()}
-											{/if}
+											{include #column-header, column => $column}
+
 											{if $column->isSortedBy()}
 												{if $column->isSortAsc()}
 													<i n:block="icon-sort-up" class="{$icon_prefix}caret-up"></i>
@@ -155,11 +152,7 @@
 											{/if}
 										</a>
 									{else}
-										{if $column->isHeaderEscaped()}
-											{_$column->getName()|noescape}
-										{else}
-											{_$column->getName()}
-										{/if}
+										{include #column-header, column => $column}
 									{/if}
 
 									<span class="column-settings-menu pull-right" n:if="$control->canHideColumns()">
@@ -218,7 +211,7 @@
 
 							{if !isset($toggle_detail)}
 								{if $inlineEdit && $inlineEdit->getItemId() == $row->getId()}
-									{? $inlineEdit->onSetDefaults($filter['inline_edit'], $item); }
+									{php $inlineEdit->onSetDefaults($filter['inline_edit'], $item); }
 
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
 										<td n:if="$hasGroupActionOnRows" class="col-checkbox"></td>
@@ -251,7 +244,7 @@
 										</td>
 										{foreach $columns as $key => $column}
 											{var $col = 'col-' . $key}
-											{? $column = $row->applyColumnCallback($key, clone $column)}
+											{php $column = $row->applyColumnCallback($key, clone $column)}
 
 											{var $td = $column->getElementPrototype('td', $key, $row)}
 											{$td->startTag()|noescape}
@@ -396,7 +389,7 @@
 
 
 {define inlineAddRow}
-	{? $inlineAdd->onSetDefaults($filter['inline_add']); }
+	{php $inlineAdd->onSetDefaults($filter['inline_add']); }
 
 	<tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden">
 		<td n:if="$hasGroupActionOnRows" class="col-checkbox"></td>
@@ -436,4 +429,21 @@
 		<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
 		</td>
 	</tr>
+{/define}
+
+
+{define column-header}
+	{if $column->isHeaderEscaped()}
+		{if $column instanceof \Nette\Utils\Html}
+			{$column->getName()|noescape}
+		{else}
+			{_$column->getName()|noescape}
+		{/if}
+	{else}
+		{if $column instanceof \Nette\Utils\Html}
+			{$column->getName()}
+		{else}
+			{_$column->getName()}
+		{/if}
+	{/if}
 {/define}

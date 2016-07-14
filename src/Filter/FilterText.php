@@ -27,7 +27,12 @@ class FilterText extends Filter
 	 * @var bool
 	 */
 	protected $exact = FALSE;
-	
+
+	/**
+	 * @var bool
+	 */
+	protected $split_words_search = TRUE;
+
 
 	/**
 	 * Adds text field to filter form
@@ -74,6 +79,27 @@ class FilterText extends Filter
 	{
 		$this->exact = $exact;
 		return $this;
+	}
+
+
+	/**
+	 * @param bool $split_words_search
+	 * @return FilterText
+	 */
+	public function setSplitWordsSearch($split_words_search)
+	{
+		$this->split_words_search = (bool) $split_words_search;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function hasSplitWordsSearch()
+	{
+		return $this->split_words_search;
 	}
 
 }

@@ -121,7 +121,7 @@ class InlineEdit extends Nette\Object
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
-		$a->add($this->text);
+		$a->addText($this->text);
 
 		if ($this->title) { $a->title($this->title); }
 		if ($this->class) { $a->class[] = $this->class; }
@@ -142,7 +142,7 @@ class InlineEdit extends Nette\Object
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
-		$a->add($this->text);
+		$a->addText($this->text);
 
 		if ($this->title) { $a->title($this->title); }
 		if ($this->class) { $a->class($this->class); }
