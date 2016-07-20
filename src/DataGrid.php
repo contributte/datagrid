@@ -1750,6 +1750,7 @@ class DataGrid extends Nette\Application\UI\Control
 		return $this->getGroupActionCollection()->addGroupSelectAction($title, $options);
 	}
 
+
 	/**
 	 * Add group action (select box)
 	 * @param string $title
@@ -1761,6 +1762,7 @@ class DataGrid extends Nette\Application\UI\Control
 		return $this->getGroupActionCollection()->addGroupSelectAction($title, $options);
 	}
 
+
 	/**
 	 * Add group action (text input)
 	 * @param string $title
@@ -1770,6 +1772,18 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		return $this->getGroupActionCollection()->addGroupTextAction($title);
 	}
+
+
+	/**
+	 * Add group action (textarea)
+	 * @param string $title
+	 * @return GroupAction\GroupAction
+	 */
+	public function addGroupTextareaAction($title)
+	{
+		return $this->getGroupActionCollection()->addGroupTextareaAction($title);
+	}
+
 
 	/**
 	 * Get collection of all group actions

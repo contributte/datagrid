@@ -15,10 +15,12 @@ use Nette;
  */
 class GroupSelectAction extends GroupAction
 {
+
 	/**
 	 * @var array
 	 */
 	protected $options;
+
 
 	/**
 	 * @param string $title
@@ -30,6 +32,7 @@ class GroupSelectAction extends GroupAction
 		$this->options = $options;
 	}
 
+
 	/**
 	 * Get action options
 	 * @return array
@@ -39,6 +42,7 @@ class GroupSelectAction extends GroupAction
 		return $this->options;
 	}
 
+
 	/**
 	 * Has the action some options?
 	 * @return boolean
@@ -47,4 +51,5 @@ class GroupSelectAction extends GroupAction
 	{
 		return (bool) $this->options;
 	}
+
 }

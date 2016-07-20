@@ -11,6 +11,7 @@ namespace Ublaboo\DataGrid\GroupAction;
 use Nette;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
 
 class GroupActionCollection extends Nette\Object
 {
@@ -60,16 +61,45 @@ class GroupActionCollection extends Nette\Object
 		 * Second for creating select for each "sub"-action
 		 */
 		foreach ($this->group_actions as $id => $action) {
+			$control = NULL;
+
 			if ($action instanceof GroupSelectAction) {
 				if ($action->hasOptions()) {
-					$container->addSelect($id, '', $action->getOptions())
-						->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id);
+					$control = $container->addSelect($id, '', $action->getOptions());
+
+					$control->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id);
 				}
+
 			} else if ($action instanceof GroupTextAction) {
-				$container->addText($id, '')
-					->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id)
+				$control = $container->addText($id, '');
+
+				$control->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id)
+					->addConditionOn($container['group_action'], Form::EQUAL, $id)
+						->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
+					->endCondition();
+
+			} else if ($action instanceof GroupTextareaAction) {
+				$control = $container->addTextarea($id, '');
+
+				$control->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($container['group_action'], Form::EQUAL, $id)
 						->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
+			}
+
+			if ($control) {
+				/**
+				 * User may set a class to the form control
+				 */
+				if ($class = $action->getClass()) {
+					$control->setAttribute('class', $class);
+				}
+
+				/**
+				 * User may set additional attribtues to the form control
+				 */
+				foreach ($action->getAttributes() as $name => $value) {
+					$control->setAttribute($name, $value);
+				}
 			}
 		}
 
@@ -136,6 +166,7 @@ class GroupActionCollection extends Nette\Object
 		return $this->group_actions[$id] = new GroupSelectAction($title, $options);
 	}
 
+
 	/**
 	 * Add one group action (text input) to collection of actions
 	 *
@@ -148,6 +179,37 @@ class GroupActionCollection extends Nette\Object
 		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
 
 		return $this->group_actions[$id] = new GroupTextAction($title);
+	}
+
+
+	/**
+	 * Add one group action (textarea) to collection of actions
+	 *
+	 * @param string $title
+	 *
+	 * @return GroupAction
+	 */
+	public function addGroupTextareaAction($title)
+	{
+		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
+
+		return $this->group_actions[$id] = new GroupTextareaAction($title);
+	}
+
+
+	/**
+	 * @param  string $title
+	 * @return GroupAction
+	 */
+	public function getGroupAction($title)
+	{
+		foreach ($this->group_actions as $action) {
+			if ($action->getTitle() === $title) {
+				return $action;
+			}
+		}
+
+		throw new DataGridGroupActionException("Group action $title does not exist.");
 	}
 
 }

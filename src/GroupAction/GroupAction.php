@@ -15,6 +15,7 @@ use Nette;
  */
 abstract class GroupAction extends Nette\Object
 {
+
 	/**
 	 * @var callable[]
 	 */
@@ -26,12 +27,24 @@ abstract class GroupAction extends Nette\Object
 	protected $title;
 
 	/**
+	 * @var string
+	 */
+	protected $class = 'form-control input-sm';
+
+	/**
+	 * @var array
+	 */
+	protected $attributes = [];
+
+
+	/**
 	 * @param string $title
 	 */
 	public function __construct($title)
 	{
 		$this->title = $title;
 	}
+
 
 	/**
 	 * Get action title
@@ -41,4 +54,48 @@ abstract class GroupAction extends Nette\Object
 	{
 		return $this->title;
 	}
+
+
+	/**
+	 * @param string $class
+	 * @return static
+	 */
+	public function setClass($class)
+	{
+		$this->class = (string) $class;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getClass()
+	{
+		return $this->class;
+	}
+
+
+	/**
+	 * @param string $key
+	 * @param mixed $value
+	 * @return static
+	 */
+	public function setAttribute($key, $value)
+	{
+		$this->attributes[$key] = $value;
+		
+		return $this;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getAttributes()
+	{
+		return $this->attributes;
+	}
+
 }
