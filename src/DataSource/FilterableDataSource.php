@@ -26,7 +26,7 @@ abstract class FilterableDataSource
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
 				if ($filter->hasConditionCallback()) {
-					Callback::invokeArgs(
+					$this->data_source = Callback::invokeArgs(
 						$filter->getConditionCallback(),
 						[$this->data_source, $filter->getValue()]
 					);
