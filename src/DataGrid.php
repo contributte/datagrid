@@ -1358,6 +1358,7 @@ class DataGrid extends Nette\Application\UI\Control
 				->setValidationScope(FALSE);
 
 			$this->inlineEdit->onControlAdd($inline_edit_container);
+			$this->inlineEdit->onControlAfterAdd($inline_edit_container);
 		}
 
 		/**
@@ -1372,6 +1373,7 @@ class DataGrid extends Nette\Application\UI\Control
 				->setAttribute('data-datagrid-cancel-inline-add', TRUE);
 
 			$this->inlineAdd->onControlAdd($inline_add_container);
+			$this->inlineAdd->onControlAfterAdd($inline_add_container);
 		}
 
 		/**

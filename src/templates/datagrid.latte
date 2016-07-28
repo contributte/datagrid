@@ -401,14 +401,15 @@
 			{var $td->class[] = 'datagrid-inline-edit'}
 			{$td->startTag()|noescape}
 				{if isset($filter['inline_add'][$key])}
-					{input $filter['inline_add'][$key], class => 'form-control input-sm'}
+					{dump $filter['inline_add'][$key]}
+					{input $filter['inline_add'][$key]}
 				{/if}
 			{$td->endTag()|noescape}
 		{/foreach}
 
 		<td class="col-action col-action-inline-edit">
-			{input $filter['inline_add']['cancel'], class => 'btn btn-xs btn-danger'}
-			{input $filter['inline_add']['submit'], class => 'btn btn-xs btn-primary'}
+			{input $filter['inline_add']['cancel']}
+			{input $filter['inline_add']['submit']}
 		</td>
 	</tr>
 {/define}
