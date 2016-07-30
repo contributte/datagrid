@@ -100,12 +100,20 @@
 												{if $visibility['visible']}
 													<a n:href="hideColumn!, column => $v_key" class="ajax">
 														<i n:block = "icon-checked" class="{$icon_prefix}check-square-o"></i>
-														{_$visibility['name']}
+														{if $visibility['escape']}
+															{_$visibility['name']|noescape}
+														{else}
+															{_$visibility['name']}
+														{/if}
 													</a>
 												{else}
 													<a n:href="showColumn!, column => $v_key" class="ajax">
 														<i n:block = "icon-unchecked" class="{$icon_prefix}square-o"></i>
-														{_$visibility['name']}
+														{if $visibility['escape']}
+															{_$visibility['name']|noescape}
+														{else}
+															{_$visibility['name']}
+														{/if}
 													</a>
 												{/if}
 											</li>
