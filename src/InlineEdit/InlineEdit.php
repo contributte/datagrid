@@ -210,7 +210,7 @@ class InlineEdit extends Nette\Object
 					break;
 				
 				default:
-					if (empty($control->getControl()->getAttribute('class'))) {
+					if (empty($control->getControl()->getClass())) {
 						$control->setAttribute('class', 'form-control input-sm');
 					}
 
