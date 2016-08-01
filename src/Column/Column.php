@@ -460,7 +460,7 @@ abstract class Column extends FilterableColumn
 		if ($this->sort == 'ASC') {
 			return [$this->key => 'DESC'];
 		} else if ($this->sort == 'DESC') {
-			return [$this->key => NULL];
+			return [$this->key => FALSE];
 		}
 
 		return [$this->key => 'ASC'];
