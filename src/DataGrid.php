@@ -540,6 +540,19 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * @return DataSource\IDataSource|NULL
+	 */
+	public function getDataSource()
+	{
+		if (!$this->dataModel) {
+			return NULL;
+		}
+
+		return $this->dataModel->getDataSource();
+	}
+
+
 	/********************************************************************************
 	 *                                  TEMPLATING                                  *
 	 ********************************************************************************/
