@@ -8,6 +8,7 @@
 
 namespace Ublaboo\DataGrid;
 
+use Nette\Utils\Callback;
 use Ublaboo\DataGrid\Column\ColumnNumber;
 
 class ColumnsSummary
@@ -28,15 +29,20 @@ class ColumnsSummary
 	 */
 	protected $format = [];
 
+	/**
+	 * @var callable
+	 */
+	protected $rowCallback = NULL;
 
 	/**
 	 * @param DataGrid $datagrid
 	 * @param array    $columns
 	 */
-	public function __construct(DataGrid $datagrid, array $columns)
+	public function __construct(DataGrid $datagrid, array $columns, $rowCallback = NULL)
 	{
 		$this->summary = array_fill_keys(array_values($columns), 0);
 		$this->datagrid = $datagrid;
+		$this->rowCallback = $rowCallback;
 
 		foreach ($this->summary as $key => $sum) {
 			$column = $this->datagrid->getColumn($key);
@@ -50,6 +56,20 @@ class ColumnsSummary
 		}
 	}
 
+	/**
+	 * Check if can add row sum into sums.. check for every summary column
+	 * @param Row    $row
+	 * @param string $column
+	 * @return bool
+	 */
+	private function canColumnAdd(Row $row, $column)
+	{
+		if (empty($this->rowCallback)) {
+			return TRUE;
+		}
+
+		return Callback::invoke($this->rowCallback, $row->getItem(), $column);
+	}
 
 	/**
 	 * @param Row $row
@@ -58,9 +78,11 @@ class ColumnsSummary
 	{
 		foreach ($this->summary as $key => $sum) {
 			$column = $this->datagrid->getColumn($key);
-			$value = $row->getValue($column->getColumn());
 
-			$this->summary[$key] += $value;
+			if ($this->canColumnAdd($row, $column->getColumn())) {
+				$value = $row->getValue($column->getColumn());
+				$this->summary[$key] += $value;
+			}
 		}
 	}
 
