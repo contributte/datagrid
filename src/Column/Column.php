@@ -72,6 +72,11 @@ abstract class Column extends FilterableColumn
 	 */
 	protected $align;
 
+    /**
+     * @var bool
+     */
+    protected $fit_content;
+
 	/**
 	 * @var array
 	 */
@@ -509,6 +514,29 @@ abstract class Column extends FilterableColumn
 	}
 
 
+    /**
+     * Set column content fit
+     * @param bool $fit_content
+     * @return $this
+     */
+    public function setFitContent($fit_content = TRUE)
+    {
+        $this->fit_content = $fit_content;
+
+        return $this;
+    }
+
+
+    /**
+     * Has column some fit content?
+     * @return bool
+     */
+    public function hasFitContent()
+    {
+        return (bool) $this->fit_content;
+    }
+
+
 	/**
 	 * Set callback that will be called after inline editing
 	 * @param callable $editable_callback
@@ -629,6 +657,13 @@ abstract class Column extends FilterableColumn
 		}
 
 		$el->class[] = "text-{$this->getAlign()}";
+
+        /**
+         * If column fit content is true
+         */
+        if ($this->hasFitContent()) {
+            $el->class[] = 'fit-content';
+        }
 
 		/**
 		 * Method called from datagrid template, set appropriate classes and another attributes
