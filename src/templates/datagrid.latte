@@ -401,7 +401,6 @@
 			{var $td->class[] = 'datagrid-inline-edit'}
 			{$td->startTag()|noescape}
 				{if isset($filter['inline_add'][$key])}
-					{dump $filter['inline_add'][$key]}
 					{input $filter['inline_add'][$key]}
 				{/if}
 			{$td->endTag()|noescape}
