@@ -75,7 +75,7 @@ abstract class Column extends FilterableColumn
     /**
      * @var bool
      */
-    protected $fit_content;
+    protected $fit_content = FALSE;
 
 	/**
 	 * @var array
