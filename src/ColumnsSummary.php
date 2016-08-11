@@ -57,18 +57,18 @@ class ColumnsSummary
 	}
 
 	/**
-	 * Check if can add row sum into sums.. check for every summary column
-	 * @param Row    $row
-	 * @param string $column
+	 * Get value from column.. (with callback or classic getValue from row)
+	 * @param Row    	    $row
+	 * @param Column\Column $column
 	 * @return bool
 	 */
-	private function canColumnAdd(Row $row, $column)
+	private function getValue(Row $row, $column)
 	{
 		if (empty($this->rowCallback)) {
-			return TRUE;
+			return $row->getValue($column->getColumn());
 		}
 
-		return Callback::invoke($this->rowCallback, $row->getItem(), $column);
+		return Callback::invoke($this->rowCallback, $row->getItem(), $column->getColumn());
 	}
 
 	/**
@@ -79,10 +79,8 @@ class ColumnsSummary
 		foreach ($this->summary as $key => $sum) {
 			$column = $this->datagrid->getColumn($key);
 
-			if ($this->canColumnAdd($row, $column->getColumn())) {
-				$value = $row->getValue($column->getColumn());
-				$this->summary[$key] += $value;
-			}
+			$value = $this->getValue($row, $column);
+			$this->summary[$key] += $value;
 		}
 	}
 
