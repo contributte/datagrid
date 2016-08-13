@@ -19,41 +19,41 @@
 	 * Own data
 	 *}
 	<div n:snippet="grid">
-		{snippetArea gridSnippets}
-			{form filter, class => 'ajax'}
-				{**
-                 * Filter form
-                 *}
-				{if $control->hasOuterFilterRendering()}
-					<div class="row row-filters">
-						{var $i = 0}
-						<div class="col-sm-6" n:foreach="$filters as $f">
-							{**
-                             * Each fitler is rendered separately in its own template
-                             *}
-							{var $filter_block = 'filter-' . $f->getKey()}
-							{var $filter_type_block = 'filtertype-' . $f->getType()}
+	{snippetArea gridSnippets}
+		{form filter, class => 'ajax'}
+			{**
+			 * Filter form
+			 *}
+			{if $control->hasOuterFilterRendering()}
+				<div class="row row-filters">
+					{var $i = 0}
+					<div class="col-sm-6" n:foreach="$filters as $f">
+						{**
+						 * Each fitler is rendered separately in its own template
+						 *}
+						{var $filter_block = 'filter-' . $f->getKey()}
+						{var $filter_type_block = 'filtertype-' . $f->getType()}
 
-							{ifset #$filter_block}
-								{include #$filter_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
-							{else}
-								{ifset #$filter_type_block}
-									{include #$filter_type_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+						{ifset #$filter_block}
+							{include #$filter_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+						{else}
+							{ifset #$filter_type_block}
+								{include #$filter_type_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
 								{else}
 									{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
-								{/ifset}
 							{/ifset}
-							{var $i = $i+1}
-						</div>
+						{/ifset}
+						{var $i = $i+1}
 					</div>
-					{if !$control->hasAutoSubmit()}
-						<div class="text-right datagrid-manual-submit">
-							{input $filter['filter']['submit']}
-						</div>
-					{/if}
+				</div>
+				{if !$control->hasAutoSubmit()}
+					<div class="text-right datagrid-manual-submit">
+						{input $filter['filter']['submit']}
+					</div>
 				{/if}
-				<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
-					<thead>
+			{/if}
+			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
+				<thead>
 					<tr class="row-group-actions" n:if="$hasGroupActionOnRows || $exports || $toolbar_buttons || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
 							{if $hasGroupActionOnRows}
@@ -105,7 +105,7 @@
 												{else}
 													<a n:href="showColumn!, column => $v_key" class="ajax">
 														<i n:block = "icon-unchecked" class="{$icon_prefix}square-o"></i>
-													{include #column-header, column => $visibility['column']}
+														{include #column-header, column => $visibility['column']}
 													</a>
 												{/if}
 											</li>
@@ -129,33 +129,33 @@
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementPrototype('th', $key)}
 							{$th->startTag()|noescape}
-							{var $col_header = 'col-' . $key . '-header'}
+								{var $col_header = 'col-' . $key . '-header'}
 
-							{**
-                             * Column header can be defined also with block {col-<key>-header}
-                             *}
-							{ifset #$col_header}
-								{include #$col_header, column => $column}
-							{else}
-								{if $column->isSortable()}
-									<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()" id="datagrid-sort-{$key}">
-										{include #column-header, column => $column}
-
-										{if $column->isSortedBy()}
-											{if $column->isSortAsc()}
-												<i n:block="icon-sort-up" class="{$icon_prefix}caret-up"></i>
-											{else}
-												<i n:block="icon-sort-down" class="{$icon_prefix}caret-down"></i>
-											{/if}
-										{else}
-											<i n:block="icon-sort" class="{$icon_prefix}sort"></i>
-										{/if}
-									</a>
+								{**
+								 * Column header can be defined also with block {col-<key>-header}
+								 *}
+								{ifset #$col_header}
+									{include #$col_header, column => $column}
 								{else}
-									{include #column-header, column => $column}
-								{/if}
+									{if $column->isSortable()}
+										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" n:href="sort!, sort => $column->getSortNext()" id="datagrid-sort-{$key}">
+											{include #column-header, column => $column}
 
-								<span class="column-settings-menu pull-right" n:if="$control->canHideColumns()">
+											{if $column->isSortedBy()}
+												{if $column->isSortAsc()}
+													<i n:block="icon-sort-up" class="{$icon_prefix}caret-up"></i>
+												{else}
+													<i n:block="icon-sort-down" class="{$icon_prefix}caret-down"></i>
+												{/if}
+											{else}
+												<i n:block="icon-sort" class="{$icon_prefix}sort"></i>
+											{/if}
+										</a>
+									{else}
+										{include #column-header, column => $column}
+									{/if}
+
+									<span class="column-settings-menu pull-right" n:if="$control->canHideColumns()">
 										<div class="btn-group">
 											<a type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												<i n:block="icon-caret-down" class="{$icon_prefix}caret-down"></i>
@@ -168,46 +168,39 @@
 											</ul>
 										</div>
 									</span>
-							{/ifset}
+								{/ifset}
+
+								{if !$control->hasOuterFilterRendering() && isset($filters[$key])}
+									<hr>
+									{var $i = $filter['filter'][$key]}
+
+									{var $filter_block = 'filter-' . $filters[$key]->getKey()}
+									{var $filter_type_block = 'filtertype-' . $filters[$key]->getType()}
+
+									{ifset #$filter_block}
+										{include #$filter_block, filter => $filters[$key], input => $i, outer => FALSE}
+									{else}
+										{ifset #$filter_type_block}
+											{include #$filter_type_block, filter => $filters[$key], input => $i, outer => FALSE}
+										{else}
+											{include $filters[$key]->getTemplate(), filter => $filters[$key], input => $i, outer => FALSE}
+										{/ifset}
+									{/ifset}
+
+								{/if}
 							{$th->endTag()|noescape}
 						{/foreach}
 						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-center">
 							{_'ublaboo_datagrid.action'}
-						</th>
-					</tr>
-					<tr n:block="header-filters">
-						{foreach $columns as $key => $column}
-							{var $th = $column->getElementPrototype('th', $key)}
-							{$th->startTag()|noescape}
-							{var $col_header = 'col-filter-' . $key . '-header'}
-							{if !$control->hasOuterFilterRendering() && isset($filters[$key])}
-								{var $i = $filter['filter'][$key]}
-
-								{var $filter_block = 'filter-' . $filters[$key]->getKey()}
-								{var $filter_type_block = 'filtertype-' . $filters[$key]->getType()}
-
-								{ifset #$filter_block}
-									{include #$filter_block, filter => $filters[$key], input => $i, outer => FALSE}
-								{else}
-									{ifset #$filter_type_block}
-										{include #$filter_type_block, filter => $filters[$key], input => $i, outer => FALSE}
-									{else}
-										{include $filters[$key]->getTemplate(), filter => $filters[$key], input => $i, outer => FALSE}
-									{/ifset}
-								{/ifset}
-
-							{/if}
-							{$th->endTag()|noescape}
-						{/foreach}
-						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-center">
 							{if !$control->hasAutoSubmit() && !$control->hasOuterFilterRendering()}
+								<hr>
 								{input $filter['filter']['submit']}
 							{/if}
 						</th>
 					</tr>
-					</thead>
+				</thead>
 
-					<tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandler()}"{/}>
+				<tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandler()}"{/}>
 					{snippetArea items}
 						{if $inlineAdd && $inlineAdd->isPositionTop()}
 							{include inlineAddRow, columns => $columns}
@@ -229,9 +222,9 @@
 											{var $td = $column->getElementPrototype('td', $key, $row)}
 											{var $td->class[] = 'datagrid-inline-edit'}
 											{$td->startTag()|noescape}
-											{if isset($filter['inline_edit'][$key])}
-												{input $filter['inline_edit'][$key], class => 'form-control input-sm'}
-											{/if}
+												{if isset($filter['inline_edit'][$key])}
+													{input $filter['inline_edit'][$key], class => 'form-control input-sm'}
+												{/if}
 											{$td->endTag()|noescape}
 										{/foreach}
 
@@ -255,19 +248,19 @@
 
 											{var $td = $column->getElementPrototype('td', $key, $row)}
 											{$td->startTag()|noescape}
-											{if $column->hasTemplate()}
-												{include $column->getTemplate(), row => $row, item => $item, (expand) $column->getTemplateVariables()}
-											{else}
-												{ifset #$col}
-													{include #$col, item => $item}
+												{if $column->hasTemplate()}
+													{include $column->getTemplate(), row => $row, item => $item, (expand) $column->getTemplateVariables()}
 												{else}
-													{if $column->isTemplateEscaped()}
-														{$column->render($row)}
+													{ifset #$col}
+														{include #$col, item => $item}
 													{else}
-														{$column->render($row)|noescape}
-													{/if}
-												{/ifset}
-											{/if}
+														{if $column->isTemplateEscaped()}
+															{$column->render($row)}
+														{else}
+															{$column->render($row)|noescape}
+														{/if}
+													{/ifset}
+												{/if}
 											{$td->endTag()|noescape}
 										{/foreach}
 										<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
@@ -349,9 +342,9 @@
 							</tr>
 						{/block}
 					{/snippetArea}
-					</tbody>
-					{block tfoot}
-						<tfoot n:snippet="pagination">
+				</tbody>
+				{block tfoot}
+					<tfoot n:snippet="pagination">
 						{if $control->isPaginated() || $filter_active}
 							<tr n:block="pagination">
 								<td colspan="{$control->getColumnsCount()}" n:if="!$control->isTreeView()" class="row-grid-bottom">
@@ -360,10 +353,10 @@
 											({var $paginator = $control['paginator']->getPaginator()}
 
 											{if $control->getPerPage() === 'all'}
-											{_'ublaboo_datagrid.items'}: {_'ublaboo_datagrid.all'}
+												{_'ublaboo_datagrid.items'}: {_'ublaboo_datagrid.all'}
 											{else}
-											{_'ublaboo_datagrid.items'}: {$paginator->getOffset() + 1} - {sizeof($rows) + $paginator->getOffset()}
-											{_'ublaboo_datagrid.from'} {$paginator->getItemCount()}
+												{_'ublaboo_datagrid.items'}: {$paginator->getOffset() + 1} - {sizeof($rows) + $paginator->getOffset()}
+												{_'ublaboo_datagrid.from'} {$paginator->getItemCount()}
 											{/if})
 										</small>
 									</div>
@@ -386,11 +379,11 @@
 								</td>
 							</tr>
 						{/if}
-						</tfoot>
-					{/block}
-				</table>
-			{/form}
-		{/snippetArea}
+					</tfoot>
+				{/block}
+			</table>
+		{/form}
+	{/snippetArea}
 	</div>
 </div>
 
@@ -407,9 +400,9 @@
 			{var $td = clone $column->getElementPrototype('td', $key)}
 			{var $td->class[] = 'datagrid-inline-edit'}
 			{$td->startTag()|noescape}
-			{if isset($filter['inline_add'][$key])}
-				{input $filter['inline_add'][$key]}
-			{/if}
+				{if isset($filter['inline_add'][$key])}
+					{input $filter['inline_add'][$key]}
+				{/if}
 			{$td->endTag()|noescape}
 		{/foreach}
 
@@ -429,7 +422,7 @@
 			{var $td = $column->getElementPrototype('td', $key)}
 
 			{$td->startTag()|noescape}
-			{$columnsSummary->render($key)}
+				{$columnsSummary->render($key)}
 			{$td->endTag()|noescape}
 		{/foreach}
 
