@@ -246,18 +246,13 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter)
 	{
-		$condition = $filter->getCondition();
-		$values = $condition[$filter->getColumn()];
-		$exprs = [];
 		$c = $this->checkAliases($filter->getColumn());
+		$p = $this->getPlaceholder();
 
-		foreach ($values as $value) {
-			$exprs[] = $this->data_source->expr()->eq($c, $value);
-		}
+		$values = $filter->getCondition()[$filter->getColumn()];
+		$expr = $this->data_source->expr()->in($c, '?'.$p);
 
-		$or = call_user_func_array([$this->data_source->expr(), 'orX'], $exprs);
-
-		$this->data_source->andWhere($or);
+		$this->data_source->andWhere($expr)->setParameter($p, $values);
 	}
 
 

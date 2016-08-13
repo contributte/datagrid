@@ -47,6 +47,11 @@ class ColumnLink extends Column
 	 */
 	protected $data_attributes = [];
 
+	/**
+	 * @var bool
+	 */
+	protected $open_in_new_tab = FALSE;
+
 
 	/**
 	 * @param DataGrid $grid
@@ -100,6 +105,10 @@ class ColumnLink extends Column
 			foreach ($this->data_attributes as $key => $attr_value) {
 				$a->data($key, $attr_value);
 			}
+		}
+
+		if ($this->open_in_new_tab) {
+			$a->addAttributes(['target' => '_blank']);
 		}
 
 		if ($this->title) { $a->title($this->title); }
@@ -192,5 +201,26 @@ class ColumnLink extends Column
 	{
 		return $this->class;
 	}
+
+	/**
+	 * Open link in new window/tab?
+	 * @return boolean
+	 */
+	public function isOpenInNewTab()
+	{
+		return $this->open_in_new_tab;
+	}
+
+	/**
+	 * Set link to open in new tab/window or not
+	 * @param boolean $open_in_new_tab
+	 */
+	public function setOpenInNewTab($open_in_new_tab)
+	{
+		$this->open_in_new_tab = $open_in_new_tab;
+	}
+
+
+
 
 }

@@ -65,7 +65,7 @@
 										{elseif $form_control->getName() == 'group_action'}
 											{input $form_control, class => 'form-control input-sm', disabled => TRUE}
 										{else}
-											{input $form_control, class => 'form-control input-sm', style => 'display:none'}
+											{input $form_control, style => 'display:none'}
 										{/if}
 									{/foreach}
 								{/block}
@@ -100,12 +100,12 @@
 												{if $visibility['visible']}
 													<a n:href="hideColumn!, column => $v_key" class="ajax">
 														<i n:block = "icon-checked" class="{$icon_prefix}check-square-o"></i>
-														{_$visibility['name']}
+														{include #column-header, column => $visibility['column']}
 													</a>
 												{else}
 													<a n:href="showColumn!, column => $v_key" class="ajax">
 														<i n:block = "icon-unchecked" class="{$icon_prefix}square-o"></i>
-														{_$visibility['name']}
+														{include #column-header, column => $visibility['column']}
 													</a>
 												{/if}
 											</li>
@@ -401,14 +401,14 @@
 			{var $td->class[] = 'datagrid-inline-edit'}
 			{$td->startTag()|noescape}
 				{if isset($filter['inline_add'][$key])}
-					{input $filter['inline_add'][$key], class => 'form-control input-sm'}
+					{input $filter['inline_add'][$key]}
 				{/if}
 			{$td->endTag()|noescape}
 		{/foreach}
 
 		<td class="col-action col-action-inline-edit">
-			{input $filter['inline_add']['cancel'], class => 'btn btn-xs btn-danger'}
-			{input $filter['inline_add']['submit'], class => 'btn btn-xs btn-primary'}
+			{input $filter['inline_add']['cancel']}
+			{input $filter['inline_add']['submit']}
 		</td>
 	</tr>
 {/define}

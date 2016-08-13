@@ -18,6 +18,7 @@ use Ublaboo\DataGrid\Traits;
  * @method onSubmit($id, Nette\Utils\ArrayHash $values)
  * @method onSubmit(Nette\Utils\ArrayHash $values)
  * @method onControlAdd(Nette\Forms\Container $container)
+ * @method onControlAfterAdd(Nette\Forms\Container $container)
  * @method onSetDefaults(Nette\Forms\Container $container, $item)
  */
 class InlineEdit extends Nette\Object
@@ -34,6 +35,11 @@ class InlineEdit extends Nette\Object
 	 * @var callable[]
 	 */
 	public $onControlAdd;
+
+	/**
+	 * @var callable[]
+	 */
+	public $onControlAfterAdd;
 
 	/**
 	 * @var callable[]
@@ -79,6 +85,8 @@ class InlineEdit extends Nette\Object
 		$this->title = 'ublaboo_datagrid.edit';
 		$this->class = 'btn btn-xs btn-default ajax';
 		$this->icon = 'pencil';
+
+		$this->onControlAfterAdd[] = [$this, 'addControlsClasses'];
 	}
 
 
@@ -123,7 +131,7 @@ class InlineEdit extends Nette\Object
 
 		$a->addText($this->text);
 
-		if ($this->title) { $a->title($this->title); }
+		if ($this->title) { $a->title($this->grid->getTranslator()->translate($this->title)); }
 		if ($this->class) { $a->class[] = $this->class; }
 
 		$a->class[] = 'datagrid-inline-edit-trigger';
@@ -180,6 +188,35 @@ class InlineEdit extends Nette\Object
 	public function isPositionBottom()
 	{
 		return !$this->position_top;
+	}
+
+
+
+	/**
+	 * @param Nette\Forms\Container $container
+	 */
+	public function addControlsClasses(Nette\Forms\Container $container)
+	{
+		foreach ($container->getControls() as $key => $control) {
+			switch ($key) {
+				case 'submit':
+					$control->setAttribute('class', 'btn btn-xs btn-primary');
+
+					break;
+
+				case 'cancel':
+					$control->setAttribute('class', 'btn btn-xs btn-danger');
+
+					break;
+				
+				default:
+					if (empty($control->getControl()->getClass())) {
+						$control->setAttribute('class', 'form-control input-sm');
+					}
+
+					break;
+			}
+		}
 	}
 
 }

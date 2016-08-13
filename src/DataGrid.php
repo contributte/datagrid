@@ -466,7 +466,7 @@ class DataGrid extends Nette\Application\UI\Control
 		//$this->getTemplate()->add('icon_prefix', static::$icon_prefix);
 		$this->getTemplate()->icon_prefix = static::$icon_prefix;
 		$this->getTemplate()->add('items_detail', $this->items_detail);
-		$this->getTemplate()->add('columns_visibility', $this->columns_visibility);
+		$this->getTemplate()->add('columns_visibility', $this->getColumnsVisibility());
 		$this->getTemplate()->add('columnsSummary', $this->columnsSummary);
 
 		$this->getTemplate()->add('inlineEdit', $this->inlineEdit);
@@ -869,8 +869,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->onColumnAdd($key, $column);
 
 		$this->columns_visibility[$key] = [
-			'visible' => TRUE,
-			'name' => $column->getName()
+			'visible' => TRUE
 		];
 
 		return $this->columns[$key] = $column;
@@ -1358,6 +1357,7 @@ class DataGrid extends Nette\Application\UI\Control
 				->setValidationScope(FALSE);
 
 			$this->inlineEdit->onControlAdd($inline_edit_container);
+			$this->inlineEdit->onControlAfterAdd($inline_edit_container);
 		}
 
 		/**
@@ -1372,6 +1372,7 @@ class DataGrid extends Nette\Application\UI\Control
 				->setAttribute('data-datagrid-cancel-inline-add', TRUE);
 
 			$this->inlineAdd->onControlAdd($inline_add_container);
+			$this->inlineAdd->onControlAfterAdd($inline_add_container);
 		}
 
 		/**
@@ -1750,6 +1751,7 @@ class DataGrid extends Nette\Application\UI\Control
 		return $this->getGroupActionCollection()->addGroupSelectAction($title, $options);
 	}
 
+
 	/**
 	 * Add group action (select box)
 	 * @param string $title
@@ -1761,6 +1763,7 @@ class DataGrid extends Nette\Application\UI\Control
 		return $this->getGroupActionCollection()->addGroupSelectAction($title, $options);
 	}
 
+
 	/**
 	 * Add group action (text input)
 	 * @param string $title
@@ -1770,6 +1773,18 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		return $this->getGroupActionCollection()->addGroupTextAction($title);
 	}
+
+
+	/**
+	 * Add group action (textarea)
+	 * @param string $title
+	 * @return GroupAction\GroupAction
+	 */
+	public function addGroupTextareaAction($title)
+	{
+		return $this->getGroupActionCollection()->addGroupTextareaAction($title);
+	}
+
 
 	/**
 	 * Get collection of all group actions
@@ -2889,6 +2904,8 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getColumns()
 	{
+		$return = $this->columns;
+
 		if (!$this->getSessionData('_grid_hidden_columns_manipulated', FALSE)) {
 			$columns_to_hide = [];
 
@@ -2905,19 +2922,30 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$hidden_columns = $this->getSessionData('_grid_hidden_columns', []);
-		
+
 		foreach ($hidden_columns as $column) {
 			if (!empty($this->columns[$column])) {
 				$this->columns_visibility[$column] = [
-					'visible' => FALSE,
-					'name' => $this->columns[$column]->getName()
+					'visible' => FALSE
 				];
 
-				$this->removeColumn($column);
+				unset($return[$column]);
 			}
 		}
 
-		return $this->columns;
+		return $return;
+	}
+
+
+	public function getColumnsVisibility()
+	{
+		$return = $this->columns_visibility;
+
+		foreach ($this->columns_visibility as $key => $column) {
+			$return[$key]['column'] = $this->columns[$key];
+		}
+
+		return $return;
 	}
 
 

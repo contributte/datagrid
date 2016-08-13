@@ -13,7 +13,7 @@ use Nette;
 /**
  * @method void onSelect()
  */
-class GroupTextAction extends GroupAction
+class GroupTextareaAction extends GroupAction
 {
 
 	/**

@@ -115,7 +115,7 @@ window.datagridSerializeUrl = function(obj, prefix) {
 	for(var p in obj) {
 		if (obj.hasOwnProperty(p)) {
 			var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-			if(v) {
+			if (v !== null && v !== "") {
 				str.push(typeof v == "object" ?
 					window.datagridSerializeUrl(v, k) :
 					encodeURIComponent(k) + "=" + encodeURIComponent(v));
