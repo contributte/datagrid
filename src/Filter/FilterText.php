@@ -66,7 +66,7 @@ class FilterText extends Filter
 	/**
 	 * @return boolean
 	 */
-	public function isExact()
+	public function isExactSearch()
 	{
 		return $this->exact;
 	}
@@ -75,7 +75,7 @@ class FilterText extends Filter
 	 * @param boolean $exact
 	 * @return FilterText
 	 */
-	public function setExact($exact = TRUE)
+	public function setExactSearch($exact = TRUE)
 	{
 		$this->exact = $exact;
 		return $this;

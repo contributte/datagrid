@@ -171,7 +171,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			$like = '(';
 			$args = [];
 
-			if($filter->isExact()){
+			if($filter->isExactSearch()){
 				$like .=  "$column = ? ";
 				$args[] = "$value";
 			} else {

@@ -122,7 +122,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			if($filter->isExact()){
+			if($filter->isExactSearch()){
 				$this->data_source->where("$column = %s", $value);
 				continue;
 			}

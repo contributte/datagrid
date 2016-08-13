@@ -217,7 +217,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 			$words = explode(' ', $value);
 			$c = $this->checkAliases($column);
 
-			if($filter->isExact()){
+			if($filter->isExactSearch()){
 				$exprs[] = $this->data_source->expr()->eq($c, $this->data_source->expr()->eq($value));
 				continue;
 			}
