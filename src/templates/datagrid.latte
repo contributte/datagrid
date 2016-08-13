@@ -168,32 +168,39 @@
 											</ul>
 										</div>
 									</span>
-								{/ifset}
-
-								{if !$control->hasOuterFilterRendering() && isset($filters[$key])}
-									<hr>
-									{var $i = $filter['filter'][$key]}
+                                {/ifset}
+                            {$th->endTag()|noescape}
+						{/foreach}
+						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-center">
+							{_'ublaboo_datagrid.action'}
+						</th>
+					</tr>
+					<tr n:block="header-filters" n:if="!$control->hasOuterFilterRendering()">
+						{foreach $columns as $key => $column}
+							{var $th = $column->getElementPrototype('th', $key)}
+							{$th->startTag()|noescape}
+							{var $col_header = 'col-filter-' . $key . '-header'}
+							{if !$control->hasOuterFilterRendering() && isset($filters[$key])}
+								{var $i = $filter['filter'][$key]}
 
 									{var $filter_block = 'filter-' . $filters[$key]->getKey()}
 									{var $filter_type_block = 'filtertype-' . $filters[$key]->getType()}
 
-									{ifset #$filter_block}
-										{include #$filter_block, filter => $filters[$key], input => $i, outer => FALSE}
+								{ifset #$filter_block}
+									{include #$filter_block, filter => $filters[$key], input => $i, outer => FALSE}
+								{else}
+									{ifset #$filter_type_block}
+										{include #$filter_type_block, filter => $filters[$key], input => $i, outer => FALSE}
 									{else}
-										{ifset #$filter_type_block}
-											{include #$filter_type_block, filter => $filters[$key], input => $i, outer => FALSE}
-										{else}
-											{include $filters[$key]->getTemplate(), filter => $filters[$key], input => $i, outer => FALSE}
-										{/ifset}
+										{include $filters[$key]->getTemplate(), filter => $filters[$key], input => $i, outer => FALSE}
 									{/ifset}
+								{/ifset}
 
-								{/if}
+							{/if}
 							{$th->endTag()|noescape}
 						{/foreach}
 						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-center">
-							{_'ublaboo_datagrid.action'}
 							{if !$control->hasAutoSubmit() && !$control->hasOuterFilterRendering()}
-								<hr>
 								{input $filter['filter']['submit']}
 							{/if}
 						</th>
