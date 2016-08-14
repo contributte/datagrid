@@ -41,6 +41,11 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var callable[]
 	 */
+	public $onExport;
+
+	/**
+	 * @var callable[]
+	 */
 	public $onColumnAdd;
 
 	/**
@@ -345,16 +350,19 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Try to find previous filters, pagination, per_page and other values in session
 		 */
 		$this->onRender[] = [$this, 'findSessionValues'];
+		$this->onExport[] = [$this, 'findSessionValues'];
 
 		/**
 		 * Find default filter values
 		 */
 		$this->onRender[] = [$this, 'findDefaultFilter'];
+		$this->onExport[] = [$this, 'findDefaultFilter'];
 
 		/**
 		 * Find default sort
 		 */
 		$this->onRender[] = [$this, 'findDefaultSort'];
+		$this->onExport[] = [$this, 'findDefaultSort'];
 
 		/**
 		 * Find default items per page
@@ -1456,7 +1464,7 @@ class DataGrid extends Nette\Application\UI\Control
 			} elseif ($control instanceof Nette\Forms\Container) {
 				if (array_key_exists($name, $values)) {
 					try {
-						$control->setValue($values[$name]);
+						$control->setValues($values[$name]);
 					} catch (Nette\InvalidArgumentException $e) {
 						if ($this->strict_session_filter_values) {
 							throw $e;
@@ -1980,6 +1988,11 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$export = $this->exports[$id];
+
+		/**
+		 * Invoke possible events
+		 */
+		$this->onExport($this);
 
 		if ($export->isFiltered()) {
 			$sort      = $this->sort;
