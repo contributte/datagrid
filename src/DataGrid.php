@@ -2857,12 +2857,19 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set columns to be summarized in the end.
-	 * @param  array  $columns
-	 * @return ColumnsSummary
+	 * @param array    $columns
+	 * @param callable $rowCallback
+	 * @return \Ublaboo\DataGrid\ColumnsSummary
 	 */
-	public function setColumnsSummary(array $columns)
+	public function setColumnsSummary(array $columns, $rowCallback = NULL)
 	{
-		$this->columnsSummary = new ColumnsSummary($this, $columns);
+		if (!empty($rowCallback)) {
+			if (!is_callable($rowCallback)) {
+				throw new \InvalidArgumentException('Row summary callback must be callable');
+			}
+		}
+
+		$this->columnsSummary = new ColumnsSummary($this, $columns, $rowCallback);
 
 		return $this->columnsSummary;
 	}
