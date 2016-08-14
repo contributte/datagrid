@@ -1235,6 +1235,9 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * @param bool $strict
+	 */
 	public function setStrictSessionFilterValues($strict = TRUE)
 	{
 		$this->strict_session_filter_values = (bool) $strict;
