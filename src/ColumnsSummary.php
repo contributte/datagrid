@@ -30,15 +30,16 @@ class ColumnsSummary
 	protected $format = [];
 
 	/**
-	 * @var callable
+	 * @var NULL|callable
 	 */
-	protected $rowCallback = NULL;
+	protected $rowCallback;
+
 
 	/**
 	 * @param DataGrid $datagrid
 	 * @param array    $columns
 	 */
-	public function __construct(DataGrid $datagrid, array $columns, $rowCallback = NULL)
+	public function __construct(DataGrid $datagrid, array $columns, $rowCallback)
 	{
 		$this->summary = array_fill_keys(array_values($columns), 0);
 		$this->datagrid = $datagrid;
@@ -56,20 +57,22 @@ class ColumnsSummary
 		}
 	}
 
+
 	/**
-	 * Get value from column.. (with callback or classic getValue from row)
+	 * Get value from column using Row::getValue() or custom callback
 	 * @param Row    	    $row
 	 * @param Column\Column $column
 	 * @return bool
 	 */
 	private function getValue(Row $row, $column)
 	{
-		if (empty($this->rowCallback)) {
+		if (!$this->rowCallback) {
 			return $row->getValue($column->getColumn());
 		}
 
-		return Callback::invoke($this->rowCallback, $row->getItem(), $column->getColumn());
+		return call_user_func_array($this->rowCallback, [$row->getItem(), $column->getColumn()]);
 	}
+
 
 	/**
 	 * @param Row $row
