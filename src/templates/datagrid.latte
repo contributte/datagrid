@@ -223,7 +223,7 @@
 											{var $td->class[] = 'datagrid-inline-edit'}
 											{$td->startTag()|noescape}
 												{if isset($filter['inline_edit'][$key])}
-													{input $filter['inline_edit'][$key], class => 'form-control input-sm'}
+													{input $filter['inline_edit'][$key]}
 												{/if}
 											{$td->endTag()|noescape}
 										{/foreach}
