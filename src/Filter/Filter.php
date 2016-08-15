@@ -142,7 +142,17 @@ abstract class Filter extends Nette\Object
 
 
 	/**
-	 * Get fitler value
+	 * Returns whether corespondive column is displayed or hidden by the user
+	 * @return boolean
+	 */
+	public function isColumnVisible()
+	{
+		return array_key_exists($this->key, $this->grid->getColumns());
+	}
+
+
+	/**
+	 * Get filter value
 	 * @return mixed
 	 */
 	public function getValue()
