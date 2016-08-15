@@ -72,6 +72,7 @@ abstract class Column extends FilterableColumn
 	 */
 	protected $align;
 
+
 	/**
 	 * @var array
 	 */
@@ -506,6 +507,19 @@ abstract class Column extends FilterableColumn
 	public function getAlign()
 	{
 		return $this->align ?: 'left';
+	}
+
+
+	/**
+	 * Set column content fit
+	 * @param bool $fit_content
+	 * @return $this
+	 */
+	public function setFitContent($fit_content = TRUE)
+	{
+		($fit_content) ? $this->addAttributes(['class' => 'datagrid-fit-content']) : NULL;
+
+		return $this;
 	}
 
 
