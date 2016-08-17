@@ -34,17 +34,6 @@ abstract class BaseDataSourceTest extends TestCase
      */
     protected $grid;
 
-    /**
-     * BaseDataSourceTest constructor.
-     * @param array $data
-     */
-    public function __construct()
-    {
-        $factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
-        $this->grid = $factory->createXTestingDataGrid();
-    }
-
-
     public function testGetCount()
     {
         Assert::same(6, $this->ds->getCount());
