@@ -87,6 +87,46 @@ abstract class BaseDataSourceTest extends TestCase
         Assert::equal([$this->data[5]], $this->getActualResultAsArray());
     }
 
+    public function testFilterRangeMin()
+    {
+
+        $filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
+        $filter->setValue(['from' =>40]);
+        $this->ds->filter([$filter]);
+
+        Assert::equal([
+            $this->data[1],
+            $this->data[4],
+            $this->data[5]
+        ], $this->getActualResultAsArray());
+    }
+
+    public function testFilterRangeMax()
+    {
+
+        $filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
+        $filter->setValue(['to' => 30]);
+        $this->ds->filter([$filter]);
+
+        Assert::equal([
+            $this->data[0],
+            $this->data[2],
+            $this->data[3]
+        ], $this->getActualResultAsArray());
+    }
+
+    public function testFilterRangeMinMax()
+    {
+
+        $filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
+        $filter->setValue(['from' => 12, 'to' => 30]);
+        $this->ds->filter([$filter]);
+
+        Assert::equal([
+            $this->data[0],
+            $this->data[2]
+        ], $this->getActualResultAsArray());
+    }
 
     public function testFilterOne()
     {
