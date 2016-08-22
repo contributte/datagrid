@@ -131,7 +131,7 @@ class InlineEdit extends Nette\Object
 
 		$a->addText($this->text);
 
-		if ($this->title) { $a->title($this->title); }
+		if ($this->title) { $a->title($this->grid->getTranslator()->translate($this->title)); }
 		if ($this->class) { $a->class[] = $this->class; }
 
 		$a->class[] = 'datagrid-inline-edit-trigger';
@@ -152,7 +152,7 @@ class InlineEdit extends Nette\Object
 
 		$a->addText($this->text);
 
-		if ($this->title) { $a->title($this->title); }
+		if ($this->title) { $a->title($this->grid->getTranslator()->translate($this->title)); }
 		if ($this->class) { $a->class($this->class); }
 
 		return $a;

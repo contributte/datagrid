@@ -100,12 +100,12 @@
 												{if $visibility['visible']}
 													<a n:href="hideColumn!, column => $v_key" class="ajax">
 														<i n:block = "icon-checked" class="{$icon_prefix}check-square-o"></i>
-														{_$visibility['name']}
+														{include #column-header, column => $visibility['column']}
 													</a>
 												{else}
 													<a n:href="showColumn!, column => $v_key" class="ajax">
 														<i n:block = "icon-unchecked" class="{$icon_prefix}square-o"></i>
-														{_$visibility['name']}
+														{include #column-header, column => $visibility['column']}
 													</a>
 												{/if}
 											</li>
@@ -223,7 +223,7 @@
 											{var $td->class[] = 'datagrid-inline-edit'}
 											{$td->startTag()|noescape}
 												{if isset($filter['inline_edit'][$key])}
-													{input $filter['inline_edit'][$key], class => 'form-control input-sm'}
+													{input $filter['inline_edit'][$key]}
 												{/if}
 											{$td->endTag()|noescape}
 										{/foreach}
@@ -401,7 +401,6 @@
 			{var $td->class[] = 'datagrid-inline-edit'}
 			{$td->startTag()|noescape}
 				{if isset($filter['inline_add'][$key])}
-					{dump $filter['inline_add'][$key]}
 					{input $filter['inline_add'][$key]}
 				{/if}
 			{$td->endTag()|noescape}

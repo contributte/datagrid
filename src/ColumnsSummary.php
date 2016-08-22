@@ -8,6 +8,7 @@
 
 namespace Ublaboo\DataGrid;
 
+use Nette\Utils\Callback;
 use Ublaboo\DataGrid\Column\ColumnNumber;
 
 class ColumnsSummary
@@ -28,15 +29,21 @@ class ColumnsSummary
 	 */
 	protected $format = [];
 
+	/**
+	 * @var NULL|callable
+	 */
+	protected $rowCallback;
+
 
 	/**
 	 * @param DataGrid $datagrid
 	 * @param array    $columns
 	 */
-	public function __construct(DataGrid $datagrid, array $columns)
+	public function __construct(DataGrid $datagrid, array $columns, $rowCallback)
 	{
 		$this->summary = array_fill_keys(array_values($columns), 0);
 		$this->datagrid = $datagrid;
+		$this->rowCallback = $rowCallback;
 
 		foreach ($this->summary as $key => $sum) {
 			$column = $this->datagrid->getColumn($key);
@@ -52,14 +59,30 @@ class ColumnsSummary
 
 
 	/**
+	 * Get value from column using Row::getValue() or custom callback
+	 * @param Row    	    $row
+	 * @param Column\Column $column
+	 * @return bool
+	 */
+	private function getValue(Row $row, $column)
+	{
+		if (!$this->rowCallback) {
+			return $row->getValue($column->getColumn());
+		}
+
+		return call_user_func_array($this->rowCallback, [$row->getItem(), $column->getColumn()]);
+	}
+
+
+	/**
 	 * @param Row $row
 	 */
 	public function add(Row $row)
 	{
 		foreach ($this->summary as $key => $sum) {
 			$column = $this->datagrid->getColumn($key);
-			$value = $row->getValue($column->getColumn());
 
+			$value = $this->getValue($row, $column);
 			$this->summary[$key] += $value;
 		}
 	}
