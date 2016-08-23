@@ -13,7 +13,7 @@ use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
 
-abstract class FilterableDataSource
+abstract class FilterableDataSource extends \Nette\Object
 {
 
 	/**

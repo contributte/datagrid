@@ -10,14 +10,22 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Doctrine\ORM\QueryBuilder;
-use Ublaboo\DataGrid\Filter;
-use Nette\Utils\Callback;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Nette\Utils\Strings;
-use Doctrine;
+use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\Sorting;
 
+/**
+ * @method void onDataLoaded(array $result)
+ */
 class DoctrineDataSource extends FilterableDataSource implements IDataSource
 {
+
+	/**
+	 * Event called when datagrid data is loaded.
+	 * @var callable[]
+	 */
+	public $onDataLoaded;
 
 	/**
 	 * @var QueryBuilder
@@ -25,14 +33,14 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	protected $data_source;
 
 	/**
-	 * @var array
+	 * @var string
 	 */
-	protected $data = [];
+	protected $primary_key;
 
 	/**
 	 * @var string
 	 */
-	protected $primary_key;
+	protected $root_alias;
 
 	/**
 	 * @var int
@@ -52,7 +60,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 
 	/**
-	 * @return Doctrine\ORM\Query
+	 * @return \Doctrine\ORM\Query
 	*/
 	public function getQuery()
 	{
@@ -60,13 +68,22 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	}
 
 
+	/**
+	 * @param  string  $column
+	 * @return string
+	 */
 	private function checkAliases($column)
 	{
 		if (Strings::contains($column, ".")) {
 			return $column;
 		}
 
-		return current($this->data_source->getRootAliases()) . '.' . $column;
+		if (!isset($this->root_alias)) {
+			$this->root_alias = $this->data_source->getRootAliases();
+			$this->root_alias = current($this->root_alias);
+		}
+
+		return $this->root_alias.'.'.$column;
 	}
 
 
@@ -81,11 +98,9 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function getCount()
 	{
-		$paginator = new Doctrine\ORM\Tools\Pagination\Paginator($this->getQuery());
-		$count = count($paginator);
-
-		return $count;
+		return (new Paginator($this->getQuery()))->count();
 	}
+
 
 	/**
 	 * Get the data
@@ -93,16 +108,16 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function getData()
 	{
-		/**
-		 * Paginator is better if the query uses ManyToMany associations
-		 */
-		return $this->data ?: $this->data_source->getQuery()->getResult();
+		$result = $this->getQuery()->getResult();
+		$this->onDataLoaded($result);
+
+		return $result;
 	}
 
 
 	/**
 	 * Filter data - get one row
-	 * @param array $condition
+	 * @param  array  $condition
 	 * @return static
 	 */
 	public function filterOne(array $condition)
@@ -122,8 +137,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Filter by date
-	 * @param  Filter\FilterDate $filter
-	 * @return static
+	 * @param Filter\FilterDate  $filter
 	 */
 	public function applyFilterDate(Filter\FilterDate $filter)
 	{
@@ -140,15 +154,12 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 				->setParameter($p1, $date->format('Y-m-d 00:00:00'))
 				->setParameter($p2, $date->format('Y-m-d 23:59:59'));
 		}
-
-		return $this;
 	}
 
 
 	/**
 	 * Filter by date range
-	 * @param  Filter\FilterDateRange $filter
-	 * @return void
+	 * @param Filter\FilterDateRange  $filter
 	 */
 	public function applyFilterDateRange(Filter\FilterDateRange $filter)
 	{
@@ -180,8 +191,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Filter by range
-	 * @param  Filter\FilterRange $filter
-	 * @return void
+	 * @param Filter\FilterRange  $filter
 	 */
 	public function applyFilterRange(Filter\FilterRange $filter)
 	{
@@ -205,8 +215,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Filter by keyword
-	 * @param  Filter\FilterText $filter
-	 * @return void
+	 * @param Filter\FilterText  $filter
 	 */
 	public function applyFilterText(Filter\FilterText $filter)
 	{
@@ -235,8 +244,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Filter by multi select value
-	 * @param  Filter\FilterMultiSelect $filter
-	 * @return void
+	 * @param Filter\FilterMultiSelect  $filter
 	 */
 	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter)
 	{
@@ -252,8 +260,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Filter by select value
-	 * @param  Filter\FilterSelect $filter
-	 * @return void
+	 * @param Filter\FilterSelect  $filter
 	 */
 	public function applyFilterSelect(Filter\FilterSelect $filter)
 	{
@@ -270,8 +277,8 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Apply limit and offset on data
-	 * @param int $offset
-	 * @param int $limit
+	 * @param  int  $offset
+	 * @param  int  $limit
 	 * @return static
 	 */
 	public function limit($offset, $limit)
@@ -324,9 +331,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function getPlaceholder()
 	{
-		$this->placeholder++;
-
-		return $this->placeholder;
+		return $this->placeholder++;
 	}
 
 }
