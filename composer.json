@@ -33,9 +33,10 @@
 		"symfony/property-access": "~3.0"
 	},
 	"require-dev": {
-		"nette/tester"     : "^1.6.1",
+		"nette/tester"     : "^1.6",
 		"tracy/tracy"      : "^2.3.0",
 		"mockery/mockery"  : "~0.9",
-		"tharos/leanmapper": "~2.2.0"
+		"tharos/leanmapper": "~2.2.0",
+                "nextras/orm"      : "~2.0"
 	}
 }
