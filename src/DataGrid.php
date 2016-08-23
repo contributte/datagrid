@@ -555,6 +555,19 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * @return DataSource\IDataSource|NULL
+	 */
+	public function getDataSource()
+	{
+		if (!$this->dataModel) {
+			return NULL;
+		}
+
+		return $this->dataModel->getDataSource();
+	}
+
+
 	/********************************************************************************
 	 *                                  TEMPLATING                                  *
 	 ********************************************************************************/
@@ -703,7 +716,7 @@ class DataGrid extends Nette\Application\UI\Control
 	protected function createSorting(array $sort, $sort_callback)
 	{
 		foreach ($sort as $key => $order) {
-			$column = $this->columns[$key];
+			$column = $this->getColumn($key);
 			$sort = [$column->getSortingColumn() => $order];
 		}
 

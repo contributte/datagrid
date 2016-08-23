@@ -271,6 +271,11 @@
 		td.col-action {
 			text-align: right;
 		}
+
+		th.datagrid-fit-content, td.datagrid-fit-content {
+			width: 1%;
+			white-space: nowrap;
+		}
 	}
 
 	.datagrid-tree {
