@@ -45,7 +45,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	/**
 	 * @var int
 	 */
-	protected $placeholder = 0;
+	protected $placeholder;
 
 
 	/**
@@ -54,6 +54,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function __construct(QueryBuilder $data_source, $primary_key)
 	{
+		$this->placeholder = count($data_source->getParameters());
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
 	}
