@@ -172,7 +172,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			$args = [];
 
 			if($filter->isExactSearch()){
-				$like .=  "$column = ? ";
+				$like .=  "$column = ? OR ";
 				$args[] = "$value";
 			} else {
                 if ($filter->hasSplitWordsSearch() === FALSE) {
@@ -180,12 +180,13 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
                 } else {
                     $words = explode(' ', $value);
                 }
-				foreach ($words as $word) {
-					$like .= "$column LIKE ? OR ";
-					$args[] = "%$word%";
-				}
-				$like = substr($like, 0, strlen($like) - 4) . ')';
-			}
+                foreach ($words as $word) {
+                    $like .= "$column LIKE ? OR ";
+                    $args[] = "%$word%";
+                }
+            }
+            $like = substr($like, 0, strlen($like) - 4) . ')';
+
 			$or[] = $like;
 			$big_or .= "$like OR ";
 			$big_or_args = array_merge($big_or_args, $args);
