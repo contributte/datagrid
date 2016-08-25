@@ -14,9 +14,7 @@ use Ublaboo\DataGrid\Filter\FilterMultiSelect;
 use Ublaboo\DataGrid\Filter\FilterRange;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterText;
-use Nette\Utils\Callback;
 use Nette\Utils\Strings;
-use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridArrayDataSourceException;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
@@ -133,7 +131,7 @@ class ArrayDataSource implements IDataSource
 	 * Apply fitler and tell whether row passes conditions or not
 	 * @param  mixed  $row
 	 * @param  Filter $filter
-	 * @return mixed
+	 * @return bool
 	 */
 	protected function applyFilter($row, Filter $filter)
 	{
@@ -151,7 +149,11 @@ class ArrayDataSource implements IDataSource
 			$condition = $filter->getCondition();
 
 			foreach ($condition as $column => $value) {
-				if ($filter instanceof FilterText && $filter->hasSplitWordsSearch() === FALSE) {
+                if ($filter instanceof FilterText && $filter->isExactSearch()) {
+                    return $row[$column] == $value;
+                }
+
+                if ($filter instanceof FilterText && $filter->hasSplitWordsSearch() === FALSE) {
 					$words = [$value];
 				} else {
 					$words = explode(' ', $value);
