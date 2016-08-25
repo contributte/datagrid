@@ -158,11 +158,17 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			if ($filter->hasSplitWordsSearch() === FALSE) {
-				$words = [$value];
-			} else {
-				$words = explode(' ', $value);
+
+			if($filter->isExactSearch()){
+				$this->data_source->where("$column = %s", $value);
+				continue;
 			}
+
+            if ($filter->hasSplitWordsSearch() === FALSE) {
+                $words = [$value];
+            } else {
+                $words = explode(' ', $value);
+            }
 
 			foreach ($words as $word) {
 				$escaped = $this->data_source->getConnection()->getDriver()->escapeLike($word, 0);
