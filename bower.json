@@ -18,7 +18,7 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "src",
+    "/src",
     "composer.json",
     "tests"
   ],
