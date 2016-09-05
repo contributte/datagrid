@@ -534,9 +534,10 @@ datagridFitlerMultiSelect = function() {
   var select;
   select = $('.selectpicker').first();
   if ($.fn.selectpicker) {
+    var tickIkon = select.data('selected-icon-check');
     return $.fn.selectpicker.defaults = {
       countSelectedText: select.data('i18n-selected'),
-      iconBase: '',
+      iconBase: ((tickIkon == null) ? "glyphicon" : ""),
       tickIcon: select.data('selected-icon-check')
     };
   }
