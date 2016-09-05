@@ -15,3 +15,9 @@ install:
 
 script:
     - vendor/bin/tester -p php  -c tests/php.ini tests/
+
+before_script:
+    - mysql -e 'create database datagridTest;'
+
+services:
+    - mysql
