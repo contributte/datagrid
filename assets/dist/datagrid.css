@@ -239,6 +239,12 @@
   text-align: right;
 }
 
+.datagrid table th.datagrid-fit-content,
+.datagrid table td.datagrid-fit-content {
+  width: 1%;
+  white-space: nowrap;
+}
+
 .datagrid .datagrid-tree > .datagrid-tree-header .datagrid-tree-item-right-actions-action {
   opacity: 0;
 }

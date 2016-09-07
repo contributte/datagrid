@@ -354,7 +354,7 @@ $.nette.ext('datargid.item_detail', {
       id = settings.nette.el.attr('data-toggle-detail');
       row_detail = $('.item-detail-' + id);
       if (row_detail.hasClass('loaded')) {
-        if (!row_detail.find('.item-detail-content').length) {
+        if (!row_detail.find('.item-detail-content').size()) {
           row_detail.removeClass('toggled');
           return true;
         }
@@ -534,10 +534,9 @@ datagridFitlerMultiSelect = function() {
   var select;
   select = $('.selectpicker').first();
   if ($.fn.selectpicker) {
-    var tickIkon = select.data('selected-icon-check');
     return $.fn.selectpicker.defaults = {
       countSelectedText: select.data('i18n-selected'),
-      iconBase: ((tickIkon == null) ? "glyphicon" : ""),
+      iconBase: '',
       tickIcon: select.data('selected-icon-check')
     };
   }
@@ -572,4 +571,11 @@ $.nette.ext('datagrid.redraw-item', {
       return row.attr('class', payload._datagrid_redraw_item_class);
     }
   }
+});
+
+$(function() {
+  return $.nette.ajax({
+    type: 'GET',
+    url: $('.datagrid').first().data('refresh-state')
+  });
 });

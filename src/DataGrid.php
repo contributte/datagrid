@@ -3072,4 +3072,20 @@ class DataGrid extends Nette\Application\UI\Control
 		return $this->some_column_default_hide;
 	}
 
+
+	/**
+	 * Simply refresh url
+	 * @return void
+	 */
+	public function handleRefreshState()
+	{
+		$this->findSessionValues();
+		$this->findDefaultFilter();
+		$this->findDefaultSort();
+		$this->findDefaultPerPage();
+
+		$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
+		$this->redrawControl('non-existing-snippet');
+	}
+
 }
