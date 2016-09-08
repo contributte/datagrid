@@ -226,6 +226,7 @@ class ArrayDataSource implements IDataSource
 
 		if ($values['from'] !== NULL && $values['from'] !== '') {
 			$date_from = \DateTime::createFromFormat($format, $values['from']);
+			$date_from->setTime(0, 0, 0);
 
 			if (!($row_value instanceof \DateTime)) {
 				/**
@@ -247,7 +248,8 @@ class ArrayDataSource implements IDataSource
 		}
 
 		if ($values['to'] !== NULL && $values['to'] !== '') {
-			$date_from = \DateTime::createFromFormat($format, $values['to']);
+			$date_to = \DateTime::createFromFormat($format, $values['to']);
+			$date_to->setTime(23, 59, 59);
 
 			if (!($row_value instanceof \DateTime)) {
 				/**
@@ -263,7 +265,7 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 
-			if ($row_value->getTimeStamp() > $date_from->getTimeStamp()) {
+			if ($row_value->getTimeStamp() > $date_to->getTimeStamp()) {
 				return FALSE;
 			}
 		}
