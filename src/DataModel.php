@@ -48,7 +48,7 @@ class DataModel
 		} else if (is_array($source)) {
 			$source = new DataSource\ArrayDataSource($source);
 
-		} else if (class_exists('DibiFluent') && $source instanceof DibiFluent) {
+		} else if ($source instanceof DibiFluent) {
 			$driver = $source->getConnection()->getDriver();
 
 			if ($driver instanceof DibiOdbcDriver) {
@@ -61,7 +61,7 @@ class DataModel
 				$source = new DataSource\DibiFluentDataSource($source, $primary_key);
 			}
 
-		} else if (class_exists('Nette\Database\Table\Selection') && $source instanceof Selection) {
+		} else if ($source instanceof Selection) {
 			$driver = NetteDatabaseSelectionHelper::getDriver($source);
 
 			if ($driver instanceof NDBDrivers\MsSqlDriver || $driver instanceof NDBDrivers\SqlsrvDriver) {
@@ -70,13 +70,13 @@ class DataModel
 				$source = new DataSource\NetteDatabaseTableDataSource($source, $primary_key);
 			}
 
-		} else if (class_exists('Doctrine\ORM\QueryBuilder') && $source instanceof QueryBuilder) {
+		} else if ($source instanceof QueryBuilder) {
 			$source = new DataSource\DoctrineDataSource($source, $primary_key);
 
-		} else if (interface_exists('Doctrine\Common\Collections\Collection') && $source instanceof Collection) {
+		} else if ($source instanceof Collection) {
 			$source = new DataSource\DoctrineCollectionDataSource($source, $primary_key);
 
-		} elseif (interface_exists('Nextras\Orm\Collection\ICollection') && $source instanceof ICollection) {
+		} elseif ($source instanceof ICollection) {
 			$source = new DataSource\NextrasDataSource($source, $primary_key);
 
 		} else {
