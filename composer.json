@@ -37,6 +37,7 @@
 		"tracy/tracy"      : "^2.3.0",
 		"mockery/mockery"  : "~0.9",
 		"tharos/leanmapper": "~2.2.0",
+		"nextras/orm"      : "~2.0",
 		"doctrine/orm"	   : "~2.5",
 		"nette/database"   : "^2.3|^2.4"
 	}

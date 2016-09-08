@@ -174,7 +174,7 @@ if typeof datagridSortableTree == 'undefined'
 
 		$('.datagrid-tree-item-children').sortable({
 			handle: '.handle-sort',
-			items: '.datagrid-tree-item',
+			items: '.datagrid-tree-item:not(.datagrid-tree-item:first-child)',
 			toleranceElement: '> .datagrid-tree-item-content',
 			connectWith: '.datagrid-tree-item-children',
 			update: (event, ui) ->
@@ -527,3 +527,12 @@ $.nette.ext('datagrid.redraw-item', {
 			row = $('tr[data-id=' + payload._datagrid_redraw_item_id + ']')
 			row.attr('class', payload._datagrid_redraw_item_class)
 })
+
+
+# On page load - check whether the url shoud be changed using history API
+#
+$ ->
+	$.nette.ajax({
+		type: 'GET',
+		url: $('.datagrid').first().data('refresh-state')
+	})

@@ -94,6 +94,9 @@ class Row extends Nette\Object
 		} else if ($this->item instanceof ActiveRow) {
 			return $this->item->{$key};
 
+		} else if ($this->item instanceof Nette\Database\Row) {
+			return $this->item->{$key};
+
 		} else if (is_array($this->item)) {
 			return $this->item[$key];
 

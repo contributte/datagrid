@@ -2085,6 +2085,7 @@ class DataGrid extends Nette\Application\UI\Control
 		if ($this->getPresenter()->isAjax()) {
 			$this->getPresenter()->payload->_datagrid_toggle_detail = $id;
 			$this->redrawControl('items');
+			$this->redrawControl('gridSnippets'); 
 
 			$this->onRedraw();
 		} else {
@@ -2813,6 +2814,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->inlineAdd = new InlineEdit($this);
 
 		$this->inlineAdd
+			->setTitle('ublaboo_datagrid.add')
 			->setIcon('plus')
 			->setClass('btn btn-xs btn-default');
 
@@ -3069,6 +3071,22 @@ class DataGrid extends Nette\Application\UI\Control
 	public function hasSomeColumnDefaultHide()
 	{
 		return $this->some_column_default_hide;
+	}
+
+
+	/**
+	 * Simply refresh url
+	 * @return void
+	 */
+	public function handleRefreshState()
+	{
+		$this->findSessionValues();
+		$this->findDefaultFilter();
+		$this->findDefaultSort();
+		$this->findDefaultPerPage();
+
+		$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
+		$this->redrawControl('non-existing-snippet');
 	}
 
 }
