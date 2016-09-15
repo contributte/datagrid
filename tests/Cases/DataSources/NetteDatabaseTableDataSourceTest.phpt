@@ -37,15 +37,15 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
         $conventions = new DiscoveredConventions($structure);
         $this->db = new Context($connection, $structure, $conventions, $storage);
 
-        $this->db->query('CREATE TABLE users (
-                                id      INTEGER      PRIMARY KEY AUTOINCREMENT,
-                                name    VARCHAR (50),
-                                age     INTEGER (3),
-                                address VARCHAR (50) 
-                            );
-        ');
-        foreach($this->data as $row){
+        $this->db->query(file_get_contents(__DIR__ . '/config/schema_users.sql'));
+        $this->db->query(file_get_contents(__DIR__ . '/config/schema_cities.sql'));
+
+        foreach($this->data['users'] as $row) {
             $this->db->query('INSERT INTO users', $row);
+        }
+
+        foreach($this->data['cities'] as $row) {
+            $this->db->query('INSERT INTO cities', $row);
         }
     }
 

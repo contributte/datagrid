@@ -11,7 +11,7 @@ final class ArrayDataSourceTest extends BaseDataSourceTest
 
 	public function setUp()
 	{
-		$this->ds = new Ublaboo\DataGrid\DataSource\ArrayDataSource($this->data);
+		$this->ds = new Ublaboo\DataGrid\DataSource\ArrayDataSource($this->data['users']);
 		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
 		$this->grid = $factory->createXTestingDataGrid();
 	}
