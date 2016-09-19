@@ -1533,8 +1533,10 @@ class DataGrid extends Nette\Application\UI\Control
 				if ($edit['submit']->isSubmittedBy()) {
 					$this->inlineEdit->onSubmit($id, $values->inline_edit);
 					$this->getPresenter()->payload->_datagrid_inline_edited = $id;
+					$this->getPresenter()->payload->_datagrid_name = $this->getName();
 				} else {
 					$this->getPresenter()->payload->_datagrid_inline_edit_cancel = $id;
+					$this->getPresenter()->payload->_datagrid_name = $this->getName();
 				}
 
 				if ($edit['submit']->isSubmittedBy() && !empty($this->inlineEdit->onCustomRedraw)) {

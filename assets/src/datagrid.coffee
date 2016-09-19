@@ -449,11 +449,13 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 #
 $.nette.ext('datagrid.after_inline_edit', {
 	success: (payload) ->
+		grid = $('.datagrid-' + payload._datagrid_name)
+
 		if payload._datagrid_inline_edited
-			$('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited')
-			$('.datagrid-inline-edit-trigger').removeClass('hidden')
+			grid.find('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited')
+			grid.find('.datagrid-inline-edit-trigger').removeClass('hidden')
 		else if payload._datagrid_inline_edit_cancel
-			$('.datagrid-inline-edit-trigger').removeClass('hidden')
+			grid.find('.datagrid-inline-edit-trigger').removeClass('hidden')
 })
 
 

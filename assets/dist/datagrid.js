@@ -186,7 +186,7 @@ if (typeof datagridSortableTree === 'undefined') {
     }
     return $('.datagrid-tree-item-children').sortable({
       handle: '.handle-sort',
-      items: '.datagrid-tree-item',
+      items: '.datagrid-tree-item:not(.datagrid-tree-item:first-child)',
       toleranceElement: '> .datagrid-tree-item-content',
       connectWith: '.datagrid-tree-item-children',
       update: function(event, ui) {
@@ -494,11 +494,13 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
 
 $.nette.ext('datagrid.after_inline_edit', {
   success: function(payload) {
+    var grid;
+    grid = $('.datagrid-' + payload._datagrid_name);
     if (payload._datagrid_inline_edited) {
-      $('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited');
-      return $('.datagrid-inline-edit-trigger').removeClass('hidden');
+      grid.find('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited');
+      return grid.find('.datagrid-inline-edit-trigger').removeClass('hidden');
     } else if (payload._datagrid_inline_edit_cancel) {
-      return $('.datagrid-inline-edit-trigger').removeClass('hidden');
+      return grid.find('.datagrid-inline-edit-trigger').removeClass('hidden');
     }
   }
 });
