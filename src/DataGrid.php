@@ -713,6 +713,11 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * @param  array         $sort
+	 * @param  callable|NULL $sort_callback
+	 * @return void
+	 */
 	protected function createSorting(array $sort, $sort_callback)
 	{
 		foreach ($sort as $key => $order) {

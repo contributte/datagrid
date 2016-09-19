@@ -469,6 +469,17 @@ abstract class Column extends FilterableColumn
 
 
 	/**
+	 * @return bool
+	 */
+	public function hasSortNext()
+	{
+		foreach ($this->getSortNext() as $key => $order) {
+			return $order !== FALSE;
+		}
+	}
+
+
+	/**
 	 * Is sorting ascending?
 	 * @return bool
 	 */
