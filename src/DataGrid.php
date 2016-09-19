@@ -3059,6 +3059,15 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * @return strign
+	 */
+	public function getSortableParentPath()
+	{
+		return $this->getParent()->lookupPath(Nette\Application\UI\Control::class, FALSE);
+	}
+
+
+	/**
 	 * Some of datagrid columns is hidden by default
 	 * @param bool $default_hide
 	 */

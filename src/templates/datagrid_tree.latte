@@ -10,7 +10,7 @@
 
 {extends $original_template}
 
-<div class="datagrid-tree-item-children datagrid-tree" n:snippet="table" n:block="data" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink $control->getSortableHandler()}"{/}>
+<div class="datagrid-tree-item-children datagrid-tree" n:snippet="table" n:block="data" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/if}>
 	{snippetArea items}
 		<div class="datagrid-tree-item datagrid-tree-header" n:snippet="item-header">
 			<div class="datagrid-tree-item-content" data-has-children="">

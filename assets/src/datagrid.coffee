@@ -149,10 +149,19 @@ datagridSortable = ->
 
 			url = $(this).data('sortable-url')
 
+			data = {};
+			component_prefix = row.closest('.datagrid').find('tbody').attr('data-sortable-parent-path')
+
+			data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id
+			data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id
+			data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id
+
+			console.log(data)
+
 			$.nette.ajax({
 				type: 'GET',
 				url: url,
-				data: {item_id: item_id, prev_id: prev_id, next_id: next_id},
+				data: data,
 				error: (jqXHR, textStatus, errorThrown) ->
 					alert(jqXHR.statusText)
 			})
@@ -208,10 +217,18 @@ if typeof datagridSortableTree == 'undefined'
 
 				parent.find('[data-toggle-tree]').first().removeClass('hidden')
 
+				component_prefix = row.closest('.datagrid-tree').attr('data-sortable-parent-path')
+				data = {}
+
+				data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id
+				data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id
+				data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id
+				data[(component_prefix + '-parent_id').replace(/^-/, '')] = parent_id
+
 				$.nette.ajax({
 					type: 'GET',
 					url: url,
-					data: {item_id: item_id, prev_id: prev_id, next_id: next_id, parent_id: parent_id},
+					data: data,
 					error: (jqXHR, textStatus, errorThrown) ->
 						if errorThrown != 'abort'
 							alert(jqXHR.statusText)
