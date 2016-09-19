@@ -927,6 +927,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function removeColumn($key)
 	{
+		unset($this->columns_visibility[$key]);
 		unset($this->columns[$key]);
 	}
 

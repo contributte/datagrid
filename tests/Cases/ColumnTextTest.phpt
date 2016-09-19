@@ -57,6 +57,14 @@ final class ColumnStatusTest extends TestCase
 		Assert::same(2, $current_option->getValue());
 	}
 
+
+	public function testRemoveColumn()
+	{
+		$grid = $this->grid;
+		$grid->addColumnText('test', 'Test');
+		$grid->removeColumn('test');
+		$grid->getColumnsVisibility();
+	}
 }
 
 

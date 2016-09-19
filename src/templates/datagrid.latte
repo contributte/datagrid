@@ -355,7 +355,7 @@
 											{if $control->getPerPage() === 'all'}
 												{_'ublaboo_datagrid.items'}: {_'ublaboo_datagrid.all'}
 											{else}
-												{_'ublaboo_datagrid.items'}: {$paginator->getOffset() + 1} - {sizeof($rows) + $paginator->getOffset()}
+												{_'ublaboo_datagrid.items'}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : 0} - {sizeof($rows) + $paginator->getOffset()}
 												{_'ublaboo_datagrid.from'} {$paginator->getItemCount()}
 											{/if})
 										</small>

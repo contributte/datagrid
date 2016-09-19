@@ -484,12 +484,6 @@
 	select {
 		padding: 0;
 		text-transform: none;
-
-		&[disabled] {
-			&:hover, &:focus {
-				@extend .level-0;
-			}
-		}
 	}
 
 	.row-grid-bottom {
