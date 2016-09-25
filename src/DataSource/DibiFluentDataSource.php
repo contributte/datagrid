@@ -137,7 +137,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		$value_from = $conditions[$filter->getColumn()]['from'];
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
-        if ($value_from || $value_from != '') {
+		if ($value_from || $value_from != '') {
 			$this->data_source->where('%n >= ?', $filter->getColumn(), $value_from);
 		}
 
@@ -158,6 +158,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
+			if($filter->isExactSearch()){
+				$this->data_source->where("$column = %s", $value);
+				continue;
+			}
+
 			if ($filter->hasSplitWordsSearch() === FALSE) {
 				$words = [$value];
 			} else {

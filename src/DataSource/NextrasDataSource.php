@@ -84,7 +84,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 			$cond[$this->prepareColumn($key)] = $value;
 		}
 		$this->data_source = $this->data_source->findBy($cond);
-                
+
 		return $this;
 	}
 
@@ -179,6 +179,13 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		$params = [];
 
 		foreach ($condition as $column => $value) {
+			if($filter->isExactSearch()){
+				$expr .= "%column = %s OR ";
+				$params[] = $column;
+				$params[] = "$value";
+				continue;
+			}
+
 			if ($filter->hasSplitWordsSearch() === FALSE) {
 				$words = [$value];
 			} else {
@@ -286,13 +293,13 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 		return $this;
 	}
-        
-        /**
-         * Adjust column from DataGrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
-         * @param string $column
-         * @return string
-         */
-        private function prepareColumn($column) {
+
+		/**
+		 * Adjust column from DataGrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
+		 * @param string $column
+		 * @return string
+		 */
+		private function prepareColumn($column) {
 		if (Strings::contains($column, '.')) {
 			return 'this->' . str_replace('.', '->', $column);
 		}
