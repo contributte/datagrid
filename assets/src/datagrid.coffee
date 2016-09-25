@@ -546,12 +546,3 @@ $.nette.ext('datagrid.redraw-item', {
 			row = $('tr[data-id=' + payload._datagrid_redraw_item_id + ']')
 			row.attr('class', payload._datagrid_redraw_item_class)
 })
-
-
-# On page load - check whether the url shoud be changed using history API
-#
-$ ->
-	$.nette.ajax({
-		type: 'GET',
-		url: $('.datagrid').first().data('refresh-state')
-	})

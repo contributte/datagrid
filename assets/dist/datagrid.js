@@ -577,10 +577,3 @@ $.nette.ext('datagrid.redraw-item', {
     }
   }
 });
-
-$(function() {
-  return $.nette.ajax({
-    type: 'GET',
-    url: $('.datagrid').first().data('refresh-state')
-  });
-});
