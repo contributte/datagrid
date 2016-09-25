@@ -2093,7 +2093,13 @@ class DataGrid extends Nette\Application\UI\Control
 		if ($this->getPresenter()->isAjax()) {
 			$this->getPresenter()->payload->_datagrid_toggle_detail = $id;
 			$this->redrawControl('items');
-			$this->redrawControl('gridSnippets'); 
+
+			/**
+			 * Only for nette 2.4
+			 */
+			if (method_exists($this->getTemplate()->getLatte(), 'addProvider')) {
+				$this->redrawControl('gridSnippets');
+			}
 
 			$this->onRedraw();
 		} else {
