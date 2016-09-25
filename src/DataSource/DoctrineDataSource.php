@@ -224,13 +224,18 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		$exprs = [];
 
 		foreach ($condition as $column => $value) {
+			$c = $this->checkAliases($column);
+
+			if($filter->isExactSearch()){
+				$exprs[] = $this->data_source->expr()->eq($c, $this->data_source->expr()->literal($value));
+				continue;
+			}
+
 			if ($filter->hasSplitWordsSearch() === FALSE) {
 				$words = [$value];
 			} else {
 				$words = explode(' ', $value);
 			}
-
-			$c = $this->checkAliases($column);
 
 			foreach ($words as $word) {
 				$exprs[] = $this->data_source->expr()->like($c, $this->data_source->expr()->literal("%$word%"));
