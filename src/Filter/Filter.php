@@ -133,16 +133,18 @@ abstract class Filter extends Nette\Object
 	/**
 	 * Set filter value
 	 * @param mixed $value
+	 * @return static
 	 */
 	public function setValue($value)
 	{
 		$this->value = $value;
 		$this->value_set = TRUE;
+		return $this;
 	}
 
 
 	/**
-	 * Get fitler value
+	 * Get filter value
 	 * @return mixed
 	 */
 	public function getValue()
