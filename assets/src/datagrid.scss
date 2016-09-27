@@ -50,6 +50,7 @@
 	.datagrid-toolbar {
 		margin-top: .35em;
 		float: right;
+		display: inline-block;
 
 		& > span {
 			margin-left: 1em;
@@ -71,6 +72,8 @@
 	}
 
 	.datagrid-settings {
+		display: inline-block;
+
 		.dropdown-menu--grid {
 			font-size: 12px;
 
@@ -123,20 +126,6 @@
 					}
 				}
 
-				.column-settings-menu {
-					opacity: 0;
-					cursor: pointer;
-					margin-left: 2px;
-
-					.dropdown-menu {
-						font-size: 12px;
-
-						li .fa {
-							margin-right: 0.5em;
-						}
-					}
-				}
-
 				&.row-group-actions {
 					th {
 						border-bottom-width: 0 !important;
@@ -150,6 +139,30 @@
 
 					hr {
 						margin: 8px -8px;
+					}
+
+					.datagrid-column-header-additions {
+						float: right;
+
+						a[data-datagrid-reset-filter-by-column] {
+							margin-left: 0.3em;
+							color: #858585;
+						}
+
+						.column-settings-menu {
+							opacity: 0;
+							cursor: pointer;
+							margin-left: 2px;
+							display: inline-block;
+
+							.dropdown-menu {
+								font-size: 12px;
+
+								li .fa {
+									margin-right: 0.5em;
+								}
+							}
+						}
 					}
 
 					.datagrid-col-filter-date-range, .datagrid-col-filter-range {
@@ -177,7 +190,7 @@
 					}
 
 					&:hover {
-						> .column-settings-menu {
+						.column-settings-menu {
 							opacity: 1;
 						}
 					}

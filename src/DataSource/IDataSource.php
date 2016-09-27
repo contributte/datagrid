@@ -59,4 +59,19 @@ interface IDataSource
 	 */
 	public function sort(Sorting $sorting);
 
+
+	/**
+	 * @param string $aggregation_type
+	 * @param string $column
+	 * @return mixed
+	 */
+	public function addAggregationColumn($aggregation_type, $column);
+
+	/**
+	 * get aggregation row
+	 * @return array
+	 */
+	public function getAggregationData();
+
+
 }

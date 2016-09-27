@@ -39,6 +39,7 @@
 		"tharos/leanmapper": "~2.2.0",
 		"nextras/orm"      : "~2.0",
 		"doctrine/orm"	   : "~2.5",
-		"nette/database"   : "^2.3|^2.4"
+		"nette/database"   : "^2.3|^2.4",
+		"dibi/dibi"   : "^3.0"
 	}
 }

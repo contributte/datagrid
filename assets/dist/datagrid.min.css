@@ -6,10 +6,11 @@
 .datagrid .datagrid-row-columns-summary td{border-top:2px solid #bbb;border-left:1px solid #eee;border-right:1px solid #eee;font-weight:700}
 .datagrid .datagrid-row-columns-summary td:first-child{border-left:1px solid #ddd}
 .datagrid .datagrid-row-columns-summary td:last-child{border-right:1px solid #ddd}
-.datagrid .datagrid-toolbar{margin-top:.35em;float:right}
+.datagrid .datagrid-toolbar{margin-top:.35em;float:right;display:inline-block}
 .datagrid .datagrid-toolbar>span{margin-left:1em}
 .datagrid .datagrid-exports .btn,.datagrid .datagrid-toolbar>span>a{margin-left:.5em}
 .datagrid .datagrid-exports .btn:first-child{margin-left:0}
+.datagrid .datagrid-settings{display:inline-block}
 .datagrid .datagrid-settings .dropdown-menu--grid{font-size:12px}
 .datagrid .datagrid-settings .dropdown-menu--grid li .fa{margin-right:.5em}
 .datagrid .row-reset-filter{text-align:right;margin-bottom:.5em}
@@ -19,17 +20,19 @@
 .datagrid table{margin:0}
 .datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn),.datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn)>.btn{width:auto}
 .datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) .dropdown-menu li{font-size:13px}
-.datagrid table thead tr .column-settings-menu{opacity:0;cursor:pointer;margin-left:2px}
-.datagrid table thead tr .column-settings-menu .dropdown-menu{font-size:12px}
-.datagrid table thead tr .column-settings-menu .dropdown-menu li .fa{margin-right:.5em}
 .datagrid table thead tr.row-group-actions th{border-bottom-width:0!important;background-color:#f9f9f9}
 .datagrid table thead tr th{font-size:90%;vertical-align:top}
 .datagrid table thead tr th hr{margin:8px -8px}
+.datagrid table thead tr th .datagrid-column-header-additions{float:right}
+.datagrid table thead tr th .datagrid-column-header-additions a[data-datagrid-reset-filter-by-column]{margin-left:.3em;color:#858585}
+.datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu{opacity:0;cursor:pointer;margin-left:2px;display:inline-block}
+.datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-menu{font-size:12px}
+.datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-menu li .fa{margin-right:.5em}
 .datagrid table thead tr th .datagrid-col-filter-date-range .input-group .datagrid-filter-date-range-last,.datagrid table thead tr th .datagrid-col-filter-range .input-group .datagrid-filter-date-range-last{-webkit-border-radius:3px 0 0 3px;-moz-border-radius:3px 0 0 3px;border-radius:3px 0 0 3px}
 .datagrid table thead tr th .datagrid-col-filter-date-range .input-group .input-group-addon-first,.datagrid table thead tr th .datagrid-col-filter-range .input-group .input-group-addon-first{-webkit-border-radius:0 3px 3px 0;-moz-border-radius:0 3px 3px 0;border-radius:0 3px 3px 0;border-left:0}
 .datagrid table thead tr th .datagrid-col-filter-date-range .input-group .datagrid-col-filter-datte-range-delimiter,.datagrid table thead tr th .datagrid-col-filter-range .input-group .datagrid-col-filter-datte-range-delimiter{background-color:inherit;border:none}
 .datagrid table thead tr th .datagrid-col-filter-range .form-control{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px}
-.datagrid table thead tr th:hover>.column-settings-menu{opacity:1}
+.datagrid table thead tr th:hover .column-settings-menu{opacity:1}
 .datagrid table tbody td{vertical-align:middle}
 .datagrid table tbody tr.ui-sortable-helper{display:table}
 .datagrid table tbody tr.row-item-detail{display:none}

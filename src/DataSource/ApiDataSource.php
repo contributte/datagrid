@@ -198,4 +198,22 @@ class ApiDataSource implements IDataSource
 		return $this;
 	}
 
+	/**
+	 * @param string $aggregation_type
+	 * @param string $column
+	 * @return mixed
+	 */
+	public function addAggregationColumn($aggregation_type, $column)
+	{
+		// TODO: Implement addAggregationColumn() method.
+	}
+
+	/**
+	 * get aggregation row
+	 * @return array
+	 */
+	public function getAggregationData()
+	{
+		// TODO: Implement getAggregationData() method.
+	}
 }

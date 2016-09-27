@@ -8,6 +8,7 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Ublaboo\DataGrid\Column\ColumnAggregationFunction;
 use Ublaboo\DataGrid\Filter\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
@@ -30,6 +31,16 @@ class ArrayDataSource implements IDataSource
 	 */
 	protected $data = [];
 
+	/**
+	 * @var array
+	 */
+	protected $aggregations = [];
+
+	/**
+	 * @var int
+	 */
+	protected $count = 0;
+
 
 	/**
 	 * @param array $data_source
@@ -37,6 +48,7 @@ class ArrayDataSource implements IDataSource
 	public function __construct(array $data_source)
 	{
 		$this->data = $data_source;
+		$this->count = sizeof($data_source);
 	}
 
 
@@ -51,7 +63,7 @@ class ArrayDataSource implements IDataSource
 	 */
 	public function getCount()
 	{
-		return sizeof($this->data);
+		return $this->count;
 	}
 
 
@@ -81,7 +93,7 @@ class ArrayDataSource implements IDataSource
 						[$this->data, $filter->getValue()]
 					);
 				} else {
-					$this->data = array_filter($this->data, function($row) use ($filter) {
+					$this->data = array_filter($this->data, function ($row) use ($filter) {
 						return $this->applyFilter($row, $filter);
 					});
 				}
@@ -340,7 +352,11 @@ class ArrayDataSource implements IDataSource
 			$data = [];
 
 			foreach ($this->data as $item) {
-				$sort_by = (string) $item[$column];
+				if (is_object($item[$column]) && $item[$column] instanceof \DateTime) {
+					$sort_by = $item[$column]->format('Y-m-d H:i:s');
+				} else {
+					$sort_by = (string) $item[$column];
+				}
 				$data[$sort_by][] = $item;
 			}
 
@@ -362,4 +378,52 @@ class ArrayDataSource implements IDataSource
 		return $this;
 	}
 
+	/**
+	 * @param string $aggregation_type
+	 * @param string $column
+	 * @return mixed
+	 */
+	public function addAggregationColumn($aggregation_type, $column)
+	{
+		$this->aggregations[$column] = $aggregation_type;
+	}
+
+	/**
+	 * get aggregation row
+	 * @return array
+	 */
+	public function getAggregationData()
+	{
+		$result = [];
+		foreach ($this->data as $row) {
+			foreach ($this->aggregations as $column => $aggregation_type) {
+				switch ($aggregation_type) {
+					case ColumnAggregationFunction::$aggregation_type_sum:
+					case ColumnAggregationFunction::$aggregation_type_avg:
+						if (!isset($result[$column])) {
+							$result[$column] = 0;
+						}
+						$result[$column] += $row[$column];
+						break;
+					case ColumnAggregationFunction::$aggregation_type_min:
+						if (!isset($result[$column]) || $row[$column] < $result[$column]) {
+							$result[$column] = $row[$column];
+						}
+						break;
+					case ColumnAggregationFunction::$aggregation_type_max:
+						if (!isset($result[$column]) || $row[$column] > $result[$column]) {
+							$result[$column] = $row[$column];
+						}
+						break;
+				}
+			}
+		}
+
+		foreach ($this->aggregations as $column => $aggregation_type) {
+			if ($aggregation_type == ColumnAggregationFunction::$aggregation_type_avg) {
+				$result[$column] =  $result[$column] / count($this->data);
+			}
+		}
+		return $result;
+	}
 }

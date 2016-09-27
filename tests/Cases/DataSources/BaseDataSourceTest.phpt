@@ -157,6 +157,44 @@ abstract class BaseDataSourceTest extends TestCase
         Assert::equal([$this->data[2]], $this->getActualResultAsArray());
     }
 
+    public function testSum(){
+		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::$aggregation_type_sum, 'age');
+		$data = $this->toArray($this->ds->getAggregationData());
+
+		Assert::equal((int)$data['age'], 230);
+	}
+
+	public function testFilteredSum(){
+
+		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter->setValue('John Red');
+		$this->ds->filter([$filter]);
+		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::$aggregation_type_sum, 'age');
+
+		$data = $this->toArray($this->ds->getAggregationData());
+		Assert::equal((int)$data['age'], 70);
+	}
+
+	public function testAvg(){
+		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::$aggregation_type_avg, 'age');
+		$data = $this->toArray($this->ds->getAggregationData());
+		Assert::equal(substr($data['age'], 0, 5), '38.33');
+	}
+
+	public function testMin(){
+		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::$aggregation_type_min, 'age');
+		$data = $this->toArray($this->ds->getAggregationData());
+		Assert::equal((int)$data['age'], 8);
+	}
+
+
+	public function testMax(){
+		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::$aggregation_type_max, 'age');
+		$data = $this->toArray($this->ds->getAggregationData());
+		Assert::equal((int)$data['age'], 80);
+	}
+
+
     public function testLimit()
     {
         $this->ds->limit(2, 2);
@@ -188,11 +226,16 @@ abstract class BaseDataSourceTest extends TestCase
     protected function getActualResultAsArray()
     {
         return array_values(
-            json_decode(
-                json_encode($this->ds->getData())
-                , TRUE)
+           $this->toArray($this->ds->getData())
         );
     }
+
+    protected function toArray($obj){
+		return
+			json_decode(
+				json_encode($obj)
+				, TRUE);
+	}
 }
 
 Assert::true(TRUE);

@@ -8,6 +8,7 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Nextras\Dbal\SqlProcessor;
 use Ublaboo\DataGrid\Filter;
 use Nextras\Orm\Mapper\Dbal\DbalCollection;
 use Nette\Utils\Strings;
@@ -27,6 +28,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 * @var array
 	 */
 	protected $data = [];
+
+	/**
+	 * @var array
+	 */
+	protected $aggregations = [];
 
 	/**
 	 * @var string
@@ -179,7 +185,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		$params = [];
 
 		foreach ($condition as $column => $value) {
-			if($filter->isExactSearch()){
+			if ($filter->isExactSearch()) {
 				$expr .= "%column = %s OR ";
 				$params[] = $column;
 				$params[] = "$value";
@@ -294,16 +300,54 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		return $this;
 	}
 
-		/**
-		 * Adjust column from DataGrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
-		 * @param string $column
-		 * @return string
-		 */
-		private function prepareColumn($column) {
-		if (Strings::contains($column, '.')) {
-			return 'this->' . str_replace('.', '->', $column);
-		}
-		return $column;
+	/**
+	 * Adjust column from DataGrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
+	 * @param string $column
+	 * @return string
+	 */
+	private function prepareColumn($column)
+	{
+	if (Strings::contains($column, '.')) {
+		return 'this->' . str_replace('.', '->', $column);
+	}
+	return $column;
 	}
 
+	/**
+	 * @param string $aggregation_type
+	 * @param string $column
+	 * @return mixed
+	 */
+	public function addAggregationColumn($aggregation_type, $column)
+	{
+		$this->aggregations[$column] = $aggregation_type;
+	}
+
+	/**
+	 * get aggregation row
+	 * @return array
+	 */
+	public function getAggregationData()
+	{
+		if (count($this->aggregations) == 0) {
+			return;
+		}
+		$sql = 'SELECT ';
+		foreach ($this->aggregations as $column => $aggregation_type) {
+			$sql .= $aggregation_type . '(' . $column . ') as ' . $column . ',';
+		}
+
+		$sql = rtrim($sql, ',') . ' FROM ( ' . $this->data_source->getQueryBuilder()->getQuerySql() . ' ) as data';
+
+		$params = $this->data_source->getQueryBuilder()->getQueryParameters();
+		array_unshift($params, $sql);
+		$sqlPreprocessor = new SqlProcessor($this->data_source->getQueryBuilder()->driver);
+		$sql = $sqlPreprocessor->process($params);
+
+
+		$result = $this->data_source->getQueryBuilder()->driver->query($sql)->fetch()->toArray();
+
+
+		return $result;
+	}
 }

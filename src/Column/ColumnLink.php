@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @copyright   Copyright (c) 2015 Giant.cz <help@giant.cz>
- * @author      Pavel Janda <pavel.janda@giant.cz>
- * @package     Giant
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
  */
 
 namespace Ublaboo\DataGrid\Column;
@@ -54,6 +54,12 @@ class ColumnLink extends Column
 
 
 	/**
+	 * @var array
+	 */
+	protected $parameters = [];
+
+
+	/**
 	 * @param DataGrid $grid
 	 * @param string $key
 	 * @param string $column
@@ -98,7 +104,7 @@ class ColumnLink extends Column
 			->href($this->createLink(
 				$this->grid,
 				$this->href,
-				$this->getItemParams($row, $this->params)
+				$this->getItemParams($row, $this->params) + $this->parameters
 			));
 			
 		if (!empty($this->data_attributes)) {
@@ -131,6 +137,19 @@ class ColumnLink extends Column
 		}
 
 		return $element;
+	}
+
+
+	/**
+	 * Add parameters to link
+	 * @param array $parameters
+	 * @return static
+	 */
+	public function addParameters(array $parameters)
+	{
+		$this->parameters = $parameters;
+
+		return $this;
 	}
 
 

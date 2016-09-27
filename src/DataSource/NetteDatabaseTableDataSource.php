@@ -23,6 +23,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	/**
 	 * @var array
 	 */
+	protected  $aggregations =[];
+
+	/**
+	 * @var array
+	 */
 	protected $data = [];
 
 	/**
@@ -38,6 +43,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	public function __construct(Selection $data_source, $primary_key)
 	{
 		$this->data_source = $data_source;
+
 		$this->primary_key = $primary_key;
 	}
 
@@ -302,4 +308,27 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		return $this;
 	}
 
+	/**
+	 * @param string $aggregation_type
+	 * @param string $column
+	 * @return mixed|void
+	 */
+	public function addAggregationColumn($aggregation_type, $column)
+	{
+		$this->aggregations[$column] = $aggregation_type;
+	}
+
+	/**
+	 * get aggregation row
+	 * @return array
+	 */
+	public function getAggregationData()
+	{
+		$result = [];
+		//there should really be some better way to do this and get all results in one query, this could be big performance issue on bigger tables
+		foreach ($this->aggregations as $column => $aggregation_type) {
+			$result[$column] = $this->data_source->aggregation($aggregation_type . '(' . $column . ')');
+		}
+		return $result;
+	}
 }

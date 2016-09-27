@@ -31,6 +31,10 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	 */
 	private $criteria;
 
+	/**
+	 * @var array
+	 */
+	protected $aggregations = [];
 
 	/**
 	 * @param Collection  $collection
@@ -263,4 +267,52 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 		return $this;
 	}
 
+	/**
+	 * @param string $aggregation_type
+	 * @param string $column
+	 * @return mixed
+	 */
+	public function addAggregationColumn($aggregation_type, $column)
+	{
+		$this->aggregations[$column] = $aggregation_type;
+	}
+
+	/**
+	 * get aggregation row
+	 * @return array
+	 */
+	public function getAggregationData()
+	{
+		$result = [];
+		foreach ($this->data_source as $row) {
+			foreach ($this->aggregations as $column => $aggregation_type) {
+				switch ($aggregation_type) {
+					case ColumnAggregationFunction::$aggregation_type_sum:
+					case ColumnAggregationFunction::$aggregation_type_avg:
+						if (!isset($result[$column])) {
+							$result[$column] = 0;
+						}
+						$result[$column] += $row[$column];
+						break;
+					case ColumnAggregationFunction::$aggregation_type_min:
+						if (!isset($result[$column]) || $row[$column] < $result[$column]) {
+							$result[$column] = $row[$column];
+						}
+						break;
+					case ColumnAggregationFunction::$aggregation_type_max:
+						if (!isset($result[$column]) || $row[$column] > $result[$column]) {
+							$result[$column] = $row[$column];
+						}
+						break;
+				}
+			}
+		}
+
+		foreach ($this->aggregations as $column => $aggregation_type) {
+			if ($aggregation_type == ColumnAggregationFunction::$aggregation_type_avg) {
+				$result[$column] =  $result[$column] / $this->data_source->count();
+			}
+		}
+		return $result;
+	}
 }

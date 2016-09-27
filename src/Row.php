@@ -89,7 +89,7 @@ class Row extends Nette\Object
 			return $this->getNextrasEntityProperty($this->item, $key);
 
 		} else if ($this->item instanceof DibiRow) {
-			return $this->item->{$key};
+			return $this->item->{$this->formatDibiRowKey($key)};
 
 		} else if ($this->item instanceof ActiveRow) {
 			return $this->item->{$key};
@@ -284,6 +284,22 @@ class Row extends Nette\Object
 		}
 
 		return $column;
+	}
+
+
+	/**
+	 * Key may contain ".", get rid of it (+ the table alias)
+	 * 
+	 * @param  string $key
+	 * @return string
+	 */
+	private function formatDibiRowKey($key)
+	{
+		if ($offset = strpos($key, '.')) {
+			return substr($key, $offset + 1);
+		}
+
+		return $key;
 	}
 
 }

@@ -9,6 +9,7 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Nette\Utils\Strings;
@@ -31,6 +32,11 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 * @var QueryBuilder
 	 */
 	protected $data_source;
+
+	/**
+	 * @var array
+	 */
+	protected $aggregations = [];
 
 	/**
 	 * @var string
@@ -109,10 +115,13 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function getData()
 	{
-		$result = $this->getQuery()->getResult();
-		$this->onDataLoaded($result);
+		$iterator = (new Paginator($this->getQuery()))->getIterator();
 
-		return $result;
+		$data = iterator_to_array($iterator);
+
+		$this->onDataLoaded($data);
+
+		return $data;
 	}
 
 
@@ -226,7 +235,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		foreach ($condition as $column => $value) {
 			$c = $this->checkAliases($column);
 
-			if($filter->isExactSearch()){
+			if ($filter->isExactSearch()) {
 				$exprs[] = $this->data_source->expr()->eq($c, $this->data_source->expr()->literal($value));
 				continue;
 			}
@@ -340,4 +349,27 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		return $this->placeholder++;
 	}
 
+	/**
+	 * @param string $aggregation_type
+	 * @param string $column
+	 * @return mixed
+	 */
+	public function addAggregationColumn($aggregation_type, $column)
+	{
+		$this->aggregations[$column] = $aggregation_type;
+	}
+
+	/**
+	 * get aggregation row
+	 * @return array
+	 */
+	public function getAggregationData()
+	{
+		$this->data_source->resetDQLPart('select');
+		$root_alias = $this->data_source->getRootAliases()[0];
+		foreach ($this->aggregations as $column => $aggregation_type) {
+			$query = $this->data_source->select("$aggregation_type($root_alias.$column) AS $column");
+		}
+		return $query->getQuery()->getSingleResult();
+	}
 }
