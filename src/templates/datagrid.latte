@@ -31,6 +31,7 @@
 						{**
 						 * Each fitler is rendered separately in its own template
 						 *}
+						{continueIf $f->isHidden()}
 						{var $filter_block = 'filter-' . $f->getKey()}
 						{var $filter_type_block = 'filtertype-' . $f->getType()}
 
@@ -170,7 +171,7 @@
 									</span>
 								{/ifset}
 
-								{if !$control->hasOuterFilterRendering() && isset($filters[$key])}
+								{if !$control->hasOuterFilterRendering() && isset($filters[$key]) && !$filters[$key]->isHidden()}}
 									<hr>
 									{var $i = $filter['filter'][$key]}
 

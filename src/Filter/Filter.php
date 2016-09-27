@@ -74,6 +74,10 @@ abstract class Filter extends Nette\Object
 		['class', 'form-control input-sm']
 	];
 
+	/**
+	 * @var bool
+	 */
+	protected $hidden = FALSE;
 
 	/**
 	 * @param DataGrid     $grid
@@ -286,6 +290,25 @@ abstract class Filter extends Nette\Object
 		}
 
 		return $input;
+	}
+
+	/**
+	 * @param boolean $hidden
+	 * @return Filter
+	 */
+	public function setHidden($hidden = TRUE)
+	{
+		$this->hidden = $hidden;
+		return $this;
+	}
+
+	/**
+	 * @param boolean $hidden
+	 * @return Filter
+	 */
+	public function isHidden()
+	{
+		return $this->hidden;
 	}
 
 }
