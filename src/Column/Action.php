@@ -62,6 +62,10 @@ class Action extends Column
 	 */
 	protected $attributes = [];
 
+	/**
+	 * @var array
+	 */
+	protected $parameters = [];
 
 	/**
 	 * @param DataGrid $grid
@@ -99,7 +103,7 @@ class Action extends Column
 		$link = $this->createLink(
 			$this->grid,
 			$this->href,
-			$this->getItemParams($row, $this->params)
+			$this->getItemParams($row, $this->params) + $this->parameters
 		);
 
 		$a = Html::el('a')->href($link);
@@ -131,6 +135,19 @@ class Action extends Column
 		}
 
 		return $a;
+	}
+
+
+	/**
+	 * Add parameters to link
+	 * @param array $parameters
+	 * @return static
+	 */
+	public function addParameters(array $parameters)
+	{
+		$this->parameters = $parameters;
+
+		return $this;
 	}
 
 
@@ -284,7 +301,7 @@ class Action extends Column
 	public function setDataAttribute($key, $value)
 	{
 		$this->data_attributes[$key] = $value;
-		
+
 		return $this;
 	}
 
