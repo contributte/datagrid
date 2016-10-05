@@ -2559,7 +2559,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getSessionData($key = NULL, $default_value = NULL)
 	{
-		if (!$this->remember_state) {
+		if (!$this->remember_state || !$this->grid_session) {
 			return $key ? $default_value : [];
 		}
 
@@ -2575,7 +2575,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function saveSessionData($key, $value)
 	{
-		if ($this->remember_state) {
+		if ($this->remember_state && $this->grid_session) {
 			$this->grid_session->{$key} = $value;
 		}
 	}
@@ -2587,7 +2587,9 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function deleteSesssionData($key)
 	{
-		unset($this->grid_session->{$key});
+		if ($this->grid_session) {
+			unset($this->grid_session->{$key});
+		}
 	}
 
 
