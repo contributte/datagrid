@@ -158,6 +158,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
+			$column = $this->data_source->getConnection()->getDriver()->escapeIdentifier($column, 0);
 			if($filter->isExactSearch()){
 				$this->data_source->where("$column = %s", $value);
 				continue;
@@ -171,7 +172,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 
 			foreach ($words as $word) {
 				$escaped = $this->data_source->getConnection()->getDriver()->escapeLike($word, 0);
-
 				if (preg_match("/[\x80-\xFF]/", $escaped)) {
 					$or[] = "$column LIKE $escaped COLLATE utf8_bin";
 				} else {
