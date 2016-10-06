@@ -271,6 +271,11 @@
 		td.col-action {
 			text-align: right;
 		}
+
+		th.datagrid-fit-content, td.datagrid-fit-content {
+			width: 1%;
+			white-space: nowrap;
+		}
 	}
 
 	.datagrid-tree {
@@ -479,12 +484,6 @@
 	select {
 		padding: 0;
 		text-transform: none;
-
-		&[disabled] {
-			&:hover, &:focus {
-				@extend .level-0;
-			}
-		}
 	}
 
 	.row-grid-bottom {

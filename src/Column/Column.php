@@ -72,6 +72,7 @@ abstract class Column extends FilterableColumn
 	 */
 	protected $align;
 
+
 	/**
 	 * @var array
 	 */
@@ -460,10 +461,21 @@ abstract class Column extends FilterableColumn
 		if ($this->sort == 'ASC') {
 			return [$this->key => 'DESC'];
 		} else if ($this->sort == 'DESC') {
-			return [$this->key => NULL];
+			return [$this->key => FALSE];
 		}
 
 		return [$this->key => 'ASC'];
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function hasSortNext()
+	{
+		foreach ($this->getSortNext() as $key => $order) {
+			return $order !== FALSE;
+		}
 	}
 
 
@@ -506,6 +518,19 @@ abstract class Column extends FilterableColumn
 	public function getAlign()
 	{
 		return $this->align ?: 'left';
+	}
+
+
+	/**
+	 * Set column content fit
+	 * @param bool $fit_content
+	 * @return $this
+	 */
+	public function setFitContent($fit_content = TRUE)
+	{
+		($fit_content) ? $this->addAttributes(['class' => 'datagrid-fit-content']) : NULL;
+
+		return $this;
 	}
 
 

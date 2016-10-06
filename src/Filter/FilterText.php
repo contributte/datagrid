@@ -26,6 +26,11 @@ class FilterText extends Filter
 	/**
 	 * @var bool
 	 */
+	protected $exact = FALSE;
+
+	/**
+	 * @var bool
+	 */
 	protected $split_words_search = TRUE;
 
 
@@ -55,6 +60,25 @@ class FilterText extends Filter
 	public function getCondition()
 	{
 		return array_fill_keys($this->column, $this->getValue());
+	}
+
+
+	/**
+	 * @return boolean
+	 */
+	public function isExactSearch()
+	{
+		return $this->exact;
+	}
+
+	/**
+	 * @param boolean $exact
+	 * @return FilterText
+	 */
+	public function setExactSearch($exact = TRUE)
+	{
+		$this->exact = $exact;
+		return $this;
 	}
 
 

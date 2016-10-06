@@ -82,16 +82,19 @@ class Row extends Nette\Object
 	 */
 	public function getValue($key)
 	{
-		if (class_exists('LeanMapper\Entity') && $this->item instanceof LeanMapper\Entity) {
+		if ($this->item instanceof LeanMapper\Entity) {
 			return $this->getLeanMapperEntityProperty($this->item, $key);
 
-		} else if (class_exists('Nextras\Orm\Entity\Entity') && $this->item instanceof Nextras\Orm\Entity\Entity) {
+		} else if ($this->item instanceof Nextras\Orm\Entity\Entity) {
 			return $this->getNextrasEntityProperty($this->item, $key);
 
-		} else if (class_exists('DibiRow') && $this->item instanceof DibiRow) {
+		} else if ($this->item instanceof DibiRow) {
 			return $this->item->{$key};
 
-		} else if (class_exists('ActiveRow') && $this->item instanceof ActiveRow) {
+		} else if ($this->item instanceof ActiveRow) {
+			return $this->item->{$key};
+
+		} else if ($this->item instanceof Nette\Database\Row) {
 			return $this->item->{$key};
 
 		} else if (is_array($this->item)) {

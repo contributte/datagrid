@@ -14,4 +14,8 @@ install:
     - composer install --no-interaction --prefer-source
 
 script:
-    - vendor/bin/tester -p php tests/
+    - vendor/bin/tester -p php  -c tests/php.ini tests/
+
+before_script:
+    - mysql -e 'create database datagridTest;'
+    - mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql

@@ -9,7 +9,7 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Ublaboo\DataGrid\Filter;
-use Nette\Utils\Callback;
+use Nextras\Orm\Mapper\Dbal\DbalCollection;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Utils\Sorting;
 use Nextras\Orm\Collection\ICollection;
@@ -19,7 +19,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 {
 
 	/**
-	 * @var QueryBuilder
+	 * @var DbalCollection
 	 */
 	protected $data_source;
 
@@ -45,15 +45,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	}
 
 
-	/**
-	 * @return Doctrine\ORM\Query
-	*/
-	public function getQuery()
-	{
-		return $this->data_source->getQuery();
-	}
-
-
 	/********************************************************************************
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
@@ -66,8 +57,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	public function getCount()
 	{
 		return $this->data_source->countStored();
-
-		return $count;
 	}
 
 	/**
@@ -90,7 +79,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function filterOne(array $condition)
 	{
-		$this->data_source = $this->data_source->findBy($condition);
+		$cond = [];
+		foreach ($condition as $key => $value) {
+			$cond[$this->prepareColumn($key)] = $value;
+		}
+		$this->data_source = $this->data_source->findBy($cond);
 
 		return $this;
 	}
@@ -107,9 +100,10 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 			$date = \DateTime::createFromFormat($filter->getPhpFormat(), $value);
 			$date_end = clone $date;
 
-			$this->data_source->getQueryBuilder()
-				->andWhere("%column >= %dt", $column, $date->setTime(0, 0, 0))
-				->andWhere("%column <= %dt", $column, $date_end->setTime(23, 59, 59));
+			$this->data_source = $this->data_source->findBy([
+				$this->prepareColumn($column) . '>=' => $date->setTime(0, 0, 0),
+				$this->prepareColumn($column) . '<=' => $date_end->setTime(23, 59, 59)
+			]);
 		}
 
 		return $this;
@@ -126,20 +120,21 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		$conditions = $filter->getCondition();
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to   = $conditions[$filter->getColumn()]['to'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
+		$dataCondition = [];
 		if ($value_from) {
 			$date_from = \DateTime::createFromFormat($filter->getPhpFormat(), $value_from);
-			$date_from;
-
-			$this->data_source->getQueryBuilder()->andWhere("%column >= %dt", $filter->getColumn(), $date_from);
+			$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $date_from->setTime(0, 0, 0);
 		}
 
 		if ($value_to) {
 			$date_to = \DateTime::createFromFormat($filter->getPhpFormat(), $value_to);
-			$date_to->setTime(23, 59, 59);
+			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $date_to->setTime(23, 59, 59);
+		}
 
-			$this->data_source->getQueryBuilder()->andWhere("%column <= %dt", $filter->getColumn(), $date_to);
+		if (!empty($dataCondition)) {
+			$this->data_source = $this->data_source->findBy($dataCondition);
 		}
 	}
 
@@ -154,14 +149,20 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		$conditions = $filter->getCondition();
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to   = $conditions[$filter->getColumn()]['to'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
+
+		$dataCondition = [];
 
 		if ($value_from) {
-			$this->data_source->getQueryBuilder()->andWhere("%column >= %any", $filter->getColumn(), $value_from);
+			$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $value_from;
 		}
 
 		if ($value_to) {
-			$this->data_source->getQueryBuilder()->andWhere("%column <= %any", $filter->getColumn(), $value_to);
+			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $value_to;
+		}
+
+		if (!empty($dataCondition)) {
+			$this->data_source = $this->data_source->findBy($dataCondition);
 		}
 	}
 
@@ -178,6 +179,13 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		$params = [];
 
 		foreach ($condition as $column => $value) {
+			if($filter->isExactSearch()){
+				$expr .= "%column = %s OR ";
+				$params[] = $column;
+				$params[] = "$value";
+				continue;
+			}
+
 			if ($filter->hasSplitWordsSearch() === FALSE) {
 				$words = [$value];
 			} else {
@@ -231,9 +239,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function applyFilterSelect(Filter\FilterSelect $filter)
 	{
-		foreach ($filter->getCondition() as $column => $value) {
-			$this->data_source->getQueryBuilder()->andWhere("%column = %any", $column, $value);
-		}
+		$this->data_source = $this->data_source->findBy([$this->prepareColumn($filter->getColumn()) => $filter->getValue()]);
 	}
 
 
@@ -286,6 +292,18 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		}
 
 		return $this;
+	}
+
+		/**
+		 * Adjust column from DataGrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
+		 * @param string $column
+		 * @return string
+		 */
+		private function prepareColumn($column) {
+		if (Strings::contains($column, '.')) {
+			return 'this->' . str_replace('.', '->', $column);
+		}
+		return $column;
 	}
 
 }

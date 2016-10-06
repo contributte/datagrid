@@ -149,10 +149,19 @@ datagridSortable = ->
 
 			url = $(this).data('sortable-url')
 
+			data = {};
+			component_prefix = row.closest('.datagrid').find('tbody').attr('data-sortable-parent-path')
+
+			data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id
+			data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id
+			data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id
+
+			console.log(data)
+
 			$.nette.ajax({
 				type: 'GET',
 				url: url,
-				data: {item_id: item_id, prev_id: prev_id, next_id: next_id},
+				data: data,
 				error: (jqXHR, textStatus, errorThrown) ->
 					alert(jqXHR.statusText)
 			})
@@ -174,7 +183,7 @@ if typeof datagridSortableTree == 'undefined'
 
 		$('.datagrid-tree-item-children').sortable({
 			handle: '.handle-sort',
-			items: '.datagrid-tree-item',
+			items: '.datagrid-tree-item:not(.datagrid-tree-item:first-child)',
 			toleranceElement: '> .datagrid-tree-item-content',
 			connectWith: '.datagrid-tree-item-children',
 			update: (event, ui) ->
@@ -208,10 +217,18 @@ if typeof datagridSortableTree == 'undefined'
 
 				parent.find('[data-toggle-tree]').first().removeClass('hidden')
 
+				component_prefix = row.closest('.datagrid-tree').attr('data-sortable-parent-path')
+				data = {}
+
+				data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id
+				data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id
+				data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id
+				data[(component_prefix + '-parent_id').replace(/^-/, '')] = parent_id
+
 				$.nette.ajax({
 					type: 'GET',
 					url: url,
-					data: {item_id: item_id, prev_id: prev_id, next_id: next_id, parent_id: parent_id},
+					data: data,
 					error: (jqXHR, textStatus, errorThrown) ->
 						if errorThrown != 'abort'
 							alert(jqXHR.statusText)
@@ -449,11 +466,13 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 #
 $.nette.ext('datagrid.after_inline_edit', {
 	success: (payload) ->
+		grid = $('.datagrid-' + payload._datagrid_name)
+
 		if payload._datagrid_inline_edited
-			$('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited')
-			$('.datagrid-inline-edit-trigger').removeClass('hidden')
+			grid.find('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited')
+			grid.find('.datagrid-inline-edit-trigger').removeClass('hidden')
 		else if payload._datagrid_inline_edit_cancel
-			$('.datagrid-inline-edit-trigger').removeClass('hidden')
+			grid.find('.datagrid-inline-edit-trigger').removeClass('hidden')
 })
 
 
