@@ -725,6 +725,11 @@ class DataGrid extends Nette\Application\UI\Control
 			$sort = [$column->getSortingColumn() => $order];
 		}
 
+		// required for first request
+		if (isset($column) && $sort_callback === NULL) {
+			$sort_callback = $column->getSortableCallback();
+		}
+
 		return new Sorting($sort, $sort_callback);
 	}
 
