@@ -457,12 +457,12 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 
 					return submit(cell, $(this))
 
-				if e.which == 27
-					e.stopPropagation()
-					e.preventDefault()
+			if e.which == 27
+				e.stopPropagation()
+				e.preventDefault()
 
-					cell.removeClass('editing');
-					cell.html(cell.data('value'));
+				cell.removeClass('editing');
+				cell.html(cell.data('value'));
 		)
 		cell.find('select').on('change', ->
 			submit(cell, $(this))

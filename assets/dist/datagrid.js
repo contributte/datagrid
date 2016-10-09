@@ -488,6 +488,12 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
           return submit(cell, $(this));
         }
       }
+      if (e.which === 27) {
+        e.stopPropagation();
+        e.preventDefault();
+        cell.removeClass('editing');
+        return cell.html(cell.data('value'));
+      }
     });
     return cell.find('select').on('change', function() {
       return submit(cell, $(this));
