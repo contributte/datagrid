@@ -1514,7 +1514,7 @@ class DataGrid extends Nette\Application\UI\Control
 			return;
 		}
 
-		$values = Nette\Utils\ArrayHash::from($form->getHttpData());
+		$values = $form->getValues();
 
 		if ($this->getPresenter()->isAjax()) {
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
