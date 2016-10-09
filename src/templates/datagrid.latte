@@ -177,7 +177,7 @@
 							{_'ublaboo_datagrid.action'}
 						</th>
 					</tr>
-					<tr n:block="header-filters" n:if="!$control->hasOuterFilterRendering()">
+					<tr n:block="header-filters" n:if="!empty($control->filters) && !$control->hasOuterFilterRendering()">
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementPrototype('th', $key)}
 							{$th->startTag()|noescape}
