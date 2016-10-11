@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @copyright   Copyright (c) 2015 Giant.cz <help@giant.cz>
- * @author      Pavel Janda <pavel.janda@giant.cz>
- * @package     Giant
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
  */
 
 namespace Ublaboo\DataGrid\Column;
