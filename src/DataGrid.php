@@ -3014,31 +3014,37 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		$return = $this->columns;
 
-		if (!$this->getSessionData('_grid_hidden_columns_manipulated', FALSE)) {
-			$columns_to_hide = [];
+		try {
+			$this->getParent();
 
-			foreach ($this->columns as $key => $column) {
-				if ($column->getDefaultHide()) {
-					$columns_to_hide[] = $key;
+			if (!$this->getSessionData('_grid_hidden_columns_manipulated', FALSE)) {
+				$columns_to_hide = [];
+
+				foreach ($this->columns as $key => $column) {
+					if ($column->getDefaultHide()) {
+						$columns_to_hide[] = $key;
+					}
+				}
+
+				if (!empty($columns_to_hide)) {
+					$this->saveSessionData('_grid_hidden_columns', $columns_to_hide);
+					$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
 				}
 			}
 
-			if (!empty($columns_to_hide)) {
-				$this->saveSessionData('_grid_hidden_columns', $columns_to_hide);
-				$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
+			$hidden_columns = $this->getSessionData('_grid_hidden_columns', []);
+
+			foreach ($hidden_columns as $column) {
+				if (!empty($this->columns[$column])) {
+					$this->columns_visibility[$column] = [
+						'visible' => FALSE
+					];
+
+					unset($return[$column]);
+				}
 			}
-		}
 
-		$hidden_columns = $this->getSessionData('_grid_hidden_columns', []);
-
-		foreach ($hidden_columns as $column) {
-			if (!empty($this->columns[$column])) {
-				$this->columns_visibility[$column] = [
-					'visible' => FALSE
-				];
-
-				unset($return[$column]);
-			}
+		} catch (DataGridHasToBeAttachedToPresenterComponentException $e) {
 		}
 
 		return $return;
