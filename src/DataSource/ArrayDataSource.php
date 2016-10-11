@@ -340,7 +340,11 @@ class ArrayDataSource implements IDataSource
 			$data = [];
 
 			foreach ($this->data as $item) {
-				$sort_by = (string) $item[$column];
+				if (is_object($item[$column]) && is_a($item[$column], 'DateTime')) {
+					$sort_by = $item[$column]->format('Y-m-d H:i:s');
+				} else {
+					$sort_by = (string) $item[$column];
+				}
 				$data[$sort_by][] = $item;
 			}
 
