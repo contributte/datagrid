@@ -1064,7 +1064,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$columns = NULL === $columns ? [$key] : (is_string($columns) ? [$columns] : $columns);
 
 		if (!is_array($columns)) {
-			throw new DataGridException("Filter Text can except only array or string.");
+			throw new DataGridException("Filter Text can accept only array or string.");
 		}
 
 		$this->addFilterCheck($key);
