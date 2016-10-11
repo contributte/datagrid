@@ -53,7 +53,7 @@
 				{/if}
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
-				<thead>
+				<thead n:block="header">
 					<tr class="row-group-actions" n:if="$hasGroupActionOnRows || $exports || $toolbar_buttons || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
 							{if $hasGroupActionOnRows}
@@ -122,8 +122,6 @@
 							</span>
 						</th>
 					</tr>
-				</thead>
-				<thead n:block="header">
 					<tr n:block="header-column-row">
 						<th n:if="$hasGroupActionOnRows" rowspan="2" class="col-checkbox">
 							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="{$control->getName()|lower}-toggle-all" type="checkbox" data-check="{$control->getName()}" data-check-all="{$control->getName()}">

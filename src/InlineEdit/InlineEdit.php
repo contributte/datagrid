@@ -76,7 +76,7 @@ class InlineEdit extends Nette\Object
 	 * Columns that are not edited can displey normal value instaad of nothing..
 	 * @var bool
 	 */
-	protected $showNonEditingColumns = FALSE;
+	protected $showNonEditingColumns = TRUE;
 
 
 	/**
