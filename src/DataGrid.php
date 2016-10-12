@@ -1454,7 +1454,9 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->getGroupActionCollection()->addToFormContainer($group_action_container);
 		}
 
-		$this->setFilterContainerDefaults($form['filter'], $this->filter);
+		if (!$form->isSubmitted()) {
+			$this->setFilterContainerDefaults($form['filter'], $this->filter);
+		}
 
 		/**
 		 * Per page part
@@ -1469,8 +1471,6 @@ class DataGrid extends Nette\Application\UI\Control
 		$form->addSubmit('per_page_submit', '');
 		
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
-
-		return $form;
 	}
 
 
