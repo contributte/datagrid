@@ -49,6 +49,11 @@ class DataGrid extends Nette\Application\UI\Control
 	public $onColumnAdd;
 
 	/**
+	 * @var callable[]
+	 */
+	public $onFiltersAssabled;
+
+	/**
 	 * @var string
 	 */
 	public static $icon_prefix = 'fa fa-';
@@ -335,6 +340,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $filter_submit_button = NULL;
 
+	/**
+	 * @var bool
+	 */
+	protected $has_column_reset = TRUE;
+
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -368,6 +378,11 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Find default items per page
 		 */
 		$this->onRender[] = [$this, 'findDefaultPerPage'];
+
+		/**
+		 * Notify about that json js extension
+		 */
+		$this->onFiltersAssabled[] = [$this, 'sendNonEmptyFiltersInPayload'];
 	}
 
 
@@ -1229,6 +1244,11 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
+		/**
+		 * Invoke possible events
+		 */
+		$this->onFiltersAssabled($this->filters);
+
 		return $this->filters;
 	}
 
@@ -1967,7 +1987,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * handler for reseting the filter
+	 * Handler for reseting the filter
 	 * @return void
 	 */
 	public function handleResetFilter()
@@ -1998,6 +2018,62 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->filter = [];
 
 		$this->reload(['grid']);
+	}
+
+
+	/**
+	 * @param  string $key
+	 * @return void
+	 */
+	public function handleResetColumnFilter($key)
+	{
+		$this->deleteSesssionData($key);
+		unset($this->filter[$key]);
+
+		$this->reload(['grid']);
+	}
+
+
+	/**
+	 * @param bool $reset
+	 * @return static
+	 */
+	public function setColumnReset($reset = TRUE)
+	{
+		$this->has_column_reset = (bool) $reset;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function hasColumnReset()
+	{
+		return $this->has_column_reset;
+	}
+
+
+	/**
+	 * @param  Filter\Filter[] $filters
+	 * @return void
+	 */
+	public function sendNonEmptyFiltersInPayload($filters)
+	{
+		if (!$this->hasColumnReset()) {
+			return;
+		}
+
+		$non_empty_filters = [];
+
+		foreach ($filters as $filter) {
+			if ($filter->isValueSet()) {
+				$non_empty_filters[] = $filter->getKey();
+			}
+		}
+
+		$this->getPresenter()->payload->non_empty_filters = $non_empty_filters;
 	}
 
 
@@ -2149,6 +2225,7 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 
 			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
+			$this->getPresenter()->payload->_datagrid_name = $this->getName();
 
 			$this->onRedraw();
 		} else {

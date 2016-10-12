@@ -71,7 +71,7 @@
 								{/block}
 							{/if}
 
-							<span class="datagrid-toolbar" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbar_buttons">
+							<div class="datagrid-toolbar" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbar_buttons">
 								<span n:if="$toolbar_buttons">
 									{foreach $toolbar_buttons as $toolbar_button}{$toolbar_button->renderButton()}{/foreach}
 								</span>
@@ -80,7 +80,7 @@
 									{foreach $exports as $export}{$export->render()}{/foreach}
 								</span>
 
-								<span class="datagrid-settings" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
+								<div class="datagrid-settings" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
 									{**
 									 * Inline add
 									 *}
@@ -118,8 +118,8 @@
 											</li>
 										</ul>
 									</div>
-								</span>
-							</span>
+								</div>
+							</div>
 						</th>
 					</tr>
 					<tr n:block="header-column-row">
@@ -154,21 +154,27 @@
 									{else}
 										{include #column-header, column => $column}
 									{/if}
-
-									<span class="column-settings-menu pull-right" n:if="$control->canHideColumns()">
-										<div class="btn-group">
-											<a type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<i n:block="icon-caret-down" class="{$icon_prefix}caret-down"></i>
-											</a>
-											<ul class="dropdown-menu dropdown-menu--grid">
-												<li>
-													<a n:href="hideColumn!, column => $key" class="ajax">
-														<i n:block = "icon-eye-slash" class="{$icon_prefix}eye-slash"></i> {_'ublaboo_datagrid.hide_column'}</a>
-												</li>
-											</ul>
-										</div>
-									</span>
 								{/ifset}
+
+								<div class="datagrid-column-header-additions">
+									<div class="btn-group column-settings-menu" n:if="$control->canHideColumns()">
+										<a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<i n:block="icon-caret-down" class="{$icon_prefix}caret-down"></i>
+										</a>
+										<ul class="dropdown-menu dropdown-menu--grid">
+											<li>
+												<a n:href="hideColumn!, column => $key" class="ajax">
+													<i n:block = "icon-eye-slash" class="{$icon_prefix}eye-slash"></i> {_'ublaboo_datagrid.hide_column'}</a>
+											</li>
+										</ul>
+									</div>
+
+									{if $control->hasColumnReset()}
+										<a data-datagrid-reset-filter-by-column="{$key}" n:href="resetColumnFilter!, key => $key" n:class="isset($filters[$key]) && $filters[$key]->isValueSet() ? '' : 'hidden', 'ajax'" title="{_'ublaboo_datagrid.reset_filter'}">
+											<i n:block="icon-remove" class="{$icon_prefix}remove"></i>
+										</a>
+									{/if}
+								</div>
 							{$th->endTag()|noescape}
 						{/foreach}
 						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-center">
