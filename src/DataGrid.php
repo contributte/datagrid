@@ -14,6 +14,8 @@ use Nette\Application\UI\PresenterComponent;
 use Ublaboo\DataGrid\Utils\ArraysHelper;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\DataGrid\Exception\DataGridColumnNotFoundException;
+use Ublaboo\DataGrid\Exception\DataGridFilterNotFoundException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 use Ublaboo\DataGrid\Utils\Sorting;
 use Ublaboo\DataGrid\InlineEdit\InlineEdit;
@@ -736,8 +738,16 @@ class DataGrid extends Nette\Application\UI\Control
 	protected function createSorting(array $sort, $sort_callback)
 	{
 		foreach ($sort as $key => $order) {
-			$column = $this->getColumn($key);
-			$sort = [$column->getSortingColumn() => $order];
+			unset($sort[$key]);
+
+			try {
+				$column = $this->getColumn($key);
+
+			} catch (DataGridColumnNotFoundException $e) {
+				continue;
+			}
+
+			$sort[$column->getSortingColumn()] = $order;
 		}
 
 		// required for first request
@@ -938,7 +948,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function getColumn($key)
 	{
 		if (!isset($this->columns[$key])) {
-			throw new DataGridException("There is no column at key [$key] defined.");
+			throw new DataGridColumnNotFoundException("There is no column at key [$key] defined.");
 		}
 
 		return $this->columns[$key];
@@ -1662,6 +1672,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Try to restore session stuff
 	 * @return void
+	 * @throws DataGridFilterNotFoundException
 	 */
 	public function findSessionValues()
 	{
@@ -1703,7 +1714,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 				} catch (DataGridException $e) {
 					if ($this->strict_session_filter_values) {
-						throw new DataGridException("Session filter: Filter [$key] not found");
+						throw new DataGridFilterNotFoundException("Session filter: Filter [$key] not found");
 					}
 				}
 			}
@@ -1717,7 +1728,7 @@ class DataGrid extends Nette\Application\UI\Control
 				try {
 					$column = $this->getColumn($key);
 
-				} catch (DataGridException $e) {
+				} catch (DataGridColumnNotFoundException $e) {
 					$this->deleteSesssionData('_grid_sort');
 					$this->sort = [];
 
