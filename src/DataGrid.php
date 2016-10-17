@@ -1232,7 +1232,7 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		foreach ($this->filter as $key => $value) {
 			if (!isset($this->filters[$key])) {
-				$this->deleteSesssionData($key);
+				$this->deleteSessionData($key);
 
 				continue;
 			}
@@ -1729,7 +1729,7 @@ class DataGrid extends Nette\Application\UI\Control
 					$column = $this->getColumn($key);
 
 				} catch (DataGridColumnNotFoundException $e) {
-					$this->deleteSesssionData('_grid_sort');
+					$this->deleteSessionData('_grid_sort');
 					$this->sort = [];
 
 					return;
@@ -2006,10 +2006,10 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Session stuff
 		 */
-		$this->deleteSesssionData('_grid_page');
+		$this->deleteSessionData('_grid_page');
 
 		if ($this->default_filter_use_on_reset) {
-			$this->deleteSesssionData('_grid_has_filtered');
+			$this->deleteSessionData('_grid_has_filtered');
 		}
 
 		foreach ($this->getSessionData() as $key => $value) {
@@ -2022,7 +2022,7 @@ class DataGrid extends Nette\Application\UI\Control
 				'_grid_hidden_columns_manipulated'
 				])) {
 
-				$this->deleteSesssionData($key);
+				$this->deleteSessionData($key);
 			}
 		}
 
@@ -2038,7 +2038,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function handleResetColumnFilter($key)
 	{
-		$this->deleteSesssionData($key);
+		$this->deleteSessionData($key);
 		unset($this->filter[$key]);
 
 		$this->reload(['grid']);
@@ -2288,7 +2288,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function handleShowAllColumns()
 	{
-		$this->deleteSesssionData('_grid_hidden_columns');
+		$this->deleteSessionData('_grid_hidden_columns');
 		$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
 
 		$this->redrawControl();
@@ -2303,7 +2303,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function handleShowDefaultColumns()
 	{
-		$this->deleteSesssionData('_grid_hidden_columns');
+		$this->deleteSessionData('_grid_hidden_columns');
 		$this->saveSessionData('_grid_hidden_columns_manipulated', FALSE);
 
 		$this->redrawControl();
@@ -2678,7 +2678,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Delete session data
 	 * @return void
 	 */
-	public function deleteSesssionData($key)
+	public function deleteSessionData($key)
 	{
 		unset($this->grid_session->{$key});
 	}
