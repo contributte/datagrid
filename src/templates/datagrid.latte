@@ -25,32 +25,34 @@
 			 * Filter form
 			 *}
 			{if $control->hasOuterFilterRendering()}
-				<div class="row row-filters">
-					{var $i = 0}
-					<div class="col-sm-6" n:foreach="$filters as $f">
-						{**
-						 * Each fitler is rendered separately in its own template
-						 *}
-						{var $filter_block = 'filter-' . $f->getKey()}
-						{var $filter_type_block = 'filtertype-' . $f->getType()}
+				{block outer-filters}
+					<div class="row row-filters">
+						{var $i = 0}
+						<div class="col-sm-6" n:foreach="$filters as $f">
+							{**
+							 * Each fitler is rendered separately in its own template
+							 *}
+							{var $filter_block = 'filter-' . $f->getKey()}
+							{var $filter_type_block = 'filtertype-' . $f->getType()}
 
-						{ifset #$filter_block}
-							{include #$filter_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
-						{else}
-							{ifset #$filter_type_block}
-								{include #$filter_type_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
-								{else}
-									{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+							{ifset #$filter_block}
+								{include #$filter_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+							{else}
+								{ifset #$filter_type_block}
+									{include #$filter_type_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+									{else}
+										{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+								{/ifset}
 							{/ifset}
-						{/ifset}
-						{var $i = $i+1}
+							{var $i = $i+1}
+						</div>
 					</div>
-				</div>
-				{if !$control->hasAutoSubmit()}
-					<div class="text-right datagrid-manual-submit">
-						{input $filter['filter']['submit']}
-					</div>
-				{/if}
+					{if !$control->hasAutoSubmit()}
+						<div class="text-right datagrid-manual-submit">
+							{input $filter['filter']['submit']}
+						</div>
+					{/if}
+				{/block}
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
 				<thead n:block="header">
