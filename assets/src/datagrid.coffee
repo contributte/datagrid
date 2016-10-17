@@ -373,7 +373,7 @@ $.nette.ext('datagrid.tree', {
 	success: (payload) ->
 		if payload._datagrid_tree
 			id = payload._datagrid_tree
-			children_block = $('.datagrid-tree-item[data-id=' + id + ']').find('.datagrid-tree-item-children').first()
+			children_block = $('.datagrid-tree-item[data-id="' + id + '"]').find('.datagrid-tree-item-children').first()
 			children_block.addClass('loaded')
 
 			for name, snippet of payload.snippets
