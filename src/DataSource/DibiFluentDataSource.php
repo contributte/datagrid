@@ -158,6 +158,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
+			$column = $this->data_source->getConnection()->getDriver()->escape($column, \dibi::IDENTIFIER);
 			if($filter->isExactSearch()){
 				$this->data_source->where("$column = %s", $value);
 				continue;
