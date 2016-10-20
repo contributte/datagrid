@@ -8,7 +8,7 @@
 <div class="dropdown">
 	{if $active_option}
 		<button class="dropdown-toggle {$active_option->getClass()} {$active_option->getClassSecondary()}" type="button" data-toggle="dropdown">
-			{if $active_option->getIcon()}<span class="{$icon_prefix}{$active_option->getIcon()}"></span> {/if}
+			{if $active_option->getIcon()}<i class="{$icon_prefix}{$active_option->getIcon()}"></i> {/if}
 			{_$active_option->getText()} <i n:if="$status->hasCaret()" class="caret"></i>
 		</button>
 	{else}
