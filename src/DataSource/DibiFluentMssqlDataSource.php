@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid\DataSource;
 
 use DibiFluent;
 use Ublaboo\DataGrid\Filter;
+use Dibi;
 
 class DibiFluentMssqlDataSource extends DibiFluentDataSource
 {
@@ -122,10 +123,17 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			if($filter->isExactSearch()){
+			$column = Dibi\Helpers::escape(
+				$this->data_source->getConnection()->getDriver(),
+				$column,
+				\dibi::IDENTIFIER
+			);
+
+			if ($filter->isExactSearch()){
 				$this->data_source->where("$column = %s", $value);
 				continue;
 			}
+
 			$or[] = "$column LIKE \"%$value%\"";
 		}
 

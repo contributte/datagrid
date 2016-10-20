@@ -13,6 +13,7 @@ use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\Sorting;
+use Dibi;
 
 class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 {
@@ -158,8 +159,13 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			$column = $this->data_source->getConnection()->getDriver()->escape($column, \dibi::IDENTIFIER);
-			if($filter->isExactSearch()){
+			$column = Dibi\Helpers::escape(
+				$this->data_source->getConnection()->getDriver(),
+				$column,
+				\dibi::IDENTIFIER
+			);
+
+			if ($filter->isExactSearch()){
 				$this->data_source->where("$column = %s", $value);
 				continue;
 			}
