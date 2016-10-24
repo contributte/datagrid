@@ -1,6 +1,6 @@
 # Non-ajax confirmation
 #
-$(document).on('click', '[data-datagrid-confirm]', (e) ->
+$(document).on('click', '[data-datagrid-confirm]:not(.ajax)', (e) ->
 	if not confirm($(e.target).closest('a').attr('data-datagrid-confirm'))
 		e.stopPropagation()
 		e.preventDefault()
