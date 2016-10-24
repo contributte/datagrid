@@ -1,6 +1,6 @@
 var datagridFitlerMultiSelect, datagridSortable, datagridSortableTree;
 
-$(document).on('click', '[data-datagrid-confirm]', function(e) {
+$(document).on('click', '[data-datagrid-confirm]:not(.ajax)', function(e) {
   if (!confirm($(e.target).closest('a').attr('data-datagrid-confirm'))) {
     e.stopPropagation();
     return e.preventDefault();
