@@ -60,7 +60,7 @@ class ItemDetail
 	/**
 	 * @var callable
 	 */
-	protected $render_condition;
+	protected $render_condition_callback;
 
 
 	/**
@@ -243,7 +243,7 @@ class ItemDetail
 	 */
 	public function setRenderCondition(callable $condition)
 	{
-		$this->render_condition = $condition;
+		$this->render_condition_callback = $condition;
 
 		return $this;
 	}
@@ -254,7 +254,7 @@ class ItemDetail
 	 */
 	public function shouldBeRendered(Row $row)
 	{
-		$condition = $this->render_condition;
+		$condition = $this->render_condition_callback;
 
 		return $condition ? $condition($row->getItem()) : TRUE;
 	}
