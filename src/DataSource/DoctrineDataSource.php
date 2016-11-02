@@ -370,7 +370,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		}
 		$this->data_source->resetDQLPart('select');
 		foreach ($this->aggregations as $column => $aggregation_type) {
-			$query = $this->data_source->select("$aggregation_type(" . $this->checkAliases($column) . ") AS $column");
+			$query = $this->data_source->addSelect("$aggregation_type(" . $this->checkAliases($column) . ") AS $column");
 		}
 		return $query->getQuery()->getSingleResult();
 	}

@@ -5,6 +5,7 @@ namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 use Tester\TestCase;
 use Tester\Assert;
 use Ublaboo;
+use Ublaboo\DataGrid\Column\ColumnAggregationFunction;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Utils\Sorting;
@@ -15,226 +16,234 @@ require __DIR__ . '/../../Files/XTestingDataGridFactory.php';
 abstract class BaseDataSourceTest extends TestCase
 {
 
-    protected $data = [
-        ['id' => 1, 'name' => 'John Doe', 'age' => 30, 'address' => 'Blue Village 1'],
-        ['id' => 2, 'name' => 'Frank Frank', 'age' => 60, 'address' => 'Yellow Garded 126'],
-        ['id' => 3, 'name' => 'Santa Claus', 'age' => 12, 'address' => 'New York'],
-        ['id' => 8, 'name' => 'Jude Law', 'age' => 8, 'address' => 'Lubababa 5'],
-        ['id' => 30, 'name' => 'Jackie Blue', 'age' => 80, 'address' => 'Prague 678'],
-        ['id' => 40, 'name' => 'John Red', 'age' => 40, 'address' => 'Porto 53'],
-    ];
+	protected $data = [
+		['id' => 1, 'name' => 'John Doe', 'age' => 30, 'address' => 'Blue Village 1'],
+		['id' => 2, 'name' => 'Frank Frank', 'age' => 60, 'address' => 'Yellow Garded 126'],
+		['id' => 3, 'name' => 'Santa Claus', 'age' => 12, 'address' => 'New York'],
+		['id' => 8, 'name' => 'Jude Law', 'age' => 8, 'address' => 'Lubababa 5'],
+		['id' => 30, 'name' => 'Jackie Blue', 'age' => 80, 'address' => 'Prague 678'],
+		['id' => 40, 'name' => 'John Red', 'age' => 40, 'address' => 'Porto 53'],
+	];
 
-    /**
-     * @var Ublaboo\DataGrid\DataSource\IDataSource
-     */
-    protected $ds;
+	/**
+	 * @var Ublaboo\DataGrid\DataSource\IDataSource
+	 */
+	protected $ds;
 
-    /**
-     * @var Ublaboo\DataGrid\DataGrid
-     */
-    protected $grid;
+	/**
+	 * @var Ublaboo\DataGrid\DataGrid
+	 */
+	protected $grid;
 
-    public function testGetCount()
-    {
-        Assert::same(6, $this->ds->getCount());
-    }
-
-
-    public function testGetData()
-    {
-        Assert::equal($this->data, $this->getActualResultAsArray());
-    }
+	public function testGetCount()
+	{
+		Assert::same(6, $this->ds->getCount());
+	}
 
 
-    public function testFilterSingleColumn()
-    {
-        $filter = new FilterText($this->grid, 'a', 'b', ['name']);
-        $filter->setValue('John Red');
-
-        $this->ds->filter([$filter]);
-        Assert::equal([
-            $this->data[0],
-            $this->data[5]
-        ], $this->getActualResultAsArray());
-    }
-
-    public function testFilterMultipleColumns()
-    {
-        $filter = new FilterText($this->grid, 'a', 'b', ['name', 'address']);
-        $filter->setValue('lu');
-        $this->ds->filter([$filter]);
+	public function testGetData()
+	{
+		Assert::equal($this->data, $this->getActualResultAsArray());
+	}
 
 
-        Assert::equal([
-            $this->data[0],
-            $this->data[3],
-            $this->data[4]
-        ], $this->getActualResultAsArray());
-    }
+	public function testFilterSingleColumn()
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter->setValue('John Red');
 
-    public function testFilterFalseSplitWordsSearch()
-    {
+		$this->ds->filter([$filter]);
+		Assert::equal([
+			$this->data[0],
+			$this->data[5]
+		], $this->getActualResultAsArray());
+	}
 
-        /**
-         * Single column - SplitWordsSearch => FALSE
-         */
-        $filter = new FilterText($this->grid, 'a', 'b', ['name']);
-        $filter->setSplitWordsSearch(FALSE);
-        $filter->setValue('John Red');
+	public function testFilterMultipleColumns()
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['name', 'address']);
+		$filter->setValue('lu');
+		$this->ds->filter([$filter]);
 
-        $this->ds->filter([$filter]);
+		Assert::equal([
+			$this->data[0],
+			$this->data[3],
+			$this->data[4]
+		], $this->getActualResultAsArray());
+	}
 
-        Assert::equal([$this->data[5]], $this->getActualResultAsArray());
-    }
+	public function testFilterFalseSplitWordsSearch()
+	{
+		/**
+		 * Single column - SplitWordsSearch => FALSE
+		 */
+		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter->setSplitWordsSearch(FALSE);
+		$filter->setValue('John Red');
 
-    public function testFilterRangeMin()
-    {
+		$this->ds->filter([$filter]);
 
-        $filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
-        $filter->setValue(['from' =>40]);
-        $this->ds->filter([$filter]);
+		Assert::equal([$this->data[5]], $this->getActualResultAsArray());
+	}
 
-        Assert::equal([
-            $this->data[1],
-            $this->data[4],
-            $this->data[5]
-        ], $this->getActualResultAsArray());
-    }
+	public function testFilterRangeMin()
+	{
+		$filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
+		$filter->setValue(['from' =>40]);
+		$this->ds->filter([$filter]);
 
-    public function testFilterRangeMax()
-    {
+		Assert::equal([
+			$this->data[1],
+			$this->data[4],
+			$this->data[5]
+		], $this->getActualResultAsArray());
+	}
 
-        $filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
-        $filter->setValue(['to' => 30]);
-        $this->ds->filter([$filter]);
+	public function testFilterRangeMax()
+	{
+		$filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
+		$filter->setValue(['to' => 30]);
+		$this->ds->filter([$filter]);
 
-        Assert::equal([
-            $this->data[0],
-            $this->data[2],
-            $this->data[3]
-        ], $this->getActualResultAsArray());
-    }
+		Assert::equal([
+			$this->data[0],
+			$this->data[2],
+			$this->data[3]
+		], $this->getActualResultAsArray());
+	}
 
-    public function testFilterRangeMinMax()
-    {
+	public function testFilterRangeMinMax()
+	{
+		$filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
+		$filter->setValue(['from' => 12, 'to' => 30]);
+		$this->ds->filter([$filter]);
 
-        $filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
-        $filter->setValue(['from' => 12, 'to' => 30]);
-        $this->ds->filter([$filter]);
+		Assert::equal([
+			$this->data[0],
+			$this->data[2]
+		], $this->getActualResultAsArray());
+	}
 
-        Assert::equal([
-            $this->data[0],
-            $this->data[2]
-        ], $this->getActualResultAsArray());
-    }
+	public function testFilterOne()
+	{
+		$this->ds->filterOne(['id' => 8]);
 
-    public function testFilterOne()
-    {
-        $this->ds->filterOne(['id' => 8]);
+		Assert::equal([$this->data[3]], $this->getActualResultAsArray());
+	}
 
-        Assert::equal([$this->data[3]], $this->getActualResultAsArray());
-    }
+	public function testFilterExactSearch()
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter->setExactSearch();
+		$filter->setValue('John Red');
 
-    public function testFilterExactSearch(){
+		$this->ds->filter([$filter]);
 
-        $filter = new FilterText($this->grid, 'a', 'b', ['name']);
-        $filter->setExactSearch();
-        $filter->setValue('John Red');
+		Assert::equal([$this->data[5]], $this->getActualResultAsArray());
+	}
 
-        $this->ds->filter([$filter]);
+	public function testFilterExactSearchId()
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['id']);
+		$filter->setExactSearch();
+		$filter->setValue('3');
 
-        Assert::equal([$this->data[5]], $this->getActualResultAsArray());
-    }
+		$this->ds->filter([$filter]);
 
-    public function testFilterExactSearchId(){
+		Assert::equal([$this->data[2]], $this->getActualResultAsArray());
+	}
 
-        $filter = new FilterText($this->grid, 'a', 'b', ['id']);
-        $filter->setExactSearch();
-        $filter->setValue('3');
-
-        $this->ds->filter([$filter]);
-
-        Assert::equal([$this->data[2]], $this->getActualResultAsArray());
-    }
-
-    public function testSum(){
-		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::AGGREGATION_TYPE_SUM, 'age');
+	public function testSum()
+	{
+		$this->ds->addAggregationColumn(ColumnAggregationFunction::AGGREGATION_TYPE_SUM, 'age');
 		$data = $this->toArray($this->ds->getAggregationData());
 
 		Assert::equal((int)$data['age'], 230);
 	}
 
-	public function testFilteredSum(){
-
+	public function testFilteredSum()
+	{
 		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
 		$filter->setValue('John Red');
 		$this->ds->filter([$filter]);
-		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::AGGREGATION_TYPE_SUM, 'age');
+		$this->ds->addAggregationColumn(ColumnAggregationFunction::AGGREGATION_TYPE_SUM, 'age');
 
 		$data = $this->toArray($this->ds->getAggregationData());
 		Assert::equal((int)$data['age'], 70);
 	}
 
-	public function testAvg(){
-		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::AGGREGATION_TYPE_AVG, 'age');
+	public function testAvg()
+	{
+		$this->ds->addAggregationColumn(ColumnAggregationFunction::AGGREGATION_TYPE_AVG, 'age');
 		$data = $this->toArray($this->ds->getAggregationData());
 		Assert::equal(substr($data['age'], 0, 5), '38.33');
 	}
 
-	public function testMin(){
-		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::AGGREGATION_TYPE_MIN, 'age');
+	public function testMultiAggregationFunction()
+	{
+		$this->ds->addAggregationColumn(ColumnAggregationFunction::AGGREGATION_TYPE_SUM, 'id');
+		$this->ds->addAggregationColumn(ColumnAggregationFunction::AGGREGATION_TYPE_MIN, 'age');
+		$data = $this->toArray($this->ds->getAggregationData());
+		$data['id'] = (int)$data['id'];
+		$data['age'] = (int)$data['age'];
+		Assert::equal($data, ['id' => 84, 'age'=> 8]);
+	}
+
+	public function testMin()
+	{
+		$this->ds->addAggregationColumn(ColumnAggregationFunction::AGGREGATION_TYPE_MIN, 'age');
 		$data = $this->toArray($this->ds->getAggregationData());
 		Assert::equal((int)$data['age'], 8);
 	}
 
 
-	public function testMax(){
-		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::AGGREGATION_TYPE_MAX, 'age');
+	public function testMax()
+	{
+		$this->ds->addAggregationColumn(ColumnAggregationFunction::AGGREGATION_TYPE_MAX, 'age');
 		$data = $this->toArray($this->ds->getAggregationData());
 		Assert::equal((int)$data['age'], 80);
 	}
 
 
-    public function testLimit()
-    {
-        $this->ds->limit(2, 2);
-        $result = $this->getActualResultAsArray();
-        Assert::equal([
-            $this->data[2],
-            $this->data[3]
-        ], $result);
-    }
+	public function testLimit()
+	{
+		$this->ds->limit(2, 2);
+		$result = $this->getActualResultAsArray();
+		Assert::equal([
+			$this->data[2],
+			$this->data[3]
+		], $result);
+	}
 
 
-    public function testSort()
-    {
-        $this->ds->sort(new Sorting(['name' => 'DESC']));
+	public function testSort()
+	{
+		$this->ds->sort(new Sorting(['name' => 'DESC']));
 
-        $result = $this->getActualResultAsArray();
+		$result = $this->getActualResultAsArray();
 
-        Assert::equal([
-            $this->data[2],
-            $this->data[3],
-            $this->data[5],
-            $this->data[0],
-            $this->data[4],
-            $this->data[1]
-        ], $result);
-    }
+		Assert::equal([
+			$this->data[2],
+			$this->data[3],
+			$this->data[5],
+			$this->data[0],
+			$this->data[4],
+			$this->data[1]
+		], $result);
+	}
 
 
-    protected function getActualResultAsArray()
-    {
-        return array_values(
-           $this->toArray($this->ds->getData())
-        );
-    }
+	protected function getActualResultAsArray()
+	{
+		return array_values(
+			$this->toArray($this->ds->getData())
+		);
+	}
 
-    protected function toArray($obj){
+	protected function toArray($obj)
+	{
 		return
-			json_decode(
-				json_encode($obj)
-				, TRUE);
+			json_decode(json_encode($obj), TRUE);
 	}
 }
 
