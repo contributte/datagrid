@@ -750,7 +750,7 @@ abstract class Column extends FilterableColumn
 
 
 	/**
-	 * @param $aggregation_type use ColumnAggregationFunction::$aggregation_type...
+	 * @param $aggregation_type use ColumnAggregationFunction::AGGREGATION_TYPE_...
 	 * @param string $column
 	 * @return ColumnAggregationFunction
 	 */

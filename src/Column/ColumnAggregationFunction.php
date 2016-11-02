@@ -14,13 +14,13 @@ class ColumnAggregationFunction
 	 */
 	protected $aggregation_type;
 
-	public static $aggregation_type_sum = 'sum';
+	const AGGREGATION_TYPE_SUM = 'sum';
 
-	public static $aggregation_type_avg = 'avg';
+	const AGGREGATION_TYPE_AVG = 'avg';
 
-	public static $aggregation_type_min = 'min';
+	const AGGREGATION_TYPE_MIN = 'min';
 
-	public static $aggregation_type_max = 'max';
+	const AGGREGATION_TYPE_MAX = 'max';
 
 	/**
 	 * ColumnSummary constructor.
@@ -44,7 +44,7 @@ class ColumnAggregationFunction
 
 
 	/**
-	 * @param string $value use ColumnAggregationFunction::$aggregation_type_...
+	 * @param string $value use ColumnAggregationFunction::AGGREGATION_TYPE_...
 	 * @return ColumnSummary
 	 */
 	public function setAggregationType($value)

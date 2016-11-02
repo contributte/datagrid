@@ -158,7 +158,7 @@ abstract class BaseDataSourceTest extends TestCase
     }
 
     public function testSum(){
-		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::$aggregation_type_sum, 'age');
+		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::AGGREGATION_TYPE_SUM, 'age');
 		$data = $this->toArray($this->ds->getAggregationData());
 
 		Assert::equal((int)$data['age'], 230);
@@ -169,27 +169,27 @@ abstract class BaseDataSourceTest extends TestCase
 		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
 		$filter->setValue('John Red');
 		$this->ds->filter([$filter]);
-		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::$aggregation_type_sum, 'age');
+		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::AGGREGATION_TYPE_SUM, 'age');
 
 		$data = $this->toArray($this->ds->getAggregationData());
 		Assert::equal((int)$data['age'], 70);
 	}
 
 	public function testAvg(){
-		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::$aggregation_type_avg, 'age');
+		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::AGGREGATION_TYPE_AVG, 'age');
 		$data = $this->toArray($this->ds->getAggregationData());
 		Assert::equal(substr($data['age'], 0, 5), '38.33');
 	}
 
 	public function testMin(){
-		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::$aggregation_type_min, 'age');
+		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::AGGREGATION_TYPE_MIN, 'age');
 		$data = $this->toArray($this->ds->getAggregationData());
 		Assert::equal((int)$data['age'], 8);
 	}
 
 
 	public function testMax(){
-		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::$aggregation_type_max, 'age');
+		$this->ds->addAggregationColumn(Ublaboo\DataGrid\Column\ColumnAggregationFunction::AGGREGATION_TYPE_MAX, 'age');
 		$data = $this->toArray($this->ds->getAggregationData());
 		Assert::equal((int)$data['age'], 80);
 	}
