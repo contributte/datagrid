@@ -251,6 +251,7 @@ abstract class Filter extends Nette\Object
 	/**
 	 * @param string $name
 	 * @param mixed $value
+	 * @return $this
 	 */
 	public function addAttribute($name, $value)
 	{
@@ -263,9 +264,18 @@ abstract class Filter extends Nette\Object
 	/**
 	 * @return array
 	 */
-	public function getAttribtues()
+	public function getAttributes()
 	{
 		return $this->attributes;
+	}
+
+
+	/**
+	 * @return \Ublaboo\DataGrid\Column\Column
+	 */
+	public function getColumnObject()
+	{
+		return $this->grid->getColumn($this->key);
 	}
 
 
