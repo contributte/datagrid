@@ -2713,6 +2713,18 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Delete session data
+	 * @return void
+	 * @deprecated
+	 */
+	public function deleteSesssionData($key)
+	{
+		@trigger_error('deleteSesssionData is deprecated, use deleteSessionData instead', E_USER_DEPRECATED);
+		return $this->deleteSessionData($key)
+	}
+
+
 	/********************************************************************************
 	 *                                  ITEM DETAIL                                 *
 	 ********************************************************************************/
