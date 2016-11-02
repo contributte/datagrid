@@ -30,6 +30,11 @@ class ArrayDataSource implements IDataSource
 	 */
 	protected $data = [];
 
+	/**
+	 * @var int
+	 */
+	protected $count = 0;
+
 
 	/**
 	 * @param array $data_source
@@ -37,6 +42,7 @@ class ArrayDataSource implements IDataSource
 	public function __construct(array $data_source)
 	{
 		$this->data = $data_source;
+		$this->count = sizeof($data_source);
 	}
 
 
@@ -51,7 +57,7 @@ class ArrayDataSource implements IDataSource
 	 */
 	public function getCount()
 	{
-		return sizeof($this->data);
+		return $this->count;
 	}
 
 
