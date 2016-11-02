@@ -9,7 +9,6 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use DibiFluent;
-use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\Sorting;
@@ -19,12 +18,12 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 {
 
 	/**
-	 * @var DibiFluent
+	 * @var Dibi\Fluent
 	 */
 	protected $data_source;
 
 	/**
-	 * @var DibiFluent
+	 * @var Dibi\Fluent
 	 */
 	protected $aggregation_data_source;
 
@@ -38,12 +37,17 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 	 */
 	protected $primary_key;
 
+	/**
+	 * @var bool
+	 */
+	protected $hasAggregationFunctions = FALSE;
+
 
 	/**
-	 * @param DibiFluent $data_source
+	 * @param Dibi\Fluent $data_source
 	 * @param string $primary_key
 	 */
-	public function __construct(\Dibi\Fluent $data_source, $primary_key)
+	public function __construct(Dibi\Fluent $data_source, $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->aggregation_data_source = $data_source->getConnection();
@@ -171,7 +175,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 				\dibi::IDENTIFIER
 			);
 
-			if ($filter->isExactSearch()){
+			if ($filter->isExactSearch()) {
 				$this->data_source->where("$column = %s", $value);
 				continue;
 			}
@@ -301,13 +305,24 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		return $this;
 	}
 
+	/**
+	 * @param string $aggregation_type
+	 * @param string $column
+	 */
 	public function addAggregationColumn($aggregation_type, $column)
 	{
 		$this->aggregation_data_source = $this->aggregation_data_source->select($aggregation_type .'(%n)', $column)->as($column);
 	}
 
+
+	/**
+	 * @return array|Dibi\Row|FALSE
+	 */
 	public function getAggregationData()
 	{
+		if ($this->hasAggregationFunctions) {
+			return FALSE;
+		}
 		$data = $this->aggregation_data_source->from($this->data_source)->as('data')->fetch();
 		return $data;
 	}

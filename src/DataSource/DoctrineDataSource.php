@@ -365,10 +365,12 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function getAggregationData()
 	{
+		if (count($this->aggregations) === 0) {
+			return [];
+		}
 		$this->data_source->resetDQLPart('select');
-		$root_alias = $this->data_source->getRootAliases()[0];
 		foreach ($this->aggregations as $column => $aggregation_type) {
-			$query = $this->data_source->select("$aggregation_type($root_alias.$column) AS $column");
+			$query = $this->data_source->select("$aggregation_type(" . $this->checkAliases($column) . ") AS $column");
 		}
 		return $query->getQuery()->getSingleResult();
 	}

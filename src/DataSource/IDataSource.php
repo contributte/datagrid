@@ -63,7 +63,7 @@ interface IDataSource
 	/**
 	 * @param string $aggregation_type
 	 * @param string $column
-	 * @return mixed
+	 * @return void
 	 */
 	public function addAggregationColumn($aggregation_type, $column);
 

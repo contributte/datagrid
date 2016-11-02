@@ -330,7 +330,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	public function getAggregationData()
 	{
 		if (count($this->aggregations) == 0) {
-			return;
+			return FALSE;
 		}
 		$sql = 'SELECT ';
 		foreach ($this->aggregations as $column => $aggregation_type) {
