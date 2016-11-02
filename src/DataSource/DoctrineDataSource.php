@@ -235,7 +235,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		foreach ($condition as $column => $value) {
 			$c = $this->checkAliases($column);
 
-			if ($filter->isExactSearch()) {
+			if($filter->isExactSearch()){
 				$exprs[] = $this->data_source->expr()->eq($c, $this->data_source->expr()->literal($value));
 				continue;
 			}
