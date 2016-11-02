@@ -551,6 +551,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * By default ID, you can change that
 	 * @param string $primary_key
 	 * @return static
+	 * @throws DataGridException
 	 */
 	public function setPrimaryKey($primary_key)
 	{
@@ -1050,9 +1051,11 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Create action callback
-	 * @param string     $key
-	 * @param string     $name
+	 * @param string $key
+	 * @param string $name
+	 * @param null $callback
 	 * @return Column\Action
+	 * @throws DataGridException
 	 */
 	public function addActionCallback($key, $name, $callback = NULL)
 	{
