@@ -10,7 +10,7 @@ namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
 
-class FilterDate extends Filter
+class FilterDate extends Filter implements IFilterDate
 {
 
 	/**

@@ -11,6 +11,7 @@ namespace Ublaboo\DataGrid\DataSource;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
 final class DoctrineCollectionDataSource extends FilterableDataSource implements IDataSource
@@ -102,8 +103,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	public function applyFilterDate(Filter\FilterDate $filter)
 	{
 		foreach ($filter->getCondition() as $column => $value) {
-			$date = \DateTime::createFromFormat($filter->getPhpFormat(), $value)
-				->format('Y-m-d H:i:s');
+			$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
 
 			$from = Criteria::expr()->gte($filter->getColumn(), $date->format('Y-m-d 00:00:00'));
 			$to = Criteria::expr()->lte($filter->getColumn(), $date->format('Y-m-d 23:59:59'));
@@ -123,20 +123,18 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 		$values = $conditions[$filter->getColumn()];
 
 		if ($value_from = $values['from']) {
-			$date_from = \DateTime::createFromFormat($filter->getPhpFormat(), $value_from)
-				->setTime(0, 0, 0)
-				->format('Y-m-d H:i:s');
+			$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
+			$date_from->setTime(0, 0, 0);
 
-			$expr = Criteria::expr()->gte($filter->getColumn(), $date_from);
+			$expr = Criteria::expr()->gte($filter->getColumn(), $date_from->format('Y-m-d H:i:s'));
 			$this->criteria->andWhere($expr);
 		}
 
 		if ($value_to = $values['to']) {
-			$date_to = \DateTime::createFromFormat($filter->getPhpFormat(), $value_to)
-				->setTime(23, 59, 59)
-				->format('Y-m-d H:i:s');
+			$date_to = DateTimeHelper::tryConvertToDateTime($value_to, [$filter->getPhpFormat()]);
+			$date_to->setTime(23, 59, 59);
 
-			$expr = Criteria::expr()->lte($filter->getColumn(), $date_to);
+			$expr = Criteria::expr()->lte($filter->getColumn(), $date_to->format('Y-m-d H:i:s'));
 			$this->criteria->andWhere($expr);
 		}
 	}

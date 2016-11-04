@@ -8,12 +8,13 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Dibi;
 use DibiFluent;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
-use Dibi;
 
 class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 {
@@ -92,7 +93,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 	{
 		$conditions = $filter->getCondition();
 
-		$date = \DateTime::createFromFormat($filter->getPhpFormat(), $conditions[$filter->getColumn()]);
+		$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
 		$this->data_source->where('DATE(%n) = ?', $filter->getColumn(), $date->format('Y-m-d'));
 	}
@@ -111,14 +112,14 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
-			$date_from = \DateTime::createFromFormat($filter->getPhpFormat(), $value_from);
+			$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
 			$date_from->setTime(0, 0, 0);
 
 			$this->data_source->where('DATE(%n) >= ?', $filter->getColumn(), $date_from);
 		}
 
 		if ($value_to) {
-			$date_to = \DateTime::createFromFormat($filter->getPhpFormat(), $value_to);
+			$date_to = DateTimeHelper::tryConvertToDateTime($value_to, [$filter->getPhpFormat()]);
 			$date_to->setTime(23, 59, 59);
 
 			$this->data_source->where('DATE(%n) <= ?', $filter->getColumn(), $date_to);

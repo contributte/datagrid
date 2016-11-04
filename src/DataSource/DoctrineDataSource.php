@@ -13,6 +13,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
 /**
@@ -149,7 +150,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		$p2 = $this->getPlaceholder();
 
 		foreach ($filter->getCondition() as $column => $value) {
-			$date = \DateTime::createFromFormat($filter->getPhpFormat(), $value);
+			$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
 			$c = $this->checkAliases($column);
 
 			$this->data_source
@@ -174,7 +175,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
-			$date_from = \DateTime::createFromFormat($filter->getPhpFormat(), $value_from);
+			$date_from = DateTimeHelper::tryConvertToDate($value_from, [$filter->getPhpFormat()]);
 			$date_from->setTime(0, 0, 0);
 
 			$p = $this->getPlaceholder();
@@ -183,7 +184,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		}
 
 		if ($value_to) {
-			$date_to = \DateTime::createFromFormat($filter->getPhpFormat(), $value_to);
+			$date_to = DateTimeHelper::tryConvertToDate($value_to, [$filter->getPhpFormat()]);
 			$date_to->setTime(23, 59, 59);
 
 			$p = $this->getPlaceholder();

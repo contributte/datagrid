@@ -8,12 +8,13 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Ublaboo\DataGrid\Filter;
-use Nextras\Orm\Mapper\Dbal\DbalCollection;
 use Nette\Utils\Strings;
-use Ublaboo\DataGrid\Utils\Sorting;
+use Nextras\Orm\Mapper\Dbal\DbalCollection;
 use Nextras\Orm\Collection\ICollection;
+use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\ArraysHelper;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
+use Ublaboo\DataGrid\Utils\Sorting;
 
 class NextrasDataSource extends FilterableDataSource implements IDataSource
 {
@@ -97,7 +98,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	public function applyFilterDate(Filter\FilterDate $filter)
 	{
 		foreach ($filter->getCondition() as $column => $value) {
-			$date = \DateTime::createFromFormat($filter->getPhpFormat(), $value);
+			$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
 			$date_end = clone $date;
 
 			$this->data_source = $this->data_source->findBy([
@@ -124,12 +125,12 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 		$dataCondition = [];
 		if ($value_from) {
-			$date_from = \DateTime::createFromFormat($filter->getPhpFormat(), $value_from);
+			$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
 			$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $date_from->setTime(0, 0, 0);
 		}
 
 		if ($value_to) {
-			$date_to = \DateTime::createFromFormat($filter->getPhpFormat(), $value_to);
+			$date_to = DateTimeHelper::tryConvertToDateTime($value_to, [$filter->getPhpFormat()]);
 			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $date_to->setTime(23, 59, 59);
 		}
 
