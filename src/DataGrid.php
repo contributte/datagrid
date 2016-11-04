@@ -215,6 +215,11 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $sortable = FALSE;
 
 	/**
+	 * @var bool
+	 */
+	protected $multiSort = FALSE;
+
+	/**
 	 * @var string
 	 */
 	protected $sortable_handler = 'sort!';
@@ -699,6 +704,37 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Tell whether DataGrid is sortable
+	 * @return bool
+	 */
+	public function isSortable()
+	{
+		return $this->sortable;
+	}
+
+
+	/**
+	 * Enable multi-sorting capability
+	 * @param bool  $multiSort
+	 * @return void
+	 */
+	public function setMultiSortEnabled($multiSort = TRUE)
+	{
+		$this->multiSort = (bool) $multiSort;
+	}
+
+
+	/**
+	 * Tell wether DataGrid can be sorted by multiple columns
+	 * @return bool
+	 */
+	public function isMultiSortEnabled()
+	{
+		return $this->multiSort;
+	}
+
+
+	/**
 	 * Set sortable handle
 	 * @param string $handler
 	 * @return static
@@ -708,16 +744,6 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->sortable_handler = (string) $handler;
 
 		return $this;
-	}
-
-
-	/**
-	 * Tell whether DataGrid is sortable
-	 * @return bool
-	 */
-	public function isSortable()
-	{
-		return $this->sortable;
 	}
 
 	/**
@@ -731,11 +757,28 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * @param Column  $column
+	 * @return array
+	 * @internal
+	 */
+	public function getSortNext(\Ublaboo\DataGrid\Column\Column $column)
+	{
+		$sort = $column->getSortNext();
+
+		if ($this->isMultiSortEnabled()) {
+			$sort = array_merge($this->sort, $sort);
+		}
+
+		return array_filter($sort);
+	}
+
+
+	/**
 	 * @param  array         $sort
 	 * @param  callable|NULL $sort_callback
 	 * @return void
 	 */
-	protected function createSorting(array $sort, $sort_callback)
+	protected function createSorting(array $sort, callable $sort_callback = NULL)
 	{
 		foreach ($sort as $key => $order) {
 			unset($sort[$key]);
@@ -750,8 +793,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$sort[$column->getSortingColumn()] = $order;
 		}
 
-		// required for first request
-		if (isset($column) && $sort_callback === NULL) {
+		if (!$sort_callback && isset($column)) {
 			$sort_callback = $column->getSortableCallback();
 		}
 
@@ -1955,44 +1997,29 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Handler for sorting
 	 * @param array $sort
 	 * @return void
+	 * @throws DataGridColumnNotFoundException
 	 */
 	public function handleSort(array $sort)
 	{
-		$new_sort = [];
-
-		/**
-		 * Find apropirate column
-		 */
 		foreach ($sort as $key => $value) {
-			if (empty($this->columns[$key])) {
-				throw new DataGridException("Column <$key> not found");
+			try {
+				$column = $this->getColumn($key);
+
+			} catch (DataGridColumnNotFoundException $e) {
+				unset($sort[$key]);
+				continue;
 			}
 
-			$column = $this->columns[$key];
-			$new_sort = [$key => $value];
-
-			/**
-			 * Pagination may be reseted after sorting
-			 */
 			if ($column->sortableResetPagination()) {
-				$this->page = 1;
-				$this->saveSessionData('_grid_page', 1);
+				$this->saveSessionData('_grid_page', $this->page = 1);
 			}
 
-			/**
-			 * Custom sorting callback may be applied
-			 */
 			if ($column->getSortableCallback()) {
 				$this->sort_callback = $column->getSortableCallback();
 			}
 		}
 
-		/**
-		 * Session stuff
-		 */
-		$this->sort = $new_sort;
-		$this->saveSessionData('_grid_sort', $this->sort);
-
+		$this->saveSessionData('_grid_sort', $this->sort = $sort);
 		$this->reload(['table']);
 	}
 
@@ -2681,6 +2708,18 @@ class DataGrid extends Nette\Application\UI\Control
 	public function deleteSessionData($key)
 	{
 		unset($this->grid_session->{$key});
+	}
+
+
+	/**
+	 * Delete session data
+	 * @return void
+	 * @deprecated
+	 */
+	public function deleteSesssionData($key)
+	{
+		@trigger_error('deleteSesssionData is deprecated, use deleteSessionData instead', E_USER_DEPRECATED);
+		return $this->deleteSessionData($key);
 	}
 
 

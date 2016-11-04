@@ -140,7 +140,7 @@
 									{include #$col_header, column => $column}
 								{else}
 									{if $column->isSortable()}
-										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" {if $column->hasSortNext()}href="{link sort!, sort => $column->getSortNext()}"{else}href="{link sort!, sort => NULL}"{/if} id="datagrid-sort-{$key}">
+										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" href="{link sort!, sort => $control->getSortNext($column)}" id="datagrid-sort-{$key}">
 											{include #column-header, column => $column}
 
 											{if $column->isSortedBy()}

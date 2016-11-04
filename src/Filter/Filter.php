@@ -251,6 +251,7 @@ abstract class Filter extends Nette\Object
 	/**
 	 * @param string $name
 	 * @param mixed $value
+	 * @return static
 	 */
 	public function addAttribute($name, $value)
 	{
@@ -262,8 +263,15 @@ abstract class Filter extends Nette\Object
 
 	/**
 	 * @return array
+	 * @deprecated use getAttributes instead
 	 */
 	public function getAttribtues()
+	{
+		@trigger_error('getAttribtues is deprecated, use getAttributes instead', E_USER_DEPRECATED);
+		return $this->getAttributes();
+	}
+
+	public function getAttributes()
 	{
 		return $this->attributes;
 	}
