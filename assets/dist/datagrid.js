@@ -163,7 +163,6 @@ datagridSortable = function() {
       data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id;
       data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id;
       data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id;
-      console.log(data);
       return $.nette.ajax({
         type: 'GET',
         url: url,
