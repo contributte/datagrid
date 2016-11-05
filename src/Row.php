@@ -92,6 +92,12 @@ class Row extends Nette\Object
 			return $this->item->{$this->formatDibiRowKey($key)};
 
 		} else if ($this->item instanceof ActiveRow) {
+			if (preg_match("/^:([a-zA-Z0-9_$]*)\.([a-zA-Z0-9_$]*)$/", $key, $matches)) {
+				$relatedTable = $matches[1];
+				$relatedColumn = $matches[2];
+
+				return $this->item->related($relatedTable)->fetch()->{$relatedColumn};
+			}
 			return $this->item->{$key};
 
 		} else if ($this->item instanceof Nette\Database\Row) {
