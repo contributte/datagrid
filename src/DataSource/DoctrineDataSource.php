@@ -150,13 +150,15 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 		foreach ($filter->getCondition() as $column => $value) {
 			$date = \DateTime::createFromFormat($filter->getPhpFormat(), $value);
-			$c = $this->checkAliases($column);
+			if ($date instanceof \DateTime) {
+				$c = $this->checkAliases($column);
 
-			$this->data_source
-				->andWhere("$c >= ?$p1")
-				->andWhere("$c <= ?$p2")
-				->setParameter($p1, $date->format('Y-m-d 00:00:00'))
-				->setParameter($p2, $date->format('Y-m-d 23:59:59'));
+				$this->data_source
+					->andWhere("$c >= ?$p1")
+					->andWhere("$c <= ?$p2")
+					->setParameter($p1, $date->format('Y-m-d 00:00:00'))
+					->setParameter($p2, $date->format('Y-m-d 23:59:59'));
+			}
 		}
 	}
 
@@ -175,20 +177,25 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 		if ($value_from) {
 			$date_from = \DateTime::createFromFormat($filter->getPhpFormat(), $value_from);
-			$date_from->setTime(0, 0, 0);
+			if ($date_from instanceof \DateTime) {
+				$date_from->setTime(0, 0, 0);
 
-			$p = $this->getPlaceholder();
+				$p = $this->getPlaceholder();
 
-			$this->data_source->andWhere("$c >= ?$p")->setParameter($p, $date_from->format('Y-m-d H:i:s'));
+				$this->data_source->andWhere("$c >= ?$p")->setParameter($p, $date_from->format('Y-m-d H:i:s'));
+			}
+
 		}
 
 		if ($value_to) {
 			$date_to = \DateTime::createFromFormat($filter->getPhpFormat(), $value_to);
-			$date_to->setTime(23, 59, 59);
+			if ($date_to instanceof \DateTime) {
+				$date_to->setTime(23, 59, 59);
 
-			$p = $this->getPlaceholder();
+				$p = $this->getPlaceholder();
 
-			$this->data_source->andWhere("$c <= ?$p")->setParameter($p, $date_to->format('Y-m-d H:i:s'));
+				$this->data_source->andWhere("$c <= ?$p")->setParameter($p, $date_to->format('Y-m-d H:i:s'));
+			}
 		}
 	}
 

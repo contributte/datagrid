@@ -83,10 +83,11 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$conditions = $filter->getCondition();
 
 		$date = \DateTime::createFromFormat($filter->getPhpFormat(), $conditions[$filter->getColumn()]);
+		if ($date instanceof \DateTime) {
+			$ymd = $date->format('Ymd');
 
-		$ymd = $date->format('Ymd');
-
-		$this->data_source->where('CONVERT(varchar(10), %n, 112) = ?', $filter->getColumn(), $ymd);
+			$this->data_source->where('CONVERT(varchar(10), %n, 112) = ?', $filter->getColumn(), $ymd);
+		}
 	}
 
 

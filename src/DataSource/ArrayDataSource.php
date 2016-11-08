@@ -236,6 +236,10 @@ class ArrayDataSource implements IDataSource
 
 		if ($values['from'] !== NULL && $values['from'] !== '') {
 			$date_from = \DateTime::createFromFormat($format, $values['from']);
+			if (!($date_from instanceof \DateTime)) {
+				/** Date given is not in valid format */
+				return FALSE;
+			}
 			$date_from->setTime(0, 0, 0);
 
 			if (!($row_value instanceof \DateTime)) {
@@ -259,6 +263,10 @@ class ArrayDataSource implements IDataSource
 
 		if ($values['to'] !== NULL && $values['to'] !== '') {
 			$date_to = \DateTime::createFromFormat($format, $values['to']);
+			if (!($date_to instanceof \DateTime)) {
+				/** Date given is not in valid format */
+				return FALSE;
+			}
 			$date_to->setTime(23, 59, 59);
 
 			if (!($row_value instanceof \DateTime)) {
@@ -287,7 +295,7 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * Apply fitler date and tell whether row value matches or not
 	 * @param  mixed  $row
-	 * @param  Filter $filter
+	 * @param  FilterDate $filter
 	 * @return mixed
 	 */
 	protected function applyFilterDate($row, FilterDate $filter)
@@ -299,6 +307,11 @@ class ArrayDataSource implements IDataSource
 			$row_value = $row[$column];
 
 			$date = \DateTime::createFromFormat($format, $value);
+
+			if (!($date instanceof \DateTime)) {
+				/** Date given is not in valid format */
+				return FALSE;
+			}
 
 			if (!($row_value instanceof \DateTime)) {
 				/**
