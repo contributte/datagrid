@@ -116,6 +116,11 @@ class DataGrid extends Nette\Application\UI\Control
 	public $default_filter_use_on_reset = TRUE;
 
 	/**
+	 * @var bool
+	 */
+	public $default_sort_use_on_reset = TRUE;
+
+	/**
 	 * @var array
 	 * @persistent
 	 */
@@ -654,9 +659,10 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set default sorting
 	 * @param array $sort
+	 * @param bool  $use_on_reset
 	 * @return static
 	 */
-	public function setDefaultSort($sort)
+	public function setDefaultSort($sort, $use_on_reset = TRUE)
 	{
 		if (is_string($sort)) {
 			$sort = [$sort => 'ASC'];
@@ -665,6 +671,7 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$this->default_sort = $sort;
+		$this->default_sort_use_on_reset = (bool) $use_on_reset;
 
 		return $this;
 	}
@@ -677,6 +684,10 @@ class DataGrid extends Nette\Application\UI\Control
 	public function findDefaultSort()
 	{
 		if (!empty($this->sort)) {
+			return;
+		}
+
+		if ($this->getSessionData('_grid_has_sorted')) {
 			return;
 		}
 
@@ -1746,6 +1757,7 @@ class DataGrid extends Nette\Application\UI\Control
 				'_grid_per_page',
 				'_grid_sort',
 				'_grid_page',
+				'_grid_has_sorted',
 				'_grid_has_filtered',
 				'_grid_hidden_columns',
 				'_grid_hidden_columns_manipulated'
@@ -2022,6 +2034,7 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
+		$this->saveSessionData('_grid_has_sorted', 1);
 		$this->saveSessionData('_grid_sort', $this->sort = $sort);
 		$this->reload(['table']);
 	}
@@ -2042,12 +2055,17 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->deleteSessionData('_grid_has_filtered');
 		}
 
+		if ($this->default_sort_use_on_reset) {
+			$this->deleteSessionData('_grid_has_sorted');
+		}
+
 		foreach ($this->getSessionData() as $key => $value) {
 			if (!in_array($key, [
 				'_grid_per_page',
 				'_grid_sort',
 				'_grid_page',
 				'_grid_has_filtered',
+				'_grid_has_sorted',
 				'_grid_hidden_columns',
 				'_grid_hidden_columns_manipulated'
 				])) {
