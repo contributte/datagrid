@@ -17,6 +17,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridColumnNotFoundException;
 use Ublaboo\DataGrid\Exception\DataGridFilterNotFoundException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
+use Ublaboo\DataGrid\Filter\IFilterDate;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 use Ublaboo\DataGrid\InlineEdit\InlineEdit;
 use Ublaboo\DataGrid\ColumnsSummary;
@@ -1546,29 +1548,30 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * @param  Nette\Forms\Container  $container
+	 * @param  array  $values
+	 * @return void
+	 */
 	public function setFilterContainerDefaults(Nette\Forms\Container $container, array $values)
 	{
-		foreach ($container->getComponents() as $name => $control) {
-			if ($control instanceof Nette\Forms\IControl) {
-				if (array_key_exists($name, $values)) {
-					try {
-						$control->setValue($values[$name]);
-					} catch (Nette\InvalidArgumentException $e) {
-						if ($this->strict_session_filter_values) {
-							throw $e;
-						}
-					}
-				}
+		foreach ($container->getComponents() as $key => $control) {
+			if (!isset($values[$key]) || !method_exists($control, 'setValue')) {
+				continue;
+			}
 
-			} elseif ($control instanceof Nette\Forms\Container) {
-				if (array_key_exists($name, $values)) {
-					try {
-						$control->setValues($values[$name]);
-					} catch (Nette\InvalidArgumentException $e) {
-						if ($this->strict_session_filter_values) {
-							throw $e;
-						}
-					}
+			$value = $values[$key];
+
+			if ($value instanceof \DateTime && ($filter = $this->getFilter($key)) instanceof IFilterDate) {
+				$value = $value->format($filter->getPhpFormat());
+			}
+
+			try {
+				$control->setValue($value);
+
+			} catch (Nette\InvalidArgumentException $e) {
+				if ($this->strict_session_filter_values) {
+					throw $e;
 				}
 			}
 		}
