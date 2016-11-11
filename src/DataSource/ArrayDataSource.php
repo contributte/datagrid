@@ -19,8 +19,8 @@ use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridArrayDataSourceException;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
 class ArrayDataSource implements IDataSource
@@ -241,7 +241,7 @@ class ArrayDataSource implements IDataSource
 		$row_value = $row[$filter->getColumn()];
 
 		if ($values['from'] !== NULL && $values['from'] !== '') {
-			$date_from = \DateTime::createFromFormat($format, $values['from']);
+			$date_from = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
 			$date_from->setTime(0, 0, 0);
 
 			if (!($row_value instanceof \DateTime)) {
@@ -264,7 +264,7 @@ class ArrayDataSource implements IDataSource
 		}
 
 		if ($values['to'] !== NULL && $values['to'] !== '') {
-			$date_to = \DateTime::createFromFormat($format, $values['to']);
+			$date_to = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
 			$date_to->setTime(23, 59, 59);
 
 			if (!($row_value instanceof \DateTime)) {
@@ -304,7 +304,7 @@ class ArrayDataSource implements IDataSource
 		foreach ($condition as $column => $value) {
 			$row_value = $row[$column];
 
-			$date = \DateTime::createFromFormat($format, $value);
+			$date = DateTimeHelper::tryConvertToDateTime($value, [$format]);
 
 			if (!($row_value instanceof \DateTime)) {
 				/**

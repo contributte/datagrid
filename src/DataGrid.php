@@ -17,6 +17,8 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridColumnNotFoundException;
 use Ublaboo\DataGrid\Exception\DataGridFilterNotFoundException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
+use Ublaboo\DataGrid\Filter\IFilterDate;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 use Ublaboo\DataGrid\InlineEdit\InlineEdit;
 use Ublaboo\DataGrid\ColumnsSummary;
@@ -112,6 +114,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @var bool
 	 */
 	public $default_filter_use_on_reset = TRUE;
+
+	/**
+	 * @var bool
+	 */
+	public $default_sort_use_on_reset = TRUE;
 
 	/**
 	 * @var array
@@ -654,9 +661,10 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set default sorting
 	 * @param array $sort
+	 * @param bool  $use_on_reset
 	 * @return static
 	 */
-	public function setDefaultSort($sort)
+	public function setDefaultSort($sort, $use_on_reset = TRUE)
 	{
 		if (is_string($sort)) {
 			$sort = [$sort => 'ASC'];
@@ -665,6 +673,7 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$this->default_sort = $sort;
+		$this->default_sort_use_on_reset = (bool) $use_on_reset;
 
 		return $this;
 	}
@@ -677,6 +686,10 @@ class DataGrid extends Nette\Application\UI\Control
 	public function findDefaultSort()
 	{
 		if (!empty($this->sort)) {
+			return;
+		}
+
+		if ($this->getSessionData('_grid_has_sorted')) {
 			return;
 		}
 
@@ -1548,29 +1561,30 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * @param  Nette\Forms\Container  $container
+	 * @param  array  $values
+	 * @return void
+	 */
 	public function setFilterContainerDefaults(Nette\Forms\Container $container, array $values)
 	{
-		foreach ($container->getComponents() as $name => $control) {
-			if ($control instanceof Nette\Forms\IControl) {
-				if (array_key_exists($name, $values)) {
-					try {
-						$control->setValue($values[$name]);
-					} catch (Nette\InvalidArgumentException $e) {
-						if ($this->strict_session_filter_values) {
-							throw $e;
-						}
-					}
-				}
+		foreach ($container->getComponents() as $key => $control) {
+			if (!isset($values[$key]) || !method_exists($control, 'setValue')) {
+				continue;
+			}
 
-			} elseif ($control instanceof Nette\Forms\Container) {
-				if (array_key_exists($name, $values)) {
-					try {
-						$control->setValues($values[$name]);
-					} catch (Nette\InvalidArgumentException $e) {
-						if ($this->strict_session_filter_values) {
-							throw $e;
-						}
-					}
+			$value = $values[$key];
+
+			if ($value instanceof \DateTime && ($filter = $this->getFilter($key)) instanceof IFilterDate) {
+				$value = $value->format($filter->getPhpFormat());
+			}
+
+			try {
+				$control->setValue($value);
+
+			} catch (Nette\InvalidArgumentException $e) {
+				if ($this->strict_session_filter_values) {
+					throw $e;
 				}
 			}
 		}
@@ -1745,6 +1759,7 @@ class DataGrid extends Nette\Application\UI\Control
 				'_grid_per_page',
 				'_grid_sort',
 				'_grid_page',
+				'_grid_has_sorted',
 				'_grid_has_filtered',
 				'_grid_hidden_columns',
 				'_grid_hidden_columns_manipulated'
@@ -2021,6 +2036,7 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
+		$this->saveSessionData('_grid_has_sorted', 1);
 		$this->saveSessionData('_grid_sort', $this->sort = $sort);
 		$this->reload(['table']);
 	}
@@ -2041,12 +2057,17 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->deleteSessionData('_grid_has_filtered');
 		}
 
+		if ($this->default_sort_use_on_reset) {
+			$this->deleteSessionData('_grid_has_sorted');
+		}
+
 		foreach ($this->getSessionData() as $key => $value) {
 			if (!in_array($key, [
 				'_grid_per_page',
 				'_grid_sort',
 				'_grid_page',
 				'_grid_has_filtered',
+				'_grid_has_sorted',
 				'_grid_hidden_columns',
 				'_grid_hidden_columns_manipulated'
 				])) {

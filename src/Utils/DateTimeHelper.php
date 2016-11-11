@@ -8,86 +8,76 @@
 
 namespace Ublaboo\DataGrid\Utils;
 
-use Nette;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 
-final class DateTimeHelper extends Nette\Object
+final class DateTimeHelper extends \Nette\Object
 {
 
 	/**
 	 * Try to convert string into DateTime object
-	 * @param  string $value
+	 * @param  mixed     $value
+	 * @param  string[]  $formats
 	 * @return \DateTime
 	 * @throws DataGridDateTimeHelperException
 	 */
-	public static function tryConvertToDateTime($value)
+	public static function tryConvertToDateTime($value, array $formats = [])
 	{
-		/**
-		 * Try to convert string Y-m-d to DateTime object
-		 */
-		$date = \DateTime::createFromFormat('Y-m-d', $value);
+		return static::fromString($value, $formats);
+	}
 
-		if ($date) {
+
+	/**
+	 * Try to convert string into DateTime object from more date formats
+	 * @param  mixed     $value
+	 * @param  string[]  $formats
+	 * @return \DateTime
+	 * @throws DataGridDateTimeHelperException
+	 */
+	public static function tryConvertToDate($value, array $formats = [])
+	{
+		return static::fromString($value, $formats);
+	}
+
+
+	/**
+	 * Convert string into DateTime object from more date without time
+	 * @param  mixed     $value
+	 * @param  string[]  $formats
+	 * @return \DateTime
+	 * @throws DataGridDateTimeHelperException
+	 */
+	public static function fromString($value, array $formats = [])
+	{
+		$formats = array_merge($formats, [
+			'Y-m-d H:i:s.u',
+			'Y-m-d H:i:s',
+			'Y-m-d',
+			'j. n. Y G:i:s',
+			'j. n. Y G:i',
+			'j. n. Y',
+		]);
+
+		if ($value instanceof \DateTime) {
+			return $value;
+		}
+
+		foreach ($formats as $format) {
+			if (!is_string($format) || !$date = \DateTime::createFromFormat($format, $value)) {
+				continue;
+			}
+
 			return $date;
 		}
 
-		/**
-		 * Try to convert string Y-m-d H:i:s to DateTime object
-		 */
-		$date = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
-
-		if ($date) {
-			return $date;
-		}
-
-		/**
-		 * Try to convert string Y-m-d H:i:s.u to DateTime object
-		 */
-		$date = \DateTime::createFromFormat('Y-m-d H:i:s.u', $value);
-
-		if ($date) {
-			return $date;
-		}
-
-		/**
-		 * Try strtotime
-		 */
 		$timestamp = strtotime($value);
-		if (FALSE !== $timestamp) {
+
+		if ($timestamp !== FALSE) {
 			$date = new \DateTime;
 			$date->setTimestamp($timestamp);
 
 			return $date;
 		}
 
-		/**
-		 * Could not convert string to datatime
-		 */
-		throw new DataGridDateTimeHelperException;
-	}
-
-
-	/**
-	 * Try to convert string into DateTime object from more date formats
-	 * @param  string $value
-	 * @return \DateTime
-	 * @throws DataGridDateTimeHelperException
-	 */
-	public static function tryConvertToDate($value)
-	{
-		$formats = ['Y-m-d', 'j. n. Y'];
-
-		foreach ($formats as $format) {
-			$date = \DateTime::createFromFormat($format, $value);
-
-			if ($date) {
-				return $date;
-			}
-		}
-
-		/**
-		 * Could not convert string to datatime
-		 */
 		throw new DataGridDateTimeHelperException;
 	}
 

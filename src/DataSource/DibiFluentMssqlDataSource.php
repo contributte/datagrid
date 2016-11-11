@@ -8,9 +8,10 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Dibi;
 use DibiFluent;
 use Ublaboo\DataGrid\Filter;
-use Dibi;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
 
 class DibiFluentMssqlDataSource extends DibiFluentDataSource
 {
@@ -82,11 +83,9 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	{
 		$conditions = $filter->getCondition();
 
-		$date = \DateTime::createFromFormat($filter->getPhpFormat(), $conditions[$filter->getColumn()]);
+		$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
-		$ymd = $date->format('Ymd');
-
-		$this->data_source->where('CONVERT(varchar(10), %n, 112) = ?', $filter->getColumn(), $ymd);
+		$this->data_source->where('CONVERT(varchar(10), %n, 112) = ?', $filter->getColumn(), $date->format('Ymd'));
 	}
 
 
