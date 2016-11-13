@@ -22,14 +22,33 @@ use Ublaboo\DataGrid\Utils\NetteDatabaseSelectionHelper;
 use Nette\Database\Drivers as NDBDrivers;
 use Ublaboo\DataGrid\DataSource\ApiDataSource;
 use Nextras\Orm\Collection\ICollection;
+use Ublaboo\DataGrid\Column\Column;
+use Ublaboo\DataGrid\Column\AggregationFunction\IAggregationFunction;
 
-class DataModel
+final class DataModel
 {
+
+	use Nette\SmartObject;
+
+	/**
+	 * @var callable[]
+	 */
+	public $onBeforeFilter = [];
+
+	/**
+	 * @var callable[]
+	 */
+	public $onAfterFilter = [];
+
+	/**
+	 * @var callable[]
+	 */
+	public $onAfterPaginated = [];
 
 	/**
 	 * @var IDataSource
 	 */
-	protected $data_source;
+	private $data_source;
 
 
 	/**
@@ -112,7 +131,11 @@ class DataModel
 		Sorting $sorting,
 		array $filters
 	) {
+		$this->onBeforeFilter($this->data_source);
+
 		$this->data_source->filter($filters);
+
+		$this->onAfterFilter($this->data_source);
 
 		/**
 		 * Paginator is optional
@@ -125,6 +148,8 @@ class DataModel
 				$paginator->getOffset(),
 				$paginator->getItemsPerPage()
 			);
+
+			$this->onAfterPaginated($this->data_source);
 
 			return $this->data_source->getData();
 		}

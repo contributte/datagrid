@@ -23,6 +23,7 @@ use Ublaboo\DataGrid\Utils\Sorting;
 use Ublaboo\DataGrid\InlineEdit\InlineEdit;
 use Ublaboo\DataGrid\ColumnsSummary;
 use Ublaboo\DataGrid\Toolbar\ToolbarButton;
+use Ublaboo\DataGrid\AggregationFunction\TDataGridAggregationFunction;
 
 /**
  * @method onRedraw()
@@ -31,6 +32,8 @@ use Ublaboo\DataGrid\Toolbar\ToolbarButton;
  */
 class DataGrid extends Nette\Application\UI\Control
 {
+
+	use TDataGridAggregationFunction;
 
 	/**
 	 * @var callable[]
@@ -504,6 +507,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->getTemplate()->add('exports', $this->exports);
 		$this->getTemplate()->add('filters', $this->filters);
 		$this->getTemplate()->add('toolbar_buttons', $this->toolbar_buttons);
+		$this->getTemplate()->add('aggregation_functions', $this->getAggregationFunctions());
 
 		$this->getTemplate()->add('filter_active', $this->isFilterActive());
 		$this->getTemplate()->add('original_template', $this->getOriginalTemplateFile());
@@ -579,6 +583,10 @@ class DataGrid extends Nette\Application\UI\Control
 	public function setDataSource($source)
 	{
 		$this->dataModel = new DataModel($source, $this->primary_key);
+
+		$this->dataModel->onBeforeFilter[] = [$this, 'beforeDataModelFilter'];
+		$this->dataModel->onAfterFilter[] = [$this, 'afterDataModelFilter'];
+		$this->dataModel->onAfterPaginated[] = [$this, 'afterDataModelPaginated'];
 
 		return $this;
 	}
@@ -3063,6 +3071,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function setColumnsSummary(array $columns, $rowCallback = NULL)
 	{
+		if ($this->hasSomeAggregationFunction()) {
+			throw new DataGridException('You can use either ColumnsSummary or AggregationFunctions');
+		}
+
 		if (!empty($rowCallback)) {
 			if (!is_callable($rowCallback)) {
 				throw new \InvalidArgumentException('Row summary callback must be callable');

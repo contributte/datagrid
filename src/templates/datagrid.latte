@@ -331,7 +331,10 @@
 						{/if}
 
 						{if !empty($rows) && $columnsSummary}
-							{include columnsSummary, columns => $columns}
+							{include columnsSummary, columcns => $columns}
+						{/if}
+						{if $control->hasSomeAggregationFunction()}
+							{include aggregationFunctions, columns => $columns}
 						{/if}
 
 						{block noItems}
@@ -427,6 +430,26 @@
 
 			{$td->startTag()|noescape}
 				{$columnsSummary->render($key)}
+			{$td->endTag()|noescape}
+		{/foreach}
+
+		<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
+		</td>
+	</tr>
+{/define}
+
+
+{define aggregationFunctions}
+	<tr class="datagrid-row-columns-summary">
+		<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
+
+		{foreach $columns as $key => $column}
+			{var $td = $column->getElementPrototype('td', $key)}
+
+			{$td->startTag()|noescape}
+				{ifset $aggregation_functions[$key]}
+					{$aggregation_functions[$key]->renderResult()|noescape}
+				{/ifset}
 			{$td->endTag()|noescape}
 		{/foreach}
 

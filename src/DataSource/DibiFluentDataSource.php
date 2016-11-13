@@ -249,7 +249,9 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function limit($offset, $limit)
 	{
-		$this->data = $this->data_source->fetchAll($offset, $limit);
+		$this->data_source->limit($limit)->offset($offset);
+
+		$this->data = $this->data_source->fetchAll();
 
 		return $this;
 	}
@@ -294,6 +296,16 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		}
 
 		return $this;
+	}
+
+
+	/**
+	 * @param  callable $aggregationCallback
+	 * @return void
+	 */
+	public function processAggregation(callable $aggregationCallback)
+	{
+		call_user_func($aggregationCallback, $this->data_source);
 	}
 
 }

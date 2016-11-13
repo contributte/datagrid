@@ -303,4 +303,14 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		return $this;
 	}
 
+
+	/**
+	 * @param  callable $aggregationCallback
+	 * @return void
+	 */
+	public function processAggregation(callable $aggregationCallback)
+	{
+		call_user_func($aggregationCallback, $this->data_source);
+	}
+
 }
