@@ -15,7 +15,11 @@ use Ublaboo\DataGrid\Traits;
 class ToolbarButton
 {
 
-	use Traits\TButton;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonIcon;
+	use Traits\TButtonClass;
+	use Traits\TButtonTitle;
+	use Traits\TButtonText;
 	use Traits\TLink;
 
 	/**
@@ -72,12 +76,12 @@ class ToolbarButton
 
 		$a->addText($this->grid->getTranslator()->translate($this->text));
 
-		if ($this->title) {
-			$a->title($this->grid->getTranslator()->translate($this->title));
+		if ($this->getTitle()) {
+			$a->title($this->grid->getTranslator()->translate($this->getTitle()));
 		}
 
-		if ($this->class) {
-			$a->class($this->class);
+		if ($this->getClass()) {
+			$a->class($this->getClass());
 		}
 
 		return $a;

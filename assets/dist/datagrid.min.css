@@ -2,6 +2,7 @@
 100%{background-color:transparent}
 }
 .datagrid{background-color:#fff;padding:1em;box-sizing:border-box}
+.datagrid .col-action .dropdown{display:inline-block}
 .datagrid .datagrid-row-inline-add.datagrid-row-inline-add-hidden{display:none}
 .datagrid .datagrid-row-columns-summary td{border-top:2px solid #bbb;border-left:1px solid #eee;border-right:1px solid #eee;font-weight:700}
 .datagrid .datagrid-row-columns-summary td:first-child{border-left:1px solid #ddd}

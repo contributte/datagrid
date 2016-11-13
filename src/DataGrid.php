@@ -1051,6 +1051,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function addAction($key, $name, $href = NULL, array $params = NULL)
 	{
 		$this->addActionCheck($key);
+
 		$href = $href ?: $key;
 
 		if (NULL === $params) {
@@ -1070,6 +1071,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function addActionCallback($key, $name, $callback = NULL)
 	{
 		$this->addActionCheck($key);
+
 		$params = ['__id' => $this->primary_key];
 
 		$this->actions[$key] = $action = new Column\ActionCallback($this, $key, $name, $params);
@@ -1081,6 +1083,19 @@ class DataGrid extends Nette\Application\UI\Control
 
 			$action->onClick[] = $callback;
 		}
+
+		return $action;
+	}
+
+
+	/**
+	 * @param string $key
+	 */
+	public function addMultiAction($key, $name)
+	{
+		$this->addActionCheck($key);
+
+		$this->actions[$key] = $action = new Column\MultiAction($this, $name);
 
 		return $action;
 	}

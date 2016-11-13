@@ -12,9 +12,12 @@ use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Status\Option;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
+use Ublaboo\DataGrid\Traits;
 
 class ColumnStatus extends Column
 {
+
+	use Traits\TButtonCaret;
 
 	/**
 	 * @var callable[]
@@ -30,11 +33,6 @@ class ColumnStatus extends Column
 	 * @var array
 	 */
 	protected $options = [];
-
-	/**
-	 * @var boolean
-	 */
-	protected $caret = TRUE;
 
 
 	/**
@@ -177,28 +175,6 @@ class ColumnStatus extends Column
 			'key'     => $this->getKey(),
 			'status'  => $this
 		]);
-	}
-
-
-	/**
-	 * Should be a "caret" present in status dropdown?
-	 * @param bool $use_caret
-	 * @return static
-	 */
-	public function setCaret($use_caret)
-	{
-		$this->caret = (bool) $use_caret;
-
-		return $this;
-	}
-
-
-	/**
-	 * @return boolean
-	 */
-	public function hasCaret()
-	{
-		return $this->caret;
 	}
 
 }

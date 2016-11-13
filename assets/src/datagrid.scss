@@ -24,6 +24,12 @@
 	padding: 1em;
 	box-sizing: border-box;
 
+	.col-action {
+		.dropdown {
+			display: inline-block;
+		}
+	}
+
 	.datagrid-row-inline-add {
 		&.datagrid-row-inline-add-hidden {
 			display: none;

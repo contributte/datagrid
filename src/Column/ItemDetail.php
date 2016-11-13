@@ -19,7 +19,11 @@ use Ublaboo\DataGrid\Row;
 class ItemDetail
 {
 
-	use Traits\TButton;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonIcon;
+	use Traits\TButtonClass;
+	use Traits\TButtonTitle;
+	use Traits\TButtonText;
 
 	/**
 	 * (renderer | template | block)

@@ -16,7 +16,11 @@ use Ublaboo\DataGrid\Traits;
 class SubmitButton extends Nette\Forms\Controls\Button
 {
 
-	use Traits\TButton;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonIcon;
+	use Traits\TButtonClass;
+	use Traits\TButtonTitle;
+	use Traits\TButtonText;
 
 	/**
 	 * @var DataGrid

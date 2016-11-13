@@ -19,7 +19,8 @@ use Ublaboo\DataGrid\Traits;
 class Action extends Column
 {
 
-	use Traits\TButton;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonText;
 	use Traits\TLink;
 
 	/**
@@ -66,6 +67,22 @@ class Action extends Column
 	 * @var array
 	 */
 	protected $parameters = [];
+
+	/**
+	 * @var string|callable
+	 */
+	private $title;
+
+	/**
+	 * @var string|callable
+	 */
+	protected $icon;
+
+	/**
+	 * @var string|callable
+	 */
+	protected $class = 'btn btn-xs btn-default';
+
 
 	/**
 	 * @param DataGrid $grid
