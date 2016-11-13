@@ -99,6 +99,11 @@ abstract class Column extends FilterableColumn
 	 */
 	protected $default_hide = FALSE;
 
+	/**
+	 * @var ColumnAggregationFunction
+	 */
+	protected $aggregation_function = NULL;
+
 
 	/**
 	 * Render row item into template
@@ -725,4 +730,36 @@ abstract class Column extends FilterableColumn
 		return $this->column;
 	}
 
+
+	/**
+	 * @return ColumnAggregationFunction
+	 */
+	public function getAggregationFunction()
+	{
+		return $this->aggregation_function;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function hasAggregationFunction()
+	{
+		return $this->aggregation_function instanceof ColumnAggregationFunction;
+	}
+
+
+	/**
+	 * @param $aggregation_type use ColumnAggregationFunction::AGGREGATION_TYPE_...
+	 * @param string $column
+	 * @return ColumnAggregationFunction
+	 */
+	public function setAggregationFunction($aggregation_type, $column = NULL)
+	{
+		if ($column === NULL) {
+			$column = $this->column;
+		}
+		$this->aggregation_function = new ColumnAggregationFunction($aggregation_type, $column);
+		return $this->aggregation_function;
+	}
 }

@@ -33,15 +33,15 @@ abstract class FilterableDataSource extends \Nette\Object
 				} else {
 					if ($filter instanceof Filter\FilterText) {
 						$this->applyFilterText($filter);
-					} else if ($filter instanceof Filter\FilterMultiSelect) {
+					} elseif ($filter instanceof Filter\FilterMultiSelect) {
 						$this->applyFilterMultiSelect($filter);
-					} else if ($filter instanceof Filter\FilterSelect) {
+					} elseif ($filter instanceof Filter\FilterSelect) {
 						$this->applyFilterSelect($filter);
-					} else if ($filter instanceof Filter\FilterDate) {
+					} elseif ($filter instanceof Filter\FilterDate) {
 						$this->applyFilterDate($filter);
-					} else if ($filter instanceof Filter\FilterDateRange) {
+					} elseif ($filter instanceof Filter\FilterDateRange) {
 						$this->applyFilterDateRange($filter);
-					} else if ($filter instanceof Filter\FilterRange) {
+					} elseif ($filter instanceof Filter\FilterRange) {
 						$this->applyFilterRange($filter);
 					}
 				}
@@ -50,5 +50,4 @@ abstract class FilterableDataSource extends \Nette\Object
 
 		return $this;
 	}
-
 }

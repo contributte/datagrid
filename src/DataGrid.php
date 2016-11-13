@@ -466,6 +466,7 @@ class DataGrid extends Nette\Application\UI\Control
 			);
 		}
 
+
 		$callback = $this->rowCallback ?: NULL;
 		$hasGroupActionOnRows = FALSE;
 
@@ -517,6 +518,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->getTemplate()->add('inlineAdd', $this->inlineAdd);
 
 		$this->getTemplate()->add('hasGroupActionOnRows', $hasGroupActionOnRows);
+		$this->getTemplate()->add('aggregationRow', $this->dataModel->aggregationRow($this->getColumns()));
 
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)

@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid\DataSource;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Ublaboo\DataGrid\Column\ColumnAggregationFunction;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
@@ -32,6 +33,10 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	 */
 	private $criteria;
 
+	/**
+	 * @var array
+	 */
+	protected $aggregations = [];
 
 	/**
 	 * @param Collection  $collection
@@ -261,4 +266,52 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 		return $this;
 	}
 
+	/**
+	 * @param string $aggregation_type
+	 * @param string $column
+	 * @return mixed
+	 */
+	public function addAggregationColumn($aggregation_type, $column)
+	{
+		$this->aggregations[$column] = $aggregation_type;
+	}
+
+	/**
+	 * get aggregation row
+	 * @return array
+	 */
+	public function getAggregationData()
+	{
+		$result = [];
+		foreach ($this->data_source as $row) {
+			foreach ($this->aggregations as $column => $aggregation_type) {
+				switch ($aggregation_type) {
+					case ColumnAggregationFunction::AGGREGATION_TYPE_SUM:
+					case ColumnAggregationFunction::AGGREGATION_TYPE_AVG:
+						if (!isset($result[$column])) {
+							$result[$column] = 0;
+						}
+						$result[$column] += $row[$column];
+						break;
+					case ColumnAggregationFunction::AGGREGATION_TYPE_MIN:
+						if (!isset($result[$column]) || $row[$column] < $result[$column]) {
+							$result[$column] = $row[$column];
+						}
+						break;
+					case ColumnAggregationFunction::AGGREGATION_TYPE_MAX:
+						if (!isset($result[$column]) || $row[$column] > $result[$column]) {
+							$result[$column] = $row[$column];
+						}
+						break;
+				}
+			}
+		}
+
+		foreach ($this->aggregations as $column => $aggregation_type) {
+			if ($aggregation_type == ColumnAggregationFunction::AGGREGATION_TYPE_AVG) {
+				$result[$column] =  $result[$column] / $this->data_source->count();
+			}
+		}
+		return $result;
+	}
 }

@@ -24,11 +24,11 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 		$this->setUpDatabase();
 
 		$config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/tmp"));
-		$entityManager = EntityManager::create($this->db, $config );
+		$entityManager = EntityManager::create($this->db, $config);
 
 		$queryBuilder = $entityManager->getRepository("Ublaboo\\DataGrid\\Tests\\Cases\\DataSources\\User")->createQueryBuilder('e');
 
-		$this->ds = new DoctrineDataSource($queryBuilder,'id');
+		$this->ds = new DoctrineDataSource($queryBuilder, 'id');
 		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
 		$this->grid = $factory->createXTestingDataGrid();
 	}
@@ -47,19 +47,18 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 							);
 		');
 
-		foreach($this->data as $row){
+		foreach ($this->data as $row) {
 			$this->db->insert('users', $row);
 		}
-
-
 	}
 }
+
 /**
- * All properties are intentionally public so we can convert it to array in getActualResultAsArray
  * @Entity @Table(name="users")
  **/
 class User
 {
+	//All properties are intentionally public so we can convert it to array in getActualResultAsArray
 	/** @Id @Column(type="integer") @GeneratedValue **/
 	public $id;
 

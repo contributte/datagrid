@@ -15,6 +15,7 @@ use DibiMsSqlDriver;
 use Nette\Database\Table\Selection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
+use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\DataSource\IDataSource;
 use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
 use Ublaboo\DataGrid\Utils\Sorting;
@@ -141,6 +142,28 @@ class DataModel
 	public function filterRow(array $condition)
 	{
 		return $this->data_source->filterOne($condition)->getData();
+	}
+
+
+	/**
+	 * @param array $columns
+	 * @return array|bool
+	 */
+	public function aggregationRow(array $columns)
+	{
+		$hasAggregation = FALSE;
+		/** @var Column $column */
+		foreach ($columns as $column) {
+			if ($column->hasAggregationFunction()) {
+				$hasAggregation = TRUE;
+				$aggregationFunction = $column->getAggregationFunction();
+				$this->data_source->addAggregationColumn($aggregationFunction->getAggregationType(), $aggregationFunction->getColumn());
+			}
+		}
+		if (!$hasAggregation) {
+			return FALSE;
+		}
+		return $this->data_source->getAggregationData();
 	}
 
 }

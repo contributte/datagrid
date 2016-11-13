@@ -8,6 +8,7 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Nette\NotImplementedException;
 use Ublaboo\DataGrid\Utils\Sorting;
 
 class ApiDataSource implements IDataSource
@@ -198,4 +199,22 @@ class ApiDataSource implements IDataSource
 		return $this;
 	}
 
+	/**
+	 * @param string $aggregation_type
+	 * @param string $column
+	 * @return mixed
+	 */
+	public function addAggregationColumn($aggregation_type, $column)
+	{
+		throw new NotImplementedException();
+	}
+
+	/**
+	 * get aggregation row
+	 * @return array
+	 */
+	public function getAggregationData()
+	{
+		throw new NotImplementedException();
+	}
 }

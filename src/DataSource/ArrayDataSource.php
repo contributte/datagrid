@@ -8,6 +8,7 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Ublaboo\DataGrid\Column\ColumnAggregationFunction;
 use Ublaboo\DataGrid\Filter\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
@@ -29,6 +30,11 @@ class ArrayDataSource implements IDataSource
 	 * @var array
 	 */
 	protected $data = [];
+
+	/**
+	 * @var array
+	 */
+	protected $aggregations = [];
 
 	/**
 	 * @var int
@@ -87,7 +93,7 @@ class ArrayDataSource implements IDataSource
 						[$this->data, $filter->getValue()]
 					);
 				} else {
-					$this->data = array_filter($this->data, function($row) use ($filter) {
+					$this->data = array_filter($this->data, function ($row) use ($filter) {
 						return $this->applyFilter($row, $filter);
 					});
 				}
@@ -372,4 +378,52 @@ class ArrayDataSource implements IDataSource
 		return $this;
 	}
 
+	/**
+	 * @param string $aggregation_type
+	 * @param string $column
+	 * @return mixed
+	 */
+	public function addAggregationColumn($aggregation_type, $column)
+	{
+		$this->aggregations[$column] = $aggregation_type;
+	}
+
+	/**
+	 * get aggregation row
+	 * @return array
+	 */
+	public function getAggregationData()
+	{
+		$result = [];
+		foreach ($this->data as $row) {
+			foreach ($this->aggregations as $column => $aggregation_type) {
+				switch ($aggregation_type) {
+					case ColumnAggregationFunction::AGGREGATION_TYPE_SUM:
+					case ColumnAggregationFunction::AGGREGATION_TYPE_AVG:
+						if (!isset($result[$column])) {
+							$result[$column] = 0;
+						}
+						$result[$column] += $row[$column];
+						break;
+					case ColumnAggregationFunction::AGGREGATION_TYPE_MIN:
+						if (!isset($result[$column]) || $row[$column] < $result[$column]) {
+							$result[$column] = $row[$column];
+						}
+						break;
+					case ColumnAggregationFunction::AGGREGATION_TYPE_MAX:
+						if (!isset($result[$column]) || $row[$column] > $result[$column]) {
+							$result[$column] = $row[$column];
+						}
+						break;
+				}
+			}
+		}
+
+		foreach ($this->aggregations as $column => $aggregation_type) {
+			if ($aggregation_type == ColumnAggregationFunction::AGGREGATION_TYPE_AVG) {
+				$result[$column] =  $result[$column] / count($this->data);
+			}
+		}
+		return $result;
+	}
 }
