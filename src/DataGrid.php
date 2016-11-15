@@ -1584,13 +1584,19 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @param  Nette\Forms\Container  $container
-	 * @param  array  $values
+	 * @param  array|\Iterator  $values
 	 * @return void
 	 */
-	public function setFilterContainerDefaults(Nette\Forms\Container $container, array $values)
+	public function setFilterContainerDefaults(Nette\Forms\Container $container, $values)
 	{
 		foreach ($container->getComponents() as $key => $control) {
-			if (!isset($values[$key]) || !method_exists($control, 'setValue')) {
+			if (!isset($values[$key])) {
+				continue;
+			}
+
+			if ($control instanceof Nette\Forms\Container) {
+				$this->setFilterContainerDefaults($control, $values[$key]);
+
 				continue;
 			}
 
