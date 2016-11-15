@@ -26,7 +26,22 @@
 			 *}
 			{if $control->hasOuterFilterRendering()}
 				{block outer-filters}
-					<div class="row row-filters">
+					<div class="row text-right datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
+						<div class="col-sm-12">
+							<button class="btn btn-xs btn-primary active" type="button" data-toggle="collapse" data-target="#datagrid-row-filters">
+								<i n:block = "icon-filter" class="{$icon_prefix}filter"></i> {_'ublaboo_datagrid.show_filter'}
+							</button>
+						</div>
+					</div>
+
+					{if $control->hasCollapsibleOuterFilters() && !$filter_active}
+						{var $filter_row_class = 'row row-filters collapse'}
+					{elseif $filter_active}
+						{var $filter_row_class = 'row row-filters collapse in'}
+					{else}
+						{var $filter_row_class = 'row row-filters'}
+					{/if}
+					<div class="{$filter_row_class}" id="datagrid-row-filters">
 						{var $i = 0}
 						<div class="col-sm-6" n:foreach="$filters as $f">
 							{**

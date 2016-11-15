@@ -41,7 +41,8 @@ class SimpleTranslator extends Nette\Object implements Nette\Localization\ITrans
 		'ublaboo_datagrid.cancel' => 'Cancel',
 		'ublaboo_datagrid.multiselect_choose' => 'Choose',
 		'ublaboo_datagrid.multiselect_selected' => '{0} selected',
-		'ublaboo_datagrid.filter_submit_button' => 'Filter'
+		'ublaboo_datagrid.filter_submit_button' => 'Filter',
+		'ublaboo_datagrid.show_filter' => 'Show filter'
 	];
 
 

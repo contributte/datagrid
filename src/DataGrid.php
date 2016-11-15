@@ -275,6 +275,11 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $outer_filter_rendering = FALSE;
 
 	/**
+	 * @var bool
+	 */
+	protected $collapsible_outer_filters = TRUE;
+
+	/**
 	 * @var array
 	 */
 	protected $columns_export_order = [];
@@ -646,7 +651,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Tell datagrid wheteher to use or not happy components
-	 * @param  boolean|NULL $use If not given, return value of static::$use_happy_components
+	 * @param  bool|NULL $use If not given, return value of static::$use_happy_components
 	 * @return void|bool
 	 */
 	public function useHappyComponents($use = NULL)
@@ -829,7 +834,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Is tree view set?
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isTreeView()
 	{
@@ -877,7 +882,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Is tree view children callback set?
-	 * @return boolean
+	 * @return bool
 	 */
 	public function hasTreeViewChildrenCallback()
 	{
@@ -887,7 +892,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @param  mixed $item
-	 * @return boolean
+	 * @return bool
 	 */
 	public function treeViewChildrenCallback($item)
 	{
@@ -1383,7 +1388,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Is filter active?
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isFilterActive()
 	{
@@ -1733,7 +1738,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Should be datagrid filters rendered separately?
-	 * @param boolean $out
+	 * @param bool $out
 	 * @return static
 	 */
 	public function setOuterFilterRendering($out = TRUE)
@@ -1746,11 +1751,29 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Are datagrid filters rendered separately?
-	 * @return boolean
+	 * @return bool
 	 */
 	public function hasOuterFilterRendering()
 	{
 		return $this->outer_filter_rendering;
+	}
+
+
+	/**
+	 * @param bool $collapsible_outer_filters
+	 */
+	public function setCollapsibleOuterFilters($collapsible_outer_filters = TRUE)
+	{
+		$this->collapsible_outer_filters = (bool) $collapsible_outer_filters;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function hasCollapsibleOuterFilters()
+	{
+		return $this->collapsible_outer_filters;
 	}
 
 
@@ -1838,7 +1861,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Add export of type callback
 	 * @param string $text
 	 * @param callable $callback
-	 * @param boolean $filtered
+	 * @param bool $filtered
 	 * @return Export\Export
 	 */
 	public function addExportCallback($text, $callback, $filtered = FALSE)
@@ -2007,7 +2030,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Has datagrid some group actions?
-	 * @return boolean
+	 * @return bool
 	 */
 	public function hasGroupActions()
 	{
@@ -3034,7 +3057,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Can datagrid hide colums?
-	 * @return boolean
+	 * @return bool
 	 */
 	public function canHideColumns()
 	{

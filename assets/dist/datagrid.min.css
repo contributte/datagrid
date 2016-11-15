@@ -1,3 +1,4 @@
+.datagrid .datagrid-collapse-filters-button-row,.datagrid .datagrid-manual-submit,.datagrid .row-filters>div{margin-bottom:.5em}
 @keyframes edited{0%{background-color:#A6E2A9}
 100%{background-color:transparent}
 }
@@ -16,7 +17,6 @@
 .datagrid .datagrid-settings .dropdown-menu--grid li .fa{margin-right:.5em}
 .datagrid .row-reset-filter{text-align:right;margin-bottom:.5em}
 .datagrid .filter-range-delimiter,.datagrid table th.col-action{text-align:center}
-.datagrid .datagrid-manual-submit,.datagrid .row-filters>div{margin-bottom:.5em}
 .datagrid .bootstrap-select.input-sm>.btn{padding:5px 25px 5px 10px;font-size:12px;line-height:1.5;border-radius:3px}
 .datagrid table{margin:0}
 .datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn),.datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn)>.btn{width:auto}

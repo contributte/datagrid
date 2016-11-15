@@ -24,6 +24,10 @@
 	padding: 1em;
 	box-sizing: border-box;
 
+	.datagrid-collapse-filters-button-row {
+		margin-bottom: 0.5em;
+	}
+
 	.col-action {
 		.dropdown {
 			display: inline-block;
