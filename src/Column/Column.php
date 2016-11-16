@@ -89,12 +89,6 @@ abstract class Column extends FilterableColumn
 	protected $editable_element = ['textarea', ['class' => 'form-control']];
 
 	/**
-	 * Cached html elements
-	 * @var array
-	 */
-	protected $el_cache = [];
-
-	/**
 	 * @var bool
 	 */
 	protected $default_hide = FALSE;
@@ -634,14 +628,7 @@ abstract class Column extends FilterableColumn
 	 */
 	public function getElementPrototype($tag, $key = NULL, Row $row = NULL)
 	{
-		/**
-		 * Get cached element
-		 */
-		if (empty($this->el_cache[$tag])) {
-			$this->el_cache[$tag] = $el = $el = Html::el($tag);
-		} else {
-			$el = $this->el_cache[$tag];
-		}
+		$el = Html::el($tag);
 
 		/**
 		 * If class was set by user via $el->class = '', fix it
