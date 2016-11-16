@@ -2,12 +2,17 @@
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
-use Tester\TestCase,
-	Tester\Assert,
-	Ublaboo\DataGrid\DataSource\NextrasDataSource,
-	Nextras\Orm\Relationships\OneHasMany;
+use Nextras\Orm\Relationships\OneHasMany;
+use Tester\Environment;
+use Tester\TestCase;
+use Tester\Assert;
+use Ublaboo\DataGrid\DataSource\NextrasDataSource;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
+
+if (!extension_loaded('mysqli')) {
+    \Tester\Environment::skip('Test requires MySQLi extension to be loaded.');
+}
 
 /**
  * @dataProvider nextrasDatasource.ini
