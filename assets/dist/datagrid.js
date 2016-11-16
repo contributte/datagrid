@@ -474,13 +474,20 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
           data: {
             value: value
           },
-          method: 'POST'
-        }).success(function() {
-          return cell.addClass('edited');
+          method: 'POST',
+          success: function() {
+            cell.html(value);
+            return cell.addClass('edited');
+          },
+          error: function() {
+            cell.html(cell.data('value'));
+            return cell.addClass('edited-error');
+          }
         });
       }
-      cell.removeClass('editing');
-      return cell.html(value);
+      return setTimeout(function() {
+        return cell.removeClass('editing');
+      }, 1200);
     };
     cell.find('input,textarea,select').focus().on('blur', function() {
       return submit(cell, $(this));
