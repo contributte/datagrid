@@ -443,12 +443,19 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 					data: {
 						value: value
 					},
-					method: 'POST'
-				}).success ->
-					cell.addClass('edited')
+					method: 'POST',
+					success: () ->
+						cell.html(value)
+						cell.addClass('edited')
+					,
+					error: () ->
+						cell.html(cell.data('value'))
+						cell.addClass('edited-error')
+				})
 
-			cell.removeClass('editing')
-			cell.html(value)
+			setTimeout ->
+				cell.removeClass('editing')
+			, 1200
 
 		cell.find('input,textarea,select').focus().on('blur', ->
 			submit(cell, $(this))

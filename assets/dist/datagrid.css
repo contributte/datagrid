@@ -8,6 +8,16 @@
   }
 }
 
+@keyframes edited-error {
+  0% {
+    background-color: #E8AAA4;
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}
+
 .datagrid {
   background-color: #fff;
   padding: 1em;
@@ -223,6 +233,12 @@
 .datagrid table tbody tr td.edited {
   animation-name: edited;
   animation-duration: 1.2s;
+  animation-delay: 0;
+}
+
+.datagrid table tbody tr td.edited-error {
+  animation-name: edited-error;
+  animation-duration: 1.6s;
   animation-delay: 0;
 }
 
