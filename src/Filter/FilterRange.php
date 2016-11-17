@@ -70,13 +70,13 @@ class FilterRange extends Filter
 			$text_from = reset($placeholder_array);
 
 			if ($text_from) {
-				$container[$this->key]['from']->setAttribute('placeholder', $text_from);
+				$container['from']->setAttribute('placeholder', $text_from);
 			}
 
 			$text_to = end($placeholder_array);
 
 			if ($text_to && ($text_to != $text_from)) {
-				$container[$this->key]['to']->setAttribute('placeholder', $text_to);
+				$container['to']->setAttribute('placeholder', $text_to);
 			}
 		}
 	}
@@ -100,7 +100,17 @@ class FilterRange extends Filter
 		return $this;
 	}
 
-
+	
+	/**
+	 * Get html attr placeholders
+	 * @return string
+	 */
+	public function getPlaceholder()
+	{
+		return $this->placeholder_array;
+	}
+	
+	
 	/**
 	 * Get filter condition
 	 * @return array

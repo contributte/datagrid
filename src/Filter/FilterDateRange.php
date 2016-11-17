@@ -70,13 +70,13 @@ class FilterDateRange extends FilterRange implements IFilterDate
 			$text_from = reset($placeholder_array);
 
 			if ($text_from) {
-				$container[$this->key]['from']->setAttribute('placeholder', $text_from);
+				$container['from']->setAttribute('placeholder', $text_from);
 			}
 
 			$text_to = end($placeholder_array);
 
 			if ($text_to && ($text_to != $text_from)) {
-				$container[$this->key]['to']->setAttribute('placeholder', $text_to);
+				$container['to']->setAttribute('placeholder', $text_to);
 			}
 		}
 	}
