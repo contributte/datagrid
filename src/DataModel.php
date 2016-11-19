@@ -22,8 +22,6 @@ use Ublaboo\DataGrid\Utils\NetteDatabaseSelectionHelper;
 use Nette\Database\Drivers as NDBDrivers;
 use Ublaboo\DataGrid\DataSource\ApiDataSource;
 use Nextras\Orm\Collection\ICollection;
-use Ublaboo\DataGrid\Column\Column;
-use Ublaboo\DataGrid\Column\AggregationFunction\IAggregationFunction;
 
 final class DataModel
 {

@@ -32,15 +32,6 @@ class FunctionSum implements IAggregationFunction
 
 
 	/**
-	 * @return string
-	 */
-	public function getColumn()
-	{
-		return $this->column;
-	}
-
-
-	/**
 	 * @return bool
 	 */
 	public function getFilterDataType()

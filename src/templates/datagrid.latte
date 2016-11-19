@@ -462,9 +462,13 @@
 			{var $td = $column->getElementPrototype('td', $key)}
 
 			{$td->startTag()|noescape}
-				{ifset $aggregation_functions[$key]}
-					{$aggregation_functions[$key]->renderResult()|noescape}
-				{/ifset}
+				{if $aggregation_functions}
+					{ifset $aggregation_functions[$key]}
+						{$aggregation_functions[$key]->renderResult()|noescape}
+					{/ifset}
+				{else}
+					{$multiple_aggregation_function->renderResult($key)|noescape}
+				{/if}
 			{$td->endTag()|noescape}
 		{/foreach}
 

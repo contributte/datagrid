@@ -8,12 +8,12 @@
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
-interface IAggregationFunction
+interface IMultipleAggregationFunction
 {
 
-	const DATA_TYPE_ALL       = 'data_type_all';
-	const DATA_TYPE_FILTERED  = 'data_type_filtered';
-	const DATA_TYPE_PAGINATED = 'data_type_paginated';
+	const DATA_TYPE_ALL       = IAggregationFunction::DATA_TYPE_ALL;
+	const DATA_TYPE_FILTERED  = IAggregationFunction::DATA_TYPE_FILTERED;
+	const DATA_TYPE_PAGINATED = IAggregationFunction::DATA_TYPE_PAGINATED;
 
 
 	/**
@@ -28,8 +28,9 @@ interface IAggregationFunction
 	public function processDataSource($data_source);
 
 	/**
+	 * @param  string $key
 	 * @return mixed
 	 */
-	public function renderResult();
+	public function renderResult($key);
 
 }

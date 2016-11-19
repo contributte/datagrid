@@ -513,6 +513,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->getTemplate()->add('filters', $this->filters);
 		$this->getTemplate()->add('toolbar_buttons', $this->toolbar_buttons);
 		$this->getTemplate()->add('aggregation_functions', $this->getAggregationFunctions());
+		$this->getTemplate()->add('multiple_aggregation_function', $this->getMultipleAggregationFunction());
 
 		$this->getTemplate()->add('filter_active', $this->isFilterActive());
 		$this->getTemplate()->add('original_template', $this->getOriginalTemplateFile());
