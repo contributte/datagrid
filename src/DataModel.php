@@ -23,10 +23,8 @@ use Nette\Database\Drivers as NDBDrivers;
 use Ublaboo\DataGrid\DataSource\ApiDataSource;
 use Nextras\Orm\Collection\ICollection;
 
-final class DataModel
+final class DataModel extends Nette\Object
 {
-
-	use Nette\SmartObject;
 
 	/**
 	 * @var callable[]
