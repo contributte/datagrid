@@ -803,7 +803,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @param  array         $sort
 	 * @param  callable|NULL $sort_callback
-	 * @return void
+	 * @return Sorting
 	 */
 	protected function createSorting(array $sort, callable $sort_callback = NULL)
 	{
