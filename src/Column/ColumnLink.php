@@ -200,10 +200,10 @@ class ColumnLink extends Column
 		return $this->title;
 	}
 
-
 	/**
 	 * Set attribute class
 	 * @param string $class
+	 * @return $this
 	 */
 	public function setClass($class)
 	{
@@ -211,7 +211,6 @@ class ColumnLink extends Column
 
 		return $this;
 	}
-
 
 	/**
 	 * Get attribute class
@@ -232,14 +231,12 @@ class ColumnLink extends Column
 
 	/**
 	 * Set link to open in new tab/window or not
-	 * @param boolean $open_in_new_tab
+	 * @param bool $open_in_new_tab
+	 * @return $this
 	 */
-	public function setOpenInNewTab($open_in_new_tab)
+	public function setOpenInNewTab($open_in_new_tab = TRUE)
 	{
 		$this->open_in_new_tab = $open_in_new_tab;
+		return $this;
 	}
-
-
-
-
 }
