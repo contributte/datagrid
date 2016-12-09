@@ -613,7 +613,7 @@ $.nette.ext('datagrid.reset-filter-by-column', {
       return grid.find('[data-datagrid-reset-filter-by-column]').each(function() {
         var new_href;
         key = $(this).attr('data-datagrid-reset-filter-by-column');
-        new_href = href.replace('do=examplesGrid-resetFilter', 'do=' + payload._datagrid_name + '-resetColumnFilter');
+        new_href = href.replace('do=' + payload._datagrid_name + '-resetFilter', 'do=' + payload._datagrid_name + '-resetColumnFilter');
         new_href += '&' + payload._datagrid_name + '-key=' + key;
         return $(this).attr('href', new_href);
       });

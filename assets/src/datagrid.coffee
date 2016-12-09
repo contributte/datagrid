@@ -587,7 +587,8 @@ $.nette.ext('datagrid.reset-filter-by-column', {
 			grid.find('[data-datagrid-reset-filter-by-column]').each ->
 				key = $(this).attr('data-datagrid-reset-filter-by-column')
 
-				new_href = href.replace('do=examplesGrid-resetFilter', 'do=' + payload._datagrid_name + '-resetColumnFilter')
+				new_href = href.replace('do=' + payload._datagrid_name + '-resetFilter', 'do=' + payload._datagrid_name + '-resetColumnFilter')
 				new_href += '&' + payload._datagrid_name + '-key=' + key
+
 				$(this).attr('href', new_href)
 })
