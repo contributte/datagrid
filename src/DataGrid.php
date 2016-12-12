@@ -2642,7 +2642,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param Nette\Localization\ITranslator $translator
 	 * @return static
 	 */
-	public function setTranslator(Nette\Localization\ITranslator $translator)
+	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
 	{
 		$this->translator = $translator;
 
