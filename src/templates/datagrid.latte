@@ -29,7 +29,7 @@
 					<div class="row text-right datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
 						<div class="col-sm-12">
 							<button class="btn btn-xs btn-primary active" type="button" data-toggle="collapse" data-target="#datagrid-row-filters">
-								<i n:block = "icon-filter" class="{$icon_prefix}filter"></i> {_'ublaboo_datagrid.show_filter'}
+								<i n:block = "icon-filter" class="{$icon_prefix}filter"></i> {='ublaboo_datagrid.show_filter'|translate}
 							</button>
 						</div>
 					</div>
@@ -75,7 +75,7 @@
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
 							{if $hasGroupActionOnRows}
 								{block group_actions}
-									{_'ublaboo_datagrid.group_actions'}:
+									{='ublaboo_datagrid.group_actions'|translate}:
 									{foreach $filter['group_action']->getControls() as $form_control}
 										{if $form_control instanceof \Nette\Forms\Controls\SubmitButton}
 											{input $form_control, class => 'btn btn-primary btn-sm', style => 'display:none'}
@@ -128,10 +128,10 @@
 											</li>
 											<li role="separator" class="divider"></li>
 											<li>
-												<a n:href="showAllColumns!" class="ajax"><i n:block = "icon-eye" class="{$icon_prefix}eye"></i> {_'ublaboo_datagrid.show_all_columns'}</a>
+												<a n:href="showAllColumns!" class="ajax"><i n:block = "icon-eye" class="{$icon_prefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
 											</li>
 											<li n:if="$control->hasSomeColumnDefaultHide()">
-												<a n:href="showDefaultColumns!" class="ajax"><i n:block = "icon-repeat" class="{$icon_prefix}repeat"></i> {_'ublaboo_datagrid.show_default_columns'}</a>
+												<a n:href="showDefaultColumns!" class="ajax"><i n:block = "icon-repeat" class="{$icon_prefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
 											</li>
 										</ul>
 									</div>
@@ -181,13 +181,13 @@
 										<ul class="dropdown-menu dropdown-menu--grid">
 											<li>
 												<a n:href="hideColumn!, column => $key" class="ajax">
-													<i n:block = "icon-eye-slash" class="{$icon_prefix}eye-slash"></i> {_'ublaboo_datagrid.hide_column'}</a>
+													<i n:block = "icon-eye-slash" class="{$icon_prefix}eye-slash"></i> {='ublaboo_datagrid.hide_column'|translate}</a>
 											</li>
 										</ul>
 									</div>
 
 									{if $control->hasColumnReset()}
-										<a data-datagrid-reset-filter-by-column="{$key}" n:href="resetColumnFilter!, key => $key" n:class="isset($filters[$key]) && $filters[$key]->isValueSet() ? '' : 'hidden', 'ajax'" title="{_'ublaboo_datagrid.reset_filter'}">
+										<a data-datagrid-reset-filter-by-column="{$key}" n:href="resetColumnFilter!, key => $key" n:class="isset($filters[$key]) && $filters[$key]->isValueSet() ? '' : 'hidden', 'ajax'" title="{='ublaboo_datagrid.reset_filter'|translate}">
 											<i n:block="icon-remove" class="{$icon_prefix}remove"></i>
 										</a>
 									{/if}
@@ -195,7 +195,7 @@
 							{$th->endTag()|noescape}
 						{/foreach}
 						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-center">
-							{_'ublaboo_datagrid.action'}
+							{='ublaboo_datagrid.action'|translate}
 						</th>
 					</tr>
 					<tr n:block="header-filters" n:if="!empty($filters) && !$control->hasOuterFilterRendering()">
@@ -356,9 +356,9 @@
 							<tr n:if="!$rows">
 								<td colspan="{$control->getColumnsCount()}">
 									{if $filter_active}
-										{_'ublaboo_datagrid.no_item_found_reset'} <a class="link ajax" n:href="resetFilter!">{_'ublaboo_datagrid.here'}</a>.
+										{='ublaboo_datagrid.no_item_found_reset'|translate} <a class="link ajax" n:href="resetFilter!">{='ublaboo_datagrid.here'|translate}</a>.
 									{else}
-										{_'ublaboo_datagrid.no_item_found'}
+										{='ublaboo_datagrid.no_item_found'|translate}
 									{/if}
 								</td>
 							</tr>
@@ -375,10 +375,10 @@
 											({var $paginator = $control['paginator']->getPaginator()}
 
 											{if $control->getPerPage() === 'all'}
-												{_'ublaboo_datagrid.items'}: {_'ublaboo_datagrid.all'}
+												{='ublaboo_datagrid.items'|translate}: {='ublaboo_datagrid.all'|translate}
 											{else}
-												{_'ublaboo_datagrid.items'}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : 0} - {sizeof($rows) + $paginator->getOffset()}
-												{_'ublaboo_datagrid.from'} {$paginator->getItemCount()}
+												{='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : 0} - {sizeof($rows) + $paginator->getOffset()}
+												{='ublaboo_datagrid.from'|translate} {$paginator->getItemCount()}
 											{/if})
 										</small>
 									</div>
@@ -392,7 +392,7 @@
 										{**
 										* Items per page form (display only beside paginated grido)
 										*}
-										<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{_'ublaboo_datagrid.reset_filter'}</a>
+										<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{='ublaboo_datagrid.reset_filter'|translate}</a>
 										{if $control->isPaginated()}
 											{input $filter['per_page'], data-autosubmit-per-page => TRUE, class => 'form-control input-sm'}
 											{input $filter['per_page_submit'], class => 'datagrid-per-page-submit'}
@@ -483,13 +483,13 @@
 		{if $column instanceof \Nette\Utils\Html}
 			{$column->getName()|noescape}
 		{else}
-			{_$column->getName()|noescape}
+			{$column->getName()|translate|noescape}
 		{/if}
 	{else}
 		{if $column instanceof \Nette\Utils\Html}
 			{$column->getName()}
 		{else}
-			{_$column->getName()}
+			{$column->getName()|translate}
 		{/if}
 	{/if}
 {/define}
