@@ -179,13 +179,8 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 
 			foreach ($words as $word) {
 				$escaped = $this->data_source->getConnection()->getDriver()->escapeLike($word, 0);
+				$or[] = "$column LIKE $escaped";
 
-				if (preg_match("/[\x80-\xFF]/", $escaped)) {
-					$or[] = "$column LIKE $escaped COLLATE utf8_bin";
-				} else {
-					$escaped = Strings::toAscii($escaped);
-					$or[] = "$column LIKE $escaped COLLATE utf8_general_ci";
-				}
 			}
 		}
 
