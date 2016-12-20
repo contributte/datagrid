@@ -540,3 +540,7 @@
 .datagrid .col-checkbox .happy-checkbox {
   margin-top: 2px;
 }
+
+.datagrid-column-status-option-icon {
+  float: right;
+}

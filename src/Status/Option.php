@@ -50,9 +50,14 @@ class Option extends Nette\Object
 	protected $class_in_dropdown = 'ajax';
 
 	/**
-	 * @var string|callable
+	 * @var string
 	 */
 	protected $icon;
+
+	/**
+	 * @var string
+	 */
+	protected $icon_secondary;
 
 
 	/**
@@ -190,11 +195,31 @@ class Option extends Nette\Object
 
 
 	/**
-	 * @return string
+	 * @return string|NULL
 	 */
 	public function getIcon()
 	{
 		return $this->icon;
+	}
+
+
+	/**
+	 * @param string $icon_secondary
+	 */
+	public function setIconSecondary($icon_secondary)
+	{
+		$this->icon_secondary = (string) $icon_secondary;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return string|NULL
+	 */
+	public function getIconSecondary()
+	{
+		return $this->icon_secondary;
 	}
 
 
