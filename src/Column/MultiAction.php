@@ -61,7 +61,7 @@ class MultiAction extends Column
 			->type('button')
 			->data('toggle', 'dropdown');
 
-		$this->tryAddIcon($button, $this->getIcon(), $this->getText());
+		$this->tryAddIcon($button, $this->getIcon(), $this->getName());
 
 		if (!empty($this->attributes)) {
 			$button->addAttributes($this->attributes);
