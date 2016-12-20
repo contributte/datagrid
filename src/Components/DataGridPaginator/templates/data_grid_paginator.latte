@@ -12,7 +12,7 @@
 	{else}
 		<a class="btn btn-sm btn-default ajax" href="{$link('page!', ['page' => $paginator->page - 1])}" rel="prev">
 	{/if}
-	<i n:block = "icon-arrow-left" class="{$icon_prefix}arrow-left"></i> {_'ublaboo_datagrid.previous'}</a>
+	<i n:block = "icon-arrow-left" class="{$icon_prefix}arrow-left"></i> {='ublaboo_datagrid.previous'|translate}</a>
 
 	{foreach $steps as $step}
 		{if $step == $paginator->page}
@@ -25,9 +25,9 @@
 	{/foreach}
 
 	{if $paginator->isLast()}
-		<a class="first btn btn-sm btn-default disabled">{_'ublaboo_datagrid.next'} 
+		<a class="first btn btn-sm btn-default disabled">{='ublaboo_datagrid.next'|translate} 
 	{else}
-		<a class="btn btn-sm btn-default ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">{_'ublaboo_datagrid.next'} 
+		<a class="btn btn-sm btn-default ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">{='ublaboo_datagrid.next'|translate} 
 	{/if}
 	<i n:block = "icon-arrow-right" class="{$icon_prefix}arrow-right"></i></a>
 </div>
