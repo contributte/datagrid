@@ -40,6 +40,11 @@ abstract class Column extends FilterableColumn
 	 * @var bool|string
 	 */
 	protected $sortable = FALSE;
+	
+	/**
+	 * @var bool
+	 */
+	protected $translatable = TRUE;
 
 	/**
 	 * @var bool
@@ -203,7 +208,24 @@ abstract class Column extends FilterableColumn
 	{
 		return (bool) $this->sortable;
 	}
-
+	
+	/**
+	 * Set column translatable or not
+	 */
+	public function setTranslatable($translatable = TRUE)
+	{
+		$this->translatable = (bool) $translatable;
+		
+		return $this;
+	}
+	
+	/**
+	 * Tell wheter column is translatable
+	 */
+	public function isTranslatable()
+	{
+		return (bool) $this->translatable;
+	}
 
 	/**
 	 * Shoud be the pagination reseted after sorting?
