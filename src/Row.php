@@ -98,6 +98,13 @@ class Row extends Nette\Object
 
 				return $this->item->related($relatedTable)->fetch()->{$relatedColumn};
 			}
+
+			if (preg_match("/^([a-zA-Z0-9_$]*)\.([a-zA-Z0-9_$]*)$/", $key, $matches)) {
+				$referredTable = $matches[1];
+				$referredColumn = $matches[2];
+
+				return $this->item->ref($referredTable)->{$referredColumn};
+			}
 			return $this->item->{$key};
 
 		} else if ($this->item instanceof Nette\Database\Row) {
