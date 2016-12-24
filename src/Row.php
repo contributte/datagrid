@@ -92,20 +92,7 @@ class Row extends Nette\Object
 			return $this->item->{$this->formatDibiRowKey($key)};
 
 		} else if ($this->item instanceof ActiveRow) {
-			if (preg_match("/^:([a-zA-Z0-9_$]*)\.([a-zA-Z0-9_$]*)$/", $key, $matches)) {
-				$relatedTable = $matches[1];
-				$relatedColumn = $matches[2];
-
-				return $this->item->related($relatedTable)->fetch()->{$relatedColumn};
-			}
-
-			if (preg_match("/^([a-zA-Z0-9_$]*)\.([a-zA-Z0-9_$]*)$/", $key, $matches)) {
-				$referredTable = $matches[1];
-				$referredColumn = $matches[2];
-
-				return $this->item->ref($referredTable)->{$referredColumn};
-			}
-			return $this->item->{$key};
+			return $this->getActiveRowProperty($this->item, $key);
 
 		} else if ($this->item instanceof Nette\Database\Row) {
 			return $this->item->{$key};
@@ -142,6 +129,37 @@ class Row extends Nette\Object
 		}
 
 		return implode(' ', array_keys($class));
+	}
+
+
+	/**
+	 * @param  ActiveRow $item
+	 * @param  string    $key
+	 * @return mixed|NULL
+	 */
+	public function getActiveRowProperty(ActiveRow $item, $key)
+	{
+		if (preg_match("/^:([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/", $key, $matches)) {
+			$relatedTable = $matches[1];
+			$relatedColumn = $matches[2];
+			$throughColumn = isset($matches[4]) ? $matches[4] : NULL;
+
+			$relatedRow = $this->item->related($relatedTable, $throughColumn)->fetch();
+
+			return $relatedRow ? $relatedRow->{$relatedColumn} : NULL;
+		}
+
+		if (preg_match("/^([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/", $key, $matches)) {
+			$referencedTable = $matches[1];
+			$referencedColumn = $matches[2];
+			$throughColumn = isset($matches[4]) ? $matches[4] : NULL;
+
+			$referencedRow = $this->item->ref($referencedTable, $throughColumn);
+
+			return $referencedRow ? $referencedRow->{$referencedColumn} : NULL;
+		}
+
+		return $this->item->{$key};
 	}
 
 
