@@ -144,7 +144,7 @@ class Row extends Nette\Object
 			$relatedColumn = $matches[2];
 			$throughColumn = isset($matches[4]) ? $matches[4] : NULL;
 
-			$relatedRow = $this->item->related($relatedTable, $throughColumn)->fetch();
+			$relatedRow = $item->related($relatedTable, $throughColumn)->fetch();
 
 			return $relatedRow ? $relatedRow->{$relatedColumn} : NULL;
 		}
@@ -154,12 +154,12 @@ class Row extends Nette\Object
 			$referencedColumn = $matches[2];
 			$throughColumn = isset($matches[4]) ? $matches[4] : NULL;
 
-			$referencedRow = $this->item->ref($referencedTable, $throughColumn);
+			$referencedRow = $item->ref($referencedTable, $throughColumn);
 
 			return $referencedRow ? $referencedRow->{$referencedColumn} : NULL;
 		}
 
-		return $this->item->{$key};
+		return $item->{$key};
 	}
 
 
