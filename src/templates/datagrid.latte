@@ -480,13 +480,13 @@
 
 {define column-header}
 	{if $column->isHeaderEscaped()}
-		{if $column instanceof \Nette\Utils\Html || !$column->isTranslatable()}
+		{if $column instanceof \Nette\Utils\Html || !$column->isTranslatableHeader()}
 			{$column->getName()|noescape}
 		{else}
 			{$column->getName()|translate|noescape}
 		{/if}
 	{else}
-		{if $column instanceof \Nette\Utils\Html || !$column->isTranslatable()}
+		{if $column instanceof \Nette\Utils\Html || !$column->isTranslatableHeader()}
 			{$column->getName()}
 		{else}
 			{$column->getName()|translate}
