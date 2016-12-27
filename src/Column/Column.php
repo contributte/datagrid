@@ -44,7 +44,7 @@ abstract class Column extends FilterableColumn
 	/**
 	 * @var bool
 	 */
-	protected $translatable = TRUE;
+	protected $translatable_header = TRUE;
 
 	/**
 	 * @var bool
@@ -212,9 +212,9 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Set column translatable or not
 	 */
-	public function setTranslatable($translatable = TRUE)
+	public function setTranslatableHeader($translatable_header = TRUE)
 	{
-		$this->translatable = (bool) $translatable;
+		$this->translatable_header = (bool) $translatable_header;
 		
 		return $this;
 	}
@@ -222,9 +222,9 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Tell wheter column is translatable
 	 */
-	public function isTranslatable()
+	public function isTranslatableHeader()
 	{
-		return (bool) $this->translatable;
+		return (bool) $this->translatable_header;
 	}
 
 	/**
