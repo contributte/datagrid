@@ -33,7 +33,7 @@ final class ColumnTranslatableTest extends TestCase
 
 		$translatable = $grid->getColumn('translatable');
 
-		Assert::same(TRUE, $translatable->isTranslatable());
+		Assert::same(TRUE, $translatable->isTranslatableHeader());
 	}
 	
 	public function testDisabledTranslating()
@@ -41,11 +41,11 @@ final class ColumnTranslatableTest extends TestCase
 		$grid = $this->grid;
 
 		$grid->addColumnText('non_translatable', 'non_translatable')
-			->setTranslatable(FALSE);
+			->setTranslatableHeader(FALSE);
 
 		$translatable = $grid->getColumn('non_translatable');
 
-		Assert::same(FALSE, $translatable->isTranslatable());
+		Assert::same(FALSE, $translatable->isTranslatableHeader());
 	}
 }
 
