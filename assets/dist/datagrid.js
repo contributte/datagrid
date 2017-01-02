@@ -22,7 +22,7 @@ $.nette.ext('datagrid.confirm', {
 $(document).on('change', 'select[data-autosubmit-per-page]', function() {
   return $(this).parent().find('input[type=submit]').click();
 }).on('change', 'select[data-autosubmit]', function() {
-  return $(this).closest('form').submit();
+  return $(this).closest('form')[0].submit();
 }).on('change', 'input[data-autosubmit][data-autosubmit-change]', function(e) {
   var $this, code;
   code = e.which || e.keyCode || 0;
@@ -30,7 +30,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', function() {
   $this = $(this);
   return window.datagrid_autosubmit_timer = setTimeout((function(_this) {
     return function() {
-      return $this.closest('form').submit();
+      return $this.closest('form')[0].submit();
     };
   })(this), 200);
 }).on('keyup', 'input[data-autosubmit]', function(e) {
@@ -43,7 +43,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', function() {
   $this = $(this);
   return window.datagrid_autosubmit_timer = setTimeout((function(_this) {
     return function() {
-      return $this.closest('form').submit();
+      return $this.closest('form')[0].submit();
     };
   })(this), 200);
 }).on('keydown', '.datagrid-inline-edit input', function(e) {
@@ -62,7 +62,7 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', function(e) {
   if (code === 13) {
     e.stopPropagation();
     e.preventDefault();
-    return $(this).closest('form').submit();
+    return $(this).closest('form')[0].submit();
   }
 });
 
