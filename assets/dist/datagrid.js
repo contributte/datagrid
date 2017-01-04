@@ -248,7 +248,7 @@ if (typeof datagridSortableTree === 'undefined') {
     }
     return $('.datagrid-tree-item-children').sortable({
       handle: '.handle-sort',
-      items: '.datagrid-tree-item:not(.datagrid-tree-item:first-child)',
+      items: '.datagrid-tree-item:not(.datagrid-tree-header)',
       toleranceElement: '> .datagrid-tree-item-content',
       connectWith: '.datagrid-tree-item-children',
       update: function(event, ui) {
