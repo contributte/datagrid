@@ -21,14 +21,14 @@ $.nette.ext('datagrid.confirm', {
 $(document).on('change', 'select[data-autosubmit-per-page]', ->
 	$(this).parent().find('input[type=submit]').click()
 ).on('change', 'select[data-autosubmit]', ->
-	$(this).closest('form')[0].submit()
+	$(this).closest('form').first().submit()
 ).on('change', 'input[data-autosubmit][data-autosubmit-change]', (e) ->
 	code = e.which || e.keyCode || 0
 
 	clearTimeout(window.datagrid_autosubmit_timer)
 	$this = $(this)
 	window.datagrid_autosubmit_timer = setTimeout =>
-		$this.closest('form')[0].submit()
+		$this.closest('form').first().submit()
 	, 200
 ).on('keyup', 'input[data-autosubmit]', (e) ->
 	code = e.which || e.keyCode || 0
@@ -39,7 +39,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', ->
 	clearTimeout(window.datagrid_autosubmit_timer)
 	$this = $(this)
 	window.datagrid_autosubmit_timer = setTimeout =>
-		$this.closest('form')[0].submit()
+		$this.closest('form').first().submit()
 	, 200
 ).on('keydown', '.datagrid-inline-edit input', (e) ->
 	code = e.which || e.keyCode || 0
@@ -61,7 +61,7 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', (e) ->
 		e.preventDefault()
 
 		
-		$(this).closest('form')[0].submit()
+		$(this).closest('form').first().submit()
 )
 
 
