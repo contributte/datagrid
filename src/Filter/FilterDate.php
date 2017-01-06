@@ -28,13 +28,6 @@ class FilterDate extends Filter implements IFilterDate
 	 */
 	protected $type = 'date';
 
-	/**
-	 * @var array
-	 */
-	protected $attributes = [
-		['class', 'form-control input-sm']
-	];
-
 
 	/**
 	 * Adds select box to filter form

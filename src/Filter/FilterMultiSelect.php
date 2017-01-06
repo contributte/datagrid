@@ -23,8 +23,8 @@ class FilterMultiSelect extends FilterSelect
 	 * @var array
 	 */
 	protected $attributes = [
-		['class', 'form-control selectpicker input-sm'],
-		['data-selected-text-format', 'count']
+		'class' => ['form-control', 'input-sm', 'selectpicker'],
+		'data-selected-text-format' => ['count'],
 	];
 
 
