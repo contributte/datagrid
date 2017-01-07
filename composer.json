@@ -30,7 +30,7 @@
 		"nette/forms"       : "^2.3|^2.4",
 		"ublaboo/responses" : "~1.0.0",
 		"ublaboo/controls"  : "~1.0.1",
-		"symfony/property-access": "2.8.15"
+		"symfony/property-access": ">=2.8.15"
 	},
 	"require-dev": {
 		"nette/tester"     : "^1.6.1",
