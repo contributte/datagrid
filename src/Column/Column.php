@@ -98,6 +98,11 @@ abstract class Column extends FilterableColumn
 	 */
 	protected $default_hide = FALSE;
 
+	/**
+	 * @var array
+	 */
+	protected $elementCache = ['td' => NULL, 'th' => NULL];
+
 
 	/**
 	 * Render row item into template
@@ -643,14 +648,33 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Get th/td column element
-	 * @param  string   $tag th|td
+	 * @param  string $tag th|td
+	 * @return Html
+	 */
+	public function getElementPrototype($tag)
+	{
+		if ($this->elementCache[$tag]) {
+			return $this->elementCache[$tag];
+		}
+
+		return $this->elementCache[$tag] = Html::el($tag);
+	}
+
+
+	/**
+	 * Method called from datagrid template, set appropriate classes and another attributes
+	 * @param  string   $tag
 	 * @param  string   $key
 	 * @param  Row|NULL $row
 	 * @return Html
 	 */
-	public function getElementPrototype($tag, $key = NULL, Row $row = NULL)
+	public function getElementForRender($tag, $key, Row $row = NULL)
 	{
-		$el = Html::el($tag);
+		if ($this->elementCache[$tag]) {
+			$el = clone $this->elementCache[$tag];
+		} else {
+			$el = Html::el($tag);
+		}
 
 		/**
 		 * If class was set by user via $el->class = '', fix it
@@ -663,23 +687,15 @@ abstract class Column extends FilterableColumn
 		}
 
 		$el->class[] = "text-{$this->getAlign()}";
+		$el->class[] = "col-{$key}";
 
-		/**
-		 * Method called from datagrid template, set appropriate classes and another attributes
-		 */
-		if ($key !== NULL && $row !== NULL) {
-			$el->class[] = "col-{$key}";
+		if ($row && $tag == 'td' && $this->isEditable()) {
+			$link = $this->grid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
 
-			if ($tag == 'td') {
-				if ($this->isEditable()) {
-					$link = $this->grid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
+			$el->data('datagrid-editable-url', $link);
 
-					$el->data('datagrid-editable-url', $link);
-
-					$el->data('datagrid-editable-type', $this->editable_element[0]);
-					$el->data('datagrid-editable-attrs', json_encode($this->editable_element[1]));
-				}
-			}
+			$el->data('datagrid-editable-type', $this->editable_element[0]);
+			$el->data('datagrid-editable-attrs', json_encode($this->editable_element[1]));
 		}
 
 		return $el;

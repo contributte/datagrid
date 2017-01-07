@@ -144,7 +144,7 @@
 							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="{$control->getName()|lower}-toggle-all" type="checkbox" data-check="{$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $key => $column}
-							{var $th = $column->getElementPrototype('th', $key)}
+							{var $th = $column->getElementForRender('th', $key)}
 							{$th->startTag()|noescape}
 								{var $col_header = 'col-' . $key . '-header'}
 
@@ -200,7 +200,7 @@
 					</tr>
 					<tr n:block="header-filters" n:if="!empty($filters) && !$control->hasOuterFilterRendering()">
 						{foreach $columns as $key => $column}
-							{var $th = $column->getElementPrototype('th', $key)}
+							{var $th = $column->getElementForRender('th', $key)}
 							{$th->startTag()|noescape}
 							{var $col_header = 'col-filter-' . $key . '-header'}
 							{if !$control->hasOuterFilterRendering() && isset($filters[$key])}
@@ -249,7 +249,7 @@
 										{foreach $columns as $key => $column}
 											{var $col = 'col-' . $key}
 
-											{var $td = $column->getElementPrototype('td', $key, $row)}
+											{var $td = $column->getElementForRender('td', $key, $row)}
 											{var $td->class[] = 'datagrid-inline-edit'}
 											{$td->startTag()|noescape}
 												{if isset($filter['inline_edit'][$key])}
@@ -277,7 +277,7 @@
 										{foreach $columns as $key => $column}
 											{php $column = $row->applyColumnCallback($key, clone $column)}
 
-											{var $td = $column->getElementPrototype('td', $key, $row)}
+											{var $td = $column->getElementForRender('td', $key, $row)}
 											{$td->startTag()|noescape}
 												{include column-value, column => $column, row => $row, key => $key}
 											{$td->endTag()|noescape}
@@ -419,7 +419,7 @@
 		{foreach $columns as $key => $column}
 			{var $col = 'col-' . $key}
 
-			{var $td = clone $column->getElementPrototype('td', $key)}
+			{var $td = clone $column->getElementForRender('td', $key)}
 			{var $td->class[] = 'datagrid-inline-edit'}
 			{$td->startTag()|noescape}
 				{if isset($filter['inline_add'][$key])}
@@ -441,7 +441,7 @@
 		<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
 
 		{foreach $columns as $key => $column}
-			{var $td = $column->getElementPrototype('td', $key)}
+			{var $td = $column->getElementForRender('td', $key)}
 
 			{$td->startTag()|noescape}
 				{$columnsSummary->render($key)}
@@ -459,7 +459,7 @@
 		<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
 
 		{foreach $columns as $key => $column}
-			{var $td = $column->getElementPrototype('td', $key)}
+			{var $td = $column->getElementForRender('td', $key)}
 
 			{$td->startTag()|noescape}
 				{if $aggregation_functions}
