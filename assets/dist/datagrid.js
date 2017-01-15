@@ -532,7 +532,11 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
           },
           method: 'POST',
           success: function() {
-            cell.html(value);
+            if (cell.data('datagrid-editable-type') === 'select') {
+              cell.html(input.find('option[value=' + value + ']').html());
+            } else {
+              cell.html(value);
+            }
             return cell.addClass('edited');
           },
           error: function() {

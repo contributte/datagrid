@@ -604,9 +604,10 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Change small inline edit input type to select
 	 * @param array  $options
+	 * @param array  $attrs
 	 * @return static
 	 */
-	public function setEditableInputTypeSelect(array $options = [])
+	public function setEditableInputTypeSelect(array $options = [], array $attrs = [])
 	{
 		$select = Html::el('select');
 
@@ -618,7 +619,7 @@ abstract class Column extends FilterableColumn
 
 		$this->addAttributes(['data-datagrid-editable-element' => (string) $select]);
 
-		return $this->setEditableInputType('select');
+		return $this->setEditableInputType('select', $attrs);
 	}
 
 

@@ -492,7 +492,11 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 					},
 					method: 'POST',
 					success: () ->
-						cell.html(value)
+						if cell.data('datagrid-editable-type') == 'select'
+							cell.html(input.find('option[value=' + value + ']').html())
+						else
+							cell.html(value)
+
 						cell.addClass('edited')
 					,
 					error: () ->
