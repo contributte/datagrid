@@ -139,6 +139,7 @@ abstract class Filter extends Nette\Object
 	{
 		$this->value = $value;
 		$this->value_set = TRUE;
+
 		return $this;
 	}
 
@@ -178,11 +179,14 @@ abstract class Filter extends Nette\Object
 
 	/**
 	 * Set custom condition on filter
-	 * @param callable $condition_callback
+	 * @param  callable $condition_callback
+	 * @return static
 	 */
 	public function setCondition($condition_callback)
 	{
 		$this->condition_callback = $condition_callback;
+
+		return $this;
 	}
 
 

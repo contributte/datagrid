@@ -56,12 +56,15 @@ class FilterDate extends Filter implements IFilterDate
 
 	/**
 	 * Set format for datepicker etc
-	 * @param string $php_format
-	 * @param string $js_format
+	 * @param  string $php_format
+	 * @param  string $js_format
+	 * @return static
 	 */
 	public function setFormat($php_format, $js_format)
 	{
 		$this->format = [$php_format, $js_format];
+
+		return $this;
 	}
 
 
