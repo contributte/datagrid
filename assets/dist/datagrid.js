@@ -544,6 +544,8 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
             return cell.addClass('edited-error');
           }
         });
+      } else {
+        cell.html(cell.data('value'));
       }
       return setTimeout(function() {
         return cell.removeClass('editing');

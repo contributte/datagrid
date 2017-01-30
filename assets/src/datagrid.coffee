@@ -503,6 +503,8 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 						cell.html(cell.data('value'))
 						cell.addClass('edited-error')
 				})
+			else
+				cell.html(cell.data('value'))
 
 			setTimeout ->
 				cell.removeClass('editing')
