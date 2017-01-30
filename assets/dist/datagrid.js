@@ -1,4 +1,4 @@
-var datagridFitlerMultiSelect, datagridShiftGroupSelection, datagridSortable, datagridSortableTree;
+var datagridFitlerMultiSelect, datagridGroupActionMultiSelect, datagridShiftGroupSelection, datagridSortable, datagridSortableTree;
 
 $(document).on('click', '[data-datagrid-confirm]:not(.ajax)', function(e) {
   if (!confirm($(e.target).closest('a').attr('data-datagrid-confirm'))) {
@@ -628,11 +628,44 @@ $(function() {
   return datagridFitlerMultiSelect();
 });
 
+datagridGroupActionMultiSelect = function() {
+  var selects;
+  selects = $('[data-datagrid-multiselect-id]');
+  return selects.each(function() {
+    var id;
+    if ($(this).hasClass('selectpicker')) {
+      $(this).removeAttr('id');
+      id = $(this).data('datagrid-multiselect-id');
+      $(this).on('loaded.bs.select', function(e) {
+        $(this).parent().attr('style', 'display:none;');
+        return $(this).parent().find('.hidden').removeClass('hidden').addClass('btn-default');
+      });
+      return $(this).on('rendered.bs.select', function(e) {
+        return $(this).parent().attr('id', id);
+      });
+    }
+  });
+};
+
+$(function() {
+  return datagridGroupActionMultiSelect();
+});
+
 $.nette.ext('datagrid.fitlerMultiSelect', {
   success: function() {
     datagridFitlerMultiSelect();
     if ($.fn.selectpicker) {
-      return $('.selectpicker').selectpicker();
+      return $('.selectpicker').selectpicker({
+        iconBase: 'fa'
+      });
+    }
+  }
+});
+
+$.nette.ext('datagrid.groupActionMultiSelect', {
+  success: function() {
+    if ($.fn.selectpicker) {
+      return datagridGroupActionMultiSelect();
     }
   }
 });

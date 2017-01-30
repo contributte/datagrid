@@ -65,7 +65,14 @@ class GroupActionCollection extends Nette\Object
 
 			if ($action instanceof GroupSelectAction) {
 				if ($action->hasOptions()) {
-					$control = $container->addSelect($id, '', $action->getOptions());
+					if ($action instanceof GroupMultiSelectAction) {
+						$control = $container->addMultiSelect($id, '', $action->getOptions());
+						$control->setAttribute('data-datagrid-multiselect-id', static::ID_ATTRIBUTE_PREFIX . $id);
+						$control->setAttribute('data-style', 'hidden');
+						$control->setAttribute('data-selected-icon-check', DataGrid::$icon_prefix . 'check');
+					} else {
+						$control = $container->addSelect($id, '', $action->getOptions());
+					}
 
 					$control->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id);
 				}
@@ -164,6 +171,22 @@ class GroupActionCollection extends Nette\Object
 		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
 
 		return $this->group_actions[$id] = new GroupSelectAction($title, $options);
+	}
+
+
+	/**
+	 * Add one group action (multiselect box) to collection of actions
+	 *
+	 * @param string $title
+	 * @param array  $options
+	 *
+	 * @return GroupAction
+	 */
+	public function addGroupMultiSelectAction($title, $options)
+	{
+		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
+
+		return $this->group_actions[$id] = new GroupMultiSelectAction($title, $options);
 	}
 
 

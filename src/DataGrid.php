@@ -1994,6 +1994,18 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Add group action (multiselect box)
+	 * @param string $title
+	 * @param array  $options
+	 * @return GroupAction\GroupAction
+	 */
+	public function addGroupMultiSelectAction($title, $options = [])
+	{
+		return $this->getGroupActionCollection()->addGroupMultiSelectAction($title, $options);
+	}
+
+
+	/**
 	 * Add group action (text input)
 	 * @param string $title
 	 * @return GroupAction\GroupAction

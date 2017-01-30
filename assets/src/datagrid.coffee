@@ -592,12 +592,40 @@ $ ->
 	datagridFitlerMultiSelect()
 
 
+datagridGroupActionMultiSelect = ->
+	selects = $('[data-datagrid-multiselect-id]');
+
+	selects.each ->
+		if $(this).hasClass('selectpicker')
+			$(this).removeAttr('id')
+			id = $(this).data('datagrid-multiselect-id')
+
+			$(this).on('loaded.bs.select', (e) ->
+				$(this).parent().attr('style', 'display:none;')
+				$(this).parent().find('.hidden').removeClass('hidden').addClass('btn-default')
+			)
+
+			$(this).on('rendered.bs.select', (e) ->
+				$(this).parent().attr('id', id)
+			)
+
+$ ->
+	datagridGroupActionMultiSelect()
+
+
 $.nette.ext('datagrid.fitlerMultiSelect', {
 	success: ->
 		datagridFitlerMultiSelect()
 
 		if $.fn.selectpicker
-			$('.selectpicker').selectpicker()
+			$('.selectpicker').selectpicker({iconBase: 'fa'})
+})
+
+
+$.nette.ext('datagrid.groupActionMultiSelect', {
+	success: ->
+		if $.fn.selectpicker
+			datagridGroupActionMultiSelect()
 })
 
 
