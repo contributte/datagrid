@@ -83,6 +83,11 @@ class Action extends Column
 	 */
 	protected $class = 'btn btn-xs btn-default';
 
+	/**
+	 * @var bool
+	 */
+	protected $open_in_new_tab = FALSE;
+
 
 	/**
 	 * @param DataGrid $grid
@@ -149,6 +154,10 @@ class Action extends Column
 
 		if ($confirm = $this->getConfirm($row)) {
 			$a->data(static::$data_confirm_attribute_name, $confirm);
+		}
+
+		if ($this->open_in_new_tab) {
+			$a->addAttributes(['target' => '_blank']);
 		}
 
 		return $a;
@@ -395,6 +404,28 @@ class Action extends Column
 	protected function translate($message)
 	{
 		return $this->grid->getTranslator()->translate($message);
+	}
+
+
+	/**
+	 * Open link in new window/tab?
+	 * @return boolean
+	 */
+	public function isOpenInNewTab()
+	{
+		return $this->open_in_new_tab;
+	}
+
+
+	/**
+	 * Set link to open in new tab/window or not
+	 * @param bool $open_in_new_tab
+	 * @return $this
+	 */
+	public function setOpenInNewTab($open_in_new_tab = TRUE)
+	{
+		$this->open_in_new_tab = $open_in_new_tab;
+		return $this;
 	}
 
 }
