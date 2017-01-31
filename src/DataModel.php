@@ -9,9 +9,7 @@
 namespace Ublaboo\DataGrid;
 
 use Nette;
-use DibiFluent;
-use DibiOdbcDriver;
-use DibiMsSqlDriver;
+use Dibi;
 use Nette\Database\Table\Selection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
@@ -48,7 +46,7 @@ final class DataModel extends Nette\Object
 
 
 	/**
-	 * @param IDataSource|array|DibiFluent|Selection|QueryBuilder|Collection $source
+	 * @param IDataSource|array|Dibi\Fluent|Selection|QueryBuilder|Collection $source
 	 * @param string $primary_key
 	 */
 	public function __construct($source, $primary_key)
@@ -63,13 +61,16 @@ final class DataModel extends Nette\Object
 		} else if (is_array($source)) {
 			$source = new DataSource\ArrayDataSource($source);
 
-		} else if ($source instanceof DibiFluent) {
+		} else if ($source instanceof Dibi\Fluent) {
 			$driver = $source->getConnection()->getDriver();
 
-			if ($driver instanceof DibiOdbcDriver) {
+			if ($driver instanceof Dibi\Drivers\OdbcDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
-			} else if ($driver instanceof DibiMsSqlDriver) {
+			} else if ($driver instanceof Dibi\Drivers\MsSqlDriver) {
+				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
+
+			} else if ($driver instanceof Dibi\Drivers\SqlsrvDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
 			} else {
