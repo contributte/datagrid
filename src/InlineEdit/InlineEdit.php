@@ -102,10 +102,13 @@ class InlineEdit extends Nette\Object
 
 	/**
 	 * @param mixed $id
+	 * @return static
 	 */
 	public function setItemId($id)
 	{
 		$this->item_id = $id;
+
+		return $this;
 	}
 
 
@@ -232,10 +235,13 @@ class InlineEdit extends Nette\Object
 
 	/**
 	 * @param bool $show
+	 * @return static
 	 */
 	public function setShowNonEditingColumns($show = TRUE)
 	{
 		$this->showNonEditingColumns = (bool) $show;
+
+		return $this;
 	}
 
 
