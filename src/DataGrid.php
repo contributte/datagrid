@@ -1514,7 +1514,8 @@ class DataGrid extends Nette\Application\UI\Control
 		$inline_edit_container = $form->addContainer('inline_edit');
 
 		if ($this->inlineEdit instanceof InlineEdit) {
-			$inline_edit_container->addSubmit('submit', 'ublaboo_datagrid.save');
+			$inline_edit_container->addSubmit('submit', 'ublaboo_datagrid.save')
+				->setValidationScope([$inline_edit_container]);
 			$inline_edit_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
 				->setValidationScope(FALSE);
 
@@ -1528,7 +1529,8 @@ class DataGrid extends Nette\Application\UI\Control
 		$inline_add_container = $form->addContainer('inline_add');
 
 		if ($this->inlineAdd instanceof InlineEdit) {
-			$inline_add_container->addSubmit('submit', 'ublaboo_datagrid.save');
+			$inline_add_container->addSubmit('submit', 'ublaboo_datagrid.save')
+				->setValidationScope([$inline_add_container]);
 			$inline_add_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
 				->setValidationScope(FALSE)
 				->setAttribute('data-datagrid-cancel-inline-add', TRUE);
