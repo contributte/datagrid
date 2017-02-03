@@ -25,9 +25,9 @@
 		}
 	},
 	"require": {
-		"nette/application" : "^2.3|^2.4",
-		"nette/utils"       : ">=2.3.10",
-		"nette/forms"       : "^2.3|^2.4",
+		"nette/application" : "^3.0",
+		"nette/utils"       : "^3.0",
+		"nette/forms"       : "^3.0",
 		"ublaboo/responses" : "~1.0.0",
 		"ublaboo/controls"  : "~1.0.1",
 		"symfony/property-access": "~3.0"
@@ -39,7 +39,7 @@
 		"tharos/leanmapper": "~2.2.0",
 		"nextras/orm"      : "~2.0",
 		"doctrine/orm"	   : "~2.5",
-		"nette/database"   : "^2.3|^2.4",
+		"nette/database"   : "^3.0",
 		"dibi/dibi"   : "^3.0"
 	}
 }
