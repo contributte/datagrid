@@ -150,7 +150,7 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	 * @param  array
 	 * @return void
 	 */
-	public function loadState(array $params)
+	public function loadState(array $params): void
 	{
 		parent::loadState($params);
 

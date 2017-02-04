@@ -50,7 +50,7 @@ class SubmitButton extends Nette\Forms\Controls\Button
 	 * @param  string
 	 * @return Nette\Utils\Html
 	 */
-	public function getControl($caption = NULL)
+	public function getControl($caption = NULL): Html
 	{
 		$el = parent::getControl('');
 

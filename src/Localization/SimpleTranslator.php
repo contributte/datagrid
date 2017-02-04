@@ -65,7 +65,7 @@ class SimpleTranslator extends Nette\Object implements Nette\Localization\ITrans
 	 * @param  int
 	 * @return string
 	 */
-	public function translate($message, $count = NULL)
+	public function translate($message, int $count = NULL): string
 	{
 		return isset($this->dictionary[$message]) ? $this->dictionary[$message] : $message;
 	}
