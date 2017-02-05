@@ -71,7 +71,7 @@ abstract class Filter extends Nette\Object
 	 * @var array
 	 */
 	protected $attributes = [
-		['class', 'form-control input-sm']
+		'class' => ['form-control', 'input-sm'],
 	];
 
 
@@ -133,16 +133,19 @@ abstract class Filter extends Nette\Object
 	/**
 	 * Set filter value
 	 * @param mixed $value
+	 * @return static
 	 */
 	public function setValue($value)
 	{
 		$this->value = $value;
 		$this->value_set = TRUE;
+
+		return $this;
 	}
 
 
 	/**
-	 * Get fitler value
+	 * Get filter value
 	 * @return mixed
 	 */
 	public function getValue()
@@ -176,11 +179,14 @@ abstract class Filter extends Nette\Object
 
 	/**
 	 * Set custom condition on filter
-	 * @param callable $condition_callback
+	 * @param  callable $condition_callback
+	 * @return static
 	 */
 	public function setCondition($condition_callback)
 	{
 		$this->condition_callback = $condition_callback;
+
+		return $this;
 	}
 
 
@@ -249,10 +255,24 @@ abstract class Filter extends Nette\Object
 	/**
 	 * @param string $name
 	 * @param mixed $value
+	 * @return static
 	 */
 	public function addAttribute($name, $value)
 	{
-		$this->attributes[] = [(string) $name, $value];
+		$this->attributes[$name][] = $value;
+
+		return $this;
+	}
+
+
+	/**
+	 * @param string $name
+	 * @param mixed $value
+	 * @return static
+	 */
+	public function setAttribute($name, $value)
+	{
+		$this->attributes[$name] = (array) $value;
 
 		return $this;
 	}
@@ -260,8 +280,19 @@ abstract class Filter extends Nette\Object
 
 	/**
 	 * @return array
+	 * @deprecated use getAttributes instead
 	 */
 	public function getAttribtues()
+	{
+		@trigger_error('getAttribtues is deprecated, use getAttributes instead', E_USER_DEPRECATED);
+		return $this->getAttributes();
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getAttributes()
 	{
 		return $this->attributes;
 	}
@@ -279,8 +310,13 @@ abstract class Filter extends Nette\Object
 			$input->setAttribute('data-datagrid-manualsubmit', TRUE);
 		}
 
-		foreach ($this->attributes as $attribute) {
-			$input->setAttribute($attribute[0], $attribute[1]);
+		foreach ($this->attributes as $key => $value) {
+			if (is_array($value)) {
+				$value = array_unique($value);
+				$value = implode(' ', $value);
+			}
+
+			$input->setAttribute($key, $value);
 		}
 
 		return $input;

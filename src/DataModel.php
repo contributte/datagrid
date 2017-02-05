@@ -9,9 +9,7 @@
 namespace Ublaboo\DataGrid;
 
 use Nette;
-use DibiFluent;
-use DibiOdbcDriver;
-use DibiMsSqlDriver;
+use Dibi;
 use Nette\Database\Table\Selection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
@@ -23,17 +21,32 @@ use Nette\Database\Drivers as NDBDrivers;
 use Ublaboo\DataGrid\DataSource\ApiDataSource;
 use Nextras\Orm\Collection\ICollection;
 
-class DataModel
+final class DataModel extends Nette\Object
 {
+
+	/**
+	 * @var callable[]
+	 */
+	public $onBeforeFilter = [];
+
+	/**
+	 * @var callable[]
+	 */
+	public $onAfterFilter = [];
+
+	/**
+	 * @var callable[]
+	 */
+	public $onAfterPaginated = [];
 
 	/**
 	 * @var IDataSource
 	 */
-	protected $data_source;
+	private $data_source;
 
 
 	/**
-	 * @param IDataSource|array|DibiFluent|Selection|QueryBuilder|Collection $source
+	 * @param IDataSource|array|Dibi\Fluent|Selection|QueryBuilder|Collection $source
 	 * @param string $primary_key
 	 */
 	public function __construct($source, $primary_key)
@@ -48,13 +61,16 @@ class DataModel
 		} else if (is_array($source)) {
 			$source = new DataSource\ArrayDataSource($source);
 
-		} else if ($source instanceof DibiFluent) {
+		} else if ($source instanceof Dibi\Fluent) {
 			$driver = $source->getConnection()->getDriver();
 
-			if ($driver instanceof DibiOdbcDriver) {
+			if ($driver instanceof Dibi\Drivers\OdbcDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
-			} else if ($driver instanceof DibiMsSqlDriver) {
+			} else if ($driver instanceof Dibi\Drivers\MsSqlDriver) {
+				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
+
+			} else if ($driver instanceof Dibi\Drivers\SqlsrvDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
 			} else {
@@ -112,7 +128,11 @@ class DataModel
 		Sorting $sorting,
 		array $filters
 	) {
+		$this->onBeforeFilter($this->data_source);
+
 		$this->data_source->filter($filters);
+
+		$this->onAfterFilter($this->data_source);
 
 		/**
 		 * Paginator is optional
@@ -125,6 +145,8 @@ class DataModel
 				$paginator->getOffset(),
 				$paginator->getItemsPerPage()
 			);
+
+			$this->onAfterPaginated($this->data_source);
 
 			return $this->data_source->getData();
 		}

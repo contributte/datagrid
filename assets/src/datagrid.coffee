@@ -1,6 +1,6 @@
 # Non-ajax confirmation
 #
-$(document).on('click', '[data-datagrid-confirm]', (e) ->
+$(document).on('click', '[data-datagrid-confirm]:not(.ajax)', (e) ->
 	if not confirm($(e.target).closest('a').attr('data-datagrid-confirm'))
 		e.stopPropagation()
 		e.preventDefault()
@@ -21,14 +21,14 @@ $.nette.ext('datagrid.confirm', {
 $(document).on('change', 'select[data-autosubmit-per-page]', ->
 	$(this).parent().find('input[type=submit]').click()
 ).on('change', 'select[data-autosubmit]', ->
-	$(this).closest('form').submit()
+	$(this).closest('form').first().submit()
 ).on('change', 'input[data-autosubmit][data-autosubmit-change]', (e) ->
 	code = e.which || e.keyCode || 0
 
 	clearTimeout(window.datagrid_autosubmit_timer)
 	$this = $(this)
 	window.datagrid_autosubmit_timer = setTimeout =>
-		$this.closest('form').submit()
+		$this.closest('form').first().submit()
 	, 200
 ).on('keyup', 'input[data-autosubmit]', (e) ->
 	code = e.which || e.keyCode || 0
@@ -39,7 +39,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', ->
 	clearTimeout(window.datagrid_autosubmit_timer)
 	$this = $(this)
 	window.datagrid_autosubmit_timer = setTimeout =>
-		$this.closest('form').submit()
+		$this.closest('form').first().submit()
 	, 200
 ).on('keydown', '.datagrid-inline-edit input', (e) ->
 	code = e.which || e.keyCode || 0
@@ -61,8 +61,55 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', (e) ->
 		e.preventDefault()
 
 		
-		$(this).closest('form').submit()
+		$(this).closest('form').first().submit()
 )
+
+
+datagridShiftGroupSelection = ->
+	last_checkbox = null
+
+	document.addEventListener 'click', (e) ->	
+		for el in e.path
+			if $(el).is('.col-checkbox') && last_checkbox && e.shiftKey
+				current_checkbox_row = $(el).closest('tr')
+
+				last_checkbox_row = last_checkbox.closest('tr')
+				last_checkbox_tbody = last_checkbox_row.closest('tbody')
+
+				checkboxes_rows = last_checkbox_tbody.find('tr').toArray()
+
+				if current_checkbox_row.index() > last_checkbox_row.index()
+					rows = checkboxes_rows.slice(last_checkbox_row.index(), current_checkbox_row.index())
+
+				else if current_checkbox_row.index() < last_checkbox_row.index()
+					rows = checkboxes_rows.slice(current_checkbox_row.index() + 1, last_checkbox_row.index())
+
+				if !rows
+					return
+
+				for row in rows
+					input = $(row).find('.col-checkbox input[type=checkbox]')[0]
+
+					if input
+						input.checked = true
+
+						ie = window.navigator.userAgent.indexOf("MSIE ")
+
+						if ie
+							event = document.createEvent('Event')
+							event.initEvent('change', true, true);
+						else
+							event = new Event('change', {'bubbles': true})
+
+						input.dispatchEvent(event)
+					
+				
+		for el in e.path
+			if $(el).is('.col-checkbox')
+				last_checkbox = $(el)
+
+datagridShiftGroupSelection()
+
 
 document.addEventListener 'change', (e) ->
 	grid = e.target.getAttribute('data-check')
@@ -116,9 +163,14 @@ window.datagridSerializeUrl = function(obj, prefix) {
 		if (obj.hasOwnProperty(p)) {
 			var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
 			if (v !== null && v !== "") {
-				str.push(typeof v == "object" ?
-					window.datagridSerializeUrl(v, k) :
-					encodeURIComponent(k) + "=" + encodeURIComponent(v));
+				if (typeof v == "object") {
+					var r = window.datagridSerializeUrl(v, k);
+						if (r) {
+							str.push(r);
+						}
+				} else {
+					str.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+				}
 			}
 		}
 	}
@@ -149,10 +201,17 @@ datagridSortable = ->
 
 			url = $(this).data('sortable-url')
 
+			data = {};
+			component_prefix = row.closest('.datagrid').find('tbody').attr('data-sortable-parent-path')
+
+			data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id
+			data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id
+			data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id
+
 			$.nette.ajax({
 				type: 'GET',
 				url: url,
-				data: {item_id: item_id, prev_id: prev_id, next_id: next_id},
+				data: data,
 				error: (jqXHR, textStatus, errorThrown) ->
 					alert(jqXHR.statusText)
 			})
@@ -174,7 +233,7 @@ if typeof datagridSortableTree == 'undefined'
 
 		$('.datagrid-tree-item-children').sortable({
 			handle: '.handle-sort',
-			items: '.datagrid-tree-item:not(.datagrid-tree-item:first-child)',
+			items: '.datagrid-tree-item:not(.datagrid-tree-header)',
 			toleranceElement: '> .datagrid-tree-item-content',
 			connectWith: '.datagrid-tree-item-children',
 			update: (event, ui) ->
@@ -208,10 +267,18 @@ if typeof datagridSortableTree == 'undefined'
 
 				parent.find('[data-toggle-tree]').first().removeClass('hidden')
 
+				component_prefix = row.closest('.datagrid-tree').attr('data-sortable-parent-path')
+				data = {}
+
+				data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id
+				data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id
+				data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id
+				data[(component_prefix + '-parent_id').replace(/^-/, '')] = parent_id
+
 				$.nette.ajax({
 					type: 'GET',
 					url: url,
-					data: {item_id: item_id, prev_id: prev_id, next_id: next_id, parent_id: parent_id},
+					data: data,
 					error: (jqXHR, textStatus, errorThrown) ->
 						if errorThrown != 'abort'
 							alert(jqXHR.statusText)
@@ -351,7 +418,7 @@ $.nette.ext('datagrid.tree', {
 	success: (payload) ->
 		if payload._datagrid_tree
 			id = payload._datagrid_tree
-			children_block = $('.datagrid-tree-item[data-id=' + id + ']').find('.datagrid-tree-item-children').first()
+			children_block = $('.datagrid-tree-item[data-id="' + id + '"]').find('.datagrid-tree-item-children').first()
 			children_block.addClass('loaded')
 
 			for name, snippet of payload.snippets
@@ -423,12 +490,25 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 					data: {
 						value: value
 					},
-					method: 'POST'
-				}).success ->
-					cell.addClass('edited')
+					method: 'POST',
+					success: () ->
+						if cell.data('datagrid-editable-type') == 'select'
+							cell.html(input.find('option[value=' + value + ']').html())
+						else
+							cell.html(value)
 
-			cell.removeClass('editing')
-			cell.html(value)
+						cell.addClass('edited')
+					,
+					error: () ->
+						cell.html(cell.data('value'))
+						cell.addClass('edited-error')
+				})
+			else
+				cell.html(cell.data('value'))
+
+			setTimeout ->
+				cell.removeClass('editing')
+			, 1200
 
 		cell.find('input,textarea,select').focus().on('blur', ->
 			submit(cell, $(this))
@@ -438,7 +518,14 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 					e.stopPropagation()
 					e.preventDefault()
 
-					submit(cell, $(this))
+					return submit(cell, $(this))
+
+			if e.which == 27
+				e.stopPropagation()
+				e.preventDefault()
+
+				cell.removeClass('editing');
+				cell.html(cell.data('value'));
 		)
 		cell.find('select').on('change', ->
 			submit(cell, $(this))
@@ -449,11 +536,13 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 #
 $.nette.ext('datagrid.after_inline_edit', {
 	success: (payload) ->
+		grid = $('.datagrid-' + payload._datagrid_name)
+
 		if payload._datagrid_inline_edited
-			$('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited')
-			$('.datagrid-inline-edit-trigger').removeClass('hidden')
+			grid.find('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited')
+			grid.find('.datagrid-inline-edit-trigger').removeClass('hidden')
 		else if payload._datagrid_inline_edit_cancel
-			$('.datagrid-inline-edit-trigger').removeClass('hidden')
+			grid.find('.datagrid-inline-edit-trigger').removeClass('hidden')
 })
 
 
@@ -505,12 +594,40 @@ $ ->
 	datagridFitlerMultiSelect()
 
 
+datagridGroupActionMultiSelect = ->
+	selects = $('[data-datagrid-multiselect-id]');
+
+	selects.each ->
+		if $(this).hasClass('selectpicker')
+			$(this).removeAttr('id')
+			id = $(this).data('datagrid-multiselect-id')
+
+			$(this).on('loaded.bs.select', (e) ->
+				$(this).parent().attr('style', 'display:none;')
+				$(this).parent().find('.hidden').removeClass('hidden').addClass('btn-default')
+			)
+
+			$(this).on('rendered.bs.select', (e) ->
+				$(this).parent().attr('id', id)
+			)
+
+$ ->
+	datagridGroupActionMultiSelect()
+
+
 $.nette.ext('datagrid.fitlerMultiSelect', {
 	success: ->
 		datagridFitlerMultiSelect()
 
 		if $.fn.selectpicker
-			$('.selectpicker').selectpicker()
+			$('.selectpicker').selectpicker({iconBase: 'fa'})
+})
+
+
+$.nette.ext('datagrid.groupActionMultiSelect', {
+	success: ->
+		if $.fn.selectpicker
+			datagridGroupActionMultiSelect()
 })
 
 
@@ -529,10 +646,30 @@ $.nette.ext('datagrid.redraw-item', {
 })
 
 
-# On page load - check whether the url shoud be changed using history API
-#
-$ ->
-	$.nette.ajax({
-		type: 'GET',
-		url: $('.datagrid').first().data('refresh-state')
-	})
+$.nette.ext('datagrid.reset-filter-by-column', {
+	success: (payload) ->
+		if !payload._datagrid_name
+			return
+
+		grid = $('.datagrid-' + payload._datagrid_name)
+
+		# Show/hide reset-fitler indecators
+		#
+		grid.find('[data-datagrid-reset-filter-by-column]').addClass('hidden')
+
+		if payload.non_empty_filters && payload.non_empty_filters.length
+			for key in payload.non_empty_filters
+				grid.find('[data-datagrid-reset-filter-by-column='+key+']').removeClass('hidden')
+
+			# Refresh their url (table header is not refreshed using snippets)
+			#
+			href = grid.find('.reset-filter').attr('href')
+
+			grid.find('[data-datagrid-reset-filter-by-column]').each ->
+				key = $(this).attr('data-datagrid-reset-filter-by-column')
+
+				new_href = href.replace('do=' + payload._datagrid_name + '-resetFilter', 'do=' + payload._datagrid_name + '-resetColumnFilter')
+				new_href += '&' + payload._datagrid_name + '-key=' + key
+
+				$(this).attr('href', new_href)
+})

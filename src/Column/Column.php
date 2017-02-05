@@ -40,6 +40,11 @@ abstract class Column extends FilterableColumn
 	 * @var bool|string
 	 */
 	protected $sortable = FALSE;
+	
+	/**
+	 * @var bool
+	 */
+	protected $translatable_header = TRUE;
 
 	/**
 	 * @var bool
@@ -89,15 +94,14 @@ abstract class Column extends FilterableColumn
 	protected $editable_element = ['textarea', ['class' => 'form-control']];
 
 	/**
-	 * Cached html elements
-	 * @var array
-	 */
-	protected $el_cache = [];
-
-	/**
 	 * @var bool
 	 */
 	protected $default_hide = FALSE;
+
+	/**
+	 * @var array
+	 */
+	protected $elementCache = ['td' => NULL, 'th' => NULL];
 
 
 	/**
@@ -209,7 +213,24 @@ abstract class Column extends FilterableColumn
 	{
 		return (bool) $this->sortable;
 	}
-
+	
+	/**
+	 * Set column translatable or not
+	 */
+	public function setTranslatableHeader($translatable_header = TRUE)
+	{
+		$this->translatable_header = (bool) $translatable_header;
+		
+		return $this;
+	}
+	
+	/**
+	 * Tell wheter column is translatable
+	 */
+	public function isTranslatableHeader()
+	{
+		return (bool) $this->translatable_header;
+	}
 
 	/**
 	 * Shoud be the pagination reseted after sorting?
@@ -469,6 +490,17 @@ abstract class Column extends FilterableColumn
 
 
 	/**
+	 * @return bool
+	 */
+	public function hasSortNext()
+	{
+		foreach ($this->getSortNext() as $key => $order) {
+			return $order !== FALSE;
+		}
+	}
+
+
+	/**
 	 * Is sorting ascending?
 	 * @return bool
 	 */
@@ -572,9 +604,10 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Change small inline edit input type to select
 	 * @param array  $options
+	 * @param array  $attrs
 	 * @return static
 	 */
-	public function setEditableInputTypeSelect(array $options = [])
+	public function setEditableInputTypeSelect(array $options = [], array $attrs = [])
 	{
 		$select = Html::el('select');
 
@@ -586,7 +619,7 @@ abstract class Column extends FilterableColumn
 
 		$this->addAttributes(['data-datagrid-editable-element' => (string) $select]);
 
-		return $this->setEditableInputType('select');
+		return $this->setEditableInputType('select', $attrs);
 	}
 
 
@@ -616,20 +649,32 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Get th/td column element
-	 * @param  string   $tag th|td
+	 * @param  string $tag th|td
+	 * @return Html
+	 */
+	public function getElementPrototype($tag)
+	{
+		if ($this->elementCache[$tag]) {
+			return $this->elementCache[$tag];
+		}
+
+		return $this->elementCache[$tag] = Html::el($tag);
+	}
+
+
+	/**
+	 * Method called from datagrid template, set appropriate classes and another attributes
+	 * @param  string   $tag
 	 * @param  string   $key
 	 * @param  Row|NULL $row
 	 * @return Html
 	 */
-	public function getElementPrototype($tag, $key = NULL, Row $row = NULL)
+	public function getElementForRender($tag, $key, Row $row = NULL)
 	{
-		/**
-		 * Get cached element
-		 */
-		if (empty($this->el_cache[$tag])) {
-			$this->el_cache[$tag] = $el = $el = Html::el($tag);
+		if ($this->elementCache[$tag]) {
+			$el = clone $this->elementCache[$tag];
 		} else {
-			$el = $this->el_cache[$tag];
+			$el = Html::el($tag);
 		}
 
 		/**
@@ -643,23 +688,15 @@ abstract class Column extends FilterableColumn
 		}
 
 		$el->class[] = "text-{$this->getAlign()}";
+		$el->class[] = "col-{$key}";
 
-		/**
-		 * Method called from datagrid template, set appropriate classes and another attributes
-		 */
-		if ($key !== NULL && $row !== NULL) {
-			$el->class[] = "col-{$key}";
+		if ($row && $tag == 'td' && $this->isEditable()) {
+			$link = $this->grid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
 
-			if ($tag == 'td') {
-				if ($this->isEditable()) {
-					$link = $this->grid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
+			$el->data('datagrid-editable-url', $link);
 
-					$el->data('datagrid-editable-url', $link);
-
-					$el->data('datagrid-editable-type', $this->editable_element[0]);
-					$el->data('datagrid-editable-attrs', json_encode($this->editable_element[1]));
-				}
-			}
+			$el->data('datagrid-editable-type', $this->editable_element[0]);
+			$el->data('datagrid-editable-attrs', json_encode($this->editable_element[1]));
 		}
 
 		return $el;

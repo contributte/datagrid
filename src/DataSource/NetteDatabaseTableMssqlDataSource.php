@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\NetteDatabaseSelectionHelper;
 
 class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource implements IDataSource
@@ -23,7 +24,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 	{
 		$conditions = $filter->getCondition();
 
-		$date = \DateTime::createFromFormat($filter->getPhpFormat(), $conditions[$filter->getColumn()]);
+		$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
 		$this->data_source->where(
 			"CONVERT(varchar(10), {$filter->getColumn()}, 112) = ?",
@@ -45,7 +46,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
-			$date_from = \DateTime::createFromFormat($filter->getPhpFormat(), $value_from);
+			$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
 			$date_from->setTime(0, 0, 0);
 
 			$this->data_source->where(
@@ -55,7 +56,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 		}
 
 		if ($value_to) {
-			$date_to = \DateTime::createFromFormat($filter->getPhpFormat(), $value_to);
+			$date_to = DateTimeHelper::tryConvertToDateTime($value_to, [$filter->getPhpFormat()]);
 			$date_to->setTime(23, 59, 59);
 
 			$this->data_source->where(

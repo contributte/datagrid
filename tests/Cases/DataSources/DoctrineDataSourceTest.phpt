@@ -17,19 +17,19 @@ require __DIR__ . '/BaseDataSourceTest.phpt';
 
 final class DoctrineDataSourceTest extends BaseDataSourceTest
 {
-    /**
-     * @var \Doctrine\DBAL\Connection
-     */
-    private $db;
+	/**
+	 * @var \Doctrine\DBAL\Connection
+	 */
+	private $db;
 
     /**
      * @var EntityManager
      */
     private $entityManager;
 
-    public function setUp()
-    {
-        $this->setUpDatabase();
+	public function setUp()
+	{
+		$this->setUpDatabase();
 
         $tmpDir = __DIR__ . '/../../tmp';
         $config = Setup::createAnnotationMetadataConfiguration([$tmpDir], false, $tmpDir);
@@ -43,11 +43,11 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
         $this->grid = $factory->createXTestingDataGrid();
     }
 
-    protected function setUpDatabase()
-    {
-        $config = new Configuration();
+	protected function setUpDatabase()
+	{
+		$config = new Configuration();
 
-        $this->db = DriverManager::getConnection(['url' => 'sqlite:///:memory:'], $config);
+		$this->db = DriverManager::getConnection(['url' => 'sqlite:///:memory:'], $config);
 
         $this->db->executeQuery(file_get_contents(__DIR__ . '/config/schema_users.sql'));
         $this->db->executeQuery(file_get_contents(__DIR__ . '/config/schema_cities.sql'));

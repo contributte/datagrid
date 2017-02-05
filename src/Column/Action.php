@@ -19,7 +19,8 @@ use Ublaboo\DataGrid\Traits;
 class Action extends Column
 {
 
-	use Traits\TButton;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonText;
 	use Traits\TLink;
 
 	/**
@@ -62,6 +63,31 @@ class Action extends Column
 	 */
 	protected $attributes = [];
 
+	/**
+	 * @var array
+	 */
+	protected $parameters = [];
+
+	/**
+	 * @var string|callable
+	 */
+	private $title;
+
+	/**
+	 * @var string|callable
+	 */
+	protected $icon;
+
+	/**
+	 * @var string|callable
+	 */
+	protected $class = 'btn btn-xs btn-default';
+
+	/**
+	 * @var bool
+	 */
+	protected $open_in_new_tab = FALSE;
+
 
 	/**
 	 * @param DataGrid $grid
@@ -99,7 +125,7 @@ class Action extends Column
 		$link = $this->createLink(
 			$this->grid,
 			$this->href,
-			$this->getItemParams($row, $this->params)
+			$this->getItemParams($row, $this->params) + $this->parameters
 		);
 
 		$a = Html::el('a')->href($link);
@@ -130,7 +156,24 @@ class Action extends Column
 			$a->data(static::$data_confirm_attribute_name, $confirm);
 		}
 
+		if ($this->open_in_new_tab) {
+			$a->addAttributes(['target' => '_blank']);
+		}
+
 		return $a;
+	}
+
+
+	/**
+	 * Add parameters to link
+	 * @param array $parameters
+	 * @return static
+	 */
+	public function addParameters(array $parameters)
+	{
+		$this->parameters = $parameters;
+
+		return $this;
 	}
 
 
@@ -284,7 +327,7 @@ class Action extends Column
 	public function setDataAttribute($key, $value)
 	{
 		$this->data_attributes[$key] = $value;
-		
+
 		return $this;
 	}
 
@@ -361,6 +404,28 @@ class Action extends Column
 	protected function translate($message)
 	{
 		return $this->grid->getTranslator()->translate($message);
+	}
+
+
+	/**
+	 * Open link in new window/tab?
+	 * @return boolean
+	 */
+	public function isOpenInNewTab()
+	{
+		return $this->open_in_new_tab;
+	}
+
+
+	/**
+	 * Set link to open in new tab/window or not
+	 * @param bool $open_in_new_tab
+	 * @return $this
+	 */
+	public function setOpenInNewTab($open_in_new_tab = TRUE)
+	{
+		$this->open_in_new_tab = $open_in_new_tab;
+		return $this;
 	}
 
 }

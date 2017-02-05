@@ -156,6 +156,27 @@ abstract class BaseDataSourceTest extends TestCase
         Assert::equal([$this->data['users'][3]], $this->getActualResultAsArray());
     }
 
+    public function testFilterExactSearch(){
+
+        $filter = new FilterText($this->grid, 'a', 'b', ['name']);
+        $filter->setExactSearch();
+        $filter->setValue('John Red');
+
+        $this->ds->filter([$filter]);
+
+        Assert::equal([$this->data[5]], $this->getActualResultAsArray());
+    }
+
+    public function testFilterExactSearchId(){
+
+        $filter = new FilterText($this->grid, 'a', 'b', ['id']);
+        $filter->setExactSearch();
+        $filter->setValue('3');
+
+        $this->ds->filter([$filter]);
+
+        Assert::equal([$this->data[2]], $this->getActualResultAsArray());
+    }
 
     public function testLimit()
     {

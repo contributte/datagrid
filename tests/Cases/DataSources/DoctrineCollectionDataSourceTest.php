@@ -8,9 +8,8 @@ require __DIR__ . '/BaseDataSourceTest.phpt';
 
 final class DoctrineCollectionDataSourceTest extends BaseDataSourceTest
 {
-    public function setUp()
-    {
-
+	public function setUp()
+	{
         $this->ds = new Ublaboo\DataGrid\DataSource\DoctrineCollectionDataSource( new ArrayCollection($this->data['users']),'id');
         $factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
         $this->grid = $factory->createXTestingDataGrid();

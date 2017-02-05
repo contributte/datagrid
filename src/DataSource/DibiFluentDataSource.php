@@ -8,10 +8,12 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Dibi;
 use DibiFluent;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
 class DibiFluentDataSource extends FilterableDataSource implements IDataSource
@@ -91,7 +93,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 	{
 		$conditions = $filter->getCondition();
 
-		$date = \DateTime::createFromFormat($filter->getPhpFormat(), $conditions[$filter->getColumn()]);
+		$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
 		$this->data_source->where('DATE(%n) = ?', $filter->getColumn(), $date->format('Y-m-d'));
 	}
@@ -110,14 +112,14 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
-			$date_from = \DateTime::createFromFormat($filter->getPhpFormat(), $value_from);
+			$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
 			$date_from->setTime(0, 0, 0);
 
 			$this->data_source->where('DATE(%n) >= ?', $filter->getColumn(), $date_from);
 		}
 
 		if ($value_to) {
-			$date_to = \DateTime::createFromFormat($filter->getPhpFormat(), $value_to);
+			$date_to = DateTimeHelper::tryConvertToDateTime($value_to, [$filter->getPhpFormat()]);
 			$date_to->setTime(23, 59, 59);
 
 			$this->data_source->where('DATE(%n) <= ?', $filter->getColumn(), $date_to);
@@ -137,7 +139,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		$value_from = $conditions[$filter->getColumn()]['from'];
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
-        if ($value_from || $value_from != '') {
+		if ($value_from || $value_from != '') {
 			$this->data_source->where('%n >= ?', $filter->getColumn(), $value_from);
 		}
 
@@ -158,6 +160,17 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
+			$column = Dibi\Helpers::escape(
+				$this->data_source->getConnection()->getDriver(),
+				$column,
+				\dibi::IDENTIFIER
+			);
+
+			if ($filter->isExactSearch()){
+				$this->data_source->where("$column = %s", $value);
+				continue;
+			}
+
 			if ($filter->hasSplitWordsSearch() === FALSE) {
 				$words = [$value];
 			} else {
@@ -166,13 +179,8 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 
 			foreach ($words as $word) {
 				$escaped = $this->data_source->getConnection()->getDriver()->escapeLike($word, 0);
+				$or[] = "$column LIKE $escaped";
 
-				if (preg_match("/[\x80-\xFF]/", $escaped)) {
-					$or[] = "$column LIKE $escaped COLLATE utf8_bin";
-				} else {
-					$escaped = Strings::toAscii($escaped);
-					$or[] = "$column LIKE $escaped COLLATE utf8_general_ci";
-				}
 			}
 		}
 
@@ -236,7 +244,9 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function limit($offset, $limit)
 	{
-		$this->data = $this->data_source->fetchAll($offset, $limit);
+		$this->data_source->limit($limit)->offset($offset);
+
+		$this->data = $this->data_source->fetchAll();
 
 		return $this;
 	}
@@ -281,6 +291,16 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 		}
 
 		return $this;
+	}
+
+
+	/**
+	 * @param  callable $aggregationCallback
+	 * @return void
+	 */
+	public function processAggregation(callable $aggregationCallback)
+	{
+		call_user_func($aggregationCallback, $this->data_source);
 	}
 
 }

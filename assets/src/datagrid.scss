@@ -19,10 +19,29 @@
 	}
 }
 
+@keyframes edited-error {
+	0% {
+		background-color: #E8AAA4;
+	}
+	100% {
+		background-color: transparent;
+	}
+}
+
 .datagrid {
 	background-color: #fff;
 	padding: 1em;
 	box-sizing: border-box;
+
+	.datagrid-collapse-filters-button-row {
+		margin-bottom: 0.5em;
+	}
+
+	.col-action {
+		.dropdown {
+			display: inline-block;
+		}
+	}
 
 	.datagrid-row-inline-add {
 		&.datagrid-row-inline-add-hidden {
@@ -50,6 +69,7 @@
 	.datagrid-toolbar {
 		margin-top: .35em;
 		float: right;
+		display: inline-block;
 
 		& > span {
 			margin-left: 1em;
@@ -71,6 +91,8 @@
 	}
 
 	.datagrid-settings {
+		display: inline-block;
+
 		.dropdown-menu--grid {
 			font-size: 12px;
 
@@ -123,20 +145,6 @@
 					}
 				}
 
-				.column-settings-menu {
-					opacity: 0;
-					cursor: pointer;
-					margin-left: 2px;
-
-					.dropdown-menu {
-						font-size: 12px;
-
-						li .fa {
-							margin-right: 0.5em;
-						}
-					}
-				}
-
 				&.row-group-actions {
 					th {
 						border-bottom-width: 0 !important;
@@ -150,6 +158,30 @@
 
 					hr {
 						margin: 8px -8px;
+					}
+
+					.datagrid-column-header-additions {
+						float: right;
+
+						a[data-datagrid-reset-filter-by-column] {
+							margin-left: 0.3em;
+							color: #858585;
+						}
+
+						.column-settings-menu {
+							opacity: 0;
+							cursor: pointer;
+							margin-left: 2px;
+							display: inline-block;
+
+							.dropdown-menu {
+								font-size: 12px;
+
+								li .fa {
+									margin-right: 0.5em;
+								}
+							}
+						}
 					}
 
 					.datagrid-col-filter-date-range, .datagrid-col-filter-range {
@@ -177,7 +209,7 @@
 					}
 
 					&:hover {
-						> .column-settings-menu {
+						.column-settings-menu {
 							opacity: 1;
 						}
 					}
@@ -234,6 +266,12 @@
 					&.edited {
 						animation-name: edited;
 						animation-duration: 1.2s;
+						animation-delay: 0;
+					}
+
+					&.edited-error {
+						animation-name: edited-error;
+						animation-duration: 1.6s;
 						animation-delay: 0;
 					}
 				}
@@ -564,4 +602,8 @@
 			margin-top: 2px;
 		}
 	}
+}
+
+.datagrid-column-status-option-icon {
+	float: right;
 }

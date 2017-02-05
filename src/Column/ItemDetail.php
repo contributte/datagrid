@@ -14,11 +14,16 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo;
 use Ublaboo\DataGrid\Traits;
 use Ublaboo\DataGrid\Exception\DataGridItemDetailException;
+use Ublaboo\DataGrid\Row;
 
 class ItemDetail
 {
 
-	use Traits\TButton;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonIcon;
+	use Traits\TButtonClass;
+	use Traits\TButtonTitle;
+	use Traits\TButtonText;
 
 	/**
 	 * (renderer | template | block)
@@ -55,6 +60,11 @@ class ItemDetail
 	 * @var array
 	 */
 	protected $template_parameters = [];
+	
+	/**
+	 * @var callable
+	 */
+	protected $render_condition_callback;
 
 
 	/**
@@ -229,6 +239,28 @@ class ItemDetail
 	public function getTemplateVariables()
 	{
 		return $this->template_parameters;
+	}
+
+	/**
+	 * @param callable $condition
+	 * @return static
+	 */
+	public function setRenderCondition(callable $condition)
+	{
+		$this->render_condition_callback = $condition;
+
+		return $this;
+	}
+
+	/**
+	 * @param Row $row
+	 * @return bool
+	 */
+	public function shouldBeRendered(Row $row)
+	{
+		$condition = $this->render_condition_callback;
+
+		return $condition ? $condition($row->getItem()) : TRUE;
 	}
 
 }

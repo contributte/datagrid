@@ -13,31 +13,33 @@ use Ublaboo\DataGrid\Tests\Cases\DataSources\Nextras\UsersRepository;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
+if (!extension_loaded('mysqli')) {
+    \Tester\Environment::skip('Test requires MySQLi extension to be loaded.');
+}
+
 /**
  * @dataProvider config/nextrasDatasource.ini
  */
 final class NextrasDataSourceTest extends BaseDataSourceTest
 {
 
-    /** @var \Nextras\Orm\Model\Model */
-    private $model;
+	/** @var \Nextras\Orm\Model\Model */
+	private $model;
 
     public function setUp()
     {
         $this->setUpDatabase();
-
-        $this->ds = new NextrasDataSource($this->model->users->findAll(), 'id');
-        $factory = new \Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
-        $this->grid = $factory->createXTestingDataGrid();
-    }
+		$this->ds = new NextrasDataSource($this->model->users->findAll(), 'id');
+		$factory = new \Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+		$this->grid = $factory->createXTestingDataGrid();
+	}
 
     protected function setUpDatabase()
     {
         $args = \Tester\Environment::loadData();
-
-        $storage = new \Nette\Caching\Storages\DevNullStorage();
-        $cache = new \Nette\Caching\Cache($storage);
-        $connection = new \Nextras\Dbal\Connection($args);
+		$storage = new \Nette\Caching\Storages\DevNullStorage();
+		$cache = new \Nette\Caching\Cache($storage);
+		$connection = new \Nextras\Dbal\Connection($args);
 
         $connection->query("DROP TABLE IF EXISTS `users`;");
         $connection->query("DROP TABLE IF EXISTS `cities`;");
@@ -65,7 +67,7 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
             'cities' => new CitiesRepository(new CitiesMapper($connection, $cache))
         ]);
 
-        $this->model = $simpleModelFactory->create();
+		$this->model = $simpleModelFactory->create();
 
         $connection->query('INSERT INTO [cities] %values[]', $this->data['cities']);
         $connection->query('INSERT INTO [users] %values[]', $this->data['users']);

@@ -20,6 +20,9 @@ $.nette.ext('ublaboo-spinners', {
 			else if el.is('.datagrid .datagrid-per-page-submit')
 					el.closest('.row-grid-bottom').find('.col-per-page').prepend(spinner_template)
 
+			else if el.is('.datagrid .reset-filter')
+					el.closest('.row-grid-bottom').find('.col-per-page').prepend(spinner_template)
+
 	complete: ->
 		$('.ublaboo-spinner').remove()
 		$('.ublaboo-spinner-icon').removeClass('ublaboo-spinner-icon')

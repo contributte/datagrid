@@ -15,7 +15,11 @@ use Ublaboo\DataGrid\Traits;
 class ToolbarButton
 {
 
-	use Traits\TButton;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonIcon;
+	use Traits\TButtonClass;
+	use Traits\TButtonTitle;
+	use Traits\TButtonText;
 	use Traits\TLink;
 
 	/**
@@ -32,6 +36,12 @@ class ToolbarButton
 	 * @var array
 	 */
 	protected $params;
+
+	/**
+	 * @var array
+	 */
+	protected $attributes = [];
+
 
 	/**
 	 * @param DataGrid $grid
@@ -60,17 +70,33 @@ class ToolbarButton
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
-		$a->addText($this->grid->getTranslator()->translate($this->text));
-
-		if ($this->title) {
-			$a->title($this->grid->getTranslator()->translate($this->title));
+		if (!empty($this->attributes)) {
+			$a->addAttributes($this->attributes);
 		}
 
-		if ($this->class) {
-			$a->class($this->class);
+		$a->addText($this->grid->getTranslator()->translate($this->text));
+
+		if ($this->getTitle()) {
+			$a->title($this->grid->getTranslator()->translate($this->getTitle()));
+		}
+
+		if ($this->getClass()) {
+			$a->class($this->getClass());
 		}
 
 		return $a;
+	}
+
+
+	/**
+	 * @param array $attrs
+	 * @return static
+	 */
+	public function addAttributes(array $attrs)
+	{
+		$this->attributes = $this->attributes + $attrs;
+
+		return $this;
 	}
 
 }

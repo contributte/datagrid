@@ -23,7 +23,7 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": ">= 1.11.0",
+    "jquery": ">= 1.11.0 <3.0",
     "happy": ">= 1.0.0",
     "bootstrap-datepicker": ">= 1.6.0",
     "nette-forms": "^2.3",

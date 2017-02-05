@@ -24,7 +24,11 @@ use Ublaboo\DataGrid\Traits;
 class InlineEdit extends Nette\Object
 {
 
-	use Traits\TButton;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonIcon;
+	use Traits\TButtonClass;
+	use Traits\TButtonTitle;
+	use Traits\TButtonText;
 
 	/**
 	 * @var callable[]
@@ -72,6 +76,12 @@ class InlineEdit extends Nette\Object
 	 */
 	protected $position_top = FALSE;
 
+	/**
+	 * Columns that are not edited can displey normal value instaad of nothing..
+	 * @var bool
+	 */
+	protected $showNonEditingColumns = TRUE;
+
 
 	/**
 	 * @param DataGrid $grid
@@ -92,10 +102,13 @@ class InlineEdit extends Nette\Object
 
 	/**
 	 * @param mixed $id
+	 * @return static
 	 */
 	public function setItemId($id)
 	{
 		$this->item_id = $id;
+
+		return $this;
 	}
 
 
@@ -217,6 +230,27 @@ class InlineEdit extends Nette\Object
 					break;
 			}
 		}
+	}
+
+
+	/**
+	 * @param bool $show
+	 * @return static
+	 */
+	public function setShowNonEditingColumns($show = TRUE)
+	{
+		$this->showNonEditingColumns = (bool) $show;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function showNonEditingColumns()
+	{
+		return $this->showNonEditingColumns;
 	}
 
 }

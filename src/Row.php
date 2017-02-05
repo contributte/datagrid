@@ -89,10 +89,10 @@ class Row extends Nette\Object
 			return $this->getNextrasEntityProperty($this->item, $key);
 
 		} else if ($this->item instanceof DibiRow) {
-			return $this->item->{$key};
+			return $this->item->{$this->formatDibiRowKey($key)};
 
 		} else if ($this->item instanceof ActiveRow) {
-			return $this->item->{$key};
+			return $this->getActiveRowProperty($this->item, $key);
 
 		} else if ($this->item instanceof Nette\Database\Row) {
 			return $this->item->{$key};
@@ -129,6 +129,37 @@ class Row extends Nette\Object
 		}
 
 		return implode(' ', array_keys($class));
+	}
+
+
+	/**
+	 * @param  ActiveRow $item
+	 * @param  string    $key
+	 * @return mixed|NULL
+	 */
+	public function getActiveRowProperty(ActiveRow $item, $key)
+	{
+		if (preg_match("/^:([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/", $key, $matches)) {
+			$relatedTable = $matches[1];
+			$relatedColumn = $matches[2];
+			$throughColumn = isset($matches[4]) ? $matches[4] : NULL;
+
+			$relatedRow = $item->related($relatedTable, $throughColumn)->fetch();
+
+			return $relatedRow ? $relatedRow->{$relatedColumn} : NULL;
+		}
+
+		if (preg_match("/^([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/", $key, $matches)) {
+			$referencedTable = $matches[1];
+			$referencedColumn = $matches[2];
+			$throughColumn = isset($matches[4]) ? $matches[4] : NULL;
+
+			$referencedRow = $item->ref($referencedTable, $throughColumn);
+
+			return $referencedRow ? $referencedRow->{$referencedColumn} : NULL;
+		}
+
+		return $item->{$key};
 	}
 
 
@@ -284,6 +315,22 @@ class Row extends Nette\Object
 		}
 
 		return $column;
+	}
+
+
+	/**
+	 * Key may contain ".", get rid of it (+ the table alias)
+	 * 
+	 * @param  string $key
+	 * @return string
+	 */
+	private function formatDibiRowKey($key)
+	{
+		if ($offset = strpos($key, '.')) {
+			return substr($key, $offset + 1);
+		}
+
+		return $key;
 	}
 
 }

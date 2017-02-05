@@ -1,6 +1,6 @@
-var datagridFitlerMultiSelect, datagridSortable, datagridSortableTree;
+var datagridFitlerMultiSelect, datagridGroupActionMultiSelect, datagridShiftGroupSelection, datagridSortable, datagridSortableTree;
 
-$(document).on('click', '[data-datagrid-confirm]', function(e) {
+$(document).on('click', '[data-datagrid-confirm]:not(.ajax)', function(e) {
   if (!confirm($(e.target).closest('a').attr('data-datagrid-confirm'))) {
     e.stopPropagation();
     return e.preventDefault();
@@ -22,7 +22,7 @@ $.nette.ext('datagrid.confirm', {
 $(document).on('change', 'select[data-autosubmit-per-page]', function() {
   return $(this).parent().find('input[type=submit]').click();
 }).on('change', 'select[data-autosubmit]', function() {
-  return $(this).closest('form').submit();
+  return $(this).closest('form').first().submit();
 }).on('change', 'input[data-autosubmit][data-autosubmit-change]', function(e) {
   var $this, code;
   code = e.which || e.keyCode || 0;
@@ -30,7 +30,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', function() {
   $this = $(this);
   return window.datagrid_autosubmit_timer = setTimeout((function(_this) {
     return function() {
-      return $this.closest('form').submit();
+      return $this.closest('form').first().submit();
     };
   })(this), 200);
 }).on('keyup', 'input[data-autosubmit]', function(e) {
@@ -43,7 +43,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', function() {
   $this = $(this);
   return window.datagrid_autosubmit_timer = setTimeout((function(_this) {
     return function() {
-      return $this.closest('form').submit();
+      return $this.closest('form').first().submit();
     };
   })(this), 200);
 }).on('keydown', '.datagrid-inline-edit input', function(e) {
@@ -62,9 +62,65 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', function(e) {
   if (code === 13) {
     e.stopPropagation();
     e.preventDefault();
-    return $(this).closest('form').submit();
+    return $(this).closest('form').first().submit();
   }
 });
+
+datagridShiftGroupSelection = function() {
+  var last_checkbox;
+  last_checkbox = null;
+  return document.addEventListener('click', function(e) {
+    var checkboxes_rows, current_checkbox_row, el, event, i, ie, input, j, k, last_checkbox_row, last_checkbox_tbody, len, len1, len2, ref, ref1, results, row, rows;
+    ref = e.path;
+    for (i = 0, len = ref.length; i < len; i++) {
+      el = ref[i];
+      if ($(el).is('.col-checkbox') && last_checkbox && e.shiftKey) {
+        current_checkbox_row = $(el).closest('tr');
+        last_checkbox_row = last_checkbox.closest('tr');
+        last_checkbox_tbody = last_checkbox_row.closest('tbody');
+        checkboxes_rows = last_checkbox_tbody.find('tr').toArray();
+        if (current_checkbox_row.index() > last_checkbox_row.index()) {
+          rows = checkboxes_rows.slice(last_checkbox_row.index(), current_checkbox_row.index());
+        } else if (current_checkbox_row.index() < last_checkbox_row.index()) {
+          rows = checkboxes_rows.slice(current_checkbox_row.index() + 1, last_checkbox_row.index());
+        }
+        if (!rows) {
+          return;
+        }
+        for (j = 0, len1 = rows.length; j < len1; j++) {
+          row = rows[j];
+          input = $(row).find('.col-checkbox input[type=checkbox]')[0];
+          if (input) {
+            input.checked = true;
+            ie = window.navigator.userAgent.indexOf("MSIE ");
+            if (ie) {
+              event = document.createEvent('Event');
+              event.initEvent('change', true, true);
+            } else {
+              event = new Event('change', {
+                'bubbles': true
+              });
+            }
+            input.dispatchEvent(event);
+          }
+        }
+      }
+    }
+    ref1 = e.path;
+    results = [];
+    for (k = 0, len2 = ref1.length; k < len2; k++) {
+      el = ref1[k];
+      if ($(el).is('.col-checkbox')) {
+        results.push(last_checkbox = $(el));
+      } else {
+        results.push(void 0);
+      }
+    }
+    return results;
+  });
+};
+
+datagridShiftGroupSelection();
 
 document.addEventListener('change', function(e) {
   var at_least_one, event, grid, i, ie, input, inputs, len, results, select;
@@ -122,9 +178,14 @@ window.datagridSerializeUrl = function(obj, prefix) {
 		if (obj.hasOwnProperty(p)) {
 			var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
 			if (v !== null && v !== "") {
-				str.push(typeof v == "object" ?
-					window.datagridSerializeUrl(v, k) :
-					encodeURIComponent(k) + "=" + encodeURIComponent(v));
+				if (typeof v == "object") {
+					var r = window.datagridSerializeUrl(v, k);
+						if (r) {
+							str.push(r);
+						}
+				} else {
+					str.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+				}
 			}
 		}
 	}
@@ -141,7 +202,7 @@ datagridSortable = function() {
     items: 'tr',
     axis: 'y',
     update: function(event, ui) {
-      var item_id, next_id, prev_id, row, url;
+      var component_prefix, data, item_id, next_id, prev_id, row, url;
       row = ui.item.closest('tr[data-id]');
       item_id = row.data('id');
       prev_id = null;
@@ -153,14 +214,15 @@ datagridSortable = function() {
         next_id = row.next().data('id');
       }
       url = $(this).data('sortable-url');
+      data = {};
+      component_prefix = row.closest('.datagrid').find('tbody').attr('data-sortable-parent-path');
+      data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id;
+      data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id;
+      data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id;
       return $.nette.ajax({
         type: 'GET',
         url: url,
-        data: {
-          item_id: item_id,
-          prev_id: prev_id,
-          next_id: next_id
-        },
+        data: data,
         error: function(jqXHR, textStatus, errorThrown) {
           return alert(jqXHR.statusText);
         }
@@ -186,11 +248,11 @@ if (typeof datagridSortableTree === 'undefined') {
     }
     return $('.datagrid-tree-item-children').sortable({
       handle: '.handle-sort',
-      items: '.datagrid-tree-item',
+      items: '.datagrid-tree-item:not(.datagrid-tree-header)',
       toleranceElement: '> .datagrid-tree-item-content',
       connectWith: '.datagrid-tree-item-children',
       update: function(event, ui) {
-        var item_id, next_id, parent, parent_id, prev_id, row, url;
+        var component_prefix, data, item_id, next_id, parent, parent_id, prev_id, row, url;
         $('.toggle-tree-to-delete').remove();
         row = ui.item.closest('.datagrid-tree-item[data-id]');
         item_id = row.data('id');
@@ -216,15 +278,16 @@ if (typeof datagridSortableTree === 'undefined') {
           return;
         }
         parent.find('[data-toggle-tree]').first().removeClass('hidden');
+        component_prefix = row.closest('.datagrid-tree').attr('data-sortable-parent-path');
+        data = {};
+        data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id;
+        data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id;
+        data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id;
+        data[(component_prefix + '-parent_id').replace(/^-/, '')] = parent_id;
         return $.nette.ajax({
           type: 'GET',
           url: url,
-          data: {
-            item_id: item_id,
-            prev_id: prev_id,
-            next_id: next_id,
-            parent_id: parent_id
-          },
+          data: data,
           error: function(jqXHR, textStatus, errorThrown) {
             if (errorThrown !== 'abort') {
               return alert(jqXHR.statusText);
@@ -402,7 +465,7 @@ $.nette.ext('datagrid.tree', {
     var children_block, content, id, name, ref, snippet, template;
     if (payload._datagrid_tree) {
       id = payload._datagrid_tree;
-      children_block = $('.datagrid-tree-item[data-id=' + id + ']').find('.datagrid-tree-item-children').first();
+      children_block = $('.datagrid-tree-item[data-id="' + id + '"]').find('.datagrid-tree-item-children').first();
       children_block.addClass('loaded');
       ref = payload.snippets;
       for (name in ref) {
@@ -467,13 +530,26 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
           data: {
             value: value
           },
-          method: 'POST'
-        }).success(function() {
-          return cell.addClass('edited');
+          method: 'POST',
+          success: function() {
+            if (cell.data('datagrid-editable-type') === 'select') {
+              cell.html(input.find('option[value=' + value + ']').html());
+            } else {
+              cell.html(value);
+            }
+            return cell.addClass('edited');
+          },
+          error: function() {
+            cell.html(cell.data('value'));
+            return cell.addClass('edited-error');
+          }
         });
+      } else {
+        cell.html(cell.data('value'));
       }
-      cell.removeClass('editing');
-      return cell.html(value);
+      return setTimeout(function() {
+        return cell.removeClass('editing');
+      }, 1200);
     };
     cell.find('input,textarea,select').focus().on('blur', function() {
       return submit(cell, $(this));
@@ -485,6 +561,12 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
           return submit(cell, $(this));
         }
       }
+      if (e.which === 27) {
+        e.stopPropagation();
+        e.preventDefault();
+        cell.removeClass('editing');
+        return cell.html(cell.data('value'));
+      }
     });
     return cell.find('select').on('change', function() {
       return submit(cell, $(this));
@@ -494,11 +576,13 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
 
 $.nette.ext('datagrid.after_inline_edit', {
   success: function(payload) {
+    var grid;
+    grid = $('.datagrid-' + payload._datagrid_name);
     if (payload._datagrid_inline_edited) {
-      $('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited');
-      return $('.datagrid-inline-edit-trigger').removeClass('hidden');
+      grid.find('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited');
+      return grid.find('.datagrid-inline-edit-trigger').removeClass('hidden');
     } else if (payload._datagrid_inline_edit_cancel) {
-      return $('.datagrid-inline-edit-trigger').removeClass('hidden');
+      return grid.find('.datagrid-inline-edit-trigger').removeClass('hidden');
     }
   }
 });
@@ -546,11 +630,44 @@ $(function() {
   return datagridFitlerMultiSelect();
 });
 
+datagridGroupActionMultiSelect = function() {
+  var selects;
+  selects = $('[data-datagrid-multiselect-id]');
+  return selects.each(function() {
+    var id;
+    if ($(this).hasClass('selectpicker')) {
+      $(this).removeAttr('id');
+      id = $(this).data('datagrid-multiselect-id');
+      $(this).on('loaded.bs.select', function(e) {
+        $(this).parent().attr('style', 'display:none;');
+        return $(this).parent().find('.hidden').removeClass('hidden').addClass('btn-default');
+      });
+      return $(this).on('rendered.bs.select', function(e) {
+        return $(this).parent().attr('id', id);
+      });
+    }
+  });
+};
+
+$(function() {
+  return datagridGroupActionMultiSelect();
+});
+
 $.nette.ext('datagrid.fitlerMultiSelect', {
   success: function() {
     datagridFitlerMultiSelect();
     if ($.fn.selectpicker) {
-      return $('.selectpicker').selectpicker();
+      return $('.selectpicker').selectpicker({
+        iconBase: 'fa'
+      });
+    }
+  }
+});
+
+$.nette.ext('datagrid.groupActionMultiSelect', {
+  success: function() {
+    if ($.fn.selectpicker) {
+      return datagridGroupActionMultiSelect();
     }
   }
 });
@@ -573,9 +690,28 @@ $.nette.ext('datagrid.redraw-item', {
   }
 });
 
-$(function() {
-  return $.nette.ajax({
-    type: 'GET',
-    url: $('.datagrid').first().data('refresh-state')
-  });
+$.nette.ext('datagrid.reset-filter-by-column', {
+  success: function(payload) {
+    var grid, href, i, key, len, ref;
+    if (!payload._datagrid_name) {
+      return;
+    }
+    grid = $('.datagrid-' + payload._datagrid_name);
+    grid.find('[data-datagrid-reset-filter-by-column]').addClass('hidden');
+    if (payload.non_empty_filters && payload.non_empty_filters.length) {
+      ref = payload.non_empty_filters;
+      for (i = 0, len = ref.length; i < len; i++) {
+        key = ref[i];
+        grid.find('[data-datagrid-reset-filter-by-column=' + key + ']').removeClass('hidden');
+      }
+      href = grid.find('.reset-filter').attr('href');
+      return grid.find('[data-datagrid-reset-filter-by-column]').each(function() {
+        var new_href;
+        key = $(this).attr('data-datagrid-reset-filter-by-column');
+        new_href = href.replace('do=' + payload._datagrid_name + '-resetFilter', 'do=' + payload._datagrid_name + '-resetColumnFilter');
+        new_href += '&' + payload._datagrid_name + '-key=' + key;
+        return $(this).attr('href', new_href);
+      });
+    }
+  }
 });

@@ -17,7 +17,11 @@ use Ublaboo\DataGrid\Traits;
 class Export
 {
 
-	use Traits\TButton;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonIcon;
+	use Traits\TButtonClass;
+	use Traits\TButtonTitle;
+	use Traits\TButtonText;
 
 	/**
 	 * @var callable

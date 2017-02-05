@@ -10,7 +10,7 @@ namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
 
-class FilterDate extends Filter
+class FilterDate extends Filter implements IFilterDate
 {
 
 	/**
@@ -27,13 +27,6 @@ class FilterDate extends Filter
 	 * @var string
 	 */
 	protected $type = 'date';
-
-	/**
-	 * @var array
-	 */
-	protected $attributes = [
-		['class', 'form-control input-sm']
-	];
 
 
 	/**
@@ -63,12 +56,15 @@ class FilterDate extends Filter
 
 	/**
 	 * Set format for datepicker etc
-	 * @param string $php_format
-	 * @param string $js_format
+	 * @param  string $php_format
+	 * @param  string $js_format
+	 * @return static
 	 */
 	public function setFormat($php_format, $js_format)
 	{
 		$this->format = [$php_format, $js_format];
+
+		return $this;
 	}
 
 

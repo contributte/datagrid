@@ -13,6 +13,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
 /**
@@ -109,10 +110,13 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function getData()
 	{
-		$result = $this->getQuery()->getResult();
-		$this->onDataLoaded($result);
+		$iterator = (new Paginator($this->getQuery()))->getIterator();
 
-		return $result;
+		$data = iterator_to_array($iterator);
+
+		$this->onDataLoaded($data);
+
+		return $data;
 	}
 
 
@@ -146,7 +150,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		$p2 = $this->getPlaceholder();
 
 		foreach ($filter->getCondition() as $column => $value) {
-			$date = \DateTime::createFromFormat($filter->getPhpFormat(), $value);
+			$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
 			$c = $this->checkAliases($column);
 
 			$this->data_source
@@ -171,7 +175,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		$value_to   = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
-			$date_from = \DateTime::createFromFormat($filter->getPhpFormat(), $value_from);
+			$date_from = DateTimeHelper::tryConvertToDate($value_from, [$filter->getPhpFormat()]);
 			$date_from->setTime(0, 0, 0);
 
 			$p = $this->getPlaceholder();
@@ -180,7 +184,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		}
 
 		if ($value_to) {
-			$date_to = \DateTime::createFromFormat($filter->getPhpFormat(), $value_to);
+			$date_to = DateTimeHelper::tryConvertToDate($value_to, [$filter->getPhpFormat()]);
 			$date_to->setTime(23, 59, 59);
 
 			$p = $this->getPlaceholder();
@@ -224,13 +228,18 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		$exprs = [];
 
 		foreach ($condition as $column => $value) {
+			$c = $this->checkAliases($column);
+
+			if($filter->isExactSearch()){
+				$exprs[] = $this->data_source->expr()->eq($c, $this->data_source->expr()->literal($value));
+				continue;
+			}
+
 			if ($filter->hasSplitWordsSearch() === FALSE) {
 				$words = [$value];
 			} else {
 				$words = explode(' ', $value);
 			}
-
-			$c = $this->checkAliases($column);
 
 			foreach ($words as $word) {
 				$exprs[] = $this->data_source->expr()->like($c, $this->data_source->expr()->literal("%$word%"));

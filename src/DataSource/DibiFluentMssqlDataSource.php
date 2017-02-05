@@ -8,8 +8,10 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Dibi;
 use DibiFluent;
 use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
 
 class DibiFluentMssqlDataSource extends DibiFluentDataSource
 {
@@ -81,11 +83,9 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	{
 		$conditions = $filter->getCondition();
 
-		$date = \DateTime::createFromFormat($filter->getPhpFormat(), $conditions[$filter->getColumn()]);
+		$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
-		$ymd = $date->format('Ymd');
-
-		$this->data_source->where('CONVERT(varchar(10), %n, 112) = ?', $filter->getColumn(), $ymd);
+		$this->data_source->where('CONVERT(varchar(10), %n, 112) = ?', $filter->getColumn(), $date->format('Ymd'));
 	}
 
 
@@ -122,6 +122,17 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
+			$column = Dibi\Helpers::escape(
+				$this->data_source->getConnection()->getDriver(),
+				$column,
+				\dibi::IDENTIFIER
+			);
+
+			if ($filter->isExactSearch()){
+				$this->data_source->where("$column = %s", $value);
+				continue;
+			}
+
 			$or[] = "$column LIKE \"%$value%\"";
 		}
 
