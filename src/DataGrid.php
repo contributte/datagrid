@@ -483,7 +483,7 @@ class DataGrid extends Nette\Application\UI\Control
 			if (!$hasGroupActionOnRows && $row->hasGroupAction()){
 				$hasGroupActionOnRows = TRUE;
 			}
-			
+
 			if ($callback) {
 				$callback($item, $row->getControl());
 			}
@@ -743,11 +743,13 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Enable multi-sorting capability
 	 * @param bool  $multiSort
-	 * @return void
+	 * @return static
 	 */
 	public function setMultiSortEnabled($multiSort = TRUE)
 	{
 		$this->multiSort = (bool) $multiSort;
+
+		return $this;
 	}
 
 
@@ -1027,12 +1029,14 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Remove column
 	 * @param string $key
-	 * @return void
+	 * @return static
 	 */
 	public function removeColumn($key)
 	{
 		unset($this->columns_visibility[$key]);
 		unset($this->columns[$key]);
+
+		return $this;
 	}
 
 
@@ -1134,11 +1138,13 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Remove action
 	 * @param string $key
-	 * @return void
+	 * @return static
 	 */
 	public function removeAction($key)
 	{
 		unset($this->actions[$key]);
+
+		return $this;
 	}
 
 
@@ -1350,11 +1356,13 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Remove filter
 	 * @param string $key
-	 * @return void
+	 * @return static
 	 */
 	public function removeFilter($key)
 	{
 		unset($this->filters[$key]);
+
+		return $this;
 	}
 
 
@@ -1375,10 +1383,13 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @param bool $strict
+	 * @return static
 	 */
 	public function setStrictSessionFilterValues($strict = TRUE)
 	{
 		$this->strict_session_filter_values = (bool) $strict;
+
+		return $this;
 	}
 
 
@@ -1585,7 +1596,7 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$form->addSubmit('per_page_submit', 'ublaboo_datagrid.per_page_submit');
-		
+
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
 	}
 
@@ -2135,7 +2146,7 @@ class DataGrid extends Nette\Application\UI\Control
 				'_grid_has_sorted',
 				'_grid_hidden_columns',
 				'_grid_hidden_columns_manipulated'
-				])) {
+			])) {
 
 				$this->deleteSessionData($key);
 			}
@@ -2874,7 +2885,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @param callable $callable_set_container 
+	 * @param callable $callable_set_container
 	 * @return static
 	 */
 	public function setItemsDetailForm(callable $callable_set_container)
