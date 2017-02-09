@@ -213,6 +213,7 @@ class InlineEdit extends Nette\Object
 		foreach ($container->getControls() as $key => $control) {
 			switch ($key) {
 				case 'submit':
+				    $control->setValidationScope([$container]);
 					$control->setAttribute('class', 'btn btn-xs btn-primary');
 
 					break;
