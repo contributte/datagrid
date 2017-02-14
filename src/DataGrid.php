@@ -3337,7 +3337,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getSortableParentPath()
 	{
-		return $this->getParent()->lookupPath(Nette\Application\UI\Control::class, FALSE);
+		return $this->getParent()->lookupPath('Nette\Application\UI\Control', FALSE);
 	}
 
 
