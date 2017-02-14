@@ -57,8 +57,14 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @var callable[]
+	 * @deprecated use $onFiltersAssembled
 	 */
 	public $onFiltersAssabled;
+
+	/**
+	 * @var callable[]
+	 */
+	public $onFiltersAssembled;
 
 	/**
 	 * @var string
@@ -404,7 +410,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Notify about that json js extension
 		 */
-		$this->onFiltersAssabled[] = [$this, 'sendNonEmptyFiltersInPayload'];
+		$this->onFiltersAssembled[] = [$this, 'sendNonEmptyFiltersInPayload'];
 	}
 
 
@@ -469,7 +475,7 @@ class DataGrid extends Nette\Application\UI\Control
 				[
 					$this->getPaginator(),
 					$this->createSorting($this->sort, $this->sort_callback),
-					$this->assableFilters()
+					$this->assembleFilters()
 				]
 			);
 		}
@@ -1312,7 +1318,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Fill array of Column\Column[] with values from $this->sort   persistent parameter
 	 * @return Filter\Filter[] $this->filters === Filter\Filter[]
 	 */
-	public function assableFilters()
+	public function assembleFilters()
 	{
 		foreach ($this->filter as $key => $value) {
 			if (!isset($this->filters[$key])) {
@@ -1341,9 +1347,25 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Invoke possible events
 		 */
-		$this->onFiltersAssabled($this->filters);
+		if (!empty($this->onFiltersAssabled)) {
+			@trigger_error('onFiltersAssabled is deprecated, use onFiltersAssembled instead', E_USER_DEPRECATED);
+			$this->onFiltersAssabled($this->filters);
+		}
 
+		$this->onFiltersAssembled($this->filters);
 		return $this->filters;
+	}
+
+	/**
+	 * Fill array of Filter\Filter[] with values from $this->filter persistent parameter
+	 * Fill array of Column\Column[] with values from $this->sort   persistent parameter
+	 * @return Filter\Filter[] $this->filters === Filter\Filter[]
+	 * @deprecated use assembleFilters instead
+	 */
+	public function assableFilters()
+	{
+		@trigger_error('assableFilters is deprecated, use assembleFilters instead', E_USER_DEPRECATED);
+		return $this->assembleFilters();
 	}
 
 
@@ -2227,7 +2249,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if ($export->isFiltered()) {
 			$sort      = $this->sort;
-			$filter    = $this->assableFilters();
+			$filter    = $this->assembleFilters();
 		} else {
 			$sort      = [$this->primary_key => 'ASC'];
 			$filter    = [];
