@@ -16,12 +16,26 @@ abstract class BaseDataSourceTest extends TestCase
 {
 
     protected $data = [
-        ['id' => 1, 'name' => 'John Doe', 'age' => 30, 'address' => 'Blue Village 1'],
-        ['id' => 2, 'name' => 'Frank Frank', 'age' => 60, 'address' => 'Yellow Garded 126'],
-        ['id' => 3, 'name' => 'Santa Claus', 'age' => 12, 'address' => 'New York'],
-        ['id' => 8, 'name' => 'Jude Law', 'age' => 8, 'address' => 'Lubababa 5'],
-        ['id' => 30, 'name' => 'Jackie Blue', 'age' => 80, 'address' => 'Prague 678'],
-        ['id' => 40, 'name' => 'John Red', 'age' => 40, 'address' => 'Porto 53'],
+        'users' => [
+            ['id' => 1, 'name' => 'John Doe', 'age' => 30, 'address' => 'Blue Village 1', 'city' => 111],
+            ['id' => 2, 'name' => 'Frank Frank', 'age' => 60, 'address' => 'Yellow Garded 126', 'city' => 2],
+            ['id' => 3, 'name' => 'Santa Claus', 'age' => 12, 'address' => 'New York', 'city' => 1],
+            ['id' => 8, 'name' => 'Jude Law', 'age' => 8, 'address' => 'Lubababa 5', 'city' => 1],
+            ['id' => 30, 'name' => 'Jackie Blue', 'age' => 80, 'address' => 'Prague 678', 'city' => 1],
+            ['id' => 40, 'name' => 'John Red', 'age' => 40, 'address' => 'Porto 53', 'city' => 1],
+        ],
+        'cities' => [
+            ['id' => 1, 'name' => 'New Work', 'created' => '2016-01-07 01:02:03.04'],
+            ['id' => 2, 'name' => 'Sydney', 'created' => '2016-01-01 01:02:03.04'],
+            ['id' => 10, 'name' => 'Prague', 'created' => '2010-01-01 01:02:03.04'],
+            ['id' => 11, 'name' => 'Berlin', 'created' => '2016-01-01 01:02:03.04'],
+            ['id' => 12, 'name' => 'London', 'created' => '2016-03-01 01:02:03.04'],
+            ['id' => 13, 'name' => 'Paris', 'created' => '2016-01-11 01:02:03.04'],
+            ['id' => 14, 'name' => 'Parisis', 'created' => '2016-01-01 01:02:03.04'],
+            ['id' => 60, 'name' => 'Tokio', 'created' => '2014-01-03 01:02:03.04'],
+            ['id' => 111, 'name' => 'Porto', 'created' => '2016-01-01 01:02:03.04'],
+            ['id' => 112, 'name' => 'Port', 'created' => '2013-01-01 01:02:03.04']
+        ]
     ];
 
     /**
@@ -34,15 +48,22 @@ abstract class BaseDataSourceTest extends TestCase
      */
     protected $grid;
 
+
     public function testGetCount()
     {
         Assert::same(6, $this->ds->getCount());
     }
 
 
+    public function testGetDataType()
+    {
+        Assert::type('array', $this->ds->getData());
+    }
+
+
     public function testGetData()
     {
-        Assert::equal($this->data, $this->getActualResultAsArray());
+        Assert::equal($this->data['users'], $this->getActualResultAsArray());
     }
 
 
@@ -53,8 +74,8 @@ abstract class BaseDataSourceTest extends TestCase
 
         $this->ds->filter([$filter]);
         Assert::equal([
-            $this->data[0],
-            $this->data[5]
+            $this->data['users'][0],
+            $this->data['users'][5]
         ], $this->getActualResultAsArray());
     }
 
@@ -66,9 +87,9 @@ abstract class BaseDataSourceTest extends TestCase
 
 
         Assert::equal([
-            $this->data[0],
-            $this->data[3],
-            $this->data[4]
+            $this->data['users'][0],
+            $this->data['users'][3],
+            $this->data['users'][4]
         ], $this->getActualResultAsArray());
     }
 
@@ -84,20 +105,20 @@ abstract class BaseDataSourceTest extends TestCase
 
         $this->ds->filter([$filter]);
 
-        Assert::equal([$this->data[5]], $this->getActualResultAsArray());
+        Assert::equal([$this->data['users'][5]], $this->getActualResultAsArray());
     }
 
     public function testFilterRangeMin()
     {
 
         $filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
-        $filter->setValue(['from' =>40]);
+        $filter->setValue(['from' => 40]);
         $this->ds->filter([$filter]);
 
         Assert::equal([
-            $this->data[1],
-            $this->data[4],
-            $this->data[5]
+            $this->data['users'][1],
+            $this->data['users'][4],
+            $this->data['users'][5]
         ], $this->getActualResultAsArray());
     }
 
@@ -109,9 +130,9 @@ abstract class BaseDataSourceTest extends TestCase
         $this->ds->filter([$filter]);
 
         Assert::equal([
-            $this->data[0],
-            $this->data[2],
-            $this->data[3]
+            $this->data['users'][0],
+            $this->data['users'][2],
+            $this->data['users'][3]
         ], $this->getActualResultAsArray());
     }
 
@@ -123,8 +144,8 @@ abstract class BaseDataSourceTest extends TestCase
         $this->ds->filter([$filter]);
 
         Assert::equal([
-            $this->data[0],
-            $this->data[2]
+            $this->data['users'][0],
+            $this->data['users'][2]
         ], $this->getActualResultAsArray());
     }
 
@@ -132,7 +153,7 @@ abstract class BaseDataSourceTest extends TestCase
     {
         $this->ds->filterOne(['id' => 8]);
 
-        Assert::equal([$this->data[3]], $this->getActualResultAsArray());
+        Assert::equal([$this->data['users'][3]], $this->getActualResultAsArray());
     }
 
     public function testFilterExactSearch(){
@@ -162,8 +183,8 @@ abstract class BaseDataSourceTest extends TestCase
         $this->ds->limit(2, 2);
         $result = $this->getActualResultAsArray();
         Assert::equal([
-            $this->data[2],
-            $this->data[3]
+            $this->data['users'][2],
+            $this->data['users'][3]
         ], $result);
     }
 
@@ -175,12 +196,12 @@ abstract class BaseDataSourceTest extends TestCase
         $result = $this->getActualResultAsArray();
 
         Assert::equal([
-            $this->data[2],
-            $this->data[3],
-            $this->data[5],
-            $this->data[0],
-            $this->data[4],
-            $this->data[1]
+            $this->data['users'][2],
+            $this->data['users'][3],
+            $this->data['users'][5],
+            $this->data['users'][0],
+            $this->data['users'][4],
+            $this->data['users'][1]
         ], $result);
     }
 

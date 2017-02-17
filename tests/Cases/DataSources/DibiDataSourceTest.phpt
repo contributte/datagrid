@@ -22,24 +22,24 @@ final class DibiFluentDataSourceTest extends BaseDataSourceTest
 		$this->grid = $factory->createXTestingDataGrid();
 	}
 
-	protected function setUpDatabase()
-	{
-			$this->db = \dibi::connect(array(
-				'driver' => 'pdo',
-				'dsn' => 'sqlite::memory:',
-			));
+    protected function setUpDatabase()
+    {
+        $this->db = \dibi::connect(array(
+            'driver' => 'pdo',
+            'dsn' => 'sqlite::memory:',
+        ));
 
-		$this->db->query('CREATE TABLE users (
-								id      INTEGER      PRIMARY KEY AUTOINCREMENT,
-								name    VARCHAR (50),
-								age     INTEGER (3),
-								address VARCHAR (50) 
-							);
-		');
-		foreach($this->data as $row){
-			$this->db->insert('users', $row)->execute();
-		}
-	}
+        $this->db->query(file_get_contents(__DIR__ . '/config/schema_users.sql'));
+        $this->db->query(file_get_contents(__DIR__ . '/config/schema_cities.sql'));
+
+        foreach($this->data['users'] as $row) {
+            $this->db->insert('users', $row)->execute();
+        }
+
+        foreach($this->data['cities'] as $row) {
+            $this->db->insert('cities', $row)->execute();
+        }
+    }
 }
 
 
