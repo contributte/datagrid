@@ -41,7 +41,7 @@ final class ItemDetailForm extends Container
 	/**
 	 * @param \Nette\ComponentModel\IContainer
 	 */
-	protected function attached($presenter)
+	protected function attached(Nette\ComponentModel\IComponent $presenter): void
 	{
 		parent::attached($presenter);
 
@@ -89,7 +89,7 @@ final class ItemDetailForm extends Container
 	 * @param  string $name
 	 * @return Container
 	 */
-	public function offsetGet($name)
+	public function offsetGet($name): Nette\ComponentModel\IComponent
 	{
 		return $this->getComponent($name);
 	}
@@ -99,7 +99,7 @@ final class ItemDetailForm extends Container
 	 * @param  string $name
 	 * @return Container
 	 */
-	public function getComponent($name)
+	public function getComponent($name): ?Nette\ComponentModel\IComponent
 	{
 		$container = $this->addContainer($name);
 
