@@ -10,7 +10,6 @@ namespace Ublaboo\DataGrid;
 
 use Nette;
 use LeanMapper;
-use Nextras;
 use DibiRow;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 use Nette\Utils\Html;
@@ -84,9 +83,6 @@ class Row extends Nette\Object
 	{
 		if ($this->item instanceof LeanMapper\Entity) {
 			return $this->getLeanMapperEntityProperty($this->item, $key);
-
-		} else if ($this->item instanceof Nextras\Orm\Entity\Entity) {
-			return $this->getNextrasEntityProperty($this->item, $key);
 
 		} else if ($this->item instanceof DibiRow) {
 			return $this->item->{$this->formatDibiRowKey($key)};
@@ -170,36 +166,6 @@ class Row extends Nette\Object
 	 * @return mixed
 	 */
 	public function getLeanMapperEntityProperty(LeanMapper\Entity $item, $key)
-	{
-		$properties = explode('.', $key);
-		$value = $item;
-
-		while ($property = array_shift($properties)) {
-			if (!isset($value->{$property})) {
-				if ($this->datagrid->strict_entity_property) {
-					throw new DataGridException(sprintf(
-						'Target Property [%s] is not an object or is empty, trying to get [%s]',
-						$value, str_replace('.', '->', $key)
-					));
-				}
-
-				return NULL;
-			}
-
-			$value = $value->{$property};
-		}
-
-		return $value;
-	}
-
-
-	/**
-	 * Nextras: Access object properties to get a item value
-	 * @param  Nextras\Orm\Entity\Entity $item
-	 * @param  string                    $key
-	 * @return mixed
-	 */
-	public function getNextrasEntityProperty(Nextras\Orm\Entity\Entity $item, $key)
 	{
 		$properties = explode('.', $key);
 		$value = $item;

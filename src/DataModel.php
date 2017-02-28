@@ -19,7 +19,6 @@ use Ublaboo\DataGrid\Utils\Sorting;
 use Ublaboo\DataGrid\Utils\NetteDatabaseSelectionHelper;
 use Nette\Database\Drivers as NDBDrivers;
 use Ublaboo\DataGrid\DataSource\ApiDataSource;
-use Nextras\Orm\Collection\ICollection;
 
 final class DataModel extends Nette\Object
 {
@@ -91,9 +90,6 @@ final class DataModel extends Nette\Object
 
 		} else if ($source instanceof Collection) {
 			$source = new DataSource\DoctrineCollectionDataSource($source, $primary_key);
-
-		} elseif ($source instanceof ICollection) {
-			$source = new DataSource\NextrasDataSource($source, $primary_key);
 
 		} else {
 			throw new DataGridWrongDataSourceException(sprintf(
