@@ -1986,16 +1986,48 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Add toolbar button
-	 * @param string $href
-	 * @param string $text
-	 * @param array  $params
+	 * @param  string  $href
+	 * @param  string  $text
+	 * @param  array   $params
 	 * @return ToolbarButton
+	 * @throws DataGridException
 	 */
 	public function addToolbarButton($href, $text = '', $params = [])
 	{
-		$button = new ToolbarButton($this, $href, $text, $params);
+		if (isset($this->toolbar_buttons[$href])) {
+			throw new DataGridException("There is already toolbar button at key [$href] defined.");
+		}
 
-		return $this->toolbar_buttons[] = $button;
+		return $this->toolbar_buttons[$href] = new ToolbarButton($this, $href, $text, $params);
+	}
+
+
+	/**
+	 * Get existing toolbar button
+	 * @param  string  $key
+	 * @return ToolbarButton
+	 * @throws DataGridException
+	 */
+	public function getToolbarButton($key)
+	{
+		if (!isset($this->toolbar_buttons[$key])) {
+			throw new DataGridException("There is no toolbar button at key [$key] defined.");
+		}
+
+		return $this->toolbar_buttons[$key];
+	}
+
+
+	/**
+	 * Remove toolbar button.
+	 * @param  string $key
+	 * @return static
+	 */
+	public function removeToolbarButton($key)
+	{
+		unset($this->toolbar_buttons[$key]);
+
+		return $this;
 	}
 
 
