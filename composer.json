@@ -43,6 +43,7 @@
 		"nette/database": "^3.0",
 		"dibi/dibi": "^3.0"
 	},
+	"minimum-stability": "dev",
 	"extra": {
 		"branch-alias": {
 			"dev-master": "6.0-dev"
