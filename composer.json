@@ -29,8 +29,7 @@
 		"nette/application": "^3.0",
 		"nette/utils": "^3.0",
 		"nette/forms": "^3.0",
-		"ublaboo/responses": "^1.0",
-		"ublaboo/controls": "^1.0",
+		"ublaboo/responses": "^2.0",
 		"symfony/property-access": "^3.0"
 	},
 	"require-dev": {
