@@ -57,8 +57,14 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @var callable[]
+	 * @deprecated use $onFiltersAssembled
 	 */
 	public $onFiltersAssabled;
+
+	/**
+	 * @var callable[]
+	 */
+	public $onFiltersAssembled;
 
 	/**
 	 * @var string
@@ -404,7 +410,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Notify about that json js extension
 		 */
-		$this->onFiltersAssabled[] = [$this, 'sendNonEmptyFiltersInPayload'];
+		$this->onFiltersAssembled[] = [$this, 'sendNonEmptyFiltersInPayload'];
 	}
 
 
@@ -469,7 +475,7 @@ class DataGrid extends Nette\Application\UI\Control
 				[
 					$this->getPaginator(),
 					$this->createSorting($this->sort, $this->sort_callback),
-					$this->assableFilters()
+					$this->assembleFilters()
 				]
 			);
 		}
@@ -483,7 +489,7 @@ class DataGrid extends Nette\Application\UI\Control
 			if (!$hasGroupActionOnRows && $row->hasGroupAction()){
 				$hasGroupActionOnRows = TRUE;
 			}
-			
+
 			if ($callback) {
 				$callback($item, $row->getControl());
 			}
@@ -583,7 +589,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set Grid data source
-	 * @param DataSource\IDataSource|array|\DibiFluent|Nette\Database\Table\Selection|\Doctrine\ORM\QueryBuilder $source
+	 * @param DataSource\IDataSource|array|\DibiFluent|\Dibi\Fluent|Nette\Database\Table\Selection|\Doctrine\ORM\QueryBuilder $source
 	 * @return static
 	 */
 	public function setDataSource($source)
@@ -743,11 +749,13 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Enable multi-sorting capability
 	 * @param bool  $multiSort
-	 * @return void
+	 * @return static
 	 */
 	public function setMultiSortEnabled($multiSort = TRUE)
 	{
 		$this->multiSort = (bool) $multiSort;
+
+		return $this;
 	}
 
 
@@ -1027,12 +1035,14 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Remove column
 	 * @param string $key
-	 * @return void
+	 * @return static
 	 */
 	public function removeColumn($key)
 	{
 		unset($this->columns_visibility[$key]);
 		unset($this->columns[$key]);
+
+		return $this;
 	}
 
 
@@ -1134,11 +1144,13 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Remove action
 	 * @param string $key
-	 * @return void
+	 * @return static
 	 */
 	public function removeAction($key)
 	{
 		unset($this->actions[$key]);
+
+		return $this;
 	}
 
 
@@ -1312,7 +1324,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Fill array of Column\Column[] with values from $this->sort   persistent parameter
 	 * @return Filter\Filter[] $this->filters === Filter\Filter[]
 	 */
-	public function assableFilters()
+	public function assembleFilters()
 	{
 		foreach ($this->filter as $key => $value) {
 			if (!isset($this->filters[$key])) {
@@ -1341,20 +1353,38 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Invoke possible events
 		 */
-		$this->onFiltersAssabled($this->filters);
+		if (!empty($this->onFiltersAssabled)) {
+			@trigger_error('onFiltersAssabled is deprecated, use onFiltersAssembled instead', E_USER_DEPRECATED);
+			$this->onFiltersAssabled($this->filters);
+		}
 
+		$this->onFiltersAssembled($this->filters);
 		return $this->filters;
+	}
+
+	/**
+	 * Fill array of Filter\Filter[] with values from $this->filter persistent parameter
+	 * Fill array of Column\Column[] with values from $this->sort   persistent parameter
+	 * @return Filter\Filter[] $this->filters === Filter\Filter[]
+	 * @deprecated use assembleFilters instead
+	 */
+	public function assableFilters()
+	{
+		@trigger_error('assableFilters is deprecated, use assembleFilters instead', E_USER_DEPRECATED);
+		return $this->assembleFilters();
 	}
 
 
 	/**
 	 * Remove filter
 	 * @param string $key
-	 * @return void
+	 * @return static
 	 */
 	public function removeFilter($key)
 	{
 		unset($this->filters[$key]);
+
+		return $this;
 	}
 
 
@@ -1375,10 +1405,13 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @param bool $strict
+	 * @return static
 	 */
 	public function setStrictSessionFilterValues($strict = TRUE)
 	{
 		$this->strict_session_filter_values = (bool) $strict;
+
+		return $this;
 	}
 
 
@@ -1585,7 +1618,7 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$form->addSubmit('per_page_submit', 'ublaboo_datagrid.per_page_submit');
-		
+
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
 	}
 
@@ -2135,7 +2168,7 @@ class DataGrid extends Nette\Application\UI\Control
 				'_grid_has_sorted',
 				'_grid_hidden_columns',
 				'_grid_hidden_columns_manipulated'
-				])) {
+			])) {
 
 				$this->deleteSessionData($key);
 			}
@@ -2227,7 +2260,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if ($export->isFiltered()) {
 			$sort      = $this->sort;
-			$filter    = $this->assableFilters();
+			$filter    = $this->assembleFilters();
 		} else {
 			$sort      = [$this->primary_key => 'ASC'];
 			$filter    = [];
@@ -2874,7 +2907,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @param callable $callable_set_container 
+	 * @param callable $callable_set_container
 	 * @return static
 	 */
 	public function setItemsDetailForm(callable $callable_set_container)
@@ -3300,11 +3333,11 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @return strign
+	 * @return string
 	 */
 	public function getSortableParentPath()
 	{
-		return $this->getParent()->lookupPath(Nette\Application\UI\Control::class, FALSE);
+		return $this->getParent()->lookupPath(Nette\Application\IPresenter::class, FALSE);
 	}
 
 

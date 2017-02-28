@@ -25,21 +25,27 @@
 		}
 	},
 	"require": {
-		"nette/application" : "^3.0",
-		"nette/utils"       : "^3.0",
-		"nette/forms"       : "^3.0",
-		"ublaboo/responses" : "~1.0.0",
-		"ublaboo/controls"  : "~1.0.1",
-		"symfony/property-access": "~3.0"
+		"php": "^7.0",
+		"nette/application": "^3.0",
+		"nette/utils": "^3.0",
+		"nette/forms": "^3.0",
+		"ublaboo/responses": "^1.0",
+		"ublaboo/controls": "^1.0",
+		"symfony/property-access": "^3.0"
 	},
 	"require-dev": {
-		"nette/tester"     : "^1.6.1",
-		"tracy/tracy"      : "^2.3.0",
-		"mockery/mockery"  : "~0.9",
-		"tharos/leanmapper": "~2.2.0",
-		"nextras/orm"      : "~2.0",
-		"doctrine/orm"	   : "~2.5",
-		"nette/database"   : "^3.0",
-		"dibi/dibi"   : "^3.0"
+		"nette/tester": "^1.6.1",
+		"tracy/tracy": "^2.3",
+		"mockery/mockery": "~0.9",
+		"tharos/leanmapper": "^2.2",
+		"nextras/orm": "^2.0",
+		"doctrine/orm": "^2.5",
+		"nette/database": "^3.0",
+		"dibi/dibi": "^3.0"
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "6.0-dev"
+		}
 	}
 }
