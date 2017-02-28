@@ -2,18 +2,20 @@
 
 namespace Ublaboo\DataGrid\Tests\Files;
 
-use Nette;
+use Nette\Application\UI\Presenter;
 use Ublaboo\DataGrid\DataGrid;
 
-final class ExportTestingPresenter extends Nette\Application\UI\Presenter
+final class ExportTestingPresenter extends Presenter
 {
-
-	protected function createComponentGrid($name)
+	/**
+	 * @param  string  $name
+	 * @return DataGrid
+	 */
+	protected function createComponentGrid(string $name) : DataGrid
 	{
 		$grid = new DataGrid(NULL, $name);
 		$grid->addExportCsv('export', 'export.csv');
 
 		return $grid;
 	}
-
 }

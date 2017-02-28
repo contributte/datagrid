@@ -2,16 +2,18 @@
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use Tester\TestCase,
-	Tester\Assert,
-	Ublaboo;
+use DateTime;
+use Tester\TestCase;
+use Tester\Assert;
+use Ublaboo\DataGrid\Column\Column;
+use Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+use Ublaboo\DataGrid\Row;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/XTestingDataGridFactory.php';
 
 final class ColumnDateTimeTest extends TestCase
 {
-
 	/**
 	 * @var Ublaboo\DataGrid\DataGrid
 	 */
@@ -20,16 +22,24 @@ final class ColumnDateTimeTest extends TestCase
 
 	public function setUp()
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
-		$this->grid = $factory->createXTestingDataGrid();
+		$this->grid = (new XTestingDataGridFactory)->createXTestingDataGrid();
 	}
 
 
-	public function render($column)
+	/**
+	 * @param  Column  $column
+	 * @return string
+	 */
+	public function render(Column $column) : string
 	{
-		$datetime = \DateTime::createFromFormat('Y-m-d H:i:s', '2015-12-15 22:58:42');
-		$item = new Ublaboo\DataGrid\Row($this->grid, ['id' => 1, 'name' => 'John', 'date' => $datetime], 'id');
+		$datetime = DateTime::createFromFormat('Y-m-d H:i:s', '2015-12-15 22:58:42');
+		$params = [
+			'id' => 1,
+			'name' => 'John',
+			'date' => $datetime
+		];
 
+		$item = new Row($this->grid, $params, 'id');
 		return (string) $column->render($item);
 	}
 
@@ -37,7 +47,7 @@ final class ColumnDateTimeTest extends TestCase
 	public function testFormat()
 	{
 		/**
-		 * Defaul forma is 'j. n. Y'
+		 * Defaul format is 'j. n. Y'
 		 */
 		$datetime = $this->grid->addColumnDateTime('date', 'Date');
 		Assert::same('15. 12. 2015', $this->render($datetime));
@@ -45,7 +55,6 @@ final class ColumnDateTimeTest extends TestCase
 		$datetime->setFormat('H:i:s');
 		Assert::same('22:58:42', $this->render($datetime));
 	}
-
 }
 
 

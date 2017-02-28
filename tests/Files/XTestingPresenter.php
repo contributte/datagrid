@@ -2,38 +2,57 @@
 
 namespace Ublaboo\DataGrid\Tests\Files;
 
-use Nette;
+use Nette\Application\UI\Presenter;
+use Nette\Application\UI\Component;
 use Ublaboo\DataGrid\DataGrid;
 
-final class XTestingPresenter extends Nette\Application\UI\Presenter
+final class XTestingPresenter extends Presenter
 {
-
 	/**
 	 * @var bool
 	 */
 	public $action_handeled = FALSE;
 
 
-	public function handleDoStuff($id)
+	/**
+	 * @param int  $id
+	 */
+	public function handleDoStuff(int $id)
 	{
 		$this->action_handeled = TRUE;
 	}
 
 
-	public function link($destination, $args = array())
+	/**
+	 * @param  string  $destination
+	 * @param  array|mixed  $args
+	 * @throws InvalidLinkException
+	 */
+	public function link(string $destination, $args = []): string
 	{
 		return $destination . '?' . http_build_query($args);
 	}
 
 
-	protected function createRequest($component, $destination, array $args, $mode)
+	/**
+	 * @param  Component  $component
+	 * @param  string  $destination
+	 * @param  array  $args
+	 * @param  string  $mode
+	 * @return string|NULL
+	 */
+	protected function createRequest(Component $component, string $destination, array $args, string $mode): ?string
 	{
 		return ucFirst($component->getName()) . $this->link($destination, $args);
 	}
 
-	protected function createComponentGrid($name)
+
+	/**
+	 * @param  string  $name
+	 * @return DataGrid
+	 */
+	protected function createComponentGrid(string $name) : DataGrid
 	{
 		return new DataGrid($this, $name);
 	}
-
 }

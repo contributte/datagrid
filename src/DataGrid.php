@@ -374,13 +374,9 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $has_column_reset = TRUE;
 
 
-	/**
-	 * @param Nette\ComponentModel\IContainer|NULL $parent
-	 * @param string                               $name
-	 */
-	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
+	public function __construct()
 	{
-		parent::__construct($parent, $name);
+		parent::__construct();
 
 		$this->monitor('Nette\Application\UI\Presenter');
 
