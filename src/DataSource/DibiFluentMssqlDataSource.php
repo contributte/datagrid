@@ -119,17 +119,18 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$condition = $filter->getCondition();
+		$driver = $this->data_source->getConnection()->getDriver();
 		$or = [];
 
 		foreach ($condition as $column => $value) {
 			if (class_exists(Dibi\Helpers::class) === TRUE) {
 				$column = Dibi\Helpers::escape(
-					$this->data_source->getConnection()->getDriver(),
+					$driver,
 					$column,
 					\dibi::IDENTIFIER
 				);
 			} else {
-				$column = $this->data_source->getConnection()->getDriver()->escape(
+				$column = $driver->escape(
 					$column,
 					\dibi::IDENTIFIER
 				);
