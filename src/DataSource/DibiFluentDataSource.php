@@ -157,14 +157,22 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$condition = $filter->getCondition();
+		$driver = $this->data_source->getConnection()->getDriver();
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			$column = Dibi\Helpers::escape(
-				$this->data_source->getConnection()->getDriver(),
-				$column,
-				\dibi::IDENTIFIER
-			);
+			if (class_exists(Dibi\Helpers::class) === TRUE) {
+				$column = Dibi\Helpers::escape(
+					$driver,
+					$column,
+					\dibi::IDENTIFIER
+				);
+			} else {
+				$column = $driver->escape(
+					$column,
+					\dibi::IDENTIFIER
+				);
+			}
 
 			if ($filter->isExactSearch()){
 				$this->data_source->where("$column = %s", $value);
@@ -178,7 +186,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 			}
 
 			foreach ($words as $word) {
-				$escaped = $this->data_source->getConnection()->getDriver()->escapeLike($word, 0);
+				$escaped = $driver->escapeLike($word, 0);
 				$or[] = "$column LIKE $escaped";
 
 			}
