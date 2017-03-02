@@ -511,34 +511,34 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->getTemplate()->add('tree_view_has_children_column', $this->tree_view_has_children_column);
 		}
 
-		$this->getTemplate()->add('rows', $rows);
+		$this->getTemplate()->rows = $rows;
 
-		$this->getTemplate()->add('columns', $this->getColumns());
-		$this->getTemplate()->add('actions', $this->actions);
-		$this->getTemplate()->add('exports', $this->exports);
-		$this->getTemplate()->add('filters', $this->filters);
-		$this->getTemplate()->add('toolbar_buttons', $this->toolbar_buttons);
-		$this->getTemplate()->add('aggregation_functions', $this->getAggregationFunctions());
-		$this->getTemplate()->add('multiple_aggregation_function', $this->getMultipleAggregationFunction());
+		$this->getTemplate()->columns = $this->getColumns();
+		$this->getTemplate()->actions = $this->actions;
+		$this->getTemplate()->exports = $this->exports;
+		$this->getTemplate()->filters = $this->filters;
+		$this->getTemplate()->toolbar_buttons = $this->toolbar_buttons;
+		$this->getTemplate()->aggregation_functions = $this->getAggregationFunctions();
+		$this->getTemplate()->multiple_aggregation_function = $this->getMultipleAggregationFunction();
 
-		$this->getTemplate()->add('filter_active', $this->isFilterActive());
-		$this->getTemplate()->add('original_template', $this->getOriginalTemplateFile());
-		//$this->getTemplate()->add('icon_prefix', static::$icon_prefix);
+		$this->getTemplate()->filter_active = $this->isFilterActive();
+		$this->getTemplate()->original_template = $this->getOriginalTemplateFile();
+		//$this->getTemplate()->icon_prefix = static::$icon_prefix;
 		$this->getTemplate()->icon_prefix = static::$icon_prefix;
-		$this->getTemplate()->add('items_detail', $this->items_detail);
-		$this->getTemplate()->add('columns_visibility', $this->getColumnsVisibility());
-		$this->getTemplate()->add('columnsSummary', $this->columnsSummary);
+		$this->getTemplate()->items_detail = $this->items_detail;
+		$this->getTemplate()->columns_visibility = $this->getColumnsVisibility();
+		$this->getTemplate()->columnsSummary = $this->columnsSummary;
 
-		$this->getTemplate()->add('inlineEdit', $this->inlineEdit);
-		$this->getTemplate()->add('inlineAdd', $this->inlineAdd);
+		$this->getTemplate()->inlineEdit = $this->inlineEdit;
+		$this->getTemplate()->inlineAdd = $this->inlineAdd;
 
-		$this->getTemplate()->add('hasGroupActionOnRows', $hasGroupActionOnRows);
+		$this->getTemplate()->hasGroupActionOnRows = $hasGroupActionOnRows;
 
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
 		 */
-		$this->getTemplate()->add('filter', $this['filter']);
-
+		$this->getTemplate()->filter = $this['filter'];
+		
 		/**
 		 * Set template file and render it
 		 */
