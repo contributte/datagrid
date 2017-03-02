@@ -144,6 +144,9 @@ document.addEventListener 'change', (e) ->
 		inputs = document.querySelectorAll('input[type=checkbox][data-check-all-' + grid + ']')
 
 		for input in inputs
+			if $(input).hasClass('persisted')
+				continue
+
 			input.checked = e.target.checked
 
 			ie = window.navigator.userAgent.indexOf("MSIE ")
@@ -672,4 +675,62 @@ $.nette.ext('datagrid.reset-filter-by-column', {
 				new_href += '&' + payload._datagrid_name + '-key=' + key
 
 				$(this).attr('href', new_href)
+})
+
+
+# Persist group action checkboxes between pages
+#
+
+$(document).on('change', '*[data-check=grid]', (e) ->
+	$this = $(this)
+	name = $this.attr('name')
+	form = $this.closest('form')[0]
+	form.persists = form.persists || {}
+	form.persists[name] = {'checked':$this.is(':checked'), 'data-check':$this.data('check')}
+)
+  
+$.nette.ext('datagrid.persistent', {
+	before: (xhr, settings) ->
+		$('.datagrid').find('form').each(() ->
+			$(this).find('input[type=checkbox].persisted').remove();
+		)
+
+	success: () ->
+		$('.datagrid').find('form').each(() ->
+			$this = $(this)
+
+			if !this.persists
+				return
+
+			ie = window.navigator.userAgent.indexOf("MSIE ")
+
+			if ie
+				event = document.createEvent('Event');
+				event.initEvent('change', true, true);
+			else
+				event = new Event('change', { 'bubbles': true })
+
+			for name in this.persists
+				if !this.persists[name]['checked']
+					continue
+				$input = $this.find('*[name="'+name+'"]');
+				if($input.length)
+					$input.prop('checked',true);
+					$input[0].dispatchEvent(event);
+					continue;
+          
+				$input = $(document.createElement('input'));
+				$input.attr('type',"checkbox");
+				$input.attr('data-check', this.persists[name]['data-check']);
+				$input.attr('name', name);
+				$input.attr('checked','checked');
+				$input.addClass('persisted');
+				$this.append($input);
+
+			if $input && $input.length
+				select = $this.find('select[name="group_action[group_action]"]');
+				if select.length
+					select[0].disabled = false
+					select[0].dispatchEvent(event)
+		)
 })
