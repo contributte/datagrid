@@ -538,7 +538,7 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
 		 */
 		$this->getTemplate()->filter = $this['filter'];
-		
+
 		/**
 		 * Set template file and render it
 		 */
