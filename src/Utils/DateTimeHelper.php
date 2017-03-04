@@ -61,6 +61,13 @@ final class DateTimeHelper extends \Nette\Object
 			return $value;
 		}
 
+		if ($value instanceof \DateTimeImmutable) {
+			$date = new \DateTime('now', $value->getTimezone());
+			$date->setTimestamp($value->getTimestamp());
+
+			return $date;
+		}
+
 		foreach ($formats as $format) {
 			if (!is_string($format) || !$date = \DateTime::createFromFormat($format, $value)) {
 				continue;
