@@ -20,8 +20,9 @@ $.nette.ext('datagrid.confirm', {
 });
 
 $(document).on('change', 'select[data-autosubmit-per-page]', function() {
-  var button = $(this).parent().find('input[type=submit]');
-  if (button.length == 0) {
+  var button;
+  button = $(this).parent().find('input[type=submit]');
+  if (button.length === 0) {
     button = $(this).parent().find('button[type=submit]');
   }
   return button.click();
