@@ -20,7 +20,12 @@ $.nette.ext('datagrid.confirm', {
 });
 
 $(document).on('change', 'select[data-autosubmit-per-page]', function() {
-  return $(this).parent().find('input[type=submit]').click();
+  var button;
+  button = $(this).parent().find('input[type=submit]');
+  if (button.length === 0) {
+    button = $(this).parent().find('button[type=submit]');
+  }
+  return button.click();
 }).on('change', 'select[data-autosubmit]', function() {
   return $(this).closest('form').first().submit();
 }).on('change', 'input[data-autosubmit][data-autosubmit-change]', function(e) {
