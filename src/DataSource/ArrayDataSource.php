@@ -41,8 +41,7 @@ class ArrayDataSource implements IDataSource
 	 */
 	public function __construct(array $data_source)
 	{
-		$this->data = $data_source;
-		$this->count = sizeof($data_source);
+		$this->setData($data_source);
 	}
 
 
@@ -57,18 +56,30 @@ class ArrayDataSource implements IDataSource
 	 */
 	public function getCount()
 	{
-		return $this->count;
+		return sizeof($this->data);
 	}
 
 
 	/**
 	 * Get the data
 	 * @return array
-	 * @return array
 	 */
 	public function getData()
 	{
 		return $this->data;
+	}
+
+
+	/**
+	 * Set the data
+	 * @param array $data_source
+	 * @return static
+	 */
+	private function setData(array $data_source)
+	{
+		$this->data = $data_source;
+
+		return $this;
 	}
 
 
@@ -82,18 +93,20 @@ class ArrayDataSource implements IDataSource
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
 				if ($filter->hasConditionCallback()) {
-					$this->data = (array) call_user_func_array(
+					$data = (array) call_user_func_array(
 						$filter->getConditionCallback(),
 						[$this->data, $filter->getValue()]
 					);
+					$this->setData($data);
 				} else {
-					$this->data = array_filter($this->data, function($row) use ($filter) {
+					$data = array_filter($this->data, function($row) use ($filter) {
 						return $this->applyFilter($row, $filter);
 					});
+					$this->setData($data);
 				}
 			}
 		}
-		
+
 		return $this;
 	}
 
@@ -108,14 +121,14 @@ class ArrayDataSource implements IDataSource
 		foreach ($this->data as $item) {
 			foreach ($condition as $key => $value) {
 				if ($item[$key] == $value) {
-					$this->data = [$item];
+					$this->setData([$item]);
 
 					return $this;
 				}
 			}
 		}
 
-		$this->data = [];
+		$this->setData([]);
 
 		return $this;
 	}
@@ -129,7 +142,8 @@ class ArrayDataSource implements IDataSource
 	 */
 	public function limit($offset, $limit)
 	{
-		$this->data = array_slice($this->data, $offset, $limit);
+		$data = array_slice($this->data, $offset, $limit);
+		$this->setData($data);
 
 		return $this;
 	}
@@ -327,15 +341,17 @@ class ArrayDataSource implements IDataSource
 	public function sort(Sorting $sorting)
 	{
 		if (is_callable($sorting->getSortCallback())) {
-			$this->data = call_user_func(
+			$data = call_user_func(
 				$sorting->getSortCallback(),
 				$this->data,
 				$sorting->getSort()
 			);
 
-			if (!is_array($this->data)) {
+			if (!is_array($data)) {
 				throw new DataGridArrayDataSourceException('Sorting callback has to return array');
 			}
+
+			$this->setData($data);
 
 			return $this;
 		}
@@ -360,13 +376,16 @@ class ArrayDataSource implements IDataSource
 				krsort($data);
 			}
 
-			$this->data = [];
+			$data_source = [];
 
 			foreach ($data as $i) {
 				foreach ($i as $item) {
-					$this->data[] = $item;
+					$data_source[] = $item;
 				}
 			}
+
+			$this->setData($data_source);
+
 		}
 
 		return $this;
