@@ -56,6 +56,13 @@ $(document).on('change', 'select[data-autosubmit-per-page]', function() {
   }
 });
 
+$('input[data-check-all-grid]').on('change', function(){
+    var selected = $('input[data-check-all-grid]:checked').length;
+    var total = $('input[data-check-all-grid]').length;
+    $('.datagrid-selected-rows-count').text( + '/' + total);
+});
+
+
 $(document).on('keydown', 'input[data-datagrid-manualsubmit]', function(e) {
   var code;
   code = e.which || e.keyCode || 0;
