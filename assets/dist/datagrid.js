@@ -71,6 +71,12 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', function(e) {
   }
 });
 
+$('input[data-check-all-grid]').on('change', function(){
+    var selected = $('input[data-check-all-grid]:checked').length;
+    var total = $('input[data-check-all-grid]').length;
+    $('.datagrid-selected-rows-count').text( + '/' + total);
+});
+
 datagridShiftGroupSelection = function() {
   var last_checkbox;
   last_checkbox = null;
