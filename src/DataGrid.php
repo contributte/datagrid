@@ -373,6 +373,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $has_column_reset = TRUE;
 
+	/**
+	 * @var bool
+	 */
+	protected $refresh_state_mode = FALSE;
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -453,6 +457,13 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if (empty($this->columns)) {
 			throw new DataGridException('You have to add at least one column.');
+		}
+
+		/**
+		 * No need to set up and render template while only refreshing state
+		 */
+		if ($this->refresh_state_mode) {
+			return;
 		}
 
 		$this->getTemplate()->setTranslator($this->getTranslator());
@@ -3403,6 +3414,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->findDefaultSort();
 		$this->findDefaultPerPage();
 
+		$this->refresh_state_mode = TRUE;
 		$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 		$this->redrawControl('non-existing-snippet');
 	}
