@@ -76,7 +76,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 */
 	private function checkAliases($column)
 	{
-		if (Strings::contains($column, ".")) {
+		if (Strings::contains($column, '.')) {
 			return $column;
 		}
 
@@ -132,7 +132,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		foreach ($condition as $column => $value) {
 			$c = $this->checkAliases($column);
 
-			$this->data_source->andWhere("$c = ?$p")
+			$this->data_source->andWhere("$c = :$p")
 				->setParameter($p, $value);
 		}
 
@@ -153,9 +153,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 			$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
 			$c = $this->checkAliases($column);
 
-			$this->data_source
-				->andWhere("$c >= ?$p1")
-				->andWhere("$c <= ?$p2")
+			$this->data_source->andWhere("$c >= :$p1 AND $c <= :$p2")
 				->setParameter($p1, $date->format('Y-m-d 00:00:00'))
 				->setParameter($p2, $date->format('Y-m-d 23:59:59'));
 		}
@@ -180,7 +178,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 			$p = $this->getPlaceholder();
 
-			$this->data_source->andWhere("$c >= ?$p")->setParameter($p, $date_from->format('Y-m-d H:i:s'));
+			$this->data_source->andWhere("$c >= :$p")->setParameter($p, $date_from->format('Y-m-d H:i:s'));
 		}
 
 		if ($value_to) {
@@ -189,7 +187,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 			$p = $this->getPlaceholder();
 
-			$this->data_source->andWhere("$c <= ?$p")->setParameter($p, $date_to->format('Y-m-d H:i:s'));
+			$this->data_source->andWhere("$c <= :$p")->setParameter($p, $date_to->format('Y-m-d H:i:s'));
 		}
 	}
 
@@ -208,12 +206,12 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 
 		if ($value_from) {
 			$p = $this->getPlaceholder();
-			$this->data_source->andWhere("$c >= ?$p")->setParameter($p, $value_from);
+			$this->data_source->andWhere("$c >= :$p")->setParameter($p, $value_from);
 		}
 
 		if ($value_to) {
 			$p = $this->getPlaceholder();
-			$this->data_source->andWhere("$c <= ?$p")->setParameter($p, $value_to);
+			$this->data_source->andWhere("$c <= :$p")->setParameter($p, $value_to);
 		}
 	}
 
@@ -230,7 +228,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		foreach ($condition as $column => $value) {
 			$c = $this->checkAliases($column);
 
-			if($filter->isExactSearch()){
+			if ($filter->isExactSearch()) {
 				$exprs[] = $this->data_source->expr()->eq($c, $this->data_source->expr()->literal($value));
 				continue;
 			}
@@ -262,7 +260,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		$p = $this->getPlaceholder();
 
 		$values = $filter->getCondition()[$filter->getColumn()];
-		$expr = $this->data_source->expr()->in($c, '?'.$p);
+		$expr = $this->data_source->expr()->in($c, ':'.$p);
 
 		$this->data_source->andWhere($expr)->setParameter($p, $values);
 	}
@@ -279,7 +277,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		foreach ($filter->getCondition() as $column => $value) {
 			$c = $this->checkAliases($column);
 
-			$this->data_source->andWhere("$c = ?$p")
+			$this->data_source->andWhere("$c = :$p")
 				->setParameter($p, $value);
 		}
 	}
@@ -341,7 +339,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function getPlaceholder()
 	{
-		return $this->placeholder++;
+		return 'param'.($this->placeholder++);
 	}
 
 }
