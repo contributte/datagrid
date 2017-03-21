@@ -371,15 +371,16 @@
 							<tr n:block="pagination">
 								<td colspan="{$control->getColumnsCount()}" n:if="!$control->isTreeView()" class="row-grid-bottom">
 									<div class="col-items">
-										<small class="text-muted" n:if="$control->isPaginated()">
-											({var $paginator = $control['paginator']->getPaginator()}
+										{var $sizeOfRows = sizeof($rows)}
+										<small class="text-muted" n:if="$sizeOfRows > 0 && $control->isPaginated()">
+											{var $paginator = $control['paginator']->getPaginator()}
 
 											{if $control->getPerPage() === 'all'}
 												{='ublaboo_datagrid.items'|translate}: {='ublaboo_datagrid.all'|translate}
 											{else}
-												{='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : 1} - {sizeof($rows) + $paginator->getOffset()}
+												{='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : 1} - {$sizeOfRows + $paginator->getOffset()}
 												{='ublaboo_datagrid.from'|translate} {$paginator->getItemCount()}
-											{/if})
+											{/if}
 										</small>
 									</div>
 									<div class="col-pagination text-center">
