@@ -643,12 +643,10 @@ datagridGroupActionMultiSelect = function() {
     if ($(this).hasClass('selectpicker')) {
       $(this).removeAttr('id');
       id = $(this).data('datagrid-multiselect-id');
-      $(this).on('loaded.bs.select', function(e) {
+      return $(this).on('loaded.bs.select', function(e) {
         $(this).parent().attr('style', 'display:none;');
+        $(this).parent().attr('id', id);
         return $(this).parent().find('.hidden').removeClass('hidden').addClass('btn-default');
-      });
-      return $(this).on('rendered.bs.select', function(e) {
-        return $(this).parent().attr('id', id);
       });
     }
   });

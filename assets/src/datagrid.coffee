@@ -608,11 +608,8 @@ datagridGroupActionMultiSelect = ->
 
 			$(this).on('loaded.bs.select', (e) ->
 				$(this).parent().attr('style', 'display:none;')
-				$(this).parent().find('.hidden').removeClass('hidden').addClass('btn-default')
-			)
-
-			$(this).on('rendered.bs.select', (e) ->
 				$(this).parent().attr('id', id)
+				$(this).parent().find('.hidden').removeClass('hidden').addClass('btn-default')
 			)
 
 $ ->
