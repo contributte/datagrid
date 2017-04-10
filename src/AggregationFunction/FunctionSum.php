@@ -60,14 +60,15 @@ class FunctionSum implements IAggregationFunction
 				->sum;
 		}
 		if ($data_source instanceof \Doctrine\ORM\QueryBuilder) {
-			$data_source_clone = clone $data_source;
+			$originalSelect = $data_source->getDQLPart('select');
 			$column = \Nette\Utils\Strings::contains($this->column, '.')
 				? $this->column 
-				: current($data_source_clone->getRootAliases()).'.'.$this->column;
-			$this->result = $data_source_clone
+				: current($data_source->getRootAliases()).'.'.$this->column;
+			$this->result = $data_source
 				->select(sprintf('SUM(%s)', $column))
 				->getQuery()
 				->getSingleScalarResult();
+			$data_source->add('select', $originalSelect, false);
 		}
 	}
 
