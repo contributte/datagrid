@@ -21,13 +21,19 @@ class FunctionSum implements IAggregationFunction
 	 */
 	protected $result = 0;
 
+	/**
+	 * @var int
+	 */
+	protected $dataType;
 
 	/**
 	 * @param string $column
+	 * @param int $dataType
 	 */
-	public function __construct($column)
+	public function __construct($column, $dataType = IAggregationFunction::DATA_TYPE_PAGINATED)
 	{
 		$this->column = $column;
+		$this->dataType = $dataType;
 	}
 
 
@@ -36,7 +42,7 @@ class FunctionSum implements IAggregationFunction
 	 */
 	public function getFilterDataType()
 	{
-		return IAggregationFunction::DATA_TYPE_PAGINATED;
+		return $this->dataType;
 	}
 
 
@@ -52,6 +58,13 @@ class FunctionSum implements IAggregationFunction
 				->from($data_source, 's')
 				->fetch()
 				->sum;
+		}
+		if ($data_source instanceof \Doctrine\ORM\QueryBuilder) {
+			$data_source_clone = clone $data_source;
+			$this->result = $data_source_clone
+				->select('SUM('.$this->column.')')
+				->getQuery()
+				->getSingleScalarResult();
 		}
 	}
 
