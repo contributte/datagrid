@@ -367,7 +367,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	*/
 	public function processAggregation(callable $aggregationCallback)
 	{
-		call_user_func($aggregationCallback, $this->data_source);
+		call_user_func($aggregationCallback, clone $this->data_source);
 	}
 
 }
