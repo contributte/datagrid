@@ -360,5 +360,14 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	{
 		return 'param'.($this->placeholder++);
 	}
+	
+	/**
+	* @param  callable $aggregationCallback
+	* @return void
+	*/
+	public function processAggregation(callable $aggregationCallback)
+	{
+		call_user_func($aggregationCallback, $this->data_source);
+	}
 
 }
