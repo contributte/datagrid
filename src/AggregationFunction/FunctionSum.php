@@ -61,8 +61,11 @@ class FunctionSum implements IAggregationFunction
 		}
 		if ($data_source instanceof \Doctrine\ORM\QueryBuilder) {
 			$data_source_clone = clone $data_source;
+			$column = \Nette\Utils\Strings::contains($this->column, '.')
+				? $this->column 
+				: current($data_source_clone->getRootAliases()).'.'.$this->column;
 			$this->result = $data_source_clone
-				->select('SUM('.$this->column.')')
+				->select(sprintf('SUM(%s)', $column))
 				->getQuery()
 				->getSingleScalarResult();
 		}
