@@ -60,7 +60,6 @@ class FunctionSum implements IAggregationFunction
 				->sum;
 		}
 		if ($data_source instanceof \Doctrine\ORM\QueryBuilder) {
-			$originalSelect = $data_source->getDQLPart('select');
 			$column = \Nette\Utils\Strings::contains($this->column, '.')
 				? $this->column 
 				: current($data_source->getRootAliases()).'.'.$this->column;
@@ -68,7 +67,6 @@ class FunctionSum implements IAggregationFunction
 				->select(sprintf('SUM(%s)', $column))
 				->getQuery()
 				->getSingleScalarResult();
-			$data_source->add('select', $originalSelect, false);
 		}
 	}
 
