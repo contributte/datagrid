@@ -73,6 +73,13 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	}
 
 
+	public function setTranslator(Nette\Localization\ITranslator $translator)
+	{
+		$this->translator = $translator;
+		return $this;
+	}
+
+
 	/**
 	 * Get paginator original template file
 	 * @return string
