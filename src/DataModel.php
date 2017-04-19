@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid;
 
 use Nette;
 use Dibi;
+use DibiFluent;
 use Nette\Database\Table\Selection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
@@ -61,7 +62,7 @@ final class DataModel extends Nette\Object
 		} else if (is_array($source)) {
 			$source = new DataSource\ArrayDataSource($source);
 
-		} else if ($source instanceof Dibi\Fluent) {
+		} else if ($source instanceof Dibi\Fluent || $source instanceof DibiFluent) {
 			$driver = $source->getConnection()->getDriver();
 
 			if ($driver instanceof Dibi\Drivers\OdbcDriver) {

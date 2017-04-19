@@ -119,6 +119,7 @@ class GroupActionCollection extends Nette\Object
 			->toggle(strtolower($this->datagrid->getName()) . 'group_action_submit');
 
 		$container->addSubmit('submit', 'ublaboo_datagrid.execute')
+            ->setValidationScope([$container])
 			->setAttribute('id', strtolower($this->datagrid->getName()) . 'group_action_submit');
 
 		if ($form instanceof Nette\ComponentModel\IComponent) {

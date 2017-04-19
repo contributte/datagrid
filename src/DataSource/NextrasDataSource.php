@@ -279,7 +279,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 		if (!empty($sort)) {
 			foreach ($sort as $column => $order) {
-				$this->data_source = $this->data_source->orderBy($column, $order);
+				$this->data_source = $this->data_source->orderBy($this->prepareColumn($column), $order);
 			}
 		} else {
 			/**
