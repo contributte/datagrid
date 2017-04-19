@@ -532,6 +532,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->getTemplate()->inlineEdit = $this->inlineEdit;
 		$this->getTemplate()->inlineAdd = $this->inlineAdd;
 
+		$this->getTemplate()->hasGroupActions = $this->hasGroupActions();
 		$this->getTemplate()->hasGroupActionOnRows = $hasGroupActionOnRows;
 
 		/**
@@ -2404,6 +2405,7 @@ class DataGrid extends Nette\Application\UI\Control
 		if ($this->getPresenter()->isAjax()) {
 			$this->redrawControl('tbody');
 			$this->redrawControl('pagination');
+			$this->redrawControl('thead-group-action');
 
 			/**
 			 * manualy reset exports links...
