@@ -526,6 +526,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->getTemplate()->add('inlineEdit', $this->inlineEdit);
 		$this->getTemplate()->add('inlineAdd', $this->inlineAdd);
 
+		$this->getTemplate()->add('hasGroupActions', $this->hasGroupActions());
 		$this->getTemplate()->add('hasGroupActionOnRows', $hasGroupActionOnRows);
 
 		/**
