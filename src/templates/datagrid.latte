@@ -345,12 +345,19 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
-						{if !empty($rows) && $columnsSummary}
-							{include columnsSummary, columcns => $columns}
-						{/if}
-						{if $control->hasSomeAggregationFunction()}
-							{include aggregationFunctions, columns => $columns}
-						{/if}
+						<tr class="datagrid-row-columns-summary" n:if="!empty($rows) && ($columnsSummary || $control->hasSomeAggregationFunction())" n:snippet="summary">
+							<td n:if="$hasGroupActions" class="col-checkbox"></td>
+
+							{if $columnsSummary && $columnsSummary->someColumnsExist($columns)}
+								{include columnsSummary, columns => $columns}
+							{/if}
+
+							{if $control->hasSomeAggregationFunction()}
+								{include aggregationFunctions, columns => $columns}
+							{/if}
+
+							<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action"></td>
+						</tr>
 
 						{block noItems}
 							<tr n:if="!$rows">
@@ -437,44 +444,34 @@
 
 
 {define columnsSummary}
-	<tr class="datagrid-row-columns-summary" n:if="$columnsSummary->someColumnsExist($columns)">
-		<td n:if="$hasGroupActions" class="col-checkbox"></td>
 
-		{foreach $columns as $key => $column}
-			{var $td = $column->getElementForRender('td', $key)}
+	{foreach $columns as $key => $column}
+		{var $td = $column->getElementForRender('td', $key)}
 
-			{$td->startTag()|noescape}
-				{$columnsSummary->render($key)}
-			{$td->endTag()|noescape}
-		{/foreach}
+		{$td->startTag()|noescape}
+			{$columnsSummary->render($key)}
+		{$td->endTag()|noescape}
+	{/foreach}
 
-		<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
-		</td>
-	</tr>
 {/define}
 
 
 {define aggregationFunctions}
-	<tr class="datagrid-row-columns-summary">
-		<td n:if="$hasGroupActions" class="col-checkbox"></td>
 
-		{foreach $columns as $key => $column}
-			{var $td = $column->getElementForRender('td', $key)}
+	{foreach $columns as $key => $column}
+		{var $td = $column->getElementForRender('td', $key)}
 
-			{$td->startTag()|noescape}
-				{if $aggregation_functions}
-					{ifset $aggregation_functions[$key]}
-						{$aggregation_functions[$key]->renderResult()|noescape}
-					{/ifset}
-				{else}
-					{$multiple_aggregation_function->renderResult($key)|noescape}
-				{/if}
-			{$td->endTag()|noescape}
-		{/foreach}
+		{$td->startTag()|noescape}
+			{if $aggregation_functions}
+				{ifset $aggregation_functions[$key]}
+					{$aggregation_functions[$key]->renderResult()|noescape}
+				{/ifset}
+			{else}
+				{$multiple_aggregation_function->renderResult($key)|noescape}
+			{/if}
+		{$td->endTag()|noescape}
+	{/foreach}
 
-		<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
-		</td>
-	</tr>
 {/define}
 
 

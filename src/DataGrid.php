@@ -1711,6 +1711,7 @@ class DataGrid extends Nette\Application\UI\Control
 					$this->inlineEdit->onCustomRedraw();
 				} else {
 					$this->redrawItem($id, $primary_where_column);
+					$this->redrawControl('summary');
 				}
 
 				return;
@@ -2405,6 +2406,7 @@ class DataGrid extends Nette\Application\UI\Control
 		if ($this->getPresenter()->isAjax()) {
 			$this->redrawControl('tbody');
 			$this->redrawControl('pagination');
+			$this->redrawControl('summary');
 			$this->redrawControl('thead-group-action');
 
 			/**
