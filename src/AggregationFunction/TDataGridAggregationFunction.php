@@ -83,6 +83,10 @@ trait TDataGridAggregationFunction
 	 */
 	public function beforeDataModelFilter(IDataSource $dataSource)
 	{
+		if (!$this->hasSomeAggregationFunction()) {
+			return;
+		}
+
 		if (!$dataSource instanceof IAggregatable) {
 			throw new DataGridException('Used DataSource has to implement IAggregatable for aggegations to work');
 		}
@@ -110,6 +114,10 @@ trait TDataGridAggregationFunction
 	 */
 	public function afterDataModelFilter(IDataSource $dataSource)
 	{
+		if (!$this->hasSomeAggregationFunction()) {
+			return;
+		}
+
 		if (!$dataSource instanceof IAggregatable) {
 			throw new DataGridException('Used DataSource has to implement IAggregatable for aggegations to work');
 		}
@@ -137,6 +145,10 @@ trait TDataGridAggregationFunction
 	 */
 	public function afterDataModelPaginated(IDataSource $dataSource)
 	{
+		if (!$this->hasSomeAggregationFunction()) {
+			return;
+		}
+
 		if (!$dataSource instanceof IAggregatable) {
 			throw new DataGridException('Used DataSource has to implement IAggregatable for aggegations to work');
 		}
