@@ -83,10 +83,9 @@ final class FunctionSum implements IAggregationFunction
 		}
 
 		if ($dataSource instanceof Collection) {
-			$this->result = 0;	// Must be cleared as this method could be called multiple times
-
 			$dataSource->forAll(function ($key, $value) {
 				$this->result += PropertyAccessHelper::getValue($value, $this->column);
+				return TRUE;
 			});
 		}
 	}
