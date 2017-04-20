@@ -12,6 +12,7 @@ use DibiFluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Utils\Strings;
+use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
 final class FunctionSum implements IAggregationFunction
 {
@@ -82,8 +83,10 @@ final class FunctionSum implements IAggregationFunction
 		}
 
 		if ($dataSource instanceof Collection) {
+			$this->result = 0;	// Must be cleared as this method could be called multiple times
+
 			$dataSource->forAll(function ($key, $value) {
-				$this->result += $value->{$this->column};
+				$this->result += PropertyAccessHelper::getValue($value, $this->column);
 			});
 		}
 	}
