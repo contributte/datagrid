@@ -163,6 +163,9 @@ final class DataModel extends Nette\Object
 	 */
 	public function filterRow(array $condition)
 	{
+		$this->onBeforeFilter($this->data_source);
+		$this->onAfterFilter($this->data_source);
+
 		return $this->data_source->filterOne($condition)->getData();
 	}
 
