@@ -8,8 +8,6 @@
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
-use Ublaboo\DataGrid\DataSource\IDataSource;
-
 interface IAggregationFunction
 {
 	const DATA_TYPE_ALL = 'data_type_all';
@@ -23,10 +21,10 @@ interface IAggregationFunction
 	public function getFilterDataType();
 
 	/**
-	 * @param  IDataSource  $dataSource
+	 * @param  mixed  $dataSource
 	 * @return void
 	 */
-	public function processDataSource(IDataSource $dataSource);
+	public function processDataSource($dataSource);
 
 	/**
 	 * @return mixed
