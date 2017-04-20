@@ -12,11 +12,12 @@ use Dibi;
 use DibiFluent;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
+use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
-class DibiFluentDataSource extends FilterableDataSource implements IDataSource
+class DibiFluentDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
 
 	/**
@@ -308,7 +309,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function processAggregation(callable $aggregationCallback)
 	{
-		call_user_func($aggregationCallback, $this->data_source);
+		call_user_func($aggregationCallback, clone $this->data_source);
 	}
-
 }

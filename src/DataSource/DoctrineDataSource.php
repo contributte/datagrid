@@ -12,6 +12,7 @@ namespace Ublaboo\DataGrid\DataSource;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Nette\Utils\Strings;
+use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
@@ -19,9 +20,8 @@ use Ublaboo\DataGrid\Utils\Sorting;
 /**
  * @method void onDataLoaded(array $result)
  */
-class DoctrineDataSource extends FilterableDataSource implements IDataSource
+class DoctrineDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
-
 	/**
 	 * Event called when datagrid data is loaded.
 	 * @var callable[]
@@ -360,14 +360,14 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	{
 		return 'param'.($this->placeholder++);
 	}
-	
+
+
 	/**
-	* @param  callable $aggregationCallback
-	* @return void
-	*/
+	 * @param  callable  $aggregationCallback
+	 * @return void
+	 */
 	public function processAggregation(callable $aggregationCallback)
 	{
 		call_user_func($aggregationCallback, clone $this->data_source);
 	}
-
 }
