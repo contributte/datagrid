@@ -11,6 +11,7 @@ namespace Ublaboo\DataGrid\AggregationFunction;
 use DibiFluent;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Utils\Strings;
+use Ublaboo\DataGrid\DataSource\IDataSource;
 
 final class FunctionSum implements IAggregationFunction
 {
@@ -56,10 +57,10 @@ final class FunctionSum implements IAggregationFunction
 
 
 	/**
-	 * @param  mixed  $dataSource
+	 * @param  IDataSource  $dataSource
 	 * @return void
 	 */
-	public function processDataSource($dataSource)
+	public function processDataSource(IDataSource $dataSource)
 	{
 		if ($dataSource instanceof DibiFluent) {
 			$connection = $dataSource->getConnection();
