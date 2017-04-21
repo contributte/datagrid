@@ -71,9 +71,9 @@
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
 				<thead n:block="header">
-					<tr class="row-group-actions" n:if="$hasGroupActionOnRows || $exports || $toolbar_buttons || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
+					<tr class="row-group-actions" n:if="$hasGroupActions || $exports || $toolbar_buttons || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
 						<th colspan="{$control->getColumnsCount()}" class="form-inline">
-							{if $hasGroupActionOnRows}
+							{if $hasGroupActions}
 								{block group_actions}
 									{='ublaboo_datagrid.group_actions'|translate}:
 									{foreach $filter['group_action']->getControls() as $form_control}
@@ -140,8 +140,8 @@
 						</th>
 					</tr>
 					<tr n:block="header-column-row">
-						<th n:if="$hasGroupActionOnRows" class="col-checkbox">
-							<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="{$control->getName()|lower}-toggle-all" type="checkbox" data-check="{$control->getName()}" data-check-all="{$control->getName()}">
+						<th n:snippet="thead-group-action" n:if="$hasGroupActions" class="col-checkbox">
+							<input n:if="$hasGroupActionOnRows" n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="{$control->getName()|lower}-toggle-all" type="checkbox" data-check="{$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementForRender('th', $key)}
@@ -230,7 +230,7 @@
 					</tr>
 				</thead>
 
-				<tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/}>
+				<tbody n:snippet="tbody" n:block="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/}>
 					{snippetArea items}
 						{if $inlineAdd && $inlineAdd->isPositionTop()}
 							{include inlineAddRow, columns => $columns}
@@ -244,7 +244,7 @@
 									{php $inlineEdit->onSetDefaults($filter['inline_edit'], $item); }
 
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
-										<td n:if="$hasGroupActionOnRows" class="col-checkbox"></td>
+										<td n:if="$hasGroupActions" class="col-checkbox"></td>
 
 										{foreach $columns as $key => $column}
 											{var $col = 'col-' . $key}
@@ -269,7 +269,7 @@
 									</tr>
 								{else}
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
-										<td n:if="$hasGroupActionOnRows" class="col-checkbox">
+										<td n:if="$hasGroupActions" class="col-checkbox">
 											{if $row->hasGroupAction()}
 												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getName()}" data-check-all-{$control->getName()|noescape} name="{$control->getName()|lower}_group_action_item[{$row->getId()}]">
 											{/if}
@@ -345,12 +345,19 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
-						{if !empty($rows) && $columnsSummary}
-							{include columnsSummary, columcns => $columns}
-						{/if}
-						{if $control->hasSomeAggregationFunction()}
-							{include aggregationFunctions, columns => $columns}
-						{/if}
+						<tr class="datagrid-row-columns-summary" n:if="!empty($rows) && ($columnsSummary || $control->hasSomeAggregationFunction())" n:snippet="summary">
+							<td n:if="$hasGroupActions" class="col-checkbox"></td>
+
+							{if $columnsSummary && $columnsSummary->someColumnsExist($columns)}
+								{include columnsSummary, columns => $columns}
+							{/if}
+
+							{if $control->hasSomeAggregationFunction()}
+								{include aggregationFunctions, columns => $columns}
+							{/if}
+
+							<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action"></td>
+						</tr>
 
 						{block noItems}
 							<tr n:if="!$rows">
@@ -377,7 +384,7 @@
 											{if $control->getPerPage() === 'all'}
 												{='ublaboo_datagrid.items'|translate}: {='ublaboo_datagrid.all'|translate}
 											{else}
-												{='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : 1} - {sizeof($rows) + $paginator->getOffset()}
+												{='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : ($paginator->getItemCount() > 0 ? 1 : 0)} - {sizeof($rows) + $paginator->getOffset()}
 												{='ublaboo_datagrid.from'|translate} {$paginator->getItemCount()}
 											{/if})
 										</small>
@@ -414,7 +421,7 @@
 	{php $inlineAdd->onSetDefaults($filter['inline_add']); }
 
 	<tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden">
-		<td n:if="$hasGroupActionOnRows" class="col-checkbox"></td>
+		<td n:if="$hasGroupActions" class="col-checkbox"></td>
 
 		{foreach $columns as $key => $column}
 			{var $col = 'col-' . $key}
@@ -437,44 +444,34 @@
 
 
 {define columnsSummary}
-	<tr class="datagrid-row-columns-summary" n:if="$columnsSummary->someColumnsExist($columns)">
-		<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
 
-		{foreach $columns as $key => $column}
-			{var $td = $column->getElementForRender('td', $key)}
+	{foreach $columns as $key => $column}
+		{var $td = $column->getElementForRender('td', $key)}
 
-			{$td->startTag()|noescape}
-				{$columnsSummary->render($key)}
-			{$td->endTag()|noescape}
-		{/foreach}
+		{$td->startTag()|noescape}
+			{$columnsSummary->render($key)}
+		{$td->endTag()|noescape}
+	{/foreach}
 
-		<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
-		</td>
-	</tr>
 {/define}
 
 
 {define aggregationFunctions}
-	<tr class="datagrid-row-columns-summary">
-		<td n:if="$control->hasGroupActions()" class="col-checkbox"></td>
 
-		{foreach $columns as $key => $column}
-			{var $td = $column->getElementForRender('td', $key)}
+	{foreach $columns as $key => $column}
+		{var $td = $column->getElementForRender('td', $key)}
 
-			{$td->startTag()|noescape}
-				{if $aggregation_functions}
-					{ifset $aggregation_functions[$key]}
-						{$aggregation_functions[$key]->renderResult()|noescape}
-					{/ifset}
-				{else}
-					{$multiple_aggregation_function->renderResult($key)|noescape}
-				{/if}
-			{$td->endTag()|noescape}
-		{/foreach}
+		{$td->startTag()|noescape}
+			{if $aggregation_functions}
+				{ifset $aggregation_functions[$key]}
+					{$aggregation_functions[$key]->renderResult()|noescape}
+				{/ifset}
+			{else}
+				{$multiple_aggregation_function->renderResult($key)|noescape}
+			{/if}
+		{$td->endTag()|noescape}
+	{/foreach}
 
-		<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
-		</td>
-	</tr>
 {/define}
 
 

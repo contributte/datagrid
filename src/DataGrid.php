@@ -455,7 +455,8 @@ class DataGrid extends Nette\Application\UI\Control
 			throw new DataGridException('You have to add at least one column.');
 		}
 
-		$this->getTemplate()->setTranslator($this->getTranslator());
+		$template = $this->getTemplate();
+		$template->setTranslator($this->getTranslator());
 
 		/**
 		 * Invoke possible events
@@ -508,42 +509,43 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		if ($this->isTreeView()) {
-			$this->getTemplate()->add('tree_view_has_children_column', $this->tree_view_has_children_column);
+			$template->add('tree_view_has_children_column', $this->tree_view_has_children_column);
 		}
 
-		$this->getTemplate()->rows = $rows;
+		$template->rows = $rows;
 
-		$this->getTemplate()->columns = $this->getColumns();
-		$this->getTemplate()->actions = $this->actions;
-		$this->getTemplate()->exports = $this->exports;
-		$this->getTemplate()->filters = $this->filters;
-		$this->getTemplate()->toolbar_buttons = $this->toolbar_buttons;
-		$this->getTemplate()->aggregation_functions = $this->getAggregationFunctions();
-		$this->getTemplate()->multiple_aggregation_function = $this->getMultipleAggregationFunction();
+		$template->columns = $this->getColumns();
+		$template->actions = $this->actions;
+		$template->exports = $this->exports;
+		$template->filters = $this->filters;
+		$template->toolbar_buttons = $this->toolbar_buttons;
+		$template->aggregation_functions = $this->getAggregationFunctions();
+		$template->multiple_aggregation_function = $this->getMultipleAggregationFunction();
 
-		$this->getTemplate()->filter_active = $this->isFilterActive();
-		$this->getTemplate()->original_template = $this->getOriginalTemplateFile();
-		$this->getTemplate()->icon_prefix = static::$icon_prefix;
-		$this->getTemplate()->icon_prefix = static::$icon_prefix;
-		$this->getTemplate()->items_detail = $this->items_detail;
-		$this->getTemplate()->columns_visibility = $this->getColumnsVisibility();
-		$this->getTemplate()->columnsSummary = $this->columnsSummary;
+		$template->filter_active = $this->isFilterActive();
+		$template->original_template = $this->getOriginalTemplateFile();
+		$template->icon_prefix = static::$icon_prefix;
+		$template->icon_prefix = static::$icon_prefix;
+		$template->items_detail = $this->items_detail;
+		$template->columns_visibility = $this->getColumnsVisibility();
+		$template->columnsSummary = $this->columnsSummary;
 
-		$this->getTemplate()->inlineEdit = $this->inlineEdit;
-		$this->getTemplate()->inlineAdd = $this->inlineAdd;
+		$template->inlineEdit = $this->inlineEdit;
+		$template->inlineAdd = $this->inlineAdd;
 
-		$this->getTemplate()->hasGroupActionOnRows = $hasGroupActionOnRows;
+		$template->hasGroupActions = $this->hasGroupActions();
+		$template->hasGroupActionOnRows = $hasGroupActionOnRows;
 
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
 		 */
-		$this->getTemplate()->filter = $this['filter'];
+		$template->filter = $this['filter'];
 
 		/**
 		 * Set template file and render it
 		 */
-		$this->getTemplate()->setFile($this->getTemplateFile());
-		$this->getTemplate()->render();
+		$template->setFile($this->getTemplateFile());
+		$template->render();
 	}
 
 
@@ -1710,6 +1712,7 @@ class DataGrid extends Nette\Application\UI\Control
 					$this->inlineEdit->onCustomRedraw();
 				} else {
 					$this->redrawItem($id, $primary_where_column);
+					$this->redrawControl('summary');
 				}
 
 				return;
@@ -2404,6 +2407,8 @@ class DataGrid extends Nette\Application\UI\Control
 		if ($this->getPresenter()->isAjax()) {
 			$this->redrawControl('tbody');
 			$this->redrawControl('pagination');
+			$this->redrawControl('summary');
+			$this->redrawControl('thead-group-action');
 
 			/**
 			 * manualy reset exports links...

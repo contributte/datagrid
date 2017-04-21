@@ -8,15 +8,20 @@
 
 namespace Ublaboo\DataGrid\Utils;
 
-use Nette;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-final class PropertyAccessHelper extends Nette\Object
+final class PropertyAccessHelper
 {
+	/**
+	 * @var PropertyAccessor
+	 */
+	private static $accessor;
 
-	private static $accessor = NULL;
 
-
+	/**
+	 * @return PropertyAccessor
+	 */
 	public static function getAccessor()
 	{
 		if (!self::$accessor) {
@@ -26,4 +31,14 @@ final class PropertyAccessHelper extends Nette\Object
 		return self::$accessor;
 	}
 
+
+	/**
+	 * @param  object  $class
+	 * @param  string  $property
+	 * @return mixed
+	 */
+	public static function getValue($class, $property)
+	{
+		return self::getAccessor()->getValue($class, $property);
+	}
 }

@@ -10,9 +10,8 @@ namespace Ublaboo\DataGrid\AggregationFunction;
 
 interface IAggregationFunction
 {
-
-	const DATA_TYPE_ALL       = 'data_type_all';
-	const DATA_TYPE_FILTERED  = 'data_type_filtered';
+	const DATA_TYPE_ALL = 'data_type_all';
+	const DATA_TYPE_FILTERED = 'data_type_filtered';
 	const DATA_TYPE_PAGINATED = 'data_type_paginated';
 
 
@@ -22,14 +21,13 @@ interface IAggregationFunction
 	public function getFilterDataType();
 
 	/**
-	 * @param  mixed $data_source
+	 * @param  mixed  $dataSource
 	 * @return void
 	 */
-	public function processDataSource($data_source);
+	public function processDataSource($dataSource);
 
 	/**
 	 * @return mixed
 	 */
 	public function renderResult();
-
 }

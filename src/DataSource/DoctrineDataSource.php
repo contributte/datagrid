@@ -12,6 +12,7 @@ namespace Ublaboo\DataGrid\DataSource;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Nette\Utils\Strings;
+use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
@@ -19,9 +20,8 @@ use Ublaboo\DataGrid\Utils\Sorting;
 /**
  * @method void onDataLoaded(array $result)
  */
-class DoctrineDataSource extends FilterableDataSource implements IDataSource
+class DoctrineDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
-
 	/**
 	 * Event called when datagrid data is loaded.
 	 * @var callable[]
@@ -89,6 +89,15 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	}
 
 
+	/**
+	 * @return bool
+	 */
+	private function usePaginator()
+	{
+		return $this->data_source->getDQLPart('join') || $this->data_source->getDQLPart('groupBy');
+	}
+
+
 	/********************************************************************************
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
@@ -100,7 +109,13 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function getCount()
 	{
-		return (new Paginator($this->getQuery()))->count();
+		if ($this->usePaginator()) {
+			return (new Paginator($this->getQuery()))->count();
+		}
+		$data_source = clone $this->data_source;
+		$data_source->select(sprintf('COUNT(%s)', $this->checkAliases($this->primary_key)));
+
+		return (int) $data_source->getQuery()->getSingleScalarResult();
 	}
 
 
@@ -110,9 +125,13 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function getData()
 	{
-		$iterator = (new Paginator($this->getQuery()))->getIterator();
+		if ($this->usePaginator()) {
+			$iterator = (new Paginator($this->getQuery()))->getIterator();
 
-		$data = iterator_to_array($iterator);
+			$data = iterator_to_array($iterator);
+		} else {
+			$data = $this->getQuery()->getResult();
+		}
 
 		$this->onDataLoaded($data);
 
@@ -342,4 +361,13 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		return 'param'.($this->placeholder++);
 	}
 
+
+	/**
+	 * @param  callable  $aggregationCallback
+	 * @return void
+	 */
+	public function processAggregation(callable $aggregationCallback)
+	{
+		call_user_func($aggregationCallback, clone $this->data_source);
+	}
 }

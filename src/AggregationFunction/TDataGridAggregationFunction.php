@@ -14,7 +14,6 @@ use Ublaboo\DataGrid\DataSource\IDataSource;
 
 trait TDataGridAggregationFunction
 {
-
 	/**
 	 * @var IAggregationFunction[]
 	 */
@@ -27,8 +26,8 @@ trait TDataGridAggregationFunction
 
 
 	/**
-	 * @param string               $key
-	 * @param IAggregationFunction $aggregationFunction
+	 * @param  string  $key
+	 * @param  IAggregationFunction  $aggregationFunction
 	 * @return static
 	 * @throws DataGridException
 	 */
@@ -38,20 +37,16 @@ trait TDataGridAggregationFunction
 			throw new DataGridException('You can use either ColumnsSummary or AggregationFunctions');
 		}
 
-		if (!($this->dataModel instanceof DataModel)) {
+		if (!$this->dataModel instanceof DataModel) {
 			throw new DataGridException('You have to set a data source first.');
 		}
 
 		if (isset($this->aggregationFunctions[$key])) {
-			throw new DataGridException(
-				"There is already a AggregationFunction defined on column {$key}"
-			);
+			throw new DataGridException('There is already a AggregationFunction defined on column '.$key);
 		}
 
 		if ($this->multipleAggregationFunction instanceof MultipleAggregationFunction) {
-			throw new DataGridException(
-				"You can not use both AggregationFunctions and MultipleAggregationFunction"
-			);
+			throw new DataGridException('You can not use both AggregationFunctions and MultipleAggregationFunction');
 		}
 
 		$this->aggregationFunctions[$key] = $aggregationFunction;
@@ -61,7 +56,9 @@ trait TDataGridAggregationFunction
 
 
 	/**
-	 * @param IMultipleAggregationFunction $multipleAggregationFunction
+	 * @param  IMultipleAggregationFunction  $multipleAggregationFunction
+	 * @throws DataGridException
+	 * @return static
 	 */
 	public function setMultipleAggregationFunction(IMultipleAggregationFunction $multipleAggregationFunction)
 	{
@@ -70,9 +67,7 @@ trait TDataGridAggregationFunction
 		}
 
 		if (!empty($this->aggregationFunctions)) {
-			throw new DataGridException(
-				"You can not use both AggregationFunctions and MultipleAggregationFunction"
-			);
+			throw new DataGridException('You can not use both AggregationFunctions and MultipleAggregationFunction');
 		}
 
 		$this->multipleAggregationFunction = $multipleAggregationFunction;
@@ -82,11 +77,20 @@ trait TDataGridAggregationFunction
 
 
 	/**
-	 * @param  IDataSource $dataSource
+	 * @param  IDataSource  $dataSource
+	 * @throws DataGridException
 	 * @return void
 	 */
 	public function beforeDataModelFilter(IDataSource $dataSource)
 	{
+		if (!$this->hasSomeAggregationFunction()) {
+			return;
+		}
+
+		if (!$dataSource instanceof IAggregatable) {
+			throw new DataGridException('Used DataSource has to implement IAggregatable for aggegations to work');
+		}
+
 		if ($this->multipleAggregationFunction) {
 			if ($this->multipleAggregationFunction->getFilterDataType() === IAggregationFunction::DATA_TYPE_ALL) {
 				$dataSource->processAggregation([$this->multipleAggregationFunction, 'processDataSource']);
@@ -104,11 +108,20 @@ trait TDataGridAggregationFunction
 
 
 	/**
-	 * @param  IDataSource $dataSource
+	 * @param  IDataSource  $dataSource
+	 * @throws DataGridException
 	 * @return void
 	 */
 	public function afterDataModelFilter(IDataSource $dataSource)
 	{
+		if (!$this->hasSomeAggregationFunction()) {
+			return;
+		}
+
+		if (!$dataSource instanceof IAggregatable) {
+			throw new DataGridException('Used DataSource has to implement IAggregatable for aggegations to work');
+		}
+
 		if ($this->multipleAggregationFunction) {
 			if ($this->multipleAggregationFunction->getFilterDataType() === IAggregationFunction::DATA_TYPE_FILTERED) {
 				$dataSource->processAggregation([$this->multipleAggregationFunction, 'processDataSource']);
@@ -126,11 +139,20 @@ trait TDataGridAggregationFunction
 
 
 	/**
-	 * @param  IDataSource $dataSource
+	 * @param  IDataSource  $dataSource
+	 * @throws DataGridException
 	 * @return void
 	 */
 	public function afterDataModelPaginated(IDataSource $dataSource)
 	{
+		if (!$this->hasSomeAggregationFunction()) {
+			return;
+		}
+
+		if (!$dataSource instanceof IAggregatable) {
+			throw new DataGridException('Used DataSource has to implement IAggregatable for aggegations to work');
+		}
+
 		if ($this->multipleAggregationFunction) {
 			if ($this->multipleAggregationFunction->getFilterDataType() === IAggregationFunction::DATA_TYPE_PAGINATED) {
 				$dataSource->processAggregation([$this->multipleAggregationFunction, 'processDataSource']);
