@@ -230,7 +230,8 @@
 					</tr>
 				</thead>
 
-				<tbody n:snippet="tbody" n:block="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/}>
+				{block tbody}
+				<tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/}>
 					{snippetArea items}
 						{if $inlineAdd && $inlineAdd->isPositionTop()}
 							{include inlineAddRow, columns => $columns}
@@ -372,6 +373,7 @@
 						{/block}
 					{/snippetArea}
 				</tbody>
+				{/block}
 				{block tfoot}
 					<tfoot n:snippet="pagination">
 						{if $control->isPaginated() || $filter_active}
