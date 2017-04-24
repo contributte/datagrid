@@ -14,27 +14,27 @@ use Doctrine\ORM\QueryBuilder;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
-final class FunctionSum implements IAggregationFunction
+class FunctionSum implements IAggregationFunction
 {
 	/**
 	 * @var string
 	 */
-	private $column;
+	protected $column;
 
 	/**
 	 * @var int
 	 */
-	private $result = 0;
+	protected $result = 0;
 
 	/**
 	 * @var int
 	 */
-	private $dataType;
+	protected $dataType;
 
 	/**
 	 * @var callable
 	 */
-	private $renderer;
+	protected $renderer;
 
 
 	/**
