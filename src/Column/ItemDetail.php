@@ -8,6 +8,7 @@
 
 namespace Ublaboo\DataGrid\Column;
 
+use Nette\Object;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\Utils\ItemDetailForm;
 use Ublaboo\DataGrid\DataGrid;
@@ -16,7 +17,7 @@ use Ublaboo\DataGrid\Traits;
 use Ublaboo\DataGrid\Exception\DataGridItemDetailException;
 use Ublaboo\DataGrid\Row;
 
-class ItemDetail
+class ItemDetail extends Object
 {
 
 	use Traits\TButtonTryAddIcon;
