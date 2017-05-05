@@ -280,7 +280,7 @@
 
 .datagrid table th.datagrid-fit-content,
 .datagrid table td.datagrid-fit-content {
-  width: 1%;
+  width: calc(1% + 1px);
   white-space: nowrap;
 }
 
