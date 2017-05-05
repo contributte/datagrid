@@ -140,7 +140,7 @@
 }
 
 .datagrid table thead tr th .datagrid-column-header-additions {
-  float: right;
+  display: inline-block;
 }
 
 .datagrid table thead tr th .datagrid-column-header-additions a[data-datagrid-reset-filter-by-column] {
@@ -280,7 +280,7 @@
 
 .datagrid table th.datagrid-fit-content,
 .datagrid table td.datagrid-fit-content {
-  width: calc(1% + 1px);
+  width: 1%;
   white-space: nowrap;
 }
 

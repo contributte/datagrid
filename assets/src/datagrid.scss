@@ -161,7 +161,7 @@
 					}
 
 					.datagrid-column-header-additions {
-						float: right;
+						display: inline-block;
 
 						a[data-datagrid-reset-filter-by-column] {
 							margin-left: 0.3em;
@@ -311,7 +311,7 @@
 		}
 
 		th.datagrid-fit-content, td.datagrid-fit-content {
-			width: calc(1% + 1px);
+			width: 1%;
 			white-space: nowrap;
 		}
 	}

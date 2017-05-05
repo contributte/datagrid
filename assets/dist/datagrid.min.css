@@ -1,5 +1,6 @@
 .datagrid .datagrid-collapse-filters-button-row,.datagrid .datagrid-manual-submit,.datagrid .row-filters>div{margin-bottom:.5em}
-.datagrid table thead tr th .datagrid-column-header-additions,.datagrid-column-status-option-icon{float:right}
+.datagrid-column-status-option-icon{float:right}
+.datagrid table thead tr th .datagrid-column-header-additions{display:inline-block}
 @keyframes edited{0%{background-color:#A6E2A9}
 100%{background-color:transparent}
 }
@@ -52,7 +53,7 @@
 .datagrid table th.col-checkbox{background-color:#f9f9f9}
 .datagrid table td.col-action,.datagrid table th.col-action{white-space:nowrap;width:10px}
 .datagrid table td.col-action{text-align:right}
-.datagrid table td.datagrid-fit-content,.datagrid table th.datagrid-fit-content{width:calc(1% + 1px);white-space:nowrap}
+.datagrid table td.datagrid-fit-content,.datagrid table th.datagrid-fit-content{width:1%;white-space:nowrap}
 .datagrid .datagrid-tree>.datagrid-tree-header .datagrid-tree-item-right-actions-action{opacity:0}
 .datagrid .datagrid-tree>.datagrid-tree-item{margin-left:20px}
 .datagrid .datagrid-tree .datagrid-tree-item{position:relative}
