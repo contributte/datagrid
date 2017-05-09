@@ -26,10 +26,16 @@ abstract class FilterableDataSource extends \Nette\Object
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
 				if ($filter->hasConditionCallback()) {
-					Callback::invokeArgs(
+					$result = Callback::invokeArgs(
 						$filter->getConditionCallback(),
 						[$this->data_source, $filter->getValue()]
 					);
+					if ($this instanceof NextrasDataSource) {
+						if ($result === NULL) {
+							throw new \Ublaboo\DataGrid\Exception\DataGridException("Callback for method 'setCondition' cannot return NULL");
+						}
+						$this->data_source = $result;
+					}
 				} else {
 					if ($filter instanceof Filter\FilterText) {
 						$this->applyFilterText($filter);
