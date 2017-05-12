@@ -1764,7 +1764,7 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
-		$this->reload();
+		$this->reload(['table']);
 	}
 
 
