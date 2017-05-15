@@ -59,10 +59,18 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		} catch (\LogicException $e) {
 			return $this->data_source->count('*');
 		}
+                
+                $dataSourceSqlBuilder = $this->data_source->getSqlBuilder();
 
-		return $this->data_source->count(
-			$this->data_source->getName() . '.' . (is_array($primary) ? reset($primary) : $primary)
-		);
+                if($dataSourceSqlBuilder->getGroup() != '') {
+                    return $this->data_source->count(
+                        'DISTINCT ' . \Nette\Utils\Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
+                    );
+                } else {
+                    return $this->data_source->count(
+                        $this->data_source->getName() . '.' . (is_array($primary) ? reset($primary) : $primary)
+                    );
+                }
 	}
 
 
