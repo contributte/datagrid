@@ -383,8 +383,20 @@ $.nette.ext('datagrid.url', {
       if (window.history.pushState) {
         host = window.location.protocol + "//" + window.location.host;
         path = window.location.pathname;
-        query = window.datagridSerializeUrl(payload.state).replace(/&+$/gm, '');
-        if (query) {
+     
+ 	var originalQueryParts = window.location.search.replace("?", '').split('&');
+        var urlQuery = {};
+        var i;
+        for (i = 0; i < originalQueryParts.length; ++i) {
+            var item = originalQueryParts[i].split('=');
+            urlQuery[item[0]] = typeof(item[1]) !== 'undefined' ? item[1] : '';
+        }
+        for (var attr in payload.state) {
+            urlQuery[attr] = payload.state[attr]; 
+        }
+        query = window.datagridSerializeUrl(urlQuery).replace(/&+$/gm, '');    
+
+	if (query) {
           url = host + path + "?" + query.replace(/\&*$/, '');
         } else {
           url = host + path;
