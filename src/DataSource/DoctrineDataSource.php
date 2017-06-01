@@ -11,6 +11,7 @@ namespace Ublaboo\DataGrid\DataSource;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
@@ -136,6 +137,48 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource
 		$this->onDataLoaded($data);
 
 		return $data;
+	}
+
+
+	/**
+	 * Filter data
+	 * @param array $filters
+	 * @return static
+	 */
+	public function filter(array $filters)
+	{
+		$withConditionCallback = [];
+
+		foreach ($filters as $filter) {
+			if ($filter->isValueSet()) {
+				if ($filter->hasConditionCallback()) {
+					$withConditionCallback[] = $filter;
+				} else {
+					if ($filter instanceof Filter\FilterText) {
+						$this->applyFilterText($filter);
+					} else if ($filter instanceof Filter\FilterMultiSelect) {
+						$this->applyFilterMultiSelect($filter);
+					} else if ($filter instanceof Filter\FilterSelect) {
+						$this->applyFilterSelect($filter);
+					} else if ($filter instanceof Filter\FilterDate) {
+						$this->applyFilterDate($filter);
+					} else if ($filter instanceof Filter\FilterDateRange) {
+						$this->applyFilterDateRange($filter);
+					} else if ($filter instanceof Filter\FilterRange) {
+						$this->applyFilterRange($filter);
+					}
+				}
+			}
+		}
+
+		foreach ($withConditionCallback as $filter) {
+			Callback::invokeArgs(
+				$filter->getConditionCallback(),
+				[$this->data_source, $filter->getValue()]
+			);
+		}
+
+		return $this;
 	}
 
 
