@@ -2422,6 +2422,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 			$this->getPresenter()->payload->_datagrid_name = $this->getName();
+			$this->getPresenter()->payload->_datagrid_full_name = $this->getUniqueId();
 
 			$this->onRedraw();
 		} else {
