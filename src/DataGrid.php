@@ -2733,7 +2733,15 @@ class DataGrid extends Nette\Application\UI\Control
 	public function getTranslator()
 	{
 		if (!$this->translator) {
-			$this->translator = new Localization\SimpleTranslator;
+			$parent = $this->getParent();
+			if (
+				$parent->getReflection()->hasMethod('getTranslator')
+				&& ($translator = $parent->getTranslator()) instanceof  Nette\Localization\ITranslator
+			) {
+				$this->translator = $translator;
+			} else {
+				$this->translator = new Localization\SimpleTranslator;
+			}
 		}
 
 		return $this->translator;
