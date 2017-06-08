@@ -149,6 +149,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	 */
 	public function applyFilterRange(Filter\FilterRange $filter)
 	{
+		$conditions = $filter->getCondition();
 		$values = $conditions[$filter->getColumn()];
 
 		if ($value_from = $values['from']) {
