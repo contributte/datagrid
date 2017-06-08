@@ -120,6 +120,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	 */
 	public function applyFilterDateRange(Filter\FilterDateRange $filter)
 	{
+		$conditions = $filter->getCondition();
 		$values = $conditions[$filter->getColumn()];
 
 		if ($value_from = $values['from']) {
@@ -147,6 +148,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	 */
 	public function applyFilterRange(Filter\FilterRange $filter)
 	{
+		$conditions = $filter->getCondition();
 		$values = $conditions[$filter->getColumn()];
 
 		if ($value_from = $values['from']) {
