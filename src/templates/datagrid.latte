@@ -140,7 +140,7 @@
 						</th>
 					</tr>
 					<tr n:block="header-column-row">
-						<th n:snippet="thead-group-action" n:if="$hasGroupActions" rowspan="2" class="col-checkbox">
+						<th n:snippet="thead-group-action" n:if="$hasGroupActions" n:attr="'rowspan=2' => !empty($filters) && !$control->hasOuterFilterRendering()" class="col-checkbox">
 							<input n:if="$hasGroupActionOnRows" n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="{$control->getName()|lower}-toggle-all" type="checkbox" data-check="{$control->getName()}" data-check-all="{$control->getName()}">
 						</th>
 						{foreach $columns as $key => $column}
