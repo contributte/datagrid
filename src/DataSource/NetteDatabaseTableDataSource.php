@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Nette\Database\Table\Selection;
+use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
@@ -54,31 +55,31 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 */
 	public function getCount()
 	{
+		$data_source_sql_builder = $this->data_source->getSqlBuilder();
+
 		try {
 			$primary = $this->data_source->getPrimary();
+
 		} catch (\LogicException $e) {
-                        $dataSourceSqlBuilder = $this->data_source->getSqlBuilder();
 
-                        if($dataSourceSqlBuilder->getGroup() != '') {
-                                return $this->data_source->count(
-                                    'DISTINCT ' . \Nette\Utils\Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
-                                );
-                        } else {
-                                return $this->data_source->count('*');
-                        }
+			if ($data_source_sql_builder->getGroup() !== '') {
+				return $this->data_source->count(
+					'DISTINCT ' . Strings::replace($data_source_sql_builder->getGroup(), '~ (DESC|ASC)~')
+				);
+			}
+
+			return $this->data_source->count('*');
 		}
-                
-                $dataSourceSqlBuilder = $this->data_source->getSqlBuilder();
 
-                if($dataSourceSqlBuilder->getGroup() != '') {
-                        return $this->data_source->count(
-                                'DISTINCT ' . \Nette\Utils\Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
-                        );
-                } else {
-                        return $this->data_source->count(
-                                $this->data_source->getName() . '.' . (is_array($primary) ? reset($primary) : $primary)
-                        );
-                }
+		if ($data_source_sql_builder->getGroup() !== '') {
+			return $this->data_source->count(
+				'DISTINCT ' . Strings::replace($data_source_sql_builder->getGroup(), '~ (DESC|ASC)~')
+			);
+		} else {
+			return $this->data_source->count(
+				$this->data_source->getName() . '.' . (is_array($primary) ? reset($primary) : $primary)
+			);
+		}
 	}
 
 
