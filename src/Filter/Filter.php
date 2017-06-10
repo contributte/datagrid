@@ -319,10 +319,6 @@ abstract class Filter extends Nette\Object
 			$input->setAttribute($key, $value);
 		}
 
-		if ($this->isValueSet()) {
-			$input->setDefaultValue($this->getValue());
-		}
-
 		return $input;
 	}
 
