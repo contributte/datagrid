@@ -1,5 +1,6 @@
 .datagrid .datagrid-collapse-filters-button-row,.datagrid .datagrid-manual-submit,.datagrid .row-filters>div{margin-bottom:.5em}
-.datagrid table thead tr th .datagrid-column-header-additions,.datagrid-column-status-option-icon{float:right}
+.datagrid-column-status-option-icon{float:right}
+.datagrid table thead tr th .datagrid-column-header-additions{display:inline-block}
 @keyframes edited{0%{background-color:#A6E2A9}
 100%{background-color:transparent}
 }

@@ -161,7 +161,7 @@
 					}
 
 					.datagrid-column-header-additions {
-						float: right;
+						display: inline-block;
 
 						a[data-datagrid-reset-filter-by-column] {
 							margin-left: 0.3em;

@@ -140,7 +140,7 @@
 }
 
 .datagrid table thead tr th .datagrid-column-header-additions {
-  float: right;
+  display: inline-block;
 }
 
 .datagrid table thead tr th .datagrid-column-header-additions a[data-datagrid-reset-filter-by-column] {
