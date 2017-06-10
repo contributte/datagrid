@@ -390,7 +390,7 @@ $.nette.ext('datargid.item_detail', {
 
 			#if row_detail.hasClass('loaded') and row.hasClass('detail-loaded')
 			if row_detail.hasClass('loaded')
-				if not row_detail.find('.item-detail-content').size()
+				if not row_detail.find('.item-detail-content').length
 					row_detail.removeClass('toggled')
 
 					return true

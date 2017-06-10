@@ -430,7 +430,7 @@ $.nette.ext('datargid.item_detail', {
       id = settings.nette.el.attr('data-toggle-detail');
       row_detail = $('.item-detail-' + id);
       if (row_detail.hasClass('loaded')) {
-        if (!row_detail.find('.item-detail-content').size()) {
+        if (!row_detail.find('.item-detail-content').length) {
           row_detail.removeClass('toggled');
           return true;
         }
