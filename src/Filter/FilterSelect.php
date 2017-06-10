@@ -34,6 +34,10 @@ class FilterSelect extends Filter
 	 */
 	protected $type = 'select';
 
+	/**
+	 * @var string
+	 */
+	protected $prompt;
 
 	/**
 	 * @param DataGrid $grid
@@ -103,6 +107,33 @@ class FilterSelect extends Filter
 		return [$this->column => $this->getValue()];
 	}
 
+	/**
+	 * Get filter prompt
+	 * @return string|NULL
+	 */
+	public function getPrompt()
+	{
+		return $this->prompt;
+	}
+
+	/**
+	 * Set filter prompt value
+	 * @param string $prompt
+	 */
+	public function setPrompt($prompt)
+	{
+		$this->prompt = $prompt;
+	}
+
+	/**
+	 * Tell if prompt has been set in this fitler
+	 * @return bool
+	 */
+	public function isPromptEnabled()
+	{
+		return isset($this->prompt);
+	}
+
 
 	/**
 	 * @param Nette\Forms\Container $container
@@ -114,6 +145,10 @@ class FilterSelect extends Filter
 	protected function addControl(Nette\Forms\Container $container, $key, $name, $options)
 	{
 		$input = $container->addSelect($key, $name, $options);
+
+		if ($this->isPromptEnabled()){
+			$input->setPrompt($this->prompt);
+		}
 
 		return $this->addAttributes($input);
 	}
