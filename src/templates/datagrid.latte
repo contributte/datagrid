@@ -85,6 +85,9 @@
 											{input $form_control, style => 'display:none'}
 										{/if}
 									{/foreach}
+									{if $control->shouldShowSelectedRowsCount()}
+										<span class="datagrid-selected-rows-count"></span>
+									{/if}
 								{/block}
 							{/if}
 

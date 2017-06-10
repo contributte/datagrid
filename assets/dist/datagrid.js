@@ -128,17 +128,25 @@ datagridShiftGroupSelection = function() {
 datagridShiftGroupSelection();
 
 document.addEventListener('change', function(e) {
-  var at_least_one, event, grid, i, ie, input, inputs, len, results, select;
+  var checked_inputs, counter, event, grid, i, ie, input, inputs, len, results, select, total;
   grid = e.target.getAttribute('data-check');
   if (grid) {
-    at_least_one = document.querySelector('.datagrid-' + grid + ' input[data-check]:checked');
+    checked_inputs = document.querySelectorAll('.datagrid-' + grid + ' input[data-check]:checked');
     select = document.querySelector('.datagrid-' + grid + ' select[name="group_action[group_action]"]');
     if (select) {
-      if (at_least_one) {
+      counter = document.querySelector('.datagrid-' + grid + ' .datagrid-selected-rows-count');
+      if (checked_inputs.length) {
         select.disabled = false;
+        total = document.querySelectorAll('.datagrid-' + grid + ' input[data-check]').length;
+        if (counter) {
+          counter.innerHTML = checked_inputs.length + '/' + total;
+        }
       } else {
         select.disabled = true;
         select.value = "";
+        if (counter) {
+          counter.innerHTML = "";
+        }
       }
     }
     ie = window.navigator.userAgent.indexOf("MSIE ");

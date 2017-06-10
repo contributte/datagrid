@@ -373,6 +373,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $has_column_reset = TRUE;
 
+	/**
+	 * @var bool
+	 */
+	protected $show_selected_rows_count = TRUE;
+
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -2118,6 +2123,26 @@ class DataGrid extends Nette\Application\UI\Control
 	public function hasGroupActions()
 	{
 		return (bool) $this->group_action_collection;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function shouldShowSelectedRowsCount()
+	{
+		return $this->show_selected_rows_count;
+	}
+
+
+	/**
+	 * @return static
+	 */
+	public function setShowSelectedRowsCount($show = TRUE)
+	{
+		$this->show_selected_rows_count = (bool) $show;
+
+		return $this;
 	}
 
 
