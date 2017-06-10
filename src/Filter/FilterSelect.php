@@ -35,9 +35,9 @@ class FilterSelect extends Filter
 	protected $type = 'select';
 
 	/**
-	 * @var string
+	 * @var string|NULL
 	 */
-	protected $prompt;
+	protected $prompt = NULL;
 
 	/**
 	 * @param DataGrid $grid
@@ -118,7 +118,7 @@ class FilterSelect extends Filter
 
 	/**
 	 * Set filter prompt value
-	 * @param string $prompt
+	 * @param string|NULL $prompt
 	 */
 	public function setPrompt($prompt)
 	{
@@ -146,7 +146,7 @@ class FilterSelect extends Filter
 	{
 		$input = $container->addSelect($key, $name, $options);
 
-		if ($this->isPromptEnabled()){
+		if ($this->isPromptEnabled()) {
 			$input->setPrompt($this->prompt);
 		}
 
