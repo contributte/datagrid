@@ -61,12 +61,12 @@
 							{/ifset}
 							{var $i = $i+1}
 						</div>
-					</div>
-					{if !$control->hasAutoSubmit()}
-						<div class="text-right datagrid-manual-submit">
-							{input $filter['filter']['submit']}
+						<div class="col-sm-12">
+							<div n:if="!$control->hasAutoSubmit()" class="text-right datagrid-manual-submit">
+								{input $filter['filter']['submit']}
+							</div>
 						</div>
-					{/if}
+					</div>
 				{/block}
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered{/block}" n:snippet="table" n:block="data">
