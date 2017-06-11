@@ -589,11 +589,14 @@ $(document).on('click', '[data-datagrid-toggle-inline-add]', (e) ->
 	row.find('input:not([readonly]),textarea:not([readonly])').first().focus()
 )
 
-$(document).on('mousedown', '[data-datagrid-cancel-inline-add]', (e) ->
-	e.stopPropagation()
-	e.preventDefault()
+$(document).on('mouseup', '[data-datagrid-cancel-inline-add]', (e) ->
+	code = e.which || e.keyCode || 0
 
-	$('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden')
+	if code == 1
+		e.stopPropagation()
+		e.preventDefault()
+
+		$('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden')
 )
 
 $.nette.ext('datagrid-toggle-inline-add', {
