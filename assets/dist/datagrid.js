@@ -1,4 +1,5 @@
-var datagridFitlerMultiSelect, datagridGroupActionMultiSelect, datagridShiftGroupSelection, datagridSortable, datagridSortableTree;
+var datagridFitlerMultiSelect, datagridGroupActionMultiSelect, datagridShiftGroupSelection, datagridSortable, datagridSortableTree, getEventDomPath,
+  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 $(document).on('click', '[data-datagrid-confirm]:not(.ajax)', function(e) {
   if (!confirm($(e.target).closest('a').attr('data-datagrid-confirm'))) {
@@ -71,12 +72,26 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', function(e) {
   }
 });
 
+getEventDomPath = function(e) {
+  var node, path;
+  if (indexOf.call(e, path) >= 0) {
+    return e.path;
+  }
+  path = [];
+  node = e.target;
+  while (node !== document.body) {
+    path.push(node);
+    node = node.parentNode;
+  }
+  return path;
+};
+
 datagridShiftGroupSelection = function() {
   var last_checkbox;
   last_checkbox = null;
   return document.addEventListener('click', function(e) {
     var checkboxes_rows, current_checkbox_row, el, event, i, ie, input, j, k, last_checkbox_row, last_checkbox_tbody, len, len1, len2, ref, ref1, results, row, rows;
-    ref = e.path;
+    ref = getEventDomPath(e);
     for (i = 0, len = ref.length; i < len; i++) {
       el = ref[i];
       if ($(el).is('.col-checkbox') && last_checkbox && e.shiftKey) {
@@ -111,7 +126,7 @@ datagridShiftGroupSelection = function() {
         }
       }
     }
-    ref1 = e.path;
+    ref1 = getEventDomPath(e);
     results = [];
     for (k = 0, len2 = ref1.length; k < len2; k++) {
       el = ref1[k];

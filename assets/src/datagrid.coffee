@@ -69,11 +69,25 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', (e) ->
 )
 
 
+getEventDomPath = (e) ->
+	if path in e
+		return e.path
+
+	path = []
+	node = e.target
+
+	while node != document.body
+		path.push(node)
+		node = node.parentNode
+
+	return path
+
+
 datagridShiftGroupSelection = ->
 	last_checkbox = null
 
 	document.addEventListener 'click', (e) ->	
-		for el in e.path
+		for el in getEventDomPath(e)
 			if $(el).is('.col-checkbox') && last_checkbox && e.shiftKey
 				current_checkbox_row = $(el).closest('tr')
 
@@ -108,7 +122,7 @@ datagridShiftGroupSelection = ->
 						input.dispatchEvent(event)
 					
 				
-		for el in e.path
+		for el in getEventDomPath(e)
 			if $(el).is('.col-checkbox')
 				last_checkbox = $(el)
 
