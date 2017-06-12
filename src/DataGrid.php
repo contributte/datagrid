@@ -1812,11 +1812,14 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Set the number of columns in the outer filter
 	 * @param int $count
 	 * @return static
+	 * @throws \InvalidArgumentException
 	 */
-	public function setOuterFilterColumnsCount($count = 2)
+	public function setOuterFilterColumnsCount($count)
 	{
 		if (!in_array($count, [1, 2, 3, 4, 6, 12])) {
-			throw new \InvalidArgumentException("Columns count must be one of the values 1, 2, 3, 4, 6, 12. Value {$count} given.");
+			throw new \InvalidArgumentException(
+				"Columns count must be one of following values: 1, 2, 3, 4, 6, 12. Value {$count} given."
+			);
 		}
 
 		$this->outer_filter_columns_count = (int) $count;
