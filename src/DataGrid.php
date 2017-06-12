@@ -281,6 +281,11 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $outer_filter_rendering = FALSE;
 
 	/**
+	 * @var int
+	 */
+	protected $outer_filter_columns_count = 2;
+
+	/**
 	 * @var bool
 	 */
 	protected $collapsible_outer_filters = TRUE;
@@ -1800,6 +1805,32 @@ class DataGrid extends Nette\Application\UI\Control
 	public function hasOuterFilterRendering()
 	{
 		return $this->outer_filter_rendering;
+	}
+
+
+	/**
+	 * Set the number of columns in the outer filter
+	 * @param int $count
+	 * @return static
+	 */
+	public function setOuterFilterColumnsCount($count = 2)
+	{
+		if (!in_array($count, [1, 2, 3, 4, 6, 12])) {
+			throw new \InvalidArgumentException("Columns count must be one of the values 1, 2, 3, 4, 6, 12. Value {$count} given.");
+		}
+
+		$this->outer_filter_columns_count = (int) $count;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function getOuterFilterColumnsCount()
+	{
+		return $this->outer_filter_columns_count;
 	}
 
 
