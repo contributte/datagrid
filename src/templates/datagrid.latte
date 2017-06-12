@@ -43,7 +43,8 @@
 					{/if}
 					<div class="{$filter_row_class}" id="datagrid-{$control->getName()}-row-filters">
 						{var $i = 0}
-						<div class="col-sm-6" n:foreach="$filters as $f">
+						{var $filter_columns_class = 'col-sm-' . (12 / $control->getOuterFilterColumnsCount())}
+						<div class="{$filter_columns_class}" n:foreach="$filters as $f">
 							{**
 							 * Each fitler is rendered separately in its own template
 							 *}
