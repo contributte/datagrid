@@ -119,10 +119,12 @@ class FilterSelect extends Filter
 	/**
 	 * Set filter prompt value
 	 * @param string|NULL $prompt
+	 * @return static
 	 */
 	public function setPrompt($prompt)
 	{
 		$this->prompt = $prompt;
+		return $this;
 	}
 
 	/**
