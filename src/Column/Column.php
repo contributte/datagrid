@@ -103,6 +103,11 @@ abstract class Column extends FilterableColumn
 	 */
 	protected $elementCache = ['td' => NULL, 'th' => NULL];
 
+	/**
+	 * @var callable|NULL
+	 */
+	protected $editable_value_callback = NULL;
+
 
 	/**
 	 * Render row item into template
@@ -624,7 +629,27 @@ abstract class Column extends FilterableColumn
 
 
 	/**
-	 * [getEditableInputType description]
+	 * @param callable $editable_value_callback
+	 * @return static
+	 */
+	public function setEditableValueCallback(callable $editable_value_callback)
+	{
+		$this->editable_value_callback = $editable_value_callback;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return callable|NULL
+	 */
+	public function getEditableValueCallback()
+	{
+		return $this->editable_value_callback;
+	}
+
+
+	/**
 	 * @return array
 	 */
 	public function getEditableInputType()
@@ -697,6 +722,13 @@ abstract class Column extends FilterableColumn
 
 			$el->data('datagrid-editable-type', $this->editable_element[0]);
 			$el->data('datagrid-editable-attrs', json_encode($this->editable_element[1]));
+
+			if ($this->getEditableValueCallback()) {
+				$el->data(
+					'datagrid-editable-value',
+					call_user_func_array($this->getEditableValueCallback(), [$row->getItem()])
+				);
+			}
 		}
 
 		return $el;

@@ -473,16 +473,27 @@ $.nette.ext('datagrid.tree', {
 $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 	cell = $(this)
 
+	if event.target.tagName.toLowerCase() == 'a'
+		return
+
 	if cell.hasClass('datagrid-inline-edit')
 		return
 
 	if !cell.hasClass('editing')
 		cell.addClass('editing')
-		value = cell.html().trim().replace('<br>', '\n')
-		cell.data('value', value)
+
+		cellValue = cell.html().trim().replace('<br>', '\n')
+
+		if cell.data('datagrid-editable-value')
+			valueToEdit = cell.data('datagrid-editable-value')
+		else
+			valueToEdit = cellValue
+
+		cell.data('originalValue', cellValue)
+		cell.data('valueToEdit', valueToEdit)
 
 		if cell.data('datagrid-editable-type') == 'textarea'
-			input = $('<textarea>' + value + '</textarea>')
+			input = $('<textarea>' + valueToEdit + '</textarea>')
 
 			cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10)
 			cell_height = cell.outerHeight()
@@ -496,11 +507,11 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 			input = $(cell.data('datagrid-editable-element'));
 
 			input.find('option').each ->
-				if $(this).text() == value
+				if $(this).text() == valueToEdit
 					input.find('option[value=' + $(this).val() + ']').prop('selected', true)
 		else
 			input = $('<input type="' + cell.data('datagrid-editable-type') + '">')
-			input.val(value)
+			input.val(valueToEdit)
 
 		attrs = cell.data('datagrid-editable-attrs')
 
@@ -513,27 +524,30 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 		submit = (cell, el) ->
 			value = el.val()
 
-			if value != cell.data('value')
+			if value != cell.data('valueToEdit')
 				$.nette.ajax({
 					url: cell.data('datagrid-editable-url'),
 					data: {
 						value: value
 					},
 					method: 'POST',
-					success: () ->
+					success: (payload) ->
 						if cell.data('datagrid-editable-type') == 'select'
 							cell.html(input.find('option[value=' + value + ']').html())
 						else
+							if payload._datagrid_editable_new_value
+								value = payload._datagrid_editable_new_value
+
 							cell.html(value)
 
 						cell.addClass('edited')
 					,
 					error: () ->
-						cell.html(cell.data('value'))
+						cell.html(cell.data('originalValue'))
 						cell.addClass('edited-error')
 				})
 			else
-				cell.html(cell.data('value'))
+				cell.html(cell.data('originalValue'))
 
 			setTimeout ->
 				cell.removeClass('editing')
@@ -554,7 +568,7 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 				e.preventDefault()
 
 				cell.removeClass('editing');
-				cell.html(cell.data('value'));
+				cell.html(cell.data('originalValue'));
 		)
 		cell.find('select').on('change', ->
 			submit(cell, $(this))

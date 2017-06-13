@@ -2453,7 +2453,12 @@ class DataGrid extends Nette\Application\UI\Control
 		$column = $this->getColumn($key);
 		$value = $this->getPresenter()->getRequest()->getPost('value');
 
-		call_user_func_array($column->getEditableCallback(), [$id, $value]);
+		/**
+		 * @var mixed Could be NULL of course
+		 */
+		$new_value = call_user_func_array($column->getEditableCallback(), [$id, $value]);
+
+		$this->getPresenter()->payload->_datagrid_editable_new_value = $new_value;
 	}
 
 
