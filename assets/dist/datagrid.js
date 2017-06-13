@@ -545,7 +545,7 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
       input = $(cell.data('datagrid-editable-element'));
       input.find('option').each(function() {
         if ($(this).text() === valueToEdit) {
-          return input.find('option[value=' + $(this).val() + ']').prop('selected', true);
+          return input.find('option[value=' + valueToEdit + ']').prop('selected', true);
         }
       });
     } else {
