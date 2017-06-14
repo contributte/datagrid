@@ -484,10 +484,12 @@ abstract class Column extends FilterableColumn
 	 */
 	public function getSortNext()
 	{
+		$defaultSort = $this->grid->getColumnDefaultSort($this->key);
+
 		if ($this->sort == 'ASC') {
-			return [$this->key => 'DESC'];
+			return [$this->key => $defaultSort === 'DESC' ? FALSE : 'DESC'];
 		} else if ($this->sort == 'DESC') {
-			return [$this->key => FALSE];
+			return [$this->key => $defaultSort === 'DESC' ? 'ASC' : FALSE];
 		}
 
 		return [$this->key => 'ASC'];
