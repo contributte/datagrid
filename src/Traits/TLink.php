@@ -25,16 +25,19 @@ trait TLink
 	 */
 	protected function createLink(DataGrid $grid, $href, $params)
 	{
-		try {
-			$parent = $grid->getParent();
+	    try {
+	        return $grid->link($href, $params);
+        } catch (\InvalidArgumentException $e) {
+            try {
+                $parent = $grid->getParent();
 
-			return $parent->link($href, $params);
-		} catch (DataGridHasToBeAttachedToPresenterComponentException $e) {
-			$parent = $grid->getPresenter();
+                return $parent->link($href, $params);
+            } catch (DataGridHasToBeAttachedToPresenterComponentException $e) {
+                $parent = $grid->getPresenter();
 
-		} catch (\InvalidArgumentException $e) {
-			$parent = $grid->getPresenter();
-
+            } catch (\InvalidArgumentException $e) {
+                $parent = $grid->getPresenter();
+            }
 		}
 
 		return $parent->link($href, $params);
