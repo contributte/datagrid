@@ -8,6 +8,8 @@
 
 namespace Ublaboo\DataGrid\Traits;
 
+use Nette\Application\UI\InvalidArgumentException;
+use Nette\Application\UI\InvalidLinkException;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 
@@ -27,7 +29,7 @@ trait TLink
 	{
 	    try {
 	        return $grid->link($href, $params);
-        } catch (\InvalidArgumentException $e) {
+        } catch (\Exception $e) {
             try {
                 $parent = $grid->getParent();
 
