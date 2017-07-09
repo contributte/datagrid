@@ -136,6 +136,18 @@ class DataGrid extends Nette\Application\UI\Control
 	public $filter = [];
 
 	/**
+	 * @var array
+	 * @persistent
+	 */
+	public $hidden = [];
+
+	/**
+	 * @var int
+	 * @persistent
+	 */
+	public $hidden_manipulated = 0;
+
+	/**
 	 * @var callable|null
 	 */
 	protected $sort_callback = NULL;
@@ -2538,7 +2550,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function handleShowAllColumns()
 	{
 		$this->deleteSessionData('_grid_hidden_columns');
-		$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
+		$this->saveHiddenColumns([]);
 
 		$this->redrawControl();
 
@@ -2553,7 +2565,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function handleShowDefaultColumns()
 	{
 		$this->deleteSessionData('_grid_hidden_columns');
-		$this->saveSessionData('_grid_hidden_columns_manipulated', FALSE);
+		$this->saveHiddenColumns(FALSE);
 
 		$this->redrawControl();
 
@@ -2568,7 +2580,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function handleShowColumn($column)
 	{
-		$columns = $this->getSessionData('_grid_hidden_columns');
+		$columns = $this->getHiddenColumns();
 
 		if (!empty($columns)) {
 			$pos = array_search($column, $columns);
@@ -2578,12 +2590,13 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
-		$this->saveSessionData('_grid_hidden_columns', $columns);
-		$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
+		$this->saveHiddenColumns($columns);
 
 		$this->redrawControl();
 
 		$this->onRedraw();
+
+		$this->handleRefreshState();
 	}
 
 
@@ -2597,7 +2610,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Store info about hiding a column to session
 		 */
-		$columns = $this->getSessionData('_grid_hidden_columns');
+		$columns = $this->getHiddenColumns();
 
 		if (empty($columns)) {
 			$columns = [$column];
@@ -2605,12 +2618,13 @@ class DataGrid extends Nette\Application\UI\Control
 			array_push($columns, $column);
 		}
 
-		$this->saveSessionData('_grid_hidden_columns', $columns);
-		$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
+		$this->saveHiddenColumns($columns);
 
 		$this->redrawControl();
 
 		$this->onRedraw();
+
+		$this->handleRefreshState();
 	}
 
 
@@ -3226,6 +3240,64 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * Get currently hidden columns
+	 * @param mixed $default Default value
+	 * @return mixed|string[]
+	 */
+	protected function getHiddenColumns($default = NULL)
+	{
+		if ($this->remember_state && $this->getSessionData('_grid_hidden_columns')) {
+			$a = $this->getSessionData('_grid_hidden_columns', $default);
+			return $a;
+		}
+
+		if (!$this->isHiddenColumnsManipulated() && empty($this->hidden)) {
+			foreach ($this->columns as $key => $column) {
+				if ($column->getDefaultHide()) {
+					$columns_to_hide[] = $key;
+				}
+			}
+
+			if (!empty($columns_to_hide)) {
+				$this->hidden = $columns_to_hide;
+			}
+		}
+
+		return $this->hidden ?: $default;
+	}
+
+
+	/**
+	 * Save currently hidden value
+	 * @param bool|string[] $columns Hidden columns
+	 */
+	protected function saveHiddenColumns($columns = FALSE)
+	{
+		if (is_array($columns)) {
+			$this->saveSessionData('_grid_hidden_columns', $columns);
+			$this->hidden = $columns;
+		}
+
+		$this->saveSessionData('_grid_hidden_columns_manipulated', $columns !== FALSE ? TRUE : FALSE);
+		$this->hidden_manipulated = ($columns !== FALSE ? 1 : 0);
+	}
+
+
+	/**
+	 * Was hidden columns manipulated
+	 * @return bool
+	 */
+	protected function isHiddenColumnsManipulated()
+	{
+		if ($this->remember_state && $this->getSessionData('_grid_hidden_columns_manipulated')) {
+			return $this->getSessionData('_grid_hidden_columns_manipulated', FALSE);
+		}
+
+		return $this->hidden_manipulated ? TRUE : FALSE;
+	}
+
+
 	/********************************************************************************
 	 *                                COLUMNS SUMMARY                               *
 	 ********************************************************************************/
@@ -3370,7 +3442,7 @@ class DataGrid extends Nette\Application\UI\Control
 		try {
 			$this->getParent();
 
-			if (!$this->getSessionData('_grid_hidden_columns_manipulated', FALSE)) {
+			if (!$this->isHiddenColumnsManipulated()) {
 				$columns_to_hide = [];
 
 				foreach ($this->columns as $key => $column) {
@@ -3380,12 +3452,11 @@ class DataGrid extends Nette\Application\UI\Control
 				}
 
 				if (!empty($columns_to_hide)) {
-					$this->saveSessionData('_grid_hidden_columns', $columns_to_hide);
-					$this->saveSessionData('_grid_hidden_columns_manipulated', TRUE);
+					$this->saveHiddenColumns($columns_to_hide);
 				}
 			}
 
-			$hidden_columns = $this->getSessionData('_grid_hidden_columns', []);
+			$hidden_columns = $this->getHiddenColumns([]);
 
 			foreach ($hidden_columns as $column) {
 				if (!empty($this->columns[$column])) {
