@@ -8,6 +8,8 @@
 
 namespace Ublaboo\DataGrid\Traits;
 
+use Nette\Application\UI\InvalidArgumentException;
+use Nette\Application\UI\InvalidLinkException;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 
@@ -25,16 +27,19 @@ trait TLink
 	 */
 	protected function createLink(DataGrid $grid, $href, $params)
 	{
-		try {
-			$parent = $grid->getParent();
+	    try {
+	        return $grid->link($href, $params);
+        } catch (\Exception $e) {
+            try {
+                $parent = $grid->getParent();
 
-			return $parent->link($href, $params);
-		} catch (DataGridHasToBeAttachedToPresenterComponentException $e) {
-			$parent = $grid->getPresenter();
+                return $parent->link($href, $params);
+            } catch (DataGridHasToBeAttachedToPresenterComponentException $e) {
+                $parent = $grid->getPresenter();
 
-		} catch (\InvalidArgumentException $e) {
-			$parent = $grid->getPresenter();
-
+            } catch (\InvalidArgumentException $e) {
+                $parent = $grid->getPresenter();
+            }
 		}
 
 		return $parent->link($href, $params);
