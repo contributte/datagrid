@@ -8,9 +8,9 @@
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
-use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\DataModel;
 use Ublaboo\DataGrid\DataSource\IDataSource;
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 trait TDataGridAggregationFunction
 {
@@ -42,7 +42,7 @@ trait TDataGridAggregationFunction
 		}
 
 		if (isset($this->aggregationFunctions[$key])) {
-			throw new DataGridException('There is already a AggregationFunction defined on column '.$key);
+			throw new DataGridException('There is already a AggregationFunction defined on column ' . $key);
 		}
 
 		if ($this->multipleAggregationFunction instanceof MultipleAggregationFunction) {
@@ -194,5 +194,4 @@ trait TDataGridAggregationFunction
 	{
 		return $this->multipleAggregationFunction;
 	}
-
 }

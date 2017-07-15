@@ -23,7 +23,7 @@ class ColumnNumber extends Column
 	protected $number_format = [
 		0, // Decimals
 		'.', // Decimal point
-		' '  // Thousands separator
+		' ',  // Thousands separator
 	];
 
 
@@ -41,10 +41,10 @@ class ColumnNumber extends Column
 		}
 
 		return number_format(
-			$value,
-			$this->number_format[0],
-			$this->number_format[1],
-			$this->number_format[2]
+			(float) $value,
+			(int) $this->number_format[0],
+			(string) $this->number_format[1],
+			(string) $this->number_format[2]
 		);
 	}
 
@@ -71,8 +71,7 @@ class ColumnNumber extends Column
 		return [
 			$this->number_format[0],
 			$this->number_format[1],
-			$this->number_format[2]
+			$this->number_format[2],
 		];
 	}
-
 }

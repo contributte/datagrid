@@ -8,8 +8,6 @@
 
 namespace Ublaboo\DataGrid\GroupAction;
 
-use Nette;
-
 /**
  * @method void onSelect()
  */
@@ -23,5 +21,4 @@ class GroupTextareaAction extends GroupAction
 	{
 		parent::__construct($title);
 	}
-
 }

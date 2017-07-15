@@ -15,7 +15,6 @@ use Ublaboo\DataGrid\Traits;
 
 class MultiAction extends Column
 {
-
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonIcon;
 	use Traits\TButtonClass;
@@ -93,7 +92,7 @@ class MultiAction extends Column
 	 * @param array|null $params
 	 * @return static
 	 */
-	public function addAction($key, $name, $href = NULL, array $params = NULL)
+	public function addAction($key, $name, $href = null, array $params = null)
 	{
 		if (isset($this->actions[$key])) {
 			throw new DataGridException(
@@ -103,7 +102,7 @@ class MultiAction extends Column
 
 		$href = $href ?: $key;
 
-		if (NULL === $params) {
+		if ($params === null) {
 			$params = [$this->grid->getPrimaryKey()];
 		}
 
@@ -149,8 +148,7 @@ class MultiAction extends Column
 	public function getTemplateVariables()
 	{
 		return array_merge($this->template_variables, [
-			'multi_action' => $this
+			'multi_action' => $this,
 		]);
 	}
-
 }

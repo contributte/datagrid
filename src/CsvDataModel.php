@@ -10,7 +10,6 @@ namespace Ublaboo\DataGrid;
 
 use Nette;
 
-
 class CsvDataModel
 {
 
@@ -44,7 +43,7 @@ class CsvDataModel
 	 * Get data with header and "body"
 	 * @return array
 	 */
-	public function getSimpleData($include_header = TRUE)
+	public function getSimpleData($include_header = true)
 	{
 		$return = [];
 
@@ -91,5 +90,4 @@ class CsvDataModel
 
 		return $row;
 	}
-
 }

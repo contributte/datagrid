@@ -63,7 +63,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 	/**
 	 * @return \Doctrine\ORM\Query
-	*/
+	 */
 	public function getQuery()
 	{
 		return $this->data_source->getQuery();
@@ -85,7 +85,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 			$this->root_alias = current($this->root_alias);
 		}
 
-		return $this->root_alias.'.'.$column;
+		return $this->root_alias . '.' . $column;
 	}
 
 
@@ -189,7 +189,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		$c = $this->checkAliases($filter->getColumn());
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to   = $conditions[$filter->getColumn()]['to'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
 			$date_from = DateTimeHelper::tryConvertToDate($value_from, [$filter->getPhpFormat()]);
@@ -221,7 +221,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		$c = $this->checkAliases($filter->getColumn());
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to   = $conditions[$filter->getColumn()]['to'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
 			$p = $this->getPlaceholder();
@@ -252,7 +252,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 				continue;
 			}
 
-			if ($filter->hasSplitWordsSearch() === FALSE) {
+			if ($filter->hasSplitWordsSearch() === false) {
 				$words = [$value];
 			} else {
 				$words = explode(' ', $value);
@@ -279,7 +279,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		$p = $this->getPlaceholder();
 
 		$values = $filter->getCondition()[$filter->getColumn()];
-		$expr = $this->data_source->expr()->in($c, ':'.$p);
+		$expr = $this->data_source->expr()->in($c, ':' . $p);
 
 		$this->data_source->andWhere($expr)->setParameter($p, $values);
 	}
@@ -358,7 +358,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	 */
 	public function getPlaceholder()
 	{
-		return 'param'.($this->placeholder++);
+		return 'param' . ($this->placeholder++);
 	}
 
 

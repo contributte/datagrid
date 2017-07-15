@@ -95,7 +95,7 @@ class ColumnsSummary
 	public function render($key)
 	{
 		if (!isset($this->summary[$key])) {
-			return NULL;
+			return null;
 		}
 
 		return number_format(
@@ -130,11 +130,10 @@ class ColumnsSummary
 	{
 		foreach ($columns as $key => $column) {
 			if (isset($this->summary[$key])) {
-				return TRUE;
+				return true;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
-
 }

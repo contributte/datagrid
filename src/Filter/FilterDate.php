@@ -45,7 +45,7 @@ class FilterDate extends Filter implements IFilterDate
 		$this->addAttributes($container[$this->key]);
 
 		if ($this->grid->hasAutoSubmit()) {
-			$container[$this->key]->setAttribute('data-autosubmit-change', TRUE);
+			$container[$this->key]->setAttribute('data-autosubmit-change', true);
 		}
 
 		if ($this->getPlaceholder()) {
@@ -86,5 +86,4 @@ class FilterDate extends Filter implements IFilterDate
 	{
 		return $this->format[1];
 	}
-
 }

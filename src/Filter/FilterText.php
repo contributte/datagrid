@@ -26,12 +26,12 @@ class FilterText extends Filter
 	/**
 	 * @var bool
 	 */
-	protected $exact = FALSE;
+	protected $exact = false;
 
 	/**
 	 * @var bool
 	 */
-	protected $split_words_search = TRUE;
+	protected $split_words_search = true;
 
 
 	/**
@@ -71,11 +71,12 @@ class FilterText extends Filter
 		return $this->exact;
 	}
 
+
 	/**
 	 * @param boolean $exact
 	 * @return FilterText
 	 */
-	public function setExactSearch($exact = TRUE)
+	public function setExactSearch($exact = true)
 	{
 		$this->exact = $exact;
 		return $this;
@@ -101,5 +102,4 @@ class FilterText extends Filter
 	{
 		return $this->split_words_search;
 	}
-
 }

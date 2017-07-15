@@ -9,9 +9,9 @@
 namespace Ublaboo\DataGrid\Column;
 
 use DateTime;
+use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 
 class ColumnDateTime extends Column
 {
@@ -66,5 +66,4 @@ class ColumnDateTime extends Column
 
 		return $this;
 	}
-
 }

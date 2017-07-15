@@ -14,7 +14,6 @@ use Ublaboo\DataGrid\Traits;
 
 class ToolbarButton
 {
-
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonIcon;
 	use Traits\TButtonClass;
@@ -98,5 +97,4 @@ class ToolbarButton
 
 		return $this;
 	}
-
 }

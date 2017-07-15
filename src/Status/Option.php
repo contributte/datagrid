@@ -119,11 +119,11 @@ class Option extends Nette\Object
 	 * @param string $class_secondary
 	 * @return static
 	 */
-	public function setClass($class, $class_secondary = NULL)
+	public function setClass($class, $class_secondary = null)
 	{
 		$this->class = (string) $class;
 
-		if ($class_secondary !== NULL) {
+		if ($class_secondary !== null) {
 			$this->class_secondary = (string) $class_secondary;
 		}
 
@@ -230,5 +230,4 @@ class Option extends Nette\Object
 	{
 		return $this->text;
 	}
-
 }

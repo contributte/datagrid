@@ -8,14 +8,14 @@
 
 namespace Ublaboo\DataGrid;
 
-use Nette;
-use LeanMapper;
-use Nextras;
 use DibiRow;
-use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
-use Nette\Utils\Html;
-use Ublaboo\DataGrid\Exception\DataGridException;
+use LeanMapper;
+use Nette;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\Html;
+use Nextras;
+use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
 class Row extends Nette\Object
 {
@@ -85,19 +85,19 @@ class Row extends Nette\Object
 		if ($this->item instanceof LeanMapper\Entity) {
 			return $this->getLeanMapperEntityProperty($this->item, $key);
 
-		} else if ($this->item instanceof Nextras\Orm\Entity\Entity) {
+		} elseif ($this->item instanceof Nextras\Orm\Entity\Entity) {
 			return $this->getNextrasEntityProperty($this->item, $key);
 
-		} else if ($this->item instanceof DibiRow) {
+		} elseif ($this->item instanceof DibiRow) {
 			return $this->item->{$this->formatDibiRowKey($key)};
 
-		} else if ($this->item instanceof ActiveRow) {
+		} elseif ($this->item instanceof ActiveRow) {
 			return $this->getActiveRowProperty($this->item, $key);
 
-		} else if ($this->item instanceof Nette\Database\Row) {
+		} elseif ($this->item instanceof Nette\Database\Row) {
 			return $this->item->{$key};
 
-		} else if (is_array($this->item)) {
+		} elseif (is_array($this->item)) {
 			return $this->item[$key];
 
 		} else {
@@ -105,7 +105,6 @@ class Row extends Nette\Object
 			 * Doctrine entity
 			 */
 			return $this->getDoctrineEntityProperty($this->item, $key);
-
 		}
 	}
 
@@ -142,21 +141,21 @@ class Row extends Nette\Object
 		if (preg_match("/^:([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/", $key, $matches)) {
 			$relatedTable = $matches[1];
 			$relatedColumn = $matches[2];
-			$throughColumn = isset($matches[4]) ? $matches[4] : NULL;
+			$throughColumn = isset($matches[4]) ? $matches[4] : null;
 
 			$relatedRow = $item->related($relatedTable, $throughColumn)->fetch();
 
-			return $relatedRow ? $relatedRow->{$relatedColumn} : NULL;
+			return $relatedRow ? $relatedRow->{$relatedColumn} : null;
 		}
 
 		if (preg_match("/^([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/", $key, $matches)) {
 			$referencedTable = $matches[1];
 			$referencedColumn = $matches[2];
-			$throughColumn = isset($matches[4]) ? $matches[4] : NULL;
+			$throughColumn = isset($matches[4]) ? $matches[4] : null;
 
 			$referencedRow = $item->ref($referencedTable, $throughColumn);
 
-			return $referencedRow ? $referencedRow->{$referencedColumn} : NULL;
+			return $referencedRow ? $referencedRow->{$referencedColumn} : null;
 		}
 
 		return $item->{$key};
@@ -183,7 +182,7 @@ class Row extends Nette\Object
 					));
 				}
 
-				return NULL;
+				return null;
 			}
 
 			$value = $value->{$property};
@@ -213,7 +212,7 @@ class Row extends Nette\Object
 					));
 				}
 
-				return NULL;
+				return null;
 			}
 
 			$value = $value->{$property};
@@ -244,7 +243,7 @@ class Row extends Nette\Object
 					));
 				}
 
-				return NULL;
+				return null;
 			}
 
 			$value = $accessor->getValue($value, $property);
@@ -272,7 +271,7 @@ class Row extends Nette\Object
 	{
 		$condition = $this->datagrid->getRowCondition('group_action');
 
-		return $condition ? $condition($this->item) : TRUE;
+		return $condition ? $condition($this->item) : true;
 	}
 
 
@@ -285,7 +284,7 @@ class Row extends Nette\Object
 	{
 		$condition = $this->datagrid->getRowCondition('action', $key);
 
-		return $condition ? $condition($this->item) : TRUE;
+		return $condition ? $condition($this->item) : true;
 	}
 
 
@@ -297,7 +296,7 @@ class Row extends Nette\Object
 	{
 		$condition = $this->datagrid->getRowCondition('inline_edit');
 
-		return $condition ? $condition($this->item) : TRUE;
+		return $condition ? $condition($this->item) : true;
 	}
 
 
@@ -310,7 +309,7 @@ class Row extends Nette\Object
 	{
 		$callback = $this->datagrid->getColumnCallback($key);
 
-		if ($callback !== NULL) {
+		if ($callback !== null) {
 			call_user_func($callback, $column, $this->getItem());
 		}
 
@@ -332,5 +331,4 @@ class Row extends Nette\Object
 
 		return $key;
 	}
-
 }

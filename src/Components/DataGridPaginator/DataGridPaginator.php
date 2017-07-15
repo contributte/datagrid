@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Nette Framework Extras
  *
@@ -15,9 +16,9 @@
 
 namespace Ublaboo\DataGrid\Components\DataGridPaginator;
 
-use Ublaboo\DataGrid\DataGrid;
 use Nette;
 use Nette\ComponentModel\IContainer;
+use Ublaboo\DataGrid\DataGrid;
 
 /**
  * Visual paginator control.
@@ -37,18 +38,6 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	 */
 	private $icon_prefix;
 
-	public function __construct(
-		Nette\Localization\ITranslator $translator,
-		$icon_prefix = 'fa fa-',
-		IContainer $parent = NULL,
-		$name = NULL
-	) {
-		parent::__construct($parent, $name);
-
-		$this->translator = $translator;
-		$this->icon_prefix = $icon_prefix;
-	}
-
 
 	/**
 	 * @var Nette\Utils\Paginator
@@ -61,6 +50,19 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	private $template_file;
 
 
+	public function __construct(
+		Nette\Localization\ITranslator $translator,
+		$icon_prefix = 'fa fa-',
+		IContainer $parent = null,
+		$name = null
+	) {
+		parent::__construct($parent, $name);
+
+		$this->translator = $translator;
+		$this->icon_prefix = $icon_prefix;
+	}
+
+
 	public function setTemplateFile($template_file)
 	{
 		$this->template_file = (string) $template_file;
@@ -69,7 +71,7 @@ class DataGridPaginator extends Nette\Application\UI\Control
 
 	public function getTemplateFile()
 	{
-		return $this->template_file ?: __DIR__.'/templates/data_grid_paginator.latte';
+		return $this->template_file ?: __DIR__ . '/templates/data_grid_paginator.latte';
 	}
 
 
@@ -79,7 +81,7 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	 */
 	public function getOriginalTemplateFile()
 	{
-		return __DIR__.'/templates/data_grid_paginator.latte';
+		return __DIR__ . '/templates/data_grid_paginator.latte';
 	}
 
 
@@ -106,7 +108,7 @@ class DataGridPaginator extends Nette\Application\UI\Control
 		$page = $paginator->page;
 
 		if ($paginator->pageCount < 2) {
-			$steps = array($page);
+			$steps = [$page];
 
 		} else {
 			$arr = range(max($paginator->firstPage, $page - 2), min($paginator->lastPage, $page + 2));
@@ -135,7 +137,7 @@ class DataGridPaginator extends Nette\Application\UI\Control
 		if (!isset($this->template->paginator)) {
 			$this->template->add('paginator', $paginator);
 		}
-		
+
 		//$this->template->add('icon_prefix', $this->icon_prefix);
 		$this->template->icon_prefix = $this->icon_prefix;
 		//$this->template->add('original_template', $this->getOriginalTemplateFile());
@@ -158,5 +160,4 @@ class DataGridPaginator extends Nette\Application\UI\Control
 			$this->getPaginator()->page = $this->getParent()->page;
 		}
 	}
-
 }

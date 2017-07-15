@@ -25,17 +25,12 @@ abstract class Filter extends Nette\Object
 	/**
 	 * @var bool
 	 */
-	protected $value_set = FALSE;
+	protected $value_set = false;
 
 	/**
 	 * @var callable
 	 */
 	protected $condition_callback;
-
-	/**
-	 * @var string
-	 */
-	private $placeholder;
 
 	/**
 	 * @var string
@@ -73,6 +68,11 @@ abstract class Filter extends Nette\Object
 	protected $attributes = [
 		'class' => ['form-control', 'input-sm'],
 	];
+
+	/**
+	 * @var string
+	 */
+	private $placeholder;
 
 
 	/**
@@ -138,7 +138,7 @@ abstract class Filter extends Nette\Object
 	public function setValue($value)
 	{
 		$this->value = $value;
-		$this->value_set = TRUE;
+		$this->value_set = true;
 
 		return $this;
 	}
@@ -305,9 +305,9 @@ abstract class Filter extends Nette\Object
 	protected function addAttributes($input)
 	{
 		if ($this->grid->hasAutoSubmit()) {
-			$input->setAttribute('data-autosubmit', TRUE);
+			$input->setAttribute('data-autosubmit', true);
 		} else {
-			$input->setAttribute('data-datagrid-manualsubmit', TRUE);
+			$input->setAttribute('data-datagrid-manualsubmit', true);
 		}
 
 		foreach ($this->attributes as $key => $value) {
@@ -321,5 +321,4 @@ abstract class Filter extends Nette\Object
 
 		return $input;
 	}
-
 }
