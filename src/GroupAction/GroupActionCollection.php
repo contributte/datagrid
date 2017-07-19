@@ -15,7 +15,7 @@ use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
 
 class GroupActionCollection extends Nette\Object
 {
-	public const ID_ATTRIBUTE_PREFIX = 'group_action_item_';
+	const ID_ATTRIBUTE_PREFIX = 'group_action_item_';
 
 	/**
 	 * @var GroupAction[]
