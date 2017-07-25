@@ -2472,6 +2472,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->redrawControl('pagination');
 			$this->redrawControl('summary');
 			$this->redrawControl('thead-group-action');
+			$this->redrawControl('gridSnippets');
 
 			/**
 			 * manualy reset exports links...
