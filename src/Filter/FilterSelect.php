@@ -22,7 +22,7 @@ class FilterSelect extends Filter
 	/**
 	 * @var bool
 	 */
-	protected $translateOptions = FALSE;
+	protected $translateOptions = false;
 
 	/**
 	 * @var string
@@ -37,7 +37,8 @@ class FilterSelect extends Filter
 	/**
 	 * @var string|NULL
 	 */
-	protected $prompt = NULL;
+	protected $prompt = null;
+
 
 	/**
 	 * @param DataGrid $grid
@@ -71,7 +72,7 @@ class FilterSelect extends Filter
 				$this->options
 			);
 
-			$select->setTranslator(NULL);
+			$select->setTranslator(null);
 		} else {
 			$select = $this->addControl($container, $this->key, $this->name, $this->options);
 		}
@@ -82,7 +83,7 @@ class FilterSelect extends Filter
 	 * @param  bool  $translateOptions
 	 * @return static
 	 */
-	public function setTranslateOptions($translateOptions = TRUE)
+	public function setTranslateOptions($translateOptions = true)
 	{
 		$this->translateOptions = (bool) $translateOptions;
 		return $this;
@@ -107,6 +108,7 @@ class FilterSelect extends Filter
 		return [$this->column => $this->getValue()];
 	}
 
+
 	/**
 	 * Get filter prompt
 	 * @return string|NULL
@@ -115,6 +117,7 @@ class FilterSelect extends Filter
 	{
 		return $this->prompt;
 	}
+
 
 	/**
 	 * Set filter prompt value
@@ -126,6 +129,7 @@ class FilterSelect extends Filter
 		$this->prompt = $prompt;
 		return $this;
 	}
+
 
 	/**
 	 * Tell if prompt has been set in this fitler
@@ -154,5 +158,4 @@ class FilterSelect extends Filter
 
 		return $this->addAttributes($input);
 	}
-
 }

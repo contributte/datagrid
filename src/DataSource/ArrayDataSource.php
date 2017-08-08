@@ -8,17 +8,15 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Ublaboo\DataGrid\Filter\Filter;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Nette\Utils\Callback;
 use Nette\Utils\Strings;
-use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridArrayDataSourceException;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
+use Ublaboo\DataGrid\Filter\Filter;
+use Ublaboo\DataGrid\Filter\FilterDate;
+use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter\FilterMultiSelect;
+use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
@@ -99,7 +97,7 @@ class ArrayDataSource implements IDataSource
 					);
 					$this->setData($data);
 				} else {
-					$data = array_filter($this->data, function($row) use ($filter) {
+					$data = array_filter($this->data, function ($row) use ($filter) {
 						return $this->applyFilter($row, $filter);
 					});
 					$this->setData($data);
@@ -160,11 +158,11 @@ class ArrayDataSource implements IDataSource
 		if (is_array($row) || $row instanceof \Traversable) {
 			if ($filter instanceof FilterDate) {
 				return $this->applyFilterDate($row, $filter);
-			} else if ($filter instanceof FilterMultiSelect) {
+			} elseif ($filter instanceof FilterMultiSelect) {
 				return $this->applyFilterMultiSelect($row, $filter);
-			} else if ($filter instanceof FilterDateRange) {
+			} elseif ($filter instanceof FilterDateRange) {
 				return $this->applyFilterDateRange($row, $filter);
-			} else if ($filter instanceof FilterRange) {
+			} elseif ($filter instanceof FilterRange) {
 				return $this->applyFilterRange($row, $filter);
 			}
 
@@ -175,7 +173,7 @@ class ArrayDataSource implements IDataSource
 					return $row[$column] == $value;
 				}
 
-				if ($filter instanceof FilterText && $filter->hasSplitWordsSearch() === FALSE) {
+				if ($filter instanceof FilterText && $filter->hasSplitWordsSearch() === false) {
 					$words = [$value];
 				} else {
 					$words = explode(' ', $value);
@@ -184,14 +182,14 @@ class ArrayDataSource implements IDataSource
 				$row_value = strtolower(Strings::toAscii($row[$column]));
 
 				foreach ($words as $word) {
-					if (FALSE !== strpos($row_value, strtolower(Strings::toAscii($word)))) {
+					if (strpos($row_value, strtolower(Strings::toAscii($word))) !== false) {
 						return $row;
 					}
 				}
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 
@@ -206,7 +204,7 @@ class ArrayDataSource implements IDataSource
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
 
-		return in_array($row[$filter->getColumn()], $values);
+		return in_array($row[$filter->getColumn()], $values, true);
 	}
 
 
@@ -220,19 +218,19 @@ class ArrayDataSource implements IDataSource
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
 
-		if ($values['from'] !== NULL && $values['from'] !== '') {
+		if ($values['from'] !== null && $values['from'] !== '') {
 			if ($values['from'] > $row[$filter->getColumn()]) {
-				return FALSE;
+				return false;
 			}
 		}
 
-		if ($values['to'] !== NULL && $values['to'] !== '') {
+		if ($values['to'] !== null && $values['to'] !== '') {
 			if ($values['to'] < $row[$filter->getColumn()]) {
-				return FALSE;
+				return false;
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
 
 
@@ -248,7 +246,7 @@ class ArrayDataSource implements IDataSource
 		$values = $condition[$filter->getColumn()];
 		$row_value = $row[$filter->getColumn()];
 
-		if ($values['from'] !== NULL && $values['from'] !== '') {
+		if ($values['from'] !== null && $values['from'] !== '') {
 			$date_from = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
 			$date_from->setTime(0, 0, 0);
 
@@ -262,16 +260,16 @@ class ArrayDataSource implements IDataSource
 					/**
 					 * Otherwise just return raw string
 					 */
-					return FALSE;
+					return false;
 				}
 			}
 
 			if ($row_value->getTimeStamp() < $date_from->getTimeStamp()) {
-				return FALSE;
+				return false;
 			}
 		}
 
-		if ($values['to'] !== NULL && $values['to'] !== '') {
+		if ($values['to'] !== null && $values['to'] !== '') {
 			$date_to = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
 			$date_to->setTime(23, 59, 59);
 
@@ -285,16 +283,16 @@ class ArrayDataSource implements IDataSource
 					/**
 					 * Otherwise just return raw string
 					 */
-					return FALSE;
+					return false;
 				}
 			}
 
 			if ($row_value->getTimeStamp() > $date_to->getTimeStamp()) {
-				return FALSE;
+				return false;
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
 
 
@@ -324,7 +322,7 @@ class ArrayDataSource implements IDataSource
 					/**
 					 * Otherwise just return raw string
 					 */
-					return FALSE;
+					return false;
 				}
 			}
 
@@ -385,10 +383,8 @@ class ArrayDataSource implements IDataSource
 			}
 
 			$this->setData($data_source);
-
 		}
 
 		return $this;
 	}
-
 }

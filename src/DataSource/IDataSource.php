@@ -19,13 +19,11 @@ interface IDataSource
 	 */
 	public function getCount();
 
-
 	/**
 	 * Get the data
 	 * @return array
 	 */
 	public function getData();
-
 
 	/**
 	 * Filter data
@@ -34,14 +32,12 @@ interface IDataSource
 	 */
 	public function filter(array $filters);
 
-
 	/**
 	 * Filter data - get one row
 	 * @param array $filter
 	 * @return static
 	 */
 	public function filterOne(array $filter);
-
 
 	/**
 	 * Apply limit and offset on data
@@ -51,12 +47,10 @@ interface IDataSource
 	 */
 	public function limit($offset, $limit);
 
-
 	/**
 	 * Sort data
 	 * @param Sorting $sorting
 	 * @return static
 	 */
 	public function sort(Sorting $sorting);
-
 }

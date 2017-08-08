@@ -10,15 +10,13 @@ namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
-use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
+use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Traits;
 
 class Action extends Column
 {
-
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonText;
 	use Traits\TLink;
@@ -71,11 +69,6 @@ class Action extends Column
 	/**
 	 * @var string|callable
 	 */
-	private $title;
-
-	/**
-	 * @var string|callable
-	 */
 	protected $icon;
 
 	/**
@@ -86,7 +79,12 @@ class Action extends Column
 	/**
 	 * @var bool
 	 */
-	protected $open_in_new_tab = FALSE;
+	protected $open_in_new_tab = false;
+
+	/**
+	 * @var string|callable
+	 */
+	private $title;
 
 
 	/**
@@ -277,7 +275,7 @@ class Action extends Column
 	 * @return static
 	 * @throws DataGridException
 	 */
-	public function setConfirm($message, $column = NULL)
+	public function setConfirm($message, $column = null)
 	{
 		$this->checkPropertyStringOrCallable($message, 'confirmation message');
 
@@ -296,7 +294,7 @@ class Action extends Column
 	public function getConfirm(Row $row)
 	{
 		if (!$this->confirm) {
-			return NULL;
+			return null;
 		}
 
 		$question = $this->confirm[0];
@@ -353,7 +351,7 @@ class Action extends Column
 	 */
 	protected function checkPropertyStringOrCallable($property, $name)
 	{
-		if (!is_string($property) && !is_callable($property) && !is_null($property)) {
+		if (!is_string($property) && !is_callable($property) && $property !== null) {
 			throw new DataGridException(
 				"Action {$name} has to be either string or a callback returning string"
 			);
@@ -422,10 +420,9 @@ class Action extends Column
 	 * @param bool $open_in_new_tab
 	 * @return $this
 	 */
-	public function setOpenInNewTab($open_in_new_tab = TRUE)
+	public function setOpenInNewTab($open_in_new_tab = true)
 	{
 		$this->open_in_new_tab = $open_in_new_tab;
 		return $this;
 	}
-
 }

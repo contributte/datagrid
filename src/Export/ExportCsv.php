@@ -8,10 +8,10 @@
 
 namespace Ublaboo\DataGrid\Export;
 
+use Nette;
 use Ublaboo\DataGrid\CsvDataModel;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\Responses\CSVResponse;
-use Nette;
 
 class ExportCsv extends Export
 {
@@ -19,7 +19,7 @@ class ExportCsv extends Export
 	/**
 	 * @var bool
 	 */
-	protected $is_ajax = FALSE;
+	protected $is_ajax = false;
 
 	/**
 	 * @var bool
@@ -39,7 +39,7 @@ class ExportCsv extends Export
 	/**
 	 * @var boolean
 	 */
-	protected $include_bom = FALSE;
+	protected $include_bom = false;
 
 	/**
 	 * @var string
@@ -61,14 +61,14 @@ class ExportCsv extends Export
 		$text,
 		$csv_file_name,
 		$filtered,
-		$output_encoding = NULL,
-		$delimiter = NULL,
-		$include_bom = FALSE
+		$output_encoding = null,
+		$delimiter = null,
+		$include_bom = false
 	) {
 		$this->grid = $grid;
 		$this->text = $text;
 		$this->filtered = (bool) $filtered;
-		$this->name = strpos($csv_file_name, '.csv') !== FALSE ? $csv_file_name : "$csv_file_name.csv";
+		$this->name = strpos($csv_file_name, '.csv') !== false ? $csv_file_name : "$csv_file_name.csv";
 
 		if ($output_encoding) {
 			$this->output_encoding = $output_encoding;
@@ -107,5 +107,4 @@ class ExportCsv extends Export
 			exit(0);
 		}
 	}
-
 }

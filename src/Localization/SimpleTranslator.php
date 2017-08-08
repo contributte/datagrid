@@ -43,14 +43,14 @@ class SimpleTranslator extends Nette\Object implements Nette\Localization\ITrans
 		'ublaboo_datagrid.multiselect_selected' => '{0} selected',
 		'ublaboo_datagrid.filter_submit_button' => 'Filter',
 		'ublaboo_datagrid.show_filter' => 'Show filter',
-		'ublaboo_datagrid.per_page_submit' => 'Change'
+		'ublaboo_datagrid.per_page_submit' => 'Change',
 	];
 
 
 	/**
 	 * @param array $dictionary
 	 */
-	public function __construct($dictionary = NULL)
+	public function __construct($dictionary = null)
 	{
 		if (is_array($dictionary)) {
 			$this->dictionary = $dictionary;
@@ -65,7 +65,7 @@ class SimpleTranslator extends Nette\Object implements Nette\Localization\ITrans
 	 * @param  int
 	 * @return string
 	 */
-	public function translate($message, $count = NULL)
+	public function translate($message, $count = null)
 	{
 		return isset($this->dictionary[$message]) ? $this->dictionary[$message] : $message;
 	}
@@ -79,5 +79,4 @@ class SimpleTranslator extends Nette\Object implements Nette\Localization\ITrans
 	{
 		$this->dictionary = $dictionary;
 	}
-
 }

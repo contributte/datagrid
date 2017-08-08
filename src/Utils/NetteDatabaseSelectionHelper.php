@@ -12,7 +12,6 @@ use Nette\Database\Table\Selection;
 
 final class NetteDatabaseSelectionHelper
 {
-
 	public static function getDriver(Selection $selection)
 	{
 		$connection = self::getContext($selection)->getConnection();
@@ -26,9 +25,8 @@ final class NetteDatabaseSelectionHelper
 		$reflection = new \ReflectionClass($selection);
 
 		$context_property = $reflection->getProperty('context');
-		$context_property->setAccessible(TRUE);
+		$context_property->setAccessible(true);
 
 		return $context_property->getValue($selection);
 	}
-
 }

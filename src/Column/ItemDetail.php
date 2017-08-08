@@ -9,16 +9,15 @@
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\Utils\ItemDetailForm;
-use Ublaboo\DataGrid\DataGrid;
 use Ublaboo;
-use Ublaboo\DataGrid\Traits;
+use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridItemDetailException;
 use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\Traits;
+use Ublaboo\DataGrid\Utils\ItemDetailForm;
 
 class ItemDetail
 {
-
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonIcon;
 	use Traits\TButtonClass;
@@ -60,7 +59,7 @@ class ItemDetail
 	 * @var array
 	 */
 	protected $template_parameters = [];
-	
+
 	/**
 	 * @var callable
 	 */
@@ -241,6 +240,7 @@ class ItemDetail
 		return $this->template_parameters;
 	}
 
+
 	/**
 	 * @param callable $condition
 	 * @return static
@@ -252,6 +252,7 @@ class ItemDetail
 		return $this;
 	}
 
+
 	/**
 	 * @param Row $row
 	 * @return bool
@@ -260,7 +261,6 @@ class ItemDetail
 	{
 		$condition = $this->render_condition_callback;
 
-		return $condition ? $condition($row->getItem()) : TRUE;
+		return $condition ? $condition($row->getItem()) : true;
 	}
-
 }

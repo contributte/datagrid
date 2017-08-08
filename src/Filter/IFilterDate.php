@@ -18,18 +18,15 @@ interface IFilterDate
 	 */
 	public function setFormat($php_format, $js_format);
 
-
 	/**
 	 * Get php format for datapicker
 	 * @return string
 	 */
 	public function getPhpFormat();
 
-
 	/**
 	 * Get js format for datepicker
 	 * @return string
 	 */
 	public function getJsFormat();
-
 }

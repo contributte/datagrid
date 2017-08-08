@@ -8,19 +8,19 @@
 
 namespace Ublaboo\DataGrid;
 
-use Nette;
 use Dibi;
 use DibiFluent;
-use Nette\Database\Table\Selection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
+use Nette;
+use Nette\Database\Drivers as NDBDrivers;
+use Nette\Database\Table\Selection;
+use Nextras\Orm\Collection\ICollection;
+use Ublaboo\DataGrid\DataSource\ApiDataSource;
 use Ublaboo\DataGrid\DataSource\IDataSource;
 use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
-use Ublaboo\DataGrid\Utils\Sorting;
 use Ublaboo\DataGrid\Utils\NetteDatabaseSelectionHelper;
-use Nette\Database\Drivers as NDBDrivers;
-use Ublaboo\DataGrid\DataSource\ApiDataSource;
-use Nextras\Orm\Collection\ICollection;
+use Ublaboo\DataGrid\Utils\Sorting;
 
 final class DataModel extends Nette\Object
 {
@@ -59,26 +59,26 @@ final class DataModel extends Nette\Object
 			 * $source = $source;
 			 */
 
-		} else if (is_array($source)) {
+		} elseif (is_array($source)) {
 			$source = new DataSource\ArrayDataSource($source);
 
-		} else if ($source instanceof Dibi\Fluent || $source instanceof DibiFluent) {
+		} elseif ($source instanceof Dibi\Fluent || $source instanceof DibiFluent) {
 			$driver = $source->getConnection()->getDriver();
 
 			if ($driver instanceof Dibi\Drivers\OdbcDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
-			} else if ($driver instanceof Dibi\Drivers\MsSqlDriver) {
+			} elseif ($driver instanceof Dibi\Drivers\MsSqlDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
-			} else if ($driver instanceof Dibi\Drivers\SqlsrvDriver) {
+			} elseif ($driver instanceof Dibi\Drivers\SqlsrvDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
 			} else {
 				$source = new DataSource\DibiFluentDataSource($source, $primary_key);
 			}
 
-		} else if ($source instanceof Selection) {
+		} elseif ($source instanceof Selection) {
 			$driver = NetteDatabaseSelectionHelper::getDriver($source);
 
 			if ($driver instanceof NDBDrivers\MsSqlDriver || $driver instanceof NDBDrivers\SqlsrvDriver) {
@@ -87,10 +87,10 @@ final class DataModel extends Nette\Object
 				$source = new DataSource\NetteDatabaseTableDataSource($source, $primary_key);
 			}
 
-		} else if ($source instanceof QueryBuilder) {
+		} elseif ($source instanceof QueryBuilder) {
 			$source = new DataSource\DoctrineDataSource($source, $primary_key);
 
-		} else if ($source instanceof Collection) {
+		} elseif ($source instanceof Collection) {
 			$source = new DataSource\DoctrineCollectionDataSource($source, $primary_key);
 
 		} elseif ($source instanceof ICollection) {
@@ -98,7 +98,7 @@ final class DataModel extends Nette\Object
 
 		} else {
 			throw new DataGridWrongDataSourceException(sprintf(
-				"DataGrid can not take [%s] as data source.",
+				'DataGrid can not take [%s] as data source.',
 				is_object($source) ? get_class($source) : 'NULL'
 			));
 		}
@@ -125,7 +125,7 @@ final class DataModel extends Nette\Object
 	 * @return array
 	 */
 	public function filterData(
-		Components\DataGridPaginator\DataGridPaginator $paginator_component = NULL,
+		Components\DataGridPaginator\DataGridPaginator $paginator_component = null,
 		Sorting $sorting,
 		array $filters
 	) {
@@ -168,5 +168,4 @@ final class DataModel extends Nette\Object
 
 		return $this->data_source->filterOne($condition)->getData();
 	}
-
 }

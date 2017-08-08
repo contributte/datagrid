@@ -4,8 +4,8 @@ namespace Ublaboo\DataGrid\Tests\Cases;
 
 use Nette\Application\AbortException;
 use Tester\Assert;
-use Tester\TestCase,
-	Ublaboo;
+use Tester\TestCase;
+use Ublaboo;
 use Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
 
 

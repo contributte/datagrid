@@ -78,7 +78,7 @@ final class DateTimeHelper extends \Nette\Object
 
 		$timestamp = strtotime($value);
 
-		if ($timestamp !== FALSE) {
+		if ($timestamp !== false) {
 			$date = new \DateTime;
 			$date->setTimestamp($timestamp);
 
@@ -87,5 +87,4 @@ final class DateTimeHelper extends \Nette\Object
 
 		throw new DataGridDateTimeHelperException;
 	}
-
 }

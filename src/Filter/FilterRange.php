@@ -9,8 +9,8 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
-use Ublaboo\DataGrid\Exception\DataGridFilterRangeException;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Exception\DataGridFilterRangeException;
 
 class FilterRange extends Filter
 {
@@ -100,7 +100,7 @@ class FilterRange extends Filter
 		return $this;
 	}
 
-	
+
 	/**
 	 * Get html attr placeholders
 	 * @return string
@@ -109,8 +109,8 @@ class FilterRange extends Filter
 	{
 		return $this->placeholder_array;
 	}
-	
-	
+
+
 	/**
 	 * Get filter condition
 	 * @return array
@@ -121,8 +121,7 @@ class FilterRange extends Filter
 
 		return [$this->column => [
 			'from' => isset($value['from']) ? $value['from'] : '',
-			'to' => isset($value['to']) ? $value['to'] : ''
+			'to' => isset($value['to']) ? $value['to'] : '',
 		]];
 	}
-
 }

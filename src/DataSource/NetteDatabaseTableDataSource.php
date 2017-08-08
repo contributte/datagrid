@@ -61,7 +61,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			$primary = $this->data_source->getPrimary();
 
 		} catch (\LogicException $e) {
-
 			if ($data_source_sql_builder->getGroup() !== '') {
 				return $this->data_source->count(
 					'DISTINCT ' . Strings::replace($data_source_sql_builder->getGroup(), '~ (DESC|ASC)~')
@@ -131,7 +130,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$conditions = $filter->getCondition();
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to   = $conditions[$filter->getColumn()]['to'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
 			$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
@@ -159,7 +158,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$conditions = $filter->getCondition();
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to   = $conditions[$filter->getColumn()]['to'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
 			$this->data_source->where("{$filter->getColumn()} >= ?", $value_from);
@@ -185,15 +184,14 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$condition = $filter->getCondition();
 
 		foreach ($condition as $column => $value) {
-
 			$like = '(';
 			$args = [];
 
-			if($filter->isExactSearch()){
-				$like .=  "$column = ? OR ";
+			if ($filter->isExactSearch()) {
+				$like .= "$column = ? OR ";
 				$args[] = "$value";
 			} else {
-				if ($filter->hasSplitWordsSearch() === FALSE) {
+				if ($filter->hasSplitWordsSearch() === false) {
 					$words = [$value];
 				} else {
 					$words = explode(' ', $value);
@@ -211,7 +209,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		}
 
 		if (sizeof($or) > 1) {
-			$big_or = substr($big_or, 0, strlen($big_or) - 4).')';
+			$big_or = substr($big_or, 0, strlen($big_or) - 4) . ')';
 
 			$query = array_merge([$big_or], $big_or_args);
 
@@ -238,7 +236,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		if (sizeof($values) > 1) {
 			$length = sizeof($values);
 			$i = 1;
-		
+
 			foreach ($values as $value) {
 				if ($i == $length) {
 					$or .= $filter->getColumn() . ' = ?)';
@@ -329,5 +327,4 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	{
 		call_user_func($aggregationCallback, $this->data_source);
 	}
-
 }
