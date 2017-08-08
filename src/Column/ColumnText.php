@@ -10,5 +10,4 @@ namespace Ublaboo\DataGrid\Column;
 
 class ColumnText extends Column
 {
-
 }

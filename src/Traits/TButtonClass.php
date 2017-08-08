@@ -8,10 +8,6 @@
 
 namespace Ublaboo\DataGrid\Traits;
 
-use Ublaboo\DataGrid\DataGrid;
-use Nette\Utils\Html;
-use Ublaboo\DataGrid\Row;
-
 trait TButtonClass
 {
 
@@ -41,5 +37,4 @@ trait TButtonClass
 	{
 		return $this->class;
 	}
-
 }

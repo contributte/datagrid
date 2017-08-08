@@ -85,7 +85,7 @@ abstract class GroupAction extends Nette\Object
 	public function setAttribute($key, $value)
 	{
 		$this->attributes[$key] = $value;
-		
+
 		return $this;
 	}
 
@@ -97,5 +97,4 @@ abstract class GroupAction extends Nette\Object
 	{
 		return $this->attributes;
 	}
-
 }

@@ -8,15 +8,14 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Status\Option;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
+use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\Status\Option;
 use Ublaboo\DataGrid\Traits;
 
 class ColumnStatus extends Column
 {
-
 	use Traits\TButtonCaret;
 
 	/**
@@ -109,7 +108,7 @@ class ColumnStatus extends Column
 			}
 		}
 
-		return NULL;
+		return null;
 	}
 
 
@@ -171,10 +170,9 @@ class ColumnStatus extends Column
 	{
 		return array_merge($this->template_variables, [
 			'options' => $this->getOptions(),
-			'column'  => $this->getColumn(),
-			'key'     => $this->getKey(),
-			'status'  => $this
+			'column' => $this->getColumn(),
+			'key' => $this->getKey(),
+			'status' => $this,
 		]);
 	}
-
 }

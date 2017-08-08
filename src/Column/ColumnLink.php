@@ -10,9 +10,8 @@ namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
+use Ublaboo\DataGrid\Row;
 
 class ColumnLink extends Column
 {
@@ -50,7 +49,7 @@ class ColumnLink extends Column
 	/**
 	 * @var bool
 	 */
-	protected $open_in_new_tab = FALSE;
+	protected $open_in_new_tab = false;
 
 
 	/**
@@ -71,7 +70,7 @@ class ColumnLink extends Column
 	{
 		parent::__construct($grid, $key, $column, $name);
 
-		$this->href   = $href;
+		$this->href = $href;
 		$this->params = $params;
 	}
 
@@ -97,7 +96,7 @@ class ColumnLink extends Column
 		$value = parent::render($row);
 
 		if (!$value && !$this->icon) {
-			return NULL;
+			return null;
 		}
 
 		$a = Html::el('a')
@@ -106,7 +105,7 @@ class ColumnLink extends Column
 				$this->href,
 				$this->getItemParams($row, $this->params) + $this->parameters
 			));
-			
+
 		if (!empty($this->data_attributes)) {
 			foreach ($this->data_attributes as $key => $attr_value) {
 				$a->data($key, $attr_value);
@@ -117,9 +116,13 @@ class ColumnLink extends Column
 			$a->addAttributes(['target' => '_blank']);
 		}
 
-		if ($this->title) { $a->title($this->title); }
-		if ($this->class) { $a->class($this->class); }
-		
+		if ($this->title) {
+			$a->title($this->title);
+		}
+		if ($this->class) {
+			$a->class($this->class);
+		}
+
 		$element = $a;
 
 		if ($this->icon) {
@@ -158,7 +161,7 @@ class ColumnLink extends Column
 	 * @param string      $icon
 	 * @return ColumnLink
 	 */
-	public function setIcon($icon = NULL)
+	public function setIcon($icon = null)
 	{
 		$this->icon = $icon;
 
@@ -200,6 +203,7 @@ class ColumnLink extends Column
 		return $this->title;
 	}
 
+
 	/**
 	 * Set attribute class
 	 * @param string $class
@@ -212,6 +216,7 @@ class ColumnLink extends Column
 		return $this;
 	}
 
+
 	/**
 	 * Get attribute class
 	 */
@@ -219,6 +224,7 @@ class ColumnLink extends Column
 	{
 		return $this->class;
 	}
+
 
 	/**
 	 * Open link in new window/tab?
@@ -229,12 +235,13 @@ class ColumnLink extends Column
 		return $this->open_in_new_tab;
 	}
 
+
 	/**
 	 * Set link to open in new tab/window or not
 	 * @param bool $open_in_new_tab
 	 * @return $this
 	 */
-	public function setOpenInNewTab($open_in_new_tab = TRUE)
+	public function setOpenInNewTab($open_in_new_tab = true)
 	{
 		$this->open_in_new_tab = $open_in_new_tab;
 		return $this;

@@ -8,17 +8,16 @@
 
 namespace Ublaboo\DataGrid\Column;
 
+use Nette\Utils\Html;
 use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Nette\Utils\Html;
+use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Traits;
 
 abstract class Column extends FilterableColumn
 {
-
 	use Traits\TLink;
 
 	/**
@@ -39,22 +38,22 @@ abstract class Column extends FilterableColumn
 	/**
 	 * @var bool|string
 	 */
-	protected $sortable = FALSE;
-	
-	/**
-	 * @var bool
-	 */
-	protected $translatable_header = TRUE;
+	protected $sortable = false;
 
 	/**
 	 * @var bool
 	 */
-	protected $sortable_reset_pagination = FALSE;
+	protected $translatable_header = true;
+
+	/**
+	 * @var bool
+	 */
+	protected $sortable_reset_pagination = false;
 
 	/**
 	 * @var null|callable
 	 */
-	protected $sortable_callback = NULL;
+	protected $sortable_callback = null;
 
 	/**
 	 * @var array
@@ -64,14 +63,14 @@ abstract class Column extends FilterableColumn
 	/**
 	 * @var bool
 	 */
-	protected $template_escaping = TRUE;
+	protected $template_escaping = true;
 
 	/**
 	 * @var bool
 	 */
-	protected $header_escaping = FALSE;
+	protected $header_escaping = false;
 
-	
+
 	/**
 	 * @var string
 	 */
@@ -96,17 +95,17 @@ abstract class Column extends FilterableColumn
 	/**
 	 * @var bool
 	 */
-	protected $default_hide = FALSE;
+	protected $default_hide = false;
 
 	/**
 	 * @var array
 	 */
-	protected $elementCache = ['td' => NULL, 'th' => NULL];
+	protected $elementCache = ['td' => null, 'th' => null];
 
 	/**
 	 * @var callable|NULL
 	 */
-	protected $editable_value_callback = NULL;
+	protected $editable_value_callback = null;
 
 
 	/**
@@ -131,6 +130,7 @@ abstract class Column extends FilterableColumn
 		 * Or replacements may be applied
 		 */
 		list($do_replace, $replaced) = $this->applyReplacements($row);
+
 		if ($do_replace) {
 			return $replaced;
 		}
@@ -168,7 +168,7 @@ abstract class Column extends FilterableColumn
 	 * Should be column values escaped in latte?
 	 * @param bool $template_escaping
 	 */
-	public function setTemplateEscaping($template_escaping = TRUE)
+	public function setTemplateEscaping($template_escaping = true)
 	{
 		$this->template_escaping = (bool) $template_escaping;
 
@@ -181,28 +181,30 @@ abstract class Column extends FilterableColumn
 		return $this->template_escaping;
 	}
 
+
 	/**
 	 * Should be column header escaped in latte?
 	 * @param bool $header_escaping
 	 */
-	public function setHeaderEscaping($header_escaping = FALSE)
+	public function setHeaderEscaping($header_escaping = false)
 	{
 		$this->header_escaping = (bool) $header_escaping;
 
 		return $this;
 	}
-	
+
+
 	public function isHeaderEscaped()
 	{
 		return $this->header_escaping;
 	}
-	
-	
+
+
 	/**
 	 * Set column sortable or not
 	 * @param bool|string $sortable
 	 */
-	public function setSortable($sortable = TRUE)
+	public function setSortable($sortable = true)
 	{
 		$this->sortable = is_string($sortable) ? $sortable : (bool) $sortable;
 
@@ -218,17 +220,19 @@ abstract class Column extends FilterableColumn
 	{
 		return (bool) $this->sortable;
 	}
-	
+
+
 	/**
 	 * Set column translatable or not
 	 */
-	public function setTranslatableHeader($translatable_header = TRUE)
+	public function setTranslatableHeader($translatable_header = true)
 	{
 		$this->translatable_header = (bool) $translatable_header;
-		
+
 		return $this;
 	}
-	
+
+
 	/**
 	 * Tell wheter column is translatable
 	 */
@@ -237,12 +241,13 @@ abstract class Column extends FilterableColumn
 		return (bool) $this->translatable_header;
 	}
 
+
 	/**
 	 * Shoud be the pagination reseted after sorting?
 	 * @param bool $sortable_reset_pagination
 	 * @return static
 	 */
-	public function setSortableResetPagination($sortable_reset_pagination = TRUE)
+	public function setSortableResetPagination($sortable_reset_pagination = true)
 	{
 		$this->sortable_reset_pagination = (bool) $sortable_reset_pagination;
 
@@ -355,11 +360,11 @@ abstract class Column extends FilterableColumn
 	{
 		$value = $row->getValue($this->column);
 
-		if ((is_scalar($value) || is_null($value)) && isset($this->replacements[$value])) {
-			return [TRUE, $this->replacements[$value]];
+		if ((is_scalar($value) || $value === null) && isset($this->replacements[$value])) {
+			return [true, $this->replacements[$value]];
 		}
 
-		return [FALSE, NULL];
+		return [false, null];
 	}
 
 
@@ -367,23 +372,23 @@ abstract class Column extends FilterableColumn
 	 * Set renderer callback and (it may be optional - the condition callback will decide)
 	 * @param callable $renderer
 	 */
-	public function setRenderer($renderer, $condition_callback = NULL)
+	public function setRenderer($renderer, $condition_callback = null)
 	{
 		if ($this->hasReplacements()) {
 			throw new DataGridException(
-				"Use either Column::setReplacement() or Column::setRenderer, not both."
+				'Use either Column::setReplacement() or Column::setRenderer, not both.'
 			);
 		}
 
 		if (!is_callable($renderer)) {
 			throw new DataGridException(
-				"Renderer (method Column::setRenderer()) must be callable."
+				'Renderer (method Column::setRenderer()) must be callable.'
 			);
 		}
 
-		if (NULL != $condition_callback && !is_callable($condition_callback)) {
+		if ($condition_callback != null&& !is_callable($condition_callback)) {
 			throw new DataGridException(
-				"Renderer (method Column::setRenderer()) must be callable."
+				'Renderer (method Column::setRenderer()) must be callable.'
 			);
 		}
 
@@ -502,7 +507,7 @@ abstract class Column extends FilterableColumn
 	public function hasSortNext()
 	{
 		foreach ($this->getSortNext() as $key => $order) {
-			return $order !== FALSE;
+			return $order !== false;
 		}
 	}
 
@@ -554,9 +559,9 @@ abstract class Column extends FilterableColumn
 	 * @param bool $fit_content
 	 * @return $this
 	 */
-	public function setFitContent($fit_content = TRUE)
+	public function setFitContent($fit_content = true)
 	{
-		($fit_content) ? $this->addAttributes(['class' => 'datagrid-fit-content']) : NULL;
+		($fit_content) ? $this->addAttributes(['class' => 'datagrid-fit-content']) : null;
 
 		return $this;
 	}
@@ -696,7 +701,7 @@ abstract class Column extends FilterableColumn
 	 * @param  Row|NULL $row
 	 * @return Html
 	 */
-	public function getElementForRender($tag, $key, Row $row = NULL)
+	public function getElementForRender($tag, $key, Row $row = null)
 	{
 		if ($this->elementCache[$tag]) {
 			$el = clone $this->elementCache[$tag];
@@ -741,7 +746,7 @@ abstract class Column extends FilterableColumn
 	 * @param bool $default_hide
 	 * @return static
 	 */
-	public function setDefaultHide($default_hide = TRUE)
+	public function setDefaultHide($default_hide = true)
 	{
 		$this->default_hide = (bool) $default_hide;
 
@@ -784,5 +789,4 @@ abstract class Column extends FilterableColumn
 	{
 		return $this->column;
 	}
-
 }

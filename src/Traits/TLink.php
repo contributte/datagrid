@@ -34,10 +34,8 @@ trait TLink
 
 		} catch (\InvalidArgumentException $e) {
 			$parent = $grid->getPresenter();
-
 		}
 
 		return $parent->link($href, $params);
 	}
-
 }

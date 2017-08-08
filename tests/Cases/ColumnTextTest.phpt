@@ -2,9 +2,9 @@
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use Tester\TestCase,
-	Tester\Assert,
-	Ublaboo;
+use Tester\TestCase;
+use Tester\Assert;
+use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/XTestingDataGridFactory.php';

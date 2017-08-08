@@ -10,7 +10,6 @@ namespace Ublaboo\DataGrid\DataSource;
 
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
-use Ublaboo\DataGrid\Utils\NetteDatabaseSelectionHelper;
 
 class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource implements IDataSource
 {
@@ -43,7 +42,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 		$conditions = $filter->getCondition();
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to   = $conditions[$filter->getColumn()]['to'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
 			$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
@@ -65,5 +64,4 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 			);
 		}
 	}
-
 }

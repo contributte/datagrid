@@ -15,7 +15,6 @@ use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
 
 class GroupActionCollection extends Nette\Object
 {
-
 	const ID_ATTRIBUTE_PREFIX = 'group_action_item_';
 
 	/**
@@ -61,7 +60,7 @@ class GroupActionCollection extends Nette\Object
 		 * Second for creating select for each "sub"-action
 		 */
 		foreach ($this->group_actions as $id => $action) {
-			$control = NULL;
+			$control = null;
 
 			if ($action instanceof GroupSelectAction) {
 				if ($action->hasOptions()) {
@@ -77,7 +76,7 @@ class GroupActionCollection extends Nette\Object
 					$control->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id);
 				}
 
-			} else if ($action instanceof GroupTextAction) {
+			} elseif ($action instanceof GroupTextAction) {
 				$control = $container->addText($id, '');
 
 				$control->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id)
@@ -85,7 +84,7 @@ class GroupActionCollection extends Nette\Object
 						->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
 					->endCondition();
 
-			} else if ($action instanceof GroupTextareaAction) {
+			} elseif ($action instanceof GroupTextareaAction) {
 				$control = $container->addTextarea($id, '');
 
 				$control->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id)
@@ -112,14 +111,14 @@ class GroupActionCollection extends Nette\Object
 
 		foreach ($this->group_actions as $id => $action) {
 			$container['group_action']->addCondition(Form::EQUAL, $id)
-				->toggle(static::ID_ATTRIBUTE_PREFIX.$id);
+				->toggle(static::ID_ATTRIBUTE_PREFIX . $id);
 		}
 
 		$container['group_action']->addCondition(Form::FILLED)
 			->toggle(strtolower($this->datagrid->getName()) . 'group_action_submit');
 
 		$container->addSubmit('submit', 'ublaboo_datagrid.execute')
-            ->setValidationScope([$container])
+			->setValidationScope([$container])
 			->setAttribute('id', strtolower($this->datagrid->getName()) . 'group_action_submit');
 
 		if ($form instanceof Nette\ComponentModel\IComponent) {
@@ -142,20 +141,20 @@ class GroupActionCollection extends Nette\Object
 		$values = $form->getValues();
 		$values = $values['group_action'];
 
-		if ($values->group_action === 0 || is_null($values->group_action)) {
+		if ($values->group_action === 0 || $values->group_action === null) {
 			return;
 		}
 
 		/**
 		 * @todo Define items IDs
 		 */
-		$http_ids = $form->getHttpData(Form::DATA_LINE|Form::DATA_KEYS, strtolower($this->datagrid->getName()) . '_group_action_item[]');
+		$http_ids = $form->getHttpData(Form::DATA_LINE | Form::DATA_KEYS, strtolower($this->datagrid->getName()) . '_group_action_item[]');
 		$ids = array_keys($http_ids);
 
 		$id = $values->group_action;
-		$this->group_actions[$id]->onSelect($ids, isset($values->{$id}) ? $values->{$id} : NULL);
+		$this->group_actions[$id]->onSelect($ids, isset($values->{$id}) ? $values->{$id} : null);
 
-		$form['group_action']['group_action']->setValue(NULL);
+		$form['group_action']['group_action']->setValue(null);
 	}
 
 
@@ -235,5 +234,4 @@ class GroupActionCollection extends Nette\Object
 
 		throw new DataGridGroupActionException("Group action $title does not exist.");
 	}
-
 }

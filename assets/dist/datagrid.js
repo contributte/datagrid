@@ -146,13 +146,13 @@ document.addEventListener('change', function(e) {
   var checked_inputs, counter, event, grid, i, ie, input, inputs, len, results, select, total;
   grid = e.target.getAttribute('data-check');
   if (grid) {
-    checked_inputs = document.querySelectorAll('.datagrid-' + grid + ' input[data-check]:checked');
+    checked_inputs = document.querySelectorAll('input[data-check-all-' + grid + ']:checked');
     select = document.querySelector('.datagrid-' + grid + ' select[name="group_action[group_action]"]');
     if (select) {
       counter = document.querySelector('.datagrid-' + grid + ' .datagrid-selected-rows-count');
       if (checked_inputs.length) {
         select.disabled = false;
-        total = document.querySelectorAll('.datagrid-' + grid + ' input[data-check]').length;
+        total = document.querySelectorAll('input[data-check-all-' + grid + ']').length;
         if (counter) {
           counter.innerHTML = checked_inputs.length + '/' + total;
         }

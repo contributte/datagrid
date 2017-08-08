@@ -3,11 +3,11 @@
 namespace Ublaboo\DataGrid\Tests\Cases;
 
 use Nette\Utils\Html;
-use Tester\TestCase,
-	Tester\Assert,
-	Ublaboo,
-	Nette,
-	LeanMapper;
+use Tester\TestCase;
+use Tester\Assert;
+use Ublaboo;
+use Nette;
+use LeanMapper;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/XTestingDataGridFactory.php';

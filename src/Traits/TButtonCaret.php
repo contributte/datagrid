@@ -14,7 +14,7 @@ trait TButtonCaret
 	/**
 	 * @var boolean
 	 */
-	protected $caret = TRUE;
+	protected $caret = true;
 
 
 	/**
@@ -37,5 +37,4 @@ trait TButtonCaret
 	{
 		return $this->caret;
 	}
-
 }

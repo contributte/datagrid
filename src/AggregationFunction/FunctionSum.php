@@ -74,7 +74,7 @@ class FunctionSum implements IAggregationFunction
 		if ($dataSource instanceof QueryBuilder) {
 			$column = Strings::contains($this->column, '.')
 				? $this->column
-				: current($dataSource->getRootAliases()).'.'.$this->column;
+				: current($dataSource->getRootAliases()) . '.' . $this->column;
 
 			$this->result = $dataSource
 				->select(sprintf('SUM(%s)', $column))
@@ -85,7 +85,7 @@ class FunctionSum implements IAggregationFunction
 		if ($dataSource instanceof Collection) {
 			$dataSource->forAll(function ($key, $value) {
 				$this->result += PropertyAccessHelper::getValue($value, $this->column);
-				return TRUE;
+				return true;
 			});
 		}
 	}
@@ -110,7 +110,7 @@ class FunctionSum implements IAggregationFunction
 	 * @param  callable|NULL  $callback
 	 * @return static
 	 */
-	public function setRenderer(callable $callback = NULL)
+	public function setRenderer(callable $callback = null)
 	{
 		$this->renderer = $callback;
 		return $this;

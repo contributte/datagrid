@@ -8,9 +8,8 @@
 
 namespace Ublaboo\DataGrid\Traits;
 
-use Ublaboo\DataGrid\DataGrid;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\DataGrid;
 
 trait TButtonTryAddIcon
 {
@@ -25,12 +24,11 @@ trait TButtonTryAddIcon
 	public function tryAddIcon(Html $el, $icon, $name)
 	{
 		if ($icon) {
-			$el->addHtml(Html::el('span')->class(DataGrid::$icon_prefix.$icon));
+			$el->addHtml(Html::el('span')->class(DataGrid::$icon_prefix . $icon));
 
 			if (strlen($name)) {
 				$el->addHtml('&nbsp;');
 			}
 		}
 	}
-
 }

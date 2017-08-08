@@ -8,8 +8,6 @@
 
 namespace Ublaboo\DataGrid\GroupAction;
 
-use Nette;
-
 /**
  * @method void onSelect()
  */
@@ -26,7 +24,7 @@ class GroupSelectAction extends GroupAction
 	 * @param string $title
 	 * @param array  $options
 	 */
-	public function __construct($title, $options = NULL)
+	public function __construct($title, $options = null)
 	{
 		parent::__construct($title);
 		$this->options = $options;
@@ -51,5 +49,4 @@ class GroupSelectAction extends GroupAction
 	{
 		return (bool) $this->options;
 	}
-
 }
