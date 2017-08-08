@@ -88,6 +88,11 @@ abstract class Column extends FilterableColumn
 	protected $editable_callback;
 
 	/**
+	 * @var callable
+	 */
+	protected $editable_condition_callback = null;
+
+	/**
 	 * @var array
 	 */
 	protected $editable_element = ['textarea', ['class' => 'form-control']];
@@ -588,12 +593,36 @@ abstract class Column extends FilterableColumn
 
 
 	/**
+	 * Set inline editing just if condition is truthy
+	 * @param callable $editable_condition_callback
+	 * @return $this
+	 */
+	public function setEditableOnConditionCallback(callable $editable_condition_callback)
+	{
+		$this->editable_condition_callback = $editable_condition_callback;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return callable
+	 */
+	public function getEditableOnConditionCallback()
+	{
+		return $this->editable_condition_callback;
+	}
+
+
+	/**
 	 * Is column editable?
+	 * @param Row $row
 	 * @return bool
 	 */
-	public function isEditable()
+	public function isEditable(Row $row)
 	{
-		return (bool) $this->getEditableCallback();
+		return ((bool) $this->getEditableCallback())
+			&& ($this->getEditableOnConditionCallback() === null || call_user_func_array($this->getEditableOnConditionCallback(), [$row->getItem()]));
 	}
 
 
@@ -720,7 +749,7 @@ abstract class Column extends FilterableColumn
 		$el->class[] = "text-{$this->getAlign()}";
 		$el->class[] = "col-{$key}";
 
-		if ($row && $tag == 'td' && $this->isEditable()) {
+		if ($row && $tag == 'td' && $this->isEditable($row)) {
 			$link = $this->grid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
 
 			$el->data('datagrid-editable-url', $link);
