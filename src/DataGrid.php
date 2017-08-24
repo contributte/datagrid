@@ -3078,6 +3078,26 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * @param  string   $multiActionKey
+	 * @param  string   $actionKey
+	 * @param  callable $condition
+	 * @return void
+	 */
+	public function allowRowsMultiAction($multiActionKey, $actionKey, callable $condition)
+	{
+		if (!isset($this->actions[$multiActionKey])) {
+			throw new DataGridException("There is no action at key [$multiActionKey] defined.");
+		}
+
+		if (!$this->actions[$multiActionKey] instanceof Column\MultiAction) {
+			throw new DataGridException("Action at key [$multiActionKey] is not a MultiAction.");
+		}
+
+		$this->actions[$multiActionKey]->setRowCondition((string) $actionKey, $condition);
+	}
+
+
+	/**
 	 * @param  string      $name
 	 * @param  string|null $key
 	 * @return bool|callable

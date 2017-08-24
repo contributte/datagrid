@@ -5,7 +5,9 @@
 <div class="dropdown">
 	{$multi_action->renderButton()|noescape}
 	<ul class="dropdown-menu">
-		<li n:foreach="$multi_action->getActions() as $action">
+		<li n:foreach="$multi_action->getActions() as $actionKey => $action">
+			{continueIf !$multi_action->testRowCondition($actionKey, $row)}
+
 			{if $action->hasTemplate()}
 				{include $action->getTemplate(), item => $row->getItem(), (expand) $action->getTemplateVariables(), row => $row}
 			{else}
