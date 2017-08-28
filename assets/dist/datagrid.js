@@ -671,6 +671,9 @@ $(function() {
 });
 
 datagridGroupActionMultiSelect = function() {
+  if (!$.fn.selectpicker) {
+    return;
+  }
   var selects;
   selects = $('[data-datagrid-multiselect-id]');
   return selects.each(function() {
@@ -706,9 +709,7 @@ $.nette.ext('datagrid.fitlerMultiSelect', {
 
 $.nette.ext('datagrid.groupActionMultiSelect', {
   success: function() {
-    if ($.fn.selectpicker) {
-      return datagridGroupActionMultiSelect();
-    }
+    return datagridGroupActionMultiSelect();
   }
 });
 
