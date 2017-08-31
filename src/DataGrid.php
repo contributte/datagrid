@@ -1598,8 +1598,10 @@ class DataGrid extends Nette\Application\UI\Control
 		 */
 		$filter_container = $form->addContainer('filter');
 
+		$validationscope  = [];
 		foreach ($this->filters as $filter) {
 			$filter->addToFormContainer($filter_container);
+			$validationscope[] = array_merge(iterator_to_array($filter_container->getControls(), false), $validationscope);
 		}
 
 		if (!$this->hasAutoSubmit()) {
@@ -1624,12 +1626,14 @@ class DataGrid extends Nette\Application\UI\Control
 		 */
 		$form->addSelect('per_page', '', $this->getItemsPerPageList())
 			->setTranslator(null);
+		$validationscope[] = $form['per_page'];
 
 		if (!$form->isSubmitted()) {
 			$form['per_page']->setValue($this->getPerPage());
 		}
 
-		$form->addSubmit('per_page_submit', 'ublaboo_datagrid.per_page_submit');
+		$form->addSubmit('per_page_submit', 'ublaboo_datagrid.per_page_submit')
+			->setValidationScope($validationscope);
 
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
 	}
