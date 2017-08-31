@@ -215,6 +215,7 @@ class InlineEdit extends Nette\Object
 	 */
 	public function addControlsClasses(Nette\Forms\Container $container)
 	{
+		$validationScope = [];
 		foreach ($container->getControls() as $key => $control) {
 			switch ($key) {
 				case 'submit':
@@ -232,10 +233,14 @@ class InlineEdit extends Nette\Object
 					if (empty($control->getControl()->getClass())) {
 						$control->setAttribute('class', 'form-control input-sm');
 					}
+					$validationScope[] = $control;
 
 					break;
 			}
 		}
+		/** @var Nette\Forms\Controls\SubmitButton $submit */
+		$submit = $container['submit'];
+		$submit->setValidationScope($validationScope);
 	}
 
 
