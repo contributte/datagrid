@@ -16,23 +16,19 @@ $.nette.ext('datagrid.confirm', {
 				return confirm(confirm_message)
 })
 
-# Datagrid auto submit
+# Datagrid autosubmit
 #
 $(document).on('change', 'select[data-autosubmit-per-page]', ->
-	button = $(this).parent().find('input[type=submit]')
-	if (button.length == 0)
-		button = $(this).parent().find('button[type=submit]');
-
-	button.click()
+	$(this).closest('form').find('[name=filter\\[submit\\]]').click()
 ).on('change', 'select[data-autosubmit]', ->
-	$(this).closest('form').first().submit()
+	$(this).closest('form').find('[name=filter\\[submit\\]]').click()
 ).on('change', 'input[data-autosubmit][data-autosubmit-change]', (e) ->
 	code = e.which || e.keyCode || 0
 
 	clearTimeout(window.datagrid_autosubmit_timer)
 	$this = $(this)
 	window.datagrid_autosubmit_timer = setTimeout =>
-		$this.closest('form').first().submit()
+		$(this).closest('form').find('[name=filter\\[submit\\]]').click()
 	, 200
 ).on('keyup', 'input[data-autosubmit]', (e) ->
 	code = e.which || e.keyCode || 0

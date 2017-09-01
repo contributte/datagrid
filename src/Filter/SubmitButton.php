@@ -8,12 +8,12 @@
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
+use Nette\Forms\Controls;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Traits;
 
-class SubmitButton extends Nette\Forms\Controls\Button
+class SubmitButton extends Controls\SubmitButton
 {
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonIcon;
@@ -47,7 +47,7 @@ class SubmitButton extends Nette\Forms\Controls\Button
 	/**
 	 * Generates control's HTML element.
 	 * @param  string
-	 * @return Nette\Utils\Html
+	 * @return Html
 	 */
 	public function getControl($caption = null)
 	{

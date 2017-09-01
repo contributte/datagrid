@@ -1548,6 +1548,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function createComponentFilter()
 	{
 		$form = new Form($this, 'filter');
+		$form_validation_scope = [];
 
 		$form->setMethod(static::$form_method);
 
@@ -1559,10 +1560,9 @@ class DataGrid extends Nette\Application\UI\Control
 		$inline_edit_container = $form->addContainer('inline_edit');
 
 		if ($this->inlineEdit instanceof InlineEdit) {
-			$inline_edit_container->addSubmit('submit', 'ublaboo_datagrid.save')
-				->setValidationScope([$inline_edit_container]);
+			$inline_edit_container->addSubmit('submit', 'ublaboo_datagrid.save');
 			$inline_edit_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
-				->setValidationScope(false);
+				->setValidationScope([]);
 
 			$this->inlineEdit->onControlAdd($inline_edit_container);
 			$this->inlineEdit->onControlAfterAdd($inline_edit_container);
@@ -1574,10 +1574,9 @@ class DataGrid extends Nette\Application\UI\Control
 		$inline_add_container = $form->addContainer('inline_add');
 
 		if ($this->inlineAdd instanceof InlineEdit) {
-			$inline_add_container->addSubmit('submit', 'ublaboo_datagrid.save')
-				->setValidationScope([$inline_add_container]);
+			$inline_add_container->addSubmit('submit', 'ublaboo_datagrid.save');
 			$inline_add_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
-				->setValidationScope(false)
+				->setValidationScope([])
 				->setAttribute('data-datagrid-cancel-inline-add', true);
 
 			$this->inlineAdd->onControlAdd($inline_add_container);
@@ -1602,9 +1601,9 @@ class DataGrid extends Nette\Application\UI\Control
 			$filter->addToFormContainer($filter_container);
 		}
 
-		if (!$this->hasAutoSubmit()) {
-			$filter_container['submit'] = $this->getFilterSubmitButton();
-		}
+		$filter_container['submit'] = $this->getFilterSubmitButton();
+
+		$form_validation_scope[] = $filter_container;
 
 		/**
 		 * Group action part
@@ -1614,6 +1613,8 @@ class DataGrid extends Nette\Application\UI\Control
 		if ($this->hasGroupActions()) {
 			$this->getGroupActionCollection()->addToFormContainer($group_action_container);
 		}
+
+		$form_validation_scope[] = $group_action_container;
 
 		if (!$form->isSubmitted()) {
 			$this->setFilterContainerDefaults($form['filter'], $this->filter);
@@ -1629,7 +1630,12 @@ class DataGrid extends Nette\Application\UI\Control
 			$form['per_page']->setValue($this->getPerPage());
 		}
 
-		$form->addSubmit('per_page_submit', 'ublaboo_datagrid.per_page_submit');
+		$form_validation_scope[] = $form['per_page'];
+
+		/*$form->addSubmit('per_page_submit', 'ublaboo_datagrid.per_page_submit')
+			->setValidationScope($form_validation_scope);*/
+
+		$filter_container['submit']->setValidationScope($form_validation_scope);
 
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
 	}
@@ -1732,6 +1738,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Inline add
 		 */
+		dump(isset($form['inline_add']) && isset($form['inline_add']['submit']) && isset($form['inline_add']['cancel'])); die;
 		if (isset($form['inline_add']) && isset($form['inline_add']['submit']) && isset($form['inline_add']['cancel'])) {
 			$add = $form['inline_add'];
 
@@ -3074,6 +3081,26 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * @param  string   $multiActionKey
+	 * @param  string   $actionKey
+	 * @param  callable $condition
+	 * @return void
+	 */
+	public function allowRowsMultiAction($multiActionKey, $actionKey, callable $condition)
+	{
+		if (!isset($this->actions[$multiActionKey])) {
+			throw new DataGridException("There is no action at key [$multiActionKey] defined.");
+		}
+
+		if (!$this->actions[$multiActionKey] instanceof Column\MultiAction) {
+			throw new DataGridException("Action at key [$multiActionKey] is not a MultiAction.");
+		}
+
+		$this->actions[$multiActionKey]->setRowCondition((string) $actionKey, $condition);
+	}
+
+
+	/**
 	 * @param  string      $name
 	 * @param  string|null $key
 	 * @return bool|callable
@@ -3305,14 +3332,9 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getFilterSubmitButton()
 	{
-		if ($this->hasAutoSubmit()) {
-			throw new DataGridException(
-				'DataGrid has auto-submit. Turn it off before setting filter submit button.'
-			);
-		}
-
 		if ($this->filter_submit_button === null) {
 			$this->filter_submit_button = new Filter\SubmitButton($this);
+			$this->filter_submit_button->setAttribute('data-autosubmit', (int) $this->hasAutoSubmit());
 		}
 
 		return $this->filter_submit_button;
