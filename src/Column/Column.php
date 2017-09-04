@@ -88,7 +88,7 @@ abstract class Column extends FilterableColumn
 	protected $editable_callback;
 
 	/**
-	 * @var callable
+	 * @var callable|null
 	 */
 	protected $editable_condition_callback = null;
 
@@ -595,7 +595,7 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Set inline editing just if condition is truthy
 	 * @param callable $editable_condition_callback
-	 * @return $this
+	 * @return static
 	 */
 	public function setEditableOnConditionCallback(callable $editable_condition_callback)
 	{
@@ -606,7 +606,7 @@ abstract class Column extends FilterableColumn
 
 
 	/**
-	 * @return callable
+	 * @return callable|null
 	 */
 	public function getEditableOnConditionCallback()
 	{
