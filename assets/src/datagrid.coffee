@@ -39,7 +39,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', ->
 	clearTimeout(window.datagrid_autosubmit_timer)
 	$this = $(this)
 	window.datagrid_autosubmit_timer = setTimeout =>
-		$this.closest('form').first().submit()
+		$this.closest('form').find('[name=filter\\[submit\\]]').click()
 	, 200
 ).on('keydown', '.datagrid-inline-edit input', (e) ->
 	code = e.which || e.keyCode || 0
@@ -61,7 +61,7 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', (e) ->
 		e.preventDefault()
 
 		
-		$(this).closest('form').first().submit()
+		$(this).closest('form').find('[name=filter\\[submit\\]]').click()
 )
 
 
