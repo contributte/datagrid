@@ -3333,10 +3333,10 @@ class DataGrid extends Nette\Application\UI\Control
 	{
 		if ($this->filter_submit_button === null) {
 			$this->filter_submit_button = new Filter\SubmitButton($this);
-            $this->filter_submit_button->setAttribute('data-autosubmit', (int) $this->hasAutoSubmit());
-            if ($this->hasAutoSubmit()) {
-                $this->filter_submit_button->setAttribute('style', 'display:none');
-            }
+			$this->filter_submit_button->setAttribute('data-autosubmit', (int) $this->hasAutoSubmit());
+			if ($this->hasAutoSubmit()) {
+				$this->filter_submit_button->setAttribute('style', 'display:none');
+			}
 		}
 
 		return $this->filter_submit_button;
