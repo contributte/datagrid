@@ -510,7 +510,7 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 
 			input.find('option').each ->
 				if $(this).text() == valueToEdit
-					input.find('option[value=' + valueToEdit + ']').prop('selected', true)
+					input.find("option[value='" + valueToEdit + "']").prop('selected', true)
 		else
 			input = $('<input type="' + cell.data('datagrid-editable-type') + '">')
 			input.val(valueToEdit)
@@ -535,7 +535,7 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 					method: 'POST',
 					success: (payload) ->
 						if cell.data('datagrid-editable-type') == 'select'
-							cell.html(input.find('option[value=' + value + ']').html())
+							cell.html(input.find("option[value='" + value + "']").html())
 						else
 							if payload._datagrid_editable_new_value
 								value = payload._datagrid_editable_new_value
