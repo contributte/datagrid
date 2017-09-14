@@ -21,14 +21,9 @@ $.nette.ext('datagrid.confirm', {
 });
 
 $(document).on('change', 'select[data-autosubmit-per-page]', function() {
-  var button;
-  button = $(this).parent().find('input[type=submit]');
-  if (button.length === 0) {
-    button = $(this).parent().find('button[type=submit]');
-  }
-  return button.click();
+  return $(this).closest('form').find('[name=filter\\[submit\\]]').click();
 }).on('change', 'select[data-autosubmit]', function() {
-  return $(this).closest('form').first().submit();
+  return $(this).closest('form').find('[name=filter\\[submit\\]]').click();
 }).on('change', 'input[data-autosubmit][data-autosubmit-change]', function(e) {
   var $this, code;
   code = e.which || e.keyCode || 0;
@@ -36,7 +31,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', function() {
   $this = $(this);
   return window.datagrid_autosubmit_timer = setTimeout((function(_this) {
     return function() {
-      return $this.closest('form').first().submit();
+      return $(_this).closest('form').find('[name=filter\\[submit\\]]').click();
     };
   })(this), 200);
 }).on('keyup', 'input[data-autosubmit]', function(e) {
@@ -49,7 +44,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', function() {
   $this = $(this);
   return window.datagrid_autosubmit_timer = setTimeout((function(_this) {
     return function() {
-      return $this.closest('form').first().submit();
+      return $this.closest('form').find('[name=filter\\[submit\\]]').click();
     };
   })(this), 200);
 }).on('keydown', '.datagrid-inline-edit input', function(e) {
@@ -68,7 +63,7 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', function(e) {
   if (code === 13) {
     e.stopPropagation();
     e.preventDefault();
-    return $(this).closest('form').first().submit();
+    return $(this).closest('form').find('[name=filter\\[submit\\]]').click();
   }
 });
 
