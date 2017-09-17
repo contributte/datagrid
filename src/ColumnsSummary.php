@@ -8,8 +8,10 @@
 
 namespace Ublaboo\DataGrid;
 
-use Nette\Utils\Callback;
 use Ublaboo\DataGrid\Column\ColumnNumber;
+use Ublaboo\DataGrid\Column\Renderer;
+use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
+
 
 class ColumnsSummary
 {
@@ -33,6 +35,11 @@ class ColumnsSummary
 	 * @var NULL|callable
 	 */
 	protected $rowCallback;
+
+	/**
+	 * @var Renderer|NULL
+	 */
+	protected $renderer;
 
 
 	/**
@@ -94,6 +101,17 @@ class ColumnsSummary
 	 */
 	public function render($key)
 	{
+		/**
+		 * Renderer function may be used
+		 */
+		try {
+			return $this->useRenderer($key);
+		} catch (DataGridColumnRendererException $e) {
+			/**
+			 * Do not use renderer
+			 */
+		}
+
 		if (!isset($this->summary[$key])) {
 			return null;
 		}
@@ -104,6 +122,49 @@ class ColumnsSummary
 			$this->format[$key][1],
 			$this->format[$key][2]
 		);
+	}
+
+
+	/**
+	 * Try to render summary with custom renderer
+	 * @param  string $key
+	 * @return mixed
+	 */
+	public function useRenderer($key)
+	{
+		if (!isset($this->summary[$key])) {
+			return null;
+		}
+
+		$renderer = $this->getRenderer();
+
+		if (!$renderer) {
+			throw new DataGridColumnRendererException;
+		}
+
+		return call_user_func_array($renderer->getCallback(), [$this->summary[$key], $key]);
+	}
+
+
+	/**
+	 * Return custom renderer callback
+	 * @return Renderer|null
+	 */
+	public function getRenderer()
+	{
+		return $this->renderer;
+	}
+
+
+	/**
+	 * Set renderer callback
+	 * @param callable $renderer
+	 */
+	public function setRenderer(callable $renderer)
+	{
+		$this->renderer = new Renderer($renderer, NULL);
+
+		return $this;
 	}
 
 
