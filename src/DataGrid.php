@@ -533,7 +533,6 @@ class DataGrid extends Nette\Application\UI\Control
 		$template->filter_active = $this->isFilterActive();
 		$template->original_template = $this->getOriginalTemplateFile();
 		$template->icon_prefix = static::$icon_prefix;
-		$template->icon_prefix = static::$icon_prefix;
 		$template->items_detail = $this->items_detail;
 		$template->columns_visibility = $this->getColumnsVisibility();
 		$template->columnsSummary = $this->columnsSummary;
@@ -1632,12 +1631,11 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$form_validation_scope[] = $form['per_page'];
 
-		/*$form->addSubmit('per_page_submit', 'ublaboo_datagrid.per_page_submit')
-			->setValidationScope($form_validation_scope);*/
-
 		$filter_container['submit']->setValidationScope($form_validation_scope);
 
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
+
+		return $form;
 	}
 
 
