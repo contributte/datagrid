@@ -15,6 +15,7 @@ use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
+
 final class DoctrineCollectionDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
 
@@ -89,6 +90,9 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	{
 		foreach ($condition as $column => $value) {
 			$expr = Criteria::expr()->eq($column, $value);
+			if (is_string($value) && is_numeric($value)) {
+				$expr = Criteria::expr()->orX($expr, Criteria::expr()->eq($column, (int) $value));
+			}
 			$this->criteria->andWhere($expr);
 		}
 
@@ -274,3 +278,4 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 		call_user_func($aggregationCallback, clone $this->data_source);
 	}
 }
+
