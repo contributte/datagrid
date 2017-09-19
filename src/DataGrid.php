@@ -1709,7 +1709,7 @@ class DataGrid extends Nette\Application\UI\Control
 					'inline_edit[_primary_where_column]'
 				);
 
-				if ($edit['submit']->isSubmittedBy()) {
+				if ($edit['submit']->isSubmittedBy() && !$edit->getErrors()) {
 					$this->inlineEdit->onSubmit($id, $values->inline_edit);
 					$this->getPresenter()->payload->_datagrid_inline_edited = $id;
 					$this->getPresenter()->payload->_datagrid_name = $this->getName();
@@ -1736,7 +1736,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$add = $form['inline_add'];
 
 			if ($add['submit']->isSubmittedBy() || $add['cancel']->isSubmittedBy()) {
-				if ($add['submit']->isSubmittedBy()) {
+				if ($add['submit']->isSubmittedBy() && !$add->getErrors()) {
 					$this->inlineAdd->onSubmit($values->inline_add);
 
 					if ($this->getPresenter()->isAjax()) {
@@ -3495,3 +3495,4 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->redrawControl('non-existing-snippet');
 	}
 }
+
