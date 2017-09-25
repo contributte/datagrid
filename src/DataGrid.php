@@ -1952,6 +1952,25 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+    /**
+     * Add export that pass array to callback
+     * @param $text
+     * @param $callback
+     * @param bool $filtered
+     * @param bool $include_headers
+     * @return Export\Export
+     * @throws DataGridException
+     */
+    public function addExportArrayCallback($text, $callback, $filtered = false, $include_headers = true)
+    {
+        if (!is_callable($callback)) {
+            throw new DataGridException('Second parameter of ExportCallback must be callable.');
+        }
+
+        return $this->addToExports(new Export\ExportArray($this, $text, $callback, $include_headers, $filtered));
+    }
+
+
 	/**
 	 * Add already implemented csv export
 	 * @param string $text
