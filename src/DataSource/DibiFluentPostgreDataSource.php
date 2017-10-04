@@ -11,7 +11,6 @@ namespace Ublaboo\DataGrid\DataSource;
 use Dibi;
 use DibiFluent;
 use Ublaboo\DataGrid\Filter;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
 
 class DibiFluentPostgreDataSource extends DibiFluentDataSource
 {
