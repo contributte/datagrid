@@ -2711,7 +2711,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$per_page = $this->per_page ?: reset($items_per_page_list);
 
-		if ($per_page !== 'all' && !in_array($this->per_page, $items_per_page_list, true)) {
+		if ($per_page !== 'all' && !in_array((int) $this->per_page, $items_per_page_list, true)) {
 			$per_page = reset($items_per_page_list);
 		}
 
@@ -3071,6 +3071,26 @@ class DataGrid extends Nette\Application\UI\Control
 	public function allowRowsAction($key, callable $condition)
 	{
 		$this->row_conditions['action'][$key] = $condition;
+	}
+
+
+	/**
+	 * @param  string   $multiActionKey
+	 * @param  string   $actionKey
+	 * @param  callable $condition
+	 * @return void
+	 */
+	public function allowRowsMultiAction($multiActionKey, $actionKey, callable $condition)
+	{
+		if (!isset($this->actions[$multiActionKey])) {
+			throw new DataGridException("There is no action at key [$multiActionKey] defined.");
+		}
+
+		if (!$this->actions[$multiActionKey] instanceof Column\MultiAction) {
+			throw new DataGridException("Action at key [$multiActionKey] is not a MultiAction.");
+		}
+
+		$this->actions[$multiActionKey]->setRowCondition((string) $actionKey, $condition);
 	}
 
 

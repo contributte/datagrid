@@ -641,6 +641,9 @@ $ ->
 
 
 datagridGroupActionMultiSelect = ->
+	if !$.fn.selectpicker
+		return;
+
 	selects = $('[data-datagrid-multiselect-id]');
 
 	selects.each ->
@@ -672,8 +675,7 @@ $.nette.ext('datagrid.fitlerMultiSelect', {
 
 $.nette.ext('datagrid.groupActionMultiSelect', {
 	success: ->
-		if $.fn.selectpicker
-			datagridGroupActionMultiSelect()
+		datagridGroupActionMultiSelect()
 })
 
 

@@ -11,6 +11,7 @@ namespace Ublaboo\DataGrid\Column;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Traits;
 
 class MultiAction extends Column
@@ -37,6 +38,11 @@ class MultiAction extends Column
 	 * @var array
 	 */
 	protected $actions = [];
+
+	/**
+	 * @var callable[]
+	 */
+	private $rowConditions = [];
 
 
 	/**
@@ -150,5 +156,31 @@ class MultiAction extends Column
 		return array_merge($this->template_variables, [
 			'multi_action' => $this,
 		]);
+	}
+
+
+	/**
+	 * @param string $actionKey
+	 * @param callable $rowCondition
+	 * @return void
+	 */
+	public function setRowCondition($actionKey, callable $rowCondition)
+	{
+		$this->rowConditions[$actionKey] = $rowCondition;
+	}
+
+
+	/**
+	 * @param  string $actionKey
+	 * @param  Row    $row
+	 * @return bool
+	 */
+	public function testRowCondition($actionKey, Row $row)
+	{
+		if (!isset($this->rowConditions[$actionKey])) {
+			return true;
+		}
+
+		return (bool) call_user_func($this->rowConditions[$actionKey], $row->getItem());
 	}
 }
