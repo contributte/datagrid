@@ -71,6 +71,9 @@ final class DataModel extends Nette\Object
 			} elseif ($driver instanceof Dibi\Drivers\MsSqlDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
+			} elseif ($driver instanceof Dibi\Drivers\PostgreDriver) {
+				$source = new DataSource\DibiFluentPostgreDataSource($source, $primary_key);
+
 			} elseif ($driver instanceof Dibi\Drivers\SqlsrvDriver) {
 				$source = new DataSource\DibiFluentMssqlDataSource($source, $primary_key);
 
