@@ -55,6 +55,7 @@ final class DateTimeHelper extends \Nette\Object
 			'j. n. Y G:i:s',
 			'j. n. Y G:i',
 			'j. n. Y',
+			'U',
 		]);
 
 		if ($value instanceof \DateTime) {
