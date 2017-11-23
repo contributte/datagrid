@@ -185,8 +185,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			}
 
 			foreach ($words as $word) {
-				$escaped = $driver->escapeLike($word, 0);
-				$or[] = "$column LIKE $escaped";
+				$or[] = ["$column LIKE %~like~", $word];
 			}
 		}
 
