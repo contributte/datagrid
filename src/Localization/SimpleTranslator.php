@@ -9,9 +9,12 @@
 namespace Ublaboo\DataGrid\Localization;
 
 use Nette;
+use Nette\SmartObject;
 
-class SimpleTranslator extends Nette\Object implements Nette\Localization\ITranslator
+class SimpleTranslator implements Nette\Localization\ITranslator
 {
+
+	use SmartObject;
 
 	/**
 	 * @var array

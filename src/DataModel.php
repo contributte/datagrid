@@ -12,7 +12,7 @@ use Dibi;
 use DibiFluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
-use Nette;
+use Nette\SmartObject;
 use Nette\Database\Drivers as NDBDrivers;
 use Nette\Database\Table\Selection;
 use Nextras\Orm\Collection\ICollection;
@@ -22,8 +22,10 @@ use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
 use Ublaboo\DataGrid\Utils\NetteDatabaseSelectionHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
-final class DataModel extends Nette\Object
+final class DataModel
 {
+
+	use SmartObject;
 
 	/**
 	 * @var callable[]

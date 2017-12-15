@@ -9,12 +9,16 @@
 namespace Ublaboo\DataGrid\GroupAction;
 
 use Nette;
+use Nette\SmartObject;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
 
-class GroupActionCollection extends Nette\Object
+class GroupActionCollection
 {
+
+	use SmartObject;
+
 	const ID_ATTRIBUTE_PREFIX = 'group_action_item_';
 
 	/**
