@@ -131,6 +131,22 @@ final class ColumnActionTest extends TestCase
 		);
 	}
 
+
+	public function testActionRenderCondition()
+	{
+		$action = $this->grid->addAction('action1', 'Do', 'doStuff!')->setRenderCondition(function () {
+			return true;
+		});
+
+		Assert::same('<a href="doStuff!?id=1" class="btn btn-xs btn-default">Do</a>', $this->render($action));
+
+		$action = $this->grid->addAction('action2', 'Do', 'doStuff!')->setRenderCondition(function () {
+			return false;
+		});
+
+		Assert::same('', $this->render($action));
+	}
+
 }
 
 
