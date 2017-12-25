@@ -79,7 +79,7 @@ getEventDomPath = function(e) {
   }
   path = [];
   node = e.target;
-  while (node !== document.body) {
+  while (node !== document.body && node !== null) {
     path.push(node);
     node = node.parentNode;
   }
