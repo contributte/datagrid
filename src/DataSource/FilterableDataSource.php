@@ -8,11 +8,14 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Nette\SmartObject;
 use Nette\Utils\Callback;
 use Ublaboo\DataGrid\Filter;
 
-abstract class FilterableDataSource extends \Nette\Object
+abstract class FilterableDataSource
 {
+
+	use SmartObject;
 
 	/**
 	 * Filter data
