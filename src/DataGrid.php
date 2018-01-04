@@ -3181,6 +3181,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 			if ($this->getPresenter()->isAjax()) {
 				$this->getPresenter()->payload->_datagrid_inline_editing = true;
+				$this->getPresenter()->payload->_datagrid_name = $this->getName();
 			}
 
 			$this->redrawItem($id, $primary_where_column);

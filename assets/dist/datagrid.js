@@ -676,10 +676,10 @@ $(function() {
 });
 
 datagridGroupActionMultiSelect = function() {
+  var selects;
   if (!$.fn.selectpicker) {
     return;
   }
-  var selects;
   selects = $('[data-datagrid-multiselect-id]');
   return selects.each(function() {
     var id;
@@ -720,8 +720,10 @@ $.nette.ext('datagrid.groupActionMultiSelect', {
 
 $.nette.ext('datagrid.inline-editing', {
   success: function(payload) {
+    var grid;
     if (payload._datagrid_inline_editing) {
-      return $('.datagrid-inline-edit-trigger').addClass('hidden');
+      grid = $('.datagrid-' + payload._datagrid_name);
+      return grid.find('.datagrid-inline-edit-trigger').addClass('hidden');
     }
   }
 });

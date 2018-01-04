@@ -682,7 +682,8 @@ $.nette.ext('datagrid.groupActionMultiSelect', {
 $.nette.ext('datagrid.inline-editing', {
 	success: (payload) ->
 		if payload._datagrid_inline_editing
-			$('.datagrid-inline-edit-trigger').addClass('hidden')
+			grid = $('.datagrid-' + payload._datagrid_name)
+			grid.find('.datagrid-inline-edit-trigger').addClass('hidden')
 })
 
 
