@@ -33,10 +33,15 @@ trait TButtonRenderer
 	 * @return mixed
 	 * @throws DataGridColumnRendererException
 	 */
-	public function useRenderer(?Row $row = null)
+	public function useRenderer($row = null)
 	{
 		$renderer = $this->getRenderer();
-		$args = $row ? [$row->getItem()] : [];
+
+		if ($row instanceof Row) {
+			$args = [$row->getItem()];
+		} else {
+			$args = [];
+		}
 
 		if (!$renderer) {
 			throw new DataGridColumnRendererException;
