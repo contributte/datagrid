@@ -17,6 +17,7 @@ use Ublaboo\DataGrid\Traits;
 
 class Action extends Column
 {
+	use Traits\TButtonRenderer;
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonText;
 	use Traits\TLink;
@@ -109,15 +110,11 @@ class Action extends Column
 	 */
 	public function render(Row $row)
 	{
-		/**
-		 * Renderer function may be used
-		 */
 		try {
+			// Renderer function may be used
 			return $this->useRenderer($row);
 		} catch (DataGridColumnRendererException $e) {
-			/**
-			 * Do not use renderer
-			 */
+			// Do not use renderer
 		}
 
 		$link = $this->createLink(
