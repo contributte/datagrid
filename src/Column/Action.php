@@ -17,7 +17,6 @@ use Ublaboo\DataGrid\Traits;
 
 class Action extends Column
 {
-	use Traits\TButtonRenderer;
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonText;
 	use Traits\TLink;
