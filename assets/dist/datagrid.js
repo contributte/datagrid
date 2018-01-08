@@ -691,7 +691,7 @@ datagridGroupActionMultiSelect = function() {
       id = $(this).data('datagrid-multiselect-id');
       $(this).on('loaded.bs.select', function(e) {
         $(this).parent().attr('style', 'display:none;');
-        return $(this).parent().find('.hidden').removeClass('hidden').addClass('btn-default');
+        return $(this).parent().find('.hidden').removeClass('hidden').addClass('btn-default btn-secondary');
       });
       return $(this).on('rendered.bs.select', function(e) {
         return $(this).parent().attr('id', id);
