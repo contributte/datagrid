@@ -556,6 +556,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Set template file and render it
 		 */
+		\Tracy\Debugger::barDump($this->getTemplateFile());
 		$template->setFile($this->getTemplateFile());
 		$template->render();
 	}

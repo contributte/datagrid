@@ -7,13 +7,11 @@
 {if $outer}
 	<div class="row">
 		{label $input class => 'col-sm-3 control-label' /}
-		<div class="col-sm-9 form-inline">
-			<div class="input-group input-group-sm datagrid-input-group-full-width">
+		<div class="col-sm-9">
+			<div class="input-group input-group-sm">
 				{input $input}
 				<label n:name="$input" class="input-group-addon input-group-append">
-					<span class="input-group-text">
-						<i class="{$icon_prefix}calendar"></i>
-					</span>
+					<i class="input-group-text {$icon_prefix}calendar"></i>
 				</label>
 			</div>
 		</div>
@@ -23,9 +21,7 @@
 		<div class="input-group input-group-sm">
 			{input $input}
 			<label n:name="$input" class="input-group-addon input-group-append">
-				<span class="input-group-text">
-					<i class="{$icon_prefix}calendar"></i>
-				</span>
+				<i class="input-group-text {$icon_prefix}calendar"></i>
 			</label>
 		</div>
 	</div>
