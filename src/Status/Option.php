@@ -49,7 +49,7 @@ class Option
 	/**
 	 * @var string
 	 */
-	protected $class_in_dropdown = 'ajax';
+	protected $class_in_dropdown = 'ajax dropdown-item';
 
 	/**
 	 * @var string

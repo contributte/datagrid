@@ -14,7 +14,7 @@ trait TButtonClass
 	/**
 	 * @var string
 	 */
-	protected $class = 'btn btn-xs btn-default';
+	protected $class = 'btn btn-xs btn-default btn-secondary';
 
 
 	/**
