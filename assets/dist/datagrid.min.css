@@ -1,5 +1,5 @@
 .datagrid .datagrid-collapse-filters-button-row,.datagrid .datagrid-manual-submit,.datagrid .row-filters>div{margin-bottom:.5em}
-.datagrid table thead tr th .datagrid-column-header-additions,.datagrid-column-status-option-icon{float:right}
+.datagrid .datagrid-column-status-option-icon,.datagrid table thead tr th .datagrid-column-header-additions{float:right}
 @keyframes edited{0%{background-color:#A6E2A9}
 100%{background-color:transparent}
 }
@@ -7,6 +7,7 @@
 100%{background-color:transparent}
 }
 .datagrid{background-color:#fff;padding:1em;box-sizing:border-box}
+.datagrid .hidden{display:none!important}
 .datagrid .col-action .dropdown{display:inline-block}
 .datagrid .datagrid-row-inline-add.datagrid-row-inline-add-hidden{display:none}
 .datagrid .datagrid-row-columns-summary td{border-top:2px solid #bbb;border-left:1px solid #eee;border-right:1px solid #eee;font-weight:700}
@@ -30,12 +31,13 @@
 .datagrid table thead tr th{font-size:90%;vertical-align:top}
 .datagrid table thead tr th hr{margin:8px -8px}
 .datagrid table thead tr th .datagrid-column-header-additions a[data-datagrid-reset-filter-by-column]{margin-left:.3em;color:#858585}
-.datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu{opacity:0;cursor:pointer;margin-left:2px;display:inline-block}
+.datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu{opacity:0;cursor:pointer;margin-left:.3em;display:inline-block}
 .datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-menu{font-size:12px}
 .datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-menu li .fa{margin-right:.5em}
+.datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-toggle::after{display:none!important}
 .datagrid table thead tr th .datagrid-col-filter-date-range .input-group .datagrid-filter-date-range-last,.datagrid table thead tr th .datagrid-col-filter-range .input-group .datagrid-filter-date-range-last{-webkit-border-radius:3px 0 0 3px;-moz-border-radius:3px 0 0 3px;border-radius:3px 0 0 3px}
 .datagrid table thead tr th .datagrid-col-filter-date-range .input-group .input-group-addon-first,.datagrid table thead tr th .datagrid-col-filter-range .input-group .input-group-addon-first{-webkit-border-radius:0 3px 3px 0;-moz-border-radius:0 3px 3px 0;border-radius:0 3px 3px 0;border-left:0}
-.datagrid table thead tr th .datagrid-col-filter-date-range .input-group .datagrid-col-filter-datte-range-delimiter,.datagrid table thead tr th .datagrid-col-filter-range .input-group .datagrid-col-filter-datte-range-delimiter{background-color:inherit;border:none}
+.datagrid table thead tr th .datagrid-col-filter-date-range .input-group .datagrid-col-filter-datte-range-delimiter,.datagrid table thead tr th .datagrid-col-filter-range .input-group .datagrid-col-filter-datte-range-delimiter{background-color:inherit;border:none;padding:.25rem .5rem}
 .datagrid table thead tr th .datagrid-col-filter-range .form-control{-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px}
 .datagrid table thead tr th:hover .column-settings-menu{opacity:1}
 .datagrid table tbody td{vertical-align:middle}
@@ -99,3 +101,15 @@
 .datagrid .row-group-actions th{font-weight:400}
 .datagrid .col-checkbox{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
 .datagrid .col-checkbox .happy-checkbox{margin-top:2px}
+@media (min-width:768px){.datagrid .ublaboo-datagrid-th-form-inline .form-group{display:inline-block;margin-bottom:0;vertical-align:middle}
+.datagrid .ublaboo-datagrid-th-form-inline .form-control{display:inline-block;width:auto;vertical-align:middle}
+.datagrid .ublaboo-datagrid-th-form-inline .input-group{display:inline-table;vertical-align:middle}
+.datagrid .ublaboo-datagrid-th-form-inline .input-group .form-control{width:auto}
+.datagrid .ublaboo-datagrid-th-form-inline .input-group>.form-control{width:100%}
+.datagrid .ublaboo-datagrid-th-form-inline .control-label{margin-bottom:0;vertical-align:middle}
+.datagrid .ublaboo-datagrid-th-form-inline .checkbox,.datagrid .ublaboo-datagrid-th-form-inline .radio{display:inline-block;margin-top:0;margin-bottom:0;vertical-align:middle}
+.datagrid .ublaboo-datagrid-th-form-inline .checkbox label,.datagrid .ublaboo-datagrid-th-form-inline .radio label{padding-left:0}
+.datagrid .ublaboo-datagrid-th-form-inline .checkbox input[type=checkbox],.datagrid .ublaboo-datagrid-th-form-inline .radio input[type=radio]{position:relative;margin-left:0}
+}
+.datagrid .btn-group-xs>.btn,.datagrid .btn-xs{padding:1px 5px;font-size:12px;line-height:1.5;border-radius:3px}
+.datagrid .dropdown-item{padding:3px 20px;line-height:1.42857143;font-size:14px}

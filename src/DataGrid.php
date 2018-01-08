@@ -560,6 +560,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Set template file and render it
 		 */
+		\Tracy\Debugger::barDump($this->getTemplateFile());
 		$template->setFile($this->getTemplateFile());
 		$template->render();
 	}
@@ -3276,7 +3277,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->inlineAdd
 			->setTitle('ublaboo_datagrid.add')
 			->setIcon('plus')
-			->setClass('btn btn-xs btn-default');
+			->setClass('btn btn-xs btn-default btn-secondary');
 
 		return $this->inlineAdd;
 	}
