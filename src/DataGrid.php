@@ -708,6 +708,21 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Return default sort for column, if specified
+	 * @param string $columnKey
+	 * @return string|NULL
+	 */
+	public function getColumnDefaultSort($columnKey)
+	{
+		if (isset($this->default_sort[$columnKey])) {
+			return $this->default_sort[$columnKey];
+		}
+
+		return NULL;
+	}
+
+
+	/**
 	 * User may set default sorting, apply it
 	 * @return void
 	 */
