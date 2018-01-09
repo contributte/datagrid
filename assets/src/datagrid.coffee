@@ -77,6 +77,8 @@ getEventDomPath = (e) ->
 	node = e.target
 
 	while node != document.body
+		if node == null
+			break
 		path.push(node)
 		node = node.parentNode
 
