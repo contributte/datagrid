@@ -8,11 +8,13 @@
 
 namespace Ublaboo\DataGrid\Status;
 
-use Nette;
+use Nette\SmartObject;
 use Ublaboo\DataGrid\Column\ColumnStatus;
 
-class Option extends Nette\Object
+class Option
 {
+
+	use SmartObject;
 
 	/**
 	 * @var ColumnStatus

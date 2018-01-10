@@ -9,13 +9,16 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
+use Nette\SmartObject;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
  * @method void addToFormContainer(Nette\Forms\Container $container)
  */
-abstract class Filter extends Nette\Object
+abstract class Filter
 {
+
+	use SmartObject;
 
 	/**
 	 * @var mixed

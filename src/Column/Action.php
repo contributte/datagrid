@@ -109,15 +109,11 @@ class Action extends Column
 	 */
 	public function render(Row $row)
 	{
-		/**
-		 * Renderer function may be used
-		 */
 		try {
+			// Renderer function may be used
 			return $this->useRenderer($row);
 		} catch (DataGridColumnRendererException $e) {
-			/**
-			 * Do not use renderer
-			 */
+			// Do not use renderer
 		}
 
 		$link = $this->createLink(

@@ -8,10 +8,13 @@
 
 namespace Ublaboo\DataGrid\Utils;
 
+use Nette\SmartObject;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 
-final class DateTimeHelper extends \Nette\Object
+final class DateTimeHelper
 {
+
+	use SmartObject;
 
 	/**
 	 * Try to convert string into DateTime object
@@ -55,6 +58,7 @@ final class DateTimeHelper extends \Nette\Object
 			'j. n. Y G:i:s',
 			'j. n. Y G:i',
 			'j. n. Y',
+			'U',
 		]);
 
 		if ($value instanceof \DateTime) {

@@ -8,11 +8,13 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette;
+use Nette\SmartObject;
 use Ublaboo;
 
-class Renderer extends Nette\Object
+class Renderer
 {
+
+	use SmartObject;
 
 	/**
 	 * @var callable
