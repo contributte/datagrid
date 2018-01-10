@@ -55,8 +55,8 @@ class FilterDateRange extends FilterRange implements IFilterDate
 		$this->addAttributes($container['to']);
 
 		if ($this->grid->hasAutoSubmit()) {
-			$container['from']->setAttribute('data-autosubmit-change', TRUE);
-			$container['to']->setAttribute('data-autosubmit-change', TRUE);
+			$container['from']->setAttribute('data-autosubmit-change', true);
+			$container['to']->setAttribute('data-autosubmit-change', true);
 		}
 
 		if ($placeholder_array = $this->getPlaceholder()) {
@@ -107,5 +107,4 @@ class FilterDateRange extends FilterRange implements IFilterDate
 	{
 		return $this->format[1];
 	}
-
 }

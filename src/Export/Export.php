@@ -8,15 +8,14 @@
 
 namespace Ublaboo\DataGrid\Export;
 
-use Ublaboo\DataGrid\DataGrid;
 use Nette\Utils\Callback;
 use Nette\Utils\Html;
 use Ublaboo;
+use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Traits;
 
 class Export
 {
-
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonIcon;
 	use Traits\TButtonClass;
@@ -79,7 +78,7 @@ class Export
 		$a = Html::el('a', [
 			'class' => [$this->class],
 			'title' => $this->grid->getTranslator()->translate($this->getTitle()),
-			'href'  => $this->link
+			'href' => $this->link,
 		]);
 
 		$this->tryAddIcon(
@@ -138,7 +137,7 @@ class Export
 	 * Tell export whether to be called via ajax or not
 	 * @param bool $ajax
 	 */
-	public function setAjax($ajax = TRUE)
+	public function setAjax($ajax = true)
 	{
 		$this->ajax = (bool) $ajax;
 
@@ -175,5 +174,4 @@ class Export
 	{
 		Callback::invokeArgs($this->callback, [$data, $this->grid]);
 	}
-
 }

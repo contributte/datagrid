@@ -84,5 +84,4 @@ class FilterMultiSelect extends FilterSelect
 
 		return $this->addAttributes($input);
 	}
-
 }

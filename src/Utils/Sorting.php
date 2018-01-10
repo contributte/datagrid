@@ -21,10 +21,10 @@ final class Sorting extends Nette\Object
 	/**
 	 * @var callable|null
 	 */
-	private $sort_callback = NULL;
+	private $sort_callback = null;
 
 
-	public function __construct(array $sort, callable $sort_callback = NULL)
+	public function __construct(array $sort, callable $sort_callback = null)
 	{
 		$this->sort = $sort;
 		$this->sort_callback = $sort_callback;
@@ -47,5 +47,4 @@ final class Sorting extends Nette\Object
 	{
 		return $this->sort_callback;
 	}
-
 }

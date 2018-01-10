@@ -26,6 +26,7 @@
 .datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn),.datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn)>.btn{width:auto}
 .datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) .dropdown-menu li{font-size:13px}
 .datagrid table thead tr.row-group-actions th{border-bottom-width:0!important;background-color:#f9f9f9}
+.datagrid table thead tr.row-group-actions .datagrid-selected-rows-count{margin-left:.3em}
 .datagrid table thead tr th{font-size:90%;vertical-align:top}
 .datagrid table thead tr th hr{margin:8px -8px}
 .datagrid table thead tr th .datagrid-column-header-additions a[data-datagrid-reset-filter-by-column]{margin-left:.3em;color:#858585}

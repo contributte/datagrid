@@ -39,6 +39,14 @@ abstract class BaseDataSourceTest extends TestCase
         Assert::same(6, $this->ds->getCount());
     }
 
+    public function testGetFilteredCount()
+    {
+        $filter = new FilterText($this->grid, 'a', 'b', ['name']);
+        $filter->setValue('John Red');
+
+        $this->ds->filter([$filter]);
+        Assert::same(2, $this->ds->getCount());
+    }
 
     public function testGetData()
     {

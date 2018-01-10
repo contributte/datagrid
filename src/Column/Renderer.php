@@ -8,8 +8,8 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Ublaboo,
-	Nette;
+use Nette;
+use Ublaboo;
 
 class Renderer extends Nette\Object
 {
@@ -54,5 +54,4 @@ class Renderer extends Nette\Object
 	{
 		return $this->condition_callback;
 	}
-
 }

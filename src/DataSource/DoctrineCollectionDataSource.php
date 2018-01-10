@@ -149,6 +149,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	 */
 	public function applyFilterRange(Filter\FilterRange $filter)
 	{
+		$conditions = $filter->getCondition();
 		$values = $conditions[$filter->getColumn()];
 
 		if ($value_from = $values['from']) {
@@ -173,12 +174,12 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 		$exprs = [];
 
 		foreach ($filter->getCondition() as $column => $value) {
-			if($filter->isExactSearch()) {
+			if ($filter->isExactSearch()) {
 				$exprs[] = Criteria::expr()->eq($column, $value);
 				continue;
 			}
 
-			if ($filter->hasSplitWordsSearch() === FALSE) {
+			if ($filter->hasSplitWordsSearch() === false) {
 				$words = [$value];
 			} else {
 				$words = explode(' ', $value);

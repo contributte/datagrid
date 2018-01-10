@@ -8,17 +8,15 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Ublaboo\DataGrid\Filter\Filter;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Nette\Utils\Callback;
 use Nette\Utils\Strings;
-use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridArrayDataSourceException;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
+use Ublaboo\DataGrid\Filter\Filter;
+use Ublaboo\DataGrid\Filter\FilterDate;
+use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter\FilterMultiSelect;
+use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
@@ -41,8 +39,7 @@ class ArrayDataSource implements IDataSource
 	 */
 	public function __construct(array $data_source)
 	{
-		$this->data = $data_source;
-		$this->count = sizeof($data_source);
+		$this->setData($data_source);
 	}
 
 
@@ -57,18 +54,30 @@ class ArrayDataSource implements IDataSource
 	 */
 	public function getCount()
 	{
-		return $this->count;
+		return sizeof($this->data);
 	}
 
 
 	/**
 	 * Get the data
 	 * @return array
-	 * @return array
 	 */
 	public function getData()
 	{
 		return $this->data;
+	}
+
+
+	/**
+	 * Set the data
+	 * @param array $data_source
+	 * @return static
+	 */
+	private function setData(array $data_source)
+	{
+		$this->data = $data_source;
+
+		return $this;
 	}
 
 
@@ -82,18 +91,20 @@ class ArrayDataSource implements IDataSource
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
 				if ($filter->hasConditionCallback()) {
-					$this->data = (array) call_user_func_array(
+					$data = (array) call_user_func_array(
 						$filter->getConditionCallback(),
 						[$this->data, $filter->getValue()]
 					);
+					$this->setData($data);
 				} else {
-					$this->data = array_filter($this->data, function($row) use ($filter) {
+					$data = array_filter($this->data, function ($row) use ($filter) {
 						return $this->applyFilter($row, $filter);
 					});
+					$this->setData($data);
 				}
 			}
 		}
-		
+
 		return $this;
 	}
 
@@ -108,14 +119,14 @@ class ArrayDataSource implements IDataSource
 		foreach ($this->data as $item) {
 			foreach ($condition as $key => $value) {
 				if ($item[$key] == $value) {
-					$this->data = [$item];
+					$this->setData([$item]);
 
 					return $this;
 				}
 			}
 		}
 
-		$this->data = [];
+		$this->setData([]);
 
 		return $this;
 	}
@@ -129,7 +140,8 @@ class ArrayDataSource implements IDataSource
 	 */
 	public function limit($offset, $limit)
 	{
-		$this->data = array_slice($this->data, $offset, $limit);
+		$data = array_slice($this->data, $offset, $limit);
+		$this->setData($data);
 
 		return $this;
 	}
@@ -146,11 +158,11 @@ class ArrayDataSource implements IDataSource
 		if (is_array($row) || $row instanceof \Traversable) {
 			if ($filter instanceof FilterDate) {
 				return $this->applyFilterDate($row, $filter);
-			} else if ($filter instanceof FilterMultiSelect) {
+			} elseif ($filter instanceof FilterMultiSelect) {
 				return $this->applyFilterMultiSelect($row, $filter);
-			} else if ($filter instanceof FilterDateRange) {
+			} elseif ($filter instanceof FilterDateRange) {
 				return $this->applyFilterDateRange($row, $filter);
-			} else if ($filter instanceof FilterRange) {
+			} elseif ($filter instanceof FilterRange) {
 				return $this->applyFilterRange($row, $filter);
 			}
 
@@ -161,7 +173,7 @@ class ArrayDataSource implements IDataSource
 					return $row[$column] == $value;
 				}
 
-				if ($filter instanceof FilterText && $filter->hasSplitWordsSearch() === FALSE) {
+				if ($filter instanceof FilterText && $filter->hasSplitWordsSearch() === false) {
 					$words = [$value];
 				} else {
 					$words = explode(' ', $value);
@@ -170,14 +182,14 @@ class ArrayDataSource implements IDataSource
 				$row_value = strtolower(Strings::toAscii($row[$column]));
 
 				foreach ($words as $word) {
-					if (FALSE !== strpos($row_value, strtolower(Strings::toAscii($word)))) {
+					if (strpos($row_value, strtolower(Strings::toAscii($word))) !== false) {
 						return $row;
 					}
 				}
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 
@@ -192,7 +204,7 @@ class ArrayDataSource implements IDataSource
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
 
-		return in_array($row[$filter->getColumn()], $values);
+		return in_array($row[$filter->getColumn()], $values, true);
 	}
 
 
@@ -206,19 +218,19 @@ class ArrayDataSource implements IDataSource
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
 
-		if ($values['from'] !== NULL && $values['from'] !== '') {
+		if ($values['from'] !== null && $values['from'] !== '') {
 			if ($values['from'] > $row[$filter->getColumn()]) {
-				return FALSE;
+				return false;
 			}
 		}
 
-		if ($values['to'] !== NULL && $values['to'] !== '') {
+		if ($values['to'] !== null && $values['to'] !== '') {
 			if ($values['to'] < $row[$filter->getColumn()]) {
-				return FALSE;
+				return false;
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
 
 
@@ -234,7 +246,7 @@ class ArrayDataSource implements IDataSource
 		$values = $condition[$filter->getColumn()];
 		$row_value = $row[$filter->getColumn()];
 
-		if ($values['from'] !== NULL && $values['from'] !== '') {
+		if ($values['from'] !== null && $values['from'] !== '') {
 			$date_from = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
 			$date_from->setTime(0, 0, 0);
 
@@ -248,16 +260,16 @@ class ArrayDataSource implements IDataSource
 					/**
 					 * Otherwise just return raw string
 					 */
-					return FALSE;
+					return false;
 				}
 			}
 
 			if ($row_value->getTimeStamp() < $date_from->getTimeStamp()) {
-				return FALSE;
+				return false;
 			}
 		}
 
-		if ($values['to'] !== NULL && $values['to'] !== '') {
+		if ($values['to'] !== null && $values['to'] !== '') {
 			$date_to = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
 			$date_to->setTime(23, 59, 59);
 
@@ -271,16 +283,16 @@ class ArrayDataSource implements IDataSource
 					/**
 					 * Otherwise just return raw string
 					 */
-					return FALSE;
+					return false;
 				}
 			}
 
 			if ($row_value->getTimeStamp() > $date_to->getTimeStamp()) {
-				return FALSE;
+				return false;
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
 
 
@@ -310,7 +322,7 @@ class ArrayDataSource implements IDataSource
 					/**
 					 * Otherwise just return raw string
 					 */
-					return FALSE;
+					return false;
 				}
 			}
 
@@ -327,15 +339,17 @@ class ArrayDataSource implements IDataSource
 	public function sort(Sorting $sorting)
 	{
 		if (is_callable($sorting->getSortCallback())) {
-			$this->data = call_user_func(
+			$data = call_user_func(
 				$sorting->getSortCallback(),
 				$this->data,
 				$sorting->getSort()
 			);
 
-			if (!is_array($this->data)) {
+			if (!is_array($data)) {
 				throw new DataGridArrayDataSourceException('Sorting callback has to return array');
 			}
+
+			$this->setData($data);
 
 			return $this;
 		}
@@ -360,16 +374,17 @@ class ArrayDataSource implements IDataSource
 				krsort($data);
 			}
 
-			$this->data = [];
+			$data_source = [];
 
 			foreach ($data as $i) {
 				foreach ($i as $item) {
-					$this->data[] = $item;
+					$data_source[] = $item;
 				}
 			}
+
+			$this->setData($data_source);
 		}
 
 		return $this;
 	}
-
 }

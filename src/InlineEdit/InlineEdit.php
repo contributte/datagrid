@@ -9,9 +9,8 @@
 namespace Ublaboo\DataGrid\InlineEdit;
 
 use Nette;
-use Nette\Application\UI\Form;
-use Ublaboo\DataGrid\DataGrid;
 use Nette\Utils\Html;
+use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Traits;
 
 /**
@@ -23,7 +22,6 @@ use Ublaboo\DataGrid\Traits;
  */
 class InlineEdit extends Nette\Object
 {
-
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonIcon;
 	use Traits\TButtonClass;
@@ -74,20 +72,20 @@ class InlineEdit extends Nette\Object
 	 * Inline adding - render on the top or in the bottom?
 	 * @var bool
 	 */
-	protected $position_top = FALSE;
+	protected $position_top = false;
 
 	/**
 	 * Columns that are not edited can displey normal value instaad of nothing..
 	 * @var bool
 	 */
-	protected $showNonEditingColumns = TRUE;
+	protected $showNonEditingColumns = true;
 
 
 	/**
 	 * @param DataGrid $grid
 	 * @param string|NULL   $primary_where_column
 	 */
-	public function __construct(DataGrid $grid, $primary_where_column = NULL)
+	public function __construct(DataGrid $grid, $primary_where_column = null)
 	{
 		$this->grid = $grid;
 		$this->primary_where_column = $primary_where_column;
@@ -144,8 +142,12 @@ class InlineEdit extends Nette\Object
 
 		$a->addText($this->text);
 
-		if ($this->title) { $a->title($this->grid->getTranslator()->translate($this->title)); }
-		if ($this->class) { $a->class[] = $this->class; }
+		if ($this->title) {
+			$a->title($this->grid->getTranslator()->translate($this->title));
+		}
+		if ($this->class) {
+			$a->class[] = $this->class;
+		}
 
 		$a->class[] = 'datagrid-inline-edit-trigger';
 
@@ -159,14 +161,18 @@ class InlineEdit extends Nette\Object
 	 */
 	public function renderButtonAdd()
 	{
-		$a = Html::el('a')->data('datagrid-toggle-inline-add', TRUE);
+		$a = Html::el('a')->data('datagrid-toggle-inline-add', true);
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
 		$a->addText($this->text);
 
-		if ($this->title) { $a->title($this->grid->getTranslator()->translate($this->title)); }
-		if ($this->class) { $a->class($this->class); }
+		if ($this->title) {
+			$a->title($this->grid->getTranslator()->translate($this->title));
+		}
+		if ($this->class) {
+			$a->class($this->class);
+		}
 
 		return $a;
 	}
@@ -177,7 +183,7 @@ class InlineEdit extends Nette\Object
 	 * @param bool $position_top
 	 * @return static
 	 */
-	public function setPositionTop($position_top = TRUE)
+	public function setPositionTop($position_top = true)
 	{
 		$this->position_top = (bool) $position_top;
 
@@ -204,7 +210,6 @@ class InlineEdit extends Nette\Object
 	}
 
 
-
 	/**
 	 * @param Nette\Forms\Container $container
 	 */
@@ -213,7 +218,7 @@ class InlineEdit extends Nette\Object
 		foreach ($container->getControls() as $key => $control) {
 			switch ($key) {
 				case 'submit':
-				    $control->setValidationScope([$container]);
+					$control->setValidationScope([$container]);
 					$control->setAttribute('class', 'btn btn-xs btn-primary');
 
 					break;
@@ -222,7 +227,7 @@ class InlineEdit extends Nette\Object
 					$control->setAttribute('class', 'btn btn-xs btn-danger');
 
 					break;
-				
+
 				default:
 					if (empty($control->getControl()->getClass())) {
 						$control->setAttribute('class', 'form-control input-sm');
@@ -238,7 +243,7 @@ class InlineEdit extends Nette\Object
 	 * @param bool $show
 	 * @return static
 	 */
-	public function setShowNonEditingColumns($show = TRUE)
+	public function setShowNonEditingColumns($show = true)
 	{
 		$this->showNonEditingColumns = (bool) $show;
 
@@ -253,5 +258,4 @@ class InlineEdit extends Nette\Object
 	{
 		return $this->showNonEditingColumns;
 	}
-
 }

@@ -9,8 +9,8 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Nette\Utils\Strings;
-use Nextras\Orm\Mapper\Dbal\DbalCollection;
 use Nextras\Orm\Collection\ICollection;
+use Nextras\Orm\Mapper\Dbal\DbalCollection;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\ArraysHelper;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
@@ -60,6 +60,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		return $this->data_source->countStored();
 	}
 
+
 	/**
 	 * Get the data
 	 * @return array
@@ -103,7 +104,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 			$this->data_source = $this->data_source->findBy([
 				$this->prepareColumn($column) . '>=' => $date->setTime(0, 0, 0),
-				$this->prepareColumn($column) . '<=' => $date_end->setTime(23, 59, 59)
+				$this->prepareColumn($column) . '<=' => $date_end->setTime(23, 59, 59),
 			]);
 		}
 
@@ -180,21 +181,21 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		$params = [];
 
 		foreach ($condition as $column => $value) {
-			if($filter->isExactSearch()){
-				$expr .= "%column = %s OR ";
+			if ($filter->isExactSearch()) {
+				$expr .= '%column = %s OR ';
 				$params[] = $column;
 				$params[] = "$value";
 				continue;
 			}
 
-			if ($filter->hasSplitWordsSearch() === FALSE) {
+			if ($filter->hasSplitWordsSearch() === false) {
 				$words = [$value];
 			} else {
 				$words = explode(' ', $value);
 			}
 
 			foreach ($words as $word) {
-				$expr .= "%column LIKE %s OR ";
+				$expr .= '%column LIKE %s OR ';
 				$params[] = $column;
 				$params[] = "%$word%";
 			}
@@ -220,7 +221,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		$expr = '(';
 
 		foreach ($values as $value) {
-			$expr .= "%column = %any OR ";
+			$expr .= '%column = %any OR ';
 			$params[] = $filter->getColumn();
 			$params[] = "$value";
 		}
@@ -295,16 +296,17 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		return $this;
 	}
 
+
 		/**
 		 * Adjust column from DataGrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
 		 * @param string $column
 		 * @return string
 		 */
-		private function prepareColumn($column) {
-		if (Strings::contains($column, '.')) {
-			return 'this->' . str_replace('.', '->', $column);
+		private function prepareColumn($column)
+		{
+			if (Strings::contains($column, '.')) {
+				return 'this->' . str_replace('.', '->', $column);
+			}
+			return $column;
 		}
-		return $column;
-	}
-
 }

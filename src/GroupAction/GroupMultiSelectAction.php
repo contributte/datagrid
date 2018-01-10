@@ -8,8 +8,6 @@
 
 namespace Ublaboo\DataGrid\GroupAction;
 
-use Nette;
-
 /**
  * @method void onSelect()
  */
@@ -20,5 +18,4 @@ class GroupMultiSelectAction extends GroupSelectAction
 	 * @var string
 	 */
 	protected $class = 'form-control input-sm selectpicker';
-
 }

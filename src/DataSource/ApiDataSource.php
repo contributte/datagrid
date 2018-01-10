@@ -104,12 +104,12 @@ class ApiDataSource implements IDataSource
 	public function getData()
 	{
 		return !empty($this->data) ? $this->data : $this->getResponse([
-			'sort'  => $this->sort_column,
-			'order'  => $this->order_column,
-			'limit'  => $this->limit,
-			'offset'  => $this->offset,
-			'filter'  => $this->filter,
-			'one' => $this->filter_one
+			'sort' => $this->sort_column,
+			'order' => $this->order_column,
+			'limit' => $this->limit,
+			'offset' => $this->offset,
+			'filter' => $this->filter,
+			'one' => $this->filter_one,
 		]);
 	}
 
@@ -146,7 +146,7 @@ class ApiDataSource implements IDataSource
 				);
 			}
 		}
-		
+
 		return $this;
 	}
 
@@ -192,10 +192,9 @@ class ApiDataSource implements IDataSource
 		 */
 		foreach ($sorting->getSort() as $column => $order) {
 			$this->sort_column = $column;
-			$this->order_column  = $order;
+			$this->order_column = $order;
 		}
 
 		return $this;
 	}
-
 }

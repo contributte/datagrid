@@ -1,4 +1,5 @@
-var datagridFitlerMultiSelect, datagridGroupActionMultiSelect, datagridShiftGroupSelection, datagridSortable, datagridSortableTree;
+var datagridFitlerMultiSelect, datagridGroupActionMultiSelect, datagridShiftGroupSelection, datagridSortable, datagridSortableTree, getEventDomPath,
+  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 $(document).on('click', '[data-datagrid-confirm]:not(.ajax)', function(e) {
   if (!confirm($(e.target).closest('a').attr('data-datagrid-confirm'))) {
@@ -71,12 +72,26 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', function(e) {
   }
 });
 
+getEventDomPath = function(e) {
+  var node, path;
+  if (indexOf.call(e, path) >= 0) {
+    return e.path;
+  }
+  path = [];
+  node = e.target;
+  while (node !== document.body) {
+    path.push(node);
+    node = node.parentNode;
+  }
+  return path;
+};
+
 datagridShiftGroupSelection = function() {
   var last_checkbox;
   last_checkbox = null;
   return document.addEventListener('click', function(e) {
     var checkboxes_rows, current_checkbox_row, el, event, i, ie, input, j, k, last_checkbox_row, last_checkbox_tbody, len, len1, len2, ref, ref1, results, row, rows;
-    ref = e.path;
+    ref = getEventDomPath(e);
     for (i = 0, len = ref.length; i < len; i++) {
       el = ref[i];
       if ($(el).is('.col-checkbox') && last_checkbox && e.shiftKey) {
@@ -111,7 +126,7 @@ datagridShiftGroupSelection = function() {
         }
       }
     }
-    ref1 = e.path;
+    ref1 = getEventDomPath(e);
     results = [];
     for (k = 0, len2 = ref1.length; k < len2; k++) {
       el = ref1[k];
@@ -128,17 +143,25 @@ datagridShiftGroupSelection = function() {
 datagridShiftGroupSelection();
 
 document.addEventListener('change', function(e) {
-  var at_least_one, event, grid, i, ie, input, inputs, len, results, select;
+  var checked_inputs, counter, event, grid, i, ie, input, inputs, len, results, select, total;
   grid = e.target.getAttribute('data-check');
   if (grid) {
-    at_least_one = document.querySelector('.datagrid-' + grid + ' input[data-check]:checked');
+    checked_inputs = document.querySelectorAll('input[data-check-all-' + grid + ']:checked');
     select = document.querySelector('.datagrid-' + grid + ' select[name="group_action[group_action]"]');
     if (select) {
-      if (at_least_one) {
+      counter = document.querySelector('.datagrid-' + grid + ' .datagrid-selected-rows-count');
+      if (checked_inputs.length) {
         select.disabled = false;
+        total = document.querySelectorAll('input[data-check-all-' + grid + ']').length;
+        if (counter) {
+          counter.innerHTML = checked_inputs.length + '/' + total;
+        }
       } else {
         select.disabled = true;
         select.value = "";
+        if (counter) {
+          counter.innerHTML = "";
+        }
       }
     }
     ie = window.navigator.userAgent.indexOf("MSIE ");
@@ -422,7 +445,7 @@ $.nette.ext('datargid.item_detail', {
       id = settings.nette.el.attr('data-toggle-detail');
       row_detail = $('.item-detail-' + id);
       if (row_detail.hasClass('loaded')) {
-        if (!row_detail.find('.item-detail-content').size()) {
+        if (!row_detail.find('.item-detail-content').length) {
           row_detail.removeClass('toggled');
           return true;
         }
@@ -493,17 +516,26 @@ $.nette.ext('datagrid.tree', {
 });
 
 $(document).on('click', '[data-datagrid-editable-url]', function(event) {
-  var attr_name, attr_value, attrs, cell, cell_height, cell_lines, cell_padding, input, line_height, submit, value;
+  var attr_name, attr_value, attrs, cell, cellValue, cell_height, cell_lines, cell_padding, input, line_height, submit, valueToEdit;
   cell = $(this);
+  if (event.target.tagName.toLowerCase() === 'a') {
+    return;
+  }
   if (cell.hasClass('datagrid-inline-edit')) {
     return;
   }
   if (!cell.hasClass('editing')) {
     cell.addClass('editing');
-    value = cell.html().trim().replace('<br>', '\n');
-    cell.data('value', value);
+    cellValue = cell.html().trim().replace('<br>', '\n');
+    if (cell.data('datagrid-editable-value')) {
+      valueToEdit = cell.data('datagrid-editable-value');
+    } else {
+      valueToEdit = cellValue;
+    }
+    cell.data('originalValue', cellValue);
+    cell.data('valueToEdit', valueToEdit);
     if (cell.data('datagrid-editable-type') === 'textarea') {
-      input = $('<textarea>' + value + '</textarea>');
+      input = $('<textarea>' + valueToEdit + '</textarea>');
       cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10);
       cell_height = cell.outerHeight();
       line_height = Math.round(parseFloat(cell.css('line-height')));
@@ -512,13 +544,13 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
     } else if (cell.data('datagrid-editable-type') === 'select') {
       input = $(cell.data('datagrid-editable-element'));
       input.find('option').each(function() {
-        if ($(this).text() === value) {
-          return input.find('option[value=' + $(this).val() + ']').prop('selected', true);
+        if ($(this).text() === valueToEdit) {
+          return input.find('option[value=' + valueToEdit + ']').prop('selected', true);
         }
       });
     } else {
       input = $('<input type="' + cell.data('datagrid-editable-type') + '">');
-      input.val(value);
+      input.val(valueToEdit);
     }
     attrs = cell.data('datagrid-editable-attrs');
     for (attr_name in attrs) {
@@ -528,29 +560,33 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
     cell.removeClass('edited');
     cell.html(input);
     submit = function(cell, el) {
+      var value;
       value = el.val();
-      if (value !== cell.data('value')) {
+      if (value !== cell.data('valueToEdit')) {
         $.nette.ajax({
           url: cell.data('datagrid-editable-url'),
           data: {
             value: value
           },
           method: 'POST',
-          success: function() {
+          success: function(payload) {
             if (cell.data('datagrid-editable-type') === 'select') {
               cell.html(input.find('option[value=' + value + ']').html());
             } else {
+              if (payload._datagrid_editable_new_value) {
+                value = payload._datagrid_editable_new_value;
+              }
               cell.html(value);
             }
             return cell.addClass('edited');
           },
           error: function() {
-            cell.html(cell.data('value'));
+            cell.html(cell.data('originalValue'));
             return cell.addClass('edited-error');
           }
         });
       } else {
-        cell.html(cell.data('value'));
+        cell.html(cell.data('originalValue'));
       }
       return setTimeout(function() {
         return cell.removeClass('editing');
@@ -570,7 +606,7 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
         e.stopPropagation();
         e.preventDefault();
         cell.removeClass('editing');
-        return cell.html(cell.data('value'));
+        return cell.html(cell.data('originalValue'));
       }
     });
     return cell.find('select').on('change', function() {
@@ -603,10 +639,14 @@ $(document).on('click', '[data-datagrid-toggle-inline-add]', function(e) {
   return row.find('input:not([readonly]),textarea:not([readonly])').first().focus();
 });
 
-$(document).on('mousedown', '[data-datagrid-cancel-inline-add]', function(e) {
-  e.stopPropagation();
-  e.preventDefault();
-  return $('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden');
+$(document).on('mouseup', '[data-datagrid-cancel-inline-add]', function(e) {
+  var code;
+  code = e.which || e.keyCode || 0;
+  if (code === 1) {
+    e.stopPropagation();
+    e.preventDefault();
+    return $('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden');
+  }
 });
 
 $.nette.ext('datagrid-toggle-inline-add', {
@@ -636,6 +676,9 @@ $(function() {
 });
 
 datagridGroupActionMultiSelect = function() {
+  if (!$.fn.selectpicker) {
+    return;
+  }
   var selects;
   selects = $('[data-datagrid-multiselect-id]');
   return selects.each(function() {
@@ -671,9 +714,7 @@ $.nette.ext('datagrid.fitlerMultiSelect', {
 
 $.nette.ext('datagrid.groupActionMultiSelect', {
   success: function() {
-    if ($.fn.selectpicker) {
-      return datagridGroupActionMultiSelect();
-    }
+    return datagridGroupActionMultiSelect();
   }
 });
 

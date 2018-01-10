@@ -10,8 +10,6 @@ namespace Ublaboo\DataGrid\DataSource;
 
 use Dibi;
 use DibiFluent;
-use Nette\Utils\Callback;
-use Nette\Utils\Strings;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
@@ -110,7 +108,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		$conditions = $filter->getCondition();
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to   = $conditions[$filter->getColumn()]['to'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
 			$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
@@ -138,7 +136,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		$conditions = $filter->getCondition();
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to   = $conditions[$filter->getColumn()]['to'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from || $value_from != '') {
 			$this->data_source->where('%n >= ?', $filter->getColumn(), $value_from);
@@ -162,7 +160,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			if (class_exists(Dibi\Helpers::class) === TRUE) {
+			if (class_exists(Dibi\Helpers::class) === true) {
 				$column = Dibi\Helpers::escape(
 					$driver,
 					$column,
@@ -175,12 +173,12 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 				);
 			}
 
-			if ($filter->isExactSearch()){
+			if ($filter->isExactSearch()) {
 				$this->data_source->where("$column = %s", $value);
 				continue;
 			}
 
-			if ($filter->hasSplitWordsSearch() === FALSE) {
+			if ($filter->hasSplitWordsSearch() === false) {
 				$words = [$value];
 			} else {
 				$words = explode(' ', $value);
@@ -189,7 +187,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			foreach ($words as $word) {
 				$escaped = $driver->escapeLike($word, 0);
 				$or[] = "$column LIKE $escaped";
-
 			}
 		}
 
@@ -291,7 +288,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 			$reflection = new \ReflectionClass('DibiFluent');
 			$cursor_property = $reflection->getProperty('cursor');
-			$cursor_property->setAccessible(TRUE);
+			$cursor_property->setAccessible(true);
 			$cursor = $cursor_property->getValue($this->data_source);
 
 			if (!$cursor) {

@@ -22,7 +22,7 @@ class FilterSelect extends Filter
 	/**
 	 * @var bool
 	 */
-	protected $translateOptions = FALSE;
+	protected $translateOptions = false;
 
 	/**
 	 * @var string
@@ -33,6 +33,11 @@ class FilterSelect extends Filter
 	 * @var string
 	 */
 	protected $type = 'select';
+
+	/**
+	 * @var string|NULL
+	 */
+	protected $prompt = null;
 
 
 	/**
@@ -67,7 +72,7 @@ class FilterSelect extends Filter
 				$this->options
 			);
 
-			$select->setTranslator(NULL);
+			$select->setTranslator(null);
 		} else {
 			$select = $this->addControl($container, $this->key, $this->name, $this->options);
 		}
@@ -78,7 +83,7 @@ class FilterSelect extends Filter
 	 * @param  bool  $translateOptions
 	 * @return static
 	 */
-	public function setTranslateOptions($translateOptions = TRUE)
+	public function setTranslateOptions($translateOptions = true)
 	{
 		$this->translateOptions = (bool) $translateOptions;
 		return $this;
@@ -105,6 +110,38 @@ class FilterSelect extends Filter
 
 
 	/**
+	 * Get filter prompt
+	 * @return string|NULL
+	 */
+	public function getPrompt()
+	{
+		return $this->prompt;
+	}
+
+
+	/**
+	 * Set filter prompt value
+	 * @param string|NULL $prompt
+	 * @return static
+	 */
+	public function setPrompt($prompt)
+	{
+		$this->prompt = $prompt;
+		return $this;
+	}
+
+
+	/**
+	 * Tell if prompt has been set in this fitler
+	 * @return bool
+	 */
+	public function isPromptEnabled()
+	{
+		return isset($this->prompt);
+	}
+
+
+	/**
 	 * @param Nette\Forms\Container $container
 	 * @param string                $key
 	 * @param string                $name
@@ -115,7 +152,10 @@ class FilterSelect extends Filter
 	{
 		$input = $container->addSelect($key, $name, $options);
 
+		if ($this->isPromptEnabled()) {
+			$input->setPrompt($this->prompt);
+		}
+
 		return $this->addAttributes($input);
 	}
-
 }

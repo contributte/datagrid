@@ -38,5 +38,4 @@ class ActionCallback extends Action
 
 		return $this->grid->link('actionCallback!', $params);
 	}
-
 }

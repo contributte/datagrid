@@ -99,7 +99,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$conditions = $filter->getCondition();
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to   = $conditions[$filter->getColumn()]['to'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
 			$this->data_source->where('CONVERT(varchar(10), %n, 112) >= ?', $filter->getColumn(), $value_from);
@@ -123,7 +123,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			if (class_exists(Dibi\Helpers::class) === TRUE) {
+			if (class_exists(Dibi\Helpers::class) === true) {
 				$column = Dibi\Helpers::escape(
 					$driver,
 					$column,
@@ -136,7 +136,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 				);
 			}
 
-			if ($filter->isExactSearch()){
+			if ($filter->isExactSearch()) {
 				$this->data_source->where("$column = %s", $value);
 				continue;
 			}
@@ -169,5 +169,4 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 		return $this;
 	}
-
 }

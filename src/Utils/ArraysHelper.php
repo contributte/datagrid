@@ -23,20 +23,20 @@ final class ArraysHelper extends Nette\Object
 		foreach ($array as $key => $value) {
 			if (is_array($value)) {
 				if (!self::testEmpty($value)) {
-					return FALSE;
+					return false;
 				}
 			} else {
 				if ($value) {
-					return FALSE;
+					return false;
 				}
 
-				if (in_array($value, [0, '0', FALSE], TRUE)) {
-					return FALSE;
+				if (in_array($value, [0, '0', false], true)) {
+					return false;
 				}
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
 
 
@@ -50,16 +50,15 @@ final class ArraysHelper extends Nette\Object
 		foreach ($a as $value) {
 			if (is_array($value) || $value instanceof \Traversable) {
 				if (self::testTruthy($value)) {
-					return TRUE;
+					return true;
 				}
 			} else {
-				if ($value !== '' && $value !== NULL) {
-					return TRUE;
+				if ($value !== '' && $value !== null) {
+					return true;
 				}
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
-
 }

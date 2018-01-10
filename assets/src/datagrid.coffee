@@ -69,11 +69,25 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', (e) ->
 )
 
 
+getEventDomPath = (e) ->
+	if path in e
+		return e.path
+
+	path = []
+	node = e.target
+
+	while node != document.body
+		path.push(node)
+		node = node.parentNode
+
+	return path
+
+
 datagridShiftGroupSelection = ->
 	last_checkbox = null
 
 	document.addEventListener 'click', (e) ->	
-		for el in e.path
+		for el in getEventDomPath(e)
 			if $(el).is('.col-checkbox') && last_checkbox && e.shiftKey
 				current_checkbox_row = $(el).closest('tr')
 
@@ -108,7 +122,7 @@ datagridShiftGroupSelection = ->
 						input.dispatchEvent(event)
 					
 				
-		for el in e.path
+		for el in getEventDomPath(e)
 			if $(el).is('.col-checkbox')
 				last_checkbox = $(el)
 
@@ -119,16 +133,27 @@ document.addEventListener 'change', (e) ->
 	grid = e.target.getAttribute('data-check')
 
 	if grid
-		at_least_one = document.querySelector('.datagrid-' + grid + ' input[data-check]:checked')
+		checked_inputs = document.querySelectorAll('input[data-check-all-' + grid + ']:checked')
 
 		select = document.querySelector('.datagrid-' + grid + ' select[name="group_action[group_action]"]')
 
 		if select
-			if at_least_one
+			counter = document.querySelector('.datagrid-' + grid + ' .datagrid-selected-rows-count')
+
+			if checked_inputs.length
 				select.disabled = false
+
+				total = document.querySelectorAll('input[data-check-all-' + grid + ']').length
+
+				if counter
+					counter.innerHTML = checked_inputs.length + '/' + total
+
 			else
 				select.disabled = true
 				select.value = ""
+
+				if counter
+					counter.innerHTML = ""
 
 		ie = window.navigator.userAgent.indexOf("MSIE ")
 
@@ -379,7 +404,7 @@ $.nette.ext('datargid.item_detail', {
 
 			#if row_detail.hasClass('loaded') and row.hasClass('detail-loaded')
 			if row_detail.hasClass('loaded')
-				if not row_detail.find('.item-detail-content').size()
+				if not row_detail.find('.item-detail-content').length
 					row_detail.removeClass('toggled')
 
 					return true
@@ -448,16 +473,27 @@ $.nette.ext('datagrid.tree', {
 $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 	cell = $(this)
 
+	if event.target.tagName.toLowerCase() == 'a'
+		return
+
 	if cell.hasClass('datagrid-inline-edit')
 		return
 
 	if !cell.hasClass('editing')
 		cell.addClass('editing')
-		value = cell.html().trim().replace('<br>', '\n')
-		cell.data('value', value)
+
+		cellValue = cell.html().trim().replace('<br>', '\n')
+
+		if cell.data('datagrid-editable-value')
+			valueToEdit = cell.data('datagrid-editable-value')
+		else
+			valueToEdit = cellValue
+
+		cell.data('originalValue', cellValue)
+		cell.data('valueToEdit', valueToEdit)
 
 		if cell.data('datagrid-editable-type') == 'textarea'
-			input = $('<textarea>' + value + '</textarea>')
+			input = $('<textarea>' + valueToEdit + '</textarea>')
 
 			cell_padding = parseInt(cell.css('padding').replace(/[^-\d\.]/g, ''), 10)
 			cell_height = cell.outerHeight()
@@ -471,11 +507,11 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 			input = $(cell.data('datagrid-editable-element'));
 
 			input.find('option').each ->
-				if $(this).text() == value
-					input.find('option[value=' + $(this).val() + ']').prop('selected', true)
+				if $(this).text() == valueToEdit
+					input.find('option[value=' + valueToEdit + ']').prop('selected', true)
 		else
 			input = $('<input type="' + cell.data('datagrid-editable-type') + '">')
-			input.val(value)
+			input.val(valueToEdit)
 
 		attrs = cell.data('datagrid-editable-attrs')
 
@@ -488,27 +524,30 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 		submit = (cell, el) ->
 			value = el.val()
 
-			if value != cell.data('value')
+			if value != cell.data('valueToEdit')
 				$.nette.ajax({
 					url: cell.data('datagrid-editable-url'),
 					data: {
 						value: value
 					},
 					method: 'POST',
-					success: () ->
+					success: (payload) ->
 						if cell.data('datagrid-editable-type') == 'select'
 							cell.html(input.find('option[value=' + value + ']').html())
 						else
+							if payload._datagrid_editable_new_value
+								value = payload._datagrid_editable_new_value
+
 							cell.html(value)
 
 						cell.addClass('edited')
 					,
 					error: () ->
-						cell.html(cell.data('value'))
+						cell.html(cell.data('originalValue'))
 						cell.addClass('edited-error')
 				})
 			else
-				cell.html(cell.data('value'))
+				cell.html(cell.data('originalValue'))
 
 			setTimeout ->
 				cell.removeClass('editing')
@@ -529,7 +568,7 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 				e.preventDefault()
 
 				cell.removeClass('editing');
-				cell.html(cell.data('value'));
+				cell.html(cell.data('originalValue'));
 		)
 		cell.find('select').on('change', ->
 			submit(cell, $(this))
@@ -564,11 +603,14 @@ $(document).on('click', '[data-datagrid-toggle-inline-add]', (e) ->
 	row.find('input:not([readonly]),textarea:not([readonly])').first().focus()
 )
 
-$(document).on('mousedown', '[data-datagrid-cancel-inline-add]', (e) ->
-	e.stopPropagation()
-	e.preventDefault()
+$(document).on('mouseup', '[data-datagrid-cancel-inline-add]', (e) ->
+	code = e.which || e.keyCode || 0
 
-	$('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden')
+	if code == 1
+		e.stopPropagation()
+		e.preventDefault()
+
+		$('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden')
 )
 
 $.nette.ext('datagrid-toggle-inline-add', {
@@ -599,6 +641,9 @@ $ ->
 
 
 datagridGroupActionMultiSelect = ->
+	if !$.fn.selectpicker
+		return;
+
 	selects = $('[data-datagrid-multiselect-id]');
 
 	selects.each ->
@@ -630,8 +675,7 @@ $.nette.ext('datagrid.fitlerMultiSelect', {
 
 $.nette.ext('datagrid.groupActionMultiSelect', {
 	success: ->
-		if $.fn.selectpicker
-			datagridGroupActionMultiSelect()
+		datagridGroupActionMultiSelect()
 })
 
 

@@ -11,11 +11,11 @@ namespace Ublaboo\DataGrid\Column;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
+use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Traits;
 
 class MultiAction extends Column
 {
-
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonIcon;
 	use Traits\TButtonClass;
@@ -38,6 +38,11 @@ class MultiAction extends Column
 	 * @var array
 	 */
 	protected $actions = [];
+
+	/**
+	 * @var callable[]
+	 */
+	private $rowConditions = [];
 
 
 	/**
@@ -93,7 +98,7 @@ class MultiAction extends Column
 	 * @param array|null $params
 	 * @return static
 	 */
-	public function addAction($key, $name, $href = NULL, array $params = NULL)
+	public function addAction($key, $name, $href = null, array $params = null)
 	{
 		if (isset($this->actions[$key])) {
 			throw new DataGridException(
@@ -103,7 +108,7 @@ class MultiAction extends Column
 
 		$href = $href ?: $key;
 
-		if (NULL === $params) {
+		if ($params === null) {
 			$params = [$this->grid->getPrimaryKey()];
 		}
 
@@ -149,8 +154,33 @@ class MultiAction extends Column
 	public function getTemplateVariables()
 	{
 		return array_merge($this->template_variables, [
-			'multi_action' => $this
+			'multi_action' => $this,
 		]);
 	}
 
+
+	/**
+	 * @param string $actionKey
+	 * @param callable $rowCondition
+	 * @return void
+	 */
+	public function setRowCondition($actionKey, callable $rowCondition)
+	{
+		$this->rowConditions[$actionKey] = $rowCondition;
+	}
+
+
+	/**
+	 * @param  string $actionKey
+	 * @param  Row    $row
+	 * @return bool
+	 */
+	public function testRowCondition($actionKey, Row $row)
+	{
+		if (!isset($this->rowConditions[$actionKey])) {
+			return true;
+		}
+
+		return (bool) call_user_func($this->rowConditions[$actionKey], $row->getItem());
+	}
 }

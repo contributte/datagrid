@@ -8,8 +8,8 @@
 
 namespace Ublaboo\DataGrid\Utils;
 
-use Nette\Forms\Container;
 use Nette;
+use Nette\Forms\Container;
 
 final class ItemDetailForm extends Container
 {
@@ -63,7 +63,7 @@ final class ItemDetailForm extends Container
 		}
 
 		foreach ((array) $this->getHttpData() as $name => $value) {
-			if ((is_array($value) || $value instanceof \Traversable) && !$this->getComponent($name, FALSE)) {
+			if ((is_array($value) || $value instanceof \Traversable) && !$this->getComponent($name, false)) {
 				$this->getComponent($name);
 			}
 		}
@@ -75,10 +75,10 @@ final class ItemDetailForm extends Container
 	 */
 	private function getHttpData()
 	{
-		if ($this->http_post === NULL) {
+		if ($this->http_post === null) {
 			$path = explode(self::NAME_SEPARATOR, $this->lookupPath('Nette\Forms\Form'));
 
-			$this->http_post = Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, NULL);
+			$this->http_post = Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, null);
 		}
 
 		return $this->http_post;
@@ -107,5 +107,4 @@ final class ItemDetailForm extends Container
 
 		return $container;
 	}
-
 }

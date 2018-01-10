@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Nette\Database\Table\Selection;
+use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
@@ -54,15 +55,30 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 */
 	public function getCount()
 	{
+		$data_source_sql_builder = $this->data_source->getSqlBuilder();
+
 		try {
 			$primary = $this->data_source->getPrimary();
+
 		} catch (\LogicException $e) {
+			if ($data_source_sql_builder->getGroup() !== '') {
+				return $this->data_source->count(
+					'DISTINCT ' . Strings::replace($data_source_sql_builder->getGroup(), '~ (DESC|ASC)~')
+				);
+			}
+
 			return $this->data_source->count('*');
 		}
 
-		return $this->data_source->count(
-			$this->data_source->getName() . '.' . (is_array($primary) ? reset($primary) : $primary)
-		);
+		if ($data_source_sql_builder->getGroup() !== '') {
+			return $this->data_source->count(
+				'DISTINCT ' . Strings::replace($data_source_sql_builder->getGroup(), '~ (DESC|ASC)~')
+			);
+		} else {
+			return $this->data_source->count(
+				$this->data_source->getName() . '.' . (is_array($primary) ? reset($primary) : $primary)
+			);
+		}
 	}
 
 
@@ -114,7 +130,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$conditions = $filter->getCondition();
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to   = $conditions[$filter->getColumn()]['to'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
 			$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
@@ -142,7 +158,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$conditions = $filter->getCondition();
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to   = $conditions[$filter->getColumn()]['to'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		if ($value_from) {
 			$this->data_source->where("{$filter->getColumn()} >= ?", $value_from);
@@ -168,15 +184,14 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$condition = $filter->getCondition();
 
 		foreach ($condition as $column => $value) {
-
 			$like = '(';
 			$args = [];
 
-			if($filter->isExactSearch()){
-				$like .=  "$column = ? OR ";
+			if ($filter->isExactSearch()) {
+				$like .= "$column = ? OR ";
 				$args[] = "$value";
 			} else {
-				if ($filter->hasSplitWordsSearch() === FALSE) {
+				if ($filter->hasSplitWordsSearch() === false) {
 					$words = [$value];
 				} else {
 					$words = explode(' ', $value);
@@ -194,7 +209,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		}
 
 		if (sizeof($or) > 1) {
-			$big_or = substr($big_or, 0, strlen($big_or) - 4).')';
+			$big_or = substr($big_or, 0, strlen($big_or) - 4) . ')';
 
 			$query = array_merge([$big_or], $big_or_args);
 
@@ -221,7 +236,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		if (sizeof($values) > 1) {
 			$length = sizeof($values);
 			$i = 1;
-		
+
 			foreach ($values as $value) {
 				if ($i == $length) {
 					$or .= $filter->getColumn() . ' = ?)';
@@ -312,5 +327,4 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	{
 		call_user_func($aggregationCallback, $this->data_source);
 	}
-
 }

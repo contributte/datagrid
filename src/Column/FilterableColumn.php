@@ -8,15 +8,9 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette\InvalidArgumentException;
+use Nette;
 use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Exception\DataGridException;
-use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
-use Nette\Utils\Html;
-use Nette;
 
 abstract class FilterableColumn extends Nette\Object
 {
@@ -61,9 +55,9 @@ abstract class FilterableColumn extends Nette\Object
 	 * @param string|array|null $columns
 	 * @return Ublaboo\DataGrid\Filter\FilterText
 	 */
-	public function setFilterText($columns = NULL)
+	public function setFilterText($columns = null)
 	{
-		if (NULL === $columns) {
+		if ($columns === null) {
 			$columns = [$this->column];
 		} else {
 			$columns = is_string($columns) ? [$columns] : $columns;
@@ -78,9 +72,9 @@ abstract class FilterableColumn extends Nette\Object
 	 * @param string|null $column
 	 * @return Ublaboo\DataGrid\Filter\FilterSelect
 	 */
-	public function setFilterSelect(array $options, $column = NULL)
+	public function setFilterSelect(array $options, $column = null)
 	{
-		$column = $column === NULL ? $this->column : $column;
+		$column = $column === null ? $this->column : $column;
 
 		return $this->grid->addFilterSelect($this->key, $this->name, $options, $column);
 	}
@@ -91,9 +85,9 @@ abstract class FilterableColumn extends Nette\Object
 	 * @param string|null $column
 	 * @return Ublaboo\DataGrid\Filter\FilterMultiSelect
 	 */
-	public function setFilterMultiSelect(array $options, $column = NULL)
+	public function setFilterMultiSelect(array $options, $column = null)
 	{
-		$column = $column === NULL ? $this->column : $column;
+		$column = $column === null ? $this->column : $column;
 
 		return $this->grid->addFilterMultiSelect($this->key, $this->name, $options, $column);
 	}
@@ -103,9 +97,9 @@ abstract class FilterableColumn extends Nette\Object
 	 * @param string|null $column
 	 * @return Ublaboo\DataGrid\Filter\FilterDate
 	 */
-	public function setFilterDate($column = NULL)
+	public function setFilterDate($column = null)
 	{
-		$column = $column === NULL ? $this->column : $column;
+		$column = $column === null ? $this->column : $column;
 
 		return $this->grid->addFilterDate($this->key, $this->name, $column);
 	}
@@ -116,9 +110,9 @@ abstract class FilterableColumn extends Nette\Object
 	 * @param string|null $name_second
 	 * @return Ublaboo\DataGrid\Filter\FilterRange
 	 */
-	public function setFilterRange($column = NULL, $name_second = '-')
+	public function setFilterRange($column = null, $name_second = '-')
 	{
-		$column = $column === NULL ? $this->column : $column;
+		$column = $column === null ? $this->column : $column;
 
 		return $this->grid->addFilterRange($this->key, $this->name, $column, $name_second);
 	}
@@ -129,11 +123,10 @@ abstract class FilterableColumn extends Nette\Object
 	 * @param string|null $name_second
 	 * @return Ublaboo\DataGrid\Filter\FilterDateRange
 	 */
-	public function setFilterDateRange($column = NULL, $name_second = '-')
+	public function setFilterDateRange($column = null, $name_second = '-')
 	{
-		$column = $column === NULL ? $this->column : $column;
+		$column = $column === null ? $this->column : $column;
 
 		return $this->grid->addFilterDateRange($this->key, $this->name, $column, $name_second);
 	}
-
 }
