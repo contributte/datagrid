@@ -138,7 +138,7 @@ final class ColumnActionTest extends TestCase
 			return true;
 		});
 
-		Assert::same('<a href="doStuff!?id=1" class="btn btn-xs btn-default">Do</a>', $this->render($action));
+		Assert::same('<a href="doStuff!?id=1" class="btn btn-xs btn-default btn-secondary">Do</a>', $this->render($action));
 
 		$action = $this->grid->addAction('action2', 'Do', 'doStuff!')->setRenderCondition(function () {
 			return false;
