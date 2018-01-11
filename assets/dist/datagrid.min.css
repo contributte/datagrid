@@ -1,4 +1,4 @@
-.datagrid .datagrid-collapse-filters-button-row,.datagrid .datagrid-manual-submit,.datagrid .row-filters>div{margin-bottom:.5em}
+.datagrid .datagrid-collapse-filters-button-row,.datagrid .datagrid-manual-submit,.datagrid .row-filters .datagrid-row-outer-filters-group{margin-bottom:.5em}
 .datagrid .datagrid-column-status-option-icon,.datagrid table thead tr th .datagrid-column-header-additions{float:right}
 @keyframes edited{0%{background-color:#A6E2A9}
 100%{background-color:transparent}
@@ -7,6 +7,7 @@
 100%{background-color:transparent}
 }
 .datagrid{background-color:#fff;padding:1em;box-sizing:border-box}
+.datagrid .datagrid-input-group-full-width{width:100%}
 .datagrid .hidden{display:none!important}
 .datagrid .col-action .dropdown{display:inline-block}
 .datagrid .datagrid-row-inline-add.datagrid-row-inline-add-hidden{display:none}

@@ -33,6 +33,10 @@
 	padding: 1em;
 	box-sizing: border-box;
 
+	.datagrid-input-group-full-width {
+		width: 100%;
+	}
+
 	.hidden {
 		display: none !important;
 	}
@@ -112,7 +116,7 @@
 	}
 
 	.row-filters {
-		& > div {
+		.datagrid-row-outer-filters-group {
 			margin-bottom: 0.5em;
 		}
 	}
