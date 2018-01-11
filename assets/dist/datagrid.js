@@ -80,6 +80,9 @@ getEventDomPath = function(e) {
   path = [];
   node = e.target;
   while (node !== document.body) {
+    if (node === null) {
+      break;
+    }
     path.push(node);
     node = node.parentNode;
   }
@@ -545,7 +548,7 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
       input = $(cell.data('datagrid-editable-element'));
       input.find('option').each(function() {
         if ($(this).text() === valueToEdit) {
-          return input.find('option[value=' + valueToEdit + ']').prop('selected', true);
+          return input.find("option[value='" + valueToEdit + "']").prop('selected', true);
         }
       });
     } else {
@@ -571,7 +574,7 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
           method: 'POST',
           success: function(payload) {
             if (cell.data('datagrid-editable-type') === 'select') {
-              cell.html(input.find('option[value=' + value + ']').html());
+              cell.html(input.find("option[value='" + value + "']").html());
             } else {
               if (payload._datagrid_editable_new_value) {
                 value = payload._datagrid_editable_new_value;
