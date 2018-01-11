@@ -9,7 +9,7 @@
 {if $outer}
 	<div class="row">
 		{label $container['from'], class => 'col-sm-3 control-label' /}
-		<div class="col-sm-4">
+		<div class="col-sm-4 form-inline">
 			<div class="input-group input-group-sm">
 				{input $container['from']}
 				<label n:name="$container['from']" class="input-group-addon input-group-append">
@@ -18,7 +18,7 @@
 			</div>
 		</div>
 		{label $container['to'], class => 'filter-range-delimiter col-sm-1 control-label' /}
-		<div class="col-sm-4">
+		<div class="col-sm-4 form-inline">
 			<div class="input-group input-group-sm">
 				{input $container['to']}
 				<label n:name="$container['to']" class="input-group-addon input-group-append">
