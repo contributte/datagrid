@@ -35,36 +35,38 @@
 					</div>
 
 					{if $control->hasCollapsibleOuterFilters() && !$filter_active}
-						{var $filter_row_class = 'row row-filters collapse'}
+						{var $filter_row_class = 'row-filters collapse'}
 					{elseif $filter_active}
-						{var $filter_row_class = 'row row-filters collapse in'}
+						{var $filter_row_class = 'row-filters collapse in'}
 					{else}
-						{var $filter_row_class = 'row row-filters'}
+						{var $filter_row_class = 'row-filters'}
 					{/if}
 					<div class="{$filter_row_class}" id="datagrid-{$control->getName()}-row-filters">
-						{var $i = 0}
-						{var $filter_columns_class = 'col-sm-' . (12 / $control->getOuterFilterColumnsCount())}
-						<div class="{$filter_columns_class}" n:foreach="$filters as $f">
-							{**
-							 * Each fitler is rendered separately in its own template
-							 *}
-							{var $filter_block = 'filter-' . $f->getKey()}
-							{var $filter_type_block = 'filtertype-' . $f->getType()}
+						<div class="row">
+							{var $i = 0}
+							{var $filter_columns_class = 'col-sm-' . (12 / $control->getOuterFilterColumnsCount())}
+							<div class="datagrid-row-outer-filters-group {$filter_columns_class}" n:foreach="$filters as $f">
+								{**
+								 * Each fitler is rendered separately in its own template
+								 *}
+								{var $filter_block = 'filter-' . $f->getKey()}
+								{var $filter_type_block = 'filtertype-' . $f->getType()}
 
-							{ifset #$filter_block}
-								{include #$filter_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
-							{else}
-								{ifset #$filter_type_block}
-									{include #$filter_type_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
-									{else}
-										{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+								{ifset #$filter_block}
+									{include #$filter_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+								{else}
+									{ifset #$filter_type_block}
+										{include #$filter_type_block, filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+										{else}
+											{include $f->getTemplate(), filter => $f, input => $form['filter'][$f->getKey()], outer => TRUE}
+									{/ifset}
 								{/ifset}
-							{/ifset}
-							{var $i = $i+1}
-						</div>
-						<div class="col-sm-12">
-							<div n:if="!$control->hasAutoSubmit()" class="text-right datagrid-manual-submit">
-								{input $filter['filter']['submit']}
+								{var $i = $i+1}
+							</div>
+							<div class="col-sm-12" n:if="!$control->hasAutoSubmit()">
+								<div class="text-right datagrid-manual-submit">
+									{input $filter['filter']['submit']}
+								</div>
 							</div>
 						</div>
 					</div>

@@ -24,6 +24,10 @@
   box-sizing: border-box;
 }
 
+.datagrid .datagrid-input-group-full-width {
+  width: 100%;
+}
+
 .datagrid .hidden {
   display: none !important;
 }
@@ -94,7 +98,7 @@
   margin-bottom: 0.5em;
 }
 
-.datagrid .row-filters > div {
+.datagrid .row-filters .datagrid-row-outer-filters-group {
   margin-bottom: 0.5em;
 }
 
