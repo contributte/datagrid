@@ -552,7 +552,6 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Set template file and render it
 		 */
-		\Tracy\Debugger::barDump($this->getTemplateFile());
 		$template->setFile($this->getTemplateFile());
 		$template->render();
 	}
@@ -1774,6 +1773,14 @@ class DataGrid extends Nette\Application\UI\Control
 			/**
 			 * Session stuff
 			 */
+			if ($this->remember_state && $this->getSessionData($key) != $value) {
+				/**
+				 * Has been filter changed?
+				 */
+				$this->page = 1;
+				$this->saveSessionData('_grid_page', 1);
+			}
+
 			$this->saveSessionData($key, $value);
 
 			/**
@@ -2247,7 +2254,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->saveSessionData('_grid_has_sorted', 1);
 		$this->saveSessionData('_grid_sort', $this->sort = $sort);
-		$this->reload(['table']);
+
+		$this->reloadTheWholeGrid();
 	}
 
 
@@ -2286,7 +2294,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->filter = [];
 
-		$this->reload(['grid']);
+		$this->reloadTheWholeGrid();
 	}
 
 
@@ -2299,7 +2307,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->deleteSessionData($key);
 		unset($this->filter[$key]);
 
-		$this->reload(['grid']);
+		$this->reloadTheWholeGrid();
 	}
 
 
@@ -2499,6 +2507,24 @@ class DataGrid extends Nette\Application\UI\Control
 			foreach ($snippets as $snippet) {
 				$this->redrawControl($snippet);
 			}
+
+			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
+			$this->getPresenter()->payload->_datagrid_name = $this->getName();
+
+			$this->onRedraw();
+		} else {
+			$this->getPresenter()->redirect('this');
+		}
+	}
+
+
+	/**
+	 * @return void
+	 */
+	public function reloadTheWholeGrid()
+	{
+		if ($this->getPresenter()->isAjax()) {
+			$this->redrawControl('grid');
 
 			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 			$this->getPresenter()->payload->_datagrid_name = $this->getName();
