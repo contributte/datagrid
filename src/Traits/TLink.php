@@ -8,6 +8,7 @@
 
 namespace Ublaboo\DataGrid\Traits;
 
+use Nette;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Ublaboo\DataGrid\DataGrid;
@@ -31,13 +32,23 @@ trait TLink
 	{
 		$targetComponent = $grid;
 
+		if (strpos($href, ':') !== false) {
+			return $grid->getPresenter()->link($href, $params);
+		}
+
 		for ($iteration = 0; $iteration < 10; $iteration++) {
 			$targetComponent = $targetComponent->getParent();
+
+			if ($targetComponent === null) {
+				$this->throwHierarchyLookupException($grid, $href, $params);
+			}
 
 			try {
 				@$link = $targetComponent->link($href, $params);
 
 			} catch (InvalidLinkException $e) {
+				$link = false;
+			} catch (Nette\InvalidArgumentException $e) {
 				$link = false;
 			}
 
