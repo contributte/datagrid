@@ -1886,7 +1886,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function findSessionValues()
 	{
-		if (!ArraysHelper::testEmpty($this->filter) || ($this->page != 1) || !empty($this->sort) || $this->per_page) {
+		if (!ArraysHelper::testEmpty($this->filter) || ($this->page != 1) || !empty($this->sort)) {
 			return;
 		}
 
