@@ -1886,7 +1886,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function findSessionValues()
 	{
-		if ($this->filter || ($this->page != 1) || !empty($this->sort) || $this->per_page) {
+		if (!ArraysHelper::testEmpty($this->filter) || ($this->page != 1) || !empty($this->sort) || $this->per_page) {
 			return;
 		}
 
@@ -1985,8 +1985,13 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param bool $include_bom
 	 * @return Export\Export
 	 */
-	public function addExportCsv($text, $csv_file_name, $output_encoding = null, $delimiter = null, $include_bom = false)
-	{
+	public function addExportCsv(
+		$text,
+		$csv_file_name,
+		$output_encoding = null,
+		$delimiter = null,
+		$include_bom = false
+	) {
 		return $this->addToExports(new Export\ExportCsv(
 			$this,
 			$text,
@@ -2008,8 +2013,13 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param bool $include_bom
 	 * @return Export\Export
 	 */
-	public function addExportCsvFiltered($text, $csv_file_name, $output_encoding = null, $delimiter = null, $include_bom = false)
-	{
+	public function addExportCsvFiltered(
+		$text,
+		$csv_file_name,
+		$output_encoding = null,
+		$delimiter = null,
+		$include_bom = false
+	) {
 		return $this->addToExports(new Export\ExportCsv(
 			$this,
 			$text,
@@ -2037,6 +2047,9 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * @return void
+	 */
 	public function resetExportsLinks()
 	{
 		foreach ($this->exports as $id => $export) {
