@@ -258,7 +258,13 @@
 											{var $td->class[] = 'datagrid-inline-edit'}
 											{$td->startTag()|noescape}
 												{if isset($filter['inline_edit'][$key])}
-													{input $filter['inline_edit'][$key]}
+													{if $filter['inline_edit'][$key] instanceof \Nette\Forms\Container}
+														{foreach $filter['inline_edit'][$key]->getControls() as $inlineEditControl}
+															{input $inlineEditControl}
+														{/foreach}
+													{else}
+														{input $filter['inline_edit'][$key]}
+													{/if}
 												{elseif $inlineEdit->showNonEditingColumns()}
 													{include column-value, column => $column, row => $row, key => $key}
 												{/if}
@@ -436,7 +442,13 @@
 			{var $td->class[] = 'datagrid-inline-edit'}
 			{$td->startTag()|noescape}
 				{if isset($filter['inline_add'][$key])}
-					{input $filter['inline_add'][$key]}
+					{if $filter['inline_add'][$key] instanceof \Nette\Forms\Container}
+						{foreach $filter['inline_add'][$key]->getControls() as $inlineAddControl}
+							{input $inlineAddControl}
+						{/foreach}
+					{else}
+						{input $filter['inline_add'][$key]}
+					{/if}
 				{/if}
 			{$td->endTag()|noescape}
 		{/foreach}
