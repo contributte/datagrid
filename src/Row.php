@@ -17,6 +17,7 @@ use Nette\Utils\Html;
 use Nextras;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
+use Dibi\Row as DRow;
 
 class Row
 {
@@ -91,7 +92,7 @@ class Row
 		} elseif ($this->item instanceof Nextras\Orm\Entity\Entity) {
 			return $this->getNextrasEntityProperty($this->item, $key);
 
-		} elseif ($this->item instanceof DibiRow) {
+		} elseif ($this->item instanceof DibiRow || $this->item instanceof DRow) {
 			return $this->item->{$this->formatDibiRowKey($key)};
 
 		} elseif ($this->item instanceof ActiveRow) {
