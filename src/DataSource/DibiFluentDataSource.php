@@ -35,10 +35,10 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 
 	/**
-	 * @param DibiFluent $data_source
+	 * @param DibiFluent|Dibi\Fluent $data_source
 	 * @param string $primary_key
 	 */
-	public function __construct(DibiFluent $data_source, $primary_key)
+	public function __construct($data_source, $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
