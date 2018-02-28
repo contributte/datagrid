@@ -6,7 +6,7 @@ use Nette\Utils\Html;
 use Tester\TestCase;
 use Tester\Assert;
 use Ublaboo;
-use Nette;
+use Nette\SmartObject;
 use LeanMapper;
 
 require __DIR__ . '/../bootstrap.php';
@@ -146,8 +146,10 @@ class XTestingLMDataGridEntity2 extends LeanMapper\Entity
 }
 
 
-class XTestingDDataGridEntity extends Nette\Object
+class XTestingDDataGridEntity
 {
+
+	use SmartObject;
 
 	/**
 	 * @ORM\Id

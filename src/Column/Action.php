@@ -20,6 +20,7 @@ class Action extends Column
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonText;
 	use Traits\TLink;
+	use Traits\TRenderCondition;
 
 	/**
 	 * @var string
@@ -109,15 +110,15 @@ class Action extends Column
 	 */
 	public function render(Row $row)
 	{
-		/**
-		 * Renderer function may be used
-		 */
+		if (!$this->shouldBeRendered($row)) {
+			return null;
+		}
+
 		try {
+			// Renderer function may be used
 			return $this->useRenderer($row);
 		} catch (DataGridColumnRendererException $e) {
-			/**
-			 * Do not use renderer
-			 */
+			// Do not use renderer
 		}
 
 		$link = $this->createLink(

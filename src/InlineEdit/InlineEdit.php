@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\InlineEdit;
 
 use Nette;
+use Nette\SmartObject;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Traits;
@@ -20,8 +21,11 @@ use Ublaboo\DataGrid\Traits;
  * @method onControlAfterAdd(Nette\Forms\Container $container)
  * @method onSetDefaults(Nette\Forms\Container $container, $item)
  */
-class InlineEdit extends Nette\Object
+class InlineEdit
 {
+
+	use SmartObject;
+
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonIcon;
 	use Traits\TButtonClass;

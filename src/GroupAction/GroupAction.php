@@ -8,13 +8,15 @@
 
 namespace Ublaboo\DataGrid\GroupAction;
 
-use Nette;
+use Nette\SmartObject;
 
 /**
  * @method void onSelect(array $ids, string $value)
  */
-abstract class GroupAction extends Nette\Object
+abstract class GroupAction
 {
+
+	use SmartObject;
 
 	/**
 	 * @var callable[]

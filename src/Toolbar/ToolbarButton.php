@@ -10,15 +10,17 @@ namespace Ublaboo\DataGrid\Toolbar;
 
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Traits;
 
 class ToolbarButton
 {
 	use Traits\TButtonTryAddIcon;
-	use Traits\TButtonIcon;
 	use Traits\TButtonClass;
-	use Traits\TButtonTitle;
+	use Traits\TButtonIcon;
+	use Traits\TButtonRenderer;
 	use Traits\TButtonText;
+	use Traits\TButtonTitle;
 	use Traits\TLink;
 
 	/**
@@ -63,6 +65,13 @@ class ToolbarButton
 	 */
 	public function renderButton()
 	{
+		try {
+			// Renderer function may be used
+			return $this->useRenderer();
+		} catch (DataGridColumnRendererException $e) {
+			// Do not use renderer
+		}
+
 		$link = $this->createLink($this->grid, $this->href, $this->params);
 
 		$a = Html::el('a')->href($link);
