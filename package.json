@@ -1,6 +1,6 @@
 {
   "name": "ublaboo-datagrid",
-  "version": "5.4.2",
+  "version": "5.5.4",
   "description": "Assets for php composer package ublaboo/datagrid",
   "main": "assets/dist/datagrid.js",
   "directories": {

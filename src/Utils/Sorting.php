@@ -8,10 +8,12 @@
 
 namespace Ublaboo\DataGrid\Utils;
 
-use Nette;
+use Nette\SmartObject;
 
-final class Sorting extends Nette\Object
+final class Sorting
 {
+
+	use SmartObject;
 
 	/**
 	 * @var array

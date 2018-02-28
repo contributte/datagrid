@@ -12,13 +12,16 @@ use DibiRow;
 use LeanMapper;
 use Nette;
 use Nette\Database\Table\ActiveRow;
+use Nette\SmartObject;
 use Nette\Utils\Html;
 use Nextras;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
-class Row extends Nette\Object
+class Row
 {
+
+	use SmartObject;
 
 	/**
 	 * @var DataGrid

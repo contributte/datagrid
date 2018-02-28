@@ -8,12 +8,14 @@
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette;
+use Nette\SmartObject;
 use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
 
-abstract class FilterableColumn extends Nette\Object
+abstract class FilterableColumn
 {
+
+	use SmartObject;
 
 	/**
 	 * @var string

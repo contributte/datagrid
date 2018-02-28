@@ -708,6 +708,21 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * Return default sort for column, if specified
+	 * @param string $columnKey
+	 * @return string|NULL
+	 */
+	public function getColumnDefaultSort($columnKey)
+	{
+		if (isset($this->default_sort[$columnKey])) {
+			return $this->default_sort[$columnKey];
+		}
+
+		return NULL;
+	}
+
+
+	/**
 	 * User may set default sorting, apply it
 	 * @return void
 	 */
@@ -1629,7 +1644,8 @@ class DataGrid extends Nette\Application\UI\Control
 			$form['per_page']->setValue($this->getPerPage());
 		}
 
-		$form->addSubmit('per_page_submit', 'ublaboo_datagrid.per_page_submit');
+		$form->addSubmit('per_page_submit', 'ublaboo_datagrid.per_page_submit')
+			->setValidationScope([$form['per_page']]);
 
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
 	}
@@ -1709,7 +1725,7 @@ class DataGrid extends Nette\Application\UI\Control
 					'inline_edit[_primary_where_column]'
 				);
 
-				if ($edit['submit']->isSubmittedBy()) {
+				if ($edit['submit']->isSubmittedBy() && !$edit->getErrors()) {
 					$this->inlineEdit->onSubmit($id, $values->inline_edit);
 					$this->getPresenter()->payload->_datagrid_inline_edited = $id;
 					$this->getPresenter()->payload->_datagrid_name = $this->getName();
@@ -1736,7 +1752,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$add = $form['inline_add'];
 
 			if ($add['submit']->isSubmittedBy() || $add['cancel']->isSubmittedBy()) {
-				if ($add['submit']->isSubmittedBy()) {
+				if ($add['submit']->isSubmittedBy() && !$add->getErrors()) {
 					$this->inlineAdd->onSubmit($values->inline_add);
 
 					if ($this->getPresenter()->isAjax()) {
@@ -1757,6 +1773,14 @@ class DataGrid extends Nette\Application\UI\Control
 			/**
 			 * Session stuff
 			 */
+			if ($this->remember_state && $this->getSessionData($key) != $value) {
+				/**
+				 * Has been filter changed?
+				 */
+				$this->page = 1;
+				$this->saveSessionData('_grid_page', 1);
+			}
+
 			$this->saveSessionData($key, $value);
 
 			/**
@@ -1862,7 +1886,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function findSessionValues()
 	{
-		if ($this->filter || ($this->page != 1) || !empty($this->sort) || $this->per_page) {
+		if (!ArraysHelper::testEmpty($this->filter) || ($this->page != 1) || !empty($this->sort)) {
 			return;
 		}
 
@@ -1961,8 +1985,13 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param bool $include_bom
 	 * @return Export\Export
 	 */
-	public function addExportCsv($text, $csv_file_name, $output_encoding = null, $delimiter = null, $include_bom = false)
-	{
+	public function addExportCsv(
+		$text,
+		$csv_file_name,
+		$output_encoding = null,
+		$delimiter = null,
+		$include_bom = false
+	) {
 		return $this->addToExports(new Export\ExportCsv(
 			$this,
 			$text,
@@ -1984,8 +2013,13 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @param bool $include_bom
 	 * @return Export\Export
 	 */
-	public function addExportCsvFiltered($text, $csv_file_name, $output_encoding = null, $delimiter = null, $include_bom = false)
-	{
+	public function addExportCsvFiltered(
+		$text,
+		$csv_file_name,
+		$output_encoding = null,
+		$delimiter = null,
+		$include_bom = false
+	) {
 		return $this->addToExports(new Export\ExportCsv(
 			$this,
 			$text,
@@ -2013,6 +2047,9 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
+	/**
+	 * @return void
+	 */
 	public function resetExportsLinks()
 	{
 		foreach ($this->exports as $id => $export) {
@@ -2230,7 +2267,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->saveSessionData('_grid_has_sorted', 1);
 		$this->saveSessionData('_grid_sort', $this->sort = $sort);
-		$this->reload(['table']);
+
+		$this->reloadTheWholeGrid();
 	}
 
 
@@ -2269,7 +2307,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->filter = [];
 
-		$this->reload(['grid']);
+		$this->reloadTheWholeGrid();
 	}
 
 
@@ -2282,7 +2320,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->deleteSessionData($key);
 		unset($this->filter[$key]);
 
-		$this->reload(['grid']);
+		$this->reloadTheWholeGrid();
 	}
 
 
@@ -2482,6 +2520,24 @@ class DataGrid extends Nette\Application\UI\Control
 			foreach ($snippets as $snippet) {
 				$this->redrawControl($snippet);
 			}
+
+			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
+			$this->getPresenter()->payload->_datagrid_name = $this->getName();
+
+			$this->onRedraw();
+		} else {
+			$this->getPresenter()->redirect('this');
+		}
+	}
+
+
+	/**
+	 * @return void
+	 */
+	public function reloadTheWholeGrid()
+	{
+		if ($this->getPresenter()->isAjax()) {
+			$this->redrawControl('grid');
 
 			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 			$this->getPresenter()->payload->_datagrid_name = $this->getName();
@@ -3074,6 +3130,26 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
+	 * @param  string   $multiActionKey
+	 * @param  string   $actionKey
+	 * @param  callable $condition
+	 * @return void
+	 */
+	public function allowRowsMultiAction($multiActionKey, $actionKey, callable $condition)
+	{
+		if (!isset($this->actions[$multiActionKey])) {
+			throw new DataGridException("There is no action at key [$multiActionKey] defined.");
+		}
+
+		if (!$this->actions[$multiActionKey] instanceof Column\MultiAction) {
+			throw new DataGridException("Action at key [$multiActionKey] is not a MultiAction.");
+		}
+
+		$this->actions[$multiActionKey]->setRowCondition((string) $actionKey, $condition);
+	}
+
+
+	/**
 	 * @param  string      $name
 	 * @param  string|null $key
 	 * @return bool|callable
@@ -3161,6 +3237,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 			if ($this->getPresenter()->isAjax()) {
 				$this->getPresenter()->payload->_datagrid_inline_editing = true;
+				$this->getPresenter()->payload->_datagrid_name = $this->getName();
 			}
 
 			$this->redrawItem($id, $primary_where_column);
@@ -3475,3 +3552,4 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->redrawControl('non-existing-snippet');
 	}
 }
+
