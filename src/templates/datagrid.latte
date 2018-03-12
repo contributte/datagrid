@@ -14,7 +14,7 @@
  * @param InlineEdit|null $inlineAdd   Inline add data
  *}
 
-<div class="datagrid datagrid-{$control->getName()}" data-refresh-state="{link refreshState!}">
+<div class="datagrid datagrid-{$control->getFullName()}" data-refresh-state="{link refreshState!}">
 	{**
 	 * Own data
 	 *}
@@ -28,7 +28,7 @@
 				{block outer-filters}
 					<div class="row text-right datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
 						<div class="col-sm-12">
-							<button class="btn btn-xs btn-primary active" type="button" data-toggle="collapse" data-target="#datagrid-{$control->getName()}-row-filters">
+							<button class="btn btn-xs btn-primary active" type="button" data-toggle="collapse" data-target="#datagrid-{$control->getFullName()}-row-filters">
 								<i n:block = "icon-filter" class="{$icon_prefix}filter"></i> {='ublaboo_datagrid.show_filter'|translate}
 							</button>
 						</div>
@@ -41,7 +41,7 @@
 					{else}
 						{var $filter_row_class = 'row row-filters'}
 					{/if}
-					<div class="{$filter_row_class}" id="datagrid-{$control->getName()}-row-filters">
+					<div class="{$filter_row_class}" id="datagrid-{$control->getFullName()}-row-filters">
 						{var $i = 0}
 						{var $filter_columns_class = 'col-sm-' . (12 / $control->getOuterFilterColumnsCount())}
 						<div class="{$filter_columns_class}" n:foreach="$filters as $f">
@@ -145,7 +145,7 @@
 					</tr>
 					<tr n:block="header-column-row">
 						<th n:snippet="thead-group-action" n:if="$hasGroupActions" n:attr="'rowspan=2' => !empty($filters) && !$control->hasOuterFilterRendering()" class="col-checkbox">
-							<input n:if="$hasGroupActionOnRows" n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="{$control->getName()|lower}-toggle-all" type="checkbox" data-check="{$control->getName()}" data-check-all="{$control->getName()}">
+							<input n:if="$hasGroupActionOnRows" n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
 						</th>
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementForRender('th', $key)}
@@ -282,7 +282,7 @@
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
 										<td n:if="$hasGroupActions" class="col-checkbox">
 											{if $row->hasGroupAction()}
-												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getName()}" data-check-all-{$control->getName()|noescape} name="{$control->getName()|lower}_group_action_item[{$row->getId()}]">
+												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getFullName()}" data-check-all-{$control->getFullName()|noescape} name="{$control->getFullName()|lower}_group_action_item[{$row->getId()}]">
 											{/if}
 										</td>
 										{foreach $columns as $key => $column}
