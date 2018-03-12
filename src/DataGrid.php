@@ -381,6 +381,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $show_selected_rows_count = true;
 
+    /**
+     * @var  string
+     */
+	protected $componentFullName;
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -438,6 +442,8 @@ class DataGrid extends Nette\Application\UI\Control
 				$this->grid_session = $presenter->getSession($this->getSessionSectionName());
 			}
 		}
+
+		$this->componentFullName = $this->lookupPath();
 	}
 
 
@@ -1728,10 +1734,10 @@ class DataGrid extends Nette\Application\UI\Control
 				if ($edit['submit']->isSubmittedBy() && !$edit->getErrors()) {
 					$this->inlineEdit->onSubmit($id, $values->inline_edit);
 					$this->getPresenter()->payload->_datagrid_inline_edited = $id;
-					$this->getPresenter()->payload->_datagrid_name = $this->getName();
+					$this->getPresenter()->payload->_datagrid_name = $this->componentFullName;
 				} else {
 					$this->getPresenter()->payload->_datagrid_inline_edit_cancel = $id;
-					$this->getPresenter()->payload->_datagrid_name = $this->getName();
+					$this->getPresenter()->payload->_datagrid_name = $this->componentFullName;
 				}
 
 				if ($edit['submit']->isSubmittedBy() && !empty($this->inlineEdit->onCustomRedraw)) {
@@ -2363,6 +2369,8 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
+        bdump($non_empty_filters);
+
 		$this->getPresenter()->payload->non_empty_filters = $non_empty_filters;
 	}
 
@@ -2522,7 +2530,7 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 
 			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
-			$this->getPresenter()->payload->_datagrid_name = $this->getName();
+			$this->getPresenter()->payload->_datagrid_name = $this->componentFullName;
 
 			$this->onRedraw();
 		} else {
@@ -2540,7 +2548,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->redrawControl('grid');
 
 			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
-			$this->getPresenter()->payload->_datagrid_name = $this->getName();
+			$this->getPresenter()->payload->_datagrid_name = $this->componentFullName;
 
 			$this->onRedraw();
 		} else {
@@ -3237,7 +3245,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 			if ($this->getPresenter()->isAjax()) {
 				$this->getPresenter()->payload->_datagrid_inline_editing = true;
-				$this->getPresenter()->payload->_datagrid_name = $this->getName();
+				$this->getPresenter()->payload->_datagrid_name = $this->componentFullName;
 			}
 
 			$this->redrawItem($id, $primary_where_column);
@@ -3354,6 +3362,14 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                   INTERNAL                                   *
 	 ********************************************************************************/
 
+    /**
+     * Gets conponent's full name in component tree
+     * @return string
+     */
+	public function getFullName()
+    {
+        return $this->componentFullName;
+    }
 
 	/**
 	 * Tell grid filters to by submitted automatically
