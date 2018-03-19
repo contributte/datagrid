@@ -53,7 +53,10 @@ trait TLink
 			}
 
 			if ($link) {
-				if (strpos($link, '#error') === 0) {
+				if (
+					strpos($link, '#error') === 0 ||
+					(strrpos($href, "!") !== false && strpos($link, '#') === 0)
+				) {
 					continue; // Did not find signal handler
 				}
 
