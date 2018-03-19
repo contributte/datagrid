@@ -52,6 +52,11 @@ class Export
 	 */
 	protected $grid;
 
+	/**
+	 * @var bool
+	 */
+	protected $paging;
+
 
 	/**
 	 * @param DataGrid   $grid
@@ -173,5 +178,23 @@ class Export
 	public function invoke(array $data)
 	{
 		Callback::invokeArgs($this->callback, [$data, $this->grid]);
+	}
+
+	/**
+	 * Is export paging?
+	 * @return bool
+	 */
+	public function isPaging()
+	{
+		return $this->paging;
+	}
+
+	/**
+	 * Tell export to use paginator
+	 * @param bool $paging
+	 */
+	public function setPaging($paging)
+	{
+		$this->paging = $paging;
 	}
 }

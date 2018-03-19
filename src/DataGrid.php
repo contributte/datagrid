@@ -2031,6 +2031,34 @@ class DataGrid extends Nette\Application\UI\Control
 		));
 	}
 
+	/**
+	 * Add already implemented csv export, but for visible data
+	 * @param string $text
+	 * @param string $csv_file_name
+	 * @param string|null $output_encoding
+	 * @param string|null $delimiter
+	 * @param bool $include_bom
+	 * @return Export\Export
+	 */
+	public function addExportVisiblePage(
+		$text,
+		$csv_file_name,
+		$output_encoding = null,
+		$delimiter = null,
+		$include_bom = false
+	) {
+		return $this->addToExports(new Export\ExportCsv(
+			$this,
+			$text,
+			$csv_file_name,
+			true,
+			$output_encoding,
+			$delimiter,
+			$include_bom,
+			true
+		));
+	}
+
 
 	/**
 	 * Add export to array
@@ -2397,6 +2425,12 @@ class DataGrid extends Nette\Application\UI\Control
 			$filter = [];
 		}
 
+		$paginator = null;
+		if ($export->isPaging()) {
+			$paginator = $this->getPaginator();
+		}
+
+
 		if ($this->dataModel === null) {
 			throw new DataGridException('You have to set a data source first.');
 		}
@@ -2405,7 +2439,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$items = Nette\Utils\Callback::invokeArgs(
 			[$this->dataModel, 'filterData'], [
-				null,
+				$paginator,
 				$this->createSorting($this->sort, $this->sort_callback),
 				$filter,
 			]
