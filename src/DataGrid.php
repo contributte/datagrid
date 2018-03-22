@@ -388,7 +388,11 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function __construct(Nette\ComponentModel\IContainer $parent = null, $name = null)
 	{
-		parent::__construct($parent, $name);
+		parent::__construct();
+
+		if ($parent !== null) {
+			$parent->addComponent($this, $name);
+		}
 
 		$this->monitor('Nette\Application\UI\Presenter');
 
