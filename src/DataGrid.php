@@ -381,6 +381,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $show_selected_rows_count = true;
 
+	/**
+	 * @var string
+	 */
+	private $custom_paginator_template;
 
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
@@ -2752,6 +2756,10 @@ class DataGrid extends Nette\Application\UI\Control
 		$paginator->setPage($this->page);
 		$paginator->setItemsPerPage($this->getPerPage());
 
+		if ($this->custom_paginator_template) {
+			$component->setTemplateFile($this->custom_paginator_template);
+		}
+
 		return $component;
 	}
 
@@ -3550,6 +3558,16 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 		$this->redrawControl('non-existing-snippet');
+	}
+
+
+	/**
+	 * @param string $template_file
+	 * @return void
+	 */
+	public function setCustomPaginatortemplate($template_file)
+	{
+		$this->custom_paginator_template = $template_file;
 	}
 }
 
