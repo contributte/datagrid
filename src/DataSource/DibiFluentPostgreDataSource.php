@@ -9,7 +9,6 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Dibi;
-use DibiFluent;
 use Ublaboo\DataGrid\Filter;
 
 class DibiFluentPostgreDataSource extends DibiFluentDataSource

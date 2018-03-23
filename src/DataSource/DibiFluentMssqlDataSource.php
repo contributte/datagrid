@@ -9,7 +9,7 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Dibi;
-use DibiFluent;
+use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 
@@ -17,7 +17,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 {
 
 	/**
-	 * @var DibiFluent
+	 * @var Dibi\Fluent|DibiFluent
 	 */
 	protected $data_source;
 
@@ -33,11 +33,15 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 
 	/**
-	 * @param DibiFluent $data_source
+	 * @param Dibi\Fluent|DibiFluent $data_source
 	 * @param string $primary_key
 	 */
-	public function __construct(DibiFluent $data_source, $primary_key)
+	public function __construct($data_source, $primary_key)
 	{
+		if(!($data_source instanceof DibiFluent) && !($data_source instanceof Dibi\Fluent)){
+			throw new DataGridWrongDataSourceException(sprintf('%s requires %s', __CLASS__, 'DibiFluent or Dibi\Fluent'));
+		}
+
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
 	}

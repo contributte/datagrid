@@ -9,7 +9,6 @@
 namespace Ublaboo\DataGrid;
 
 use Dibi;
-use DibiFluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\SmartObject;
@@ -49,7 +48,7 @@ final class DataModel
 
 
 	/**
-	 * @param IDataSource|array|Dibi\Fluent|Selection|QueryBuilder|Collection $source
+	 * @param IDataSource|array|DibiFluent|Dibi\Fluent|Selection|QueryBuilder|Collection $source
 	 * @param string $primary_key
 	 */
 	public function __construct($source, $primary_key)
