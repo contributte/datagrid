@@ -613,7 +613,7 @@
   }
 }
 
-.datagrid .btn-xs,
+.datagrid .btn-sm,
 .datagrid .btn-group-xs > .btn {
   padding: 1px 5px;
   font-size: 12px;
