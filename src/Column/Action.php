@@ -75,7 +75,7 @@ class Action extends Column
 	/**
 	 * @var string|callable
 	 */
-	protected $class = 'btn btn-xs btn-default btn-secondary';
+	protected $class = 'btn btn-sm btn-secondary';
 
 	/**
 	 * @var bool

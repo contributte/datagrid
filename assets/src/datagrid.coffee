@@ -64,7 +64,7 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', (e) ->
 		e.stopPropagation()
 		e.preventDefault()
 
-		
+
 		$(this).closest('form').first().submit()
 )
 
@@ -88,7 +88,7 @@ getEventDomPath = (e) ->
 datagridShiftGroupSelection = ->
 	last_checkbox = null
 
-	document.addEventListener 'click', (e) ->	
+	document.addEventListener 'click', (e) ->
 		for el in getEventDomPath(e)
 			if $(el).is('.col-checkbox') && last_checkbox && e.shiftKey
 				current_checkbox_row = $(el).closest('tr')
@@ -122,8 +122,8 @@ datagridShiftGroupSelection = ->
 							event = new Event('change', {'bubbles': true})
 
 						input.dispatchEvent(event)
-					
-				
+
+
 		for el in getEventDomPath(e)
 			if $(el).is('.col-checkbox')
 				last_checkbox = $(el)
@@ -460,7 +460,7 @@ $.nette.ext('datagrid.tree', {
 
 				if content.data('has-children')
 					template.addClass('has-children')
-				
+
 
 				children_block.append(template)
 
@@ -655,7 +655,7 @@ datagridGroupActionMultiSelect = ->
 
 			$(this).on('loaded.bs.select', (e) ->
 				$(this).parent().attr('style', 'display:none;')
-				$(this).parent().find('.hidden').removeClass('hidden').addClass('btn-default btn-secondary')
+				$(this).parent().find('.hidden').removeClass('hidden').addClass('btn-secondary')
 			)
 
 			$(this).on('rendered.bs.select', (e) ->
