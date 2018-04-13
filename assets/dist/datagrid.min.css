@@ -112,5 +112,5 @@
 .datagrid .ublaboo-datagrid-th-form-inline .checkbox label,.datagrid .ublaboo-datagrid-th-form-inline .radio label{padding-left:0}
 .datagrid .ublaboo-datagrid-th-form-inline .checkbox input[type=checkbox],.datagrid .ublaboo-datagrid-th-form-inline .radio input[type=radio]{position:relative;margin-left:0}
 }
-.datagrid .btn-group-xs>.btn,.datagrid .btn-xs{padding:1px 5px;font-size:12px;line-height:1.5;border-radius:3px}
+.datagrid .btn-group-xs>.btn,.datagrid .btn-xs,.datagrid .btn-sm{padding:1px 5px;font-size:12px;line-height:1.5;border-radius:3px}
 .datagrid .dropdown-item{padding:3px 20px;line-height:1.42857143;font-size:14px}

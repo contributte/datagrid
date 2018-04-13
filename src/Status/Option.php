@@ -44,7 +44,7 @@ class Option
 	/**
 	 * @var string
 	 */
-	protected $class_secondary = 'btn btn-xs';
+	protected $class_secondary = 'btn btn-xs btn-sm';
 
 	/**
 	 * @var string

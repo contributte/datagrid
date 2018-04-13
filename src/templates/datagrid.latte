@@ -28,7 +28,7 @@
 				{block outer-filters}
 					<div class="row text-right datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
 						<div class="col-sm-12">
-							<button class="btn btn-xs btn-primary active" type="button" data-toggle="collapse" data-target="#datagrid-{$control->getName()}-row-filters">
+							<button class="btn btn-xs btn-sm btn-primary active" type="button" data-toggle="collapse" data-target="#datagrid-{$control->getName()}-row-filters">
 								<i n:block = "icon-filter" class="{$icon_prefix}filter"></i> {='ublaboo_datagrid.show_filter'|translate}
 							</button>
 						</div>
@@ -115,7 +115,7 @@
 									 * Hideable columns
 									 *}
 									<div class="btn-group">
-										<button type="button" class="btn btn-xs btn-default btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
+										<button type="button" class="btn btn-xs btn-sm btn-default btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
 											<i n:block = "icon-gear" class="{$icon_prefix}gear"></i>
 										</button>
 										<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
@@ -268,8 +268,8 @@
 										{/foreach}
 
 										<td class="col-action col-action-inline-edit">
-											{input $filter['inline_edit']['cancel'], class => 'btn btn-xs btn-danger'}
-											{input $filter['inline_edit']['submit'], class => 'btn btn-xs btn-primary'}
+											{input $filter['inline_edit']['cancel'], class => 'btn btn-xs btn-sm btn-danger'}
+											{input $filter['inline_edit']['submit'], class => 'btn btn-xs btn-sm btn-primary'}
 											{input $filter['inline_edit']['_id']}
 											{input $filter['inline_edit']['_primary_where_column']}
 										</td>
@@ -299,7 +299,7 @@
 													{/if}
 												{/if}
 											{/foreach}
-											<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
+											<span class="handle-sort btn btn-xs btn-sm btn-default btn-secondary" n:if="$control->isSortable()">
 												<i n:block = "icon-arrows-v" class="{$icon_prefix}arrows-v"></i>
 											</span>
 											{if $inlineEdit && $row->hasInlineEdit()}
