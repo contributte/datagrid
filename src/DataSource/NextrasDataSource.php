@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -34,12 +34,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	protected $primary_key;
 
-
 	/**
 	 * @param ICollection  $data_source
 	 * @param string       $primary_key
 	 */
-	public function __construct(ICollection $data_source, $primary_key)
+	public function __construct(ICollection $data_source, string $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
@@ -50,12 +49,12 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-
 	/**
 	 * Get count of data
+	 *
 	 * @return int
 	 */
-	public function getCount()
+	public function getCount(): int
 	{
 		return $this->data_source->countStored();
 	}
@@ -63,9 +62,10 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Get the data
+	 *
 	 * @return array
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		/**
 		 * Paginator is better if the query uses ManyToMany associations
@@ -76,6 +76,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Filter data - get one row
+	 *
 	 * @param array $condition
 	 * @return static
 	 */
@@ -93,6 +94,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Filter by date
+	 *
 	 * @param  Filter\FilterDate $filter
 	 * @return static
 	 */
@@ -114,10 +116,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Filter by date range
+	 *
 	 * @param  Filter\FilterDateRange $filter
 	 * @return void
 	 */
-	public function applyFilterDateRange(Filter\FilterDateRange $filter)
+	public function applyFilterDateRange(Filter\FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
 
@@ -143,10 +146,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Filter by range
+	 *
 	 * @param  Filter\FilterRange $filter
 	 * @return void
 	 */
-	public function applyFilterRange(Filter\FilterRange $filter)
+	public function applyFilterRange(Filter\FilterRange $filter): void
 	{
 		$conditions = $filter->getCondition();
 
@@ -171,10 +175,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Filter by keyword
+	 *
 	 * @param  Filter\FilterText $filter
 	 * @return void
 	 */
-	public function applyFilterText(Filter\FilterText $filter)
+	public function applyFilterText(Filter\FilterText $filter): void
 	{
 		$condition = $filter->getCondition();
 		$expr = '(';
@@ -211,10 +216,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Filter by multi select value
+	 *
 	 * @param  Filter\FilterMultiSelect $filter
 	 * @return void
 	 */
-	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter)
+	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter): void
 	{
 		$this->data_source = $this->data_source->findBy([$this->prepareColumn($filter->getColumn()) => $filter->getValue()]);
 	}
@@ -222,10 +228,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Filter by select value
+	 *
 	 * @param  Filter\FilterSelect $filter
 	 * @return void
 	 */
-	public function applyFilterSelect(Filter\FilterSelect $filter)
+	public function applyFilterSelect(Filter\FilterSelect $filter): void
 	{
 		$this->data_source = $this->data_source->findBy([$this->prepareColumn($filter->getColumn()) => $filter->getValue()]);
 	}
@@ -233,11 +240,12 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Apply limit and offset on data
+	 *
 	 * @param int $offset
 	 * @param int $limit
 	 * @return static
 	 */
-	public function limit($offset, $limit)
+	public function limit(int $offset, int $limit)
 	{
 		$this->data_source = $this->data_source->limitBy($limit, $offset);
 
@@ -247,6 +255,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 	/**
 	 * Sort data
+	 *
 	 * @param  Sorting $sorting
 	 * @return static
 	 */
@@ -285,14 +294,16 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 		/**
 		 * Adjust column from DataGrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
+		 *
 		 * @param string $column
 		 * @return string
 		 */
-		private function prepareColumn($column)
-		{
-			if (Strings::contains($column, '.')) {
-				return 'this->' . str_replace('.', '->', $column);
-			}
-			return $column;
+	private function prepareColumn(string $column): string
+	{
+		if (Strings::contains($column, '.')) {
+			return 'this->' . str_replace('.', '->', $column);
 		}
+		return $column;
+	}
+
 }

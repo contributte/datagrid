@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -15,18 +15,21 @@ interface IDataSource
 
 	/**
 	 * Get count of data
+	 *
 	 * @return int
 	 */
-	public function getCount();
+	public function getCount(): int;
 
 	/**
 	 * Get the data
+	 *
 	 * @return array
 	 */
-	public function getData();
+	public function getData(): array;
 
 	/**
 	 * Filter data
+	 *
 	 * @param array $filters
 	 * @return static
 	 */
@@ -34,6 +37,7 @@ interface IDataSource
 
 	/**
 	 * Filter data - get one row
+	 *
 	 * @param array $filter
 	 * @return static
 	 */
@@ -41,16 +45,19 @@ interface IDataSource
 
 	/**
 	 * Apply limit and offset on data
+	 *
 	 * @param int $offset
 	 * @param int $limit
 	 * @return static
 	 */
-	public function limit($offset, $limit);
+	public function limit(int $offset, int $limit);
 
 	/**
 	 * Sort data
+	 *
 	 * @param Sorting $sorting
 	 * @return static
 	 */
 	public function sort(Sorting $sorting);
+
 }

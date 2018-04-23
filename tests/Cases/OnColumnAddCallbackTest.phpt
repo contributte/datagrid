@@ -1,7 +1,8 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * TEST: OnColumnAddCallbackTest
+ *
  * @testCase Ublaboo\DataGrid\Tests\Cases\OnColumnAddCallbackTest
  */
 
@@ -22,17 +23,16 @@ class OnColumnAddCallbackTest extends Tester\TestCase
 	 */
 	private $grid;
 
-
-	public function setUp()
+	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
 		$this->grid = $factory->createXTestingDataGrid();
 	}
 
 
-	public function testSetSortable()
+	public function testSetSortable(): void
 	{
-		$this->grid->onColumnAdd[] = function($key, Ublaboo\DataGrid\Column\Column $column) {
+		$this->grid->onColumnAdd[] = function ($key, Ublaboo\DataGrid\Column\Column $column): void {
 			$column->setSortable();
 		};
 
@@ -41,7 +41,7 @@ class OnColumnAddCallbackTest extends Tester\TestCase
 		$columnDateTime = $this->grid->addColumnDateTime('dateTime', 'dateTimeName');
 
 		$columnTextNotSortable = $this->grid->addColumnText('textNotSortable', 'textName')
-			->setSortable(FALSE);
+			->setSortable(false);
 
 		Tester\Assert::true($columnText->isSortable());
 		Tester\Assert::true($columnNumber->isSortable());

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -14,12 +14,14 @@ use Ublaboo\DataGrid\Filter;
 
 class DibiFluentPostgreDataSource extends DibiFluentDataSource
 {
+
 	/**
 	 * Filter by keyword
+	 *
 	 * @param  Filter\FilterText $filter
 	 * @return void
 	 */
-	public function applyFilterText(Filter\FilterText $filter)
+	public function applyFilterText(Filter\FilterText $filter): void
 	{
 		$condition = $filter->getCondition();
 		$driver = $this->data_source->getConnection()->getDriver();
@@ -52,4 +54,5 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 			$this->data_source->where($or);
 		}
 	}
+
 }

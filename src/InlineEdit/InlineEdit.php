@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -74,22 +74,23 @@ class InlineEdit
 
 	/**
 	 * Inline adding - render on the top or in the bottom?
+	 *
 	 * @var bool
 	 */
 	protected $position_top = false;
 
 	/**
 	 * Columns that are not edited can displey normal value instaad of nothing..
+	 *
 	 * @var bool
 	 */
 	protected $showNonEditingColumns = true;
 
-
-	/**
-	 * @param DataGrid $grid
-	 * @param string|NULL   $primary_where_column
-	 */
-	public function __construct(DataGrid $grid, $primary_where_column = null)
+/**
+ * @param DataGrid $grid
+ * @param string|NULL   $primary_where_column
+ */
+	public function __construct(DataGrid $grid, ?string $primary_where_column = null)
 	{
 		$this->grid = $grid;
 		$this->primary_where_column = $primary_where_column;
@@ -126,7 +127,7 @@ class InlineEdit
 	/**
 	 * @return string
 	 */
-	public function getPrimaryWhereColumn()
+	public function getPrimaryWhereColumn(): string
 	{
 		return $this->primary_where_column;
 	}
@@ -134,10 +135,11 @@ class InlineEdit
 
 	/**
 	 * Render row item detail button
+	 *
 	 * @param  Row $row
 	 * @return Html
 	 */
-	public function renderButton($row)
+	public function renderButton(Row $row): Html
 	{
 		$a = Html::el('a')
 			->href($this->grid->link('inlineEdit!', ['id' => $row->getId()]));
@@ -161,9 +163,10 @@ class InlineEdit
 
 	/**
 	 * Render row item detail button
+	 *
 	 * @return Html
 	 */
-	public function renderButtonAdd()
+	public function renderButtonAdd(): Html
 	{
 		$a = Html::el('a')->href('')->data('datagrid-toggle-inline-add', true);
 
@@ -184,10 +187,11 @@ class InlineEdit
 
 	/**
 	 * Setter for inline adding position
+	 *
 	 * @param bool $position_top
 	 * @return static
 	 */
-	public function setPositionTop($position_top = true)
+	public function setPositionTop(bool $position_top = true)
 	{
 		$this->position_top = (bool) $position_top;
 
@@ -197,9 +201,10 @@ class InlineEdit
 
 	/**
 	 * Getter for inline adding
+	 *
 	 * @return bool
 	 */
-	public function isPositionTop()
+	public function isPositionTop(): bool
 	{
 		return $this->position_top;
 	}
@@ -208,7 +213,7 @@ class InlineEdit
 	/**
 	 * @return bool
 	 */
-	public function isPositionBottom()
+	public function isPositionBottom(): bool
 	{
 		return !$this->position_top;
 	}
@@ -217,7 +222,7 @@ class InlineEdit
 	/**
 	 * @param Nette\Forms\Container $container
 	 */
-	public function addControlsClasses(Nette\Forms\Container $container)
+	public function addControlsClasses(Nette\Forms\Container $container): void
 	{
 		foreach ($container->getControls() as $key => $control) {
 			switch ($key) {
@@ -247,7 +252,7 @@ class InlineEdit
 	 * @param bool $show
 	 * @return static
 	 */
-	public function setShowNonEditingColumns($show = true)
+	public function setShowNonEditingColumns(bool $show = true)
 	{
 		$this->showNonEditingColumns = (bool) $show;
 
@@ -258,8 +263,9 @@ class InlineEdit
 	/**
 	 * @return bool
 	 */
-	public function showNonEditingColumns()
+	public function showNonEditingColumns(): bool
 	{
 		return $this->showNonEditingColumns;
 	}
+
 }

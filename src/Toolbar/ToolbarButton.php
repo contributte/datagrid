@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -15,6 +15,7 @@ use Ublaboo\DataGrid\Traits;
 
 class ToolbarButton
 {
+
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonClass;
 	use Traits\TButtonIcon;
@@ -43,14 +44,13 @@ class ToolbarButton
 	 */
 	protected $attributes = [];
 
-
 	/**
 	 * @param DataGrid $grid
 	 * @param string   $href
 	 * @param string   $text
 	 * @param array    $params
 	 */
-	public function __construct(DataGrid $grid, $href, $text, $params = [])
+	public function __construct(DataGrid $grid, string $href, string $text, array $params = [])
 	{
 		$this->grid = $grid;
 		$this->href = $href;
@@ -61,9 +61,10 @@ class ToolbarButton
 
 	/**
 	 * Render toolbar button
+	 *
 	 * @return Html
 	 */
-	public function renderButton()
+	public function renderButton(): Html
 	{
 		try {
 			// Renderer function may be used
@@ -106,4 +107,5 @@ class ToolbarButton
 
 		return $this;
 	}
+
 }

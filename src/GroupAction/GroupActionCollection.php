@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -9,8 +9,8 @@
 namespace Ublaboo\DataGrid\GroupAction;
 
 use Nette;
-use Nette\SmartObject;
 use Nette\Application\UI\Form;
+use Nette\SmartObject;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
 
@@ -31,7 +31,6 @@ class GroupActionCollection
 	 */
 	protected $datagrid;
 
-
 	public function __construct(DataGrid $datagrid)
 	{
 		$this->datagrid = $datagrid;
@@ -40,10 +39,11 @@ class GroupActionCollection
 
 	/**
 	 * Get assambled form
+	 *
 	 * @param Nette\Forms\Container $container
 	 * @return void
 	 */
-	public function addToFormContainer($container)
+	public function addToFormContainer(Nette\Forms\Container $container): void
 	{
 		/** @var Nette\Application\UI\Form $form */
 		$form = $container->lookup('Nette\Application\UI\Form');
@@ -85,7 +85,7 @@ class GroupActionCollection
 
 				$control->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($container['group_action'], Form::EQUAL, $id)
-						->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
+					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
 					->endCondition();
 
 			} elseif ($action instanceof GroupTextareaAction) {
@@ -93,7 +93,7 @@ class GroupActionCollection
 
 				$control->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($container['group_action'], Form::EQUAL, $id)
-						->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
+					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
 			}
 
 			if ($control) {
@@ -133,10 +133,11 @@ class GroupActionCollection
 
 	/**
 	 * Pass "sub"-form submission forward to custom submit function
+	 *
 	 * @param  Form   $form
 	 * @return void
 	 */
-	public function submitted(Form $form)
+	public function submitted(Form $form): void
 	{
 		if (!isset($form['group_action']['submit']) || !$form['group_action']['submit']->isSubmittedBy()) {
 			return;
@@ -156,7 +157,7 @@ class GroupActionCollection
 		$ids = array_keys($http_ids);
 
 		$id = $values->group_action;
-		$this->group_actions[$id]->onSelect($ids, isset($values->{$id}) ? $values->{$id} : null);
+		$this->group_actions[$id]->onSelect($ids, $values->{$id} ?? null);
 
 		$form['group_action']['group_action']->setValue(null);
 	}
@@ -167,10 +168,9 @@ class GroupActionCollection
 	 *
 	 * @param string $title
 	 * @param array  $options
-	 *
 	 * @return GroupAction
 	 */
-	public function addGroupSelectAction($title, $options)
+	public function addGroupSelectAction(string $title, array $options): GroupAction
 	{
 		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
 
@@ -183,10 +183,9 @@ class GroupActionCollection
 	 *
 	 * @param string $title
 	 * @param array  $options
-	 *
 	 * @return GroupAction
 	 */
-	public function addGroupMultiSelectAction($title, $options)
+	public function addGroupMultiSelectAction(string $title, array $options): GroupAction
 	{
 		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
 
@@ -198,10 +197,9 @@ class GroupActionCollection
 	 * Add one group action (text input) to collection of actions
 	 *
 	 * @param string $title
-	 *
 	 * @return GroupAction
 	 */
-	public function addGroupTextAction($title)
+	public function addGroupTextAction(string $title): GroupAction
 	{
 		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
 
@@ -213,10 +211,9 @@ class GroupActionCollection
 	 * Add one group action (textarea) to collection of actions
 	 *
 	 * @param string $title
-	 *
 	 * @return GroupAction
 	 */
-	public function addGroupTextareaAction($title)
+	public function addGroupTextareaAction(string $title): GroupAction
 	{
 		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
 
@@ -228,7 +225,7 @@ class GroupActionCollection
 	 * @param  string $title
 	 * @return GroupAction
 	 */
-	public function getGroupAction($title)
+	public function getGroupAction(string $title): GroupAction
 	{
 		foreach ($this->group_actions as $action) {
 			if ($action->getTitle() === $title) {
@@ -238,4 +235,5 @@ class GroupActionCollection
 
 		throw new DataGridGroupActionException("Group action $title does not exist.");
 	}
+
 }

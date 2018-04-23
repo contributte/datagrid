@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -18,7 +18,6 @@ trait TRenderCondition
 	 */
 	protected $render_condition_callback;
 
-
 	/**
 	 * @param callable $condition
 	 * @return static
@@ -35,7 +34,7 @@ trait TRenderCondition
 	 * @param Row $row
 	 * @return bool
 	 */
-	public function shouldBeRendered(Row $row)
+	public function shouldBeRendered(Row $row): bool
 	{
 		$condition = $this->render_condition_callback;
 

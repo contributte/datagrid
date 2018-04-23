@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -51,12 +51,10 @@ class ColumnLink extends Column
 	 */
 	protected $open_in_new_tab = false;
 
-
 	/**
 	 * @var array
 	 */
 	protected $parameters = [];
-
 
 	/**
 	 * @param DataGrid $grid
@@ -66,7 +64,7 @@ class ColumnLink extends Column
 	 * @param string $href
 	 * @param array  $params
 	 */
-	public function __construct(DataGrid $grid, $key, $column, $name, $href, $params)
+	public function __construct(DataGrid $grid, string $key, string $column, string $name, string $href, array $params)
 	{
 		parent::__construct($grid, $key, $column, $name);
 
@@ -77,6 +75,7 @@ class ColumnLink extends Column
 
 	/**
 	 * Render row item into template
+	 *
 	 * @param  Row   $row
 	 * @return mixed
 	 */
@@ -145,6 +144,7 @@ class ColumnLink extends Column
 
 	/**
 	 * Add parameters to link
+	 *
 	 * @param array $parameters
 	 * @return static
 	 */
@@ -158,10 +158,11 @@ class ColumnLink extends Column
 
 	/**
 	 * Set icon before simple link
+	 *
 	 * @param string      $icon
 	 * @return ColumnLink
 	 */
-	public function setIcon($icon = null)
+	public function setIcon(?string $icon = null): ColumnLink
 	{
 		$this->icon = $icon;
 
@@ -171,11 +172,12 @@ class ColumnLink extends Column
 
 	/**
 	 * Setting data attributes
+	 *
 	 * @param string $key
 	 * @param mixed  $value
 	 * @return static
 	 */
-	public function setDataAttribute($key, $value)
+	public function setDataAttribute(string $key, $value)
 	{
 		$this->data_attributes[$key] = $value;
 
@@ -185,9 +187,10 @@ class ColumnLink extends Column
 
 	/**
 	 * Set attribute title
+	 *
 	 * @param string $title
 	 */
-	public function setTitle($title)
+	public function setTitle(string $title)
 	{
 		$this->title = $title;
 
@@ -206,10 +209,11 @@ class ColumnLink extends Column
 
 	/**
 	 * Set attribute class
+	 *
 	 * @param string $class
 	 * @return $this
 	 */
-	public function setClass($class)
+	public function setClass(string $class)
 	{
 		$this->class = $class;
 
@@ -228,9 +232,10 @@ class ColumnLink extends Column
 
 	/**
 	 * Open link in new window/tab?
-	 * @return boolean
+	 *
+	 * @return bool
 	 */
-	public function isOpenInNewTab()
+	public function isOpenInNewTab(): bool
 	{
 		return $this->open_in_new_tab;
 	}
@@ -238,12 +243,14 @@ class ColumnLink extends Column
 
 	/**
 	 * Set link to open in new tab/window or not
+	 *
 	 * @param bool $open_in_new_tab
 	 * @return $this
 	 */
-	public function setOpenInNewTab($open_in_new_tab = true)
+	public function setOpenInNewTab(bool $open_in_new_tab = true)
 	{
 		$this->open_in_new_tab = $open_in_new_tab;
 		return $this;
 	}
+
 }

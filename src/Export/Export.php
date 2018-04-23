@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -16,6 +16,7 @@ use Ublaboo\DataGrid\Traits;
 
 class Export
 {
+
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonIcon;
 	use Traits\TButtonClass;
@@ -61,9 +62,9 @@ class Export
 	 * @param DataGrid   $grid
 	 * @param string     $text
 	 * @param callable   $callback
-	 * @param boolean    $filtered
+	 * @param bool    $filtered
 	 */
-	public function __construct($grid, $text, $callback, $filtered)
+	public function __construct(DataGrid $grid, string $text, callable $callback, bool $filtered)
 	{
 		$this->grid = $grid;
 		$this->text = $text;
@@ -75,9 +76,10 @@ class Export
 
 	/**
 	 * Render export button
+	 *
 	 * @return Html
 	 */
-	public function render()
+	public function render(): Html
 	{
 		$a = Html::el('a', [
 			'class' => [$this->class],
@@ -120,10 +122,11 @@ class Export
 	
 	/**
 	 * Tell export which columns to use when exporting data
+	 *
 	 * @param array $columns
 	 * @return self
 	 */
-	public function setColumns($columns)
+	public function setColumns(array $columns): self
 	{
 		$this->columns = $columns;
 
@@ -133,9 +136,10 @@ class Export
 
 	/**
 	 * Get columns for export
+	 *
 	 * @return array
 	 */
-	public function getColumns()
+	public function getColumns(): array
 	{
 		return $this->columns;
 	}
@@ -143,10 +147,11 @@ class Export
 
 	/**
 	 * Export signal url
+	 *
 	 * @param string $link
 	 * @return self
 	 */
-	public function setLink($link)
+	public function setLink(string $link): self
 	{
 		$this->link = $link;
 
@@ -156,9 +161,10 @@ class Export
 
 	/**
 	 * Tell export whether to be called via ajax or not
+	 *
 	 * @param bool $ajax
 	 */
-	public function setAjax($ajax = true)
+	public function setAjax(bool $ajax = true)
 	{
 		$this->ajax = (bool) $ajax;
 
@@ -168,9 +174,10 @@ class Export
 
 	/**
 	 * Is export called via ajax?
+	 *
 	 * @return bool
 	 */
-	public function isAjax()
+	public function isAjax(): bool
 	{
 		return $this->ajax;
 	}
@@ -178,9 +185,10 @@ class Export
 
 	/**
 	 * Is export filtered?
+	 *
 	 * @return bool
 	 */
-	public function isFiltered()
+	public function isFiltered(): bool
 	{
 		return $this->filtered;
 	}
@@ -188,11 +196,13 @@ class Export
 
 	/**
 	 * Call export callback
+	 *
 	 * @param  array    $data
 	 * @return void
 	 */
-	public function invoke(array $data)
+	public function invoke(array $data): void
 	{
 		Callback::invokeArgs($this->callback, [$data, $this->grid]);
 	}
+
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -33,7 +33,6 @@ class ArrayDataSource implements IDataSource
 	 */
 	protected $count = 0;
 
-
 	/**
 	 * @param array $data_source
 	 */
@@ -47,12 +46,12 @@ class ArrayDataSource implements IDataSource
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-
 	/**
 	 * Get count of data
+	 *
 	 * @return int
 	 */
-	public function getCount()
+	public function getCount(): int
 	{
 		return sizeof($this->data);
 	}
@@ -60,9 +59,10 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Get the data
+	 *
 	 * @return array
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		return $this->data;
 	}
@@ -70,6 +70,7 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Set the data
+	 *
 	 * @param array $data_source
 	 * @return static
 	 */
@@ -83,6 +84,7 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Filter data
+	 *
 	 * @param Filter[] $filters
 	 * @return static
 	 */
@@ -111,14 +113,15 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Filter data - get one row
+	 *
 	 * @param array $condition
 	 * @return ArrayDataSource
 	 */
-	public function filterOne(array $condition)
+	public function filterOne(array $condition): ArrayDataSource
 	{
 		foreach ($this->data as $item) {
 			foreach ($condition as $key => $value) {
-				if ($item[$key] == $value) {
+				if ($item[$key] === $value) {
 					$this->setData([$item]);
 
 					return $this;
@@ -134,11 +137,12 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Apply limit and offset on data
+	 *
 	 * @param int $offset
 	 * @param int $limit
 	 * @return static
 	 */
-	public function limit($offset, $limit)
+	public function limit(int $offset, int $limit)
 	{
 		$data = array_slice($this->data, $offset, $limit);
 		$this->setData($data);
@@ -149,6 +153,7 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Apply fitler and tell whether row passes conditions or not
+	 *
 	 * @param  mixed  $row
 	 * @param  Filter $filter
 	 * @return mixed
@@ -170,7 +175,7 @@ class ArrayDataSource implements IDataSource
 
 			foreach ($condition as $column => $value) {
 				if ($filter instanceof FilterText && $filter->isExactSearch()) {
-					return $row[$column] == $value;
+					return $row[$column] === $value;
 				}
 
 				if ($filter instanceof FilterText && $filter->hasSplitWordsSearch() === false) {
@@ -195,11 +200,10 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Filter by multi select value
-	 * @param  mixed  $row
-	 * @param  FilterMultiSelect $filter
-	 * @return void
+	 *
+	 * @param mixed $row
 	 */
-	public function applyFilterMultiSelect($row, FilterMultiSelect $filter)
+	public function applyFilterMultiSelect($row, FilterMultiSelect $filter): bool
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -209,11 +213,9 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * @param  mixed  $row
-	 * @param  FilterRange $filter
-	 * @return void
+	 * @param mixed $row
 	 */
-	public function applyFilterRange($row, FilterRange $filter)
+	public function applyFilterRange($row, FilterRange $filter): bool
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -235,11 +237,9 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * @param  mixed  $row
-	 * @param  FilterDateRange $filter
-	 * @return void
+	 * @param mixed $row
 	 */
-	public function applyFilterDateRange($row, FilterDateRange $filter)
+	public function applyFilterDateRange($row, FilterDateRange $filter): bool
 	{
 		$format = $filter->getPhpFormat();
 		$condition = $filter->getCondition();
@@ -298,6 +298,7 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Apply fitler date and tell whether row value matches or not
+	 *
 	 * @param  mixed  $row
 	 * @param  Filter $filter
 	 * @return mixed
@@ -326,13 +327,14 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 
-			return $row_value->format($format) == $date->format($format);
+			return $row_value->format($format) === $date->format($format);
 		}
 	}
 
 
 	/**
 	 * Sort data
+	 *
 	 * @param  Sorting $sorting
 	 * @return static
 	 */
@@ -387,4 +389,5 @@ class ArrayDataSource implements IDataSource
 
 		return $this;
 	}
+
 }

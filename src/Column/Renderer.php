@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -26,12 +26,11 @@ class Renderer
 	 */
 	protected $condition_callback;
 
-
 	/**
 	 * @param callable      $callback
 	 * @param callable|NULL $condition_callback
 	 */
-	public function __construct($callback, $condition_callback)
+	public function __construct(callable $callback, ?callable $condition_callback)
 	{
 		$this->callback = $callback;
 		$this->condition_callback = $condition_callback;
@@ -40,9 +39,10 @@ class Renderer
 
 	/**
 	 * Get custom renderer callback
+	 *
 	 * @return callable
 	 */
-	public function getCallback()
+	public function getCallback(): callable
 	{
 		return $this->callback;
 	}
@@ -50,10 +50,12 @@ class Renderer
 
 	/**
 	 * Get custom renderer condition callback
+	 *
 	 * @return callable|NULL
 	 */
-	public function getConditionCallback()
+	public function getConditionCallback(): ?callable
 	{
 		return $this->condition_callback;
 	}
+
 }

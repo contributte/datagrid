@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -15,6 +15,7 @@ use Ublaboo\DataGrid\Traits;
 
 class SubmitButton extends Nette\Forms\Controls\Button
 {
+
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonIcon;
 	use Traits\TButtonClass;
@@ -26,11 +27,10 @@ class SubmitButton extends Nette\Forms\Controls\Button
 	 */
 	protected $grid;
 
-
 	/**
 	 * @param DataGrid     $grid
 	 */
-	public function __construct($grid)
+	public function __construct(DataGrid $grid)
 	{
 		parent::__construct($this->text);
 
@@ -46,10 +46,11 @@ class SubmitButton extends Nette\Forms\Controls\Button
 
 	/**
 	 * Generates control's HTML element.
+	 *
 	 * @param  string
 	 * @return Nette\Utils\Html
 	 */
-	public function getControl($caption = null)
+	public function getControl(?string $caption = null): Nette\Utils\Html
 	{
 		$el = parent::getControl('');
 
@@ -68,4 +69,5 @@ class SubmitButton extends Nette\Forms\Controls\Button
 
 		return $el;
 	}
+
 }

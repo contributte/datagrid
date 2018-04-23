@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -25,8 +25,7 @@ final class Sorting
 	 */
 	private $sort_callback = null;
 
-
-	public function __construct(array $sort, callable $sort_callback = null)
+	public function __construct(array $sort, ?callable $sort_callback = null)
 	{
 		$this->sort = $sort;
 		$this->sort_callback = $sort_callback;
@@ -36,7 +35,7 @@ final class Sorting
 	/**
 	 * @return array
 	 */
-	public function getSort()
+	public function getSort(): array
 	{
 		return $this->sort;
 	}
@@ -45,8 +44,9 @@ final class Sorting
 	/**
 	 * @return callable|null
 	 */
-	public function getSortCallback()
+	public function getSortCallback(): ?callable
 	{
 		return $this->sort_callback;
 	}
+
 }

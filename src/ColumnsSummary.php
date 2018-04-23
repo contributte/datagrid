@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -11,7 +11,6 @@ namespace Ublaboo\DataGrid;
 use Ublaboo\DataGrid\Column\ColumnNumber;
 use Ublaboo\DataGrid\Column\Renderer;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-
 
 class ColumnsSummary
 {
@@ -72,11 +71,12 @@ class ColumnsSummary
 
 	/**
 	 * Get value from column using Row::getValue() or custom callback
+	 *
 	 * @param Row    	    $row
 	 * @param Column\Column $column
 	 * @return bool
 	 */
-	private function getValue(Row $row, $column)
+	private function getValue(Row $row, Column\Column $column): bool
 	{
 		if (!$this->rowCallback) {
 			return $row->getValue($column->getColumn());
@@ -89,7 +89,7 @@ class ColumnsSummary
 	/**
 	 * @param Row $row
 	 */
-	public function add(Row $row)
+	public function add(Row $row): void
 	{
 		foreach ($this->summary as $key => $sum) {
 			$column = $this->datagrid->getColumn($key);
@@ -104,7 +104,7 @@ class ColumnsSummary
 	 * @param  string $key
 	 * @return mixed
 	 */
-	public function render($key)
+	public function render(string $key)
 	{
 		/**
 		 * Renderer function may be used
@@ -132,10 +132,11 @@ class ColumnsSummary
 
 	/**
 	 * Try to render summary with custom renderer
+	 *
 	 * @param  string $key
 	 * @return mixed
 	 */
-	public function useRenderer($key)
+	public function useRenderer(string $key)
 	{
 		if (!isset($this->summary[$key])) {
 			return null;
@@ -144,7 +145,7 @@ class ColumnsSummary
 		$renderer = $this->getRenderer();
 
 		if (!$renderer) {
-			throw new DataGridColumnRendererException;
+			throw new DataGridColumnRendererException();
 		}
 
 		return call_user_func_array($renderer->getCallback(), [$this->summary[$key], $key]);
@@ -153,9 +154,10 @@ class ColumnsSummary
 
 	/**
 	 * Return custom renderer callback
+	 *
 	 * @return Renderer|null
 	 */
-	public function getRenderer()
+	public function getRenderer(): ?Renderer
 	{
 		return $this->renderer;
 	}
@@ -163,11 +165,12 @@ class ColumnsSummary
 
 	/**
 	 * Set renderer callback
+	 *
 	 * @param callable $renderer
 	 */
 	public function setRenderer(callable $renderer)
 	{
-		$this->renderer = new Renderer($renderer, NULL);
+		$this->renderer = new Renderer($renderer, null);
 
 		return $this;
 	}
@@ -175,12 +178,13 @@ class ColumnsSummary
 
 	/**
 	 * Set number format
+	 *
 	 * @param string $key
 	 * @param int    $decimals
 	 * @param string $dec_point
 	 * @param string $thousands_sep
 	 */
-	public function setFormat($key, $decimals = 0, $dec_point = '.', $thousands_sep = ' ')
+	public function setFormat(string $key, int $decimals = 0, string $dec_point = '.', string $thousands_sep = ' ')
 	{
 		$this->format[$key] = [$decimals, $dec_point, $thousands_sep];
 
@@ -192,7 +196,7 @@ class ColumnsSummary
 	 * @param  array  $columns
 	 * @return bool
 	 */
-	public function someColumnsExist(array $columns)
+	public function someColumnsExist(array $columns): bool
 	{
 		foreach ($columns as $key => $column) {
 			if (isset($this->summary[$key])) {

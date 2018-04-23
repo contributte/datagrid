@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -20,6 +20,7 @@ trait TLink
 
 	/**
 	 * Create link to custom destination
+	 *
 	 * @param  DataGrid $grid
 	 * @param  string   $href
 	 * @param  array    $params
@@ -28,7 +29,7 @@ trait TLink
 	 * @throws \InvalidArgumentException
 	 * @throws DataGridLinkCreationException
 	 */
-	protected function createLink(DataGrid $grid, $href, $params)
+	protected function createLink(DataGrid $grid, string $href, array $params): string
 	{
 		$targetComponent = $grid;
 
@@ -80,7 +81,7 @@ trait TLink
 	/**
 	 * @throws DataGridLinkCreationException
 	 */
-	private function throwHierarchyLookupException(DataGrid $grid, $href, $params)
+	private function throwHierarchyLookupException(DataGrid $grid, $href, $params): void
 	{
 		$desiredHandler = get_class($grid->getParent()) . '::handle' . ucfirst($href) . '()';
 
@@ -92,4 +93,5 @@ trait TLink
 			. 'Try adding handler ' . $desiredHandler
 		);
 	}
+
 }

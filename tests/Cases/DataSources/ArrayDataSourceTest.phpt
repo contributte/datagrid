@@ -1,6 +1,7 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
+
 use Ublaboo;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
@@ -9,14 +10,15 @@ require __DIR__ . '/BaseDataSourceTest.phpt';
 final class ArrayDataSourceTest extends BaseDataSourceTest
 {
 
-	public function setUp()
+	public function setUp(): void
 	{
 		$this->ds = new Ublaboo\DataGrid\DataSource\ArrayDataSource($this->data);
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
 		$this->grid = $factory->createXTestingDataGrid();
 	}
+
 }
 
 
-$test_case = new ArrayDataSourceTest;
+$test_case = new ArrayDataSourceTest();
 $test_case->run();

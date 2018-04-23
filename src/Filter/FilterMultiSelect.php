@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -27,15 +27,14 @@ class FilterMultiSelect extends FilterSelect
 		'data-selected-text-format' => ['count'],
 	];
 
-
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $key
-	 * @param string   $name
-	 * @param string   $options
-	 * @param string   $column
-	 */
-	public function __construct($grid, $key, $name, array $options, $column)
+/**
+ * @param DataGrid $grid
+ * @param string   $key
+ * @param string   $name
+ * @param string   $options
+ * @param string   $column
+ */
+	public function __construct(DataGrid $grid, string $key, string $name, array $options, string $column)
 	{
 		parent::__construct($grid, $key, $name, $options, $column);
 
@@ -45,9 +44,10 @@ class FilterMultiSelect extends FilterSelect
 
 	/**
 	 * Get filter condition
+	 *
 	 * @return array
 	 */
-	public function getCondition()
+	public function getCondition(): array
 	{
 		$return = [$this->column => []];
 
@@ -66,7 +66,7 @@ class FilterMultiSelect extends FilterSelect
 	 * @param array                $options
 	 * @return Nette\Forms\Controls\SelectBox
 	 */
-	protected function addControl(Nette\Forms\Container $container, $key, $name, $options)
+	protected function addControl(Nette\Forms\Container $container, string $key, string $name, array $options): Nette\Forms\Controls\SelectBox
 	{
 		/**
 		 * Set some translated texts
@@ -84,4 +84,5 @@ class FilterMultiSelect extends FilterSelect
 
 		return $this->addAttributes($input);
 	}
+
 }

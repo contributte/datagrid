@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -32,12 +32,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 */
 	protected $primary_key;
 
-
 	/**
 	 * @param Selection $data_source
 	 * @param string $primary_key
 	 */
-	public function __construct(Selection $data_source, $primary_key)
+	public function __construct(Selection $data_source, string $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
@@ -48,12 +47,12 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-
 	/**
 	 * Get count of data
+	 *
 	 * @return int
 	 */
-	public function getCount()
+	public function getCount(): int
 	{
 		$data_source_sql_builder = $this->data_source->getSqlBuilder();
 
@@ -84,9 +83,10 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Get the data
+	 *
 	 * @return array
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		return $this->data ?: $this->data_source->fetchAll();
 	}
@@ -94,6 +94,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter data - get one row
+	 *
 	 * @param array $condition
 	 * @return static
 	 */
@@ -107,10 +108,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter by date
+	 *
 	 * @param  Filter\FilterDate $filter
 	 * @return void
 	 */
-	public function applyFilterDate(Filter\FilterDate $filter)
+	public function applyFilterDate(Filter\FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
 
@@ -122,10 +124,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter by date range
+	 *
 	 * @param  Filter\FilterDateRange $filter
 	 * @return void
 	 */
-	public function applyFilterDateRange(Filter\FilterDateRange $filter)
+	public function applyFilterDateRange(Filter\FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
 
@@ -150,10 +153,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter by range
+	 *
 	 * @param  Filter\FilterRange $filter
 	 * @return void
 	 */
-	public function applyFilterRange(Filter\FilterRange $filter)
+	public function applyFilterRange(Filter\FilterRange $filter): void
 	{
 		$conditions = $filter->getCondition();
 
@@ -172,10 +176,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter by keyword
+	 *
 	 * @param  Filter\FilterText $filter
 	 * @return void
 	 */
-	public function applyFilterText(Filter\FilterText $filter)
+	public function applyFilterText(Filter\FilterText $filter): void
 	{
 		$or = [];
 		$args = [];
@@ -224,10 +229,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter by multi select value
+	 *
 	 * @param  Filter\FilterMultiSelect $filter
 	 * @return void
 	 */
-	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter)
+	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter): void
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -238,7 +244,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			$i = 1;
 
 			foreach ($values as $value) {
-				if ($i == $length) {
+				if ($i === $length) {
 					$or .= $filter->getColumn() . ' = ?)';
 				} else {
 					$or .= $filter->getColumn() . ' = ? OR ';
@@ -258,10 +264,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter by select value
+	 *
 	 * @param  Filter\FilterSelect $filter
 	 * @return void
 	 */
-	public function applyFilterSelect(Filter\FilterSelect $filter)
+	public function applyFilterSelect(Filter\FilterSelect $filter): void
 	{
 		$this->data_source->where($filter->getCondition());
 	}
@@ -269,11 +276,12 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Apply limit and offset on data
+	 *
 	 * @param int $offset
 	 * @param int $limit
 	 * @return static
 	 */
-	public function limit($offset, $limit)
+	public function limit(int $offset, int $limit)
 	{
 		$this->data = $this->data_source->limit($limit, $offset)->fetchAll();
 
@@ -283,6 +291,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Sort data
+	 *
 	 * @param  Sorting $sorting
 	 * @return static
 	 */
@@ -323,8 +332,9 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 * @param  callable $aggregationCallback
 	 * @return void
 	 */
-	public function processAggregation(callable $aggregationCallback)
+	public function processAggregation(callable $aggregationCallback): void
 	{
 		call_user_func($aggregationCallback, $this->data_source);
 	}
+
 }

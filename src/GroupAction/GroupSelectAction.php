@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -19,12 +19,11 @@ class GroupSelectAction extends GroupAction
 	 */
 	protected $options;
 
-
 	/**
 	 * @param string $title
 	 * @param array  $options
 	 */
-	public function __construct($title, $options = null)
+	public function __construct(string $title, ?array $options = null)
 	{
 		parent::__construct($title);
 		$this->options = $options;
@@ -33,9 +32,10 @@ class GroupSelectAction extends GroupAction
 
 	/**
 	 * Get action options
+	 *
 	 * @return array
 	 */
-	public function getOptions()
+	public function getOptions(): array
 	{
 		return $this->options;
 	}
@@ -43,10 +43,12 @@ class GroupSelectAction extends GroupAction
 
 	/**
 	 * Has the action some options?
-	 * @return boolean
+	 *
+	 * @return bool
 	 */
-	public function hasOptions()
+	public function hasOptions(): bool
 	{
 		return (bool) $this->options;
 	}
+
 }

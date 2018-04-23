@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -12,9 +12,9 @@ use Dibi;
 use DibiFluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
-use Nette\SmartObject;
 use Nette\Database\Drivers as NDBDrivers;
 use Nette\Database\Table\Selection;
+use Nette\SmartObject;
 use Nextras\Orm\Collection\ICollection;
 use Ublaboo\DataGrid\DataSource\ApiDataSource;
 use Ublaboo\DataGrid\DataSource\IDataSource;
@@ -46,7 +46,6 @@ final class DataModel
 	 * @var IDataSource
 	 */
 	private $data_source;
-
 
 	/**
 	 * @param IDataSource|array|Dibi\Fluent|Selection|QueryBuilder|Collection $source
@@ -114,9 +113,10 @@ final class DataModel
 
 	/**
 	 * Return dat asource
+	 *
 	 * @return IDataSource
 	 */
-	public function getDataSource()
+	public function getDataSource(): IDataSource
 	{
 		return $this->data_source;
 	}
@@ -124,16 +124,18 @@ final class DataModel
 
 	/**
 	 * Filter/paginate/limit/order data source and return reset of data in array
+	 *
 	 * @param  Components\DataGridPaginator\DataGridPaginator $paginator_component
 	 * @param  Sorting                                        $sorting
 	 * @param  array                                          $filters
 	 * @return array
 	 */
 	public function filterData(
-		Components\DataGridPaginator\DataGridPaginator $paginator_component = null,
+		?Components\DataGridPaginator\DataGridPaginator $paginator_component = null,
 		Sorting $sorting,
 		array $filters
-	) {
+	): array
+	{
 		$this->onBeforeFilter($this->data_source);
 
 		$this->data_source->filter($filters);
@@ -163,6 +165,7 @@ final class DataModel
 
 	/**
 	 * Filter one row
+	 *
 	 * @param  array $condition
 	 * @return mixed
 	 */
@@ -173,4 +176,5 @@ final class DataModel
 
 		return $this->data_source->filterOne($condition)->getData();
 	}
+
 }

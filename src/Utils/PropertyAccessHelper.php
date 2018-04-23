@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -13,16 +13,16 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 final class PropertyAccessHelper
 {
+
 	/**
 	 * @var PropertyAccessor
 	 */
 	private static $accessor;
 
-
 	/**
 	 * @return PropertyAccessor
 	 */
-	public static function getAccessor()
+	public static function getAccessor(): PropertyAccessor
 	{
 		if (!self::$accessor) {
 			self::$accessor = PropertyAccess::createPropertyAccessor();
@@ -41,4 +41,5 @@ final class PropertyAccessHelper
 	{
 		return self::getAccessor()->getValue($class, $property);
 	}
+
 }

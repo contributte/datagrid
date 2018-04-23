@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -16,10 +16,11 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 	/**
 	 * Filter by date
+	 *
 	 * @param  Filter\FilterDate $filter
 	 * @return void
 	 */
-	public function applyFilterDate(Filter\FilterDate $filter)
+	public function applyFilterDate(Filter\FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
 
@@ -34,10 +35,11 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 	/**
 	 * Filter by date range
+	 *
 	 * @param  Filter\FilterDateRange $filter
 	 * @return void
 	 */
-	public function applyFilterDateRange(Filter\FilterDateRange $filter)
+	public function applyFilterDateRange(Filter\FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
 
@@ -64,4 +66,5 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 			);
 		}
 	}
+
 }

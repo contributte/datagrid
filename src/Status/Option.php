@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -61,9 +61,9 @@ class Option
 	 */
 	protected $icon_secondary;
 
-
 	/**
 	 * [__construct description]
+	 *
 	 * @param ColumnStatus $columnStatus
 	 * @param mixed       $value
 	 * @param string       $text
@@ -87,9 +87,10 @@ class Option
 
 	/**
 	 * End option fluent interface and return parent
+	 *
 	 * @return ColumnStatus
 	 */
-	public function endOption()
+	public function endOption(): ColumnStatus
 	{
 		return $this->columnStatus;
 	}
@@ -99,7 +100,7 @@ class Option
 	 * @param string $title
 	 * @return static
 	 */
-	public function setTitle($title)
+	public function setTitle(string $title)
 	{
 		$this->title = (string) $title;
 
@@ -110,7 +111,7 @@ class Option
 	/**
 	 * @return string
 	 */
-	public function getTitle()
+	public function getTitle(): string
 	{
 		return $this->title;
 	}
@@ -121,7 +122,7 @@ class Option
 	 * @param string $class_secondary
 	 * @return static
 	 */
-	public function setClass($class, $class_secondary = null)
+	public function setClass(string $class, ?string $class_secondary = null)
 	{
 		$this->class = (string) $class;
 
@@ -136,7 +137,7 @@ class Option
 	/**
 	 * @return string
 	 */
-	public function getClass()
+	public function getClass(): string
 	{
 		return $this->class;
 	}
@@ -146,7 +147,7 @@ class Option
 	 * @param string $class_secondary
 	 * @return static
 	 */
-	public function setClassSecondary($class_secondary)
+	public function setClassSecondary(string $class_secondary)
 	{
 		$this->class_secondary = (string) $class_secondary;
 
@@ -157,7 +158,7 @@ class Option
 	/**
 	 * @return string
 	 */
-	public function getClassSecondary()
+	public function getClassSecondary(): string
 	{
 		return $this->class_secondary;
 	}
@@ -167,7 +168,7 @@ class Option
 	 * @param string $class_in_dropdown
 	 * @return static
 	 */
-	public function setClassInDropdown($class_in_dropdown)
+	public function setClassInDropdown(string $class_in_dropdown)
 	{
 		$this->class_in_dropdown = (string) $class_in_dropdown;
 
@@ -178,7 +179,7 @@ class Option
 	/**
 	 * @return string
 	 */
-	public function getClassInDropdown()
+	public function getClassInDropdown(): string
 	{
 		return $this->class_in_dropdown;
 	}
@@ -188,7 +189,7 @@ class Option
 	 * @param string $icon
 	 * @return static
 	 */
-	public function setIcon($icon)
+	public function setIcon(string $icon)
 	{
 		$this->icon = (string) $icon;
 
@@ -199,7 +200,7 @@ class Option
 	/**
 	 * @return string|NULL
 	 */
-	public function getIcon()
+	public function getIcon(): ?string
 	{
 		return $this->icon;
 	}
@@ -208,7 +209,7 @@ class Option
 	/**
 	 * @param string $icon_secondary
 	 */
-	public function setIconSecondary($icon_secondary)
+	public function setIconSecondary(string $icon_secondary)
 	{
 		$this->icon_secondary = (string) $icon_secondary;
 
@@ -219,7 +220,7 @@ class Option
 	/**
 	 * @return string|NULL
 	 */
-	public function getIconSecondary()
+	public function getIconSecondary(): ?string
 	{
 		return $this->icon_secondary;
 	}
@@ -228,8 +229,9 @@ class Option
 	/**
 	 * @return string
 	 */
-	public function getText()
+	public function getText(): string
 	{
 		return $this->text;
 	}
+
 }

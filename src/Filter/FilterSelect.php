@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -39,7 +39,6 @@ class FilterSelect extends Filter
 	 */
 	protected $prompt = null;
 
-
 	/**
 	 * @param DataGrid $grid
 	 * @param string   $key
@@ -47,7 +46,7 @@ class FilterSelect extends Filter
 	 * @param string   $options
 	 * @param string   $column
 	 */
-	public function __construct($grid, $key, $name, array $options, $column)
+	public function __construct(DataGrid $grid, string $key, string $name, array $options, string $column)
 	{
 		parent::__construct($grid, $key, $name, $column);
 
@@ -57,9 +56,10 @@ class FilterSelect extends Filter
 
 	/**
 	 * Adds select box to filter form
+	 *
 	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer(Nette\Forms\Container $container)
+	public function addToFormContainer(Nette\Forms\Container $container): void
 	{
 		$form = $container->lookup('Nette\Application\UI\Form');
 		$translator = $form->getTranslator();
@@ -83,7 +83,7 @@ class FilterSelect extends Filter
 	 * @param  bool  $translateOptions
 	 * @return static
 	 */
-	public function setTranslateOptions($translateOptions = true)
+	public function setTranslateOptions(bool $translateOptions = true)
 	{
 		$this->translateOptions = (bool) $translateOptions;
 		return $this;
@@ -93,7 +93,7 @@ class FilterSelect extends Filter
 	/**
 	 * @return bool
 	 */
-	public function getTranslateOptions()
+	public function getTranslateOptions(): bool
 	{
 		return $this->translateOptions;
 	}
@@ -101,9 +101,10 @@ class FilterSelect extends Filter
 
 	/**
 	 * Get filter condition
+	 *
 	 * @return array
 	 */
-	public function getCondition()
+	public function getCondition(): array
 	{
 		return [$this->column => $this->getValue()];
 	}
@@ -111,9 +112,10 @@ class FilterSelect extends Filter
 
 	/**
 	 * Get filter prompt
+	 *
 	 * @return string|NULL
 	 */
-	public function getPrompt()
+	public function getPrompt(): ?string
 	{
 		return $this->prompt;
 	}
@@ -121,10 +123,11 @@ class FilterSelect extends Filter
 
 	/**
 	 * Set filter prompt value
+	 *
 	 * @param string|NULL $prompt
 	 * @return static
 	 */
-	public function setPrompt($prompt)
+	public function setPrompt(?string $prompt)
 	{
 		$this->prompt = $prompt;
 		return $this;
@@ -133,9 +136,10 @@ class FilterSelect extends Filter
 
 	/**
 	 * Tell if prompt has been set in this fitler
+	 *
 	 * @return bool
 	 */
-	public function isPromptEnabled()
+	public function isPromptEnabled(): bool
 	{
 		return isset($this->prompt);
 	}
@@ -148,7 +152,7 @@ class FilterSelect extends Filter
 	 * @param array                $options
 	 * @return Nette\Forms\Controls\SelectBox
 	 */
-	protected function addControl(Nette\Forms\Container $container, $key, $name, $options)
+	protected function addControl(Nette\Forms\Container $container, string $key, string $name, array $options): Nette\Forms\Controls\SelectBox
 	{
 		$input = $container->addSelect($key, $name, $options);
 
@@ -158,4 +162,5 @@ class FilterSelect extends Filter
 
 		return $this->addAttributes($input);
 	}
+
 }
