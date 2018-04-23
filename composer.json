@@ -1,44 +1,70 @@
 {
-	"name": "ublaboo/datagrid",
-	"type": "library",
-	"description": "DataGrid for Nette Framework: filtering, sorting, pagination, tree view, table view, translator, etc",
-	"keywords": ["datagrid", "grid", "nette"],
-	"homepage": "https://ublaboo.org/datagrid",
-	"license": ["MIT"],
-	"support": {
-		"issues": "https://github.com/ublaboo/datagrid/issues"
-	},
-	"authors": [
-		{
-			"name": "Pavel Janda",
-			"homepage": "http://paveljanda.com"
-		}
-	],
-	"autoload": {
-		"psr-4": {
-			"Ublaboo\\DataGrid\\": "src/"
-		}
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"Ublaboo\\DataGrid\\Tests\\": "tests"
-		}
-	},
-	"require": {
-		"php": "^5.6|^7.0",
-		"contributte/application": "^0.3",
-		"nette/utils": ">=2.4.0",
-		"nette/forms": "^2.3",
-		"symfony/property-access": "~3.0"
-	},
-	"require-dev": {
-		"nette/tester": "^2.0.0",
-		"tracy/tracy": "^2.3.0",
-		"mockery/mockery": "~0.9",
-		"tharos/leanmapper": "~2.2.0",
-		"nextras/orm": "~2.0",
-		"doctrine/orm": "~2.5",
-		"nette/database": "^2.3",
-		"dibi/dibi": "^3.0"
-	}
+  "name": "ublaboo/datagrid",
+  "type": "library",
+  "description": "DataGrid for Nette Framework: filtering, sorting, pagination, tree view, table view, translator, etc",
+  "keywords": ["datagrid", "grid", "nette"],
+  "homepage": "https://ublaboo.org/datagrid",
+  "license": ["MIT"],
+  "support": {
+    "issues": "https://github.com/ublaboo/datagrid/issues"
+  },
+  "authors": [
+    {
+      "name": "Pavel Janda",
+      "homepage": "http://paveljanda.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Ublaboo\\DataGrid\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Ublaboo\\DataGrid\\Tests\\": "tests"
+    }
+  },
+  "require": {
+    "php": ">=7.1",
+    "contributte/application": "^0.3",
+    "nette/utils": "~2.5.1",
+    "nette/forms": "~2.4.7",
+    "symfony/property-access": "~3.0"
+  },
+  "require-dev": {
+    "ninjify/qa": "~0.7.1",
+    "nette/tester": "~2.0.0",
+    "tracy/tracy": "~2.4.13",
+    "mockery/mockery": "^1.0",
+    "tharos/leanmapper": "~2.2.0",
+    "nextras/orm": "~2.2.3",
+    "doctrine/orm": "~2.6.1",
+    "nette/database": "~2.4.5",
+    "dibi/dibi": "~3.2.1"
+  },
+  "scripts": {
+    "qa": [
+      "linter src tests",
+      "codesniffer src tests"
+    ],
+    "tester": [
+      "tester -s -p php --colors 1 -C tests/cases"
+    ],
+    "coverage": [
+      "tester -s -p php --colors 1 -C -d extension=xdebug.so --coverage ./coverage.xml --coverage-src ./src tests/cases"
+    ],
+    "phpstan-install": [
+      "mkdir -p temp/phpstan",
+      "composer require -d temp/phpstan phpstan/phpstan:0.9.2",
+      "composer require -d temp/phpstan phpstan/phpstan-nette:0.9"
+    ],
+    "phpstan": [
+      "temp/phpstan/vendor/bin/phpstan analyse -l max -c phpstan.neon src"
+    ]
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "6.0.x-dev"
+    }
+  }
 }
