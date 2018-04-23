@@ -11,7 +11,7 @@ namespace Ublaboo\DataGrid\Export;
 use Nette;
 use Ublaboo\DataGrid\CsvDataModel;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\Responses\CSVResponse;
+use Contributte\Application\Response\CSVResponse;
 
 class ExportCsv extends Export
 {

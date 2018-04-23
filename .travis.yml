@@ -17,7 +17,7 @@ before_script:
   - mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 
 script:
-  - vendor/bin/tester tests/ -c tests/php.ini --coverage coverage.xml --coverage-src src/
+  - vendor/bin/tester tests/ -C --coverage coverage.xml --coverage-src src/
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
