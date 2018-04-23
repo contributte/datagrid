@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ruleset name="Contributte">
+
+    <!-- Extending rulesets -->
+    <rule ref="./vendor/ninjify/coding-standard/ruleset.xml"/>
+
+    <!-- Custom rules -->
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+        <properties>
+            <property name="rootNamespaces" type="array" value="
+                src=>Ublaboo\DataGrid,
+                tests/fixtures=>Tests\Fixtures
+            "/>
+        </properties>
+    </rule>
+    <rule ref="Generic.WhiteSpace.ScopeIndent">
+        <properties>
+            <property name="indent" value="4"/>
+            <property name="tabIndent" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="Generic.WhiteSpace.DisallowSpaceIndent" />
+    <rule ref="Generic.PHP.LowerCaseConstant"/>
+
+    <!-- Uncomment in the future -->
+    <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint">
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint"/>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversablePropertyTypeHintSpecification">
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversablePropertyTypeHintSpecification"/>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableParameterTypeHintSpecification">
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableParameterTypeHintSpecification"/>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint">
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint"/>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableReturnTypeHintSpecification">
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableReturnTypeHintSpecification"/>
+    </rule>
+
+    <!-- Add excluded sniffs from Ninjify -->
+    <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.UselessDocComment"/>
+
+    <!-- Excluding Ninjify -->
+    <rule ref="Generic.PHP.UpperCaseConstant">
+        <exclude name="Generic.PHP.UpperCaseConstant"/>
+    </rule>
+
+    <!-- Excluding Slevomat -->
+    <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions">
+        <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions"/>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants.NonFullyQualified">
+        <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants.NonFullyQualified"/>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming">
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming"/>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming">
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming"/>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Commenting.RequireOneLinePropertyDocComment">
+        <exclude name="SlevomatCodingStandard.Commenting.RequireOneLinePropertyDocComment"/>
+    </rule>
+    <rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit">
+        <exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit"/>
+    </rule>
+
+    <!-- Excluding Generic -->
+    <rule ref="Generic.Commenting.DocComment.ParamNotFirst">
+        <exclude name="Generic.Commenting.DocComment.ParamNotFirst"/>
+    </rule>
+    <rule ref="Generic.CodeAnalysis.EmptyStatement.DetectedCatch">
+        <exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedCatch"/>
+    </rule>
+
+    <!-- Excluding Squiz -->
+    <rule ref="Squiz.Commenting.FunctionComment">
+        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.WrongStyle"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingReturn"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+    </rule>
+
+    <!-- Exclude folders -->
+    <exclude-pattern>/tests/tmp</exclude-pattern>
+
+</ruleset>

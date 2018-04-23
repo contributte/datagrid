@@ -50,6 +50,7 @@ jobs:
         - composer run-script phpstan
 
   allow_failures:
+    - stage: Quality Assurance
     - stage: Test Coverage
     - stage: Phpstan
 
