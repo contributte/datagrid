@@ -1,0 +1,26 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+# Top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+
+# JS / PHP
+[*.{js,php,phpt}]
+charset = utf-8
+indent_style = tab
+indent_size = 4
+
+# NEON
+[*.neon]
+charset = utf-8
+indent_style = tab
+indent_size = 4
+
+# Composer, NPM, Travis, BitbucketPipelines
+[{composer.json,package.json,.travis.yml,bitbucket-pipelines.yml}]
+indent_style = space
+indent_size = 2
