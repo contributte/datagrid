@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
@@ -13,27 +13,27 @@ require __DIR__ . '/BaseDataSourceTest.phpt';
 
 final class DoctrineDataSourceTest extends BaseDataSourceTest
 {
+
 	/**
 	 * @var \Doctrine\DBAL\Connection
 	 */
 	private $db;
 
-
-	public function setUp()
+	public function setUp(): void
 	{
 		$this->setUpDatabase();
 
-		$config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/tmp"));
-		$entityManager = EntityManager::create($this->db, $config );
+		$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/tmp']);
+		$entityManager = EntityManager::create($this->db, $config);
 
-		$queryBuilder = $entityManager->getRepository("Ublaboo\\DataGrid\\Tests\\Cases\\DataSources\\User")->createQueryBuilder('e');
+		$queryBuilder = $entityManager->getRepository('Ublaboo\\DataGrid\\Tests\\Cases\\DataSources\\User')->createQueryBuilder('e');
 
-		$this->ds = new DoctrineDataSource($queryBuilder,'id');
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+		$this->ds = new DoctrineDataSource($queryBuilder, 'id');
+		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
 		$this->grid = $factory->createXTestingDataGrid();
 	}
 
-	protected function setUpDatabase()
+	protected function setUpDatabase(): void
 	{
 		$config = new Configuration();
 
@@ -47,30 +47,38 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 							);
 		');
 
-		foreach($this->data as $row){
+		foreach ($this->data as $row) {
 			$this->db->insert('users', $row);
 		}
-
-
 	}
+
 }
 /**
  * All properties are intentionally public so we can convert it to array in getActualResultAsArray
+ *
  * @Entity @Table(name="users")
  **/
 class User
 {
-	/** @Id @Column(type="integer") @GeneratedValue **/
+
+	/**
+	 * @Id @Column(type="integer") @GeneratedValue
+	 **/
 	public $id;
 
-	/** @Column(type="string") **/
+	/**
+	 * @Column(type="string")
+	 **/
 	public $name;
 
-
-	/** @Column(type="integer") **/
+	/**
+	 * @Column(type="integer")
+	 **/
 	public $age;
 
-	/** @Column(type="string") **/
+	/**
+	 * @Column(type="string")
+	 **/
 	public $address;
 
 	public function getId()
@@ -83,7 +91,7 @@ class User
 		return $this->name;
 	}
 
-	public function setName($name)
+	public function setName($name): void
 	{
 		$this->name = $name;
 	}
@@ -93,7 +101,7 @@ class User
 		return $this->name;
 	}
 
-	public function setAge($name)
+	public function setAge($name): void
 	{
 		$this->name = $name;
 	}
@@ -103,10 +111,11 @@ class User
 		return $this->name;
 	}
 
-	public function setAddress($name)
+	public function setAddress($name): void
 	{
 		$this->name = $name;
 	}
+
 }
 $test_case = new DoctrineDataSourceTest();
 $test_case->run();

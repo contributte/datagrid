@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -28,12 +28,12 @@ class FilterDateRange extends FilterRange implements IFilterDate
 	 */
 	protected $type = 'date-range';
 
-
 	/**
 	 * Adds select box to filter form
+	 *
 	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer(Nette\Forms\Container $container)
+	public function addToFormContainer(Nette\Forms\Container $container): void
 	{
 		$container = $container->addContainer($this->key);
 
@@ -68,7 +68,7 @@ class FilterDateRange extends FilterRange implements IFilterDate
 
 			$text_to = end($placeholder_array);
 
-			if ($text_to && ($text_to != $text_from)) {
+			if ($text_to && ($text_to !== $text_from)) {
 				$container['to']->setAttribute('placeholder', $text_to);
 			}
 		}
@@ -77,11 +77,12 @@ class FilterDateRange extends FilterRange implements IFilterDate
 
 	/**
 	 * Set format for datepicker etc
+	 *
 	 * @param  string $php_format
 	 * @param  string $js_format
 	 * @return static
 	 */
-	public function setFormat($php_format, $js_format)
+	public function setFormat(string $php_format, string $js_format)
 	{
 		$this->format = [$php_format, $js_format];
 
@@ -91,9 +92,10 @@ class FilterDateRange extends FilterRange implements IFilterDate
 
 	/**
 	 * Get php format for datapicker
+	 *
 	 * @return string
 	 */
-	public function getPhpFormat()
+	public function getPhpFormat(): string
 	{
 		return $this->format[0];
 	}
@@ -101,10 +103,12 @@ class FilterDateRange extends FilterRange implements IFilterDate
 
 	/**
 	 * Get js format for datepicker
+	 *
 	 * @return string
 	 */
-	public function getJsFormat()
+	public function getJsFormat(): string
 	{
 		return $this->format[1];
 	}
+
 }

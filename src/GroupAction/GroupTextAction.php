@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -17,8 +17,9 @@ class GroupTextAction extends GroupAction
 	/**
 	 * @param string $title
 	 */
-	public function __construct($title)
+	public function __construct(string $title)
 	{
 		parent::__construct($title);
 	}
+
 }

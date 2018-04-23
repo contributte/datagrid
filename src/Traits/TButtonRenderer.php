@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -26,14 +26,14 @@ trait TButtonRenderer
 	 */
 	protected $replacements = [];
 
-
 	/**
 	 * Try to render item with custom renderer
+	 *
 	 * @param  Row|null $row
 	 * @return mixed
 	 * @throws DataGridColumnRendererException
 	 */
-	public function useRenderer($row = null)
+	public function useRenderer(?Row $row = null)
 	{
 		$renderer = $this->getRenderer();
 
@@ -44,12 +44,12 @@ trait TButtonRenderer
 		}
 
 		if (!$renderer) {
-			throw new DataGridColumnRendererException;
+			throw new DataGridColumnRendererException();
 		}
 
 		if ($renderer->getConditionCallback()) {
 			if (!call_user_func_array($renderer->getConditionCallback(), $args)) {
-				throw new DataGridColumnRendererException;
+				throw new DataGridColumnRendererException();
 			}
 
 			return call_user_func_array($renderer->getCallback(), $args);
@@ -61,10 +61,11 @@ trait TButtonRenderer
 
 	/**
 	 * Set renderer callback and (it may be optional - the condition callback will decide)
+	 *
 	 * @param callable $renderer
 	 * @throws DataGridException
 	 */
-	public function setRenderer($renderer, $condition_callback = null)
+	public function setRenderer(callable $renderer, $condition_callback = null)
 	{
 		if ($this->hasReplacements()) {
 			throw new DataGridException(
@@ -78,7 +79,7 @@ trait TButtonRenderer
 			);
 		}
 
-		if ($condition_callback != null && !is_callable($condition_callback)) {
+		if ($condition_callback !== null && !is_callable($condition_callback)) {
 			throw new DataGridException(
 				'Renderer (method Column::setRenderer()) must be callable.'
 			);
@@ -92,9 +93,10 @@ trait TButtonRenderer
 
 	/**
 	 * Set renderer callback just if condition is truthy
+	 *
 	 * @param callable $renderer
 	 */
-	public function setRendererOnCondition($renderer, $condition_callback)
+	public function setRendererOnCondition(callable $renderer, $condition_callback)
 	{
 		return $this->setRenderer($renderer, $condition_callback);
 	}
@@ -102,9 +104,10 @@ trait TButtonRenderer
 
 	/**
 	 * Return custom renderer callback
+	 *
 	 * @return Renderer|null
 	 */
-	public function getRenderer()
+	public function getRenderer(): ?Renderer
 	{
 		return $this->renderer;
 	}
@@ -112,10 +115,11 @@ trait TButtonRenderer
 
 	/**
 	 * Set column replacements
+	 *
 	 * @param  array $replacements
 	 * @return Column
 	 */
-	public function setReplacement(array $replacements)
+	public function setReplacement(array $replacements): Column
 	{
 		$this->replacements = $replacements;
 
@@ -125,9 +129,10 @@ trait TButtonRenderer
 
 	/**
 	 * Tell whether columns has replacements
+	 *
 	 * @return bool
 	 */
-	public function hasReplacements()
+	public function hasReplacements(): bool
 	{
 		return (bool) $this->replacements;
 	}
@@ -135,10 +140,11 @@ trait TButtonRenderer
 
 	/**
 	 * Apply replacements
+	 *
 	 * @param  Row   $row
 	 * @return array
 	 */
-	public function applyReplacements(Row $row)
+	public function applyReplacements(Row $row): array
 	{
 		$value = $row->getValue($this->column);
 
@@ -148,4 +154,5 @@ trait TButtonRenderer
 
 		return [false, null];
 	}
+
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -33,12 +33,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	 */
 	protected $primary_key;
 
-
 	/**
 	 * @param Fluent $data_source
 	 * @param string $primary_key
 	 */
-	public function __construct(Fluent $data_source, $primary_key)
+	public function __construct(Fluent $data_source, string $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
@@ -49,12 +48,12 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-
 	/**
 	 * Get count of data
+	 *
 	 * @return int
 	 */
-	public function getCount()
+	public function getCount(): int
 	{
 		return $this->data_source->count();
 	}
@@ -62,9 +61,10 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Get the data
+	 *
 	 * @return array
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		return $this->data ?: $this->data_source->fetchAll();
 	}
@@ -72,6 +72,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter data - get one row
+	 *
 	 * @param array $condition
 	 * @return static
 	 */
@@ -85,10 +86,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter by date
+	 *
 	 * @param  Filter\FilterDate $filter
 	 * @return void
 	 */
-	public function applyFilterDate(Filter\FilterDate $filter)
+	public function applyFilterDate(Filter\FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
 
@@ -100,10 +102,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter by date range
+	 *
 	 * @param  Filter\FilterDateRange $filter
 	 * @return void
 	 */
-	public function applyFilterDateRange(Filter\FilterDateRange $filter)
+	public function applyFilterDateRange(Filter\FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
 
@@ -128,21 +131,22 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter by range
+	 *
 	 * @param  Filter\FilterRange $filter
 	 * @return void
 	 */
-	public function applyFilterRange(Filter\FilterRange $filter)
+	public function applyFilterRange(Filter\FilterRange $filter): void
 	{
 		$conditions = $filter->getCondition();
 
 		$value_from = $conditions[$filter->getColumn()]['from'];
 		$value_to = $conditions[$filter->getColumn()]['to'];
 
-		if ($value_from || $value_from != '') {
+		if ($value_from || $value_from !== '') {
 			$this->data_source->where('%n >= ?', $filter->getColumn(), $value_from);
 		}
 
-		if ($value_to || $value_to != '') {
+		if ($value_to || $value_to !== '') {
 			$this->data_source->where('%n <= ?', $filter->getColumn(), $value_to);
 		}
 	}
@@ -150,10 +154,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter by keyword
+	 *
 	 * @param  Filter\FilterText $filter
 	 * @return void
 	 */
-	public function applyFilterText(Filter\FilterText $filter)
+	public function applyFilterText(Filter\FilterText $filter): void
 	{
 		$condition = $filter->getCondition();
 		$driver = $this->data_source->getConnection()->getDriver();
@@ -199,10 +204,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter by multi select value
+	 *
 	 * @param  Filter\FilterMultiSelect $filter
 	 * @return void
 	 */
-	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter)
+	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter): void
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -216,7 +222,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			$this->data_source->where('(%n = ?', $filter->getColumn(), $value1);
 
 			foreach ($values as $value) {
-				if ($i == $length) {
+				if ($i === $length) {
 					$this->data_source->or('%n = ?)', $filter->getColumn(), $value);
 				} else {
 					$this->data_source->or('%n = ?', $filter->getColumn(), $value);
@@ -232,10 +238,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter by select value
+	 *
 	 * @param  Filter\FilterSelect $filter
 	 * @return void
 	 */
-	public function applyFilterSelect(Filter\FilterSelect $filter)
+	public function applyFilterSelect(Filter\FilterSelect $filter): void
 	{
 		$this->data_source->where($filter->getCondition());
 	}
@@ -243,11 +250,12 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Apply limit and offset on data
+	 *
 	 * @param int $offset
 	 * @param int $limit
 	 * @return static
 	 */
-	public function limit($offset, $limit)
+	public function limit(int $offset, int $limit)
 	{
 		$this->data_source->limit($limit)->offset($offset);
 
@@ -259,6 +267,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Sort data
+	 *
 	 * @param  Sorting $sorting
 	 * @return static
 	 */
@@ -303,8 +312,9 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	 * @param  callable $aggregationCallback
 	 * @return void
 	 */
-	public function processAggregation(callable $aggregationCallback)
+	public function processAggregation(callable $aggregationCallback): void
 	{
 		call_user_func($aggregationCallback, clone $this->data_source);
 	}
+
 }

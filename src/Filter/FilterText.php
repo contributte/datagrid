@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -33,12 +33,12 @@ class FilterText extends Filter
 	 */
 	protected $split_words_search = true;
 
-
 	/**
 	 * Adds text field to filter form
+	 *
 	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer(Nette\Forms\Container $container)
+	public function addToFormContainer(Nette\Forms\Container $container): void
 	{
 		$container->addText($this->key, $this->name);
 
@@ -55,28 +55,29 @@ class FilterText extends Filter
 	 * 	If more than one column exists in fitler text,
 	 * 	than there is OR clause put betweeen their conditions
 	 * Or callback in case of custom condition callback
+	 *
 	 * @return array|callable
 	 */
-	public function getCondition()
+	public function getCondition(): array
 	{
 		return array_fill_keys($this->column, $this->getValue());
 	}
 
 
 	/**
-	 * @return boolean
+	 * @return bool
 	 */
-	public function isExactSearch()
+	public function isExactSearch(): bool
 	{
 		return $this->exact;
 	}
 
 
 	/**
-	 * @param boolean $exact
+	 * @param bool $exact
 	 * @return FilterText
 	 */
-	public function setExactSearch($exact = true)
+	public function setExactSearch(bool $exact = true): FilterText
 	{
 		$this->exact = $exact;
 		return $this;
@@ -87,7 +88,7 @@ class FilterText extends Filter
 	 * @param bool $split_words_search
 	 * @return FilterText
 	 */
-	public function setSplitWordsSearch($split_words_search)
+	public function setSplitWordsSearch(bool $split_words_search): FilterText
 	{
 		$this->split_words_search = (bool) $split_words_search;
 
@@ -98,8 +99,9 @@ class FilterText extends Filter
 	/**
 	 * @return bool
 	 */
-	public function hasSplitWordsSearch()
+	public function hasSplitWordsSearch(): bool
 	{
 		return $this->split_words_search;
 	}
+
 }

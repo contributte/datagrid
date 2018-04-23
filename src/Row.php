@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -8,7 +8,7 @@
 
 namespace Ublaboo\DataGrid;
 
-use DibiRow;
+use Dibi\Row as DibiRow;
 use LeanMapper;
 use Nette;
 use Nette\Database\Table\ActiveRow;
@@ -48,12 +48,11 @@ class Row
 	 */
 	protected $control;
 
-
-	/**
-	 * @param DataGrid $datagrid
-	 * @param mixed    $item
-	 * @param string   $primary_key
-	 */
+/**
+ * @param DataGrid $datagrid
+ * @param mixed    $item
+ * @param string   $primary_key
+ */
 	public function __construct(DataGrid $datagrid, $item, $primary_key)
 	{
 		$this->control = Html::el('tr');
@@ -70,6 +69,7 @@ class Row
 
 	/**
 	 * Get id value of item
+	 *
 	 * @return mixed
 	 */
 	public function getId()
@@ -80,6 +80,7 @@ class Row
 
 	/**
 	 * Get item value of key
+	 *
 	 * @param  mixed $key
 	 * @return mixed
 	 */
@@ -115,7 +116,7 @@ class Row
 	/**
 	 * @return Html
 	 */
-	public function getControl()
+	public function getControl(): Html
 	{
 		return $this->control;
 	}
@@ -124,7 +125,7 @@ class Row
 	/**
 	 * @return string
 	 */
-	public function getControlClass()
+	public function getControlClass(): string
 	{
 		if (!$class = $this->control->class) {
 			return '';
@@ -139,22 +140,22 @@ class Row
 	 * @param  string    $key
 	 * @return mixed|NULL
 	 */
-	public function getActiveRowProperty(ActiveRow $item, $key)
+	public function getActiveRowProperty(ActiveRow $item, string $key)
 	{
-		if (preg_match("/^:([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/", $key, $matches)) {
+		if (preg_match('/^:([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/', $key, $matches)) {
 			$relatedTable = $matches[1];
 			$relatedColumn = $matches[2];
-			$throughColumn = isset($matches[4]) ? $matches[4] : null;
+			$throughColumn = $matches[4] ?? null;
 
 			$relatedRow = $item->related($relatedTable, $throughColumn)->fetch();
 
 			return $relatedRow ? $relatedRow->{$relatedColumn} : null;
 		}
 
-		if (preg_match("/^([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/", $key, $matches)) {
+		if (preg_match('/^([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/', $key, $matches)) {
 			$referencedTable = $matches[1];
 			$referencedColumn = $matches[2];
-			$throughColumn = isset($matches[4]) ? $matches[4] : null;
+			$throughColumn = $matches[4] ?? null;
 
 			$referencedRow = $item->ref($referencedTable, $throughColumn);
 
@@ -167,6 +168,7 @@ class Row
 
 	/**
 	 * LeanMapper: Access object properties to get a item value
+	 *
 	 * @param  LeanMapper\Entity $item
 	 * @param  mixed             $key
 	 * @return mixed
@@ -181,7 +183,8 @@ class Row
 				if ($this->datagrid->strict_entity_property) {
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
-						$value, str_replace('.', '->', $key)
+						$value,
+						str_replace('.', '->', $key)
 					));
 				}
 
@@ -197,11 +200,12 @@ class Row
 
 	/**
 	 * Nextras: Access object properties to get a item value
+	 *
 	 * @param  Nextras\Orm\Entity\Entity $item
 	 * @param  string                    $key
 	 * @return mixed
 	 */
-	public function getNextrasEntityProperty(Nextras\Orm\Entity\Entity $item, $key)
+	public function getNextrasEntityProperty(Nextras\Orm\Entity\Entity $item, string $key)
 	{
 		$properties = explode('.', $key);
 		$value = $item;
@@ -211,7 +215,8 @@ class Row
 				if ($this->datagrid->strict_entity_property) {
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
-						$value, str_replace('.', '->', $key)
+						$value,
+						str_replace('.', '->', $key)
 					));
 				}
 
@@ -227,6 +232,7 @@ class Row
 
 	/**
 	 * Doctrine: Access object properties to get a item value
+	 *
 	 * @param  mixed $item
 	 * @param  mixed $key
 	 * @return mixed
@@ -242,7 +248,8 @@ class Row
 				if ($this->datagrid->strict_entity_property) {
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
-						$value, str_replace('.', '->', $key)
+						$value,
+						str_replace('.', '->', $key)
 					));
 				}
 
@@ -258,6 +265,7 @@ class Row
 
 	/**
 	 * Get original item
+	 *
 	 * @return mixed
 	 */
 	public function getItem()
@@ -268,9 +276,10 @@ class Row
 
 	/**
 	 * Has particular row group actions allowed?
+	 *
 	 * @return bool
 	 */
-	public function hasGroupAction()
+	public function hasGroupAction(): bool
 	{
 		$condition = $this->datagrid->getRowCondition('group_action');
 
@@ -280,10 +289,11 @@ class Row
 
 	/**
 	 * Has particular row a action allowed?
+	 *
 	 * @param  mixed  $key
 	 * @return bool
 	 */
-	public function hasAction($key)
+	public function hasAction($key): bool
 	{
 		$condition = $this->datagrid->getRowCondition('action', $key);
 
@@ -293,9 +303,8 @@ class Row
 
 	/**
 	 * Has particular row inlie edit allowed?
-	 * @return bool
 	 */
-	public function hasInlineEdit()
+	public function hasInlineEdit(): bool
 	{
 		$condition = $this->datagrid->getRowCondition('inline_edit');
 
@@ -303,12 +312,7 @@ class Row
 	}
 
 
-	/**
-	 * @param  string        $key
-	 * @param  Column\Column $column
-	 * @return void
-	 */
-	public function applyColumnCallback($key, Column\Column $column)
+	public function applyColumnCallback(string $key, Column\Column $column): Column\Column
 	{
 		$callback = $this->datagrid->getColumnCallback($key);
 
@@ -322,11 +326,8 @@ class Row
 
 	/**
 	 * Key may contain ".", get rid of it (+ the table alias)
-	 * 
-	 * @param  string $key
-	 * @return string
 	 */
-	private function formatDibiRowKey($key)
+	private function formatDibiRowKey(string $key): string
 	{
 		if ($offset = strpos($key, '.')) {
 			return substr($key, $offset + 1);
@@ -334,4 +335,5 @@ class Row
 
 		return $key;
 	}
+
 }

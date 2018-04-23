@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -58,11 +58,10 @@ class ApiDataSource implements IDataSource
 	 */
 	protected $filter = [];
 
-
 	/**
 	 * @param string $url
 	 */
-	public function __construct($url, array $query_params = [])
+	public function __construct(string $url, array $query_params = [])
 	{
 		$this->url = $url;
 		$this->query_params = $query_params;
@@ -71,6 +70,7 @@ class ApiDataSource implements IDataSource
 
 	/**
 	 * Get data of remote source
+	 *
 	 * @param  array  $params
 	 * @return mixed
 	 */
@@ -86,12 +86,12 @@ class ApiDataSource implements IDataSource
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-
 	/**
 	 * Get count of data
+	 *
 	 * @return int
 	 */
-	public function getCount()
+	public function getCount(): int
 	{
 		return $this->getResponse(['count' => '']);
 	}
@@ -99,9 +99,10 @@ class ApiDataSource implements IDataSource
 
 	/**
 	 * Get the data
+	 *
 	 * @return array
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		return !empty($this->data) ? $this->data : $this->getResponse([
 			'sort' => $this->sort_column,
@@ -116,6 +117,7 @@ class ApiDataSource implements IDataSource
 
 	/**
 	 * Filter data
+	 *
 	 * @param array $filters
 	 * @return static
 	 */
@@ -153,6 +155,7 @@ class ApiDataSource implements IDataSource
 
 	/**
 	 * Filter data - get one row
+	 *
 	 * @param array $condition
 	 * @return static
 	 */
@@ -167,11 +170,12 @@ class ApiDataSource implements IDataSource
 
 	/**
 	 * Apply limit and offset on data
+	 *
 	 * @param int $offset
 	 * @param int $limit
 	 * @return static
 	 */
-	public function limit($offset, $limit)
+	public function limit(int $offset, int $limit)
 	{
 		$this->offset = $offset;
 		$this->limit = $limit;
@@ -182,6 +186,7 @@ class ApiDataSource implements IDataSource
 
 	/**
 	 * Sort data
+	 *
 	 * @param Sorting $sorting
 	 * @return static
 	 */
@@ -197,4 +202,5 @@ class ApiDataSource implements IDataSource
 
 		return $this;
 	}
+
 }

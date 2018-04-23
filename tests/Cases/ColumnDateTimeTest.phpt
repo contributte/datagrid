@@ -1,9 +1,9 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use Tester\TestCase;
 use Tester\Assert;
+use Tester\TestCase;
 use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
@@ -17,10 +17,9 @@ final class ColumnDateTimeTest extends TestCase
 	 */
 	private $grid;
 
-
-	public function setUp()
+	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
 		$this->grid = $factory->createXTestingDataGrid();
 	}
 
@@ -34,7 +33,7 @@ final class ColumnDateTimeTest extends TestCase
 	}
 
 
-	public function testFormat()
+	public function testFormat(): void
 	{
 		/**
 		 * Defaul forma is 'j. n. Y'
@@ -49,5 +48,5 @@ final class ColumnDateTimeTest extends TestCase
 }
 
 
-$test_case = new ColumnDateTimeTest;
+$test_case = new ColumnDateTimeTest();
 $test_case->run();

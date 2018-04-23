@@ -1,9 +1,9 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use Tester\TestCase;
 use Tester\Assert;
+use Tester\TestCase;
 use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
@@ -17,32 +17,31 @@ final class ColumnStatusTest extends TestCase
 	 */
 	private $grid;
 
-
-	public function setUp()
+	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
 		$this->grid = $factory->createXTestingDataGrid();
 	}
 
 
-	public function testStatus()
+	public function testStatus(): void
 	{
 		$grid = $this->grid;
 
 		$grid->addColumnStatus('status', 'Status')
-			->setCaret(FALSE)
+			->setCaret(false)
 			->addOption(1, 'Online')
-				->setIcon('check')
-				->setClass('btn-success')
-				->endOption()
+			->setIcon('check')
+			->setClass('btn-success')
+			->endOption()
 			->addOption(2, 'Standby')
-				->setIcon('user')
-				->setClass('btn-primary')
-				->endOption()
+			->setIcon('user')
+			->setClass('btn-primary')
+			->endOption()
 			->addOption(3, 'Offline')
-				->setIcon('close')
-				->setClass('btn-danger')
-				->endOption()
+			->setIcon('close')
+			->setClass('btn-danger')
+			->endOption()
 			->onChange[] = [$this, 'statusChange'];
 
 		$status = $grid->getColumn('status');
@@ -58,15 +57,16 @@ final class ColumnStatusTest extends TestCase
 	}
 
 
-	public function testRemoveColumn()
+	public function testRemoveColumn(): void
 	{
 		$grid = $this->grid;
 		$grid->addColumnText('test', 'Test');
 		$grid->removeColumn('test');
 		$grid->getColumnsVisibility();
 	}
+
 }
 
 
-$test_case = new ColumnStatusTest;
+$test_case = new ColumnStatusTest();
 $test_case->run();

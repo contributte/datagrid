@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -23,9 +23,10 @@ class CsvDataModel
 	 */
 	protected $columns;
 
-	/** @var Nette\Localization\ITranslator */
+	/**
+	 * @var Nette\Localization\ITranslator
+	 */
 	protected $translator;
-
 
 	/**
 	 * @param array $data
@@ -41,9 +42,10 @@ class CsvDataModel
 
 	/**
 	 * Get data with header and "body"
+	 *
 	 * @return array
 	 */
-	public function getSimpleData($include_header = true)
+	public function getSimpleData($include_header = true): array
 	{
 		$return = [];
 
@@ -61,9 +63,10 @@ class CsvDataModel
 
 	/**
 	 * Get data header
+	 *
 	 * @return array
 	 */
-	public function getHeader()
+	public function getHeader(): array
 	{
 		$header = [];
 
@@ -77,10 +80,11 @@ class CsvDataModel
 
 	/**
 	 * Get item values saved into row
+	 *
 	 * @param  mixed $item
 	 * @return array
 	 */
-	public function getRow($item)
+	public function getRow($item): array
 	{
 		$row = [];
 
@@ -90,4 +94,5 @@ class CsvDataModel
 
 		return $row;
 	}
+
 }

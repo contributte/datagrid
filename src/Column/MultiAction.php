@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -16,6 +16,7 @@ use Ublaboo\DataGrid\Traits;
 
 class MultiAction extends Column
 {
+
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonIcon;
 	use Traits\TButtonClass;
@@ -44,7 +45,6 @@ class MultiAction extends Column
 	 */
 	private $rowConditions = [];
 
-
 	/**
 	 * @param DataGrid $grid
 	 */
@@ -60,7 +60,7 @@ class MultiAction extends Column
 	/**
 	 * @return Html
 	 */
-	public function renderButton()
+	public function renderButton(): Html
 	{
 		$button = Html::el('button')
 			->type('button')
@@ -98,7 +98,7 @@ class MultiAction extends Column
 	 * @param array|null $params
 	 * @return static
 	 */
-	public function addAction($key, $name, $href = null, array $params = null)
+	public function addAction(string $key, string $name, ?string $href = null, ?array $params = null)
 	{
 		if (isset($this->actions[$key])) {
 			throw new DataGridException(
@@ -135,7 +135,7 @@ class MultiAction extends Column
 	 * @param  string $key
 	 * @return Action
 	 */
-	public function getAction($key)
+	public function getAction(string $key): Action
 	{
 		if (!isset($this->actions[$key])) {
 			throw new DataGridException(
@@ -149,9 +149,10 @@ class MultiAction extends Column
 
 	/**
 	 * Column can have variables that will be passed to custom template scope
+	 *
 	 * @return array
 	 */
-	public function getTemplateVariables()
+	public function getTemplateVariables(): array
 	{
 		return array_merge($this->template_variables, [
 			'multi_action' => $this,
@@ -164,7 +165,7 @@ class MultiAction extends Column
 	 * @param callable $rowCondition
 	 * @return void
 	 */
-	public function setRowCondition($actionKey, callable $rowCondition)
+	public function setRowCondition(string $actionKey, callable $rowCondition): void
 	{
 		$this->rowConditions[$actionKey] = $rowCondition;
 	}
@@ -175,7 +176,7 @@ class MultiAction extends Column
 	 * @param  Row    $row
 	 * @return bool
 	 */
-	public function testRowCondition($actionKey, Row $row)
+	public function testRowCondition(string $actionKey, Row $row): bool
 	{
 		if (!isset($this->rowConditions[$actionKey])) {
 			return true;
@@ -183,4 +184,5 @@ class MultiAction extends Column
 
 		return (bool) call_user_func($this->rowConditions[$actionKey], $row->getItem());
 	}
+
 }

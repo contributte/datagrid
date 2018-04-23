@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -37,14 +37,13 @@ abstract class FilterableColumn
 	 */
 	protected $column;
 
-
 	/**
 	 * @param DataGrid $grid
 	 * @param string   $key
 	 * @param string   $column
 	 * @param string   $name
 	 */
-	public function __construct(DataGrid $grid, $key, $column, $name)
+	public function __construct(DataGrid $grid, string $key, string $column, string $name)
 	{
 		$this->grid = $grid;
 		$this->key = $key;
@@ -57,7 +56,7 @@ abstract class FilterableColumn
 	 * @param string|array|null $columns
 	 * @return Ublaboo\DataGrid\Filter\FilterText
 	 */
-	public function setFilterText($columns = null)
+	public function setFilterText($columns = null): Ublaboo\DataGrid\Filter\FilterText
 	{
 		if ($columns === null) {
 			$columns = [$this->column];
@@ -74,7 +73,7 @@ abstract class FilterableColumn
 	 * @param string|null $column
 	 * @return Ublaboo\DataGrid\Filter\FilterSelect
 	 */
-	public function setFilterSelect(array $options, $column = null)
+	public function setFilterSelect(array $options, ?string $column = null): Ublaboo\DataGrid\Filter\FilterSelect
 	{
 		$column = $column === null ? $this->column : $column;
 
@@ -87,7 +86,7 @@ abstract class FilterableColumn
 	 * @param string|null $column
 	 * @return Ublaboo\DataGrid\Filter\FilterMultiSelect
 	 */
-	public function setFilterMultiSelect(array $options, $column = null)
+	public function setFilterMultiSelect(array $options, ?string $column = null): Ublaboo\DataGrid\Filter\FilterMultiSelect
 	{
 		$column = $column === null ? $this->column : $column;
 
@@ -99,7 +98,7 @@ abstract class FilterableColumn
 	 * @param string|null $column
 	 * @return Ublaboo\DataGrid\Filter\FilterDate
 	 */
-	public function setFilterDate($column = null)
+	public function setFilterDate(?string $column = null): Ublaboo\DataGrid\Filter\FilterDate
 	{
 		$column = $column === null ? $this->column : $column;
 
@@ -112,7 +111,7 @@ abstract class FilterableColumn
 	 * @param string|null $name_second
 	 * @return Ublaboo\DataGrid\Filter\FilterRange
 	 */
-	public function setFilterRange($column = null, $name_second = '-')
+	public function setFilterRange(?string $column = null, ?string $name_second = '-'): Ublaboo\DataGrid\Filter\FilterRange
 	{
 		$column = $column === null ? $this->column : $column;
 
@@ -125,10 +124,11 @@ abstract class FilterableColumn
 	 * @param string|null $name_second
 	 * @return Ublaboo\DataGrid\Filter\FilterDateRange
 	 */
-	public function setFilterDateRange($column = null, $name_second = '-')
+	public function setFilterDateRange(?string $column = null, ?string $name_second = '-'): Ublaboo\DataGrid\Filter\FilterDateRange
 	{
 		$column = $column === null ? $this->column : $column;
 
 		return $this->grid->addFilterDateRange($this->key, $this->name, $column, $name_second);
 	}
+
 }

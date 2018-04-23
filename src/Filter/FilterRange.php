@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -35,7 +35,6 @@ class FilterRange extends Filter
 	 */
 	protected $type = 'range';
 
-
 	/**
 	 * @param DataGrid $grid
 	 * @param string   $key
@@ -43,7 +42,7 @@ class FilterRange extends Filter
 	 * @param string   $column
 	 * @param string   $name_second
 	 */
-	public function __construct($grid, $key, $name, $column, $name_second)
+	public function __construct(DataGrid $grid, string $key, string $name, string $column, string $name_second)
 	{
 		parent::__construct($grid, $key, $name, $column);
 
@@ -53,9 +52,10 @@ class FilterRange extends Filter
 
 	/**
 	 * Adds select box to filter form
+	 *
 	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer(Nette\Forms\Container $container)
+	public function addToFormContainer(Nette\Forms\Container $container): void
 	{
 		$container = $container->addContainer($this->key);
 
@@ -75,7 +75,7 @@ class FilterRange extends Filter
 
 			$text_to = end($placeholder_array);
 
-			if ($text_to && ($text_to != $text_from)) {
+			if ($text_to && ($text_to !== $text_from)) {
 				$container['to']->setAttribute('placeholder', $text_to);
 			}
 		}
@@ -84,10 +84,11 @@ class FilterRange extends Filter
 
 	/**
 	 * Set html attr placeholder of both inputs
+	 *
 	 * @param string $placeholder_array
 	 * @return static
 	 */
-	public function setPlaceholder($placeholder_array)
+	public function setPlaceholder(string $placeholder_array)
 	{
 		if (!is_array($placeholder_array)) {
 			throw new DataGridFilterRangeException(
@@ -103,9 +104,10 @@ class FilterRange extends Filter
 
 	/**
 	 * Get html attr placeholders
+	 *
 	 * @return string
 	 */
-	public function getPlaceholder()
+	public function getPlaceholder(): string
 	{
 		return $this->placeholder_array;
 	}
@@ -113,15 +115,17 @@ class FilterRange extends Filter
 
 	/**
 	 * Get filter condition
+	 *
 	 * @return array
 	 */
-	public function getCondition()
+	public function getCondition(): array
 	{
 		$value = $this->getValue();
 
 		return [$this->column => [
-			'from' => isset($value['from']) ? $value['from'] : '',
-			'to' => isset($value['to']) ? $value['to'] : '',
+			'from' => $value['from'] ?? '',
+			'to' => $value['to'] ?? '',
 		]];
 	}
+
 }

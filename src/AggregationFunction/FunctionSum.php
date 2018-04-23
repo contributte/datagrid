@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -16,6 +16,7 @@ use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
 class FunctionSum implements IAggregationFunction
 {
+
 	/**
 	 * @var string
 	 */
@@ -36,22 +37,14 @@ class FunctionSum implements IAggregationFunction
 	 */
 	protected $renderer;
 
-
-	/**
-	 * @param string $column
-	 * @param int $dataType
-	 */
-	public function __construct($column, $dataType = IAggregationFunction::DATA_TYPE_PAGINATED)
+	public function __construct(string $column, string $dataType = IAggregationFunction::DATA_TYPE_PAGINATED)
 	{
 		$this->column = $column;
 		$this->dataType = $dataType;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function getFilterDataType()
+	public function getFilterDataType(): string
 	{
 		return $this->dataType;
 	}
@@ -59,9 +52,8 @@ class FunctionSum implements IAggregationFunction
 
 	/**
 	 * @param  mixed  $dataSource
-	 * @return void
 	 */
-	public function processDataSource($dataSource)
+	public function processDataSource($dataSource): void
 	{
 		if ($dataSource instanceof Fluent) {
 			$connection = $dataSource->getConnection();
@@ -85,7 +77,6 @@ class FunctionSum implements IAggregationFunction
 		if ($dataSource instanceof Collection) {
 			$dataSource->forAll(function ($key, $value) {
 				$this->result += PropertyAccessHelper::getValue($value, $this->column);
-				return true;
 			});
 		}
 	}
@@ -110,9 +101,10 @@ class FunctionSum implements IAggregationFunction
 	 * @param  callable|NULL  $callback
 	 * @return static
 	 */
-	public function setRenderer(callable $callback = null)
+	public function setRenderer(?callable $callback = null)
 	{
 		$this->renderer = $callback;
 		return $this;
 	}
+
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -49,11 +49,10 @@ class SimpleTranslator implements Nette\Localization\ITranslator
 		'ublaboo_datagrid.per_page_submit' => 'Change',
 	];
 
-
 	/**
 	 * @param array $dictionary
 	 */
-	public function __construct($dictionary = null)
+	public function __construct(?array $dictionary = null)
 	{
 		if (is_array($dictionary)) {
 			$this->dictionary = $dictionary;
@@ -63,23 +62,25 @@ class SimpleTranslator implements Nette\Localization\ITranslator
 
 	/**
 	 * Translates the given string
-	 * 
+	 *
 	 * @param  string
 	 * @param  int
 	 * @return string
 	 */
-	public function translate($message, $count = null)
+	public function translate($message, $count = null): string
 	{
-		return isset($this->dictionary[$message]) ? $this->dictionary[$message] : $message;
+		return $this->dictionary[$message] ?? $message;
 	}
 
 
 	/**
 	 * Set translator dictionary
+	 *
 	 * @param array $dictionary
 	 */
-	public function setDictionary(array $dictionary)
+	public function setDictionary(array $dictionary): void
 	{
 		$this->dictionary = $dictionary;
 	}
+
 }

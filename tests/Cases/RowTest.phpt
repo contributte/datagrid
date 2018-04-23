@@ -1,13 +1,13 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use Nette\Utils\Html;
-use Tester\TestCase;
-use Tester\Assert;
-use Ublaboo;
-use Nette\SmartObject;
 use LeanMapper;
+use Nette\SmartObject;
+use Nette\Utils\Html;
+use Tester\Assert;
+use Tester\TestCase;
+use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/XTestingDataGridFactory.php';
@@ -20,18 +20,17 @@ final class RowTest extends TestCase
 	 */
 	private $grid;
 
-
-	public function setUp()
+	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
 		$this->grid = $factory->createXTestingDataGrid();
 	}
 
 
-	public function testControl()
+	public function testControl(): void
 	{
 		$item = ['id' => 20, 'name' => 'John Doe'];
-		$callback = function ($item, Html $row) {
+		$callback = function ($item, Html $row): void {
 			$row->addClass('bg-warning');
 		};
 
@@ -43,7 +42,7 @@ final class RowTest extends TestCase
 	}
 
 
-	public function testArray()
+	public function testArray(): void
 	{
 		$item = ['id' => 20, 'name' => 'John Doe'];
 
@@ -54,7 +53,7 @@ final class RowTest extends TestCase
 	}
 
 
-	public function testObject()
+	public function testObject(): void
 	{
 		$item = (object) ['id' => 20, 'name' => 'John Doe'];
 
@@ -64,7 +63,7 @@ final class RowTest extends TestCase
 	}
 
 
-	public function testLeanMapperEntity()
+	public function testLeanMapperEntity(): void
 	{
 		$entity = new XTestingLMDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
 		$entity2 = new XTestingLMDataGridEntity2(['id' => 21, 'name' => 'Francis', 'age' => 20]);
@@ -79,7 +78,7 @@ final class RowTest extends TestCase
 	}
 
 
-	public function testDoctrineEntity()
+	public function testDoctrineEntity(): void
 	{
 		$entity = new XTestingDDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
 		$entity2 = new XTestingDDataGridEntity(['id' => 21, 'name' => 'Francis', 'age' => 20]);
@@ -107,14 +106,13 @@ class XTestingLMDataGridEntity extends LeanMapper\Entity
 
 	private $age;
 
-
 	public function getAge()
 	{
 		return $this->age;
 	}
 
 
-	public function setAge($age)
+	public function setAge($age): void
 	{
 		$this->age = $age;
 	}
@@ -131,14 +129,13 @@ class XTestingLMDataGridEntity2 extends LeanMapper\Entity
 
 	private $age;
 
-
 	public function getAge()
 	{
 		return $this->age;
 	}
 
 
-	public function setAge($age)
+	public function setAge($age): void
 	{
 		$this->age = $age;
 	}
@@ -155,7 +152,7 @@ class XTestingDDataGridEntity
 	 * @ORM\Id
 	 * @ORM\Column(type="integer")
 	 * @ORM\GeneratedValue
-	 * @var integer
+	 * @var int
 	 */
 	private $id;
 
@@ -167,12 +164,11 @@ class XTestingDDataGridEntity
 
 	/**
 	 * @ORM\Column(type="integer")
-	 * @var integer
+	 * @var int
 	 */
 	private $age;
 
 	private $partner;
-
 
 	public function __construct($args)
 	{
@@ -189,9 +185,9 @@ class XTestingDDataGridEntity
 
 
 	/**
-	 * @return integer
+	 * @return int
 	 */
-	final public function getId()
+	final public function getId(): int
 	{
 		return $this->id;
 	}
@@ -203,7 +199,7 @@ class XTestingDDataGridEntity
 	}
 
 
-	public function setPartner($p)
+	public function setPartner($p): void
 	{
 		$this->partner = $p;
 	}
@@ -217,5 +213,5 @@ class XTestingDDataGridEntity
 }
 
 
-$test_case = new RowTest;
+$test_case = new RowTest();
 $test_case->run();

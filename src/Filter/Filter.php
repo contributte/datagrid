@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -77,14 +77,13 @@ abstract class Filter
 	 */
 	private $placeholder;
 
-
 	/**
 	 * @param DataGrid     $grid
 	 * @param string       $key
 	 * @param string       $name
 	 * @param string|array $column
 	 */
-	public function __construct($grid, $key, $name, $column)
+	public function __construct(DataGrid $grid, string $key, string $name, $column)
 	{
 		$this->grid = $grid;
 		$this->key = $key;
@@ -95,6 +94,7 @@ abstract class Filter
 
 	/**
 	 * Get filter key
+	 *
 	 * @return mixed
 	 */
 	public function getKey()
@@ -105,9 +105,10 @@ abstract class Filter
 
 	/**
 	 * Get filter name
+	 *
 	 * @return string
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->name;
 	}
@@ -115,9 +116,10 @@ abstract class Filter
 
 	/**
 	 * Get filter column
+	 *
 	 * @return string
 	 */
-	public function getColumn()
+	public function getColumn(): string
 	{
 		return $this->column;
 	}
@@ -125,9 +127,10 @@ abstract class Filter
 
 	/**
 	 * Tell whether value has been set in this fitler
-	 * @return boolean
+	 *
+	 * @return bool
 	 */
-	public function isValueSet()
+	public function isValueSet(): bool
 	{
 		return $this->value_set;
 	}
@@ -135,6 +138,7 @@ abstract class Filter
 
 	/**
 	 * Set filter value
+	 *
 	 * @param mixed $value
 	 * @return static
 	 */
@@ -149,6 +153,7 @@ abstract class Filter
 
 	/**
 	 * Get filter value
+	 *
 	 * @return mixed
 	 */
 	public function getValue()
@@ -159,10 +164,11 @@ abstract class Filter
 
 	/**
 	 * Set html attr placeholder
+	 *
 	 * @param  string $placeholder
 	 * @return static
 	 */
-	public function setPlaceholder($placeholder)
+	public function setPlaceholder(string $placeholder)
 	{
 		$this->placeholder = $placeholder;
 
@@ -172,9 +178,10 @@ abstract class Filter
 
 	/**
 	 * Get html attr placeholder
+	 *
 	 * @return string
 	 */
-	public function getPlaceholder()
+	public function getPlaceholder(): string
 	{
 		return $this->placeholder;
 	}
@@ -182,10 +189,11 @@ abstract class Filter
 
 	/**
 	 * Set custom condition on filter
+	 *
 	 * @param  callable $condition_callback
 	 * @return static
 	 */
-	public function setCondition($condition_callback)
+	public function setCondition(callable $condition_callback)
 	{
 		$this->condition_callback = $condition_callback;
 
@@ -195,9 +203,10 @@ abstract class Filter
 
 	/**
 	 * Get filter condition
+	 *
 	 * @return array
 	 */
-	public function getCondition()
+	public function getCondition(): array
 	{
 		return [$this->column => $this->getValue()];
 	}
@@ -205,9 +214,10 @@ abstract class Filter
 
 	/**
 	 * Tell whether custom condition_callback on filter is set
+	 *
 	 * @return bool
 	 */
-	public function hasConditionCallback()
+	public function hasConditionCallback(): bool
 	{
 		return (bool) $this->condition_callback;
 	}
@@ -215,9 +225,10 @@ abstract class Filter
 
 	/**
 	 * Get custom filter condition
+	 *
 	 * @return callable
 	 */
-	public function getConditionCallback()
+	public function getConditionCallback(): callable
 	{
 		return $this->condition_callback;
 	}
@@ -225,10 +236,11 @@ abstract class Filter
 
 	/**
 	 * Filter may have its own template
+	 *
 	 * @param  string $template
 	 * @return static
 	 */
-	public function setTemplate($template)
+	public function setTemplate(string $template)
 	{
 		$this->template = (string) $template;
 
@@ -238,9 +250,10 @@ abstract class Filter
 
 	/**
 	 * Get filter template path
+	 *
 	 * @return string
 	 */
-	public function getTemplate()
+	public function getTemplate(): string
 	{
 		return $this->template;
 	}
@@ -249,7 +262,7 @@ abstract class Filter
 	/**
 	 * @return string
 	 */
-	public function getType()
+	public function getType(): string
 	{
 		return $this->type;
 	}
@@ -260,7 +273,7 @@ abstract class Filter
 	 * @param mixed $value
 	 * @return static
 	 */
-	public function addAttribute($name, $value)
+	public function addAttribute(string $name, $value)
 	{
 		$this->attributes[$name][] = $value;
 
@@ -273,7 +286,7 @@ abstract class Filter
 	 * @param mixed $value
 	 * @return static
 	 */
-	public function setAttribute($name, $value)
+	public function setAttribute(string $name, $value)
 	{
 		$this->attributes[$name] = (array) $value;
 
@@ -285,7 +298,7 @@ abstract class Filter
 	 * @return array
 	 * @deprecated use getAttributes instead
 	 */
-	public function getAttribtues()
+	public function getAttribtues(): array
 	{
 		@trigger_error('getAttribtues is deprecated, use getAttributes instead', E_USER_DEPRECATED);
 		return $this->getAttributes();
@@ -295,7 +308,7 @@ abstract class Filter
 	/**
 	 * @return array
 	 */
-	public function getAttributes()
+	public function getAttributes(): array
 	{
 		return $this->attributes;
 	}
@@ -305,7 +318,7 @@ abstract class Filter
 	 * @param Nette\Forms\Controls\BaseControl $input
 	 * @return Nette\Forms\Controls\BaseControl
 	 */
-	protected function addAttributes($input)
+	protected function addAttributes(Nette\Forms\Controls\BaseControl $input): Nette\Forms\Controls\BaseControl
 	{
 		if ($this->grid->hasAutoSubmit()) {
 			$input->setAttribute('data-autosubmit', true);
@@ -324,4 +337,5 @@ abstract class Filter
 
 		return $input;
 	}
+
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -16,12 +16,12 @@ trait TButtonText
 	 */
 	protected $text = '';
 
-
 	/**
 	 * Set text
+	 *
 	 * @param string $text
 	 */
-	public function setText($text)
+	public function setText(string $text)
 	{
 		$this->text = $text;
 
@@ -31,10 +31,12 @@ trait TButtonText
 
 	/**
 	 * Get text
+	 *
 	 * @return string
 	 */
-	public function getText()
+	public function getText(): string
 	{
 		return $this->text;
 	}
+
 }

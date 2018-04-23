@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -38,11 +38,10 @@ abstract class GroupAction
 	 */
 	protected $attributes = [];
 
-
 	/**
 	 * @param string $title
 	 */
-	public function __construct($title)
+	public function __construct(string $title)
 	{
 		$this->title = $title;
 	}
@@ -50,9 +49,10 @@ abstract class GroupAction
 
 	/**
 	 * Get action title
+	 *
 	 * @return string
 	 */
-	public function getTitle()
+	public function getTitle(): string
 	{
 		return $this->title;
 	}
@@ -62,7 +62,7 @@ abstract class GroupAction
 	 * @param string $class
 	 * @return static
 	 */
-	public function setClass($class)
+	public function setClass(string $class)
 	{
 		$this->class = (string) $class;
 
@@ -73,7 +73,7 @@ abstract class GroupAction
 	/**
 	 * @return string
 	 */
-	public function getClass()
+	public function getClass(): string
 	{
 		return $this->class;
 	}
@@ -84,7 +84,7 @@ abstract class GroupAction
 	 * @param mixed $value
 	 * @return static
 	 */
-	public function setAttribute($key, $value)
+	public function setAttribute(string $key, $value)
 	{
 		$this->attributes[$key] = $value;
 
@@ -95,8 +95,9 @@ abstract class GroupAction
 	/**
 	 * @return array
 	 */
-	public function getAttributes()
+	public function getAttributes(): array
 	{
 		return $this->attributes;
 	}
+
 }

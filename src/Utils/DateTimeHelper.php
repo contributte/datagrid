@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -18,12 +18,13 @@ final class DateTimeHelper
 
 	/**
 	 * Try to convert string into DateTime object
+	 *
 	 * @param  mixed     $value
 	 * @param  string[]  $formats
 	 * @return \DateTime
 	 * @throws DataGridDateTimeHelperException
 	 */
-	public static function tryConvertToDateTime($value, array $formats = [])
+	public static function tryConvertToDateTime($value, array $formats = []): \DateTime
 	{
 		return static::fromString($value, $formats);
 	}
@@ -31,12 +32,13 @@ final class DateTimeHelper
 
 	/**
 	 * Try to convert string into DateTime object from more date formats
+	 *
 	 * @param  mixed     $value
 	 * @param  string[]  $formats
 	 * @return \DateTime
 	 * @throws DataGridDateTimeHelperException
 	 */
-	public static function tryConvertToDate($value, array $formats = [])
+	public static function tryConvertToDate($value, array $formats = []): \DateTime
 	{
 		return static::fromString($value, $formats);
 	}
@@ -44,12 +46,13 @@ final class DateTimeHelper
 
 	/**
 	 * Convert string into DateTime object from more date without time
+	 *
 	 * @param  mixed     $value
 	 * @param  string[]  $formats
 	 * @return \DateTime
 	 * @throws DataGridDateTimeHelperException
 	 */
-	public static function fromString($value, array $formats = [])
+	public static function fromString($value, array $formats = []): \DateTime
 	{
 		$formats = array_merge($formats, [
 			'Y-m-d H:i:s.u',
@@ -83,12 +86,13 @@ final class DateTimeHelper
 		$timestamp = strtotime($value);
 
 		if ($timestamp !== false) {
-			$date = new \DateTime;
+			$date = new \DateTime();
 			$date->setTimestamp($timestamp);
 
 			return $date;
 		}
 
-		throw new DataGridDateTimeHelperException;
+		throw new DataGridDateTimeHelperException();
 	}
+
 }

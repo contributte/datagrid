@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * Nette Framework Extras
@@ -38,7 +38,6 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	 */
 	private $icon_prefix;
 
-
 	/**
 	 * @var Nette\Utils\Paginator
 	 */
@@ -49,13 +48,13 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	 */
 	private $template_file;
 
-
 	public function __construct(
 		Nette\Localization\ITranslator $translator,
 		$icon_prefix = 'fa fa-',
-		IContainer $parent = null,
+		?IContainer $parent = null,
 		$name = null
-	) {
+	)
+	{
 		parent::__construct($parent, $name);
 
 		$this->translator = $translator;
@@ -63,7 +62,7 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	}
 
 
-	public function setTemplateFile($template_file)
+	public function setTemplateFile($template_file): void
 	{
 		$this->template_file = (string) $template_file;
 	}
@@ -77,9 +76,10 @@ class DataGridPaginator extends Nette\Application\UI\Control
 
 	/**
 	 * Get paginator original template file
+	 *
 	 * @return string
 	 */
-	public function getOriginalTemplateFile()
+	public function getOriginalTemplateFile(): string
 	{
 		return __DIR__ . '/templates/data_grid_paginator.latte';
 	}
@@ -88,10 +88,10 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	/**
 	 * @return Nette\Utils\Paginator
 	 */
-	public function getPaginator()
+	public function getPaginator(): Nette\Utils\Paginator
 	{
 		if (!$this->paginator) {
-			$this->paginator = new Nette\Utils\Paginator;
+			$this->paginator = new Nette\Utils\Paginator();
 		}
 
 		return $this->paginator;
@@ -100,9 +100,10 @@ class DataGridPaginator extends Nette\Application\UI\Control
 
 	/**
 	 * Renders paginator.
+	 *
 	 * @return void
 	 */
-	public function render()
+	public function render(): void
 	{
 		$paginator = $this->getPaginator();
 		$page = $paginator->page;
@@ -116,6 +117,7 @@ class DataGridPaginator extends Nette\Application\UI\Control
 			/**
 			 * Something to do with steps in tempale...
 			 * [Default $count = 3;]
+			 *
 			 * @var int
 			 */
 			$count = 1;
@@ -149,10 +151,11 @@ class DataGridPaginator extends Nette\Application\UI\Control
 
 	/**
 	 * Loads state informations.
+	 *
 	 * @param  array
 	 * @return void
 	 */
-	public function loadState(array $params)
+	public function loadState(array $params): void
 	{
 		parent::loadState($params);
 
@@ -160,4 +163,5 @@ class DataGridPaginator extends Nette\Application\UI\Control
 			$this->getPaginator()->page = $this->getParent()->page;
 		}
 	}
+
 }

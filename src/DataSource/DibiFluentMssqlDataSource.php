@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -31,12 +31,11 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	 */
 	protected $primary_key;
 
-
 	/**
 	 * @param Fluent $data_source
 	 * @param string $primary_key
 	 */
-	public function __construct(Fluent $data_source, $primary_key)
+	public function __construct(Fluent $data_source, string $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
@@ -47,12 +46,12 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-
 	/**
 	 * Get count of data
+	 *
 	 * @return int
 	 */
-	public function getCount()
+	public function getCount(): int
 	{
 		$clone = clone $this->data_source;
 		$clone->removeClause('ORDER BY');
@@ -63,6 +62,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 	/**
 	 * Get the data
+	 *
 	 * @param array $condition
 	 * @return static
 	 */
@@ -76,10 +76,11 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 	/**
 	 * Filter by date
+	 *
 	 * @param  Filter\FilterDate $filter
 	 * @return void
 	 */
-	public function applyFilterDate(Filter\FilterDate $filter)
+	public function applyFilterDate(Filter\FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
 
@@ -91,10 +92,11 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 	/**
 	 * Filter by date range
+	 *
 	 * @param  Filter\FilterDateRange $filter
 	 * @return void
 	 */
-	public function applyFilterDateRange(Filter\FilterDateRange $filter)
+	public function applyFilterDateRange(Filter\FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
 
@@ -113,10 +115,11 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 	/**
 	 * Filter by date
+	 *
 	 * @param  Filter\FilterText $filter
 	 * @return void
 	 */
-	public function applyFilterText(Filter\FilterText $filter)
+	public function applyFilterText(Filter\FilterText $filter): void
 	{
 		$condition = $filter->getCondition();
 		$driver = $this->data_source->getConnection()->getDriver();
@@ -154,11 +157,12 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 	/**
 	 * Apply limit and offset on data
+	 *
 	 * @param int $offset
 	 * @param int $limit
 	 * @return static
 	 */
-	public function limit($offset, $limit)
+	public function limit(int $offset, int $limit)
 	{
 		$sql = (string) $this->data_source;
 
@@ -169,4 +173,5 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 		return $this;
 	}
+
 }
