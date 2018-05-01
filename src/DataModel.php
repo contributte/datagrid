@@ -8,8 +8,7 @@
 
 namespace Ublaboo\DataGrid;
 
-use Dibi;
-use DibiFluent;
+use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\SmartObject;
@@ -49,7 +48,7 @@ final class DataModel
 
 
 	/**
-	 * @param IDataSource|array|Dibi\Fluent|Selection|QueryBuilder|Collection $source
+	 * @param IDataSource|array|Fluent|Selection|QueryBuilder|Collection $source
 	 * @param string $primary_key
 	 */
 	public function __construct($source, $primary_key)
@@ -64,7 +63,7 @@ final class DataModel
 		} elseif (is_array($source)) {
 			$source = new DataSource\ArrayDataSource($source);
 
-		} elseif ($source instanceof Dibi\Fluent || $source instanceof DibiFluent) {
+		} elseif ($source instanceof Fluent) {
 			$driver = $source->getConnection()->getDriver();
 
 			if ($driver instanceof Dibi\Drivers\OdbcDriver) {

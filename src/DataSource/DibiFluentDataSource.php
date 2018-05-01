@@ -8,8 +8,8 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Dibi;
-use DibiFluent;
+use Dibi\Fluent;
+use Dibi\Helpers;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
@@ -19,7 +19,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 {
 
 	/**
-	 * @var DibiFluent
+	 * @var Fluent
 	 */
 	protected $data_source;
 
@@ -35,10 +35,10 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 
 	/**
-	 * @param DibiFluent $data_source
+	 * @param Fluent $data_source
 	 * @param string $primary_key
 	 */
-	public function __construct(DibiFluent $data_source, $primary_key)
+	public function __construct(Fluent $data_source, $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
@@ -160,8 +160,8 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			if (class_exists(Dibi\Helpers::class) === true) {
-				$column = Dibi\Helpers::escape(
+			if (class_exists(Helpers::class) === true) {
+				$column = Helpers::escape(
 					$driver,
 					$column,
 					\dibi::IDENTIFIER
@@ -285,7 +285,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			 */
 			$this->data_source->clause('ORDER BY');
 
-			$reflection = new \ReflectionClass('DibiFluent');
+			$reflection = new \ReflectionClass(Fluent::class);
 			$cursor_property = $reflection->getProperty('cursor');
 			$cursor_property->setAccessible(true);
 			$cursor = $cursor_property->getValue($this->data_source);

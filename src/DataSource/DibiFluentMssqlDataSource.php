@@ -8,8 +8,8 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Dibi;
-use DibiFluent;
+use Dibi\Fluent;
+use Dibi\Helpers;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 
@@ -17,7 +17,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 {
 
 	/**
-	 * @var DibiFluent
+	 * @var Fluent
 	 */
 	protected $data_source;
 
@@ -33,10 +33,10 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 
 	/**
-	 * @param DibiFluent $data_source
+	 * @param Fluent $data_source
 	 * @param string $primary_key
 	 */
-	public function __construct(DibiFluent $data_source, $primary_key)
+	public function __construct(Fluent $data_source, $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
@@ -123,8 +123,8 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			if (class_exists(Dibi\Helpers::class) === true) {
-				$column = Dibi\Helpers::escape(
+			if (class_exists(Helpers::class) === true) {
+				$column = Helpers::escape(
 					$driver,
 					$column,
 					\dibi::IDENTIFIER
