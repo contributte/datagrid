@@ -252,7 +252,7 @@
 								{if $inlineEdit && $inlineEdit->getItemId() == $row->getId()}
 									{php $inlineEdit->onSetDefaults($filter['inline_edit'], $item); }
 
-									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
+									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:attr="$row->getControl()->attrs">
 										<td n:if="$hasGroupActions" class="col-checkbox"></td>
 
 										{foreach $columns as $key => $column}
@@ -283,7 +283,7 @@
 										</td>
 									</tr>
 								{else}
-									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:class="$row->getControlClass()">
+									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:attr="$row->getControl()->attrs">
 										<td n:if="$hasGroupActions" class="col-checkbox">
 											{if $row->hasGroupAction()}
 												<input n:class="$control->useHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getName()}" data-check-all-{$control->getName()|noescape} name="{$control->getName()|lower}_group_action_item[{$row->getId()}]">
