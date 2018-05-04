@@ -46,6 +46,11 @@ class ExportCsv extends Export
 	 */
 	protected $delimiter = ';';
 
+	/**
+	 * @var bool
+	 */
+	protected $paging = false;
+
 
 	/**
 	 * @param DataGrid    $grid
@@ -55,6 +60,7 @@ class ExportCsv extends Export
 	 * @param string|null $output_encoding
 	 * @param string|null $delimiter
 	 * @param bool        $include_bom
+	 * @param bool        $paging
 	 */
 	public function __construct(
 		DataGrid $grid,
@@ -63,7 +69,8 @@ class ExportCsv extends Export
 		$filtered,
 		$output_encoding = null,
 		$delimiter = null,
-		$include_bom = false
+		$include_bom = false,
+		$paging = false
 	) {
 		$this->grid = $grid;
 		$this->text = $text;
@@ -80,6 +87,10 @@ class ExportCsv extends Export
 
 		if ($include_bom) {
 			$this->include_bom = $include_bom;
+		}
+
+		if ($paging) {
+			$this->paging = $paging;
 		}
 	}
 
