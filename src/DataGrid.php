@@ -3022,7 +3022,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Items can have thair detail - toggled
 	 * @param mixed $detail callable|string|bool
-	 * @param bool|NULL $primary_where_column
+	 * @param string|null $primary_where_column
 	 * @return Column\ItemDetail
 	 */
 	public function setItemsDetail($detail = true, $primary_where_column = null)
