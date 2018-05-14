@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Status;
 
 use Nette\SmartObject;
@@ -64,7 +58,6 @@ class Option
 	/**
 	 * [__construct description]
 	 *
-	 * @param ColumnStatus $columnStatus
 	 * @param mixed       $value
 	 * @param string       $text
 	 */
@@ -87,8 +80,6 @@ class Option
 
 	/**
 	 * End option fluent interface and return parent
-	 *
-	 * @return ColumnStatus
 	 */
 	public function endOption(): ColumnStatus
 	{
@@ -97,7 +88,6 @@ class Option
 
 
 	/**
-	 * @param string $title
 	 * @return static
 	 */
 	public function setTitle(string $title)
@@ -108,9 +98,6 @@ class Option
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getTitle(): string
 	{
 		return $this->title;
@@ -118,8 +105,6 @@ class Option
 
 
 	/**
-	 * @param string $class
-	 * @param string $class_secondary
 	 * @return static
 	 */
 	public function setClass(string $class, ?string $class_secondary = null)
@@ -134,9 +119,6 @@ class Option
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getClass(): string
 	{
 		return $this->class;
@@ -144,7 +126,6 @@ class Option
 
 
 	/**
-	 * @param string $class_secondary
 	 * @return static
 	 */
 	public function setClassSecondary(string $class_secondary)
@@ -155,9 +136,6 @@ class Option
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getClassSecondary(): string
 	{
 		return $this->class_secondary;
@@ -165,7 +143,6 @@ class Option
 
 
 	/**
-	 * @param string $class_in_dropdown
 	 * @return static
 	 */
 	public function setClassInDropdown(string $class_in_dropdown)
@@ -176,9 +153,6 @@ class Option
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getClassInDropdown(): string
 	{
 		return $this->class_in_dropdown;
@@ -186,7 +160,6 @@ class Option
 
 
 	/**
-	 * @param string $icon
 	 * @return static
 	 */
 	public function setIcon(string $icon)
@@ -197,18 +170,12 @@ class Option
 	}
 
 
-	/**
-	 * @return string|NULL
-	 */
 	public function getIcon(): ?string
 	{
 		return $this->icon;
 	}
 
 
-	/**
-	 * @param string $icon_secondary
-	 */
 	public function setIconSecondary(string $icon_secondary)
 	{
 		$this->icon_secondary = (string) $icon_secondary;
@@ -217,18 +184,12 @@ class Option
 	}
 
 
-	/**
-	 * @return string|NULL
-	 */
 	public function getIconSecondary(): ?string
 	{
 		return $this->icon_secondary;
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getText(): string
 	{
 		return $this->text;

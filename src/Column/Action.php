@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
@@ -89,9 +83,6 @@ class Action extends Column
 	private $title;
 
 	/**
-	 * @param DataGrid $grid
-	 * @param string   $href
-	 * @param string   $name
 	 * @param array    $params
 	 */
 	public function __construct(DataGrid $grid, string $href, string $name, array $params)
@@ -106,7 +97,6 @@ class Action extends Column
 	/**
 	 * Render row item into template
 	 *
-	 * @param  Row   $row
 	 * @return mixed
 	 */
 	public function render(Row $row)
@@ -198,8 +188,6 @@ class Action extends Column
 	/**
 	 * Get attribute title
 	 *
-	 * @param Row $row
-	 * @return string
 	 * @throws DataGridException
 	 */
 	public function getTitle(Row $row): string
@@ -231,8 +219,6 @@ class Action extends Column
 	/**
 	 * Get attribute class
 	 *
-	 * @param Row $row
-	 * @return string
 	 * @throws DataGridException
 	 */
 	public function getClass(Row $row): string
@@ -264,8 +250,6 @@ class Action extends Column
 	/**
 	 * Get icon
 	 *
-	 * @param Row $row
-	 * @return string
 	 * @throws DataGridException
 	 */
 	public function getIcon(Row $row): string
@@ -298,11 +282,9 @@ class Action extends Column
 	/**
 	 * Get confirm dialog for particular row item
 	 *
-	 * @param Row $row
-	 * @return string
 	 * @throws DataGridException
 	 */
-	public function getConfirm(Row $row): string
+	public function getConfirm(Row $row): ?string
 	{
 		if (!$this->confirm) {
 			return null;
@@ -330,7 +312,6 @@ class Action extends Column
 	/**
 	 * Setting data attributes
 	 *
-	 * @param string $key
 	 * @param mixed $value
 	 * @return static
 	 */
@@ -360,14 +341,13 @@ class Action extends Column
 	 * Check whether given property is string or callable
 	 *
 	 * @param  mixed $property
-	 * @return void
 	 * @throws DataGridException
 	 */
 	protected function checkPropertyStringOrCallable($property, $name): void
 	{
 		if (!is_string($property) && !is_callable($property) && $property !== null) {
 			throw new DataGridException(
-				"Action {$name} has to be either string or a callback returning string"
+				sprintf('Action %s has to be either string or a callback returning string', $name)
 			);
 		}
 	}
@@ -377,10 +357,8 @@ class Action extends Column
 	 * Check whether given property is string or callable
 	 * 	in that case call callback and check property and return it
 	 *
-	 * @param  Row                  $row
 	 * @param  string|callable|null $property
 	 * @param  string               $name
-	 * @return string
 	 * @throws DataGridException
 	 */
 	public function getPropertyStringOrCallableGetString(Row $row, $property, $name): string
@@ -399,7 +377,7 @@ class Action extends Column
 			$value = call_user_func($property, $row->getItem());
 
 			if (!is_string($value)) {
-				throw new DataGridException("Action {$name} callback has to return a string");
+				throw new DataGridException(sprintf('Action %s callback has to return a string', $name));
 			}
 
 			return $value;
@@ -411,9 +389,6 @@ class Action extends Column
 
 	/**
 	 * Translator helper
-	 *
-	 * @param  string $message
-	 * @return string
 	 */
 	protected function translate(string $message): string
 	{
@@ -423,8 +398,6 @@ class Action extends Column
 
 	/**
 	 * Open link in new window/tab?
-	 *
-	 * @return bool
 	 */
 	public function isOpenInNewTab(): bool
 	{
@@ -435,7 +408,6 @@ class Action extends Column
 	/**
 	 * Set link to open in new tab/window or not
 	 *
-	 * @param bool $open_in_new_tab
 	 * @return $this
 	 */
 	public function setOpenInNewTab(bool $open_in_new_tab = true)

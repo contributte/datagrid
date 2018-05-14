@@ -2,7 +2,9 @@
 
 namespace Ublaboo\DataGrid\Exception;
 
-class DataGridColumnRendererException extends \Exception
+use Exception;
+
+class DataGridColumnRendererException extends Exception
 {
 
 }

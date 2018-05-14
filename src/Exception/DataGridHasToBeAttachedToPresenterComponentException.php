@@ -2,7 +2,9 @@
 
 namespace Ublaboo\DataGrid\Exception;
 
-class DataGridHasToBeAttachedToPresenterComponentException extends \Exception
+use Exception;
+
+class DataGridHasToBeAttachedToPresenterComponentException extends Exception
 {
 
 }

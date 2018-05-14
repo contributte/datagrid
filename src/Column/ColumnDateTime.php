@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Column;
 
 use DateTime;
@@ -28,9 +22,6 @@ class ColumnDateTime extends Column
 
 	/**
 	 * Format row item value as DateTime
-	 *
-	 * @param  Row $row
-	 * @return string
 	 */
 	public function getColumnValue(Row $row): string
 	{
@@ -59,7 +50,6 @@ class ColumnDateTime extends Column
 	/**
 	 * Set DateTime format
 	 *
-	 * @param string $format
 	 * @return static
 	 */
 	public function setFormat(string $format)

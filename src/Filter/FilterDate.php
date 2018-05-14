@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
@@ -30,8 +24,6 @@ class FilterDate extends Filter implements IFilterDate
 
 	/**
 	 * Adds select box to filter form
-	 *
-	 * @param Nette\Forms\Container $container
 	 */
 	public function addToFormContainer(Nette\Forms\Container $container): void
 	{
@@ -57,8 +49,6 @@ class FilterDate extends Filter implements IFilterDate
 	/**
 	 * Set format for datepicker etc
 	 *
-	 * @param  string $php_format
-	 * @param  string $js_format
 	 * @return static
 	 */
 	public function setFormat(string $php_format, string $js_format)
@@ -71,8 +61,6 @@ class FilterDate extends Filter implements IFilterDate
 
 	/**
 	 * Get php format for datapicker
-	 *
-	 * @return string
 	 */
 	public function getPhpFormat(): string
 	{
@@ -82,8 +70,6 @@ class FilterDate extends Filter implements IFilterDate
 
 	/**
 	 * Get js format for datepicker
-	 *
-	 * @return string
 	 */
 	public function getJsFormat(): string
 	{

@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
@@ -57,11 +51,6 @@ class ColumnLink extends Column
 	protected $parameters = [];
 
 	/**
-	 * @param DataGrid $grid
-	 * @param string $key
-	 * @param string $column
-	 * @param string $name
-	 * @param string $href
 	 * @param array  $params
 	 */
 	public function __construct(DataGrid $grid, string $key, string $column, string $name, string $href, array $params)
@@ -76,7 +65,6 @@ class ColumnLink extends Column
 	/**
 	 * Render row item into template
 	 *
-	 * @param  Row   $row
 	 * @return mixed
 	 */
 	public function render(Row $row)
@@ -158,9 +146,6 @@ class ColumnLink extends Column
 
 	/**
 	 * Set icon before simple link
-	 *
-	 * @param string      $icon
-	 * @return ColumnLink
 	 */
 	public function setIcon(?string $icon = null): ColumnLink
 	{
@@ -173,7 +158,6 @@ class ColumnLink extends Column
 	/**
 	 * Setting data attributes
 	 *
-	 * @param string $key
 	 * @param mixed  $value
 	 * @return static
 	 */
@@ -187,8 +171,6 @@ class ColumnLink extends Column
 
 	/**
 	 * Set attribute title
-	 *
-	 * @param string $title
 	 */
 	public function setTitle(string $title)
 	{
@@ -210,7 +192,6 @@ class ColumnLink extends Column
 	/**
 	 * Set attribute class
 	 *
-	 * @param string $class
 	 * @return $this
 	 */
 	public function setClass(string $class)
@@ -232,8 +213,6 @@ class ColumnLink extends Column
 
 	/**
 	 * Open link in new window/tab?
-	 *
-	 * @return bool
 	 */
 	public function isOpenInNewTab(): bool
 	{
@@ -244,7 +223,6 @@ class ColumnLink extends Column
 	/**
 	 * Set link to open in new tab/window or not
 	 *
-	 * @param bool $open_in_new_tab
 	 * @return $this
 	 */
 	public function setOpenInNewTab(bool $open_in_new_tab = true)

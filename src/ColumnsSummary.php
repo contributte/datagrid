@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid;
 
 use Ublaboo\DataGrid\Column\ColumnNumber;
@@ -71,10 +65,6 @@ class ColumnsSummary
 
 	/**
 	 * Get value from column using Row::getValue() or custom callback
-	 *
-	 * @param Row    	    $row
-	 * @param Column\Column $column
-	 * @return bool
 	 */
 	private function getValue(Row $row, Column\Column $column): bool
 	{
@@ -86,9 +76,6 @@ class ColumnsSummary
 	}
 
 
-	/**
-	 * @param Row $row
-	 */
 	public function add(Row $row): void
 	{
 		foreach ($this->summary as $key => $sum) {
@@ -101,7 +88,6 @@ class ColumnsSummary
 
 
 	/**
-	 * @param  string $key
 	 * @return mixed
 	 */
 	public function render(string $key)
@@ -133,7 +119,6 @@ class ColumnsSummary
 	/**
 	 * Try to render summary with custom renderer
 	 *
-	 * @param  string $key
 	 * @return mixed
 	 */
 	public function useRenderer(string $key)
@@ -154,8 +139,6 @@ class ColumnsSummary
 
 	/**
 	 * Return custom renderer callback
-	 *
-	 * @return Renderer|null
 	 */
 	public function getRenderer(): ?Renderer
 	{
@@ -165,8 +148,6 @@ class ColumnsSummary
 
 	/**
 	 * Set renderer callback
-	 *
-	 * @param callable $renderer
 	 */
 	public function setRenderer(callable $renderer)
 	{
@@ -178,11 +159,6 @@ class ColumnsSummary
 
 	/**
 	 * Set number format
-	 *
-	 * @param string $key
-	 * @param int    $decimals
-	 * @param string $dec_point
-	 * @param string $thousands_sep
 	 */
 	public function setFormat(string $key, int $decimals = 0, string $dec_point = '.', string $thousands_sep = ' ')
 	{
@@ -194,7 +170,6 @@ class ColumnsSummary
 
 	/**
 	 * @param  array  $columns
-	 * @return bool
 	 */
 	public function someColumnsExist(array $columns): bool
 	{

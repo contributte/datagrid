@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Martin Procházka <juniwalk@outlook.cz>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\DataSource;
 
 use Doctrine\Common\Collections\Collection;
@@ -33,10 +27,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	 */
 	protected $criteria;
 
-	/**
-	 * @param Collection  $collection
-	 * @param string      $primary_key
-	 */
 	public function __construct(Collection $collection, string $primary_key)
 	{
 		$this->criteria = Criteria::create();
@@ -45,9 +35,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * @return Collection
-	 */
 	private function getFilteredCollection(): Collection
 	{
 		return $this->data_source->matching($this->criteria);
@@ -60,8 +47,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 	/**
 	 * Get count of data
-	 *
-	 * @return int
 	 */
 	public function getCount(): int
 	{
@@ -99,9 +84,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 	/**
 	 * Filter by date
-	 *
-	 * @param  Filter\FilterDate $filter
-	 * @return void
 	 */
 	public function applyFilterDate(Filter\FilterDate $filter): void
 	{
@@ -118,9 +100,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 	/**
 	 * Filter by date range
-	 *
-	 * @param  Filter\FilterDateRange $filter
-	 * @return void
 	 */
 	public function applyFilterDateRange(Filter\FilterDateRange $filter): void
 	{
@@ -147,9 +126,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 	/**
 	 * Filter by range
-	 *
-	 * @param  Filter\FilterRange $filter
-	 * @return void
 	 */
 	public function applyFilterRange(Filter\FilterRange $filter): void
 	{
@@ -170,9 +146,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 	/**
 	 * Filter by keyword
-	 *
-	 * @param  Filter\FilterText $filter
-	 * @return void
 	 */
 	public function applyFilterText(Filter\FilterText $filter): void
 	{
@@ -202,9 +175,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 	/**
 	 * Filter by multi select value
-	 *
-	 * @param  Filter\FilterMultiSelect $filter
-	 * @return void
 	 */
 	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter): void
 	{
@@ -217,9 +187,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 	/**
 	 * Filter by select value
-	 *
-	 * @param  Filter\FilterSelect $filter
-	 * @return void
 	 */
 	public function applyFilterSelect(Filter\FilterSelect $filter): void
 	{
@@ -233,8 +200,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	/**
 	 * Apply limit and offset on data
 	 *
-	 * @param int $offset
-	 * @param int $limit
 	 * @return static
 	 */
 	public function limit(int $offset, int $limit)
@@ -248,7 +213,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	/**
 	 * Sort data
 	 *
-	 * @param Sorting $sorting
 	 * @return static
 	 */
 	public function sort(Sorting $sorting)
@@ -274,10 +238,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * @param  callable  $aggregationCallback
-	 * @return void
-	 */
 	public function processAggregation(callable $aggregationCallback): void
 	{
 		call_user_func($aggregationCallback, clone $this->data_source);

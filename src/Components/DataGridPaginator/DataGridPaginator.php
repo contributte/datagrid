@@ -7,11 +7,7 @@
  *
  * For more information please see http://addons.nette.org
  *
- * @author     David Grudl
- * @copyright  Copyright (c) 2009 David Grudl
- * @license    New BSD License
  * @link       http://addons.nette.org
- * @package    Nette Extras
  */
 
 namespace Ublaboo\DataGrid\Components\DataGridPaginator;
@@ -76,8 +72,6 @@ class DataGridPaginator extends Nette\Application\UI\Control
 
 	/**
 	 * Get paginator original template file
-	 *
-	 * @return string
 	 */
 	public function getOriginalTemplateFile(): string
 	{
@@ -85,9 +79,6 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return Nette\Utils\Paginator
-	 */
 	public function getPaginator(): Nette\Utils\Paginator
 	{
 		if (!$this->paginator) {
@@ -100,8 +91,6 @@ class DataGridPaginator extends Nette\Application\UI\Control
 
 	/**
 	 * Renders paginator.
-	 *
-	 * @return void
 	 */
 	public function render(): void
 	{
@@ -153,7 +142,6 @@ class DataGridPaginator extends Nette\Application\UI\Control
 	 * Loads state informations.
 	 *
 	 * @param  array
-	 * @return void
 	 */
 	public function loadState(array $params): void
 	{

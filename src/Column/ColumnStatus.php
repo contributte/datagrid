@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Column;
 
 use Ublaboo\DataGrid\DataGrid;
@@ -34,12 +28,6 @@ class ColumnStatus extends Column
 	 */
 	protected $options = [];
 
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $key
-	 * @param string   $column
-	 * @param string   $name
-	 */
 	public function __construct(DataGrid $grid, string $key, string $column, string $name)
 	{
 		parent::__construct($grid, $key, $column, $name);
@@ -50,9 +38,6 @@ class ColumnStatus extends Column
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getKey(): string
 	{
 		return $this->key;
@@ -72,7 +57,6 @@ class ColumnStatus extends Column
 	 * Get particular option
 	 *
 	 * @param  mixed $value
-	 * @return Option
 	 * @throws DataGridColumnStatusException
 	 */
 	public function getOption($value): Option
@@ -87,9 +71,6 @@ class ColumnStatus extends Column
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getColumn(): string
 	{
 		return $this->column;
@@ -98,9 +79,6 @@ class ColumnStatus extends Column
 
 	/**
 	 * Find selected option for current item/row
-	 *
-	 * @param  Row    $row
-	 * @return Option|NULL
 	 */
 	public function getCurrentOption(Row $row): ?Option
 	{
@@ -119,7 +97,6 @@ class ColumnStatus extends Column
 	 *
 	 * @param mixed $value
 	 * @param string $text
-	 * @return Option
 	 * @throws DataGridColumnStatusException
 	 */
 	public function addOption($value, $text): Option
@@ -154,7 +131,6 @@ class ColumnStatus extends Column
 
 	/**
 	 * @param  mixed $value
-	 * @return void
 	 */
 	public function removeOption($value): void
 	{

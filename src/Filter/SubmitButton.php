@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
@@ -27,9 +21,6 @@ class SubmitButton extends Nette\Forms\Controls\Button
 	 */
 	protected $grid;
 
-	/**
-	 * @param DataGrid     $grid
-	 */
 	public function __construct(DataGrid $grid)
 	{
 		parent::__construct($this->text);
@@ -48,7 +39,6 @@ class SubmitButton extends Nette\Forms\Controls\Button
 	 * Generates control's HTML element.
 	 *
 	 * @param  string
-	 * @return Nette\Utils\Html
 	 */
 	public function getControl(?string $caption = null): Nette\Utils\Html
 	{

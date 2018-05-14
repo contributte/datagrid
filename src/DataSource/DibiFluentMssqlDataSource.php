@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\DataSource;
 
 use Dibi;
@@ -48,8 +42,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 	/**
 	 * Get count of data
-	 *
-	 * @return int
 	 */
 	public function getCount(): int
 	{
@@ -76,9 +68,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 	/**
 	 * Filter by date
-	 *
-	 * @param  Filter\FilterDate $filter
-	 * @return void
 	 */
 	public function applyFilterDate(Filter\FilterDate $filter): void
 	{
@@ -92,9 +81,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 	/**
 	 * Filter by date range
-	 *
-	 * @param  Filter\FilterDateRange $filter
-	 * @return void
 	 */
 	public function applyFilterDateRange(Filter\FilterDateRange $filter): void
 	{
@@ -115,9 +101,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 	/**
 	 * Filter by date
-	 *
-	 * @param  Filter\FilterText $filter
-	 * @return void
 	 */
 	public function applyFilterText(Filter\FilterText $filter): void
 	{
@@ -158,8 +141,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	/**
 	 * Apply limit and offset on data
 	 *
-	 * @param int $offset
-	 * @param int $limit
 	 * @return static
 	 */
 	public function limit(int $offset, int $limit)

@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Column;
 
 use Ublaboo\DataGrid\Row;
@@ -30,7 +24,6 @@ class ColumnNumber extends Column
 	/**
 	 * Format row item value
 	 *
-	 * @param  Row   $row
 	 * @return mixed
 	 */
 	public function getColumnValue(Row $row)
@@ -52,10 +45,6 @@ class ColumnNumber extends Column
 
 	/**
 	 * Set number format
-	 *
-	 * @param int    $decimals
-	 * @param string $dec_point
-	 * @param string $thousands_sep
 	 */
 	public function setFormat(int $decimals = 0, string $dec_point = '.', string $thousands_sep = ' ')
 	{

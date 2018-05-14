@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\AggregationFunction;
 
 use Ublaboo\DataGrid\DataModel;
@@ -26,8 +20,6 @@ trait TDataGridAggregationFunction
 	private $multipleAggregationFunction;
 
 	/**
-	 * @param  string  $key
-	 * @param  IAggregationFunction  $aggregationFunction
 	 * @return static
 	 * @throws DataGridException
 	 */
@@ -56,7 +48,6 @@ trait TDataGridAggregationFunction
 
 
 	/**
-	 * @param  IMultipleAggregationFunction  $multipleAggregationFunction
 	 * @throws DataGridException
 	 * @return static
 	 */
@@ -76,11 +67,6 @@ trait TDataGridAggregationFunction
 	}
 
 
-	/**
-	 * @param  IDataSource  $dataSource
-	 * @throws DataGridException
-	 * @return void
-	 */
 	public function beforeDataModelFilter(IDataSource $dataSource): void
 	{
 		if (!$this->hasSomeAggregationFunction()) {
@@ -107,11 +93,6 @@ trait TDataGridAggregationFunction
 	}
 
 
-	/**
-	 * @param  IDataSource  $dataSource
-	 * @throws DataGridException
-	 * @return void
-	 */
 	public function afterDataModelFilter(IDataSource $dataSource): void
 	{
 		if (!$this->hasSomeAggregationFunction()) {
@@ -138,11 +119,6 @@ trait TDataGridAggregationFunction
 	}
 
 
-	/**
-	 * @param  IDataSource  $dataSource
-	 * @throws DataGridException
-	 * @return void
-	 */
 	public function afterDataModelPaginated(IDataSource $dataSource): void
 	{
 		if (!$this->hasSomeAggregationFunction()) {

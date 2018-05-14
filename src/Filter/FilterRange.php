@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
@@ -35,13 +29,6 @@ class FilterRange extends Filter
 	 */
 	protected $type = 'range';
 
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $key
-	 * @param string   $name
-	 * @param string   $column
-	 * @param string   $name_second
-	 */
 	public function __construct(DataGrid $grid, string $key, string $name, string $column, string $name_second)
 	{
 		parent::__construct($grid, $key, $name, $column);
@@ -52,8 +39,6 @@ class FilterRange extends Filter
 
 	/**
 	 * Adds select box to filter form
-	 *
-	 * @param Nette\Forms\Container $container
 	 */
 	public function addToFormContainer(Nette\Forms\Container $container): void
 	{
@@ -85,7 +70,6 @@ class FilterRange extends Filter
 	/**
 	 * Set html attr placeholder of both inputs
 	 *
-	 * @param string $placeholder_array
 	 * @return static
 	 */
 	public function setPlaceholder(string $placeholder_array)
@@ -104,8 +88,6 @@ class FilterRange extends Filter
 
 	/**
 	 * Get html attr placeholders
-	 *
-	 * @return string
 	 */
 	public function getPlaceholder(): string
 	{

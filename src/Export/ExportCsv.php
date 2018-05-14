@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Export;
 
 use Contributte\Application\Response\CSVResponse;
@@ -46,15 +40,6 @@ class ExportCsv extends Export
 	 */
 	protected $delimiter = ';';
 
-	/**
-	 * @param DataGrid    $grid
-	 * @param string      $text
-	 * @param string      $csv_file_name
-	 * @param bool        $filtered
-	 * @param string|null $output_encoding
-	 * @param string|null $delimiter
-	 * @param bool        $include_bom
-	 */
 	public function __construct(
 		DataGrid $grid,
 		string $text,
@@ -68,7 +53,7 @@ class ExportCsv extends Export
 		$this->grid = $grid;
 		$this->text = $text;
 		$this->filtered = (bool) $filtered;
-		$this->name = strpos($csv_file_name, '.csv') !== false ? $csv_file_name : "$csv_file_name.csv";
+		$this->name = strpos($csv_file_name, '.csv') !== false ? $csv_file_name : sprintf('%.csv', $csv_file_name);
 
 		if ($output_encoding) {
 			$this->output_encoding = $output_encoding;
@@ -88,7 +73,6 @@ class ExportCsv extends Export
 	 * Call export callback
 	 *
 	 * @param  array    $data
-	 * @return void
 	 */
 	public function invoke(array $data): void
 	{

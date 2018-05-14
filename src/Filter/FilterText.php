@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
@@ -35,8 +29,6 @@ class FilterText extends Filter
 
 	/**
 	 * Adds text field to filter form
-	 *
-	 * @param Nette\Forms\Container $container
 	 */
 	public function addToFormContainer(Nette\Forms\Container $container): void
 	{
@@ -64,19 +56,12 @@ class FilterText extends Filter
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function isExactSearch(): bool
 	{
 		return $this->exact;
 	}
 
 
-	/**
-	 * @param bool $exact
-	 * @return FilterText
-	 */
 	public function setExactSearch(bool $exact = true): FilterText
 	{
 		$this->exact = $exact;
@@ -84,10 +69,6 @@ class FilterText extends Filter
 	}
 
 
-	/**
-	 * @param bool $split_words_search
-	 * @return FilterText
-	 */
 	public function setSplitWordsSearch(bool $split_words_search): FilterText
 	{
 		$this->split_words_search = (bool) $split_words_search;
@@ -96,9 +77,6 @@ class FilterText extends Filter
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function hasSplitWordsSearch(): bool
 	{
 		return $this->split_words_search;

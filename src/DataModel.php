@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid;
 
 use Dibi;
@@ -113,8 +107,6 @@ final class DataModel
 
 	/**
 	 * Return dat asource
-	 *
-	 * @return IDataSource
 	 */
 	public function getDataSource(): IDataSource
 	{
@@ -125,8 +117,6 @@ final class DataModel
 	/**
 	 * Filter/paginate/limit/order data source and return reset of data in array
 	 *
-	 * @param  Components\DataGridPaginator\DataGridPaginator $paginator_component
-	 * @param  Sorting                                        $sorting
 	 * @param  array                                          $filters
 	 * @return array
 	 */

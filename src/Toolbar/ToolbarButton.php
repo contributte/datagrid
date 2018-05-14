@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Toolbar;
 
 use Nette\Utils\Html;
@@ -45,9 +39,6 @@ class ToolbarButton
 	protected $attributes = [];
 
 	/**
-	 * @param DataGrid $grid
-	 * @param string   $href
-	 * @param string   $text
 	 * @param array    $params
 	 */
 	public function __construct(DataGrid $grid, string $href, string $text, array $params = [])
@@ -61,8 +52,6 @@ class ToolbarButton
 
 	/**
 	 * Render toolbar button
-	 *
-	 * @return Html
 	 */
 	public function renderButton(): Html
 	{

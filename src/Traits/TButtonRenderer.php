@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Traits;
 
 use Ublaboo\DataGrid\Column\Renderer;
@@ -29,7 +23,6 @@ trait TButtonRenderer
 	/**
 	 * Try to render item with custom renderer
 	 *
-	 * @param  Row|null $row
 	 * @return mixed
 	 * @throws DataGridColumnRendererException
 	 */
@@ -62,7 +55,6 @@ trait TButtonRenderer
 	/**
 	 * Set renderer callback and (it may be optional - the condition callback will decide)
 	 *
-	 * @param callable $renderer
 	 * @throws DataGridException
 	 */
 	public function setRenderer(callable $renderer, $condition_callback = null)
@@ -93,8 +85,6 @@ trait TButtonRenderer
 
 	/**
 	 * Set renderer callback just if condition is truthy
-	 *
-	 * @param callable $renderer
 	 */
 	public function setRendererOnCondition(callable $renderer, $condition_callback)
 	{
@@ -104,8 +94,6 @@ trait TButtonRenderer
 
 	/**
 	 * Return custom renderer callback
-	 *
-	 * @return Renderer|null
 	 */
 	public function getRenderer(): ?Renderer
 	{
@@ -117,7 +105,6 @@ trait TButtonRenderer
 	 * Set column replacements
 	 *
 	 * @param  array $replacements
-	 * @return Column
 	 */
 	public function setReplacement(array $replacements): Column
 	{
@@ -129,8 +116,6 @@ trait TButtonRenderer
 
 	/**
 	 * Tell whether columns has replacements
-	 *
-	 * @return bool
 	 */
 	public function hasReplacements(): bool
 	{
@@ -141,7 +126,6 @@ trait TButtonRenderer
 	/**
 	 * Apply replacements
 	 *
-	 * @param  Row   $row
 	 * @return array
 	 */
 	public function applyReplacements(Row $row): array
