@@ -1,13 +1,9 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Utils;
 
+use DateTime;
+use DateTimeImmutable;
 use Nette\SmartObject;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 
@@ -21,10 +17,9 @@ final class DateTimeHelper
 	 *
 	 * @param  mixed     $value
 	 * @param  string[]  $formats
-	 * @return \DateTime
 	 * @throws DataGridDateTimeHelperException
 	 */
-	public static function tryConvertToDateTime($value, array $formats = []): \DateTime
+	public static function tryConvertToDateTime($value, array $formats = []): DateTime
 	{
 		return static::fromString($value, $formats);
 	}
@@ -35,10 +30,9 @@ final class DateTimeHelper
 	 *
 	 * @param  mixed     $value
 	 * @param  string[]  $formats
-	 * @return \DateTime
 	 * @throws DataGridDateTimeHelperException
 	 */
-	public static function tryConvertToDate($value, array $formats = []): \DateTime
+	public static function tryConvertToDate($value, array $formats = []): DateTime
 	{
 		return static::fromString($value, $formats);
 	}
@@ -49,10 +43,9 @@ final class DateTimeHelper
 	 *
 	 * @param  mixed     $value
 	 * @param  string[]  $formats
-	 * @return \DateTime
 	 * @throws DataGridDateTimeHelperException
 	 */
-	public static function fromString($value, array $formats = []): \DateTime
+	public static function fromString($value, array $formats = []): DateTime
 	{
 		$formats = array_merge($formats, [
 			'Y-m-d H:i:s.u',
@@ -64,19 +57,19 @@ final class DateTimeHelper
 			'U',
 		]);
 
-		if ($value instanceof \DateTime) {
+		if ($value instanceof DateTime) {
 			return $value;
 		}
 
-		if ($value instanceof \DateTimeImmutable) {
-			$date = new \DateTime('now', $value->getTimezone());
+		if ($value instanceof DateTimeImmutable) {
+			$date = new DateTime('now', $value->getTimezone());
 			$date->setTimestamp($value->getTimestamp());
 
 			return $date;
 		}
 
 		foreach ($formats as $format) {
-			if (!is_string($format) || !$date = \DateTime::createFromFormat($format, $value)) {
+			if (!is_string($format) || !$date = DateTime::createFromFormat($format, $value)) {
 				continue;
 			}
 
@@ -86,7 +79,7 @@ final class DateTimeHelper
 		$timestamp = strtotime($value);
 
 		if ($timestamp !== false) {
-			$date = new \DateTime();
+			$date = new DateTime();
 			$date->setTimestamp($timestamp);
 
 			return $date;

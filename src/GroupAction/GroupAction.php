@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\GroupAction;
 
 use Nette\SmartObject;
@@ -38,9 +32,6 @@ abstract class GroupAction
 	 */
 	protected $attributes = [];
 
-	/**
-	 * @param string $title
-	 */
 	public function __construct(string $title)
 	{
 		$this->title = $title;
@@ -49,8 +40,6 @@ abstract class GroupAction
 
 	/**
 	 * Get action title
-	 *
-	 * @return string
 	 */
 	public function getTitle(): string
 	{
@@ -59,7 +48,6 @@ abstract class GroupAction
 
 
 	/**
-	 * @param string $class
 	 * @return static
 	 */
 	public function setClass(string $class)
@@ -70,9 +58,6 @@ abstract class GroupAction
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getClass(): string
 	{
 		return $this->class;
@@ -80,7 +65,6 @@ abstract class GroupAction
 
 
 	/**
-	 * @param string $key
 	 * @param mixed $value
 	 * @return static
 	 */

@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Localization;
 
 use Nette;
@@ -65,9 +59,8 @@ class SimpleTranslator implements Nette\Localization\ITranslator
 	 *
 	 * @param  string
 	 * @param  int
-	 * @return string
 	 */
-	public function translate($message, $count = null): string
+	public function translate(string $message, ?int $count = null): string
 	{
 		return $this->dictionary[$message] ?? $message;
 	}

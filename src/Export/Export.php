@@ -1,16 +1,9 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Export;
 
 use Nette\Utils\Callback;
 use Nette\Utils\Html;
-use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Traits;
 
@@ -53,12 +46,6 @@ class Export
 	 */
 	protected $grid;
 
-	/**
-	 * @param DataGrid   $grid
-	 * @param string     $text
-	 * @param callable   $callback
-	 * @param bool    $filtered
-	 */
 	public function __construct(DataGrid $grid, string $text, callable $callback, bool $filtered)
 	{
 		$this->grid = $grid;
@@ -71,8 +58,6 @@ class Export
 
 	/**
 	 * Render export button
-	 *
-	 * @return Html
 	 */
 	public function render(): Html
 	{
@@ -102,7 +87,6 @@ class Export
 	 * Tell export which columns to use when exporting data
 	 *
 	 * @param array $columns
-	 * @return self
 	 */
 	public function setColumns(array $columns): self
 	{
@@ -125,9 +109,6 @@ class Export
 
 	/**
 	 * Export signal url
-	 *
-	 * @param string $link
-	 * @return self
 	 */
 	public function setLink(string $link): self
 	{
@@ -139,8 +120,6 @@ class Export
 
 	/**
 	 * Tell export whether to be called via ajax or not
-	 *
-	 * @param bool $ajax
 	 */
 	public function setAjax(bool $ajax = true)
 	{
@@ -152,8 +131,6 @@ class Export
 
 	/**
 	 * Is export called via ajax?
-	 *
-	 * @return bool
 	 */
 	public function isAjax(): bool
 	{
@@ -163,8 +140,6 @@ class Export
 
 	/**
 	 * Is export filtered?
-	 *
-	 * @return bool
 	 */
 	public function isFiltered(): bool
 	{
@@ -176,7 +151,6 @@ class Export
 	 * Call export callback
 	 *
 	 * @param  array    $data
-	 * @return void
 	 */
 	public function invoke(array $data): void
 	{

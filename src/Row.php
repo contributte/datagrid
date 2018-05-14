@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid;
 
 use Dibi\Row as DibiRow;
@@ -49,7 +43,6 @@ class Row
 	protected $control;
 
 /**
- * @param DataGrid $datagrid
  * @param mixed    $item
  * @param string   $primary_key
  */
@@ -113,18 +106,12 @@ class Row
 	}
 
 
-	/**
-	 * @return Html
-	 */
 	public function getControl(): Html
 	{
 		return $this->control;
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getControlClass(): string
 	{
 		if (!$class = $this->control->class) {
@@ -136,8 +123,6 @@ class Row
 
 
 	/**
-	 * @param  ActiveRow $item
-	 * @param  string    $key
 	 * @return mixed|NULL
 	 */
 	public function getActiveRowProperty(ActiveRow $item, string $key)
@@ -169,7 +154,6 @@ class Row
 	/**
 	 * LeanMapper: Access object properties to get a item value
 	 *
-	 * @param  LeanMapper\Entity $item
 	 * @param  mixed             $key
 	 * @return mixed
 	 */
@@ -201,8 +185,6 @@ class Row
 	/**
 	 * Nextras: Access object properties to get a item value
 	 *
-	 * @param  Nextras\Orm\Entity\Entity $item
-	 * @param  string                    $key
 	 * @return mixed
 	 */
 	public function getNextrasEntityProperty(Nextras\Orm\Entity\Entity $item, string $key)
@@ -276,8 +258,6 @@ class Row
 
 	/**
 	 * Has particular row group actions allowed?
-	 *
-	 * @return bool
 	 */
 	public function hasGroupAction(): bool
 	{
@@ -291,7 +271,6 @@ class Row
 	 * Has particular row a action allowed?
 	 *
 	 * @param  mixed  $key
-	 * @return bool
 	 */
 	public function hasAction($key): bool
 	{

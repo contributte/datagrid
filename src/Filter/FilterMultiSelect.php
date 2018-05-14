@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
@@ -28,11 +22,7 @@ class FilterMultiSelect extends FilterSelect
 	];
 
 /**
- * @param DataGrid $grid
- * @param string   $key
- * @param string   $name
  * @param string   $options
- * @param string   $column
  */
 	public function __construct(DataGrid $grid, string $key, string $name, array $options, string $column)
 	{
@@ -60,11 +50,7 @@ class FilterMultiSelect extends FilterSelect
 
 
 	/**
-	 * @param Nette\Forms\Container $container
-	 * @param string                $key
-	 * @param string                $name
 	 * @param array                $options
-	 * @return Nette\Forms\Controls\SelectBox
 	 */
 	protected function addControl(Nette\Forms\Container $container, string $key, string $name, array $options): Nette\Forms\Controls\SelectBox
 	{

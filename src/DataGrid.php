@@ -1,17 +1,18 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid;
 
+use DateTime;
+use Dibi\Fluent;
+use DibiFluent;
+use Doctrine\ORM\QueryBuilder;
+use InvalidArgumentException;
+use Iterator;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Link;
 use Nette\Application\UI\PresenterComponent;
+use Traversable;
 use Ublaboo\DataGrid\AggregationFunction\TDataGridAggregationFunction;
 use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\Exception\DataGridColumnNotFoundException;
@@ -385,10 +386,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $show_selected_rows_count = true;
 
-	/**
-	 * @param Nette\ComponentModel\IContainer|NULL $parent
-	 * @param string                               $name
-	 */
 	public function __construct(?Nette\ComponentModel\IContainer $parent = null, ?string $name = null)
 	{
 		parent::__construct();
@@ -431,8 +428,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * {inheritDoc}
-	 *
-	 * @return void
 	 */
 	public function attached($presenter): void
 	{
@@ -455,8 +450,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 /**
  * Render template
- *
- * @return void
  */
 	public function render(): void
 	{
@@ -572,7 +565,6 @@ class DataGrid extends Nette\Application\UI\Control
 /**
  * Each row can be modified with user callback
  *
- * @param  callable  $callback
  * @return static
  */
 	public function setRowCallback(callable $callback)
@@ -590,7 +582,6 @@ class DataGrid extends Nette\Application\UI\Control
 /**
  * By default ID, you can change that
  *
- * @param string $primary_key
  * @return static
  */
 	public function setPrimaryKey(string $primary_key)
@@ -622,9 +613,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return DataSource\IDataSource|NULL
-	 */
 	public function getDataSource(): ?DataSource\IDataSource
 	{
 		if (!$this->dataModel) {
@@ -642,7 +630,6 @@ class DataGrid extends Nette\Application\UI\Control
 /**
  * Set custom template file to render
  *
- * @param string $template_file
  * @return static
  */
 	public function setTemplateFile(string $template_file)
@@ -656,7 +643,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Get DataGrid template file
 	 *
-	 * @return string
 	 * @return static
 	 */
 	public function getTemplateFile(): string
@@ -667,8 +653,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Get DataGrid original template file
-	 *
-	 * @return string
 	 */
 	public function getOriginalTemplateFile(): string
 	{
@@ -700,7 +684,6 @@ class DataGrid extends Nette\Application\UI\Control
  * Set default sorting
  *
  * @param array $sort
- * @param bool  $use_on_reset
  * @return static
  */
 	public function setDefaultSort(array $sort, bool $use_on_reset = true)
@@ -720,9 +703,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Return default sort for column, if specified
-	 *
-	 * @param string $columnKey
-	 * @return string|NULL
 	 */
 	public function getColumnDefaultSort(string $columnKey): ?string
 	{
@@ -736,8 +716,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * User may set default sorting, apply it
-	 *
-	 * @return void
 	 */
 	public function findDefaultSort(): void
 	{
@@ -760,7 +738,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set grido to be sortable
 	 *
-	 * @param bool $sortable
 	 * @return static
 	 */
 	public function setSortable(bool $sortable = true)
@@ -777,8 +754,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Tell whether DataGrid is sortable
-	 *
-	 * @return bool
 	 */
 	public function isSortable(): bool
 	{
@@ -789,7 +764,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Enable multi-sorting capability
 	 *
-	 * @param bool  $multiSort
 	 * @return static
 	 */
 	public function setMultiSortEnabled(bool $multiSort = true)
@@ -802,8 +776,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Tell wether DataGrid can be sorted by multiple columns
-	 *
-	 * @return bool
 	 */
 	public function isMultiSortEnabled(): bool
 	{
@@ -814,7 +786,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set sortable handle
 	 *
-	 * @param string $handler
 	 * @return static
 	 */
 	public function setSortableHandler(string $handler = 'sort!')
@@ -827,8 +798,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Return sortable handle name
-	 *
-	 * @return string
 	 */
 	public function getSortableHandler(): string
 	{
@@ -837,7 +806,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @param Column  $column
 	 * @return array
 	 * @internal
 	 */
@@ -855,8 +823,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @param  array         $sort
-	 * @param  callable|NULL $sort_callback
-	 * @return Sorting
 	 */
 	protected function createSorting(array $sort, ?callable $sort_callback = null): Sorting
 	{
@@ -887,8 +853,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 /**
  * Is tree view set?
- *
- * @return bool
  */
 	public function isTreeView(): bool
 	{
@@ -899,7 +863,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Setting tree view
 	 *
-	 * @param callable $get_children_callback
 	 * @param string|callable $tree_view_has_children_column
 	 * @return static
 	 */
@@ -937,8 +900,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Is tree view children callback set?
-	 *
-	 * @return bool
 	 */
 	public function hasTreeViewChildrenCallback(): bool
 	{
@@ -948,7 +909,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @param  mixed $item
-	 * @return bool
 	 */
 	public function treeViewChildrenCallback($item): bool
 	{
@@ -962,11 +922,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 /**
  * Add text column with no other formating
- *
- * @param  string      $key
- * @param  string      $name
- * @param  string|null $column
- * @return Column\ColumnText
  */
 	public function addColumnText(string $key, string $name, ?string $column = null): Column\ColumnText
 	{
@@ -979,11 +934,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Add column with link
-	 *
-	 * @param  string      $key
-	 * @param  string      $name
-	 * @param  string|null $column
-	 * @return Column\ColumnLink
 	 */
 	public function addColumnLink(string $key, string $name, $href = null, ?string $column = null, ?array $params = null): Column\ColumnLink
 	{
@@ -1001,11 +951,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Add column with possible number formating
-	 *
-	 * @param  string      $key
-	 * @param  string      $name
-	 * @param  string|null $column
-	 * @return Column\ColumnNumber
 	 */
 	public function addColumnNumber(string $key, string $name, ?string $column = null): Column\ColumnNumber
 	{
@@ -1018,11 +963,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Add column with date formating
-	 *
-	 * @param  string      $key
-	 * @param  string      $name
-	 * @param  string|null $column
-	 * @return Column\ColumnDateTime
 	 */
 	public function addColumnDateTime(string $key, string $name, ?string $column = null): Column\ColumnDateTime
 	{
@@ -1035,11 +975,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Add column status
-	 *
-	 * @param  string      $key
-	 * @param  string      $name
-	 * @param  string|null $column
-	 * @return Column\ColumnStatus
 	 */
 	public function addColumnStatus(string $key, string $name, ?string $column = null): Column\ColumnStatus
 	{
@@ -1050,11 +985,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @param string $key
-	 * @param Column\Column $column
-	 * @return Column\Column
-	 */
 	protected function addColumn(string $key, Column\Column $column): Column\Column
 	{
 		$this->onColumnAdd($key, $column);
@@ -1070,8 +1000,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Return existing column
 	 *
-	 * @param  string $key
-	 * @return Column\Column
 	 * @throws DataGridException
 	 */
 	public function getColumn(string $key): Column\Column
@@ -1087,7 +1015,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Remove column
 	 *
-	 * @param string $key
 	 * @return static
 	 */
 	public function removeColumn(string $key)
@@ -1101,7 +1028,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Check whether given key already exists in $this->columns
 	 *
-	 * @param  string $key
 	 * @throws DataGridException
 	 */
 	protected function addColumnCheck(string $key): void
@@ -1119,11 +1045,7 @@ class DataGrid extends Nette\Application\UI\Control
 /**
  * Create action
  *
- * @param string     $key
- * @param string     $name
- * @param string     $href
  * @param array|null $params
- * @return Column\Action
  */
 	public function addAction(string $key, string $name, ?string $href = null, ?array $params = null): Column\Action
 	{
@@ -1141,10 +1063,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Create action callback
-	 *
-	 * @param string     $key
-	 * @param string     $name
-	 * @return Column\Action
 	 */
 	public function addActionCallback(string $key, string $name, $callback = null): Column\Action
 	{
@@ -1166,9 +1084,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @param string $key
-	 */
 	public function addMultiAction(string $key, $name)
 	{
 		$this->addActionCheck($key);
@@ -1182,8 +1097,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Get existing action
 	 *
-	 * @param  string       $key
-	 * @return Column\Action
 	 * @throws DataGridException
 	 */
 	public function getAction(string $key): Column\Action
@@ -1199,7 +1112,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Remove action
 	 *
-	 * @param string $key
 	 * @return static
 	 */
 	public function removeAction(string $key)
@@ -1213,7 +1125,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Check whether given key already exists in $this->filters
 	 *
-	 * @param  string $key
 	 * @throws DataGridException
 	 */
 	protected function addActionCheck(string $key): void
@@ -1231,10 +1142,7 @@ class DataGrid extends Nette\Application\UI\Control
 /**
  * Add filter fot text search
  *
- * @param string       $key
- * @param string       $name
  * @param array|string $columns
- * @return Filter\FilterText
  * @throws DataGridException
  */
 	public function addFilterText(string $key, string $name, $columns = null): Filter\FilterText
@@ -1254,11 +1162,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Add select box filter
 	 *
-	 * @param string $key
-	 * @param string $name
 	 * @param array  $options
-	 * @param string $column
-	 * @return Filter\FilterSelect
 	 * @throws DataGridException
 	 */
 	public function addFilterSelect(string $key, string $name, array $options, ?string $column = null): Filter\FilterSelect
@@ -1278,11 +1182,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Add multi select box filter
 	 *
-	 * @param string $key
-	 * @param string $name
 	 * @param array  $options
-	 * @param string $column
-	 * @return Filter\FilterSelect
 	 * @throws DataGridException
 	 */
 	public function addFilterMultiSelect(string $key, string $name, array $options, ?string $column = null): Filter\FilterSelect
@@ -1302,10 +1202,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Add datepicker filter
 	 *
-	 * @param string $key
-	 * @param string $name
-	 * @param string $column
-	 * @return Filter\FilterDate
 	 * @throws DataGridException
 	 */
 	public function addFilterDate(string $key, string $name, ?string $column = null): Filter\FilterDate
@@ -1325,10 +1221,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Add range filter (from - to)
 	 *
-	 * @param string $key
-	 * @param string $name
-	 * @param string $column
-	 * @return Filter\FilterRange
 	 * @throws DataGridException
 	 */
 	public function addFilterRange(string $key, string $name, ?string $column = null, $name_second = '-'): Filter\FilterRange
@@ -1348,10 +1240,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Add datepicker filter (from - to)
 	 *
-	 * @param string $key
-	 * @param string $name
-	 * @param string $column
-	 * @return Filter\FilterDateRange
 	 * @throws DataGridException
 	 */
 	public function addFilterDateRange(string $key, string $name, ?string $column = null, $name_second = '-'): Filter\FilterDateRange
@@ -1371,7 +1259,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Check whether given key already exists in $this->filters
 	 *
-	 * @param  string $key
 	 * @throws DataGridException
 	 */
 	protected function addFilterCheck(string $key): void
@@ -1397,7 +1284,7 @@ class DataGrid extends Nette\Application\UI\Control
 				continue;
 			}
 
-			if (is_array($value) || $value instanceof \Traversable) {
+			if (is_array($value) || $value instanceof Traversable) {
 				if (!ArraysHelper::testEmpty($value)) {
 					$this->filters[$key]->setValue($value);
 				}
@@ -1444,7 +1331,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Remove filter
 	 *
-	 * @param string $key
 	 * @return static
 	 */
 	public function removeFilter(string $key)
@@ -1457,9 +1343,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Get defined filter
-	 *
-	 * @param  string $key
-	 * @return Filter\Filter
 	 */
 	public function getFilter(string $key): Filter\Filter
 	{
@@ -1472,7 +1355,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @param bool $strict
 	 * @return static
 	 */
 	public function setStrictSessionFilterValues(bool $strict = true)
@@ -1489,8 +1371,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 /**
  * Is filter active?
- *
- * @return bool
  */
 	public function isFilterActive(): bool
 	{
@@ -1532,7 +1412,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 * If we want to sent some initial filter
 	 *
 	 * @param array $filter
-	 * @param bool  $use_on_reset
 	 * @return static
 	 */
 	public function setDefaultFilter(array $default_filter, bool $use_on_reset = true)
@@ -1577,8 +1456,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * User may set default filter, find it
-	 *
-	 * @return void
 	 */
 	public function findDefaultFilter(): void
 	{
@@ -1697,9 +1574,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @param  Nette\Forms\Container  $container
-	 * @param  array|\Iterator  $values
-	 * @return void
+	 * @param  array|Iterator  $values
 	 */
 	public function setFilterContainerDefaults(Nette\Forms\Container $container, $values): void
 	{
@@ -1716,7 +1591,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 			$value = $values[$key];
 
-			if ($value instanceof \DateTime && ($filter = $this->getFilter($key)) instanceof IFilterDate) {
+			if ($value instanceof DateTime && ($filter = $this->getFilter($key)) instanceof IFilterDate) {
 				$value = $value->format($filter->getPhpFormat());
 			}
 
@@ -1734,9 +1609,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set $this->filter values after filter form submitted
-	 *
-	 * @param  Form $form
-	 * @return void
 	 */
 	public function filterSucceeded(Form $form): void
 	{
@@ -1858,7 +1730,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Should be datagrid filters rendered separately?
 	 *
-	 * @param bool $out
 	 * @return static
 	 */
 	public function setOuterFilterRendering(bool $out = true)
@@ -1871,8 +1742,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Are datagrid filters rendered separately?
-	 *
-	 * @return bool
 	 */
 	public function hasOuterFilterRendering(): bool
 	{
@@ -1883,14 +1752,13 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Set the number of columns in the outer filter
 	 *
-	 * @param int $count
 	 * @return static
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function setOuterFilterColumnsCount(int $count)
 	{
 		if (!in_array($count, [1, 2, 3, 4, 6, 12], true)) {
-			throw new \InvalidArgumentException(
+			throw new InvalidArgumentException(
 				"Columns count must be one of following values: 1, 2, 3, 4, 6, 12. Value {$count} given."
 			);
 		}
@@ -1901,27 +1769,18 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function getOuterFilterColumnsCount(): bool
 	{
 		return $this->outer_filter_columns_count;
 	}
 
 
-	/**
-	 * @param bool $collapsible_outer_filters
-	 */
 	public function setCollapsibleOuterFilters(bool $collapsible_outer_filters = true): void
 	{
 		$this->collapsible_outer_filters = (bool) $collapsible_outer_filters;
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function hasCollapsibleOuterFilters(): bool
 	{
 		return $this->collapsible_outer_filters;
@@ -1931,7 +1790,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Try to restore session stuff
 	 *
-	 * @return void
 	 * @throws DataGridFilterNotFoundException
 	 */
 	public function findSessionValues(): void
@@ -2010,11 +1868,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 /**
  * Add export of type callback
- *
- * @param string $text
- * @param callable $callback
- * @param bool $filtered
- * @return Export\Export
  */
 	public function addExportCallback(string $text, callable $callback, bool $filtered = false): Export\Export
 	{
@@ -2028,13 +1881,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Add already implemented csv export
-	 *
-	 * @param string $text
-	 * @param string $csv_file_name
-	 * @param string|null $output_encoding
-	 * @param string|null $delimiter
-	 * @param bool $include_bom
-	 * @return Export\Export
 	 */
 	public function addExportCsv(
 		string $text,
@@ -2058,13 +1904,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Add already implemented csv export, but for filtered data
-	 *
-	 * @param string $text
-	 * @param string $csv_file_name
-	 * @param string|null $output_encoding
-	 * @param string|null $delimiter
-	 * @param bool $include_bom
-	 * @return Export\Export
 	 */
 	public function addExportCsvFiltered(
 		string $text,
@@ -2088,9 +1927,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Add export to array
-	 *
-	 * @param Export\Export $export
-	 * @return Export\Export
 	 */
 	protected function addToExports(Export\Export $export): Export\Export
 	{
@@ -2102,9 +1938,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return void
-	 */
 	public function resetExportsLinks(): void
 	{
 		foreach ($this->exports as $id => $export) {
@@ -2120,10 +1953,7 @@ class DataGrid extends Nette\Application\UI\Control
 /**
  * Add toolbar button
  *
- * @param  string  $href
- * @param  string  $text
  * @param  array   $params
- * @return ToolbarButton
  * @throws DataGridException
  */
 	public function addToolbarButton(string $href, string $text = '', array $params = []): ToolbarButton
@@ -2139,8 +1969,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Get existing toolbar button
 	 *
-	 * @param  string  $key
-	 * @return ToolbarButton
 	 * @throws DataGridException
 	 */
 	public function getToolbarButton(string $key): ToolbarButton
@@ -2156,7 +1984,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Remove toolbar button.
 	 *
-	 * @param  string $key
 	 * @return static
 	 */
 	public function removeToolbarButton(string $key)
@@ -2174,9 +2001,7 @@ class DataGrid extends Nette\Application\UI\Control
 /**
  * Alias for add group select action
  *
- * @param string $title
  * @param array  $options
- * @return GroupAction\GroupAction
  */
 	public function addGroupAction(string $title, array $options = []): GroupAction\GroupAction
 	{
@@ -2187,9 +2012,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Add group action (select box)
 	 *
-	 * @param string $title
 	 * @param array  $options
-	 * @return GroupAction\GroupAction
 	 */
 	public function addGroupSelectAction(string $title, array $options = []): GroupAction\GroupAction
 	{
@@ -2200,9 +2023,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Add group action (multiselect box)
 	 *
-	 * @param string $title
 	 * @param array  $options
-	 * @return GroupAction\GroupAction
 	 */
 	public function addGroupMultiSelectAction(string $title, array $options = []): GroupAction\GroupAction
 	{
@@ -2212,9 +2033,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Add group action (text input)
-	 *
-	 * @param string $title
-	 * @return GroupAction\GroupAction
 	 */
 	public function addGroupTextAction(string $title): GroupAction\GroupAction
 	{
@@ -2224,9 +2042,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Add group action (textarea)
-	 *
-	 * @param string $title
-	 * @return GroupAction\GroupAction
 	 */
 	public function addGroupTextareaAction(string $title): GroupAction\GroupAction
 	{
@@ -2236,8 +2051,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Get collection of all group actions
-	 *
-	 * @return GroupAction\GroupActionCollection
 	 */
 	public function getGroupActionCollection(): GroupAction\GroupActionCollection
 	{
@@ -2251,8 +2064,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Has datagrid some group actions?
-	 *
-	 * @return bool
 	 */
 	public function hasGroupActions(): bool
 	{
@@ -2260,9 +2071,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function shouldShowSelectedRowsCount(): bool
 	{
 		return $this->show_selected_rows_count;
@@ -2286,9 +2094,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 /**
  * Handler for changind page (just refresh site with page as persistent paramter set)
- *
- * @param  int  $page
- * @return void
  */
 	public function handlePage(int $page): void
 	{
@@ -2306,7 +2111,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Handler for sorting
 	 *
 	 * @param array $sort
-	 * @return void
 	 * @throws DataGridColumnNotFoundException
 	 */
 	public function handleSort(array $sort): void
@@ -2338,8 +2142,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Handler for reseting the filter
-	 *
-	 * @return void
 	 */
 	public function handleResetFilter(): void
 	{
@@ -2376,10 +2178,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @param  string $key
-	 * @return void
-	 */
 	public function handleResetColumnFilter(string $key): void
 	{
 		$this->deleteSessionData($key);
@@ -2390,7 +2188,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @param bool $reset
 	 * @return static
 	 */
 	public function setColumnReset(bool $reset = true)
@@ -2401,9 +2198,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function hasColumnReset(): bool
 	{
 		return $this->has_column_reset;
@@ -2412,7 +2206,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @param  Filter\Filter[] $filters
-	 * @return void
 	 */
 	public function sendNonEmptyFiltersInPayload($filters): void
 	{
@@ -2436,7 +2229,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Handler for export
 	 *
 	 * @param  int $id Key for particular export class in array $this->exports
-	 * @return void
 	 */
 	public function handleExport(int $id): void
 	{
@@ -2496,9 +2288,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Handler for getting children of parent item (e.g. category)
-	 *
-	 * @param  int $parent
-	 * @return void
 	 */
 	public function handleGetChildren(int $parent): void
 	{
@@ -2523,7 +2312,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Handler for getting item detail
 	 *
 	 * @param  mixed $id
-	 * @return void
 	 */
 	public function handleGetItemDetail($id): void
 	{
@@ -2553,7 +2341,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 *
 	 * @param  mixed $id
 	 * @param  mixed $key
-	 * @return void
 	 */
 	public function handleEdit($id, $key): void
 	{
@@ -2571,8 +2358,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Redraw $this
-	 *
-	 * @return void
 	 */
 	public function reload($snippets = []): void
 	{
@@ -2602,9 +2387,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return void
-	 */
 	public function reloadTheWholeGrid(): void
 	{
 		if ($this->getPresenter()->isAjax()) {
@@ -2622,11 +2404,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Handler for column status
-	 *
-	 * @param  string $id
-	 * @param  string $key
-	 * @param  string $value
-	 * @return void
 	 */
 	public function handleChangeStatus(string $id, string $key, string $value): void
 	{
@@ -2641,9 +2418,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Redraw just one row via ajax
 	 *
-	 * @param  int   $id
 	 * @param  mixed $primary_where_column
-	 * @return void
 	 */
 	public function redrawItem(int $id, $primary_where_column = null): void
 	{
@@ -2661,8 +2436,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Tell datagrid to display all columns
-	 *
-	 * @return void
 	 */
 	public function handleShowAllColumns(): void
 	{
@@ -2677,8 +2450,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Tell datagrid to display default columns
-	 *
-	 * @return void
 	 */
 	public function handleShowDefaultColumns(): void
 	{
@@ -2693,9 +2464,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Reveal particular column
-	 *
-	 * @param  string $column
-	 * @return void
 	 */
 	public function handleShowColumn(string $column): void
 	{
@@ -2720,9 +2488,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Notice datagrid to not display particular columns
-	 *
-	 * @param  string $column
-	 * @return void
 	 */
 	public function handleHideColumn(string $column): void
 	{
@@ -2796,8 +2561,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * User may set default "items per page" value, apply it
-	 *
-	 * @return void
 	 */
 	public function findDefaultPerPage(): void
 	{
@@ -2815,8 +2578,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Paginator factory
-	 *
-	 * @return Components\DataGridPaginator\DataGridPaginator
 	 */
 	public function createComponentPaginator(): Components\DataGridPaginator\DataGridPaginator
 	{
@@ -2838,8 +2599,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Get parameter per_page
-	 *
-	 * @return int
 	 */
 	public function getPerPage(): int
 	{
@@ -2883,7 +2642,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Order Grid to "be paginated"
 	 *
-	 * @param bool $do
 	 * @return static
 	 */
 	public function setPagination(bool $do)
@@ -2896,8 +2654,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Tell whether Grid is paginated
-	 *
-	 * @return bool
 	 */
 	public function isPaginated(): bool
 	{
@@ -2907,8 +2663,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Return current paginator class
-	 *
-	 * @return NULL|Components\DataGridPaginator\DataGridPaginator
 	 */
 	public function getPaginator(): ?Components\DataGridPaginator\DataGridPaginator
 	{
@@ -2927,7 +2681,6 @@ class DataGrid extends Nette\Application\UI\Control
 /**
  * Set datagrid translator
  *
- * @param Nette\Localization\ITranslator $translator
  * @return static
  */
 	public function setTranslator(Nette\Localization\ITranslator $translator)
@@ -2940,8 +2693,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Get translator for datagrid
-	 *
-	 * @return Nette\Localization\ITranslator
 	 */
 	public function getTranslator(): Nette\Localization\ITranslator
 	{
@@ -3000,8 +2751,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 /**
  * Find some unique session key name
- *
- * @return string
  */
 	public function getSessionSectionName(): string
 	{
@@ -3012,7 +2761,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Should datagrid remember its filters/pagination/etc using session?
 	 *
-	 * @param bool $remember
 	 * @return static
 	 */
 	public function setRememberState(bool $remember = true)
@@ -3026,7 +2774,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Should datagrid refresh url using history API?
 	 *
-	 * @param bool $refresh
 	 * @return static
 	 */
 	public function setRefreshUrl(bool $refresh = true)
@@ -3040,7 +2787,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Get session data if functionality is enabled
 	 *
-	 * @param  string $key
 	 * @return mixed
 	 */
 	public function getSessionData(?string $key = null, $default_value = null)
@@ -3056,9 +2802,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Save session data - just if it is enabled
 	 *
-	 * @param  string $key
 	 * @param  mixed  $value
-	 * @return void
 	 */
 	public function saveSessionData(string $key, $value): void
 	{
@@ -3070,8 +2814,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Delete session data
-	 *
-	 * @return void
 	 */
 	public function deleteSessionData($key): void
 	{
@@ -3082,7 +2824,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Delete session data
 	 *
-	 * @return void
 	 * @deprecated
 	 */
 	public function deleteSesssionData($key): void
@@ -3112,7 +2853,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 *
 	 * @param mixed $detail callable|string|bool
 	 * @param bool|NULL $primary_where_column
-	 * @return Column\ItemDetail
 	 */
 	public function setItemsDetail($detail = true, $primary_where_column = null): Column\ItemDetail
 	{
@@ -3156,7 +2896,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @param callable $callable_set_container
 	 * @return static
 	 */
 	public function setItemsDetailForm(callable $callable_set_container)
@@ -3173,9 +2912,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return Nette\Forms\Container|NULL
-	 */
 	public function getItemDetailForm(): ?Nette\Forms\Container
 	{
 		if ($this->items_detail instanceof Column\ItemDetail) {
@@ -3190,43 +2926,24 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                ROW PRIVILEGES                                *
 	 ********************************************************************************/
 
-/**
- * @param  callable $condition
- * @return void
- */
 	public function allowRowsGroupAction(callable $condition): void
 	{
 		$this->row_conditions['group_action'] = $condition;
 	}
 
 
-	/**
-	 * @param  callable $condition
-	 * @return void
-	 */
 	public function allowRowsInlineEdit(callable $condition): void
 	{
 		$this->row_conditions['inline_edit'] = $condition;
 	}
 
 
-	/**
-	 * @param  string   $key
-	 * @param  callable $condition
-	 * @return void
-	 */
 	public function allowRowsAction(string $key, callable $condition): void
 	{
 		$this->row_conditions['action'][$key] = $condition;
 	}
 
 
-	/**
-	 * @param  string   $multiActionKey
-	 * @param  string   $actionKey
-	 * @param  callable $condition
-	 * @return void
-	 */
 	public function allowRowsMultiAction(string $multiActionKey, string $actionKey, callable $condition): void
 	{
 		if (!isset($this->actions[$multiActionKey])) {
@@ -3242,8 +2959,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @param  string      $name
-	 * @param  string|null $key
 	 * @return bool|callable
 	 */
 	public function getRowCondition(string $name, ?string $key = null)
@@ -3266,21 +2981,12 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                               COLUMN CALLBACK                                *
 	 ********************************************************************************/
 
-/**
- * @param  string   $key
- * @param  callable $callback
- * @return void
- */
 	public function addColumnCallback(string $key, callable $callback): void
 	{
 		$this->column_callbacks[$key] = $callback;
 	}
 
 
-	/**
-	 * @param  string $key
-	 * @return callable|null
-	 */
 	public function getColumnCallback(string $key): ?callable
 	{
 		return empty($this->column_callbacks[$key]) ? null : $this->column_callbacks[$key];
@@ -3291,9 +2997,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                 INLINE EDIT                                  *
 	 ********************************************************************************/
 
-/**
- * @return InlineEdit
- */
 	public function addInlineEdit($primary_where_column = null): InlineEdit
 	{
 		$this->inlineEdit = new InlineEdit($this, $primary_where_column ?: $this->primary_key);
@@ -3302,9 +3005,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return InlineEdit|null
-	 */
 	public function getInlineEdit(): ?InlineEdit
 	{
 		return $this->inlineEdit;
@@ -3313,7 +3013,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @param  mixed $id
-	 * @return void
 	 */
 	public function handleInlineEdit($id): void
 	{
@@ -3339,9 +3038,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                  INLINE ADD                                  *
 	 ********************************************************************************/
 
-/**
- * @return InlineEdit
- */
 	public function addInlineAdd(): InlineEdit
 	{
 		$this->inlineAdd = new InlineEdit($this);
@@ -3355,9 +3051,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return InlineEdit|null
-	 */
 	public function getInlineAdd(): ?InlineEdit
 	{
 		return $this->inlineAdd;
@@ -3370,8 +3063,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 /**
  * Can datagrid hide colums?
- *
- * @return bool
  */
 	public function canHideColumns(): bool
 	{
@@ -3398,8 +3089,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 /**
  * Will datagrid show summary in the end?
- *
- * @return bool
  */
 	public function hasColumnsSummary(): bool
 	{
@@ -3411,8 +3100,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 * Set columns to be summarized in the end.
 	 *
 	 * @param array    $columns
-	 * @param callable $rowCallback
-	 * @return \Ublaboo\DataGrid\ColumnsSummary
 	 */
 	public function setColumnsSummary(array $columns, ?callable $rowCallback = null): ColumnsSummary
 	{
@@ -3422,7 +3109,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if (!empty($rowCallback)) {
 			if (!is_callable($rowCallback)) {
-				throw new \InvalidArgumentException('Row summary callback must be callable');
+				throw new InvalidArgumentException('Row summary callback must be callable');
 			}
 		}
 
@@ -3432,9 +3119,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return ColumnsSummary|NULL
-	 */
 	public function getColumnsSummary(): ?ColumnsSummary
 	{
 		return $this->columnsSummary;
@@ -3447,8 +3131,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 /**
  * Tell grid filters to by submitted automatically
- *
- * @param bool $auto
  */
 	public function setAutoSubmit(bool $auto = true)
 	{
@@ -3458,9 +3140,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function hasAutoSubmit(): bool
 	{
 		return $this->auto_submit;
@@ -3469,8 +3148,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Submit button when no auto-submitting is used
-	 *
-	 * @return Filter\SubmitButton
 	 */
 	public function getFilterSubmitButton(): Filter\SubmitButton
 	{
@@ -3494,8 +3171,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 /**
  * Get count of columns
- *
- * @return int
  */
 	public function getColumnsCount(): int
 	{
@@ -3519,8 +3194,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Get primary key of datagrid data source
-	 *
-	 * @return string
 	 */
 	public function getPrimaryKey(): string
 	{
@@ -3586,9 +3259,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return PresenterComponent
-	 */
 	public function getParent(): PresenterComponent
 	{
 		$parent = parent::getParent();
@@ -3603,9 +3273,6 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getSortableParentPath(): string
 	{
 		return $this->getParent()->lookupPath(Nette\Application\IPresenter::class, false);
@@ -3614,8 +3281,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Some of datagrid columns is hidden by default
-	 *
-	 * @param bool $default_hide
 	 */
 	public function setSomeColumnDefaultHide(bool $default_hide): void
 	{
@@ -3634,8 +3299,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Simply refresh url
-	 *
-	 * @return void
 	 */
 	public function handleRefreshState(): void
 	{

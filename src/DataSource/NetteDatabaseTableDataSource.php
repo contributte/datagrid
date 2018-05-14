@@ -1,13 +1,8 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\DataSource;
 
+use LogicException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Filter;
@@ -32,10 +27,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 */
 	protected $primary_key;
 
-	/**
-	 * @param Selection $data_source
-	 * @param string $primary_key
-	 */
 	public function __construct(Selection $data_source, string $primary_key)
 	{
 		$this->data_source = $data_source;
@@ -49,8 +40,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Get count of data
-	 *
-	 * @return int
 	 */
 	public function getCount(): int
 	{
@@ -59,7 +48,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		try {
 			$primary = $this->data_source->getPrimary();
 
-		} catch (\LogicException $e) {
+		} catch (LogicException $e) {
 			if ($data_source_sql_builder->getGroup() !== '') {
 				return $this->data_source->count(
 					'DISTINCT ' . Strings::replace($data_source_sql_builder->getGroup(), '~ (DESC|ASC)~')
@@ -108,9 +97,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter by date
-	 *
-	 * @param  Filter\FilterDate $filter
-	 * @return void
 	 */
 	public function applyFilterDate(Filter\FilterDate $filter): void
 	{
@@ -124,9 +110,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter by date range
-	 *
-	 * @param  Filter\FilterDateRange $filter
-	 * @return void
 	 */
 	public function applyFilterDateRange(Filter\FilterDateRange $filter): void
 	{
@@ -153,9 +136,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter by range
-	 *
-	 * @param  Filter\FilterRange $filter
-	 * @return void
 	 */
 	public function applyFilterRange(Filter\FilterRange $filter): void
 	{
@@ -176,9 +156,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter by keyword
-	 *
-	 * @param  Filter\FilterText $filter
-	 * @return void
 	 */
 	public function applyFilterText(Filter\FilterText $filter): void
 	{
@@ -229,9 +206,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter by multi select value
-	 *
-	 * @param  Filter\FilterMultiSelect $filter
-	 * @return void
 	 */
 	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter): void
 	{
@@ -264,9 +238,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	/**
 	 * Filter by select value
-	 *
-	 * @param  Filter\FilterSelect $filter
-	 * @return void
 	 */
 	public function applyFilterSelect(Filter\FilterSelect $filter): void
 	{
@@ -277,8 +248,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	/**
 	 * Apply limit and offset on data
 	 *
-	 * @param int $offset
-	 * @param int $limit
 	 * @return static
 	 */
 	public function limit(int $offset, int $limit)
@@ -292,7 +261,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	/**
 	 * Sort data
 	 *
-	 * @param  Sorting $sorting
 	 * @return static
 	 */
 	public function sort(Sorting $sorting)
@@ -328,10 +296,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
-	/**
-	 * @param  callable $aggregationCallback
-	 * @return void
-	 */
 	public function processAggregation(callable $aggregationCallback): void
 	{
 		call_user_func($aggregationCallback, $this->data_source);

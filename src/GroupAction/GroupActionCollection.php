@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\GroupAction;
 
 use Nette;
@@ -19,7 +13,7 @@ class GroupActionCollection
 
 	use SmartObject;
 
-	const ID_ATTRIBUTE_PREFIX = 'group_action_item_';
+	public const ID_ATTRIBUTE_PREFIX = 'group_action_item_';
 
 	/**
 	 * @var GroupAction[]
@@ -39,9 +33,6 @@ class GroupActionCollection
 
 	/**
 	 * Get assambled form
-	 *
-	 * @param Nette\Forms\Container $container
-	 * @return void
 	 */
 	public function addToFormContainer(Nette\Forms\Container $container): void
 	{
@@ -133,9 +124,6 @@ class GroupActionCollection
 
 	/**
 	 * Pass "sub"-form submission forward to custom submit function
-	 *
-	 * @param  Form   $form
-	 * @return void
 	 */
 	public function submitted(Form $form): void
 	{
@@ -166,9 +154,7 @@ class GroupActionCollection
 	/**
 	 * Add one group action (select box) to collection of actions
 	 *
-	 * @param string $title
 	 * @param array  $options
-	 * @return GroupAction
 	 */
 	public function addGroupSelectAction(string $title, array $options): GroupAction
 	{
@@ -181,9 +167,7 @@ class GroupActionCollection
 	/**
 	 * Add one group action (multiselect box) to collection of actions
 	 *
-	 * @param string $title
 	 * @param array  $options
-	 * @return GroupAction
 	 */
 	public function addGroupMultiSelectAction(string $title, array $options): GroupAction
 	{
@@ -195,9 +179,6 @@ class GroupActionCollection
 
 	/**
 	 * Add one group action (text input) to collection of actions
-	 *
-	 * @param string $title
-	 * @return GroupAction
 	 */
 	public function addGroupTextAction(string $title): GroupAction
 	{
@@ -209,9 +190,6 @@ class GroupActionCollection
 
 	/**
 	 * Add one group action (textarea) to collection of actions
-	 *
-	 * @param string $title
-	 * @return GroupAction
 	 */
 	public function addGroupTextareaAction(string $title): GroupAction
 	{
@@ -221,10 +199,6 @@ class GroupActionCollection
 	}
 
 
-	/**
-	 * @param  string $title
-	 * @return GroupAction
-	 */
 	public function getGroupAction(string $title): GroupAction
 	{
 		foreach ($this->group_actions as $action) {

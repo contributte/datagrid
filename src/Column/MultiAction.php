@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
@@ -45,9 +39,6 @@ class MultiAction extends Column
 	 */
 	private $rowConditions = [];
 
-	/**
-	 * @param DataGrid $grid
-	 */
 	public function __construct(DataGrid $grid, $name)
 	{
 		$this->grid = $grid;
@@ -57,9 +48,6 @@ class MultiAction extends Column
 	}
 
 
-	/**
-	 * @return Html
-	 */
 	public function renderButton(): Html
 	{
 		$button = Html::el('button')
@@ -92,9 +80,6 @@ class MultiAction extends Column
 
 
 	/**
-	 * @param string     $key
-	 * @param string     $name
-	 * @param string     $href
 	 * @param array|null $params
 	 * @return static
 	 */
@@ -102,7 +87,7 @@ class MultiAction extends Column
 	{
 		if (isset($this->actions[$key])) {
 			throw new DataGridException(
-				"There is already action at key [$key] defined for MultiAction."
+				sprintf('There is already action at key [%s] defined for MultiAction.', $key)
 			);
 		}
 
@@ -131,15 +116,11 @@ class MultiAction extends Column
 	}
 
 
-	/**
-	 * @param  string $key
-	 * @return Action
-	 */
 	public function getAction(string $key): Action
 	{
 		if (!isset($this->actions[$key])) {
 			throw new DataGridException(
-				"There is no action at key [$key] defined for MultiAction."
+				sprintf('There is no action at key [%s] defined for MultiAction.', $key)
 			);
 		}
 
@@ -160,22 +141,12 @@ class MultiAction extends Column
 	}
 
 
-	/**
-	 * @param string $actionKey
-	 * @param callable $rowCondition
-	 * @return void
-	 */
 	public function setRowCondition(string $actionKey, callable $rowCondition): void
 	{
 		$this->rowConditions[$actionKey] = $rowCondition;
 	}
 
 
-	/**
-	 * @param  string $actionKey
-	 * @param  Row    $row
-	 * @return bool
-	 */
 	public function testRowCondition(string $actionKey, Row $row): bool
 	{
 		if (!isset($this->rowConditions[$actionKey])) {

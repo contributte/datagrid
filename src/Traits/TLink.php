@@ -1,13 +1,8 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Traits;
 
+use InvalidArgumentException;
 use Nette;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -21,12 +16,9 @@ trait TLink
 	/**
 	 * Create link to custom destination
 	 *
-	 * @param  DataGrid $grid
-	 * @param  string   $href
 	 * @param  array    $params
-	 * @return string
 	 * @throws DataGridHasToBeAttachedToPresenterComponentException
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws DataGridLinkCreationException
 	 */
 	protected function createLink(DataGrid $grid, string $href, array $params): string
@@ -77,9 +69,6 @@ trait TLink
 	}
 
 
-	/**
-	 * @throws DataGridLinkCreationException
-	 */
 	private function throwHierarchyLookupException(DataGrid $grid, $href, $params): void
 	{
 		$desiredHandler = get_class($grid->getParent()) . '::handle' . ucfirst($href) . '()';

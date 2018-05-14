@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\InlineEdit;
 
 use Nette;
@@ -86,10 +80,6 @@ class InlineEdit
 	 */
 	protected $showNonEditingColumns = true;
 
-/**
- * @param DataGrid $grid
- * @param string|NULL   $primary_where_column
- */
 	public function __construct(DataGrid $grid, ?string $primary_where_column = null)
 	{
 		$this->grid = $grid;
@@ -124,9 +114,6 @@ class InlineEdit
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getPrimaryWhereColumn(): string
 	{
 		return $this->primary_where_column;
@@ -135,9 +122,6 @@ class InlineEdit
 
 	/**
 	 * Render row item detail button
-	 *
-	 * @param  Row $row
-	 * @return Html
 	 */
 	public function renderButton(Row $row): Html
 	{
@@ -163,8 +147,6 @@ class InlineEdit
 
 	/**
 	 * Render row item detail button
-	 *
-	 * @return Html
 	 */
 	public function renderButtonAdd(): Html
 	{
@@ -188,7 +170,6 @@ class InlineEdit
 	/**
 	 * Setter for inline adding position
 	 *
-	 * @param bool $position_top
 	 * @return static
 	 */
 	public function setPositionTop(bool $position_top = true)
@@ -201,8 +182,6 @@ class InlineEdit
 
 	/**
 	 * Getter for inline adding
-	 *
-	 * @return bool
 	 */
 	public function isPositionTop(): bool
 	{
@@ -210,18 +189,12 @@ class InlineEdit
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function isPositionBottom(): bool
 	{
 		return !$this->position_top;
 	}
 
 
-	/**
-	 * @param Nette\Forms\Container $container
-	 */
 	public function addControlsClasses(Nette\Forms\Container $container): void
 	{
 		foreach ($container->getControls() as $key => $control) {
@@ -249,7 +222,6 @@ class InlineEdit
 
 
 	/**
-	 * @param bool $show
 	 * @return static
 	 */
 	public function setShowNonEditingColumns(bool $show = true)
@@ -260,9 +232,6 @@ class InlineEdit
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function showNonEditingColumns(): bool
 	{
 		return $this->showNonEditingColumns;

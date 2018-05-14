@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Traits;
 
 use Ublaboo\DataGrid\Row;
@@ -19,7 +13,6 @@ trait TRenderCondition
 	protected $render_condition_callback;
 
 	/**
-	 * @param callable $condition
 	 * @return static
 	 */
 	public function setRenderCondition(callable $condition)
@@ -30,10 +23,6 @@ trait TRenderCondition
 	}
 
 
-	/**
-	 * @param Row $row
-	 * @return bool
-	 */
 	public function shouldBeRendered(Row $row): bool
 	{
 		$condition = $this->render_condition_callback;

@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
@@ -40,11 +34,7 @@ class FilterSelect extends Filter
 	protected $prompt = null;
 
 	/**
-	 * @param DataGrid $grid
-	 * @param string   $key
-	 * @param string   $name
 	 * @param string   $options
-	 * @param string   $column
 	 */
 	public function __construct(DataGrid $grid, string $key, string $name, array $options, string $column)
 	{
@@ -56,8 +46,6 @@ class FilterSelect extends Filter
 
 	/**
 	 * Adds select box to filter form
-	 *
-	 * @param Nette\Forms\Container $container
 	 */
 	public function addToFormContainer(Nette\Forms\Container $container): void
 	{
@@ -80,7 +68,6 @@ class FilterSelect extends Filter
 
 
 	/**
-	 * @param  bool  $translateOptions
 	 * @return static
 	 */
 	public function setTranslateOptions(bool $translateOptions = true)
@@ -90,9 +77,6 @@ class FilterSelect extends Filter
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function getTranslateOptions(): bool
 	{
 		return $this->translateOptions;
@@ -112,8 +96,6 @@ class FilterSelect extends Filter
 
 	/**
 	 * Get filter prompt
-	 *
-	 * @return string|NULL
 	 */
 	public function getPrompt(): ?string
 	{
@@ -124,7 +106,6 @@ class FilterSelect extends Filter
 	/**
 	 * Set filter prompt value
 	 *
-	 * @param string|NULL $prompt
 	 * @return static
 	 */
 	public function setPrompt(?string $prompt)
@@ -136,8 +117,6 @@ class FilterSelect extends Filter
 
 	/**
 	 * Tell if prompt has been set in this fitler
-	 *
-	 * @return bool
 	 */
 	public function isPromptEnabled(): bool
 	{
@@ -146,11 +125,7 @@ class FilterSelect extends Filter
 
 
 	/**
-	 * @param Nette\Forms\Container $container
-	 * @param string                $key
-	 * @param string                $name
 	 * @param array                $options
-	 * @return Nette\Forms\Controls\SelectBox
 	 */
 	protected function addControl(Nette\Forms\Container $container, string $key, string $name, array $options): Nette\Forms\Controls\SelectBox
 	{

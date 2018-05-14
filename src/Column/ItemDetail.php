@@ -1,15 +1,8 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
-use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridItemDetailException;
 use Ublaboo\DataGrid\Row;
@@ -63,10 +56,6 @@ class ItemDetail
 	 */
 	protected $template_parameters = [];
 
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $primary_where_column
-	 */
 	public function __construct(DataGrid $grid, string $primary_where_column)
 	{
 		$this->grid = $grid;
@@ -80,9 +69,6 @@ class ItemDetail
 
 	/**
 	 * Render row item detail button
-	 *
-	 * @param  Row $row
-	 * @return Html
 	 */
 	public function renderButton(Row $row): Html
 	{
@@ -138,8 +124,6 @@ class ItemDetail
 
 	/**
 	 * Set item detail type
-	 *
-	 * @param string $type
 	 */
 	public function setType(string $type)
 	{
@@ -151,8 +135,6 @@ class ItemDetail
 
 	/**
 	 * Get item detail type
-	 *
-	 * @return string
 	 */
 	public function getType(): string
 	{
@@ -162,8 +144,6 @@ class ItemDetail
 
 	/**
 	 * Set item detail template
-	 *
-	 * @param string $template
 	 */
 	public function setTemplate(string $template)
 	{
@@ -175,8 +155,6 @@ class ItemDetail
 
 	/**
 	 * Get item detail template
-	 *
-	 * @return string
 	 */
 	public function getTemplate(): string
 	{
@@ -186,8 +164,6 @@ class ItemDetail
 
 	/**
 	 * Set item detail renderer
-	 *
-	 * @param callable $renderer
 	 */
 	public function setRenderer(callable $renderer)
 	{
@@ -199,8 +175,6 @@ class ItemDetail
 
 	/**
 	 * Get item detail renderer
-	 *
-	 * @return callable
 	 */
 	public function getRenderer(): callable
 	{
@@ -209,7 +183,6 @@ class ItemDetail
 
 
 	/**
-	 * @param ItemDetailForm $form
 	 * @return static
 	 */
 	public function setForm(ItemDetailForm $form)
@@ -220,9 +193,6 @@ class ItemDetail
 	}
 
 
-	/**
-	 * @return ItemDetailForm
-	 */
 	public function getForm(): ItemDetailForm
 	{
 		return $this->form;

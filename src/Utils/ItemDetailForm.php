@@ -1,16 +1,11 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Utils;
 
 use Nette;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
+use Traversable;
 
 final class ItemDetailForm extends Container
 {
@@ -25,9 +20,6 @@ final class ItemDetailForm extends Container
 	 */
 	private $http_post;
 
-	/**
-	 * @param callable $callable_set_container
-	 */
 	public function __construct(callable $callable_set_container)
 	{
 		parent::__construct();
@@ -38,9 +30,6 @@ final class ItemDetailForm extends Container
 	}
 
 
-	/**
-	 * @param \Nette\ComponentModel\IContainer
-	 */
 	protected function attached(IContainer $presenter): void
 	{
 		parent::attached($presenter);
@@ -53,9 +42,6 @@ final class ItemDetailForm extends Container
 	}
 
 
-	/**
-	 * @return void
-	 */
 	public function loadHttpData(): void
 	{
 		if (!$this->getForm()->isSubmitted()) {
@@ -63,7 +49,7 @@ final class ItemDetailForm extends Container
 		}
 
 		foreach ((array) $this->getHttpData() as $name => $value) {
-			if ((is_array($value) || $value instanceof \Traversable) && !$this->getComponent($name, false)) {
+			if ((is_array($value) || $value instanceof Traversable) && !$this->getComponent($name, false)) {
 				$this->getComponent($name);
 			}
 		}
@@ -85,20 +71,12 @@ final class ItemDetailForm extends Container
 	}
 
 
-	/**
-	 * @param  string $name
-	 * @return Container
-	 */
 	public function offsetGet(string $name): Container
 	{
 		return $this->getComponent($name);
 	}
 
 
-	/**
-	 * @param  string $name
-	 * @return Container
-	 */
 	public function getComponent(string $name): Container
 	{
 		$container = $this->addContainer($name);

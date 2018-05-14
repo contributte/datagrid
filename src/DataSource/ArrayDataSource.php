@@ -1,14 +1,11 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\DataSource;
 
+use DateTime;
+use DateTimeInterface;
 use Nette\Utils\Strings;
+use Traversable;
 use Ublaboo\DataGrid\Exception\DataGridArrayDataSourceException;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter\Filter;
@@ -48,8 +45,6 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Get count of data
-	 *
-	 * @return int
 	 */
 	public function getCount(): int
 	{
@@ -115,7 +110,6 @@ class ArrayDataSource implements IDataSource
 	 * Filter data - get one row
 	 *
 	 * @param array $condition
-	 * @return ArrayDataSource
 	 */
 	public function filterOne(array $condition): ArrayDataSource
 	{
@@ -138,8 +132,6 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * Apply limit and offset on data
 	 *
-	 * @param int $offset
-	 * @param int $limit
 	 * @return static
 	 */
 	public function limit(int $offset, int $limit)
@@ -155,12 +147,11 @@ class ArrayDataSource implements IDataSource
 	 * Apply fitler and tell whether row passes conditions or not
 	 *
 	 * @param  mixed  $row
-	 * @param  Filter $filter
 	 * @return mixed
 	 */
 	protected function applyFilter($row, Filter $filter)
 	{
-		if (is_array($row) || $row instanceof \Traversable) {
+		if (is_array($row) || $row instanceof Traversable) {
 			if ($filter instanceof FilterDate) {
 				return $this->applyFilterDate($row, $filter);
 			} elseif ($filter instanceof FilterMultiSelect) {
@@ -250,7 +241,7 @@ class ArrayDataSource implements IDataSource
 			$date_from = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
 			$date_from->setTime(0, 0, 0);
 
-			if (!($row_value instanceof \DateTime)) {
+			if (!($row_value instanceof DateTime)) {
 				/**
 				 * Try to convert string to DateTime object
 				 */
@@ -273,7 +264,7 @@ class ArrayDataSource implements IDataSource
 			$date_to = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
 			$date_to->setTime(23, 59, 59);
 
-			if (!($row_value instanceof \DateTime)) {
+			if (!($row_value instanceof DateTime)) {
 				/**
 				 * Try to convert string to DateTime object
 				 */
@@ -313,7 +304,7 @@ class ArrayDataSource implements IDataSource
 
 			$date = DateTimeHelper::tryConvertToDateTime($value, [$format]);
 
-			if (!($row_value instanceof \DateTime)) {
+			if (!($row_value instanceof DateTime)) {
 				/**
 				 * Try to convert string to DateTime object
 				 */
@@ -335,7 +326,6 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * Sort data
 	 *
-	 * @param  Sorting $sorting
 	 * @return static
 	 */
 	public function sort(Sorting $sorting)
@@ -362,7 +352,7 @@ class ArrayDataSource implements IDataSource
 			$data = [];
 
 			foreach ($this->data as $item) {
-				if (is_object($item[$column]) && $item[$column] instanceof \DateTimeInterface) {
+				if (is_object($item[$column]) && $item[$column] instanceof DateTimeInterface) {
 					$sort_by = $item[$column]->format('Y-m-d H:i:s');
 				} else {
 					$sort_by = (string) $item[$column];

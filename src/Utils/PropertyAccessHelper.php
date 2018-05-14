@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Utils;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -19,9 +13,6 @@ final class PropertyAccessHelper
 	 */
 	private static $accessor;
 
-	/**
-	 * @return PropertyAccessor
-	 */
 	public static function getAccessor(): PropertyAccessor
 	{
 		if (!self::$accessor) {

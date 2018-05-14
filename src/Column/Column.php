@@ -1,15 +1,8 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
-use Ublaboo;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Traits;
@@ -98,7 +91,6 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Render row item into template
 	 *
-	 * @param  Row   $row
 	 * @return mixed
 	 */
 	public function render(Row $row)
@@ -129,8 +121,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Should be column values escaped in latte?
-	 *
-	 * @param bool $template_escaping
 	 */
 	public function setTemplateEscaping(bool $template_escaping = true)
 	{
@@ -148,8 +138,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Should be column header escaped in latte?
-	 *
-	 * @param bool $header_escaping
 	 */
 	public function setHeaderEscaping(bool $header_escaping = false)
 	{
@@ -180,8 +168,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Tell whether column is sortable
-	 *
-	 * @return bool
 	 */
 	public function isSortable(): bool
 	{
@@ -212,7 +198,6 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Shoud be the pagination reseted after sorting?
 	 *
-	 * @param bool $sortable_reset_pagination
 	 * @return static
 	 */
 	public function setSortableResetPagination(bool $sortable_reset_pagination = true)
@@ -225,8 +210,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Do reset pagination after sorting?
-	 *
-	 * @return bool
 	 */
 	public function sortableResetPagination(): bool
 	{
@@ -237,7 +220,6 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Set custom ORDER BY clause
 	 *
-	 * @param callable $sortable_callback
 	 * @return static
 	 */
 	public function setSortableCallback(callable $sortable_callback)
@@ -250,8 +232,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Get custom ORDER BY clause
-	 *
-	 * @return callable|null
 	 */
 	public function getSortableCallback(): ?callable
 	{
@@ -261,8 +241,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Get column to sort by
-	 *
-	 * @return string
 	 */
 	public function getSortingColumn(): string
 	{
@@ -272,8 +250,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Get column name
-	 *
-	 * @return string
 	 */
 	public function getColumnName(): string
 	{
@@ -284,7 +260,6 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Get column value of row item
 	 *
-	 * @param  Row   $row
 	 * @return mixed
 	 */
 	public function getColumnValue(Row $row)
@@ -293,9 +268,6 @@ abstract class Column extends FilterableColumn
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getName(): string
 	{
 		return $this->name;
@@ -304,8 +276,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Column may have its own template
-	 *
-	 * @param string $template
 	 */
 	public function setTemplate(string $template, array $template_variables = [])
 	{
@@ -329,8 +299,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Tell whether column has its owntemplate
-	 *
-	 * @return bool
 	 */
 	public function hasTemplate(): bool
 	{
@@ -340,8 +308,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Get column template path
-	 *
-	 * @return string
 	 */
 	public function getTemplate(): string
 	{
@@ -351,8 +317,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Tell whether data source is sorted by this collumn
-	 *
-	 * @return bool
 	 */
 	public function isSortedBy(): bool
 	{
@@ -384,7 +348,7 @@ abstract class Column extends FilterableColumn
 
 		if ($this->sort === 'ASC') {
 			return [$this->key => $defaultSort === 'DESC' ? false : 'DESC'];
-		} else if ($this->sort === 'DESC') {
+		} elseif ($this->sort === 'DESC') {
 			return [$this->key => $defaultSort === 'DESC' ? 'ASC' : false];
 		}
 
@@ -392,9 +356,6 @@ abstract class Column extends FilterableColumn
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	public function hasSortNext(): bool
 	{
 		foreach ($this->getSortNext() as $key => $order) {
@@ -405,8 +366,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Is sorting ascending?
-	 *
-	 * @return bool
 	 */
 	public function isSortAsc(): bool
 	{
@@ -416,8 +375,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Set column alignment
-	 *
-	 * @param string $align
 	 */
 	public function setAlign(string $align)
 	{
@@ -440,8 +397,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Get column alignment
-	 *
-	 * @return string
 	 */
 	public function getAlign(): string
 	{
@@ -452,7 +407,6 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Set column content fit
 	 *
-	 * @param bool $fit_content
 	 * @return $this
 	 */
 	public function setFitContent(bool $fit_content = true)
@@ -465,8 +419,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Set callback that will be called after inline editing
-	 *
-	 * @param callable $editable_callback
 	 */
 	public function setEditableCallback(callable $editable_callback)
 	{
@@ -478,8 +430,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Return callback that is used after inline editing
-	 *
-	 * @return callable
 	 */
 	public function getEditableCallback(): callable
 	{
@@ -489,8 +439,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Is column editable?
-	 *
-	 * @return bool
 	 */
 	public function isEditable(): bool
 	{
@@ -501,7 +449,6 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Element is by default textarea, user can change that
 	 *
-	 * @param string $el_type
 	 * @param array  $attrs
 	 * @return static
 	 */
@@ -537,7 +484,6 @@ abstract class Column extends FilterableColumn
 
 
 	/**
-	 * @param callable $editable_value_callback
 	 * @return static
 	 */
 	public function setEditableValueCallback(callable $editable_value_callback)
@@ -548,9 +494,6 @@ abstract class Column extends FilterableColumn
 	}
 
 
-	/**
-	 * @return callable|NULL
-	 */
 	public function getEditableValueCallback(): ?callable
 	{
 		return $this->editable_value_callback;
@@ -585,7 +528,6 @@ abstract class Column extends FilterableColumn
 	 * Get th/td column element
 	 *
 	 * @param  string $tag th|td
-	 * @return Html
 	 */
 	public function getElementPrototype(string $tag): Html
 	{
@@ -599,11 +541,6 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Method called from datagrid template, set appropriate classes and another attributes
-	 *
-	 * @param  string   $tag
-	 * @param  string   $key
-	 * @param  Row|NULL $row
-	 * @return Html
 	 */
 	public function getElementForRender(string $tag, string $key, ?Row $row = null): Html
 	{
@@ -647,7 +584,6 @@ abstract class Column extends FilterableColumn
 
 
 	/**
-	 * @param bool $default_hide
 	 * @return static
 	 */
 	public function setDefaultHide(bool $default_hide = true)
@@ -671,7 +607,6 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Get row item params (E.g. action may be called id => $item->id, name => $item->name, ...)
 	 *
-	 * @param  Row   $row
 	 * @param  array $params_list
 	 * @return array
 	 */
@@ -687,9 +622,6 @@ abstract class Column extends FilterableColumn
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getColumn(): string
 	{
 		return $this->column;

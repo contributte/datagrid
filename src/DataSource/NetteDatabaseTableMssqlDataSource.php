@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\DataSource;
 
 use Ublaboo\DataGrid\Filter;
@@ -16,9 +10,6 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 	/**
 	 * Filter by date
-	 *
-	 * @param  Filter\FilterDate $filter
-	 * @return void
 	 */
 	public function applyFilterDate(Filter\FilterDate $filter): void
 	{
@@ -35,9 +26,6 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 	/**
 	 * Filter by date range
-	 *
-	 * @param  Filter\FilterDateRange $filter
-	 * @return void
 	 */
 	public function applyFilterDateRange(Filter\FilterDateRange $filter): void
 	{

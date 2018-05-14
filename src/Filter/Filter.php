@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
@@ -78,9 +72,6 @@ abstract class Filter
 	private $placeholder;
 
 	/**
-	 * @param DataGrid     $grid
-	 * @param string       $key
-	 * @param string       $name
 	 * @param string|array $column
 	 */
 	public function __construct(DataGrid $grid, string $key, string $name, $column)
@@ -105,8 +96,6 @@ abstract class Filter
 
 	/**
 	 * Get filter name
-	 *
-	 * @return string
 	 */
 	public function getName(): string
 	{
@@ -116,8 +105,6 @@ abstract class Filter
 
 	/**
 	 * Get filter column
-	 *
-	 * @return string
 	 */
 	public function getColumn(): string
 	{
@@ -127,8 +114,6 @@ abstract class Filter
 
 	/**
 	 * Tell whether value has been set in this fitler
-	 *
-	 * @return bool
 	 */
 	public function isValueSet(): bool
 	{
@@ -165,7 +150,6 @@ abstract class Filter
 	/**
 	 * Set html attr placeholder
 	 *
-	 * @param  string $placeholder
 	 * @return static
 	 */
 	public function setPlaceholder(string $placeholder)
@@ -178,8 +162,6 @@ abstract class Filter
 
 	/**
 	 * Get html attr placeholder
-	 *
-	 * @return string
 	 */
 	public function getPlaceholder(): string
 	{
@@ -190,7 +172,6 @@ abstract class Filter
 	/**
 	 * Set custom condition on filter
 	 *
-	 * @param  callable $condition_callback
 	 * @return static
 	 */
 	public function setCondition(callable $condition_callback)
@@ -214,8 +195,6 @@ abstract class Filter
 
 	/**
 	 * Tell whether custom condition_callback on filter is set
-	 *
-	 * @return bool
 	 */
 	public function hasConditionCallback(): bool
 	{
@@ -225,8 +204,6 @@ abstract class Filter
 
 	/**
 	 * Get custom filter condition
-	 *
-	 * @return callable
 	 */
 	public function getConditionCallback(): callable
 	{
@@ -237,7 +214,6 @@ abstract class Filter
 	/**
 	 * Filter may have its own template
 	 *
-	 * @param  string $template
 	 * @return static
 	 */
 	public function setTemplate(string $template)
@@ -250,8 +226,6 @@ abstract class Filter
 
 	/**
 	 * Get filter template path
-	 *
-	 * @return string
 	 */
 	public function getTemplate(): string
 	{
@@ -259,9 +233,6 @@ abstract class Filter
 	}
 
 
-	/**
-	 * @return string
-	 */
 	public function getType(): string
 	{
 		return $this->type;
@@ -269,7 +240,6 @@ abstract class Filter
 
 
 	/**
-	 * @param string $name
 	 * @param mixed $value
 	 * @return static
 	 */
@@ -282,7 +252,6 @@ abstract class Filter
 
 
 	/**
-	 * @param string $name
 	 * @param mixed $value
 	 * @return static
 	 */
@@ -314,10 +283,6 @@ abstract class Filter
 	}
 
 
-	/**
-	 * @param Nette\Forms\Controls\BaseControl $input
-	 * @return Nette\Forms\Controls\BaseControl
-	 */
 	protected function addAttributes(Nette\Forms\Controls\BaseControl $input): Nette\Forms\Controls\BaseControl
 	{
 		if ($this->grid->hasAutoSubmit()) {

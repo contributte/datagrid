@@ -1,11 +1,5 @@
 <?php declare(strict_types = 1);
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
-
 namespace Ublaboo\DataGrid\DataSource;
 
 use Dibi\Fluent;
@@ -33,10 +27,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	 */
 	protected $primary_key;
 
-	/**
-	 * @param Fluent $data_source
-	 * @param string $primary_key
-	 */
 	public function __construct(Fluent $data_source, string $primary_key)
 	{
 		$this->data_source = $data_source;
@@ -50,8 +40,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Get count of data
-	 *
-	 * @return int
 	 */
 	public function getCount(): int
 	{
@@ -86,9 +74,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter by date
-	 *
-	 * @param  Filter\FilterDate $filter
-	 * @return void
 	 */
 	public function applyFilterDate(Filter\FilterDate $filter): void
 	{
@@ -102,9 +87,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter by date range
-	 *
-	 * @param  Filter\FilterDateRange $filter
-	 * @return void
 	 */
 	public function applyFilterDateRange(Filter\FilterDateRange $filter): void
 	{
@@ -131,9 +113,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter by range
-	 *
-	 * @param  Filter\FilterRange $filter
-	 * @return void
 	 */
 	public function applyFilterRange(Filter\FilterRange $filter): void
 	{
@@ -154,9 +133,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter by keyword
-	 *
-	 * @param  Filter\FilterText $filter
-	 * @return void
 	 */
 	public function applyFilterText(Filter\FilterText $filter): void
 	{
@@ -204,9 +180,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter by multi select value
-	 *
-	 * @param  Filter\FilterMultiSelect $filter
-	 * @return void
 	 */
 	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter): void
 	{
@@ -238,9 +211,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 	/**
 	 * Filter by select value
-	 *
-	 * @param  Filter\FilterSelect $filter
-	 * @return void
 	 */
 	public function applyFilterSelect(Filter\FilterSelect $filter): void
 	{
@@ -251,8 +221,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	/**
 	 * Apply limit and offset on data
 	 *
-	 * @param int $offset
-	 * @param int $limit
 	 * @return static
 	 */
 	public function limit(int $offset, int $limit)
@@ -268,7 +236,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	/**
 	 * Sort data
 	 *
-	 * @param  Sorting $sorting
 	 * @return static
 	 */
 	public function sort(Sorting $sorting)
@@ -294,7 +261,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			 */
 			$this->data_source->clause('ORDER BY');
 
-			$reflection = new \ReflectionClass(Fluent::class);
+			$reflection = new ReflectionClass(Fluent::class);
 			$cursor_property = $reflection->getProperty('cursor');
 			$cursor_property->setAccessible(true);
 			$cursor = $cursor_property->getValue($this->data_source);
@@ -308,10 +275,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	}
 
 
-	/**
-	 * @param  callable $aggregationCallback
-	 * @return void
-	 */
 	public function processAggregation(callable $aggregationCallback): void
 	{
 		call_user_func($aggregationCallback, clone $this->data_source);
