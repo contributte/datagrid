@@ -285,7 +285,12 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			 */
 			$this->data_source->clause('ORDER BY');
 
-			$reflection = new \ReflectionClass('DibiFluent');
+			if ($this->data_source instanceof Dibi\Fluent) {
+				$reflection = new \ReflectionClass('Dibi\Fluent');
+			} else {
+				$reflection = new \ReflectionClass('DibiFluent');
+			}
+
 			$cursor_property = $reflection->getProperty('cursor');
 			$cursor_property->setAccessible(true);
 			$cursor = $cursor_property->getValue($this->data_source);
