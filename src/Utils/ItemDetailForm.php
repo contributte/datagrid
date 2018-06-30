@@ -99,7 +99,7 @@ final class ItemDetailForm extends Container
 	 * @param  string $name
 	 * @return Container
 	 */
-	public function getComponent($name)
+	public function getComponent($name, $throw = true)
 	{
 		$container = $this->addContainer($name);
 
