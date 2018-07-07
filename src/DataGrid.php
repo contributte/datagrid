@@ -2251,6 +2251,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function handleSort(array $sort)
 	{
+		if (count($sort) === 0) {
+			$sort = $this->default_sort;
+		}
+
 		foreach ($sort as $key => $value) {
 			try {
 				$column = $this->getColumn($key);
