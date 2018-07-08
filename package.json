@@ -2,25 +2,14 @@
   "name": "ublaboo-datagrid",
   "version": "5.5.4",
   "description": "Assets for php composer package ublaboo/datagrid",
-  "main": "assets/dist/datagrid.js",
-  "directories": {
-    "test": "tests"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ublaboo/datagrid.git"
-  },
   "keywords": [
     "ublaboo",
     "datagrid"
   ],
   "author": "Pavel Janda <me@paveljanda.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ublaboo/datagrid/issues"
-  },
-  "homepage": "https://github.com/ublaboo/datagrid#readme"
+  "main": "assets/dist/datagrid.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
