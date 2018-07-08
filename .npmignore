@@ -1,6 +1,21 @@
+# Editor
+/.idea
+
+# Sources
 /src
+
+# Assets
 /bower.json
+
+# CI
 /.travis.yml
-/composer.json
 /.scrutinizer.yml
+
+# PHP
+/composer.json
+/composer.lock
+/vendor
+
+# Tests
 /tests
+/coverage.xml
