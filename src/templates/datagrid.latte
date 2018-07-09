@@ -241,6 +241,10 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
+						{if $columnsSummary->getPositionTop()}
+							{include columnSummary}
+						{/if}
+
 						{foreach $rows as $row}
 							{var $item = $row->getItem()}
 
@@ -356,19 +360,9 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
-						<tr class="datagrid-row-columns-summary" n:if="!empty($rows) && ($columnsSummary || $control->hasSomeAggregationFunction())" n:snippet="summary">
-							<td n:if="$hasGroupActions" class="col-checkbox"></td>
-
-							{if $columnsSummary && $columnsSummary->someColumnsExist($columns)}
-								{include columnsSummary, columns => $columns}
-							{/if}
-
-							{if $control->hasSomeAggregationFunction()}
-								{include aggregationFunctions, columns => $columns}
-							{/if}
-
-							<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action"></td>
-						</tr>
+						{if !$columnsSummary->getPositionTop()}
+							{include columnSummary}
+						{/if}
 
 						{block noItems}
 							<tr n:if="!$rows">
@@ -458,6 +452,25 @@
 			{input $filter['inline_add']['submit']}
 		</td>
 	</tr>
+{/define}
+
+
+{define columnSummary}
+
+	<tr class="datagrid-row-columns-summary" n:if="!empty($rows) && ($columnsSummary || $control->hasSomeAggregationFunction())" n:snippet="summary">
+		<td n:if="$hasGroupActions" class="col-checkbox"></td>
+
+		{if $columnsSummary && $columnsSummary->someColumnsExist($columns)}
+			{include columnsSummary, columns => $columns}
+		{/if}
+
+		{if $control->hasSomeAggregationFunction()}
+			{include aggregationFunctions, columns => $columns}
+		{/if}
+
+		<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action"></td>
+	</tr>
+
 {/define}
 
 
