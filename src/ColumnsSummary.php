@@ -44,7 +44,7 @@ class ColumnsSummary
 	/**
 	 * @var bool
 	 */
-	protected $positionTop;
+	protected $positionTop = false;
 
 
 	/**
