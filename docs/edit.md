@@ -16,7 +16,7 @@ As you can see in the example above (or on the homepage), there is column name a
  */
 $grid->addColumnText('name', 'Name')
 	->setSortable()
-	->setEditableCallback(function($id, $value) {
+	->setEditableCallback(function($id, $value): void {
 		echo("Id: $id, new value: $value"); die;
 	});
 
@@ -58,12 +58,14 @@ As you can see in the demo above, you can edit the link column but actually, onl
 
 ```php
 $grid->addColumnLink('link', 'Link', 'this#demo', 'name', ['id'])
-	->setEditableValueCallback(function($row) { return $row->name; })
-	->setEditableCallback(function($id, $value) {
+	->setEditableValueCallback(function(Dibi\Row $row): string {
+		return $row->name;
+	})
+	->setEditableCallback(function($id, $value): Html {
 		$link = Html::el('a')->href($this->link('this#demo', ['id' => $id]))
 			->setText($value);
 
-		return (string) $link; // Important line - right here you have to return new content which will be rendered in edited column
+		return $link; // Important line - right here you have to return new content which will be rendered in edited column
 	});
 ```
 
@@ -85,14 +87,14 @@ $grid = new DataGrid($this, $name);
  * Big inline editing
  */
 $grid->addInlineEdit()
-	->onControlAdd[] = function($container) {
+	->onControlAdd[] = function(Nette\Forms\Container $container): void {
 		$container->addText('id', '');
 		$container->addText('name', '');
 		$container->addText('inserted', '');
 		$container->addText('link', '');
 	};
 
-$grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
+$grid->getInlineEdit()->onSetDefaults[] = function(Nette\Forms\Container $container, $item): void {
 	$container->setDefaults([
 		'id' => $item->id,
 		'name' => $item->name,
@@ -101,7 +103,7 @@ $grid->getInlineEdit()->onSetDefaults[] = function($container, $item) {
 	]);
 };
 
-$grid->getInlineEdit()->onSubmit[] = function($id, $values) {
+$grid->getInlineEdit()->onSubmit[] = function($id, Nette\Utils\ArrayHash $values): void {
 	/**
 	 * Save new values
 	 */
@@ -116,7 +118,7 @@ By default, after submitting inline edit, the row is redrawed and the green anim
 /**
  * This callback will redraw the whole grid
  */
-$grid->getInlineEdit()->onCustomRedraw[] = function() use ($grid) {
+$grid->getInlineEdit()->onCustomRedraw[] = function() use ($grid): void {
 	$grid->redrawControl();
 };
 ```

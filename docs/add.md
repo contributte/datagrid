@@ -4,24 +4,28 @@ Since version `3.3.0` there is a feature "inline adding" available. Up above is 
 
 ```php
 $grid->addInlineAdd()
-	->onControlAdd[] = function($container) {
+	->onControlAdd[] = function(Nette\Forms\Container $container) {
 		$container->addText('id', '')->setAttribute('readonly');
 		$container->addText('name', '');
 		$container->addText('inserted', '');
 		$container->addText('link', '');
 	};
 
-$p = $this;
-
-$grid->getInlineAdd()->onSubmit[] = function($values) use ($p) {
+$grid->getInlineAdd()->onSubmit[] = function(Nette\Utils\ArrayHash $values): void {
 	/**
 	 * Save new values
 	 */
-	$v='';foreach($values as $key=>$value){$v.="$key: $value, ";}$v=trim($v,', ');
+	$v='';
 
-	$p->flashMessage("Record with values [$v] was added! (not really)", 'success');
+	foreach($values as $key=>$value) {
+		$v.="$key: $value, ";
+	}
 
-	$p->redrawControl('flashes');
+	$v=trim($v,', ');
+
+	$this->flashMessage("Record with values [$v] was added! (not really)", 'success');
+
+	$this->redrawControl('flashes');
 };
 ```
 

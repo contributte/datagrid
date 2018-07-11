@@ -3,18 +3,12 @@
 As you can see in the example below, a `SimpleTranslator` class comes with datagrid (the example was translated to czech). You can use it as shown (you will do that probably in some factory for all datagrids in your application). Of course you can use your own translator - it just has to implement `Nette\Localization\ITranslator`.
 
 ```php
-public function createComponentLocalizationGrid($name)
+public function createComponentLocalizationGrid($name): Ublaboo\DataGrid\DataGrid
 {
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
 	$grid = new DataGrid($this, $name);
 
 	$grid->setDataSource($this->ndb->table('ublaboo_example'));
 
-	/**
-	 * Columns
-	 */
 	$grid->addColumnNumber('id', 'Id')
 		->setAlign('left')
 		->setSortable();
@@ -24,9 +18,6 @@ public function createComponentLocalizationGrid($name)
 
 	$grid->addColumnDateTime('inserted', 'Inserted');
 
-	/**
-	 * Localization
-	 */
 	$translator = new Ublaboo\DataGrid\Localization\SimpleTranslator([
 		'ublaboo_datagrid.no_item_found_reset' => 'Žádné položky nenalezeny. Filtr můžete vynulovat',
 		'ublaboo_datagrid.no_item_found' => 'Žádné položky nenalezeny.',
@@ -47,6 +38,7 @@ public function createComponentLocalizationGrid($name)
 		'Name' => 'Jméno',
 		'Inserted' => 'Vloženo'
 	]);
+
 	$grid->setTranslator($translator);
 }
 ```
@@ -62,5 +54,5 @@ $grid->addFilterMultiSelect('status', 'Status:', [
 	0 => 'Offline',
 	1 => 'Online',
 	2 => 'Standby'
-])->setTranslateOptions(); // Or disable it again: ::setTranslateOptions(FALSE)
+])->setTranslateOptions(); // Or disable it again: ::setTranslateOptions(false)
 ```
