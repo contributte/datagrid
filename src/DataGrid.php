@@ -164,7 +164,7 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $template_file;
 
 	/**
-	 * @var Column\IColumn[]
+	 * @var Column\Column[]
 	 */
 	protected $columns = [];
 
@@ -3445,7 +3445,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Get set of set columns
-	 * @return Column\IColumn[]
+	 * @return Column\Column[]
 	 */
 	public function getColumns()
 	{
