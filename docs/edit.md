@@ -1,7 +1,7 @@
 # Inline editing
 
-- [Small inline edit](#small-inline-editing)]
-- [Big inline edit](#big-inline-editing)]
+- [Small inline edit](#small-inline-editing)
+- [Big inline edit](#big-inline-editing)
 
 
 ## Small inline editing
