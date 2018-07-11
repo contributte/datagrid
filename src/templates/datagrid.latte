@@ -241,7 +241,7 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
-						{if $columnsSummary->getPositionTop()}
+						{if $columnsSummary && $columnsSummary->getPositionTop()}
 							{include columnSummary}
 						{/if}
 
@@ -360,7 +360,7 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
-						{if !$columnsSummary->getPositionTop()}
+						{if $columnsSummary && !$columnsSummary->getPositionTop()}
 							{include columnSummary}
 						{/if}
 
