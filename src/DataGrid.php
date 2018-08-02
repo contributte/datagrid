@@ -2514,6 +2514,7 @@ class DataGrid extends Nette\Application\UI\Control
 	public function reload($snippets = [])
 	{
 		if ($this->getPresenter()->isAjax()) {
+			$this->redrawControl('gridSnippets');
 			$this->redrawControl('tbody');
 			$this->redrawControl('pagination');
 			$this->redrawControl('summary');
