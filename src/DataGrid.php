@@ -2295,8 +2295,9 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->deleteSessionData('_grid_has_filtered');
 		}
 
-		if ($this->default_sort_use_on_reset) {
-			$this->deleteSessionData('_grid_has_sorted');
+		if ($this->default_sort_use_on_reset && $this->getSessionData('_grid_has_sorted')) {
+			$this->sort = $this->default_sort;
+			$this->saveSessionData('_grid_sort', $this->default_sort);
 		}
 
 		foreach ($this->getSessionData() as $key => $value) {
