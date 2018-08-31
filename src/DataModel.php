@@ -8,6 +8,7 @@
 
 namespace Ublaboo\DataGrid;
 
+use Dibi;
 use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
