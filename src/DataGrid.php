@@ -3268,7 +3268,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->inlineAdd
 			->setTitle('ublaboo_datagrid.add')
 			->setIcon('plus')
-			->setClass('btn btn-xs btn-default');
+			->setClass('btn btn-xs btn-default btn-secondary');
 
 		return $this->inlineAdd;
 	}

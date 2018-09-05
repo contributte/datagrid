@@ -95,7 +95,7 @@ class InlineEdit
 		$this->primary_where_column = $primary_where_column;
 
 		$this->title = 'ublaboo_datagrid.edit';
-		$this->class = 'btn btn-xs btn-default ajax';
+		$this->class = 'btn btn-xs btn-default btn-secondary ajax';
 		$this->icon = 'pencil';
 
 		$this->onControlAfterAdd[] = [$this, 'addControlsClasses'];
@@ -165,7 +165,7 @@ class InlineEdit
 	 */
 	public function renderButtonAdd()
 	{
-		$a = Html::el('a')->data('datagrid-toggle-inline-add', true);
+		$a = Html::el('a')->href('')->data('datagrid-toggle-inline-add', true);
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
@@ -234,7 +234,7 @@ class InlineEdit
 
 				default:
 					if (empty($control->getControl()->getClass())) {
-						$control->setAttribute('class', 'form-control input-sm');
+						$control->setAttribute('class', 'form-control input-sm form-control-sm');
 					}
 
 					break;
