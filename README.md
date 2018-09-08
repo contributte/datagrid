@@ -10,7 +10,7 @@ Please see the [full documentation](http://ublaboo.org/datagrid/).
 
 [![Build Status](https://img.shields.io/travis/contributte/datagrid.svg?style=flat-square)](https://travis-ci.org/contributte/datagrid)
 [![Code coverage](https://img.shields.io/coveralls/contributte/datagrid.svg?style=flat-square)](https://coveralls.io/r/contributte/datagrid)
-[![Licence](https://img.shields.io/packagist/l/contributte/datagrid.svg?style=flat-square)](https://packagist.org/packages/contributte/datagrid)
+[![Licence](https://img.shields.io/packagist/l/ublaboo/datagrid.svg?style=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/ublaboo/datagrid.svg?style=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
 [![Downloads total](https://img.shields.io/packagist/dt/ublaboo/datagrid.svg?style=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
