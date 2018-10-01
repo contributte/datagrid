@@ -2382,8 +2382,6 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
-        bdump($non_empty_filters);
-
 		$this->getPresenter()->payload->non_empty_filters = $non_empty_filters;
 	}
 
