@@ -250,8 +250,12 @@ window.datagridSerializeUrl = function(obj, prefix) {
         data = {};
         component_prefix = row.closest('.datagrid').find('tbody').attr('data-sortable-parent-path');
         data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id;
-        data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id;
-        data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id;
+        if (prev_id !== null) {
+          data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id;
+        }
+        if (next_id !== null) {
+          data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id;
+        }
         return $.nette.ajax({
           type: 'GET',
           url: url,
@@ -314,8 +318,12 @@ window.datagridSerializeUrl = function(obj, prefix) {
           component_prefix = row.closest('.datagrid-tree').attr('data-sortable-parent-path');
           data = {};
           data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id;
-          data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id;
-          data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id;
+          if (prev_id !== null) {
+            data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id;
+          }
+          if (next_id !== null) {
+            data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id;
+          }
           data[(component_prefix + '-parent_id').replace(/^-/, '')] = parent_id;
           return $.nette.ajax({
             type: 'GET',
