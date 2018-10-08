@@ -31,7 +31,7 @@ composer require ublaboo/datagrid
 | State       | Version   | Branch   | Nette | PHP      |  |
 |-------------|-----------|----------|-------|----------|--|
 | dev         | `^6.0.0`  | `master` | >=2.4 | `>= 7.1` | `minimum-stability: dev, prefer-stable: true` |
-| dev         | `^5.7.0`  | `master` | >=2.4 | `>= 5.6` | `minimum-stability: dev, prefer-stable: true` |
+| next        | `^5.7.0`  | `v5.x`   | >=2.4 | `>= 5.6` | `minimum-stability: dev, prefer-stable: true` |
 | stable      | `^5.6.0`  | `v5.x`   | >=2.3 | `>= 5.6` |  |
 | stable      | `^4.4.22` | `v5.x`   | >=2.3 | `>= 5.6` |  |
 | stable      | `^3.3.1`  | `v5.x`   | >=2.3 | `>= 5.3` |  |
