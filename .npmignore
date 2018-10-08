@@ -3,6 +3,7 @@
 
 # Sources
 /src
+/docs
 
 # Assets
 /bower.json
