@@ -13,7 +13,9 @@
 			<div class="input-group input-group-sm">
 				{input $container['from']}
 				<label n:name="$container['from']" class="input-group-addon input-group-append">
-					<i class="input-group-text {$icon_prefix}calendar"></i>
+					<span class="input-group-text">
+						<i class="{$icon_prefix}calendar"></i>
+					</span>
 				</label>
 			</div>
 		</div>
@@ -22,7 +24,9 @@
 			<div class="input-group input-group-sm">
 				{input $container['to']}
 				<label n:name="$container['to']" class="input-group-addon input-group-append">
-					<i class="input-group-text {$icon_prefix}calendar"></i>
+					<span class="input-group-text">
+						<i class="{$icon_prefix}calendar"></i>
+					</span>
 				</label>
 			</div>
 		</div>
@@ -32,14 +36,18 @@
 		<div class="input-group input-group-sm">
 			{input $container['from']}
 			<label n:name="$container['from']" class="input-group-addon input-group-append input-group-addon-first">
-				<i class="input-group-text {$icon_prefix}calendar"></i>
+				<span class="input-group-text">
+					<i class="{$icon_prefix}calendar"></i>
+				</span>
 			</label>
 
 			<div class="input-group-addon datagrid-col-filter-datte-range-delimiter">-</div>
 
 			{input $container['to']}
 			<label n:name="$container['to']" class="input-group-addon input-group-append">
-				<i class="input-group-text {$icon_prefix}calendar"></i>
+				<span class="input-group-text">
+					<i class="{$icon_prefix}calendar"></i>
+				</span>
 			</label>
 		</div>
 	</div>
