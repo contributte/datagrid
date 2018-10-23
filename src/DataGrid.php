@@ -3505,7 +3505,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if (!($parent instanceof PresenterComponent)) {
 			throw new DataGridHasToBeAttachedToPresenterComponentException(
-				"DataGrid is attached to: '" . get_class($parent) . "', but instance of PresenterComponent is needed."
+				"DataGrid is attached to: '" . $parent ? get_class($parent) : 'null'. "', but instance of PresenterComponent is needed."
 			);
 		}
 
