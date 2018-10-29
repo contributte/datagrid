@@ -55,7 +55,8 @@ trait TLink
 			if ($link) {
 				if (
 					strpos($link, '#error') === 0 ||
-					(strrpos($href, "!") !== false && strpos($link, '#') === 0)
+					(strrpos($href, "!") !== false && strpos($link, '#') === 0) ||
+					(in_array($grid->getPresenter()->invalidLinkMode, [Presenter::INVALID_LINK_WARNING, Presenter::INVALID_LINK_SILENT], true) && strpos($link, '#') === 0)
 				) {
 					continue; // Did not find signal handler
 				}
