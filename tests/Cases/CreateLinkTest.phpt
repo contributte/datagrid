@@ -11,7 +11,6 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/XTestingDataGridFactory.php';
 
 final class CreateLinkTest extends TestCase
 {
