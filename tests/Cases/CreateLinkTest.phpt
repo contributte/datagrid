@@ -30,14 +30,6 @@ final class CreateLinkTest extends TestCase
 	}
 
 
-	public function render($column)
-	{
-		$item = new Ublaboo\DataGrid\Row($this->grid, ['id' => 1, 'name' => 'John'], 'id');
-
-		return (string) $column->render($item);
-	}
-
-
 	public function testActionLink()
 	{
 		$this->grid->getPresenter()->invalidLinkMode = Presenter::INVALID_LINK_SILENT;

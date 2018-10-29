@@ -2,16 +2,12 @@
 
 namespace Ublaboo\DataGrid\Tests\Files;
 
-use Ublaboo\DataGrid\DataGrid;
-
 final class TestPresenter extends \Nette\Application\UI\Presenter
 {
 
-	protected function createComponentGrid($name)
+	protected function createComponentGrid()
 	{
-		$factory = new TestGridControl();
-
-		return $factory;
+		return new TestGridControl();
 	}
 
 	protected function createTemplate($class = null)
