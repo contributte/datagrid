@@ -216,21 +216,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter)
 	{
-		$condition = $filter->getCondition();
-		$values = $condition[$filter->getColumn()];
-		$expr = '(';
-
-		foreach ($values as $value) {
-			$expr .= '%column = %any OR ';
-			$params[] = $filter->getColumn();
-			$params[] = "$value";
-		}
-
-		$expr = preg_replace('/ OR $/', ')', $expr);
-
-		array_unshift($params, $expr);
-
-		call_user_func_array([$this->data_source->getQueryBuilder(), 'andWhere'], $params);
+		$this->data_source = $this->data_source->findBy([$this->prepareColumn($filter->getColumn()) => $filter->getValue()]);
 	}
 
 

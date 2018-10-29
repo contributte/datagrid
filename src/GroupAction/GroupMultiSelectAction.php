@@ -17,5 +17,5 @@ class GroupMultiSelectAction extends GroupSelectAction
 	/**
 	 * @var string
 	 */
-	protected $class = 'form-control input-sm selectpicker';
+	protected $class = 'form-control input-sm form-control-sm selectpicker';
 }

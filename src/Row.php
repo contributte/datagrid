@@ -74,6 +74,10 @@ class Row
 	 */
 	public function getId()
 	{
+		if (is_object($this->id) && method_exists($this->id, '__toString')) {
+			return (string) $this->id;
+		}
+
 		return $this->id;
 	}
 

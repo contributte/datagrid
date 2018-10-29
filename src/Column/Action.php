@@ -75,7 +75,7 @@ class Action extends Column
 	/**
 	 * @var string|callable
 	 */
-	protected $class = 'btn btn-xs btn-default';
+	protected $class = 'btn btn-xs btn-default btn-secondary';
 
 	/**
 	 * @var bool
@@ -241,7 +241,7 @@ class Action extends Column
 	/**
 	 * Set icon
 	 * @param string|callable $icon
-	 * @return static|callable
+	 * @return static
 	 * @throws DataGridException
 	 */
 	public function setIcon($icon)

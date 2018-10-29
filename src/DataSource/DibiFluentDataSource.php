@@ -19,7 +19,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 {
 
 	/**
-	 * @var DibiFluent
+	 * @var DibiFluent|Dibi\Fluent
 	 */
 	protected $data_source;
 
@@ -35,10 +35,10 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 
 	/**
-	 * @param DibiFluent $data_source
+	 * @param DibiFluent|Dibi\Fluent $data_source
 	 * @param string $primary_key
 	 */
-	public function __construct(DibiFluent $data_source, $primary_key)
+	public function __construct($data_source, $primary_key)
 	{
 		$this->data_source = $data_source;
 		$this->primary_key = $primary_key;
@@ -285,7 +285,12 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			 */
 			$this->data_source->clause('ORDER BY');
 
-			$reflection = new \ReflectionClass('DibiFluent');
+			if ($this->data_source instanceof Dibi\Fluent) {
+				$reflection = new \ReflectionClass('Dibi\Fluent');
+			} else {
+				$reflection = new \ReflectionClass('DibiFluent');
+			}
+
 			$cursor_property = $reflection->getProperty('cursor');
 			$cursor_property->setAccessible(true);
 			$cursor = $cursor_property->getValue($this->data_source);

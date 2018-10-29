@@ -41,6 +41,11 @@ class ColumnsSummary
 	 */
 	protected $renderer;
 
+	/**
+	 * @var bool
+	 */
+	protected $positionTop = false;
+
 
 	/**
 	 * @param DataGrid $datagrid
@@ -196,5 +201,23 @@ class ColumnsSummary
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * @param bool $top
+	 */
+	public function setPositionTop($top = true)
+	{
+		$this->positionTop = ($top === false) ? false : true;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function getPositionTop()
+	{
+		return $this->positionTop;
 	}
 }

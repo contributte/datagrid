@@ -164,7 +164,7 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $template_file;
 
 	/**
-	 * @var Column\IColumn[]
+	 * @var Column\Column[]
 	 */
 	protected $columns = [];
 
@@ -387,12 +387,21 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $componentFullName;
 
 	/**
+	 * @var string
+	 */
+	private $custom_paginator_template;
+
+	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
 	 * @param string                               $name
 	 */
 	public function __construct(Nette\ComponentModel\IContainer $parent = null, $name = null)
 	{
-		parent::__construct($parent, $name);
+		parent::__construct();
+
+		if ($parent !== null) {
+			$parent->addComponent($this, $name);
+		}
 
 		$this->monitor('Nette\Application\UI\Presenter');
 
@@ -2253,6 +2262,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function handleSort(array $sort)
 	{
+		if (count($sort) === 0) {
+			$sort = $this->default_sort;
+		}
+
 		foreach ($sort as $key => $value) {
 			try {
 				$column = $this->getColumn($key);
@@ -2758,6 +2771,10 @@ class DataGrid extends Nette\Application\UI\Control
 		$paginator->setPage($this->page);
 		$paginator->setItemsPerPage($this->getPerPage());
 
+		if ($this->custom_paginator_template) {
+			$component->setTemplateFile($this->custom_paginator_template);
+		}
+
 		return $component;
 	}
 
@@ -2772,7 +2789,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$per_page = $this->per_page ?: reset($items_per_page_list);
 
-		if ($per_page !== 'all' && !in_array((int) $this->per_page, $items_per_page_list, true)) {
+		if (($per_page !== 'all' && !in_array((int) $this->per_page, $items_per_page_list, true))
+			|| ($per_page === 'all' && !in_array($this->per_page, $items_per_page_list, true))) {
 			$per_page = reset($items_per_page_list);
 		}
 
@@ -3024,7 +3042,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Items can have thair detail - toggled
 	 * @param mixed $detail callable|string|bool
-	 * @param bool|NULL $primary_where_column
+	 * @param string|null $primary_where_column
 	 * @return Column\ItemDetail
 	 */
 	public function setItemsDetail($detail = true, $primary_where_column = null)
@@ -3266,7 +3284,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->inlineAdd
 			->setTitle('ublaboo_datagrid.add')
 			->setIcon('plus')
-			->setClass('btn btn-xs btn-default');
+			->setClass('btn btn-xs btn-default btn-secondary');
 
 		return $this->inlineAdd;
 	}
@@ -3451,7 +3469,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Get set of set columns
-	 * @return Column\IColumn[]
+	 * @return Column\Column[]
 	 */
 	public function getColumns()
 	{
@@ -3564,6 +3582,16 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
 		$this->redrawControl('non-existing-snippet');
+	}
+
+
+	/**
+	 * @param string $template_file
+	 * @return void
+	 */
+	public function setCustomPaginatortemplate($template_file)
+	{
+		$this->custom_paginator_template = $template_file;
 	}
 }
 
