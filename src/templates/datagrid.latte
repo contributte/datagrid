@@ -243,7 +243,7 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
-						{if (($control->hasSomeAggregationFunction()) || ($columnsSummary) && $columnsSummary->getPositionTop())}
+						{if $columnsSummary && $columnsSummary->getPositionTop()}
 							{include columnSummary}
 						{/if}
 
@@ -362,7 +362,7 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
-						{if (($control->hasSomeAggregationFunction()) || ($columnsSummary) && !$columnsSummary->getPositionTop())}
+						{if ($control->hasSomeAggregationFunction()) || ($columnsSummary && !$columnsSummary->getPositionTop())}
 							{include columnSummary}
 						{/if}
 
