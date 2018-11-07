@@ -2782,6 +2782,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$per_page = $this->per_page ?: reset($items_per_page_list);
 
+		$items_per_page_list = array_keys($items_per_page_list);
+
 		if (($per_page !== 'all' && !in_array((int) $this->per_page, $items_per_page_list, true))
 			|| ($per_page === 'all' && !in_array($this->per_page, $items_per_page_list, true))) {
 			$per_page = reset($items_per_page_list);
