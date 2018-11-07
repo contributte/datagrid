@@ -21,17 +21,17 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	/**
 	 * @var Collection
 	 */
-	private $data_source;
+	protected $data_source;
 
 	/**
 	 * @var string
 	 */
-	private $primary_key;
+	protected $primary_key;
 
 	/**
 	 * @var Criteria
 	 */
-	private $criteria;
+	protected $criteria;
 
 
 	/**
