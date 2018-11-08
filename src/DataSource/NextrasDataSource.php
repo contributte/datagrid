@@ -275,7 +275,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 			$order = $this->data_source->getQueryBuilder()->getClause('order');
 
 			if (ArraysHelper::testEmpty($order)) {
-				$this->data_source = $this->data_source->orderBy($this->primary_key);
+				$this->data_source = $this->data_source->orderBy($this->prepareColumn($this->primary_key));
 			}
 		}
 
