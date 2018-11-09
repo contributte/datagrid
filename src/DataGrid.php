@@ -2475,6 +2475,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if ($this->getPresenter()->isAjax()) {
 			$this->getPresenter()->payload->_datagrid_toggle_detail = $id;
+			$this->getPresenter()->payload->_datagrid_name = $this->getName();
 			$this->redrawControl('items');
 
 			/**
