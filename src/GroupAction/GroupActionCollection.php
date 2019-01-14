@@ -152,7 +152,7 @@ class GroupActionCollection
 		/**
 		 * @todo Define items IDs
 		 */
-		$http_ids = $form->getHttpData(Form::DATA_LINE | Form::DATA_KEYS, strtolower($this->datagrid->getName()) . '_group_action_item[]');
+		$http_ids = $form->getHttpData(Form::DATA_LINE | Form::DATA_KEYS, strtolower($this->datagrid->getFullName()) . '_group_action_item[]');
 		$ids = array_keys($http_ids);
 
 		$id = $values->group_action;
