@@ -105,7 +105,13 @@ class Row
 			return $this->item->{$key};
 
 		} elseif (is_array($this->item)) {
-			return $this->item[$key];
+            $arrayKey = $this->item[$key];
+
+            if (is_object($arrayKey) && method_exists($arrayKey, '__toString')) {
+                return $arrayKey->__toString();
+            }
+
+            return $arrayKey;
 
 		} else {
 			/**
