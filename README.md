@@ -10,7 +10,7 @@ Please see the [full documentation](http://ublaboo.org/datagrid/).
 
 [![Build Status](https://img.shields.io/travis/contributte/datagrid.svg?style=flat-square)](https://travis-ci.org/contributte/datagrid)
 [![Code coverage](https://img.shields.io/coveralls/contributte/datagrid.svg?style=flat-square)](https://coveralls.io/r/contributte/datagrid)
-[![Licence](https://img.shields.io/packagist/l/contributte/datagrid.svg?style=flat-square)](https://packagist.org/packages/contributte/datagrid)
+[![Licence](https://img.shields.io/packagist/l/ublaboo/datagrid.svg?style=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/ublaboo/datagrid.svg?style=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
 [![Downloads total](https://img.shields.io/packagist/dt/ublaboo/datagrid.svg?style=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
@@ -31,7 +31,8 @@ composer require ublaboo/datagrid
 | State       | Version   | Branch   | Nette | PHP      |  |
 |-------------|-----------|----------|-------|----------|--|
 | dev         | `^6.0.0`  | `master` | >=2.4 | `>= 7.1` | `minimum-stability: dev, prefer-stable: true` |
-| stable      | `^5.6.0`  | `v5.x`   | >=2.3 | `>= 5.6` |  |
+| next        | `^5.8.0`  | `v5.x`   | >=2.4 | `>= 5.6` | `minimum-stability: dev, prefer-stable: true` |
+| stable      | `^5.7.0`  | `v5.x`   | >=2.3 | `>= 5.6` |  |
 | stable      | `^4.4.22` | `v5.x`   | >=2.3 | `>= 5.6` |  |
 | stable      | `^3.3.1`  | `v5.x`   | >=2.3 | `>= 5.3` |  |
 
@@ -39,7 +40,7 @@ composer require ublaboo/datagrid
 
 :construction: :construction: :construction:
 
-At this time we're working on new strict-typed (PHP >=7.1) **^6.0.0** in master branch. 
+At this time we're working on new strict-typed (PHP >=7.2) **^6.0.0** in master branch. 
 It will go throw the massive refactoring (namespace, classes, snake-case -> camelCase, etc.). 
 We'll looking for some help (testers, PR).
 

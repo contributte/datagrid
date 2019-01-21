@@ -64,7 +64,7 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', (e) ->
 		e.stopPropagation()
 		e.preventDefault()
 
-		
+
 		$(this).closest('form').first().submit()
 )
 
@@ -88,7 +88,7 @@ getEventDomPath = (e) ->
 datagridShiftGroupSelection = ->
 	last_checkbox = null
 
-	document.addEventListener 'click', (e) ->	
+	document.addEventListener 'click', (e) ->
 		for el in getEventDomPath(e)
 			if $(el).is('.col-checkbox') && last_checkbox && e.shiftKey
 				current_checkbox_row = $(el).closest('tr')
@@ -122,8 +122,8 @@ datagridShiftGroupSelection = ->
 							event = new Event('change', {'bubbles': true})
 
 						input.dispatchEvent(event)
-					
-				
+
+
 		for el in getEventDomPath(e)
 			if $(el).is('.col-checkbox')
 				last_checkbox = $(el)
@@ -236,8 +236,12 @@ datagridSortable = ->
 			component_prefix = row.closest('.datagrid').find('tbody').attr('data-sortable-parent-path')
 
 			data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id
-			data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id
-			data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id
+
+			if (prev_id != null)
+				data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id
+
+			if (next_id != null)
+				data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id
 
 			$.nette.ajax({
 				type: 'GET',
@@ -302,8 +306,13 @@ if typeof datagridSortableTree == 'undefined'
 				data = {}
 
 				data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id
-				data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id
-				data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id
+
+				if (prev_id != null)
+					data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id
+
+				if (next_id != null)
+					data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id
+
 				data[(component_prefix + '-parent_id').replace(/^-/, '')] = parent_id
 
 				$.nette.ajax({
@@ -401,7 +410,8 @@ $.nette.ext('datargid.item_detail', {
 	before: (xhr, settings) ->
 		if settings.nette and settings.nette.el.attr('data-toggle-detail')
 			id = settings.nette.el.attr('data-toggle-detail')
-			row_detail = $('.item-detail-' + id)
+			grid = $('.datagrid-' + settings.nette.el.attr('data-toggle-detail-grid'))
+			row_detail = grid.find('.item-detail-' + id)
 			#row = row_detail.closest('.datagrid').find('tr[data-id=' + id + ']')
 
 			#if row_detail.hasClass('loaded') and row.hasClass('detail-loaded')
@@ -427,7 +437,8 @@ $.nette.ext('datargid.item_detail', {
 	success: (payload) ->
 		if payload._datagrid_toggle_detail
 			id = payload._datagrid_toggle_detail
-			row_detail = $('.item-detail-' + id)
+			grid = $('.datagrid-' + payload._datagrid_name)
+			row_detail = grid.find('.item-detail-' + id)
 
 			row_detail.toggleClass('toggled')
 			row_detail.find('.item-detail-content').slideToggle('fast')
@@ -460,7 +471,7 @@ $.nette.ext('datagrid.tree', {
 
 				if content.data('has-children')
 					template.addClass('has-children')
-				
+
 
 				children_block.append(template)
 
@@ -486,7 +497,7 @@ $(document).on('click', '[data-datagrid-editable-url]', (event) ->
 
 		cellValue = cell.html().trim().replace('<br>', '\n')
 
-		if cell.data('datagrid-editable-value')
+		if cell.attr('data-datagrid-editable-value')
 			valueToEdit = cell.data('datagrid-editable-value')
 		else
 			valueToEdit = cellValue
@@ -655,7 +666,7 @@ datagridGroupActionMultiSelect = ->
 
 			$(this).on('loaded.bs.select', (e) ->
 				$(this).parent().attr('style', 'display:none;')
-				$(this).parent().find('.hidden').removeClass('hidden').addClass('btn-default')
+				$(this).parent().find('.hidden').removeClass('hidden').addClass('btn-default btn-secondary')
 			)
 
 			$(this).on('rendered.bs.select', (e) ->

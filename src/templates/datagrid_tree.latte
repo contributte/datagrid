@@ -13,6 +13,11 @@
 <div class="datagrid-tree-item-children datagrid-tree" n:snippet="table" n:block="data" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/if}>
 	{snippetArea items}
 		<div class="datagrid-tree-item datagrid-tree-header" n:snippet="item-header">
+			<div class="text-right" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbar_buttons">
+				<span n:if="$toolbar_buttons">
+					{foreach $toolbar_buttons as $toolbar_button}{$toolbar_button->renderButton()}{/foreach}
+				</span>
+			</div>
 			<div class="datagrid-tree-item-content" data-has-children="">
 				<div class="datagrid-tree-item-left">
 					{foreach $columns as $key => $column}
@@ -44,7 +49,7 @@
 								{/if}
 							{/foreach}
 
-							<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
+							<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
 								<i class="{$icon_prefix}arrows"></i>
 							</span>
 						</div>
@@ -121,7 +126,7 @@
 									{/if}
 								{/foreach}
 
-								<span class="handle-sort btn btn-xs btn-default" n:if="$control->isSortable()">
+								<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
 									<i n:block = "icon-arrows" class="{$icon_prefix}arrows"></i>
 								</span>
 							</div>
