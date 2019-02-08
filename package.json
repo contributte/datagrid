@@ -2,6 +2,10 @@
   "name": "ublaboo-datagrid",
   "version": "5.7.0",
   "description": "Assets for php composer package ublaboo/datagrid",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/contributte/datagrid.git"
+  },
   "keywords": [
     "ublaboo",
     "contributte",
@@ -11,12 +15,22 @@
   "license": "MIT",
   "main": "assets/dist/datagrid.js",
   "devDependencies": {
-    "coffee-script": "^1.12.7",
-    "node-sass": "^4.9.3"
+    "css-loader": "^2.1.0",
+    "mini-css-extract-plugin": "^0.5.0",
+    "node-sass": "^4.11.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.1.14"
   },
   "scripts": {
-    "build": "npm run build:css & npm run build:js",
-    "build:css": "node-sass -o assets/dist assets/src",
-    "build:js": "coffee --compile --output assets/dist/ assets/src/*.coffee"
+    "build": "webpack --config webpack.config.js",
+    "start:dev": "webpack-dev-server"
+  },
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "naja": "^1.5.1",
+    "nette-forms": "^3.0.0"
   }
 }

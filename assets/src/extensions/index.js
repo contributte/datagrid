@@ -1,0 +1,15 @@
+import './confirm';
+import './happy';
+import './sortable';
+import './forms';
+import './url';
+import './sort';
+import './itemDetail';
+import './tree';
+import './afterInlineEdit';
+import './toggleInlineAdd';
+import './filterMultiSelect';
+import './groupActionMultiSelect';
+import './inlineEditing';
+import './redrawItem';
+import './resetFilterByColumn';
