@@ -200,24 +200,24 @@
   });
 
 
-window.datagridSerializeUrl = function(obj, prefix) {
-	var str = [];
-	for(var p in obj) {
-		if (obj.hasOwnProperty(p)) {
-			var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-			if (v !== null && v !== "") {
-				if (typeof v == "object") {
-					var r = window.datagridSerializeUrl(v, k);
-						if (r) {
-							str.push(r);
-						}
-				} else {
-					str.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
-				}
-			}
-		}
-	}
-	return str.join("&");
+  window.datagridSerializeUrl = function (obj, prefix) {
+    var str = [];
+    for (var p in obj) {
+      if (obj.hasOwnProperty(p)) {
+        var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+        if (v !== null && v !== "") {
+          if (typeof v == "object") {
+            var r = window.datagridSerializeUrl(v, k);
+            if (r) {
+              str.push(r);
+            }
+          } else {
+            str.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+          }
+        }
+      }
+    }
+    return str.join("&");
 }
 ;
 
