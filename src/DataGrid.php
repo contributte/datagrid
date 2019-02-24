@@ -607,7 +607,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set Grid data source
-	 * @param DataSource\IDataSource|array|\DibiFluent|\Dibi\Fluent|Nette\Database\Table\Selection|\Doctrine\ORM\QueryBuilder $source
+	 * @param DataSource\IDataSource|array|\DibiFluent|\Dibi\Fluent|Nette\Database\Table\Selection|\Doctrine\ORM\QueryBuilder|\Nextras\Orm\Collection\ICollection $source
 	 * @return static
 	 */
 	public function setDataSource($source)
