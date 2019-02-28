@@ -110,7 +110,7 @@ class Export
 	 * @param string $confirmDialog
 	 * @return self
 	 */
-	public function setConfirmDialog(string $confirmDialog): self
+	public function setConfirmDialog($confirmDialog)
 	{
 		$this->confirmDialog = $confirmDialog;
 		
