@@ -51,8 +51,12 @@ class Export
 	 * @var DataGrid
 	 */
 	protected $grid;
-
-
+	
+	/**
+	 * @var null|string
+	 */
+	protected $confirmDialog = null;
+	
 	/**
 	 * @param DataGrid   $grid
 	 * @param string     $text
@@ -92,11 +96,28 @@ class Export
 		if ($this->isAjax()) {
 			$a->class[] = 'ajax';
 		}
-
+		
+		if ($this->confirmDialog !== null) {
+			$a->setAttribute('data-datagrid-confirm', $this->confirmDialog);
+		}
+		
+		
 		return $a;
 	}
-
-
+	
+	/**
+	 * Add Confirm dialog
+	 * @param string $confirmDialog
+	 * @return self
+	 */
+	public function setConfirmDialog($confirmDialog)
+	{
+		$this->confirmDialog = $confirmDialog;
+		
+		return $this;
+	}
+	
+	
 	/**
 	 * Tell export which columns to use when exporting data
 	 * @param array $columns
