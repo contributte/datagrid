@@ -5,15 +5,6 @@
   "keywords": ["datagrid", "grid", "nette"],
   "homepage": "https://ublaboo.org/datagrid",
   "license": ["MIT"],
-  "support": {
-    "issues": "https://github.com/ublaboo/datagrid/issues"
-  },
-  "authors": [
-    {
-      "name": "Pavel Janda",
-      "homepage": "http://paveljanda.com"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "Ublaboo\\DataGrid\\": "src/"
@@ -25,22 +16,21 @@
     }
   },
   "require": {
-    "php": ">=7.1",
-    "contributte/application": "^0.3.0",
-    "nette/utils": "~2.5.2",
-    "nette/forms": "~2.4.7",
-    "symfony/property-access": "^3.4.9"
+    "php": ">=7.3",
+    "contributte/application": "^0.4.0",
+    "nette/utils": "~2.5.3 || ~3.0.0",
+    "nette/forms": "~2.4.9 || ~3.0.0",
+    "symfony/property-access": "^4.2.3"
   },
   "require-dev": {
-    "ninjify/qa": "^0.8.0",
-    "nette/tester": "~2.0.0",
-    "tracy/tracy": "~2.4.13",
-    "mockery/mockery": "^1.1.0",
-    "tharos/leanmapper": "~2.2.0",
-    "nextras/orm": "~2.2.3",
-    "doctrine/orm": "~2.6.1",
-    "nette/database": "~2.4.5",
-    "dibi/dibi": "~3.2.1"
+    "ninjify/qa": "^0.9.0",
+    "nette/tester": "~2.1.0",
+    "tracy/tracy": "~2.6.1",
+    "mockery/mockery": "^1.2.2",
+    "nextras/orm": "~3.0",
+    "doctrine/orm": "~2.6.3",
+    "nette/database": "~3.0.0",
+    "dibi/dibi": "~4.0.1"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
