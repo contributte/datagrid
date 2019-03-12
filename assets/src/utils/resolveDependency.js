@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 export const NETTE_AJAX = 'NETTE_AJAX';
 
 export const NAJA = 'NAJA';
@@ -10,10 +8,13 @@ try {
     require('naja');
     use = NAJA;
 } catch(e) {
-    if($.nette !== undefined) 
+
+    try {
+        require('netteAjax');
         use = NETTE_AJAX;
-    else 
+    } catch(e) {
         throw 'Ublaboo Datagrid requires naja.js or natte-ajax!';
+    }
 }
 
 export default use;

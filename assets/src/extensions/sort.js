@@ -2,16 +2,18 @@ import $ from 'jquery';
 
 import registerExtension from '../utils/registerExtension';
 
+
 registerExtension('datagrid.sort', {
-    success: function (payload) {
+    success(payload) {
         if (payload._datagrid_sort) {
-            const ref = payload._datagrid_sort;
-            const results = [];
-            for (let key in ref) {
-                let href = ref[key];
-                results.push($('#datagrid-sort-' + key).attr('href', href));
-            }
-            return results;
+            return (() => {
+                const result = [];
+                for (let key in payload._datagrid_sort) {
+                    const href = payload._datagrid_sort[key];
+                    result.push($(`#datagrid-sort-${key}`).attr('href', href));
+                }
+                return result;
+            })();
         }
     }
 });

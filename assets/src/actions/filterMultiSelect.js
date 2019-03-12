@@ -1,10 +1,13 @@
 import $ from 'jquery';
 
-export default function () {
-    var select;
-    select = $('.selectpicker').first();
+
+// FilterMultiSelect
+//
+export default function() {
+    const select = $('.selectpicker').first();
+
     if ($.fn.selectpicker) {
-        return $.fn.selectpicker.defaults = {
+        $.fn.selectpicker.defaults = {
             countSelectedText: select.data('i18n-selected'),
             iconBase: '',
             tickIcon: select.data('selected-icon-check')

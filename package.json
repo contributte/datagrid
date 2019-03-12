@@ -15,7 +15,11 @@
   "license": "MIT",
   "main": "assets/dist/datagrid.js",
   "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-loader": "^8.0.5",
     "css-loader": "^2.1.0",
+    "eslint": "^5.15.1",
     "mini-css-extract-plugin": "^0.5.0",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
@@ -25,11 +29,15 @@
     "webpack-dev-server": "^3.1.14"
   },
   "scripts": {
+    "lint": "eslint ./assets/src",
     "build": "webpack --config webpack.config.js"
   },
   "dependencies": {
     "jquery": "^3.3.1",
-    "naja": "^1.5.1",
     "nette-forms": "^3.0.0"
+  },
+  "optionalDependencies": {
+    "naja": "^1.5.1",
+    "nette.ajax.js": "^2.3.0"
   }
 }

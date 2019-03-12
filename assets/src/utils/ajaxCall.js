@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import use, {NETTE_AJAX, NAJA} from './resolveDependency';
 
 let ajaxCall = () => { };
@@ -16,7 +14,7 @@ if (use === NAJA) {
 }
 
 if(use === NETTE_AJAX) {
-    ajaxCall = (settings) => $.nette.ajax(settings);
+    ajaxCall = (settings) => require('netteAjax').ajax(settings);
 }
 
 export default ajaxCall;

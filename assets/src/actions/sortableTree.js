@@ -12,20 +12,19 @@ export default function () {
         toleranceElement: '> .datagrid-tree-item-content',
         connectWith: '.datagrid-tree-item-children',
         update: function (event, ui) {
-            var component_prefix, data, item_id, next_id, parent, parent_id, prev_id, row, url;
             $('.toggle-tree-to-delete').remove();
-            row = ui.item.closest('.datagrid-tree-item[data-id]');
-            item_id = row.data('id');
-            prev_id = null;
-            next_id = null;
-            parent_id = null;
+            const row = ui.item.closest('.datagrid-tree-item[data-id]');
+            let item_id = row.data('id');
+            let prev_id = null;
+            let next_id = null;
+            let parent_id = null;
             if (row.prev().length) {
                 prev_id = row.prev().data('id');
             }
             if (row.next().length) {
                 next_id = row.next().data('id');
             }
-            parent = row.parent().closest('.datagrid-tree-item');
+            const parent = row.parent().closest('.datagrid-tree-item');
             if (parent.length) {
                 parent.find('.datagrid-tree-item-children').first().css({
                     display: 'block'
@@ -33,13 +32,13 @@ export default function () {
                 parent.addClass('has-children');
                 parent_id = parent.data('id');
             }
-            url = $(this).data('sortable-url');
+            const url = $(this).data('sortable-url');
             if (!url) {
                 return;
             }
             parent.find('[data-toggle-tree]').first().removeClass('hidden');
-            component_prefix = row.closest('.datagrid-tree').attr('data-sortable-parent-path');
-            data = {};
+            const component_prefix = row.closest('.datagrid-tree').attr('data-sortable-parent-path');
+            const data = {};
             data[(component_prefix + '-item_id').replace(/^-/, '')] = item_id;
             if (prev_id !== null) {
                 data[(component_prefix + '-prev_id').replace(/^-/, '')] = prev_id;
@@ -52,22 +51,21 @@ export default function () {
                 type: 'GET',
                 url: url,
                 data: data,
-                error: function (jqXHR, textStatus, errorThrown) {
+                error(jqXHR, textStatus, errorThrown) {
                     if (errorThrown !== 'abort') {
-                        return alert(jqXHR.statusText);
+                        alert(jqXHR.statusText);
                     }
                 }
             });
         },
-        stop: function () {
-            return $('.toggle-tree-to-delete').removeClass('toggle-tree-to-delete');
+        stop() {
+            $('.toggle-tree-to-delete').removeClass('toggle-tree-to-delete');
         },
-        start: function (event, ui) {
-            var parent;
-            parent = ui.item.parent().closest('.datagrid-tree-item');
+        start(event, ui) {
+            const parent = ui.item.parent().closest('.datagrid-tree-item');
             if (parent.length) {
                 if (parent.find('.datagrid-tree-item').length === 2) {
-                    return parent.find('[data-toggle-tree]').addClass('toggle-tree-to-delete');
+                    parent.find('[data-toggle-tree]').addClass('toggle-tree-to-delete');
                 }
             }
         }

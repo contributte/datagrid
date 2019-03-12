@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import use, {NETTE_AJAX, NAJA} from './resolveDependency';
 
 export default function (name, extension) {
@@ -43,7 +41,7 @@ export default function (name, extension) {
     }
 
     if(use === NETTE_AJAX) {
-        $.nette.ext(name, extension);
+        require('netteAjax').ext(name, extension);
     }
 
 }
