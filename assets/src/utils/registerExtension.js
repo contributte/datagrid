@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+import $ from 'jquery';
+
+>>>>>>> 6737a30dff783a4a24094c93b30bb51e7177d568
 import use, {NETTE_AJAX, NAJA} from './resolveDependency';
 
 export default function (name, extension) {
@@ -41,7 +46,11 @@ export default function (name, extension) {
     }
 
     if(use === NETTE_AJAX) {
+<<<<<<< HEAD
         require('netteAjax').ext(name, extension);
+=======
+        $.nette.ext(name, extension);
+>>>>>>> 6737a30dff783a4a24094c93b30bb51e7177d568
     }
 
 }
