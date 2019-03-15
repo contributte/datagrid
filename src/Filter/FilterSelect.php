@@ -44,7 +44,7 @@ class FilterSelect extends Filter
 	 * @param DataGrid $grid
 	 * @param string   $key
 	 * @param string   $name
-	 * @param string   $options
+	 * @param array    $options
 	 * @param string   $column
 	 */
 	public function __construct($grid, $key, $name, array $options, $column)
@@ -87,6 +87,15 @@ class FilterSelect extends Filter
 	{
 		$this->translateOptions = (bool) $translateOptions;
 		return $this;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getOptions()
+	{
+		return $this->options;
 	}
 
 
