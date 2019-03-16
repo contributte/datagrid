@@ -2779,7 +2779,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getPerPage()
 	{
-		$items_per_page_list = $this->getItemsPerPageList();
+		$items_per_page_list = array_keys($this->getItemsPerPageList());
 
 		$per_page = $this->per_page ?: reset($items_per_page_list);
 
