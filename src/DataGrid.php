@@ -1743,7 +1743,9 @@ class DataGrid extends Nette\Application\UI\Control
 				}
 
 				if ($edit['submit']->isSubmittedBy() && !empty($this->inlineEdit->onCustomRedraw)) {
-					$this->inlineEdit->onCustomRedraw();
+					$this->inlineEdit->onCustomRedraw('submit');
+				} elseif ($edit['cancel']->isSubmittedBy() && !empty($this->inlineEdit->onCustomRedraw)) {
+					$this->inlineEdit->onCustomRedraw('cancel');
 				} else {
 					$this->redrawItem($id, $primary_where_column);
 					$this->redrawControl('summary');
