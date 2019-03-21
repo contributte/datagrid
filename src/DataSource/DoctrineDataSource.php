@@ -129,7 +129,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		if ($this->usePaginator()) {
 			$iterator = (new Paginator($this->getQuery()))->getIterator();
 
-			$data = iterator_to_array($iterator);
+			$data = iterator_to_array($iterator);   // ??
 		} else {
 			$data = $this->getQuery()->getResult();
 		}
