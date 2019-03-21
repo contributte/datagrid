@@ -1,5 +1,5 @@
 {
-	"name": "ublaboo/datagrid",
+	"name": "reservio/datagrid",
 	"type": "library",
 	"description": "DataGrid for Nette Framework: filtering, sorting, pagination, tree view, table view, translator, etc",
 	"keywords": ["datagrid", "grid", "nette"],
