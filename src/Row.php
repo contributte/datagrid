@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -14,6 +14,7 @@ use Nette;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\Html;
 use Nextras;
+use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
@@ -33,7 +34,7 @@ class Row
 	/**
 	 * @var string
 	 */
-	protected $primary_key;
+	protected $primaryKey;
 
 	/**
 	 * @var mixed
@@ -47,17 +48,15 @@ class Row
 
 
 	/**
-	 * @param DataGrid $datagrid
 	 * @param mixed    $item
-	 * @param string   $primary_key
 	 */
-	public function __construct(DataGrid $datagrid, $item, $primary_key)
+	public function __construct(DataGrid $datagrid, $item, string $primaryKey)
 	{
 		$this->control = Html::el('tr');
 		$this->datagrid = $datagrid;
 		$this->item = $item;
-		$this->primary_key = $primary_key;
-		$this->id = $this->getValue($primary_key);
+		$this->primaryKey = $primaryKey;
+		$this->id = $this->getValue($primaryKey);
 
 		if ($datagrid->hasColumnsSummary()) {
 			$datagrid->getColumnsSummary()->add($this);
@@ -66,7 +65,6 @@ class Row
 
 
 	/**
-	 * Get id value of item
 	 * @return mixed
 	 */
 	public function getId()
@@ -80,7 +78,6 @@ class Row
 
 
 	/**
-	 * Get item value of key
 	 * @param  mixed $key
 	 * @return mixed
 	 */
@@ -111,27 +108,18 @@ class Row
 			return $arrayValue;
 
 		} else {
-			/**
-			 * Doctrine entity
-			 */
 			return $this->getDoctrineEntityProperty($this->item, $key);
 		}
 	}
 
 
-	/**
-	 * @return Html
-	 */
-	public function getControl()
+	public function getControl(): Html
 	{
 		return $this->control;
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getControlClass()
+	public function getControlClass(): string
 	{
 		if (!$class = $this->control->class) {
 			return '';
@@ -142,11 +130,9 @@ class Row
 
 
 	/**
-	 * @param  ActiveRow $item
-	 * @param  string    $key
-	 * @return mixed|null
+	 * @return mixed
 	 */
-	public function getActiveRowProperty(ActiveRow $item, $key)
+	public function getActiveRowProperty(ActiveRow $item, string $key)
 	{
 		if (preg_match("/^:([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/", $key, $matches)) {
 			$relatedTable = $matches[1];
@@ -174,8 +160,7 @@ class Row
 
 	/**
 	 * LeanMapper: Access object properties to get a item value
-	 * @param  LeanMapper\Entity $item
-	 * @param  mixed             $key
+	 * @param  mixed $key
 	 * @return mixed
 	 */
 	public function getLeanMapperEntityProperty(LeanMapper\Entity $item, $key)
@@ -204,8 +189,7 @@ class Row
 
 	/**
 	 * Nextras: Access object properties to get a item value
-	 * @param  Nextras\Orm\Entity\Entity $item
-	 * @param  string                    $key
+	 * @param  string $key
 	 * @return mixed
 	 */
 	public function getNextrasEntityProperty(Nextras\Orm\Entity\Entity $item, $key)
@@ -275,9 +259,8 @@ class Row
 
 	/**
 	 * Has particular row group actions allowed?
-	 * @return bool
 	 */
-	public function hasGroupAction()
+	public function hasGroupAction(): bool
 	{
 		$condition = $this->datagrid->getRowCondition('group_action');
 
@@ -288,9 +271,8 @@ class Row
 	/**
 	 * Has particular row a action allowed?
 	 * @param  mixed  $key
-	 * @return bool
 	 */
-	public function hasAction($key)
+	public function hasAction($key): bool
 	{
 		$condition = $this->datagrid->getRowCondition('action', $key);
 
@@ -300,9 +282,8 @@ class Row
 
 	/**
 	 * Has particular row inlie edit allowed?
-	 * @return bool
 	 */
-	public function hasInlineEdit()
+	public function hasInlineEdit(): bool
 	{
 		$condition = $this->datagrid->getRowCondition('inline_edit');
 
@@ -310,12 +291,7 @@ class Row
 	}
 
 
-	/**
-	 * @param  string        $key
-	 * @param  Column\Column $column
-	 * @return void
-	 */
-	public function applyColumnCallback($key, Column\Column $column)
+	public function applyColumnCallback(string $key, Column $column): void
 	{
 		$callback = $this->datagrid->getColumnCallback($key);
 
@@ -329,11 +305,8 @@ class Row
 
 	/**
 	 * Key may contain ".", get rid of it (+ the table alias)
-	 * 
-	 * @param  string $key
-	 * @return string
 	 */
-	private function formatDibiRowKey($key)
+	private function formatDibiRowKey(string $key): string
 	{
 		if ($offset = strpos($key, '.')) {
 			return substr($key, $offset + 1);

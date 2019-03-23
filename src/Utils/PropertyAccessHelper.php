@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -19,10 +19,7 @@ final class PropertyAccessHelper
 	private static $accessor;
 
 
-	/**
-	 * @return PropertyAccessor
-	 */
-	public static function getAccessor()
+	public static function getAccessor(): PropertyAccessor
 	{
 		if (!self::$accessor) {
 			self::$accessor = PropertyAccess::createPropertyAccessor();
@@ -33,11 +30,9 @@ final class PropertyAccessHelper
 
 
 	/**
-	 * @param  object  $class
-	 * @param  string  $property
 	 * @return mixed
 	 */
-	public static function getValue($class, $property)
+	public static function getValue(object $class, string $property)
 	{
 		return self::getAccessor()->getValue($class, $property);
 	}

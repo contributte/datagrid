@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -8,6 +8,7 @@
 
 namespace Ublaboo\DataGrid;
 
+use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\Column\ColumnNumber;
 use Ublaboo\DataGrid\Column\Renderer;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
@@ -32,9 +33,9 @@ class ColumnsSummary
 	protected $format = [];
 
 	/**
-	 * @var NULL|callable
+	 * @var callable|null
 	 */
-	protected $rowCallback;
+	protected $rowCallback = null;
 
 	/**
 	 * @var Renderer|null
@@ -47,12 +48,11 @@ class ColumnsSummary
 	protected $positionTop = false;
 
 
-	/**
-	 * @param DataGrid $datagrid
-	 * @param array    $columns
-	 */
-	public function __construct(DataGrid $datagrid, array $columns, $rowCallback)
-	{
+	public function __construct(
+		DataGrid $datagrid,
+		array $columns,
+		?callable $rowCallback
+	) {
 		$this->summary = array_fill_keys(array_values($columns), 0);
 		$this->datagrid = $datagrid;
 		$this->rowCallback = $rowCallback;
@@ -72,11 +72,9 @@ class ColumnsSummary
 
 	/**
 	 * Get value from column using Row::getValue() or custom callback
-	 * @param Row    	    $row
-	 * @param Column\Column $column
-	 * @return bool
+	 * @return mixed
 	 */
-	private function getValue(Row $row, $column)
+	private function getValue(Row $row, Column $column)
 	{
 		if (!$this->rowCallback) {
 			return $row->getValue($column->getColumn());
@@ -86,10 +84,7 @@ class ColumnsSummary
 	}
 
 
-	/**
-	 * @param Row $row
-	 */
-	public function add(Row $row)
+	public function add(Row $row): void
 	{
 		foreach ($this->summary as $key => $sum) {
 			$column = $this->datagrid->getColumn($key);
@@ -101,20 +96,13 @@ class ColumnsSummary
 
 
 	/**
-	 * @param  string $key
-	 * @return mixed
+	 * @param string $key
 	 */
-	public function render($key)
+	public function render(string $key)
 	{
-		/**
-		 * Renderer function may be used
-		 */
 		try {
 			return $this->useRenderer($key);
 		} catch (DataGridColumnRendererException $e) {
-			/**
-			 * Do not use renderer
-			 */
 		}
 
 		if (!isset($this->summary[$key])) {
@@ -131,11 +119,9 @@ class ColumnsSummary
 
 
 	/**
-	 * Try to render summary with custom renderer
-	 * @param  string $key
 	 * @return mixed
 	 */
-	public function useRenderer($key)
+	public function useRenderer(string $key)
 	{
 		if (!isset($this->summary[$key])) {
 			return null;
@@ -151,21 +137,13 @@ class ColumnsSummary
 	}
 
 
-	/**
-	 * Return custom renderer callback
-	 * @return Renderer|null
-	 */
-	public function getRenderer()
+	public function getRenderer(): ?Renderer
 	{
 		return $this->renderer;
 	}
 
 
-	/**
-	 * Set renderer callback
-	 * @param callable $renderer
-	 */
-	public function setRenderer(callable $renderer)
+	public function setRenderer(callable $renderer): self
 	{
 		$this->renderer = new Renderer($renderer, NULL);
 
@@ -173,14 +151,12 @@ class ColumnsSummary
 	}
 
 
-	/**
-	 * Set number format
-	 * @param string $key
-	 * @param int    $decimals
-	 * @param string $dec_point
-	 * @param string $thousands_sep
-	 */
-	public function setFormat($key, $decimals = 0, $dec_point = '.', $thousands_sep = ' ')
+	public function setFormat(
+		string $key,
+		int $decimals = 0,
+		string $dec_point = '.',
+		string $thousands_sep = ' '
+	): self
 	{
 		$this->format[$key] = [$decimals, $dec_point, $thousands_sep];
 
@@ -188,11 +164,7 @@ class ColumnsSummary
 	}
 
 
-	/**
-	 * @param  array  $columns
-	 * @return bool
-	 */
-	public function someColumnsExist(array $columns)
+	public function someColumnsExist(array $columns): bool
 	{
 		foreach ($columns as $key => $column) {
 			if (isset($this->summary[$key])) {
@@ -204,19 +176,15 @@ class ColumnsSummary
 	}
 
 
-	/**
-	 * @param bool $top
-	 */
-	public function setPositionTop($top = true)
+	public function setPositionTop(bool $top = true): self
 	{
 		$this->positionTop = ($top === false) ? false : true;
+
+		return $this;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function getPositionTop()
+	public function getPositionTop(): bool
 	{
 		return $this->positionTop;
 	}

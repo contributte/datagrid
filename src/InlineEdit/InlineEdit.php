@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -9,9 +9,16 @@
 namespace Ublaboo\DataGrid\InlineEdit;
 
 use Nette;
+use Nette\Forms\Container;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Traits;
+use Ublaboo\DataGrid\Traits\TButtonClass;
+use Ublaboo\DataGrid\Traits\TButtonIcon;
+use Ublaboo\DataGrid\Traits\TButtonText;
+use Ublaboo\DataGrid\Traits\TButtonTitle;
+use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
 
 /**
  * @method onSubmit($id, Nette\Utils\ArrayHash $values)
@@ -24,42 +31,41 @@ class InlineEdit
 {
 
 	use SmartObject;
-
-	use Traits\TButtonTryAddIcon;
-	use Traits\TButtonIcon;
-	use Traits\TButtonClass;
-	use Traits\TButtonTitle;
-	use Traits\TButtonText;
-
-	/**
-	 * @var callable[]
-	 */
-	public $onSubmit;
+	use TButtonTryAddIcon;
+	use TButtonIcon;
+	use TButtonClass;
+	use TButtonTitle;
+	use TButtonText;
 
 	/**
 	 * @var callable[]
 	 */
-	public $onControlAdd;
+	public $onSubmit = [];
 
 	/**
 	 * @var callable[]
 	 */
-	public $onControlAfterAdd;
+	public $onControlAdd = [];
 
 	/**
 	 * @var callable[]
 	 */
-	public $onSetDefaults;
+	public $onControlAfterAdd = [];
 
 	/**
 	 * @var callable[]
 	 */
-	public $onCustomRedraw;
+	public $onSetDefaults = [];
+
+	/**
+	 * @var callable[]
+	 */
+	public $onCustomRedraw = [];
 
 	/**
 	 * @var mixed
 	 */
-	protected $item_id;
+	protected $itemID;
 
 	/**
 	 * @var DataGrid
@@ -69,13 +75,13 @@ class InlineEdit
 	/**
 	 * @var string|null
 	 */
-	protected $primary_where_column;
+	protected $primaryWhereColumn = null;
 
 	/**
 	 * Inline adding - render on the top or in the bottom?
 	 * @var bool
 	 */
-	protected $position_top = false;
+	protected $positionTop = false;
 
 	/**
 	 * Columns that are not edited can displey normal value instaad of nothing..
@@ -84,14 +90,10 @@ class InlineEdit
 	protected $showNonEditingColumns = true;
 
 
-	/**
-	 * @param DataGrid $grid
-	 * @param string|null   $primary_where_column
-	 */
-	public function __construct(DataGrid $grid, $primary_where_column = null)
+	public function __construct(DataGrid $grid, ?string $primaryWhereColumn = null)
 	{
 		$this->grid = $grid;
-		$this->primary_where_column = $primary_where_column;
+		$this->primaryWhereColumn = $primaryWhereColumn;
 
 		$this->title = 'ublaboo_datagrid.edit';
 		$this->class = 'btn btn-xs btn-default btn-secondary ajax';
@@ -103,11 +105,10 @@ class InlineEdit
 
 	/**
 	 * @param mixed $id
-	 * @return static
 	 */
-	public function setItemId($id)
+	public function setItemId($id): self
 	{
-		$this->item_id = $id;
+		$this->itemID = $id;
 
 		return $this;
 	}
@@ -118,25 +119,17 @@ class InlineEdit
 	 */
 	public function getItemId()
 	{
-		return $this->item_id;
+		return $this->itemID;
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getPrimaryWhereColumn()
+	public function getPrimaryWhereColumn(): string
 	{
-		return $this->primary_where_column;
+		return $this->primaryWhereColumn;
 	}
 
 
-	/**
-	 * Render row item detail button
-	 * @param  Row $row
-	 * @return Html
-	 */
-	public function renderButton($row)
+	public function renderButton(Row $row): Html
 	{
 		$a = Html::el('a')
 			->href($this->grid->link('inlineEdit!', ['id' => $row->getId()]));
@@ -160,9 +153,8 @@ class InlineEdit
 
 	/**
 	 * Render row item detail button
-	 * @return Html
 	 */
-	public function renderButtonAdd()
+	public function renderButtonAdd(): Html
 	{
 		$a = Html::el('a')->href('')->data('datagrid-toggle-inline-add', true);
 
@@ -181,42 +173,27 @@ class InlineEdit
 	}
 
 
-	/**
-	 * Setter for inline adding position
-	 * @param bool $position_top
-	 * @return static
-	 */
-	public function setPositionTop($position_top = true)
+	public function setPositionTop(bool $positionTop = true): self
 	{
-		$this->position_top = (bool) $position_top;
+		$this->positionTop = $positionTop;
 
 		return $this;
 	}
 
 
-	/**
-	 * Getter for inline adding
-	 * @return bool
-	 */
-	public function isPositionTop()
+	public function isPositionTop(): bool
 	{
-		return $this->position_top;
+		return $this->positionTop;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function isPositionBottom()
+	public function isPositionBottom(): bool
 	{
-		return !$this->position_top;
+		return !$this->positionTop;
 	}
 
 
-	/**
-	 * @param Nette\Forms\Container $container
-	 */
-	public function addControlsClasses(Nette\Forms\Container $container)
+	public function addControlsClasses(Container $container): void
 	{
 		foreach ($container->getControls() as $key => $control) {
 			switch ($key) {
@@ -242,22 +219,15 @@ class InlineEdit
 	}
 
 
-	/**
-	 * @param bool $show
-	 * @return static
-	 */
-	public function setShowNonEditingColumns($show = true)
+	public function setShowNonEditingColumns(bool $show = true): self
 	{
-		$this->showNonEditingColumns = (bool) $show;
+		$this->showNonEditingColumns = $show;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function showNonEditingColumns()
+	public function showNonEditingColumns(): bool
 	{
 		return $this->showNonEditingColumns;
 	}

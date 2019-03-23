@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid\GroupAction;
 
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
 
@@ -21,7 +22,7 @@ class GroupActionCollection
 	/**
 	 * @var GroupAction[]
 	 */
-	protected $group_actions = [];
+	protected $groupActions = [];
 
 	/**
 	 * @var DataGrid
@@ -35,12 +36,7 @@ class GroupActionCollection
 	}
 
 
-	/**
-	 * Get assambled form
-	 * @param Nette\Forms\Container $container
-	 * @return void
-	 */
-	public function addToFormContainer($container)
+	public function addToFormContainer(Container $container): void
 	{
 		/** @var Nette\Application\UI\Form $form */
 		$form = $container->lookup('Nette\Application\UI\Form');
@@ -50,7 +46,7 @@ class GroupActionCollection
 		/**
 		 * First foreach for filling "main" select
 		 */
-		foreach ($this->group_actions as $id => $action) {
+		foreach ($this->groupActions as $id => $action) {
 			$main_options[$id] = $action->getTitle();
 		}
 
@@ -60,7 +56,7 @@ class GroupActionCollection
 		/**
 		 * Second for creating select for each "sub"-action
 		 */
-		foreach ($this->group_actions as $id => $action) {
+		foreach ($this->groupActions as $id => $action) {
 			$control = null;
 
 			if ($action instanceof GroupSelectAction) {
@@ -110,7 +106,7 @@ class GroupActionCollection
 			}
 		}
 
-		foreach ($this->group_actions as $id => $action) {
+		foreach ($this->groupActions as $id => $action) {
 			$container['group_action']->addCondition(Form::EQUAL, $id)
 				->toggle(static::ID_ATTRIBUTE_PREFIX . $id);
 		}
@@ -153,7 +149,7 @@ class GroupActionCollection
 		$ids = array_keys($http_ids);
 
 		$id = $values->group_action;
-		$this->group_actions[$id]->onSelect($ids, isset($values->{$id}) ? $values->{$id} : null);
+		$this->groupActions[$id]->onSelect($ids, isset($values->{$id}) ? $values->{$id} : null);
 
 		$form['group_action']['group_action']->setValue(null);
 	}
@@ -161,73 +157,51 @@ class GroupActionCollection
 
 	/**
 	 * Add one group action (select box) to collection of actions
-	 *
-	 * @param string $title
-	 * @param array  $options
-	 *
-	 * @return GroupAction
 	 */
-	public function addGroupSelectAction($title, $options)
+	public function addGroupSelectAction(string $title, array $options): GroupAction
 	{
-		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
+		$id = ($s = sizeof($this->groupActions)) ? ($s + 1) : 1;
 
-		return $this->group_actions[$id] = new GroupSelectAction($title, $options);
+		return $this->groupActions[$id] = new GroupSelectAction($title, $options);
 	}
 
 
 	/**
 	 * Add one group action (multiselect box) to collection of actions
-	 *
-	 * @param string $title
-	 * @param array  $options
-	 *
-	 * @return GroupAction
 	 */
-	public function addGroupMultiSelectAction($title, $options)
+	public function addGroupMultiSelectAction(string $title, array $options): GroupAction
 	{
-		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
+		$id = ($s = sizeof($this->groupActions)) ? ($s + 1) : 1;
 
-		return $this->group_actions[$id] = new GroupMultiSelectAction($title, $options);
+		return $this->groupActions[$id] = new GroupMultiSelectAction($title, $options);
 	}
 
 
 	/**
 	 * Add one group action (text input) to collection of actions
-	 *
-	 * @param string $title
-	 *
-	 * @return GroupAction
 	 */
-	public function addGroupTextAction($title)
+	public function addGroupTextAction(string $title): GroupAction
 	{
-		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
+		$id = ($s = sizeof($this->groupActions)) ? ($s + 1) : 1;
 
-		return $this->group_actions[$id] = new GroupTextAction($title);
+		return $this->groupActions[$id] = new GroupTextAction($title);
 	}
 
 
 	/**
 	 * Add one group action (textarea) to collection of actions
-	 *
-	 * @param string $title
-	 *
-	 * @return GroupAction
 	 */
-	public function addGroupTextareaAction($title)
+	public function addGroupTextareaAction(string $title): GroupAction
 	{
-		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
+		$id = ($s = sizeof($this->groupActions)) ? ($s + 1) : 1;
 
-		return $this->group_actions[$id] = new GroupTextareaAction($title);
+		return $this->groupActions[$id] = new GroupTextareaAction($title);
 	}
 
 
-	/**
-	 * @param  string $title
-	 * @return GroupAction
-	 */
-	public function getGroupAction($title)
+	public function getGroupAction(string $title): GroupAction
 	{
-		foreach ($this->group_actions as $action) {
+		foreach ($this->groupActions as $action) {
 			if ($action->getTitle() === $title) {
 				return $action;
 			}

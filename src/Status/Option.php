@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -41,191 +41,136 @@ class Option
 	/**
 	 * @var string
 	 */
-	protected $class_secondary = 'btn btn-xs';
+	protected $classSecondary = 'btn btn-xs';
 
 	/**
 	 * @var string
 	 */
-	protected $class_in_dropdown = 'ajax dropdown-item';
+	protected $classInDropdown = 'ajax dropdown-item';
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $icon;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
-	protected $icon_secondary;
+	protected $iconSecondary;
 
 
 	/**
-	 * [__construct description]
-	 * @param ColumnStatus $columnStatus
-	 * @param mixed       $value
-	 * @param string       $text
+	 * @param mixed $value
 	 */
-	public function __construct(ColumnStatus $columnStatus, $value, $text)
+	public function __construct(ColumnStatus $columnStatus, $value, string $text)
 	{
 		$this->columnStatus = $columnStatus;
 		$this->value = $value;
-		$this->text = (string) $text;
+		$this->text = $text;
 	}
 
 
-	/**
-	 * @return mixed
-	 */
 	public function getValue()
 	{
 		return $this->value;
 	}
 
 
-	/**
-	 * End option fluent interface and return parent
-	 * @return ColumnStatus
-	 */
-	public function endOption()
+	public function endOption(): ColumnStatus
 	{
 		return $this->columnStatus;
 	}
 
 
-	/**
-	 * @param string $title
-	 * @return static
-	 */
-	public function setTitle($title)
+	public function setTitle(string $title): self
 	{
-		$this->title = (string) $title;
+		$this->title = $title;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getTitle()
+	public function getTitle(): string
 	{
 		return $this->title;
 	}
 
 
-	/**
-	 * @param string $class
-	 * @param string $class_secondary
-	 * @return static
-	 */
-	public function setClass($class, $class_secondary = null)
+	public function setClass(string $class, string $classSecondary = null): self
 	{
 		$this->class = (string) $class;
 
-		if ($class_secondary !== null) {
-			$this->class_secondary = (string) $class_secondary;
+		if ($classSecondary !== null) {
+			$this->classSecondary = (string) $classSecondary;
 		}
 
 		return $this;
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getClass()
+	public function getClass(): string
 	{
 		return $this->class;
 	}
 
 
-	/**
-	 * @param string $class_secondary
-	 * @return static
-	 */
-	public function setClassSecondary($class_secondary)
+	public function setClassSecondary(string $classSecondary): self
 	{
-		$this->class_secondary = (string) $class_secondary;
+		$this->classSecondary = $classSecondary;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getClassSecondary()
+	public function getClassSecondary(): string
 	{
-		return $this->class_secondary;
+		return $this->classSecondary;
 	}
 
 
-	/**
-	 * @param string $class_in_dropdown
-	 * @return static
-	 */
-	public function setClassInDropdown($class_in_dropdown)
+	public function setClassInDropdown(string $classInDropdown): self
 	{
-		$this->class_in_dropdown = (string) $class_in_dropdown;
+		$this->classInDropdown = $classInDropdown;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getClassInDropdown()
+	public function getClassInDropdown(): string
 	{
-		return $this->class_in_dropdown;
+		return $this->classInDropdown;
 	}
 
 
-	/**
-	 * @param string $icon
-	 * @return static
-	 */
-	public function setIcon($icon)
+	public function setIcon(string $icon): self
 	{
-		$this->icon = (string) $icon;
+		$this->icon = $icon;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return string|null
-	 */
-	public function getIcon()
+	public function getIcon(): ?string
 	{
 		return $this->icon;
 	}
 
 
-	/**
-	 * @param string $icon_secondary
-	 */
-	public function setIconSecondary($icon_secondary)
+	public function setIconSecondary(string $iconSecondary)
 	{
-		$this->icon_secondary = (string) $icon_secondary;
+		$this->iconSecondary = $iconSecondary;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return string|null
-	 */
-	public function getIconSecondary()
+	public function getIconSecondary(): ?string
 	{
-		return $this->icon_secondary;
+		return $this->iconSecondary;
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getText()
+	public function getText(): string
 	{
 		return $this->text;
 	}

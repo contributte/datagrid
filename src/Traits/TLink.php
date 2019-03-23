@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -19,16 +19,15 @@ trait TLink
 {
 
 	/**
-	 * Create link to custom destination
-	 * @param  DataGrid $grid
-	 * @param  string   $href
-	 * @param  array    $params
-	 * @return string
 	 * @throws DataGridHasToBeAttachedToPresenterComponentException
 	 * @throws \InvalidArgumentException
 	 * @throws DataGridLinkCreationException
 	 */
-	protected function createLink(DataGrid $grid, $href, $params)
+	protected function createLink(
+		DataGrid $grid,
+		string $href,
+		array $params
+	): string
 	{
 		$targetComponent = $grid;
 
@@ -72,7 +71,7 @@ trait TLink
 			}
 		}
 
-		// Went 10 steps up to the UI\Presenter and did not find any signal handler
+		// Went 10 steps up to the Presenter and did not find any signal handler
 		$this->throwHierarchyLookupException($grid, $href, $params);
 	}
 
@@ -80,7 +79,11 @@ trait TLink
 	/**
 	 * @throws DataGridLinkCreationException
 	 */
-	private function throwHierarchyLookupException(DataGrid $grid, $href, $params)
+	private function throwHierarchyLookupException(
+		DataGrid $grid,
+		string $href,
+		array $params
+	): void
 	{
 		$desiredHandler = get_class($grid->getParent()) . '::handle' . ucfirst($href) . '()';
 

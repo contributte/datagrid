@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -161,7 +161,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var string
 	 */
-	protected $template_file;
+	protected $templateFile;
 
 	/**
 	 * @var Column\Column[]
@@ -642,12 +642,12 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set custom template file to render
-	 * @param string $template_file
+	 * @param string $templateFile
 	 * @return static
 	 */
-	public function setTemplateFile($template_file)
+	public function setTemplateFile($templateFile)
 	{
-		$this->template_file = $template_file;
+		$this->templateFile = $templateFile;
 
 		return $this;
 	}
@@ -660,7 +660,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getTemplateFile()
 	{
-		return $this->template_file ?: $this->getOriginalTemplateFile();
+		return $this->templateFile ?: $this->getOriginalTemplateFile();
 	}
 
 
@@ -915,7 +915,7 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Set tree view template file
 		 */
-		if (!$this->template_file) {
+		if (!$this->templateFile) {
 			$this->setTemplateFile(__DIR__ . '/templates/datagrid_tree.latte');
 		}
 
@@ -3572,12 +3572,12 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @param string $template_file
+	 * @param string $templateFile
 	 * @return void
 	 */
-	public function setCustomPaginatortemplate($template_file)
+	public function setCustomPaginatortemplate(string $templateFile): void
 	{
-		$this->custom_paginator_template = $template_file;
+		$this->custom_paginator_template = $templateFile;
 	}
 }
 

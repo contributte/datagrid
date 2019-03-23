@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -16,28 +16,20 @@ trait TRenderCondition
 	/**
 	 * @var callable|null
 	 */
-	protected $render_condition_callback;
+	protected $renderConditionCallback;
 
 
-	/**
-	 * @param callable $condition
-	 * @return static
-	 */
-	public function setRenderCondition(callable $condition)
+	public function setRenderCondition(callable $condition): self
 	{
-		$this->render_condition_callback = $condition;
+		$this->renderConditionCallback = $condition;
 
 		return $this;
 	}
 
 
-	/**
-	 * @param Row $row
-	 * @return bool
-	 */
-	public function shouldBeRendered(Row $row)
+	public function shouldBeRendered(Row $row): bool
 	{
-		$condition = $this->render_condition_callback;
+		$condition = $this->renderConditionCallback;
 
 		return $condition ? $condition($row->getItem()) : true;
 	}

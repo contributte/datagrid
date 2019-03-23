@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -17,11 +17,7 @@ trait TButtonClass
 	protected $class = 'btn btn-xs btn-default btn-secondary';
 
 
-	/**
-	 * Set attribute class
-	 * @param string $class
-	 */
-	public function setClass($class)
+	public function setClass(string $class): self
 	{
 		$this->class = $class;
 
@@ -29,11 +25,7 @@ trait TButtonClass
 	}
 
 
-	/**
-	 * Get attribute class
-	 * @return string
-	 */
-	public function getClass()
+	public function getClass(): string
 	{
 		return $this->class;
 	}

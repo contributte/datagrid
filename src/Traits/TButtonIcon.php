@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -17,11 +17,7 @@ trait TButtonIcon
 	protected $icon;
 
 
-	/**
-	 * Set icon
-	 * @param string $icon
-	 */
-	public function setIcon($icon)
+	public function setIcon(string $icon): self
 	{
 		$this->icon = $icon;
 
@@ -29,11 +25,7 @@ trait TButtonIcon
 	}
 
 
-	/**
-	 * Get icon
-	 * @return string
-	 */
-	public function getIcon()
+	public function getIcon(): self
 	{
 		return $this->icon;
 	}

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -8,9 +8,6 @@
 
 namespace Ublaboo\DataGrid\GroupAction;
 
-/**
- * @method void onSelect()
- */
 class GroupSelectAction extends GroupAction
 {
 
@@ -20,22 +17,15 @@ class GroupSelectAction extends GroupAction
 	protected $options;
 
 
-	/**
-	 * @param string $title
-	 * @param array  $options
-	 */
-	public function __construct($title, $options = null)
+	public function __construct(string $title, array $options = [])
 	{
 		parent::__construct($title);
+
 		$this->options = $options;
 	}
 
 
-	/**
-	 * Get action options
-	 * @return array
-	 */
-	public function getOptions()
+	public function getOptions(): array
 	{
 		return $this->options;
 	}
@@ -43,10 +33,9 @@ class GroupSelectAction extends GroupAction
 
 	/**
 	 * Has the action some options?
-	 * @return boolean
 	 */
-	public function hasOptions()
+	public function hasOptions(): bool
 	{
-		return (bool) $this->options;
+		return $this->options !== [];
 	}
 }

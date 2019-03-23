@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -28,12 +28,10 @@ trait TButtonRenderer
 
 
 	/**
-	 * Try to render item with custom renderer
-	 * @param  Row|null $row
 	 * @return mixed
 	 * @throws DataGridColumnRendererException
 	 */
-	public function useRenderer($row = null)
+	public function useRenderer(Row $row = null)
 	{
 		$renderer = $this->getRenderer();
 
@@ -61,10 +59,12 @@ trait TButtonRenderer
 
 	/**
 	 * Set renderer callback and (it may be optional - the condition callback will decide)
-	 * @param callable $renderer
 	 * @throws DataGridException
 	 */
-	public function setRenderer($renderer, $condition_callback = null)
+	public function setRenderer(
+		callable $renderer,
+		?callable $conditionCallback = null
+	): self
 	{
 		if ($this->hasReplacements()) {
 			throw new DataGridException(
@@ -72,50 +72,28 @@ trait TButtonRenderer
 			);
 		}
 
-		if (!is_callable($renderer)) {
-			throw new DataGridException(
-				'Renderer (method Column::setRenderer()) must be callable.'
-			);
-		}
-
-		if ($condition_callback != null && !is_callable($condition_callback)) {
-			throw new DataGridException(
-				'Renderer (method Column::setRenderer()) must be callable.'
-			);
-		}
-
-		$this->renderer = new Renderer($renderer, $condition_callback);
+		$this->renderer = new Renderer($renderer, $conditionCallback);
 
 		return $this;
 	}
 
 
-	/**
-	 * Set renderer callback just if condition is truthy
-	 * @param callable $renderer
-	 */
-	public function setRendererOnCondition($renderer, $condition_callback)
+	public function setRendererOnCondition(
+		callable $renderer,
+		callable $conditionCallback
+	): void
 	{
-		return $this->setRenderer($renderer, $condition_callback);
+		return $this->setRenderer($renderer, $conditionCallback);
 	}
 
 
-	/**
-	 * Return custom renderer callback
-	 * @return Renderer|null
-	 */
-	public function getRenderer()
+	public function getRenderer(): ?Renderer
 	{
 		return $this->renderer;
 	}
 
 
-	/**
-	 * Set column replacements
-	 * @param  array $replacements
-	 * @return Column
-	 */
-	public function setReplacement(array $replacements)
+	public function setReplacement(array $replacements): Colummn
 	{
 		$this->replacements = $replacements;
 
@@ -123,22 +101,13 @@ trait TButtonRenderer
 	}
 
 
-	/**
-	 * Tell whether columns has replacements
-	 * @return bool
-	 */
-	public function hasReplacements()
+	public function hasReplacements(): bool
 	{
-		return (bool) $this->replacements;
+		return $this->replacements !== [];
 	}
 
 
-	/**
-	 * Apply replacements
-	 * @param  Row   $row
-	 * @return array
-	 */
-	public function applyReplacements(Row $row)
+	public function applyReplacements(Row $row): array
 	{
 		$value = $row->getValue($this->column);
 

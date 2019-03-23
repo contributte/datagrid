@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\Utils;
 
 use Nette;
+use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
 
 final class ItemDetailForm extends Container
@@ -17,7 +18,7 @@ final class ItemDetailForm extends Container
 	/**
 	 * @var callable
 	 */
-	private $callable_set_container;
+	private $callableSetContainer;
 
 	/**
 	 * @var array
@@ -25,23 +26,17 @@ final class ItemDetailForm extends Container
 	private $http_post;
 
 
-	/**
-	 * @param callable $callable_set_container
-	 */
-	public function __construct(callable $callable_set_container)
+	public function __construct(callable $callableSetContainer)
 	{
 		parent::__construct();
 
 		$this->monitor('Nette\Application\UI\Presenter');
 
-		$this->callable_set_container = $callable_set_container;
+		$this->callableSetContainer = $callableSetContainer;
 	}
 
 
-	/**
-	 * @param \Nette\ComponentModel\IContainer
-	 */
-	protected function attached($presenter)
+	protected function attached(IContainer $presenter): void
 	{
 		parent::attached($presenter);
 
@@ -53,10 +48,7 @@ final class ItemDetailForm extends Container
 	}
 
 
-	/**
-	 * @return void
-	 */
-	public function loadHttpData()
+	public function loadHttpData(): void
 	{
 		if (!$this->getForm()->isSubmitted()) {
 			return;
@@ -85,25 +77,17 @@ final class ItemDetailForm extends Container
 	}
 
 
-	/**
-	 * @param  string $name
-	 * @return Container
-	 */
-	public function offsetGet($name)
+	public function offsetGet(string $name): Container
 	{
 		return $this->getComponent($name);
 	}
 
 
-	/**
-	 * @param  string $name
-	 * @return Container
-	 */
-	public function getComponent($name, $throw = true)
+	public function getComponent(string $name, bool $throw = true): Container
 	{
 		$container = $this->addContainer($name);
 
-		call_user_func($this->callable_set_container, $container);
+		call_user_func($this->callableSetContainer, $container);
 
 		return $container;
 	}

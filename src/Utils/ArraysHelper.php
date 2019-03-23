@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -14,10 +14,8 @@ final class ArraysHelper
 
 	/**
 	 * Test recursively whether given array is empty
-	 * @param  array $array
-	 * @return bool
 	 */
-	public static function testEmpty($array)
+	public static function testEmpty(array $array): bool
 	{
 		foreach ($array as $key => $value) {
 			if (is_array($value)) {
@@ -41,12 +39,10 @@ final class ArraysHelper
 
 	/**
 	 * Is array and its values truthy?
-	 * @param  array|\Traversable $a
-	 * @return boolean
 	 */
-	public static function testTruthy($a)
+	public static function testTruthy(iterable $iterable): bool
 	{
-		foreach ($a as $value) {
+		foreach ($iterable as $value) {
 			if (is_array($value) || $value instanceof \Traversable) {
 				if (self::testTruthy($value)) {
 					return true;
