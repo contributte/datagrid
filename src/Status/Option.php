@@ -8,13 +8,10 @@
 
 namespace Ublaboo\DataGrid\Status;
 
-use Nette\SmartObject;
 use Ublaboo\DataGrid\Column\ColumnStatus;
 
 class Option
 {
-
-	use SmartObject;
 
 	/**
 	 * @var ColumnStatus
@@ -197,7 +194,7 @@ class Option
 
 
 	/**
-	 * @return string|NULL
+	 * @return string|null
 	 */
 	public function getIcon()
 	{
@@ -217,7 +214,7 @@ class Option
 
 
 	/**
-	 * @return string|NULL
+	 * @return string|null
 	 */
 	public function getIconSecondary()
 	{

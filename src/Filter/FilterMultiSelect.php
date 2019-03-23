@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
+use Nette\Forms\Container;
 use Ublaboo\DataGrid\DataGrid;
 
 class FilterMultiSelect extends FilterSelect
@@ -28,26 +29,23 @@ class FilterMultiSelect extends FilterSelect
 	];
 
 
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $key
-	 * @param string   $name
-	 * @param string   $options
-	 * @param string   $column
-	 */
-	public function __construct($grid, $key, $name, array $options, $column)
-	{
+	public function __construct(
+		DataGrid $grid,
+		string $key,
+		string $name,
+		array $options,
+		string $column
+	) {
 		parent::__construct($grid, $key, $name, $options, $column);
 
-		$this->addAttribute('data-selected-icon-check', DataGrid::$icon_prefix . 'check');
+		$this->addAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
 	}
 
 
 	/**
 	 * Get filter condition
-	 * @return array
 	 */
-	public function getCondition()
+	public function getCondition(): array
 	{
 		$return = [$this->column => []];
 
@@ -59,14 +57,12 @@ class FilterMultiSelect extends FilterSelect
 	}
 
 
-	/**
-	 * @param Nette\Forms\Container $container
-	 * @param string                $key
-	 * @param string                $name
-	 * @param array                $options
-	 * @return Nette\Forms\Controls\SelectBox
-	 */
-	protected function addControl(Nette\Forms\Container $container, $key, $name, $options)
+	protected function addControl(
+		Container $container,
+		string $key,
+		string $name,
+		array $options
+	): SelectBox
 	{
 		/**
 		 * Set some translated texts

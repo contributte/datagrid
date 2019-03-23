@@ -9,7 +9,6 @@
 namespace Ublaboo\DataGrid\GroupAction;
 
 use Nette;
-use Nette\SmartObject;
 use Nette\Application\UI\Form;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
@@ -17,9 +16,7 @@ use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
 class GroupActionCollection
 {
 
-	use SmartObject;
-
-	const ID_ATTRIBUTE_PREFIX = 'group_action_item_';
+	private const ID_ATTRIBUTE_PREFIX = 'group_action_item_';
 
 	/**
 	 * @var GroupAction[]
@@ -72,7 +69,7 @@ class GroupActionCollection
 						$control = $container->addMultiSelect($id, '', $action->getOptions());
 						$control->setAttribute('data-datagrid-multiselect-id', static::ID_ATTRIBUTE_PREFIX . $id);
 						$control->setAttribute('data-style', 'hidden');
-						$control->setAttribute('data-selected-icon-check', DataGrid::$icon_prefix . 'check');
+						$control->setAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
 					} else {
 						$control = $container->addSelect($id, '', $action->getOptions());
 					}

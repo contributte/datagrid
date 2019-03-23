@@ -6,7 +6,6 @@ use Nette\Utils\Html;
 use Tester\TestCase;
 use Tester\Assert;
 use Ublaboo;
-use Nette\SmartObject;
 use LeanMapper;
 
 require __DIR__ . '/../bootstrap.php';
@@ -100,7 +99,7 @@ final class RowTest extends TestCase
 /**
  * @property int $id
  * @property string $name
- * @property XTestingLMDataGridEntity2|NULL $girlfriend
+ * @property XTestingLMDataGridEntity2|null $girlfriend
  */
 class XTestingLMDataGridEntity extends LeanMapper\Entity
 {
@@ -148,8 +147,6 @@ class XTestingLMDataGridEntity2 extends LeanMapper\Entity
 
 class XTestingDDataGridEntity
 {
-
-	use SmartObject;
 
 	/**
 	 * @ORM\Id

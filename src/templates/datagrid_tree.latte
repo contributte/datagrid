@@ -4,11 +4,11 @@
  * @param array    $exports           Available exports
  * @param Row[]    $rows              List of rows (each contain a item from data source)
  * @param DataGrid $control           Parent (DataGrid)
- * @param string   $original_template Original template file path
- * @param string   $icon_prefix       Icon prefix (fa fa-)
+ * @param string   $originalTemplate Original template file path
+ * @param string   $iconPrefix       Icon prefix (fa fa-)
  *}
 
-{extends $original_template}
+{extends $originalTemplate}
 
 <div class="datagrid-tree-item-children datagrid-tree" n:snippet="table" n:block="data" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/if}>
 	{snippetArea items}
@@ -50,7 +50,7 @@
 							{/foreach}
 
 							<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
-								<i class="{$icon_prefix}arrows"></i>
+								<i class="{$iconPrefix}arrows"></i>
 							</span>
 						</div>
 					</div>
@@ -66,7 +66,7 @@
 				<div n:class="datagrid-tree-item-content, $row->getControlClass()" data-id="{$row->getId()}" data-has-children="{$has_children ? true : false}">
 					<div class="datagrid-tree-item-left">
 						<a n:href="getChildren! parent => $row->getId()" data-toggle-tree="true" n:class="!$has_children ? hidden, 'chevron ajax'">
-							<i n:block="icon-chevron" class="{$icon_prefix}chevron-right"></i>
+							<i n:block="icon-chevron" class="{$iconPrefix}chevron-right"></i>
 						</a>
 						{foreach $columns as $key => $column}
 							{var $col = 'col-' . $key}
@@ -127,7 +127,7 @@
 								{/foreach}
 
 								<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
-									<i n:block = "icon-arrows" class="{$icon_prefix}arrows"></i>
+									<i n:block = "icon-arrows" class="{$iconPrefix}arrows"></i>
 								</span>
 							</div>
 						</div>

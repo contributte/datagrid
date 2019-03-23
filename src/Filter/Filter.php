@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -9,7 +9,6 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
-use Nette\SmartObject;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
@@ -17,8 +16,6 @@ use Ublaboo\DataGrid\DataGrid;
  */
 abstract class Filter
 {
-
-	use SmartObject;
 
 	/**
 	 * @var mixed
@@ -28,12 +25,12 @@ abstract class Filter
 	/**
 	 * @var bool
 	 */
-	protected $value_set = false;
+	protected $valueSet = false;
 
 	/**
-	 * @var callable
+	 * @var callable|null
 	 */
-	protected $condition_callback;
+	protected $conditionCallback;
 
 	/**
 	 * @var string
@@ -41,7 +38,7 @@ abstract class Filter
 	protected $key;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $name;
 
@@ -51,12 +48,12 @@ abstract class Filter
 	protected $column;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $template;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $type;
 
@@ -79,13 +76,14 @@ abstract class Filter
 
 
 	/**
-	 * @param DataGrid     $grid
-	 * @param string       $key
-	 * @param string       $name
 	 * @param string|array $column
 	 */
-	public function __construct($grid, $key, $name, $column)
-	{
+	public function __construct(
+		DataGrid $grid,
+		string $key,
+		string $name,
+		$column
+	) {
 		$this->grid = $grid;
 		$this->key = $key;
 		$this->name = $name;
@@ -95,9 +93,8 @@ abstract class Filter
 
 	/**
 	 * Get filter key
-	 * @return mixed
 	 */
-	public function getKey()
+	public function getKey(): string
 	{
 		return $this->key;
 	}
@@ -105,9 +102,8 @@ abstract class Filter
 
 	/**
 	 * Get filter name
-	 * @return string
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->name;
 	}
@@ -115,9 +111,8 @@ abstract class Filter
 
 	/**
 	 * Get filter column
-	 * @return string
 	 */
-	public function getColumn()
+	public function getColumn(): string
 	{
 		return $this->column;
 	}
@@ -125,23 +120,21 @@ abstract class Filter
 
 	/**
 	 * Tell whether value has been set in this fitler
-	 * @return boolean
 	 */
-	public function isValueSet()
+	public function isValueSet(): bool
 	{
-		return $this->value_set;
+		return $this->valueSet;
 	}
 
 
 	/**
 	 * Set filter value
 	 * @param mixed $value
-	 * @return static
 	 */
-	public function setValue($value)
+	public function setValue($value): self
 	{
 		$this->value = $value;
-		$this->value_set = true;
+		$this->valueSet = true;
 
 		return $this;
 	}
@@ -180,68 +173,68 @@ abstract class Filter
 	}
 
 
-	/**
+	/**|null
 	 * Set custom condition on filter
-	 * @param  callable $condition_callback
-	 * @return static
+	 * @param  callable $conditionCallback
+	 * @return static|null
 	 */
-	public function setCondition($condition_callback)
+	p|nullublic function setCondition($conditionCallback)|null
 	{
-		$this->condition_callback = $condition_callback;
-
-		return $this;
+		$this->conditionCallback = $conditionCallback;
+|null
+		return $this;|null|null
 	}
 
 
-	/**
-	 * Get filter condition
+	/**|null
+	 * Get filter condition|null
 	 * @return array
 	 */
 	public function getCondition()
-	{
+	{|null
 		return [$this->column => $this->getValue()];
 	}
 
-
-	/**
-	 * Tell whether custom condition_callback on filter is set
+|null
+	|null|null/**
+	 * Tell whether custom conditionCallback on filter is set
 	 * @return bool
 	 */
-	public function hasConditionCallback()
-	{
-		return (bool) $this->condition_callback;
+	public function hasConditionCallback()|null|null
+	|null{
+		return (bool) $this->conditionCallback;
 	}
 
-
+|null|null
 	/**
 	 * Get custom filter condition
 	 * @return callable
 	 */
-	public function getConditionCallback()
+	public function getConditionCallbac|nullk()|null
 	{
-		return $this->condition_callback;
+		return $this->conditionCallback;
 	}
 
-
+|null|null
 	/**
 	 * Filter may have its own template
 	 * @param  string $template
 	 * @return static
-	 */
+	|null|null */|null
 	public function setTemplate($template)
 	{
 		$this->template = (string) $template;
-
+|null
 		return $this;
 	}
 
 
-	/**
+	/**|null
 	 * Get filter template path
 	 * @return string
 	 */
 	public function getTemplate()
-	{
+	|null{
 		return $this->template;
 	}
 

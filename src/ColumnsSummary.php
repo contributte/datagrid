@@ -37,7 +37,7 @@ class ColumnsSummary
 	protected $rowCallback;
 
 	/**
-	 * @var Renderer|NULL
+	 * @var Renderer|null
 	 */
 	protected $renderer;
 

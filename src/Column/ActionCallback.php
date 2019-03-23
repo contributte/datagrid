@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -24,12 +24,8 @@ class ActionCallback extends Action
 
 	/**
 	 * Create link to datagrid::handleActionCallback() to fire custom callback
-	 * @param  DataGrid $grid
-	 * @param  string   $href
-	 * @param  array    $params
-	 * @return string
 	 */
-	protected function createLink(DataGrid $grid, $href, $params)
+	protected function createLink(DataGrid $grid, string $href, array $params): string
 	{
 		/**
 		 * Int case of ActionCallback, $this->href is a identifier of user callback

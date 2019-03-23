@@ -24,7 +24,7 @@ trait TButtonTryAddIcon
 	public function tryAddIcon(Html $el, $icon, $name)
 	{
 		if ($icon) {
-			$el->addHtml(Html::el('span')->class(DataGrid::$icon_prefix . $icon));
+			$el->addHtml(Html::el('span')->class(DataGrid::$iconPrefix . $icon));
 
 			if (strlen($name)) {
 				$el->addHtml('&nbsp;');

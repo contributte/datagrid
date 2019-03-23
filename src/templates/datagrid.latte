@@ -7,8 +7,8 @@
  * @param Form            $filter             Workaround for latte snippets
  * @param Row[]           $rows               List of rows (each contain a item from data source)
  * @param DataGrid        $control            Parent (DataGrid)
- * @param string          $original_template  Original template file path
- * @param string          $icon_prefix        Icon prefix (fa fa-)
+ * @param string          $originalTemplate  Original template file path
+ * @param string          $iconPrefix        Icon prefix (fa fa-)
  * @param array           $columns_visibility What columns are visible
  * @param InlineEdit|null $inlineEdit  Inline editing data
  * @param InlineEdit|null $inlineAdd   Inline add data
@@ -29,7 +29,7 @@
 					<div class="row text-right datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
 						<div class="col-sm-12">
 							<button class="btn btn-xs btn-primary active" type="button" data-toggle="collapse" data-target="#datagrid-{$control->getName()}-row-filters">
-								<i n:block = "icon-filter" class="{$icon_prefix}filter"></i> {='ublaboo_datagrid.show_filter'|translate}
+								<i n:block = "icon-filter" class="{$iconPrefix}filter"></i> {='ublaboo_datagrid.show_filter'|translate}
 							</button>
 						</div>
 					</div>
@@ -116,28 +116,28 @@
 									 *}
 									<div class="btn-group">
 										<button type="button" class="btn btn-xs btn-default btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
-											<i n:block = "icon-gear" class="{$icon_prefix}gear"></i>
+											<i n:block = "icon-gear" class="{$iconPrefix}gear"></i>
 										</button>
 										<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
 											<li n:foreach="$columns_visibility as $v_key => $visibility">
 												{if $visibility['visible']}
 													<a n:href="hideColumn!, column => $v_key" class="ajax dropdown-item">
-														<i n:block = "icon-checked" class="{$icon_prefix}check-square-o"></i>
+														<i n:block = "icon-checked" class="{$iconPrefix}check-square-o"></i>
 														{include #column-header, column => $visibility['column']}
 													</a>
 												{else}
 													<a n:href="showColumn!, column => $v_key" class="ajax dropdown-item">
-														<i n:block = "icon-unchecked" class="{$icon_prefix}square-o"></i>
+														<i n:block = "icon-unchecked" class="{$iconPrefix}square-o"></i>
 														{include #column-header, column => $visibility['column']}
 													</a>
 												{/if}
 											</li>
 											<li role="separator" class="divider dropdown-divider"></li>
 											<li>
-												<a n:href="showAllColumns!" class="ajax dropdown-item"><i n:block = "icon-eye" class="{$icon_prefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
+												<a n:href="showAllColumns!" class="ajax dropdown-item"><i n:block = "icon-eye" class="{$iconPrefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
 											</li>
 											<li n:if="$control->hasSomeColumnDefaultHide()">
-												<a n:href="showDefaultColumns!" class="ajax dropdown-item"><i n:block = "icon-repeat" class="{$icon_prefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
+												<a n:href="showDefaultColumns!" class="ajax dropdown-item"><i n:block = "icon-repeat" class="{$iconPrefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
 											</li>
 										</ul>
 									</div>
@@ -166,12 +166,12 @@
 
 											{if $column->isSortedBy()}
 												{if $column->isSortAsc()}
-													<i n:block="icon-sort-up" class="{$icon_prefix}caret-up"></i>
+													<i n:block="icon-sort-up" class="{$iconPrefix}caret-up"></i>
 												{else}
-													<i n:block="icon-sort-down" class="{$icon_prefix}caret-down"></i>
+													<i n:block="icon-sort-down" class="{$iconPrefix}caret-down"></i>
 												{/if}
 											{else}
-												<i n:block="icon-sort" class="{$icon_prefix}sort"></i>
+												<i n:block="icon-sort" class="{$iconPrefix}sort"></i>
 											{/if}
 										</a>
 									{else}
@@ -182,19 +182,19 @@
 								<div class="datagrid-column-header-additions">
 									<div class="btn-group column-settings-menu" n:if="$control->canHideColumns()">
 										<a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">
-											<i n:block="icon-caret-down" class="{$icon_prefix}caret-down"></i>
+											<i n:block="icon-caret-down" class="{$iconPrefix}caret-down"></i>
 										</a>
 										<ul class="dropdown-menu dropdown-menu--grid">
 											<li>
 												<a n:href="hideColumn!, column => $key" class="ajax dropdown-item">
-													<i n:block = "icon-eye-slash" class="{$icon_prefix}eye-slash"></i> {='ublaboo_datagrid.hide_column'|translate}</a>
+													<i n:block = "icon-eye-slash" class="{$iconPrefix}eye-slash"></i> {='ublaboo_datagrid.hide_column'|translate}</a>
 											</li>
 										</ul>
 									</div>
 
 									{if $control->hasColumnReset()}
 										<a data-datagrid-reset-filter-by-column="{$key}" n:href="resetColumnFilter!, key => $key" n:class="isset($filters[$key]) && $filters[$key]->isValueSet() ? '' : 'hidden', 'ajax'" title="{='ublaboo_datagrid.reset_filter'|translate}">
-											<i n:block="icon-remove" class="{$icon_prefix}remove"></i>
+											<i n:block="icon-remove" class="{$iconPrefix}remove"></i>
 										</a>
 									{/if}
 								</div>
@@ -310,7 +310,7 @@
 												{/if}
 											{/foreach}
 											<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
-												<i n:block = "icon-arrows-v" class="{$icon_prefix}arrows-v"></i>
+												<i n:block = "icon-arrows-v" class="{$iconPrefix}arrows-v"></i>
 											</span>
 											{if $inlineEdit && $row->hasInlineEdit()}
 												{$inlineEdit->renderButton($row)|noescape}

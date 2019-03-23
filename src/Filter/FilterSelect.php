@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -9,6 +9,8 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
+use Nette\Forms\Container;
+use Nette\Forms\Controls\SelectBox;
 use Ublaboo\DataGrid\DataGrid;
 
 class FilterSelect extends Filter
@@ -35,31 +37,25 @@ class FilterSelect extends Filter
 	protected $type = 'select';
 
 	/**
-	 * @var string|NULL
+	 * @var string|null
 	 */
 	protected $prompt = null;
 
 
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $key
-	 * @param string   $name
-	 * @param array    $options
-	 * @param string   $column
-	 */
-	public function __construct($grid, $key, $name, array $options, $column)
-	{
+	public function __construct(
+		DataGrid $grid,
+		string $key,
+		string $name,
+		array $options,
+		string $column
+	) {
 		parent::__construct($grid, $key, $name, $column);
 
 		$this->options = $options;
 	}
 
 
-	/**
-	 * Adds select box to filter form
-	 * @param Nette\Forms\Container $container
-	 */
-	public function addToFormContainer(Nette\Forms\Container $container)
+	public function addToFormContainer(Container $container): void
 	{
 		$form = $container->lookup('Nette\Application\UI\Form');
 		$translator = $form->getTranslator();
@@ -79,85 +75,60 @@ class FilterSelect extends Filter
 	}
 
 
-	/**
-	 * @param  bool  $translateOptions
-	 * @return static
-	 */
-	public function setTranslateOptions($translateOptions = true)
+	public function setTranslateOptions(bool $translateOptions = true): self
 	{
 		$this->translateOptions = (bool) $translateOptions;
 		return $this;
 	}
 
 
-	/**
-	 * @return array
-	 */
-	public function getOptions()
+	public function getOptions(): array
 	{
 		return $this->options;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function getTranslateOptions()
+	public function getTranslateOptions(): bool
 	{
 		return $this->translateOptions;
 	}
 
 
-	/**
-	 * Get filter condition
-	 * @return array
-	 */
-	public function getCondition()
+	public function getCondition(): array
 	{
 		return [$this->column => $this->getValue()];
 	}
 
 
-	/**
-	 * Get filter prompt
-	 * @return string|NULL
-	 */
-	public function getPrompt()
+	public function getPrompt(): ?string
 	{
 		return $this->prompt;
 	}
 
 
-	/**
-	 * Set filter prompt value
-	 * @param string|NULL $prompt
-	 * @return static
-	 */
-	public function setPrompt($prompt)
+	public function setPrompt(?string $prompt): self
 	{
 		$this->prompt = $prompt;
+
 		return $this;
 	}
 
 
 	/**
 	 * Tell if prompt has been set in this fitler
-	 * @return bool
 	 */
-	public function isPromptEnabled()
+	public function isPromptEnabled(): bool
 	{
 		return isset($this->prompt);
 	}
 
 
-	/**
-	 * @param Nette\Forms\Container $container
-	 * @param string                $key
-	 * @param string                $name
-	 * @param array                $options
-	 * @return Nette\Forms\Controls\SelectBox
-	 */
-	protected function addControl(Nette\Forms\Container $container, $key, $name, $options)
+	protected function addControl(
+		Container $container,
+		string $key,
+		string $name,
+		array $options
+	): SelectBox
 	{
 		$input = $container->addSelect($key, $name, $options);
 

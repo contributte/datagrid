@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -12,10 +12,12 @@ use DibiFluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Utils\Strings;
+use Ublaboo\DataGrid\DataSource\IDataSource;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
 class FunctionSum implements IAggregationFunction
 {
+
 	/**
 	 * @var string
 	 */
@@ -27,41 +29,30 @@ class FunctionSum implements IAggregationFunction
 	protected $result = 0;
 
 	/**
-	 * @var int
+	 * @var string
 	 */
 	protected $dataType;
 
 	/**
-	 * @var callable
+	 * @var callable|null
 	 */
-	protected $renderer;
+	protected $renderer = null;
 
 
-	/**
-	 * @param string $column
-	 * @param int $dataType
-	 */
-	public function __construct($column, $dataType = IAggregationFunction::DATA_TYPE_PAGINATED)
+	public function __construct(string $column, string $dataType = IAggregationFunction::DATA_TYPE_PAGINATED)
 	{
 		$this->column = $column;
 		$this->dataType = $dataType;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function getFilterDataType()
+	public function getFilterDataType(): string
 	{
 		return $this->dataType;
 	}
 
 
-	/**
-	 * @param  mixed  $dataSource
-	 * @return void
-	 */
-	public function processDataSource($dataSource)
+	public function processDataSource(IDataSource $dataSource): void
 	{
 		if ($dataSource instanceof DibiFluent) {
 			$connection = $dataSource->getConnection();
@@ -106,13 +97,10 @@ class FunctionSum implements IAggregationFunction
 	}
 
 
-	/**
-	 * @param  callable|NULL  $callback
-	 * @return static
-	 */
-	public function setRenderer(callable $callback = null)
+	public function setRenderer(callable $callback = null): self
 	{
 		$this->renderer = $callback;
+
 		return $this;
 	}
 }

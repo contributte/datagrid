@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -13,16 +13,24 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Traits;
+use Ublaboo\DataGrid\Traits\TButtonCaret;
+use Ublaboo\DataGrid\Traits\TButtonClass;
+use Ublaboo\DataGrid\Traits\TButtonIcon;
+use Ublaboo\DataGrid\Traits\TButtonText;
+use Ublaboo\DataGrid\Traits\TButtonTitle;
+use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
+use Ublaboo\DataGrid\Traits\TLink;
 
 class MultiAction extends Column
 {
-	use Traits\TButtonTryAddIcon;
-	use Traits\TButtonIcon;
-	use Traits\TButtonClass;
-	use Traits\TButtonTitle;
-	use Traits\TButtonText;
-	use Traits\TButtonCaret;
-	use Traits\TLink;
+
+	use TButtonTryAddIcon;
+	use TButtonIcon;
+	use TButtonClass;
+	use TButtonTitle;
+	use TButtonText;
+	use TButtonCaret;
+	use TLink;
 
 	/**
 	 * @var DataGrid
@@ -45,10 +53,7 @@ class MultiAction extends Column
 	private $rowConditions = [];
 
 
-	/**
-	 * @param DataGrid $grid
-	 */
-	public function __construct(DataGrid $grid, $name)
+	public function __construct(DataGrid $grid, string $name)
 	{
 		$this->grid = $grid;
 		$this->name = $name;
@@ -57,10 +62,7 @@ class MultiAction extends Column
 	}
 
 
-	/**
-	 * @return Html
-	 */
-	public function renderButton()
+	public function renderButton(): Html
 	{
 		$button = Html::el('button')
 			->type('button')
@@ -91,14 +93,12 @@ class MultiAction extends Column
 	}
 
 
-	/**
-	 * @param string     $key
-	 * @param string     $name
-	 * @param string     $href
-	 * @param array|null $params
-	 * @return static
-	 */
-	public function addAction($key, $name, $href = null, array $params = null)
+	public function addAction(
+		string $key,
+		string $name,
+		?string $href = null,
+		?array $params = null
+	): self
 	{
 		if (isset($this->actions[$key])) {
 			throw new DataGridException(
@@ -125,17 +125,13 @@ class MultiAction extends Column
 	/**
 	 * @return Action[]
 	 */
-	public function getActions()
+	public function getActions(): array
 	{
 		return $this->actions;
 	}
 
 
-	/**
-	 * @param  string $key
-	 * @return Action
-	 */
-	public function getAction($key)
+	public function getAction(string $key): Action
 	{
 		if (!isset($this->actions[$key])) {
 			throw new DataGridException(
@@ -149,9 +145,8 @@ class MultiAction extends Column
 
 	/**
 	 * Column can have variables that will be passed to custom template scope
-	 * @return array
 	 */
-	public function getTemplateVariables()
+	public function getTemplateVariables(): array
 	{
 		return array_merge($this->template_variables, [
 			'multi_action' => $this,
@@ -159,23 +154,16 @@ class MultiAction extends Column
 	}
 
 
-	/**
-	 * @param string $actionKey
-	 * @param callable $rowCondition
-	 * @return void
-	 */
-	public function setRowCondition($actionKey, callable $rowCondition)
+	public function setRowCondition(
+		string $actionKey,
+		callable $rowCondition
+	): void
 	{
 		$this->rowConditions[$actionKey] = $rowCondition;
 	}
 
 
-	/**
-	 * @param  string $actionKey
-	 * @param  Row    $row
-	 * @return bool
-	 */
-	public function testRowCondition($actionKey, Row $row)
+	public function testRowCondition(string $actionKey, Row $row): bool
 	{
 		if (!isset($this->rowConditions[$actionKey])) {
 			return true;

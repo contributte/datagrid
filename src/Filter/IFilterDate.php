@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -13,20 +13,18 @@ interface IFilterDate
 
 	/**
 	 * Set format for datepicker etc
-	 * @param string $php_format
-	 * @param string $js_format
 	 */
-	public function setFormat($php_format, $js_format);
+	public function setFormat(string $phpFormat, string $jsFormat);
+
 
 	/**
 	 * Get php format for datapicker
-	 * @return string
 	 */
-	public function getPhpFormat();
+	public function getPhpFormat(): string;
+
 
 	/**
 	 * Get js format for datepicker
-	 * @return string
 	 */
-	public function getJsFormat();
+	public function getJsFormat(): string;
 }

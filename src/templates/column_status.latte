@@ -8,7 +8,7 @@
 <div class="dropdown">
 	{if $active_option}
 		<button class="dropdown-toggle {$active_option->getClass()} {$active_option->getClassSecondary()}" type="button" data-toggle="dropdown">
-			{if $active_option->getIcon()}<i class="{$icon_prefix}{$active_option->getIcon()}"></i> {/if}
+			{if $active_option->getIcon()}<i class="{$iconPrefix}{$active_option->getIcon()}"></i> {/if}
 			{$active_option->getText()|translate} <i n:if="$status->hasCaret()" class="caret"></i>
 		</button>
 	{else}
@@ -17,7 +17,7 @@
 	<ul class="dropdown-menu">
 		<li n:foreach="$status->getOptions() as $option">
 			<a class="{$option->getClassInDropdown()}" n:href="changeStatus!, id => $row->getId(), key => $status->getKey(), value => $option->getValue()">
-				{if $option->getIconSecondary()}<i class="datagrid-column-status-option-icon {$icon_prefix}{$option->getIconSecondary()}"></i> {/if}
+				{if $option->getIconSecondary()}<i class="datagrid-column-status-option-icon {$iconPrefix}{$option->getIconSecondary()}"></i> {/if}
 				{$option->getText()|translate}
 			</a>
 		</li>

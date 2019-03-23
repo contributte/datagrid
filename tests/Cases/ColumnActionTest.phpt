@@ -88,7 +88,7 @@ final class ColumnActionTest extends TestCase
 	{
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!');
 
-		DataGrid::$icon_prefix = 'icon-';
+		DataGrid::$iconPrefix = 'icon-';
 		$action->setIcon('user');
 
 		Assert::same(

@@ -9,7 +9,6 @@
 namespace Ublaboo\DataGrid\InlineEdit;
 
 use Nette;
-use Nette\SmartObject;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Traits;
@@ -68,7 +67,7 @@ class InlineEdit
 	protected $grid;
 
 	/**
-	 * @var string|NULL
+	 * @var string|null
 	 */
 	protected $primary_where_column;
 
@@ -87,7 +86,7 @@ class InlineEdit
 
 	/**
 	 * @param DataGrid $grid
-	 * @param string|NULL   $primary_where_column
+	 * @param string|null   $primary_where_column
 	 */
 	public function __construct(DataGrid $grid, $primary_where_column = null)
 	{

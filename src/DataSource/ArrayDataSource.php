@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -35,11 +35,11 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * @param array $data_source
+	 * @param array $dataSource
 	 */
-	public function __construct(array $data_source)
+	public function __construct(array $dataSource)
 	{
-		$this->setData($data_source);
+		$this->setData($dataSource);
 	}
 
 
@@ -50,9 +50,8 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Get count of data
-	 * @return int
 	 */
-	public function getCount()
+	public function getCount(): int
 	{
 		return sizeof($this->data);
 	}
@@ -60,9 +59,8 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Get the data
-	 * @return array
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		return $this->data;
 	}
@@ -70,23 +68,19 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Set the data
-	 * @param array $data_source
-	 * @return static
 	 */
-	private function setData(array $data_source)
+	private function setData(array $dataSource): self
 	{
-		$this->data = $data_source;
+		$this->data = $dataSource;
 
 		return $this;
 	}
 
 
 	/**
-	 * Filter data
 	 * @param Filter[] $filters
-	 * @return static
 	 */
-	public function filter(array $filters)
+	public function filter(array $filters): self
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
@@ -109,12 +103,7 @@ class ArrayDataSource implements IDataSource
 	}
 
 
-	/**
-	 * Filter data - get one row
-	 * @param array $condition
-	 * @return ArrayDataSource
-	 */
-	public function filterOne(array $condition)
+	public function filterOne(array $condition): self
 	{
 		foreach ($this->data as $item) {
 			foreach ($condition as $key => $value) {
@@ -132,13 +121,7 @@ class ArrayDataSource implements IDataSource
 	}
 
 
-	/**
-	 * Apply limit and offset on data
-	 * @param int $offset
-	 * @param int $limit
-	 * @return static
-	 */
-	public function limit($offset, $limit)
+	public function limit(int $offset, int $limit): self
 	{
 		$data = array_slice($this->data, $offset, $limit);
 		$this->setData($data);
@@ -148,9 +131,7 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * Apply fitler and tell whether row passes conditions or not
-	 * @param  mixed  $row
-	 * @param  Filter $filter
+	 * @param  mixed $row
 	 * @return mixed
 	 */
 	protected function applyFilter($row, Filter $filter)
@@ -194,12 +175,9 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * Filter by multi select value
-	 * @param  mixed  $row
-	 * @param  FilterMultiSelect $filter
-	 * @return void
+	 * @param mixed $row
 	 */
-	public function applyFilterMultiSelect($row, FilterMultiSelect $filter)
+	public function applyFilterMultiSelect($row, FilterMultiSelect $filter): void
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -209,11 +187,9 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * @param  mixed  $row
-	 * @param  FilterRange $filter
-	 * @return void
+	 * @param mixed $row
 	 */
-	public function applyFilterRange($row, FilterRange $filter)
+	public function applyFilterRange($row, FilterRange $filter): void
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -235,11 +211,10 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * @param  mixed  $row
-	 * @param  FilterDateRange $filter
-	 * @return void
+	 * @param mixed $row
+	 * @param FilterDateRange $filter
 	 */
-	public function applyFilterDateRange($row, FilterDateRange $filter)
+	public function applyFilterDateRange($row, FilterDateRange $filter): void
 	{
 		$format = $filter->getPhpFormat();
 		$condition = $filter->getCondition();
@@ -299,7 +274,6 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * Apply fitler date and tell whether row value matches or not
 	 * @param  mixed  $row
-	 * @param  Filter $filter
 	 * @return mixed
 	 */
 	protected function applyFilterDate($row, FilterDate $filter)
@@ -331,12 +305,7 @@ class ArrayDataSource implements IDataSource
 	}
 
 
-	/**
-	 * Sort data
-	 * @param  Sorting $sorting
-	 * @return static
-	 */
-	public function sort(Sorting $sorting)
+	public function sort(Sorting $sorting): self
 	{
 		if (is_callable($sorting->getSortCallback())) {
 			$data = call_user_func(
@@ -374,15 +343,15 @@ class ArrayDataSource implements IDataSource
 				krsort($data);
 			}
 
-			$data_source = [];
+			$dataSource = [];
 
 			foreach ($data as $i) {
 				foreach ($i as $item) {
-					$data_source[] = $item;
+					$dataSource[] = $item;
 				}
 			}
 
-			$this->setData($data_source);
+			$this->setData($dataSource);
 		}
 
 		return $this;

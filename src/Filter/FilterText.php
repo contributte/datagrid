@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
+use Nette\Forms\Container;
 
 class FilterText extends Filter
 {
@@ -31,14 +32,13 @@ class FilterText extends Filter
 	/**
 	 * @var bool
 	 */
-	protected $split_words_search = true;
+	protected $splitWordsSearch = true;
 
 
 	/**
 	 * Adds text field to filter form
-	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer(Nette\Forms\Container $container)
+	public function addToFormContainer(Container $container)
 	{
 		$container->addText($this->key, $this->name);
 
@@ -63,43 +63,29 @@ class FilterText extends Filter
 	}
 
 
-	/**
-	 * @return boolean
-	 */
-	public function isExactSearch()
+	public function isExactSearch(): bool
 	{
 		return $this->exact;
 	}
 
 
-	/**
-	 * @param boolean $exact
-	 * @return FilterText
-	 */
-	public function setExactSearch($exact = true)
+	public function setExactSearch(bool $exact = true): self
 	{
 		$this->exact = $exact;
 		return $this;
 	}
 
 
-	/**
-	 * @param bool $split_words_search
-	 * @return FilterText
-	 */
-	public function setSplitWordsSearch($split_words_search)
+	public function setSplitWordsSearch(bool $splitWordsSearch): self
 	{
-		$this->split_words_search = (bool) $split_words_search;
+		$this->splitWordsSearch = $splitWordsSearch;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function hasSplitWordsSearch()
+	public function hasSplitWordsSearch(): bool
 	{
-		return $this->split_words_search;
+		return $this->splitWordsSearch;
 	}
 }

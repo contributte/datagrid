@@ -12,7 +12,6 @@ use DibiRow;
 use LeanMapper;
 use Nette;
 use Nette\Database\Table\ActiveRow;
-use Nette\SmartObject;
 use Nette\Utils\Html;
 use Nextras;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -20,8 +19,6 @@ use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
 class Row
 {
-
-	use SmartObject;
 
 	/**
 	 * @var DataGrid
@@ -147,7 +144,7 @@ class Row
 	/**
 	 * @param  ActiveRow $item
 	 * @param  string    $key
-	 * @return mixed|NULL
+	 * @return mixed|null
 	 */
 	public function getActiveRowProperty(ActiveRow $item, $key)
 	{

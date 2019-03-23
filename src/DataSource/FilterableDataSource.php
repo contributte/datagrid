@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -8,21 +8,17 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Nette\SmartObject;
 use Nette\Utils\Callback;
 use Ublaboo\DataGrid\Filter;
 
 abstract class FilterableDataSource
 {
 
-	use SmartObject;
-
 	/**
 	 * Filter data
 	 * @param array $filters
-	 * @return static
 	 */
-	public function filter(array $filters)
+	public function filter(array $filters): self
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {

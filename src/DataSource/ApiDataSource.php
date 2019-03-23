@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -26,32 +26,32 @@ class ApiDataSource implements IDataSource
 	/**
 	 * @var array
 	 */
-	protected $query_params;
+	protected $queryParams;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
-	protected $sort_column;
+	protected $sortColumn;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
-	protected $order_column;
+	protected $orderColumn;
 
 	/**
-	 * @var int
+	 * @var int|null
 	 */
 	protected $limit;
 
 	/**
-	 * @var int
+	 * @var int|null
 	 */
 	protected $offset;
 
 	/**
 	 * @var int
 	 */
-	protected $filter_one = 0;
+	protected $filterOne = 0;
 
 	/**
 	 * @var array
@@ -59,26 +59,22 @@ class ApiDataSource implements IDataSource
 	protected $filter = [];
 
 
-	/**
-	 * @param string $url
-	 */
-	public function __construct($url, array $query_params = [])
+	public function __construct(string $url, array $queryParams = [])
 	{
 		$this->url = $url;
-		$this->query_params = $query_params;
+		$this->queryParams = $queryParams;
 	}
 
 
 	/**
 	 * Get data of remote source
-	 * @param  array  $params
 	 * @return mixed
 	 */
 	protected function getResponse(array $params = [])
 	{
-		$query_string = http_build_query($params + $this->query_params);
+		$queryString = http_build_query($params + $this->queryParams);
 
-		return json_decode(file_get_contents("{$this->url}?$query_string"));
+		return json_decode(file_get_contents(sprintf('%s?%s', $this->url, $queryString)));
 	}
 
 
@@ -87,39 +83,26 @@ class ApiDataSource implements IDataSource
 	 ********************************************************************************/
 
 
-	/**
-	 * Get count of data
-	 * @return int
-	 */
-	public function getCount()
+	public function getCount(): int
 	{
 		return $this->getResponse(['count' => '']);
 	}
 
 
-	/**
-	 * Get the data
-	 * @return array
-	 */
-	public function getData()
+	public function getData(): array
 	{
 		return !empty($this->data) ? $this->data : $this->getResponse([
-			'sort' => $this->sort_column,
-			'order' => $this->order_column,
+			'sort' => $this->sortColumn,
+			'order' => $this->orderColumn,
 			'limit' => $this->limit,
 			'offset' => $this->offset,
 			'filter' => $this->filter,
-			'one' => $this->filter_one,
+			'one' => $this->filterOne,
 		]);
 	}
 
 
-	/**
-	 * Filter data
-	 * @param array $filters
-	 * @return static
-	 */
-	public function filter(array $filters)
+	public function filter(array $filters): self
 	{
 		/**
 		 * First, save all filter values to array
@@ -151,27 +134,16 @@ class ApiDataSource implements IDataSource
 	}
 
 
-	/**
-	 * Filter data - get one row
-	 * @param array $condition
-	 * @return static
-	 */
-	public function filterOne(array $condition)
+	public function filterOne(array $condition): self
 	{
 		$this->filter = $condition;
-		$this->filter_one = 1;
+		$this->filterOne = 1;
 
 		return $this;
 	}
 
 
-	/**
-	 * Apply limit and offset on data
-	 * @param int $offset
-	 * @param int $limit
-	 * @return static
-	 */
-	public function limit($offset, $limit)
+	public function limit(int $offset, int $limit): self
 	{
 		$this->offset = $offset;
 		$this->limit = $limit;
@@ -180,19 +152,14 @@ class ApiDataSource implements IDataSource
 	}
 
 
-	/**
-	 * Sort data
-	 * @param Sorting $sorting
-	 * @return static
-	 */
-	public function sort(Sorting $sorting)
+	public function sort(Sorting $sorting): self
 	{
 		/**
 		 * there is only one iteration
 		 */
 		foreach ($sorting->getSort() as $column => $order) {
-			$this->sort_column = $column;
-			$this->order_column = $order;
+			$this->sortColumn = $column;
+			$this->orderColumn = $order;
 		}
 
 		return $this;

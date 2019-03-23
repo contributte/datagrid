@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Nette Framework Extras
@@ -17,92 +17,79 @@
 namespace Ublaboo\DataGrid\Components\DataGridPaginator;
 
 use Nette;
+use Nette\Application\UI\Control;
 use Nette\ComponentModel\IContainer;
+use Nette\Localization\ITranslator;
+use Nette\Utils\Paginator;
 use Ublaboo\DataGrid\DataGrid;
 
-/**
- * Visual paginator control.
- *
- * @property-read Nette\Application\UI\ITemplate $template
- */
-class DataGridPaginator extends Nette\Application\UI\Control
+class DataGridPaginator extends Control
 {
 
 	/**
-	 * @var Nette\Localization\ITranslator
+	 * @var ITranslator
 	 */
 	private $translator;
 
 	/**
-	 * @var  string
+	 * @var string
 	 */
-	private $icon_prefix;
+	private $iconPrefix;
 
 
 	/**
-	 * @var Nette\Utils\Paginator
+	 * @var Paginator
 	 */
 	private $paginator;
 
 	/**
 	 * @var string
 	 */
-	private $template_file;
+	private $templateFile;
 
 
 	public function __construct(
-		Nette\Localization\ITranslator $translator,
-		$icon_prefix = 'fa fa-',
+		ITranslator $translator,
+		string $iconPrefix = 'fa fa-',
 		IContainer $parent = null,
-		$name = null
+		?string $name = null
 	) {
 		parent::__construct($parent, $name);
 
 		$this->translator = $translator;
-		$this->icon_prefix = $icon_prefix;
+		$this->iconPrefix = $iconPrefix;
 	}
 
 
-	public function setTemplateFile($template_file)
+	public function setTemplateFile(string $templateFile): void
 	{
-		$this->template_file = (string) $template_file;
+		$this->templateFile = $templateFile;
 	}
 
 
-	public function getTemplateFile()
+	public function getTemplateFile(): string
 	{
-		return $this->template_file ?: __DIR__ . '/templates/data_grid_paginator.latte';
+		return $this->templateFile ?: __DIR__ . '/templates/data_grid_paginator.latte';
 	}
 
 
-	/**
-	 * Get paginator original template file
-	 * @return string
-	 */
-	public function getOriginalTemplateFile()
+	public function getOriginalTemplateFile(): string
 	{
 		return __DIR__ . '/templates/data_grid_paginator.latte';
 	}
 
 
-	/**
-	 * @return Nette\Utils\Paginator
-	 */
-	public function getPaginator()
+	public function getPaginator(): Paginator
 	{
-		if (!$this->paginator) {
-			$this->paginator = new Nette\Utils\Paginator;
+		if ($this->paginator === null) {
+			$this->paginator = new Paginator;
 		}
 
 		return $this->paginator;
 	}
 
 
-	/**
-	 * Renders paginator.
-	 * @return void
-	 */
-	public function render()
+	public function render(): void
 	{
 		$paginator = $this->getPaginator();
 		$page = $paginator->page;
@@ -128,31 +115,27 @@ class DataGridPaginator extends Nette\Application\UI\Control
 			$steps = array_values(array_unique($arr));
 		}
 
-		$this->template->setTranslator($this->translator);
+		$this->getTemplate()->setTranslator($this->translator);
 
-		if (!isset($this->template->steps)) {
-			$this->template->add('steps', $steps);
+		if (!isset($this->getTemplate()->steps)) {
+			$this->getTemplate()->add('steps', $steps);
 		}
 
-		if (!isset($this->template->paginator)) {
-			$this->template->add('paginator', $paginator);
+		if (!isset($this->getTemplate()->paginator)) {
+			$this->getTemplate()->add('paginator', $paginator);
 		}
 
-		//$this->template->add('icon_prefix', $this->icon_prefix);
-		$this->template->icon_prefix = $this->icon_prefix;
-		//$this->template->add('original_template', $this->getOriginalTemplateFile());
-		$this->template->original_template = $this->getOriginalTemplateFile();
-		$this->template->setFile($this->getTemplateFile());
-		$this->template->render();
+		$this->getTemplate()->iconPrefix = $this->iconPrefix;
+		$this->getTemplate()->originalTemplate = $this->getOriginalTemplateFile();
+		$this->getTemplate()->setFile($this->getTemplateFile());
+		$this->getTemplate()->render();
 	}
 
 
 	/**
 	 * Loads state informations.
-	 * @param  array
-	 * @return void
 	 */
-	public function loadState(array $params)
+	public function loadState(array $params): void
 	{
 		parent::loadState($params);
 

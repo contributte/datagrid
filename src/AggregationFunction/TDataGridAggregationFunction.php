@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -20,18 +20,15 @@ trait TDataGridAggregationFunction
 	private $aggregationFunctions = [];
 
 	/**
-	 * @var IAggregationFunction|NULL
+	 * @var IAggregationFunction|null
 	 */
-	private $multipleAggregationFunction;
+	private $multipleAggregationFunction = null;
 
 
 	/**
-	 * @param  string  $key
-	 * @param  IAggregationFunction  $aggregationFunction
-	 * @return static
 	 * @throws DataGridException
 	 */
-	public function addAggregationFunction($key, IAggregationFunction $aggregationFunction)
+	public function addAggregationFunction(string $key, IAggregationFunction $aggregationFunction): self
 	{
 		if ($this->hasColumnsSummary()) {
 			throw new DataGridException('You can use either ColumnsSummary or AggregationFunctions');
@@ -56,11 +53,9 @@ trait TDataGridAggregationFunction
 
 
 	/**
-	 * @param  IMultipleAggregationFunction  $multipleAggregationFunction
 	 * @throws DataGridException
-	 * @return static
 	 */
-	public function setMultipleAggregationFunction(IMultipleAggregationFunction $multipleAggregationFunction)
+	public function setMultipleAggregationFunction(IMultipleAggregationFunction $multipleAggregationFunction): self
 	{
 		if ($this->hasColumnsSummary()) {
 			throw new DataGridException('You can use either ColumnsSummary or AggregationFunctions');
@@ -77,11 +72,9 @@ trait TDataGridAggregationFunction
 
 
 	/**
-	 * @param  IDataSource  $dataSource
 	 * @throws DataGridException
-	 * @return void
 	 */
-	public function beforeDataModelFilter(IDataSource $dataSource)
+	public function beforeDataModelFilter(IDataSource $dataSource): void
 	{
 		if (!$this->hasSomeAggregationFunction()) {
 			return;
@@ -108,11 +101,9 @@ trait TDataGridAggregationFunction
 
 
 	/**
-	 * @param  IDataSource  $dataSource
 	 * @throws DataGridException
-	 * @return void
 	 */
-	public function afterDataModelFilter(IDataSource $dataSource)
+	public function afterDataModelFilter(IDataSource $dataSource): void
 	{
 		if (!$this->hasSomeAggregationFunction()) {
 			return;
@@ -139,11 +130,9 @@ trait TDataGridAggregationFunction
 
 
 	/**
-	 * @param  IDataSource  $dataSource
 	 * @throws DataGridException
-	 * @return void
 	 */
-	public function afterDataModelPaginated(IDataSource $dataSource)
+	public function afterDataModelPaginated(IDataSource $dataSource): void
 	{
 		if (!$this->hasSomeAggregationFunction()) {
 			return;
@@ -169,10 +158,7 @@ trait TDataGridAggregationFunction
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function hasSomeAggregationFunction()
+	public function hasSomeAggregationFunction(): bool
 	{
 		return !empty($this->aggregationFunctions) || $this->multipleAggregationFunction;
 	}
@@ -181,16 +167,13 @@ trait TDataGridAggregationFunction
 	/**
 	 * @return IAggregationFunction[]
 	 */
-	public function getAggregationFunctions()
+	public function getAggregationFunctions(): array
 	{
 		return $this->aggregationFunctions;
 	}
 
 
-	/**
-	 * @return MultipleAggregationFunction
-	 */
-	public function getMultipleAggregationFunction()
+	public function getMultipleAggregationFunction(): MultipleAggregationFunction
 	{
 		return $this->multipleAggregationFunction;
 	}

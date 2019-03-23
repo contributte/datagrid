@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -8,18 +8,15 @@
 
 namespace Ublaboo\DataGrid\Export;
 
+use Contributte\Application\Response\CSVResponse;
 use Nette;
+use Nette\Application\UI\Presenter;
 use Ublaboo\DataGrid\CsvDataModel;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\Responses\CSVResponse;
 
 class ExportCsv extends Export
 {
-
-	/**
-	 * @var bool
-	 */
-	protected $is_ajax = false;
 
 	/**
 	 * @var bool
@@ -34,74 +31,59 @@ class ExportCsv extends Export
 	/**
 	 * @var string
 	 */
-	protected $output_encoding = 'utf-8';
+	protected $outputEncoding;
 
 	/**
 	 * @var boolean
 	 */
-	protected $include_bom = false;
+	protected $includeBom;
 
 	/**
 	 * @var string
 	 */
-	protected $delimiter = ';';
+	protected $delimiter;
 
 
-	/**
-	 * @param DataGrid    $grid
-	 * @param string      $text
-	 * @param string      $csv_file_name
-	 * @param bool        $filtered
-	 * @param string|null $output_encoding
-	 * @param string|null $delimiter
-	 * @param bool        $include_bom
-	 */
 	public function __construct(
 		DataGrid $grid,
-		$text,
-		$csv_file_name,
-		$filtered,
-		$output_encoding = null,
-		$delimiter = null,
-		$include_bom = false
+		string $text,
+		string $name,
+		bool $filtered,
+		?string $outputEncoding = 'utf-8',
+		?string $delimiter = ';',
+		?bool $includeBom = false
 	) {
 		$this->grid = $grid;
 		$this->text = $text;
 		$this->filtered = (bool) $filtered;
-		$this->name = strpos($csv_file_name, '.csv') !== false ? $csv_file_name : "$csv_file_name.csv";
 
-		if ($output_encoding) {
-			$this->output_encoding = $output_encoding;
+		if (strpos($name, '.csv') === false) {
+			$name .= '.csv';
 		}
 
-		if ($delimiter) {
-			$this->delimiter = $delimiter;
-		}
-
-		if ($include_bom) {
-			$this->include_bom = $include_bom;
-		}
+		$this->name =  $name;
+		$this->outputEncoding = $outputEncoding;
+		$this->delimiter = $delimiter;
+		$this->includeBom = $includeBom;
 	}
 
 
 	/**
 	 * Call export callback
-	 * @param  array    $data
-	 * @return void
 	 */
-	public function invoke(array $data)
+	public function invoke(array $data): void
 	{
 		$columns = $this->getColumns() ?: $this->grid->getColumns();
 
 		$csv_data_model = new CsvDataModel($data, $columns, $this->grid->getTranslator());
 
-		if ($this->grid->getPresenter() instanceof Nette\Application\UI\Presenter) {
+		if ($this->grid->getPresenter() instanceof Presenter) {
 			$this->grid->getPresenter()->sendResponse(new CSVResponse(
 				$csv_data_model->getSimpleData(),
 				$this->name,
-				$this->output_encoding,
+				$this->outputEncoding,
 				$this->delimiter,
-				$this->include_bom
+				$this->includeBom
 			));
 
 			exit(0);

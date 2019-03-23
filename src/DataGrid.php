@@ -67,7 +67,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var string
 	 */
-	public static $icon_prefix = 'fa fa-';
+	public static $iconPrefix = 'fa fa-';
 
 	/**
 	 * Default form method
@@ -241,7 +241,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var string
 	 */
-	protected $original_template;
+	protected $originalTemplate;
 
 	/**
 	 * @var array
@@ -367,7 +367,7 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $auto_submit = true;
 
 	/**
-	 * @var Filter\SubmitButton|NULL
+	 * @var Filter\SubmitButton|null
 	 */
 	protected $filter_submit_button = null;
 
@@ -387,7 +387,7 @@ class DataGrid extends Nette\Application\UI\Control
 	private $custom_paginator_template;
 
 	/**
-	 * @param Nette\ComponentModel\IContainer|NULL $parent
+	 * @param Nette\ComponentModel\IContainer|null $parent
 	 * @param string                               $name
 	 */
 	public function __construct(Nette\ComponentModel\IContainer $parent = null, $name = null)
@@ -539,9 +539,9 @@ class DataGrid extends Nette\Application\UI\Control
 		$template->multiple_aggregation_function = $this->getMultipleAggregationFunction();
 
 		$template->filter_active = $this->isFilterActive();
-		$template->original_template = $this->getOriginalTemplateFile();
-		$template->icon_prefix = static::$icon_prefix;
-		$template->icon_prefix = static::$icon_prefix;
+		$template->originalTemplate = $this->getOriginalTemplateFile();
+		$template->iconPrefix = static::$iconPrefix;
+		$template->iconPrefix = static::$iconPrefix;
 		$template->items_detail = $this->items_detail;
 		$template->columns_visibility = $this->getColumnsVisibility();
 		$template->columnsSummary = $this->columnsSummary;
@@ -623,7 +623,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @return DataSource\IDataSource|NULL
+	 * @return DataSource\IDataSource|null
 	 */
 	public function getDataSource()
 	{
@@ -676,7 +676,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Tell datagrid wheteher to use or not happy components
-	 * @param  bool|NULL $use If not given, return value of static::$use_happy_components
+	 * @param  bool|null $use If not given, return value of static::$use_happy_components
 	 * @return void|bool
 	 */
 	public function useHappyComponents($use = null)
@@ -718,7 +718,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Return default sort for column, if specified
 	 * @param string $columnKey
-	 * @return string|NULL
+	 * @return string|null
 	 */
 	public function getColumnDefaultSort($columnKey)
 	{
@@ -844,7 +844,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * @param  array         $sort
-	 * @param  callable|NULL $sort_callback
+	 * @param  callable|null $sort_callback
 	 * @return Sorting
 	 */
 	protected function createSorting(array $sort, callable $sort_callback = null)
@@ -2758,7 +2758,7 @@ class DataGrid extends Nette\Application\UI\Control
 		 */
 		$component = new Components\DataGridPaginator\DataGridPaginator(
 			$this->getTranslator(),
-			static::$icon_prefix
+			static::$iconPrefix
 		);
 		$paginator = $component->getPaginator();
 
@@ -3099,7 +3099,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @return Nette\Forms\Container|NULL
+	 * @return Nette\Forms\Container|null
 	 */
 	public function getItemDetailForm()
 	{
@@ -3360,7 +3360,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @return ColumnsSummary|NULL
+	 * @return ColumnsSummary|null
 	 */
 	public function getColumnsSummary()
 	{

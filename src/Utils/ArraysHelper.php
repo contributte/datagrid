@@ -8,12 +8,9 @@
 
 namespace Ublaboo\DataGrid\Utils;
 
-use Nette\SmartObject;
 
 final class ArraysHelper
 {
-
-	use SmartObject;
 
 	/**
 	 * Test recursively whether given array is empty

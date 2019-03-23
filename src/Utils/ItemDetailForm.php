@@ -71,7 +71,7 @@ final class ItemDetailForm extends Container
 
 
 	/**
-	 * @return mixed|NULL
+	 * @return mixed|null
 	 */
 	private function getHttpData()
 	{

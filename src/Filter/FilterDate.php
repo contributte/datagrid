@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
@@ -56,13 +56,10 @@ class FilterDate extends Filter implements IFilterDate
 
 	/**
 	 * Set format for datepicker etc
-	 * @param  string $php_format
-	 * @param  string $js_format
-	 * @return static
 	 */
-	public function setFormat($php_format, $js_format)
+	public function setFormat(string $phpFormat, string $jsFormat): self
 	{
-		$this->format = [$php_format, $js_format];
+		$this->format = [$phpFormat, $jsFormat];
 
 		return $this;
 	}
@@ -70,9 +67,8 @@ class FilterDate extends Filter implements IFilterDate
 
 	/**
 	 * Get php format for datapicker
-	 * @return string
 	 */
-	public function getPhpFormat()
+	public function getPhpFormat(): string
 	{
 		return $this->format[0];
 	}
@@ -80,9 +76,8 @@ class FilterDate extends Filter implements IFilterDate
 
 	/**
 	 * Get js format for datepicker
-	 * @return string
 	 */
-	public function getJsFormat()
+	public function getJsFormat(): string
 	{
 		return $this->format[1];
 	}
