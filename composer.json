@@ -22,21 +22,18 @@
 	},
 	"require": {
 		"php": "^5.6|^7.0",
-		"nette/application": "^2.4.0",
-		"nette/utils": "^2.4.0",
-		"nette/forms": "^2.3.0",
-		"ublaboo/responses": "~1.0.0 || ~2.0.0",
+		"nette/application": "^3.0",
+		"nette/utils": "^3.0",
+		"nette/forms": "^3.0",
+		"contributte/application": "dev-master",
 		"symfony/property-access": "^3.0.0 || ^4.0.0"
 	},
 	"require-dev": {
-		"nette/tester": "^1.6.1",
-		"tracy/tracy": "^2.3.0",
-		"mockery/mockery": "~0.9",
-		"tharos/leanmapper": "~2.2.0",
-		"nextras/orm": "~2.3.0",
-		"doctrine/orm": "~2.5",
-		"nette/database": "^2.3",
-		"dibi/dibi": "^3.0"
+		"nette/tester": "^2.2",
+		"tracy/tracy": "^2.6",
+		"mockery/mockery": "~1.2",
+		"phpstan/phpstan": "^0.11",
+		"ninjify/coding-standard": "^0.8"
 	},
 	"extra": {
 		"branch-alias": {
@@ -44,5 +41,16 @@
 		}
 	},
 	"prefer-stable": true,
-	"minimum-stability": "dev"
+	"minimum-stability": "dev",
+	"scripts": {
+		"tests": [
+			"php vendor/nette/tester/src/tester.php tests/Api/UnitTests -C",
+			"php vendor/nette/tester/src/tester.php tests/Api/IntegrationTests -C",
+			"php vendor/nette/tester/src/tester.php tests/Api/DatabaseTests -j 1 -C",
+			"php vendor/nette/tester/src/tester.php tests/Api/AcceptanceTests -j 1 -C"
+		],
+		"phpstan": "vendor/phpstan/phpstan/bin/phpstan analyse src --level 7",
+		"phpcs": "vendor/bin/phpcs --standard=vendor/gamee/php-code-checker-rules/ruleset.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests",
+		"phpcsfix": "vendor/bin/phpcbf --standard=vendor/gamee/php-code-checker-rules/ruleset.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests"
+	}
 }
