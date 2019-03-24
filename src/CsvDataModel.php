@@ -1,41 +1,28 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid;
 
-use Nette;
 use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\Column\Column;
 
 class CsvDataModel
 {
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $data;
 
-	/**
-	 * @var Column[]
-	 */
+	/** @var Column[] */
 	protected $columns;
 
-	/**
-	 * @var ITranslator
-	 */
+	/** @var ITranslator */
 	protected $translator;
-
 
 	public function __construct(
 		array $data,
 		array $columns,
 		ITranslator $translator
-	) {
+	)
+    {
 		$this->data = $data;
 		$this->columns = $columns;
 		$this->translator = $translator;
@@ -75,7 +62,8 @@ class CsvDataModel
 
 	/**
 	 * Get item values saved into row
-	 * @param  mixed $item
+     *
+     * @param  mixed $item
 	 */
 	public function getRow($item): array
 	{
@@ -87,4 +75,5 @@ class CsvDataModel
 
 		return $row;
 	}
+
 }

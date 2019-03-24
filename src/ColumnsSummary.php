@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid;
 
@@ -13,46 +7,33 @@ use Ublaboo\DataGrid\Column\ColumnNumber;
 use Ublaboo\DataGrid\Column\Renderer;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 
-
 class ColumnsSummary
 {
 
-	/**
-	 * @var DataGrid
-	 */
+	/** @var DataGrid */
 	protected $datagrid;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $summary;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $format = [];
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $rowCallback = null;
 
-	/**
-	 * @var Renderer|null
-	 */
+	/** @var Renderer|null */
 	protected $renderer;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $positionTop = false;
-
 
 	public function __construct(
 		DataGrid $datagrid,
 		array $columns,
 		?callable $rowCallback
-	) {
+	)
+    {
 		$this->summary = array_fill_keys(array_values($columns), 0);
 		$this->datagrid = $datagrid;
 		$this->rowCallback = $rowCallback;
@@ -72,7 +53,8 @@ class ColumnsSummary
 
 	/**
 	 * Get value from column using Row::getValue() or custom callback
-	 * @return mixed
+     *
+     * @return mixed
 	 */
 	private function getValue(Row $row, Column $column)
 	{
@@ -95,9 +77,6 @@ class ColumnsSummary
 	}
 
 
-	/**
-	 * @param string $key
-	 */
 	public function render(string $key)
 	{
 		try {
@@ -130,7 +109,7 @@ class ColumnsSummary
 		$renderer = $this->getRenderer();
 
 		if (!$renderer) {
-			throw new DataGridColumnRendererException;
+			throw new DataGridColumnRendererException();
 		}
 
 		return call_user_func_array($renderer->getCallback(), [$this->summary[$key], $key]);
@@ -145,7 +124,7 @@ class ColumnsSummary
 
 	public function setRenderer(callable $renderer): self
 	{
-		$this->renderer = new Renderer($renderer, NULL);
+		$this->renderer = new Renderer($renderer, null);
 
 		return $this;
 	}
@@ -178,7 +157,9 @@ class ColumnsSummary
 
 	public function setPositionTop(bool $top = true): self
 	{
-		$this->positionTop = ($top === false) ? false : true;
+		$this->positionTop = ($top === false)
+            ? false
+            : true;
 
 		return $this;
 	}
@@ -188,4 +169,5 @@ class ColumnsSummary
 	{
 		return $this->positionTop;
 	}
+
 }

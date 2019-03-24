@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -13,7 +7,6 @@ use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits;
 use Ublaboo\DataGrid\Traits\TButtonText;
 use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
 use Ublaboo\DataGrid\Traits\TLink;
@@ -27,71 +20,44 @@ class Action extends Column
 	use TLink;
 	use TRenderCondition;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	public static $dataConfirmAttributeName = 'datagrid-confirm';
 
-	/**
-	 * @var DataGrid
-	 */
+	/** @var DataGrid */
 	protected $grid;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $href;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $name;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $params;
 
-	/**
-	 * @var array|callable
-	 */
+	/** @var array|callable */
 	protected $confirm;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $dataAttributes = [];
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $attributes = [];
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $parameters = [];
 
-	/**
-	 * @var string|callable
-	 */
+	/** @var string|callable */
 	protected $icon;
 
-	/**
-	 * @var string|callable
-	 */
+	/** @var string|callable */
 	protected $class = 'btn btn-xs btn-default btn-secondary';
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $openInNewTab = false;
 
-	/**
-	 * @var string|callable
-	 */
+	/** @var string|callable */
 	private $title;
-
 
 	public function __construct(DataGrid $grid, string $href, string $name, array $params)
 	{
@@ -103,7 +69,6 @@ class Action extends Column
 
 
 	/**
-	 * @param  Row $row
 	 * @return mixed
 	 */
 	public function render(Row $row)
@@ -270,14 +235,7 @@ class Action extends Column
 
 		$question = $this->confirm[0];
 
-		if (is_string($question)) {
-			$question = $this->translate($question);
-		} else {
-			/**
-			 * If user callback was used for setting action confirmation dialog, it has to return string
-			 */
-			$question = $this->getPropertyStringOrCallableGetString($row, $question, 'confirmation dialog');
-		}
+		$question = is_string($question) ? $this->translate($question) : $this->getPropertyStringOrCallableGetString($row, $question, 'confirmation dialog');
 
 		if (!$this->confirm[1]) {
 			return $question;
@@ -300,7 +258,7 @@ class Action extends Column
 
 	public function addAttributes(array $attrs): self
 	{
-		$this->attributes = $this->attributes + $attrs;
+		$this->attributes += $attrs;
 
 		return $this;
 	}
@@ -362,4 +320,5 @@ class Action extends Column
 
 		return $this;
 	}
+
 }

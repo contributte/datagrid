@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Traits;
 
@@ -16,38 +10,29 @@ use Ublaboo\DataGrid\Row;
 trait TButtonRenderer
 {
 
-	/**
-	 * @var Renderer|null
-	 */
+	/** @var Renderer|null */
 	protected $renderer;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $replacements = [];
-
 
 	/**
 	 * @return mixed
 	 * @throws DataGridColumnRendererException
 	 */
-	public function useRenderer(Row $row = null)
+	public function useRenderer(?Row $row = null)
 	{
 		$renderer = $this->getRenderer();
 
-		if ($row instanceof Row) {
-			$args = [$row->getItem()];
-		} else {
-			$args = [];
-		}
+		$args = $row instanceof Row ? [$row->getItem()] : [];
 
 		if (!$renderer) {
-			throw new DataGridColumnRendererException;
+			throw new DataGridColumnRendererException();
 		}
 
 		if ($renderer->getConditionCallback()) {
 			if (!call_user_func_array($renderer->getConditionCallback(), $args)) {
-				throw new DataGridColumnRendererException;
+				throw new DataGridColumnRendererException();
 			}
 
 			return call_user_func_array($renderer->getCallback(), $args);
@@ -59,7 +44,8 @@ trait TButtonRenderer
 
 	/**
 	 * Set renderer callback and (it may be optional - the condition callback will decide)
-	 * @throws DataGridException
+     *
+     * @throws DataGridException
 	 */
 	public function setRenderer(
 		callable $renderer,
@@ -117,4 +103,5 @@ trait TButtonRenderer
 
 		return [false, null];
 	}
+
 }

@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -13,20 +7,15 @@ use Ublaboo\DataGrid\Row;
 class ColumnNumber extends Column
 {
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $align = 'right';
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $numberFormat = [
 		0, // Decimals
 		'.', // Decimal point
 		' ',  // Thousands separator
 	];
-
 
 	/**
 	 * @return mixed
@@ -68,4 +57,5 @@ class ColumnNumber extends Column
 			$this->numberFormat[2],
 		];
 	}
+
 }

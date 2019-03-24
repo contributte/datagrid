@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\GroupAction;
 
@@ -19,16 +13,11 @@ class GroupActionCollection
 
 	private const ID_ATTRIBUTE_PREFIX = 'group_action_item_';
 
-	/**
-	 * @var GroupAction[]
-	 */
+	/** @var GroupAction[] */
 	protected $groupActions = [];
 
-	/**
-	 * @var DataGrid
-	 */
+	/** @var DataGrid */
 	protected $datagrid;
-
 
 	public function __construct(DataGrid $datagrid)
 	{
@@ -63,30 +52,29 @@ class GroupActionCollection
 				if ($action->hasOptions()) {
 					if ($action instanceof GroupMultiSelectAction) {
 						$control = $container->addMultiSelect($id, '', $action->getOptions());
-						$control->setAttribute('data-datagrid-multiselect-id', static::ID_ATTRIBUTE_PREFIX . $id);
+						$control->setAttribute('data-datagrid-multiselect-id', self::ID_ATTRIBUTE_PREFIX . $id);
 						$control->setAttribute('data-style', 'hidden');
 						$control->setAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
 					} else {
 						$control = $container->addSelect($id, '', $action->getOptions());
 					}
 
-					$control->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id);
+					$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id);
 				}
-
 			} elseif ($action instanceof GroupTextAction) {
 				$control = $container->addText($id, '');
 
-				$control->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id)
+				$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($container['group_action'], Form::EQUAL, $id)
-						->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
+                    ->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
 					->endCondition();
 
 			} elseif ($action instanceof GroupTextareaAction) {
 				$control = $container->addTextarea($id, '');
 
-				$control->setAttribute('id', static::ID_ATTRIBUTE_PREFIX . $id)
+				$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($container['group_action'], Form::EQUAL, $id)
-						->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
+                    ->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
 			}
 
 			if ($control) {
@@ -108,7 +96,7 @@ class GroupActionCollection
 
 		foreach ($this->groupActions as $id => $action) {
 			$container['group_action']->addCondition(Form::EQUAL, $id)
-				->toggle(static::ID_ATTRIBUTE_PREFIX . $id);
+				->toggle(self::ID_ATTRIBUTE_PREFIX . $id);
 		}
 
 		$container['group_action']->addCondition(Form::FILLED)
@@ -126,10 +114,8 @@ class GroupActionCollection
 
 	/**
 	 * Pass "sub"-form submission forward to custom submit function
-	 * @param  Form   $form
-	 * @return void
-	 */
-	public function submitted(Form $form)
+     */
+	public function submitted(Form $form): void
 	{
 		if (!isset($form['group_action']['submit']) || !$form['group_action']['submit']->isSubmittedBy()) {
 			return;
@@ -149,7 +135,7 @@ class GroupActionCollection
 		$ids = array_keys($http_ids);
 
 		$id = $values->group_action;
-		$this->groupActions[$id]->onSelect($ids, isset($values->{$id}) ? $values->{$id} : null);
+		$this->groupActions[$id]->onSelect($ids, $values->{$id} ?? null);
 
 		$form['group_action']['group_action']->setValue(null);
 	}
@@ -160,7 +146,9 @@ class GroupActionCollection
 	 */
 	public function addGroupSelectAction(string $title, array $options): GroupAction
 	{
-		$id = ($s = sizeof($this->groupActions)) ? ($s + 1) : 1;
+		$id = ($s = sizeof($this->groupActions))
+            ? ($s + 1)
+            : 1;
 
 		return $this->groupActions[$id] = new GroupSelectAction($title, $options);
 	}
@@ -171,7 +159,9 @@ class GroupActionCollection
 	 */
 	public function addGroupMultiSelectAction(string $title, array $options): GroupAction
 	{
-		$id = ($s = sizeof($this->groupActions)) ? ($s + 1) : 1;
+		$id = ($s = sizeof($this->groupActions))
+            ? ($s + 1)
+            : 1;
 
 		return $this->groupActions[$id] = new GroupMultiSelectAction($title, $options);
 	}
@@ -182,7 +172,9 @@ class GroupActionCollection
 	 */
 	public function addGroupTextAction(string $title): GroupAction
 	{
-		$id = ($s = sizeof($this->groupActions)) ? ($s + 1) : 1;
+		$id = ($s = sizeof($this->groupActions))
+            ? ($s + 1)
+            : 1;
 
 		return $this->groupActions[$id] = new GroupTextAction($title);
 	}
@@ -193,7 +185,9 @@ class GroupActionCollection
 	 */
 	public function addGroupTextareaAction(string $title): GroupAction
 	{
-		$id = ($s = sizeof($this->groupActions)) ? ($s + 1) : 1;
+		$id = ($s = sizeof($this->groupActions))
+            ? ($s + 1)
+            : 1;
 
 		return $this->groupActions[$id] = new GroupTextareaAction($title);
 	}
@@ -209,4 +203,5 @@ class GroupActionCollection
 
 		throw new DataGridGroupActionException("Group action $title does not exist.");
 	}
+
 }

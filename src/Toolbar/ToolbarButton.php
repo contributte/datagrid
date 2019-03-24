@@ -1,10 +1,4 @@
-<?php
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Toolbar;
 
@@ -15,6 +9,7 @@ use Ublaboo\DataGrid\Traits;
 
 class ToolbarButton
 {
+
 	use Traits\TButtonTryAddIcon;
 	use Traits\TButtonClass;
 	use Traits\TButtonIcon;
@@ -23,34 +18,22 @@ class ToolbarButton
 	use Traits\TButtonTitle;
 	use Traits\TLink;
 
-	/**
-	 * @var DataGrid
-	 */
+	/** @var DataGrid */
 	protected $grid;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $href;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $params;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $attributes = [];
 
-
 	/**
-	 * @param DataGrid $grid
-	 * @param string   $href
-	 * @param string   $text
 	 * @param array    $params
 	 */
-	public function __construct(DataGrid $grid, $href, $text, $params = [])
+	public function __construct(DataGrid $grid, string $href, string $text, array $params = [])
 	{
 		$this->grid = $grid;
 		$this->href = $href;
@@ -61,9 +44,8 @@ class ToolbarButton
 
 	/**
 	 * Render toolbar button
-	 * @return Html
-	 */
-	public function renderButton()
+     */
+	public function renderButton(): Html
 	{
 		try {
 			// Renderer function may be used
@@ -102,8 +84,9 @@ class ToolbarButton
 	 */
 	public function addAttributes(array $attrs)
 	{
-		$this->attributes = $this->attributes + $attrs;
+		$this->attributes += $attrs;
 
 		return $this;
 	}
+
 }

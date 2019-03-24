@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -19,34 +13,22 @@ class ColumnStatus extends Column
 
 	use Traits\TButtonCaret;
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onChange = [];
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $key;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $options = [];
 
-
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $key
-	 * @param string   $column
-	 * @param string   $name
-	 */
 	public function __construct(
 		DataGrid $grid,
 		string $key,
 		string $column,
 		string $name
-	) {
+	)
+    {
 		parent::__construct($grid, $key, $column, $name);
 
 		$this->key = $key;
@@ -95,7 +77,7 @@ class ColumnStatus extends Column
 	public function getCurrentOption(Row $row): ?Option
 	{
 		foreach ($this->getOptions() as $option) {
-			if ($option->getValue() == $row->getValue($this->getColumn())) {
+			if ($option->getValue() === $row->getValue($this->getColumn())) {
 				return $option;
 			}
 		}
@@ -141,7 +123,7 @@ class ColumnStatus extends Column
 	public function removeOption($value): void
 	{
 		foreach ($this->options as $key => $option) {
-			if ($option->getValue() == $value) {
+			if ($option->getValue() === $value) {
 				unset($this->options[$key]);
 			}
 		}
@@ -161,11 +143,12 @@ class ColumnStatus extends Column
 		]);
 	}
 
-	
+
 	public function setReplacement(array $replacements): void
 	{
 		throw new DataGridColumnStatusException(
 			'Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)'
 		);
 	}
+
 }

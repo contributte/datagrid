@@ -1,13 +1,8 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Traits;
 
+use InvalidArgumentException;
 use Nette;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -20,7 +15,7 @@ trait TLink
 
 	/**
 	 * @throws DataGridHasToBeAttachedToPresenterComponentException
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 * @throws DataGridLinkCreationException
 	 */
 	protected function createLink(
@@ -54,7 +49,7 @@ trait TLink
 			if ($link) {
 				if (
 					strpos($link, '#error') === 0 ||
-					(strrpos($href, "!") !== false && strpos($link, '#') === 0) ||
+					(strrpos($href, '!') !== false && strpos($link, '#') === 0) ||
 					(in_array($grid->getPresenter()->invalidLinkMode, [Presenter::INVALID_LINK_WARNING, Presenter::INVALID_LINK_SILENT], true) && strpos($link, '#') === 0)
 				) {
 					continue; // Did not find signal handler
@@ -95,4 +90,5 @@ trait TLink
 			. 'Try adding handler ' . $desiredHandler
 		);
 	}
+
 }

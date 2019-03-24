@@ -1,13 +1,6 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\GroupAction;
-
 
 /**
  * @method void onSelect(array $ids, string $value)
@@ -17,26 +10,17 @@ abstract class GroupAction
 
 	use SmartObject;
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onSelect = [];
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $title;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $class = 'form-control input-sm form-control-sm';
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $attributes = [];
-
 
 	public function __construct(string $title)
 	{
@@ -64,9 +48,6 @@ abstract class GroupAction
 	}
 
 
-	/**
-	 * @param string $key
-	 */
 	public function setAttribute(string $key, $value): self
 	{
 		$this->attributes[$key] = $value;
@@ -79,4 +60,5 @@ abstract class GroupAction
 	{
 		return $this->attributes;
 	}
+
 }

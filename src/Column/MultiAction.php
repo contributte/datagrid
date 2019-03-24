@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -12,7 +6,6 @@ use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits;
 use Ublaboo\DataGrid\Traits\TButtonCaret;
 use Ublaboo\DataGrid\Traits\TButtonClass;
 use Ublaboo\DataGrid\Traits\TButtonIcon;
@@ -32,26 +25,17 @@ class MultiAction extends Column
 	use TButtonCaret;
 	use TLink;
 
-	/**
-	 * @var DataGrid
-	 */
+	/** @var DataGrid */
 	protected $grid;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $name;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $actions = [];
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	private $rowConditions = [];
-
 
 	public function __construct(DataGrid $grid, string $name)
 	{
@@ -171,4 +155,5 @@ class MultiAction extends Column
 
 		return (bool) call_user_func($this->rowConditions[$actionKey], $row->getItem());
 	}
+
 }

@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -16,11 +10,8 @@ use Ublaboo\DataGrid\DataGrid;
 class ActionCallback extends Action
 {
 
-	/**
-	 * @var callable
-	 */
+	/** @var callable */
 	public $onClick = [];
-
 
 	/**
 	 * Create link to datagrid::handleActionCallback() to fire custom callback
@@ -30,8 +21,9 @@ class ActionCallback extends Action
 		/**
 		 * Int case of ActionCallback, $this->href is a identifier of user callback
 		 */
-		$params = $params + ['__key' => $this->href];
+		$params += ['__key' => $this->href];
 
 		return $this->grid->link('actionCallback!', $params);
 	}
+
 }

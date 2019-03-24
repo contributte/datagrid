@@ -1,15 +1,8 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid;
 
 use Dibi;
-use DibiFluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Database\Drivers as NDBDrivers;
@@ -37,30 +30,18 @@ final class DataModel
 
 	use SmartObject;
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onBeforeFilter = [];
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onAfterFilter = [];
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onAfterPaginated = [];
 
-	/**
-	 * @var IDataSource
-	 */
+	/** @var IDataSource */
 	private $dataSource;
 
-
-	/**
-	 * @param string $primaryKey
-	 */
 	public function __construct(IDataSource $source, string $primaryKey)
 	{
 		if ($source instanceof IDataSource || $source instanceof ApiDataSource) {
@@ -90,16 +71,10 @@ final class DataModel
 			} else {
 				$source = new DibiFluentDataSource($source, $primaryKey);
 			}
-
 		} elseif ($source instanceof Selection) {
 			$driver = NetteDatabaseSelectionHelper::getDriver($source);
 
-			if ($driver instanceof NDBDrivers\MsSqlDriver || $driver instanceof NDBDrivers\SqlsrvDriver) {
-				$source = new NetteDatabaseTableMssqlDataSource($source, $primaryKey);
-			} else {
-				$source = new NetteDatabaseTableDataSource($source, $primaryKey);
-			}
-
+			$source = $driver instanceof NDBDrivers\MsSqlDriver || $driver instanceof NDBDrivers\SqlsrvDriver ? new NetteDatabaseTableMssqlDataSource($source, $primaryKey) : new NetteDatabaseTableDataSource($source, $primaryKey);
 		} elseif ($source instanceof QueryBuilder) {
 			$source = new DoctrineDataSource($source, $primaryKey);
 
@@ -127,7 +102,7 @@ final class DataModel
 
 
 	public function filterData(
-		DataGridPaginator $paginatorComponent = null,
+		?DataGridPaginator $paginatorComponent,
 		Sorting $sorting,
 		array $filters
 	): array
@@ -169,4 +144,5 @@ final class DataModel
 
 		return $this->dataSource->filterOne($condition)->getData();
 	}
+
 }

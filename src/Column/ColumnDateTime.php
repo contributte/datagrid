@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -16,20 +10,12 @@ use Ublaboo\DataGrid\Utils\DateTimeHelper;
 class ColumnDateTime extends Column
 {
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $align = 'right';
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $format = 'j. n. Y';
 
-
-	/**
-	 * @param  Row $row
-	 */
 	public function getColumnValue(Row $row): string
 	{
 		$value = parent::getColumnValue($row);
@@ -60,4 +46,5 @@ class ColumnDateTime extends Column
 
 		return $this;
 	}
+
 }

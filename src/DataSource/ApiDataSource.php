@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -13,51 +7,32 @@ use Ublaboo\DataGrid\Utils\Sorting;
 class ApiDataSource implements IDataSource
 {
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $data = [];
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $url;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $queryParams;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $sortColumn;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $orderColumn;
 
-	/**
-	 * @var int|null
-	 */
+	/** @var int|null */
 	protected $limit;
 
-	/**
-	 * @var int|null
-	 */
+	/** @var int|null */
 	protected $offset;
 
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	protected $filterOne = 0;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $filter = [];
-
 
 	public function __construct(string $url, array $queryParams = [])
 	{
@@ -68,7 +43,8 @@ class ApiDataSource implements IDataSource
 
 	/**
 	 * Get data of remote source
-	 * @return mixed
+     *
+     * @return mixed
 	 */
 	protected function getResponse(array $params = [])
 	{
@@ -81,8 +57,6 @@ class ApiDataSource implements IDataSource
 	/********************************************************************************
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
-
-
 	public function getCount(): int
 	{
 		return $this->getResponse(['count' => '']);
@@ -164,4 +138,5 @@ class ApiDataSource implements IDataSource
 
 		return $this;
 	}
+
 }

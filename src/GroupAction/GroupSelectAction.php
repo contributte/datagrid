@@ -1,21 +1,12 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\GroupAction;
 
 class GroupSelectAction extends GroupAction
 {
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $options;
-
 
 	public function __construct(string $title, array $options = [])
 	{
@@ -38,4 +29,5 @@ class GroupSelectAction extends GroupAction
 	{
 		return $this->options !== [];
 	}
+
 }

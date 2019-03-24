@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
@@ -18,26 +12,17 @@ use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 class FunctionSum implements IAggregationFunction
 {
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $column;
 
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	protected $result = 0;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $dataType;
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $renderer = null;
-
 
 	public function __construct(string $column, string $dataType = IAggregationFunction::DATA_TYPE_PAGINATED)
 	{
@@ -76,6 +61,7 @@ class FunctionSum implements IAggregationFunction
 		if ($dataSource instanceof Collection) {
 			$dataSource->forAll(function ($key, $value) {
 				$this->result += PropertyAccessHelper::getValue($value, $this->column);
+
 				return true;
 			});
 		}
@@ -97,10 +83,11 @@ class FunctionSum implements IAggregationFunction
 	}
 
 
-	public function setRenderer(callable $callback = null): self
+	public function setRenderer(?callable $callback = null): self
 	{
 		$this->renderer = $callback;
 
 		return $this;
 	}
+
 }

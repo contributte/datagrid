@@ -1,14 +1,7 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
-use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
@@ -20,33 +13,25 @@ use Ublaboo\DataGrid\Filter\FilterText;
 abstract class FilterableColumn
 {
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $key;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $name;
 
-	/**
-	 * @var DataGrid
-	 */
+	/** @var DataGrid */
 	protected $grid;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $column;
-
 
 	public function __construct(
 		DataGrid $grid,
 		string $key,
 		string $column,
 		string $name
-	) {
+	)
+    {
 		$this->grid = $grid;
 		$this->key = $key;
 		$this->column = $column;
@@ -62,7 +47,9 @@ abstract class FilterableColumn
 		if ($columns === null) {
 			$columns = [$this->column];
 		} else {
-			$columns = is_string($columns) ? [$columns] : $columns;
+			$columns = is_string($columns)
+                ? [$columns]
+                : $columns;
 		}
 
 		return $this->grid->addFilterText($this->key, $this->name, $columns);
@@ -74,7 +61,7 @@ abstract class FilterableColumn
 		?string $column = null
 	): FilterSelect
 	{
-		$column = $column === null ? $this->column : $column;
+		$column = $column ?? $this->column;
 
 		return $this->grid->addFilterSelect($this->key, $this->name, $options, $column);
 	}
@@ -85,7 +72,7 @@ abstract class FilterableColumn
 		?string $column = null
 	): FilterMultiSelect
 	{
-		$column = $column === null ? $this->column : $column;
+		$column = $column ?? $this->column;
 
 		return $this->grid->addFilterMultiSelect($this->key, $this->name, $options, $column);
 	}
@@ -93,7 +80,7 @@ abstract class FilterableColumn
 
 	public function setFilterDate(?string $column = null): FilterDate
 	{
-		$column = $column === null ? $this->column : $column;
+		$column = $column ?? $this->column;
 
 		return $this->grid->addFilterDate($this->key, $this->name, $column);
 	}
@@ -104,7 +91,7 @@ abstract class FilterableColumn
 		?string $nameSecond = '-'
 	): FilterRange
 	{
-		$column = $column === null ? $this->column : $column;
+		$column = $column ?? $this->column;
 
 		return $this->grid->addFilterRange($this->key, $this->name, $column, $nameSecond);
 	}
@@ -115,8 +102,9 @@ abstract class FilterableColumn
 		?string $nameSecond = '-'
 	): FilterDateRange
 	{
-		$column = $column === null ? $this->column : $column;
+		$column = $column ?? $this->column;
 
 		return $this->grid->addFilterDateRange($this->key, $this->name, $column, $nameSecond);
 	}
+
 }

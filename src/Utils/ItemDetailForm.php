@@ -1,30 +1,20 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Utils;
 
 use Nette;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
+use Traversable;
 
 final class ItemDetailForm extends Container
 {
 
-	/**
-	 * @var callable
-	 */
+	/** @var callable */
 	private $callableSetContainer;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	private $http_post;
-
 
 	public function __construct(callable $callableSetContainer)
 	{
@@ -55,7 +45,7 @@ final class ItemDetailForm extends Container
 		}
 
 		foreach ((array) $this->getHttpData() as $name => $value) {
-			if ((is_array($value) || $value instanceof \Traversable) && !$this->getComponent($name, false)) {
+			if ((is_array($value) || $value instanceof Traversable) && !$this->getComponent($name, false)) {
 				$this->getComponent($name);
 			}
 		}
@@ -91,4 +81,5 @@ final class ItemDetailForm extends Container
 
 		return $container;
 	}
+
 }
