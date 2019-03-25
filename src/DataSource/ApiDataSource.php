@@ -76,7 +76,7 @@ class ApiDataSource implements IDataSource
 	}
 
 
-	public function filter(array $filters): self
+	public function filter(array $filters): IDataSource
 	{
 		/**
 		 * First, save all filter values to array
@@ -108,7 +108,7 @@ class ApiDataSource implements IDataSource
 	}
 
 
-	public function filterOne(array $condition): self
+	public function filterOne(array $condition): IDataSource
 	{
 		$this->filter = $condition;
 		$this->filterOne = 1;
@@ -117,7 +117,7 @@ class ApiDataSource implements IDataSource
 	}
 
 
-	public function limit(int $offset, int $limit): self
+	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->offset = $offset;
 		$this->limit = $limit;
@@ -126,7 +126,7 @@ class ApiDataSource implements IDataSource
 	}
 
 
-	public function sort(Sorting $sorting): self
+	public function sort(Sorting $sorting): IDataSource
 	{
 		/**
 		 * there is only one iteration

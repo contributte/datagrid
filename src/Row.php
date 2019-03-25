@@ -170,7 +170,7 @@ class Row
 
 		while ($property = array_shift($properties)) {
 			if (!isset($value->{$property})) {
-				if ($this->datagrid->strict_entity_property) {
+				if ($this->datagrid->strictEntityProperty) {
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
 						$value, str_replace('.', '->', $key)
@@ -199,7 +199,7 @@ class Row
 
 		while ($property = array_shift($properties)) {
 			if (!isset($value->{$property})) {
-				if ($this->datagrid->strict_entity_property) {
+				if ($this->datagrid->strictEntityProperty) {
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
 						$value, str_replace('.', '->', $key)
@@ -230,7 +230,7 @@ class Row
 
 		while ($property = array_shift($properties)) {
 			if (!is_object($value) && !$value) {
-				if ($this->datagrid->strict_entity_property) {
+				if ($this->datagrid->strictEntityProperty) {
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
 						$value, str_replace('.', '->', $key)
@@ -291,7 +291,7 @@ class Row
 	}
 
 
-	public function applyColumnCallback(string $key, Column $column): void
+	public function applyColumnCallback(string $key, Column $column): Column
 	{
 		$callback = $this->datagrid->getColumnCallback($key);
 

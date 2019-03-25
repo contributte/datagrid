@@ -60,7 +60,7 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * Set the data
 	 */
-	private function setData(array $dataSource): self
+	private function setData(array $dataSource): IDataSource
 	{
 		$this->data = $dataSource;
 
@@ -71,7 +71,7 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * @param Filter[] $filters
 	 */
-	public function filter(array $filters): self
+	public function filter(array $filters): IDataSource
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
@@ -94,7 +94,7 @@ class ArrayDataSource implements IDataSource
 	}
 
 
-	public function filterOne(array $condition): self
+	public function filterOne(array $condition): IDataSource
 	{
 		foreach ($this->data as $item) {
 			foreach ($condition as $key => $value) {
@@ -112,7 +112,7 @@ class ArrayDataSource implements IDataSource
 	}
 
 
-	public function limit(int $offset, int $limit): self
+	public function limit(int $offset, int $limit): IDataSource
 	{
 		$data = array_slice($this->data, $offset, $limit);
 		$this->setData($data);
@@ -164,7 +164,7 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * @param mixed $row
 	 */
-	public function applyFilterMultiSelect($row, FilterMultiSelect $filter): void
+	public function applyFilterMultiSelect($row, FilterMultiSelect $filter): bool
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -176,7 +176,7 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * @param mixed $row
 	 */
-	public function applyFilterRange($row, FilterRange $filter): void
+	public function applyFilterRange($row, FilterRange $filter): bool
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -200,7 +200,7 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * @param mixed $row
 	 */
-	public function applyFilterDateRange($row, FilterDateRange $filter): void
+	public function applyFilterDateRange($row, FilterDateRange $filter): bool
 	{
 		$format = $filter->getPhpFormat();
 		$condition = $filter->getCondition();
@@ -292,7 +292,7 @@ class ArrayDataSource implements IDataSource
 	}
 
 
-	public function sort(Sorting $sorting): self
+	public function sort(Sorting $sorting): IDataSource
 	{
 		if (is_callable($sorting->getSortCallback())) {
 			$data = call_user_func(

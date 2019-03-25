@@ -25,6 +25,7 @@
 		"nette/application": "^3.0",
 		"nette/utils": "^3.0",
 		"nette/forms": "^3.0",
+		"nette/di": "^3.0",
 		"contributte/application": "dev-master",
 		"symfony/property-access": "^3.0.0 || ^4.0.0"
 	},

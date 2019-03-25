@@ -2,6 +2,8 @@
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
+use Ublaboo\DataGrid\DataSource\IDataSource;
+
 interface IAggregationFunction
 {
 
@@ -12,9 +14,12 @@ interface IAggregationFunction
 	public function getFilterDataType(): string;
 
 
-	public function processDataSource($dataSource): void;
+	public function processDataSource(IDataSource $dataSource): void;
 
 
-	public function renderResult(): void;
+	/**
+	 * @return mixed
+	 */
+	public function renderResult();
 
 }

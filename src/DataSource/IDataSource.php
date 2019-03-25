@@ -2,6 +2,7 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Ublaboo\DataGrid\Filter\Filter;
 use Ublaboo\DataGrid\Utils\Sorting;
 
 interface IDataSource
@@ -19,6 +20,7 @@ interface IDataSource
 
 	/**
 	 * Filter data
+	 * @param Filter[] $filters
 	 */
 	public function filter(array $filters): self;
 
