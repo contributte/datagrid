@@ -13,6 +13,7 @@ use Nette\Application\IPresenter;
 use Nette\Application\UI\Component;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Link;
+use Nette\Application\UI\Presenter;
 use Nette\Application\UI\PresenterComponent;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
@@ -395,6 +396,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	private $customPaginatorTemplate = null;
 
+
 	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
 		parent::__construct();
@@ -432,25 +434,18 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Notify about that json js extension
 		 */
 		$this->onFiltersAssembled[] = [$this, 'sendNonEmptyFiltersInPayload'];
-	}
 
-
-	/**
-	 * {inheritDoc}
-	 * @return void
-	 */
-	public function attached($presenter)
-	{
-		parent::attached($presenter);
-
-		if ($presenter instanceof Nette\Application\UI\Presenter) {
-			/**
-			 * Get session
-			 */
-			if ($this->rememberState) {
-				$this->gridSession = $presenter->getSession($this->getSessionSectionName());
+		$this->monitor(
+			Presenter::class,
+			function(Presenter $presenter): void {
+				/**
+				 * Get session
+				 */
+				if ($this->rememberState) {
+					$this->gridSession = $presenter->getSession($this->getSessionSectionName());
+				}
 			}
-		}
+		);
 	}
 
 
@@ -459,11 +454,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 ********************************************************************************/
 
 
-	/**
-	 * Render template
-	 * @return void
-	 */
-	public function render()
+	public function render(): void
 	{
 		/**
 		 * Check whether datagrid has set some columns, initiated data source, etc
@@ -3341,7 +3332,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$return = $this->columns;
 
 		try {
-			$this->getParent();
+			$this->getParentComponent();
 
 			if (!$this->getSessionData('_grid_hidden_columns_manipulated', false)) {
 				$columns_to_hide = [];
@@ -3395,11 +3386,11 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @internal
 	 */
-	public function getParent(): Component
+	public function getParentComponent(): Component
 	{
 		$parent = parent::getParent();
 
-		if (!($parent instanceof Component)) {
+		if (!$parent instanceof Component) {
 			throw new DataGridHasToBeAttachedToPresenterComponentException(
 				sprintf(
 					'DataGrid is attached to: "%s", but instance of %s is needed.',
@@ -3418,7 +3409,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getSortableParentPath(): string
 	{
-		return $this->getParent()->lookupPath(IPresenter::class, false);
+		return $this->getParentComponent()->lookupPath(IPresenter::class, false);
 	}
 
 

@@ -499,7 +499,7 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Set attributes for both th and td element
 	 */
-	public function addAttributes(array $attrs): self
+	public function addCellAttributes(array $attrs): self
 	{
 		$this->getElementPrototype('td')->addAttributes($attrs);
 		$this->getElementPrototype('th')->addAttributes($attrs);

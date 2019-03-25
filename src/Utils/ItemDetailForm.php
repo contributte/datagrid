@@ -3,9 +3,11 @@
 namespace Ublaboo\DataGrid\Utils;
 
 use Nette;
+use Nette\Application\UI\Presenter;
+use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
-use Traversable;
+use Nette\Utils\Arrays;
 
 final class ItemDetailForm extends Container
 {
@@ -14,41 +16,25 @@ final class ItemDetailForm extends Container
 	private $callableSetContainer;
 
 	/** @var array */
-	private $http_post;
+	private $httpPost;
+
+	/**
+	 * @var array|bool
+	 */
+	private $containerSetByName = [];
 
 	public function __construct(callable $callableSetContainer)
 	{
 		parent::__construct();
 
-		$this->monitor('Nette\Application\UI\Presenter');
+		$this->monitor(
+			Presenter::class,
+			function(Presenter $presenter): void {
+				$this->loadHttpData();
+			}
+		);
 
 		$this->callableSetContainer = $callableSetContainer;
-	}
-
-
-	protected function attached(IContainer $presenter): void
-	{
-		parent::attached($presenter);
-
-		if (!$presenter instanceof Nette\Application\UI\Presenter) {
-			return;
-		}
-
-		$this->loadHttpData();
-	}
-
-
-	public function loadHttpData(): void
-	{
-		if (!$this->getForm()->isSubmitted()) {
-			return;
-		}
-
-		foreach ((array) $this->getHttpData() as $name => $value) {
-			if ((is_array($value) || $value instanceof Traversable) && !$this->getComponent($name, false)) {
-				$this->getComponent($name);
-			}
-		}
 	}
 
 
@@ -57,29 +43,52 @@ final class ItemDetailForm extends Container
 	 */
 	private function getHttpData()
 	{
-		if ($this->http_post === null) {
+		if ($this->httpPost === null) {
 			$path = explode(self::NAME_SEPARATOR, $this->lookupPath('Nette\Forms\Form'));
 
-			$this->http_post = Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, null);
+			$this->httpPost = Arrays::get($this->getForm()->getHttpData(), $path, null);
 		}
 
-		return $this->http_post;
+		return $this->httpPost;
 	}
 
 
-	public function offsetGet(string $name): Container
+	/**
+	 * {@inheritDoc}
+	 */
+	public function offsetGet($name): IComponent
 	{
-		return $this->getComponent($name);
+		return $this->getComponentAndSetContainer($name);
 	}
 
 
-	public function getComponent(string $name, bool $throw = true): Container
+	/**
+	 * @param string|int $name
+	 */
+	public function getComponentAndSetContainer($name): IComponent
 	{
 		$container = $this->addContainer($name);
 
-		call_user_func($this->callableSetContainer, $container);
+		if (!isset($this->containerSetByName[$name])) {
+			call_user_func($this->callableSetContainer, $container);
+
+			$this->containerSetByName[$name] = true;
+		}
 
 		return $container;
 	}
 
+
+	private function loadHttpData(): void
+	{
+		if (!$this->getForm()->isSubmitted()) {
+			return;
+		}
+
+		foreach ((array) $this->getHttpData() as $name => $value) {
+			if ((is_array($value) || $value instanceof \Traversable)) {
+				$this->getComponentAndSetContainer($name);
+			}
+		}
+	}
 }

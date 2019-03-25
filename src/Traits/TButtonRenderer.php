@@ -67,7 +67,7 @@ trait TButtonRenderer
 	public function setRendererOnCondition(
 		callable $renderer,
 		callable $conditionCallback
-	): void
+	): self
 	{
 		return $this->setRenderer($renderer, $conditionCallback);
 	}

@@ -166,7 +166,7 @@ class ColumnLink extends Column
 	}
 
 
-	public function setTitle(string $title): void
+	public function setTitle(string $title): self
 	{
 		$this->title = $title;
 

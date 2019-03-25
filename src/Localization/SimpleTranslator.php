@@ -53,7 +53,7 @@ class SimpleTranslator implements ITranslator
 	}
 
 
-	public function translate(string $message, ?int $count = null): string
+	function translate($message, ...$parameters): string;
 	{
 		return isset($this->dictionary[$message]) ? $this->dictionary[$message] : $message;
 	}

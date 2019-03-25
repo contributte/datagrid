@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
+use Nette\Forms\Controls\Button;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Traits;
@@ -18,7 +19,7 @@ use Ublaboo\DataGrid\Traits\TButtonText;
 use Ublaboo\DataGrid\Traits\TButtonTitle;
 use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
 
-class SubmitButton extends Nette\Forms\Controls\Button
+class SubmitButton extends Button
 {
 
 	use TButtonTryAddIcon;
@@ -47,9 +48,12 @@ class SubmitButton extends Nette\Forms\Controls\Button
 	}
 
 
-	public function getControl(): Html
+	/**
+	 * @param  string|object  $caption
+	 */
+	public function getControl($caption = null): Html
 	{
-		$el = parent::getControl('');
+		$el = parent::getControl($caption);
 
 		$el->type = 'submit';
 		$el->class = $this->getClass();
