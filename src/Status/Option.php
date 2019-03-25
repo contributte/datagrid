@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Status;
 
@@ -13,51 +7,32 @@ use Ublaboo\DataGrid\Column\ColumnStatus;
 class Option
 {
 
-	/**
-	 * @var ColumnStatus
-	 */
+	/** @var ColumnStatus */
 	protected $columnStatus;
 
-	/**
-	 * @var mixed
-	 */
+	/** @var mixed */
 	protected $value;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $text;
 
-	/**
-	 * @var string|callable
-	 */
+	/** @var string|callable */
 	protected $title;
 
-	/**
-	 * @var string|callable
-	 */
+	/** @var string|callable */
 	protected $class = 'btn-success';
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $classSecondary = 'btn btn-xs';
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $classInDropdown = 'ajax dropdown-item';
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $icon;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $iconSecondary;
-
 
 	/**
 	 * @param mixed $value
@@ -96,7 +71,7 @@ class Option
 	}
 
 
-	public function setClass(string $class, string $classSecondary = null): self
+	public function setClass(string $class, ?string $classSecondary = null): self
 	{
 		$this->class = (string) $class;
 
@@ -174,4 +149,5 @@ class Option
 	{
 		return $this->text;
 	}
+
 }

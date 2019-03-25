@@ -1,20 +1,10 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
-use Ublaboo;
-use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits;
 
 abstract class Column extends FilterableColumn
 {
@@ -22,88 +12,53 @@ abstract class Column extends FilterableColumn
 	use TButtonRenderer;
 	use TLink;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $template;
 
-	/**
-	 * @var bool|string
-	 */
+	/** @var bool|string */
 	protected $sortable = false;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $translatableHeader = true;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $sortableResetPagination = false;
 
-	/**
-	 * @var null|callable
-	 */
+	/** @var callable|null */
 	protected $sortableCallback = null;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $sort;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $templateEscaping = true;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $headerEscaping = false;
 
-
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $align;
 
-
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $templateVariables = [];
 
-	/**
-	 * @var callable
-	 */
+	/** @var callable */
 	protected $editableCallback;
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $editableConditionCallback = null;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $editableElement = ['textarea', ['class' => 'form-control']];
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $defaultHide = false;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $elementCache = ['td' => null, 'th' => null];
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $editableValueCallback = null;
-
 
 	/**
 	 * @return mixed
@@ -167,11 +122,14 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Set column sortable or not
-	 * @param bool|string $sortable
+     *
+     * @param bool|string $sortable
 	 */
 	public function setSortable($sortable = true): self
 	{
-		$this->sortable = is_string($sortable) ? $sortable : (bool) $sortable;
+		$this->sortable = is_string($sortable)
+            ? $sortable
+            : (bool) $sortable;
 
 		return $this;
 	}
@@ -248,7 +206,9 @@ abstract class Column extends FilterableColumn
 
 	public function getSortingColumn(): string
 	{
-		return is_string($this->sortable) ? $this->sortable : $this->column;
+		return is_string($this->sortable)
+            ? $this->sortable
+            : $this->column;
 	}
 
 
@@ -339,10 +299,10 @@ abstract class Column extends FilterableColumn
 	{
 		$defaultSort = $this->grid->getColumnDefaultSort($this->key);
 
-		if ($this->sort == 'ASC') {
-			return [$this->key => $defaultSort === 'DESC' ? FALSE : 'DESC'];
-		} else if ($this->sort == 'DESC') {
-			return [$this->key => $defaultSort === 'DESC' ? 'ASC' : FALSE];
+		if ($this->sort === 'ASC') {
+			return [$this->key => $defaultSort === 'DESC' ? false : 'DESC'];
+		} elseif ($this->sort === 'DESC') {
+			return [$this->key => $defaultSort === 'DESC' ? 'ASC' : false];
 		}
 
 		return [$this->key => 'ASC'];
@@ -396,7 +356,9 @@ abstract class Column extends FilterableColumn
 
 	public function setFitContent(bool $fitContent = true): self
 	{
-		$fitContent ? $this->addAttributes(['class' => 'datagrid-fit-content']) : null;
+		$fitContent
+            ? $this->addAttributes(['class' => 'datagrid-fit-content'])
+            : null;
 
 		return $this;
 	}
@@ -439,7 +401,7 @@ abstract class Column extends FilterableColumn
 	}
 
 
-	public function isEditable(Row $row = null): bool
+	public function isEditable(?Row $row = null): bool
 	{
 		return ((bool) $this->getEditableCallback())
 			&& ($row === null || $this->getEditableOnConditionCallback() === null || call_user_func_array($this->getEditableOnConditionCallback(), [$row->getItem()]));
@@ -524,13 +486,11 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Method called from datagrid template, set appropriate classes and another attributes
 	 */
-	public function getElementForRender(string $tag, string $key, Row $row = null): Html
+	public function getElementForRender(string $tag, string $key, ?Row $row = null): Html
 	{
-		if ($this->elementCache[$tag]) {
-			$el = clone $this->elementCache[$tag];
-		} else {
-			$el = Html::el($tag);
-		}
+		$el = $this->elementCache[$tag]
+            ? clone $this->elementCache[$tag]
+            : Html::el($tag);
 
 		/**
 		 * If class was set by user via $el->class = '', fix it
@@ -545,7 +505,7 @@ abstract class Column extends FilterableColumn
 		$el->class[] = sprintf('text-%s', $this->getAlign());
 		$el->class[] = sprintf('col-%s', $key);
 
-		if ($row && $tag == 'td' && $this->isEditable($row)) {
+		if ($row && $tag === 'td' && $this->isEditable($row)) {
 			$link = $this->grid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
 
 			$el->data('datagrid-editable-url', $link);
@@ -602,4 +562,5 @@ abstract class Column extends FilterableColumn
 	{
 		return $this->column;
 	}
+
 }

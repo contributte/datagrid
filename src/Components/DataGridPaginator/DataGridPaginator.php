@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 /**
  * Nette Framework Extras
@@ -7,16 +7,11 @@
  *
  * For more information please see http://addons.nette.org
  *
- * @author     David Grudl
- * @copyright  Copyright (c) 2009 David Grudl
- * @license    New BSD License
  * @link       http://addons.nette.org
- * @package    Nette Extras
  */
 
 namespace Ublaboo\DataGrid\Components\DataGridPaginator;
 
-use Nette;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IContainer;
 use Nette\Localization\ITranslator;
@@ -26,34 +21,25 @@ use Ublaboo\DataGrid\DataGrid;
 class DataGridPaginator extends Control
 {
 
-	/**
-	 * @var ITranslator
-	 */
+	/** @var ITranslator */
 	private $translator;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $iconPrefix;
 
-
-	/**
-	 * @var Paginator
-	 */
+	/** @var Paginator */
 	private $paginator;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $templateFile;
-
 
 	public function __construct(
 		ITranslator $translator,
 		string $iconPrefix = 'fa fa-',
-		IContainer $parent = null,
+		?IContainer $parent = null,
 		?string $name = null
-	) {
+	)
+    {
 		parent::__construct($parent, $name);
 
 		$this->translator = $translator;
@@ -82,7 +68,7 @@ class DataGridPaginator extends Control
 	public function getPaginator(): Paginator
 	{
 		if ($this->paginator === null) {
-			$this->paginator = new Paginator;
+			$this->paginator = new Paginator();
 		}
 
 		return $this->paginator;
@@ -103,14 +89,17 @@ class DataGridPaginator extends Control
 			/**
 			 * Something to do with steps in tempale...
 			 * [Default $count = 3;]
-			 * @var int
+             *
+             * @var int
 			 */
 			$count = 1;
 
 			$quotient = ($paginator->pageCount - 1) / $count;
+
 			for ($i = 0; $i <= $count; $i++) {
 				$arr[] = round($quotient * $i) + $paginator->firstPage;
 			}
+
 			sort($arr);
 			$steps = array_values(array_unique($arr));
 		}
@@ -143,4 +132,5 @@ class DataGridPaginator extends Control
 			$this->getPaginator()->page = $this->getParent()->page;
 		}
 	}
+
 }

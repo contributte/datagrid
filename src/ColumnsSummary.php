@@ -28,7 +28,6 @@ class ColumnsSummary
 	/** @var bool */
 	protected $positionTop = false;
 
-
 	/**
 	 * @param array|string[] $columns
 	 */

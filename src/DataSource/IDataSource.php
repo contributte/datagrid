@@ -20,7 +20,8 @@ interface IDataSource
 
 	/**
 	 * Filter data
-	 * @param Filter[] $filters
+     *
+     * @param Filter[] $filters
 	 */
 	public function filter(array $filters): self;
 

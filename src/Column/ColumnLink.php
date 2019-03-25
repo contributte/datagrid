@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -16,47 +10,29 @@ use Ublaboo\DataGrid\Row;
 class ColumnLink extends Column
 {
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $title;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $class;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $params;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $href;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $icon;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $dataAttributes = [];
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $openInNewTab = false;
 
-
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $parameters = [];
-
 
 	public function __construct(
 		DataGrid $grid,
@@ -65,7 +41,8 @@ class ColumnLink extends Column
 		string $name,
 		string $href,
 		array $params
-	) {
+	)
+    {
 		parent::__construct($grid, $key, $column, $name);
 
 		$this->href = $href;
@@ -115,6 +92,7 @@ class ColumnLink extends Column
 		if ($this->title) {
 			$a->title($this->title);
 		}
+
 		if ($this->class) {
 			$a->class($this->class);
 		}
@@ -206,4 +184,5 @@ class ColumnLink extends Column
 
 		return $this;
 	}
+
 }

@@ -2,12 +2,11 @@
 
 namespace Ublaboo\DataGrid\Utils;
 
-use Nette;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
-use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
 use Nette\Utils\Arrays;
+use Traversable;
 
 final class ItemDetailForm extends Container
 {
@@ -18,9 +17,7 @@ final class ItemDetailForm extends Container
 	/** @var array */
 	private $httpPost;
 
-	/**
-	 * @var array|bool
-	 */
+	/** @var array|bool */
 	private $containerSetByName = [];
 
 	public function __construct(callable $callableSetContainer)
@@ -29,7 +26,7 @@ final class ItemDetailForm extends Container
 
 		$this->monitor(
 			Presenter::class,
-			function(Presenter $presenter): void {
+			function (Presenter $presenter): void {
 				$this->loadHttpData();
 			}
 		);
@@ -86,9 +83,10 @@ final class ItemDetailForm extends Container
 		}
 
 		foreach ((array) $this->getHttpData() as $name => $value) {
-			if ((is_array($value) || $value instanceof \Traversable)) {
+			if ((is_array($value) || $value instanceof Traversable)) {
 				$this->getComponentAndSetContainer($name);
 			}
 		}
 	}
+
 }

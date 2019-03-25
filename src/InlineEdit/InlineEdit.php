@@ -1,10 +1,4 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\InlineEdit;
 
@@ -13,7 +7,6 @@ use Nette\Forms\Container;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits;
 use Ublaboo\DataGrid\Traits\TButtonClass;
 use Ublaboo\DataGrid\Traits\TButtonIcon;
 use Ublaboo\DataGrid\Traits\TButtonText;
@@ -37,58 +30,43 @@ class InlineEdit
 	use TButtonTitle;
 	use TButtonText;
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onSubmit = [];
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onControlAdd = [];
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onControlAfterAdd = [];
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onSetDefaults = [];
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onCustomRedraw = [];
 
-	/**
-	 * @var mixed
-	 */
+	/** @var mixed */
 	protected $itemID;
 
-	/**
-	 * @var DataGrid
-	 */
+	/** @var DataGrid */
 	protected $grid;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $primaryWhereColumn = null;
 
 	/**
 	 * Inline adding - render on the top or in the bottom?
-	 * @var bool
+     *
+     * @var bool
 	 */
 	protected $positionTop = false;
 
 	/**
 	 * Columns that are not edited can displey normal value instaad of nothing..
-	 * @var bool
+     *
+     * @var bool
 	 */
 	protected $showNonEditingColumns = true;
-
 
 	public function __construct(DataGrid $grid, ?string $primaryWhereColumn = null)
 	{
@@ -141,6 +119,7 @@ class InlineEdit
 		if ($this->title) {
 			$a->title($this->grid->getTranslator()->translate($this->title));
 		}
+
 		if ($this->class) {
 			$a->class[] = $this->class;
 		}
@@ -165,6 +144,7 @@ class InlineEdit
 		if ($this->title) {
 			$a->title($this->grid->getTranslator()->translate($this->title));
 		}
+
 		if ($this->class) {
 			$a->class($this->class);
 		}
@@ -202,12 +182,10 @@ class InlineEdit
 					$control->setAttribute('class', 'btn btn-xs btn-primary');
 
 					break;
-
 				case 'cancel':
 					$control->setAttribute('class', 'btn btn-xs btn-danger');
 
 					break;
-
 				default:
 					if (empty($control->getControl()->getClass())) {
 						$control->setAttribute('class', 'form-control input-sm form-control-sm');
@@ -231,4 +209,5 @@ class InlineEdit
 	{
 		return $this->showNonEditingColumns;
 	}
+
 }

@@ -1,19 +1,11 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
-use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridItemDetailException;
 use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits;
 use Ublaboo\DataGrid\Traits\TButtonClass;
 use Ublaboo\DataGrid\Traits\TButtonIcon;
 use Ublaboo\DataGrid\Traits\TButtonText;
@@ -34,40 +26,28 @@ class ItemDetail
 
 	/**
 	 * (renderer | template | block)
-	 * @var string|null
+     *
+     * @var string|null
 	 */
 	protected $type;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $template;
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $renderer;
 
-	/**
-	 * @var DataGrid
-	 */
+	/** @var DataGrid */
 	protected $grid;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $primaryWhereColumn;
 
-	/**
-	 * @var ItemDetailForm
-	 */
+	/** @var ItemDetailForm */
 	protected $form;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $templateParameters = [];
-
 
 	public function __construct(DataGrid $grid, string $primaryWhereColumn)
 	{
@@ -82,10 +62,8 @@ class ItemDetail
 
 	/**
 	 * Render row item detail button
-	 * @param  Row $row
-	 * @return Html
-	 */
-	public function renderButton($row)
+     */
+	public function renderButton(Row $row): Html
 	{
 		$a = Html::el('a')
 			->href($this->grid->link('getItemDetail!', ['id' => $row->getId()]))
@@ -114,7 +92,7 @@ class ItemDetail
 	 */
 	public function render($item)
 	{
-		if ($this->getType() == 'block') {
+		if ($this->getType() === 'block') {
 			throw new DataGridItemDetailException(
 				'ItemDetail is set to render as block, but block #detail is not defined'
 			);
@@ -210,4 +188,5 @@ class ItemDetail
 	{
 		return $this->templateParameters;
 	}
+
 }
