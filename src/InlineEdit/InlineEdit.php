@@ -4,6 +4,7 @@ namespace Ublaboo\DataGrid\InlineEdit;
 
 use Nette;
 use Nette\Forms\Container;
+use Nette\SmartObject;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Row;

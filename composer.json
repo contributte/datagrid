@@ -21,7 +21,7 @@
 		}
 	},
 	"require": {
-		"php": "^5.6|^7.0",
+		"php": "^7.2",
 		"nette/application": "^3.0",
 		"nette/utils": "^3.0",
 		"nette/forms": "^3.0",
@@ -34,7 +34,13 @@
 		"tracy/tracy": "^2.6",
 		"mockery/mockery": "~1.2",
 		"phpstan/phpstan": "^0.11",
-		"ninjify/coding-standard": "^0.8"
+		"ninjify/coding-standard": "^0.8",
+		"tharos/leanmapper": "~3.4",
+		"nextras/orm": "~3.1",
+		"doctrine/orm": "~2.6",
+		"nette/database": "~3.0",
+		"dibi/dibi": "^3.0.0 || ^4.0.0"
+
 	},
 	"extra": {
 		"branch-alias": {

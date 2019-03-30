@@ -2,6 +2,7 @@
 
 namespace Ublaboo\DataGrid\Traits;
 
+use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\Column\Renderer;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -30,7 +31,7 @@ trait TButtonRenderer
 			throw new DataGridColumnRendererException();
 		}
 
-		if ($renderer->getConditionCallback()) {
+		if ($renderer->getConditionCallback() !== null) {
 			if (!call_user_func_array($renderer->getConditionCallback(), $args)) {
 				throw new DataGridColumnRendererException();
 			}
@@ -79,7 +80,7 @@ trait TButtonRenderer
 	}
 
 
-	public function setReplacement(array $replacements): Colummn
+	public function setReplacement(array $replacements): self
 	{
 		$this->replacements = $replacements;
 
@@ -93,9 +94,9 @@ trait TButtonRenderer
 	}
 
 
-	public function applyReplacements(Row $row): array
+	public function applyReplacements(Row $row, string $column): array
 	{
-		$value = $row->getValue($this->column);
+		$value = $row->getValue($column);
 
 		if ((is_scalar($value) || $value === null) && isset($this->replacements[$value])) {
 			return [true, $this->replacements[$value]];

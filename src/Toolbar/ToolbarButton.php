@@ -67,12 +67,13 @@ class ToolbarButton
 		$a->addText($this->grid->getTranslator()->translate($this->text));
 
 		if ($this->getTitle()) {
-			$a->title($this->grid->getTranslator()->translate($this->getTitle()));
+			$a->setAttribute(
+				'title',
+				$this->grid->getTranslator()->translate($this->getTitle())
+			);
 		}
 
-		if ($this->getClass()) {
-			$a->class($this->getClass());
-		}
+		$a->setAttribute('class', $this->getClass());
 
 		return $a;
 	}

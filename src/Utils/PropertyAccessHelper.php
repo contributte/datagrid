@@ -9,11 +9,11 @@ final class PropertyAccessHelper
 {
 
 	/** @var PropertyAccessor */
-	private static $accessor;
+	private static $accessor = null;
 
 	public static function getAccessor(): PropertyAccessor
 	{
-		if (!self::$accessor) {
+		if (self::$accessor === null) {
 			self::$accessor = PropertyAccess::createPropertyAccessor();
 		}
 

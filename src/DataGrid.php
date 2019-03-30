@@ -620,7 +620,7 @@ s	 */
 		if (!is_array($source) && !$source instanceof IDataSource) {	
 			throw new \InvalidArgumentException(
 				sprintf('Please provide an instance of %s or an array', IDataSource::class)
-			)
+			);
 		}
 
 		$this->dataModel = new DataModel($source, $this->primaryKey);

@@ -9,6 +9,7 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Utils\Html;
 use Nextras;
 use Ublaboo\DataGrid\Column\Column;
+use Ublaboo\DataGrid\ColumnsSummary;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
@@ -31,7 +32,7 @@ class Row
 	protected $control;
 
 	/**
-	 * @param mixed    $item
+	 * @param mixed $item
 	 */
 	public function __construct(DataGrid $datagrid, $item, string $primaryKey)
 	{
@@ -41,7 +42,7 @@ class Row
 		$this->primaryKey = $primaryKey;
 		$this->id = $this->getValue($primaryKey);
 
-		if ($datagrid->hasColumnsSummary()) {
+		if ($datagrid->getColumnsSummary() instanceof ColumnsSummary) {
 			$datagrid->getColumnsSummary()->add($this);
 		}
 	}
@@ -66,21 +67,21 @@ class Row
 	 */
 	public function getValue($key)
 	{
-		if ($this->item instanceof LeanMapper\Entity) {
+		if ($this->item instanceof \LeanMapper\Entity) {
 			return $this->getLeanMapperEntityProperty($this->item, $key);
-		} elseif ($this->item instanceof Nextras\Orm\Entity\Entity) {
+		} elseif ($this->item instanceof \Nextras\Orm\Entity\Entity) {
 			return $this->getNextrasEntityProperty($this->item, $key);
-		} elseif ($this->item instanceof DibiRow) {
+		} elseif ($this->item instanceof \Dibi\Row) {
 			return $this->item->{$this->formatDibiRowKey($key)};
-		} elseif ($this->item instanceof ActiveRow) {
+		} elseif ($this->item instanceof \Nette\Database\Table\ActiveRow) {
 			return $this->getActiveRowProperty($this->item, $key);
-		} elseif ($this->item instanceof Nette\Database\Row) {
+		} elseif ($this->item instanceof \Nette\Database\Row) {
 			return $this->item->{$key};
 		} elseif (is_array($this->item)) {
 			$arrayValue = $this->item[$key];
 
 			if (is_object($arrayValue) && method_exists($arrayValue, '__toString')) {
-				return $arrayValue->__toString();
+				return (string) $arrayValue;
 			}
 
 			return $arrayValue;
@@ -109,7 +110,7 @@ class Row
 	/**
 	 * @return mixed
 	 */
-	public function getActiveRowProperty(ActiveRow $item, string $key)
+	public function getActiveRowProperty(\Nette\Database\Table\ActiveRow $item, string $key)
 	{
 		if (preg_match('/^:([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/', $key, $matches)) {
 			$relatedTable = $matches[1];
@@ -145,7 +146,7 @@ class Row
      * @param  mixed $key
 	 * @return mixed
 	 */
-	public function getLeanMapperEntityProperty(LeanMapper\Entity $item, $key)
+	public function getLeanMapperEntityProperty(\LeanMapper\Entity $item, $key)
 	{
 		$properties = explode('.', $key);
 		$value = $item;
@@ -175,7 +176,7 @@ class Row
      *
      * @return mixed
 	 */
-	public function getNextrasEntityProperty(Nextras\Orm\Entity\Entity $item, string $key)
+	public function getNextrasEntityProperty(\Nextras\Orm\Entity\Entity $item, string $key)
 	{
 		$properties = explode('.', $key);
 		$value = $item;

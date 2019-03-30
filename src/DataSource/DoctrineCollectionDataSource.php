@@ -1,0 +1,261 @@
+<?php
+
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Martin Procházka <juniwalk@outlook.cz>
+ * @package     Ublaboo
+ */
+
+namespace Ublaboo\DataGrid\DataSource;
+
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
+use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Filter\FilterDate;
+use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter\FilterMultiSelect;
+use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterSelect;
+use Ublaboo\DataGrid\Filter\FilterText;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
+use Ublaboo\DataGrid\Utils\Sorting;
+
+final class DoctrineCollectionDataSource extends FilterableDataSource implements
+	IDataSource,
+	IAggregatable
+{
+
+	/**
+	 * @var Collection
+	 */
+	protected $dataSource;
+
+	/**
+	 * @var string
+	 */
+	protected $primaryKey;
+
+	/**
+	 * @var Criteria
+	 */
+	protected $criteria;
+
+
+	public function __construct(Collection $collection, string $primaryKey)
+	{
+		$this->criteria = Criteria::create();
+		$this->dataSource = $collection;
+		$this->primaryKey = $primaryKey;
+	}
+
+
+	/********************************************************************************
+	 *                          IDataSource implementation                          *
+	 ********************************************************************************/
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getCount(): int
+	{
+		return $this->getFilteredCollection()->count();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getData(): array
+	{
+		return $this->getFilteredCollection()->toArray();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function filterOne(array $condition): IDataSource
+	{
+		foreach ($condition as $column => $value) {
+			$expr = Criteria::expr()->eq($column, $value);
+			$this->criteria->andWhere($expr);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function limit(int $offset, int $limit): IDataSource
+	{
+		$this->criteria->setFirstResult($offset)->setMaxResults($limit);
+
+		return $this;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function sort(Sorting $sorting): IDataSource
+	{
+		if (is_callable($sorting->getSortCallback())) {
+			call_user_func(
+				$sorting->getSortCallback(),
+				$this->criteria,
+				$sorting->getSort()
+			);
+
+			return $this;
+		}
+
+		if ($sort = $sorting->getSort()) {
+			$this->criteria->orderBy($sort);
+			return $this;
+		}
+
+		$this->criteria->orderBy([$this->primaryKey => 'ASC']);
+
+		return $this;
+	}
+
+
+	public function processAggregation(callable $aggregationCallback): void
+	{
+		call_user_func($aggregationCallback, clone $this->dataSource);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function applyFilterDate(FilterDate $filter): void
+	{
+		foreach ($filter->getCondition() as $column => $value) {
+			$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+
+			$from = Criteria::expr()->gte($filter->getColumn(), $date->format('Y-m-d 00:00:00'));
+			$to = Criteria::expr()->lte($filter->getColumn(), $date->format('Y-m-d 23:59:59'));
+
+			$this->criteria->andWhere($from)->andWhere($to);
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function applyFilterDateRange(FilterDateRange $filter): void
+	{
+		$conditions = $filter->getCondition();
+		$values = $conditions[$filter->getColumn()];
+
+		if ($valueFrom = $values['from']) {
+			$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
+			$dateFrom->setTime(0, 0, 0);
+
+			$expr = Criteria::expr()->gte($filter->getColumn(), $dateFrom->format('Y-m-d H:i:s'));
+			$this->criteria->andWhere($expr);
+		}
+
+		if ($valueTo = $values['to']) {
+			$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
+			$dateTo->setTime(23, 59, 59);
+
+			$expr = Criteria::expr()->lte($filter->getColumn(), $dateTo->format('Y-m-d H:i:s'));
+			$this->criteria->andWhere($expr);
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function applyFilterRange(FilterRange $filter): void
+	{
+		$conditions = $filter->getCondition();
+		$values = $conditions[$filter->getColumn()];
+
+		if ($valueFrom = $values['from']) {
+			$expr = Criteria::expr()->gte($filter->getColumn(), $valueFrom);
+			$this->criteria->andWhere($expr);
+		}
+
+		if ($valueTo = $values['to']) {
+			$expr = Criteria::expr()->lte($filter->getColumn(), $valueTo);
+			$this->criteria->andWhere($expr);
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function applyFilterText(FilterText $filter): void
+	{
+		$exprs = [];
+
+		foreach ($filter->getCondition() as $column => $value) {
+			if ($filter->isExactSearch()) {
+				$exprs[] = Criteria::expr()->eq($column, $value);
+				continue;
+			}
+
+			if ($filter->hasSplitWordsSearch() === false) {
+				$words = [$value];
+			} else {
+				$words = explode(' ', $value);
+			}
+
+			foreach ($words as $word) {
+				$exprs[] = Criteria::expr()->contains($column, $word);
+			}
+		}
+
+		$expr = call_user_func_array([Criteria::expr(), 'orX'], $exprs);
+		$this->criteria->andWhere($expr);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function applyFilterMultiSelect(FilterMultiSelect $filter): void
+	{
+		$values = $filter->getCondition()[$filter->getColumn()];
+
+		$expr = Criteria::expr()->in($filter->getColumn(), $values);
+		$this->criteria->andWhere($expr);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function applyFilterSelect(FilterSelect $filter): void
+	{
+		foreach ($filter->getCondition() as $column => $value) {
+			$expr = Criteria::expr()->eq($column, $value);
+			$this->criteria->andWhere($expr);
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getDataSource()
+	{
+		return $this->dataSource;
+	}
+
+
+	private function getFilteredCollection(): Collection
+	{
+		return $this->dataSource->matching($this->criteria);
+	}
+}

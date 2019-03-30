@@ -5,7 +5,6 @@ namespace Ublaboo\DataGrid\DataSource;
 use DateTime;
 use DateTimeInterface;
 use Nette\Utils\Strings;
-use Traversable;
 use Ublaboo\DataGrid\Exception\DataGridArrayDataSourceException;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter\Filter;
@@ -40,7 +39,7 @@ class ArrayDataSource implements IDataSource
 	 ********************************************************************************/
 
 	/**
-	 * Get count of data
+	 * {@inheritDoc}
 	 */
 	public function getCount(): int
 	{
@@ -49,7 +48,7 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * Get the data
+	 * {@inheritDoc}
 	 */
 	public function getData(): array
 	{
@@ -58,18 +57,7 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * Set the data
-	 */
-	private function setData(array $dataSource): IDataSource
-	{
-		$this->data = $dataSource;
-
-		return $this;
-	}
-
-
-	/**
-	 * @param Filter[] $filters
+	 * {@inheritDoc}
 	 */
 	public function filter(array $filters): IDataSource
 	{
@@ -94,6 +82,9 @@ class ArrayDataSource implements IDataSource
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function filterOne(array $condition): IDataSource
 	{
 		foreach ($this->data as $item) {
@@ -112,6 +103,9 @@ class ArrayDataSource implements IDataSource
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$data = array_slice($this->data, $offset, $limit);
@@ -127,7 +121,7 @@ class ArrayDataSource implements IDataSource
 	 */
 	protected function applyFilter($row, Filter $filter)
 	{
-		if (is_array($row) || $row instanceof Traversable) {
+		if (is_array($row) || $row instanceof \Traversable) {
 			if ($filter instanceof FilterDate) {
 				return $this->applyFilterDate($row, $filter);
 			} elseif ($filter instanceof FilterMultiSelect) {
@@ -164,7 +158,7 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * @param mixed $row
 	 */
-	public function applyFilterMultiSelect($row, FilterMultiSelect $filter): bool
+	protected function applyFilterMultiSelect($row, FilterMultiSelect $filter): bool
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -176,7 +170,7 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * @param mixed $row
 	 */
-	public function applyFilterRange($row, FilterRange $filter): bool
+	protected function applyFilterRange($row, FilterRange $filter): bool
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -200,7 +194,7 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * @param mixed $row
 	 */
-	public function applyFilterDateRange($row, FilterDateRange $filter): bool
+	protected function applyFilterDateRange($row, FilterDateRange $filter): bool
 	{
 		$format = $filter->getPhpFormat();
 		$condition = $filter->getCondition();
@@ -261,9 +255,8 @@ class ArrayDataSource implements IDataSource
 	 * Apply fitler date and tell whether row value matches or not
      *
      * @param  mixed  $row
-	 * @return mixed
 	 */
-	protected function applyFilterDate($row, FilterDate $filter)
+	protected function applyFilterDate($row, FilterDate $filter): bool
 	{
 		$format = $filter->getPhpFormat();
 		$condition = $filter->getCondition();
@@ -292,6 +285,9 @@ class ArrayDataSource implements IDataSource
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function sort(Sorting $sorting): IDataSource
 	{
 		if (is_callable($sorting->getSortCallback())) {
@@ -339,6 +335,17 @@ class ArrayDataSource implements IDataSource
 
 			$this->setData($dataSource);
 		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Set the data
+	 */
+	private function setData(array $dataSource): IDataSource
+	{
+		$this->data = $dataSource;
 
 		return $this;
 	}

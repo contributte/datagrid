@@ -76,7 +76,7 @@ abstract class Column extends FilterableColumn
 		/**
 		 * Or replacements may be applied
 		 */
-		[$replace, $replaced] = $this->applyReplacements($row);
+		[$replace, $replaced] = $this->applyReplacements($row, $this->column);
 
 		if ($replace) {
 			return $replaced;
@@ -273,7 +273,7 @@ abstract class Column extends FilterableColumn
 
 
 	/**
-	 * Tell whether data source is sorted by this collumn
+	 * Tell whether data source is sorted by this column
 	 */
 	public function isSortedBy(): bool
 	{

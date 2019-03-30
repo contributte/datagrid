@@ -57,12 +57,19 @@ class ApiDataSource implements IDataSource
 	/********************************************************************************
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getCount(): int
 	{
 		return $this->getResponse(['count' => '']);
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getData(): array
 	{
 		return !empty($this->data) ? $this->data : $this->getResponse([
@@ -76,6 +83,9 @@ class ApiDataSource implements IDataSource
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function filter(array $filters): IDataSource
 	{
 		/**
@@ -108,6 +118,9 @@ class ApiDataSource implements IDataSource
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function filterOne(array $condition): IDataSource
 	{
 		$this->filter = $condition;
@@ -117,6 +130,9 @@ class ApiDataSource implements IDataSource
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->offset = $offset;
@@ -126,6 +142,9 @@ class ApiDataSource implements IDataSource
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function sort(Sorting $sorting): IDataSource
 	{
 		/**

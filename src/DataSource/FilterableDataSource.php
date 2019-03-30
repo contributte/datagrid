@@ -3,37 +3,44 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Nette\Utils\Callback;
-use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Filter\Filter;
+use Ublaboo\DataGrid\Filter\FilterDate;
+use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter\FilterMultiSelect;
+use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterSelect;
+use Ublaboo\DataGrid\Filter\FilterText;
 
 abstract class FilterableDataSource
 {
 
 	/**
-	 * Filter data
-     *
-     * @param array $filters
+	 * {@inheritDoc}
+	 *
+	 * 
+	 * @param array|Filter[] $filters
 	 */
-	public function filter(array $filters): self
+	public function filter(array $filters): IDataSource
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
 				if ($filter->hasConditionCallback()) {
 					Callback::invokeArgs(
 						$filter->getConditionCallback(),
-						[$this->data_source, $filter->getValue()]
+						[$this->getDataSource(), $filter->getValue()]
 					);
 				} else {
-					if ($filter instanceof Filter\FilterText) {
+					if ($filter instanceof FilterText) {
 						$this->applyFilterText($filter);
-					} elseif ($filter instanceof Filter\FilterMultiSelect) {
+					} elseif ($filter instanceof FilterMultiSelect) {
 						$this->applyFilterMultiSelect($filter);
-					} elseif ($filter instanceof Filter\FilterSelect) {
+					} elseif ($filter instanceof FilterSelect) {
 						$this->applyFilterSelect($filter);
-					} elseif ($filter instanceof Filter\FilterDate) {
+					} elseif ($filter instanceof FilterDate) {
 						$this->applyFilterDate($filter);
-					} elseif ($filter instanceof Filter\FilterDateRange) {
+					} elseif ($filter instanceof FilterDateRange) {
 						$this->applyFilterDateRange($filter);
-					} elseif ($filter instanceof Filter\FilterRange) {
+					} elseif ($filter instanceof FilterRange) {
 						$this->applyFilterRange($filter);
 					}
 				}
@@ -43,4 +50,21 @@ abstract class FilterableDataSource
 		return $this;
 	}
 
+
+	/**
+	 * @return mixed
+	 */
+	abstract protected function getDataSource();
+
+	abstract protected function applyFilterDate(FilterDate $filter): void;
+
+	abstract protected function applyFilterDateRange(FilterDateRange $filter): void;
+
+	abstract protected function applyFilterRange(FilterRange $filter): void;
+
+	abstract protected function applyFilterText(FilterText $filter): void;
+
+	abstract protected function applyFilterMultiSelect(FilterMultiSelect $filter): void;
+
+	abstract protected function applyFilterSelect(FilterSelect $filter): void;
 }

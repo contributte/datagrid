@@ -1,0 +1,375 @@
+<?php
+
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Jakub Kontra <me@jakubkontra.cz>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
+
+namespace Ublaboo\DataGrid\DataSource;
+
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Nette\Utils\Strings;
+use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
+use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Filter\FilterDate;
+use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter\FilterMultiSelect;
+use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterSelect;
+use Ublaboo\DataGrid\Filter\FilterText;
+use Ublaboo\DataGrid\Utils\DateTimeHelper;
+use Ublaboo\DataGrid\Utils\Sorting;
+
+/**
+ * @method void onDataLoaded(array $result)
+ */
+class DoctrineDataSource extends FilterableDataSource implements IDataSource, IAggregatable
+{
+	/**
+	 * Event called when datagrid data is loaded.
+	 * @var callable[]
+	 */
+	public $onDataLoaded;
+
+	/**
+	 * @var QueryBuilder
+	 */
+	protected $dataSource;
+
+	/**
+	 * @var string
+	 */
+	protected $primaryKey;
+
+	/**
+	 * @var string
+	 */
+	protected $rootAlias;
+
+	/**
+	 * @var int
+	 */
+	protected $placeholder;
+
+
+	public function __construct(QueryBuilder $dataSource, string $primaryKey)
+	{
+		$this->placeholder = count($dataSource->getParameters());
+		$this->dataSource = $dataSource;
+		$this->primaryKey = $primaryKey;
+	}
+
+
+	public function getQuery(): Query
+	{
+		return $this->dataSource->getQuery();
+	}
+
+
+	/********************************************************************************
+	 *                          IDataSource implementation                          *
+	 ********************************************************************************/
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getCount(): int
+	{
+		if ($this->usePaginator()) {
+			return (new Paginator($this->getQuery()))->count();
+		}
+		$dataSource = clone $this->dataSource;
+		$dataSource->select(sprintf('COUNT(%s)', $this->checkAliases($this->primaryKey)));
+		$dataSource->resetDQLPart('orderBy');
+
+		return (int) $dataSource->getQuery()->getSingleScalarResult();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getData(): array
+	{
+		if ($this->usePaginator()) {
+			$iterator = (new Paginator($this->getQuery()))->getIterator();
+
+			$data = iterator_to_array($iterator);
+		} else {
+			$data = $this->getQuery()->getResult();
+		}
+
+		$this->onDataLoaded($data);
+
+		return $data;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function filterOne(array $condition): IDataSource
+	{
+		$p = $this->getPlaceholder();
+
+		foreach ($condition as $column => $value) {
+			$c = $this->checkAliases($column);
+
+			$this->dataSource->andWhere("$c = :$p")
+				->setParameter($p, $value);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function limit(int $offset, int $limit): IDataSource
+	{
+		$this->dataSource->setFirstResult($offset)->setMaxResults($limit);
+
+		return $this;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function sort(Sorting $sorting): IDataSource
+	{
+		if (is_callable($sorting->getSortCallback())) {
+			call_user_func(
+				$sorting->getSortCallback(),
+				$this->dataSource,
+				$sorting->getSort()
+			);
+
+			return $this;
+		}
+
+		$sort = $sorting->getSort();
+
+		if (!empty($sort)) {
+			foreach ($sort as $column => $order) {
+				$this->dataSource->addOrderBy($this->checkAliases($column), $order);
+			}
+		} else {
+			/**
+			 * Has the statement already a order by clause?
+			 */
+			if (!$this->dataSource->getDQLPart('orderBy')) {
+				$this->dataSource->orderBy($this->checkAliases($this->primaryKey));
+			}
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get unique int value for each instance class (self)
+	 */
+	public function getPlaceholder(): int
+	{
+		return 'param' . ($this->placeholder++);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */	
+	public function processAggregation(callable $aggregationCallback): void
+	{
+		call_user_func($aggregationCallback, clone $this->dataSource);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function applyFilterDate(FilterDate $filter): void
+	{
+		$p1 = $this->getPlaceholder();
+		$p2 = $this->getPlaceholder();
+
+		foreach ($filter->getCondition() as $column => $value) {
+			$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+			$c = $this->checkAliases($column);
+
+			$this->dataSource->andWhere("$c >= :$p1 AND $c <= :$p2")
+				->setParameter($p1, $date->format('Y-m-d 00:00:00'))
+				->setParameter($p2, $date->format('Y-m-d 23:59:59'));
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function applyFilterDateRange(FilterDateRange $filter): void
+	{
+		$conditions = $filter->getCondition();
+		$c = $this->checkAliases($filter->getColumn());
+
+		$valueFrom = $conditions[$filter->getColumn()]['from'];
+		$valueTo = $conditions[$filter->getColumn()]['to'];
+
+		if ($valueFrom) {
+			$dateFrom = DateTimeHelper::tryConvertToDate($valueFrom, [$filter->getPhpFormat()]);
+			$dateFrom->setTime(0, 0, 0);
+
+			$p = $this->getPlaceholder();
+
+			$this->dataSource->andWhere("$c >= :$p")->setParameter(
+				$p,
+				$dateFrom->format('Y-m-d H:i:s')
+			);
+		}
+
+		if ($valueTo) {
+			$dateTo = DateTimeHelper::tryConvertToDate($valueTo, [$filter->getPhpFormat()]);
+			$dateTo->setTime(23, 59, 59);
+
+			$p = $this->getPlaceholder();
+
+			$this->dataSource->andWhere("$c <= :$p")->setParameter(
+				$p,
+				$dateTo->format('Y-m-d H:i:s')
+			);
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function applyFilterRange(FilterRange $filter): void
+	{
+		$conditions = $filter->getCondition();
+		$c = $this->checkAliases($filter->getColumn());
+
+		$valueFrom = $conditions[$filter->getColumn()]['from'];
+		$valueTo = $conditions[$filter->getColumn()]['to'];
+
+		if ($valueFrom) {
+			$p = $this->getPlaceholder();
+			$this->dataSource->andWhere("$c >= :$p")->setParameter($p, $valueFrom);
+		}
+
+		if ($valueTo) {
+			$p = $this->getPlaceholder();
+			$this->dataSource->andWhere("$c <= :$p")->setParameter($p, $valueTo);
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function applyFilterText(FilterText $filter): void
+	{
+		$condition = $filter->getCondition();
+		$exprs = [];
+
+		foreach ($condition as $column => $value) {
+			$c = $this->checkAliases($column);
+
+			if ($filter->isExactSearch()) {
+				$exprs[] = $this->dataSource->expr()->eq(
+					$c,
+					$this->dataSource->expr()->literal($value)
+				);
+				continue;
+			}
+
+			if ($filter->hasSplitWordsSearch() === false) {
+				$words = [$value];
+			} else {
+				$words = explode(' ', $value);
+			}
+
+			foreach ($words as $word) {
+				$exprs[] = $this->dataSource->expr()->like(
+					$c,
+					$this->dataSource->expr()->literal("%$word%")
+				);
+			}
+		}
+
+		$or = call_user_func_array([$this->dataSource->expr(), 'orX'], $exprs);
+
+		$this->dataSource->andWhere($or);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function applyFilterMultiSelect(FilterMultiSelect $filter): void
+	{
+		$c = $this->checkAliases($filter->getColumn());
+		$p = $this->getPlaceholder();
+
+		$values = $filter->getCondition()[$filter->getColumn()];
+		$expr = $this->dataSource->expr()->in($c, ':' . $p);
+
+		$this->dataSource->andWhere($expr)->setParameter($p, $values);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function applyFilterSelect(FilterSelect $filter): void
+	{
+		$p = $this->getPlaceholder();
+
+		foreach ($filter->getCondition() as $column => $value) {
+			$c = $this->checkAliases($column);
+
+			$this->dataSource->andWhere("$c = :$p")
+				->setParameter($p, $value);
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function getDataSource()
+	{
+		return $this->dataSource;
+	}
+
+
+	/**
+	 * @param  string  $column
+	 * @return string
+	 */
+	private function checkAliases(string $column): string
+	{
+		if (Strings::contains($column, '.')) {
+			return $column;
+		}
+
+		if (!isset($this->rootAlias)) {
+			$this->rootAlias = $this->dataSource->getRootAliases();
+			$this->rootAlias = current($this->rootAlias);
+		}
+
+		return $this->rootAlias . '.' . $column;
+	}
+
+
+	private function usePaginator(): bool
+	{
+		return $this->dataSource->getDQLPart('join') || $this->dataSource->getDQLPart('groupBy');
+	}
+}

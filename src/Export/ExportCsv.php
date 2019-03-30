@@ -13,7 +13,6 @@ use Nette;
 use Nette\Application\UI\Presenter;
 use Ublaboo\DataGrid\CsvDataModel;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\Responses\CSVResponse;
 
 class ExportCsv extends Export
 {

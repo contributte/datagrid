@@ -47,13 +47,13 @@ class SimpleTranslator implements ITranslator
 	];
 
 
-	public function __construct(array $dictionary = null)
+	public function __construct(array $dictionary = [])
 	{
 		$this->dictionary = $dictionary;
 	}
 
 
-	function translate($message, ...$parameters): string;
+	function translate($message, ...$parameters): string
 	{
 		return isset($this->dictionary[$message]) ? $this->dictionary[$message] : $message;
 	}

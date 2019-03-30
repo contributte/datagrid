@@ -5,10 +5,10 @@ namespace Ublaboo\DataGrid\Traits;
 trait TButtonIcon
 {
 
-	/** @var string|callable */
+	/** @var string|null */
 	protected $icon;
 
-	public function setIcon(string $icon): self
+	public function setIcon(?string $icon): self
 	{
 		$this->icon = $icon;
 
@@ -16,7 +16,7 @@ trait TButtonIcon
 	}
 
 
-	public function getIcon(): self
+	public function getIcon(): ?string
 	{
 		return $this->icon;
 	}

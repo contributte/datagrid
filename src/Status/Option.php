@@ -16,10 +16,10 @@ class Option
 	/** @var string */
 	protected $text;
 
-	/** @var string|callable */
+	/** @var string|null */
 	protected $title;
 
-	/** @var string|callable */
+	/** @var string */
 	protected $class = 'btn-success';
 
 	/** @var string */
@@ -65,7 +65,7 @@ class Option
 	}
 
 
-	public function getTitle(): string
+	public function getTitle(): ?string
 	{
 		return $this->title;
 	}
@@ -73,17 +73,17 @@ class Option
 
 	public function setClass(string $class, ?string $classSecondary = null): self
 	{
-		$this->class = (string) $class;
+		$this->class = $class;
 
 		if ($classSecondary !== null) {
-			$this->classSecondary = (string) $classSecondary;
+			$this->classSecondary = $classSecondary;
 		}
 
 		return $this;
 	}
 
 
-	public function getClass(): string
+	public function getClass(): ?string
 	{
 		return $this->class;
 	}

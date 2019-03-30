@@ -21,14 +21,14 @@ interface IDataSource
 	/**
 	 * Filter data
      *
-     * @param Filter[] $filters
+     * @param array|Filter[] $filters
 	 */
 	public function filter(array $filters): self;
 
 	/**
 	 * Filter data - get one row
 	 */
-	public function filterOne(array $filter): self;
+	public function filterOne(array $condition): self;
 
 	/**
 	 * Apply limit and offset on data

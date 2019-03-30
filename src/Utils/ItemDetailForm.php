@@ -17,13 +17,11 @@ final class ItemDetailForm extends Container
 	/** @var array */
 	private $httpPost;
 
-	/** @var array|bool */
+	/** @var array|bool[] */
 	private $containerSetByName = [];
 
 	public function __construct(callable $callableSetContainer)
 	{
-		parent::__construct();
-
 		$this->monitor(
 			Presenter::class,
 			function (Presenter $presenter): void {
@@ -37,13 +35,21 @@ final class ItemDetailForm extends Container
 
 	/**
 	 * @return mixed|null
+	 * @throws \UnexpectedValueException
 	 */
 	private function getHttpData()
 	{
 		if ($this->httpPost === null) {
-			$path = explode(self::NAME_SEPARATOR, $this->lookupPath('Nette\Forms\Form'));
+			$lookupPath = $this->lookupPath('Nette\Forms\Form');
+			$form = $this->getForm();
 
-			$this->httpPost = Arrays::get($this->getForm()->getHttpData(), $path, null);
+			if ($lookupPath === null || $form === null) {
+				throw new \UnexpectedValueException;
+			}
+
+			$path = explode(self::NAME_SEPARATOR, $lookupPath);
+
+			$this->httpPost = Arrays::get($form->getHttpData(), $path, null);
 		}
 
 		return $this->httpPost;
@@ -76,9 +82,18 @@ final class ItemDetailForm extends Container
 	}
 
 
+	/**
+	 * @throws \UnexpectedValueException
+	 */
 	private function loadHttpData(): void
 	{
-		if (!$this->getForm()->isSubmitted()) {
+		$form = $this->getForm();
+
+		if ($form === null) {
+			throw new \UnexpectedValueException;
+		}
+
+		if (!$form->isSubmitted()) {
 			return;
 		}
 
