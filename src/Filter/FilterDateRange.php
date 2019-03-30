@@ -37,39 +37,41 @@ class FilterDateRange extends FilterRange implements IFilterDate
 	{
 		$container = $container->addContainer($this->key);
 
-		$container->addText('from', $this->name)
-			->setAttribute('data-provide', 'datepicker')
+		$from = $container->addText('from', $this->name);
+
+		$from->setAttribute('data-provide', 'datepicker')
 			->setAttribute('data-date-orientation', 'bottom')
 			->setAttribute('data-date-format', $this->getJsFormat())
 			->setAttribute('data-date-today-highlight', 'true')
 			->setAttribute('data-date-autoclose', 'true');
 
-		$container->addText('to', $this->name_second)
-			->setAttribute('data-provide', 'datepicker')
+		$to = $container->addText('to', $this->nameSecond);
+
+		$to->setAttribute('data-provide', 'datepicker')
 			->setAttribute('data-date-orientation', 'bottom')
 			->setAttribute('data-date-format', $this->getJsFormat())
 			->setAttribute('data-date-today-highlight', 'true')
 			->setAttribute('data-date-autoclose', 'true');
 
-		$this->addAttributes($container['from']);
-		$this->addAttributes($container['to']);
+		$this->addAttributes($from);
+		$this->addAttributes($to);
 
 		if ($this->grid->hasAutoSubmit()) {
-			$container['from']->setAttribute('data-autosubmit-change', true);
-			$container['to']->setAttribute('data-autosubmit-change', true);
+			$from->setAttribute('data-autosubmit-change', true);
+			$to->setAttribute('data-autosubmit-change', true);
 		}
 
-		if ($placeholder_array = $this->getPlaceholder()) {
-			$text_from = reset($placeholder_array);
+		if ($placeholders = $this->getPlaceholders()) {
+			$textFrom = reset($placeholders);
 
-			if ($text_from) {
-				$container['from']->setAttribute('placeholder', $text_from);
+			if ($textFrom) {
+				$from->setAttribute('placeholder', $textFrom);
 			}
 
-			$text_to = end($placeholder_array);
+			$textTo = end($placeholders);
 
-			if ($text_to && ($text_to != $text_from)) {
-				$container['to']->setAttribute('placeholder', $text_to);
+			if ($textTo && ($textTo != $textFrom)) {
+				$to->setAttribute('placeholder', $textTo);
 			}
 		}
 	}

@@ -9,11 +9,13 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
+use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Ublaboo\DataGrid\DataGrid;
 
-class FilterSelect extends Filter
+class FilterSelect extends OneColumnFilter
 {
 
 	/**
@@ -57,8 +59,17 @@ class FilterSelect extends Filter
 
 	public function addToFormContainer(Container $container): void
 	{
-		$form = $container->lookup('Nette\Application\UI\Form');
+		$form = $container->lookup(Form::class);
+
+		if (!$form instanceof Form) {
+			throw new \UnexpectedValueException;
+		}
+
 		$translator = $form->getTranslator();
+
+		if ($translator === null) {
+			throw new \UnexpectedValueException;
+		}
 
 		if (!$this->translateOptions) {
 			$select = $this->addControl(
@@ -114,28 +125,21 @@ class FilterSelect extends Filter
 	}
 
 
-	/**
-	 * Tell if prompt has been set in this fitler
-	 */
-	public function isPromptEnabled(): bool
-	{
-		return isset($this->prompt);
-	}
-
-
 	protected function addControl(
 		Container $container,
 		string $key,
 		string $name,
 		array $options
-	): SelectBox
+	): BaseControl
 	{
 		$input = $container->addSelect($key, $name, $options);
 
-		if ($this->isPromptEnabled()) {
-			$input->setPrompt($this->prompt);
+		if ($this->getPrompt() !== null) {
+			$input->setPrompt($this->getPrompt());
 		}
 
-		return $this->addAttributes($input);
+		$this->addAttributes($input);
+
+		return $input;
 	}
 }

@@ -99,7 +99,7 @@ class Row
 
 	public function getControlClass(): string
 	{
-		if (!$class = $this->control->class) {
+		if (!$class = $this->control->getAttribute('class')) {
 			return '';
 		}
 
@@ -252,9 +252,11 @@ class Row
 	{
 		$condition = $this->datagrid->getRowCondition('group_action');
 
-		return $condition
-            ? $condition($this->item)
-            : true;
+		if (is_callable($condition)) {
+			return ($condition)($this->item);
+		}
+
+		return true;
 	}
 
 
@@ -267,9 +269,11 @@ class Row
 	{
 		$condition = $this->datagrid->getRowCondition('action', $key);
 
-		return $condition
-            ? $condition($this->item)
-            : true;
+		if (is_callable($condition)) {
+			return ($condition)($this->item);
+		}
+
+		return true;
 	}
 
 
@@ -280,9 +284,11 @@ class Row
 	{
 		$condition = $this->datagrid->getRowCondition('inline_edit');
 
-		return $condition
-            ? $condition($this->item)
-            : true;
+		if (is_callable($condition)) {
+			return ($condition)($this->item);
+		}
+
+		return true;
 	}
 
 

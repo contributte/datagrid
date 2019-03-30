@@ -8,6 +8,7 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
@@ -27,7 +28,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 {
 
 	/**
-	 * @var Collection
+	 * @var ArrayCollection
 	 */
 	protected $dataSource;
 
@@ -42,7 +43,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	protected $criteria;
 
 
-	public function __construct(Collection $collection, string $primaryKey)
+	public function __construct(ArrayCollection $collection, string $primaryKey)
 	{
 		$this->criteria = Criteria::create();
 		$this->dataSource = $collection;

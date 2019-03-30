@@ -9,7 +9,10 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
+use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SelectBox;
 use Ublaboo\DataGrid\DataGrid;
 
 class FilterMultiSelect extends FilterSelect
@@ -62,22 +65,39 @@ class FilterMultiSelect extends FilterSelect
 		string $key,
 		string $name,
 		array $options
-	): SelectBox
+	): BaseControl
 	{
 		/**
 		 * Set some translated texts
 		 */
 		$form = $container->lookup('Nette\Application\UI\Form');
-		$t = [$form->getTranslator(), 'translate'];
 
-		$this->addAttribute('title', $t('ublaboo_datagrid.multiselect_choose'));
-		$this->addAttribute('data-i18n-selected', $t('ublaboo_datagrid.multiselect_selected'));
+		if (!$form instanceof Form) {
+			throw new \UnexpectedValueException;
+		}
+
+		$translator = $form->getTranslator();
+
+		if ($translator === null) {
+			throw new \UnexpectedValueException;
+		}
+
+		$this->addAttribute(
+			'title',
+			$translator->translate('ublaboo_datagrid.multiselect_choose')
+		);
+		$this->addAttribute(
+			'data-i18n-selected',
+			$translator->translate('ublaboo_datagrid.multiselect_selected')
+		);
 
 		/**
 		 * Add input to container
 		 */
 		$input = $container->addMultiSelect($key, $name, $options);
 
-		return $this->addAttributes($input);
+		$this->addAttributes($input);
+
+		return $input;
 	}
 }

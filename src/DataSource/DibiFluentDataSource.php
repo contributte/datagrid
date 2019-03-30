@@ -26,7 +26,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 {
 
 	/**
-	 * @var DibiFluent|Dibi\Fluent
+	 * @var Fluent
 	 */
 	protected $dataSource;
 
@@ -121,11 +121,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			 */
 			$this->dataSource->clause('ORDER BY');
 
-			if ($this->dataSource instanceof Dibi\Fluent) {
-				$reflection = new \ReflectionClass('Dibi\Fluent');
-			} else {
-				$reflection = new \ReflectionClass('DibiFluent');
-			}
+			$reflection = new \ReflectionClass(Fluent::class);
 
 			$cursorProperty = $reflection->getProperty('cursor');
 			$cursorProperty->setAccessible(true);
@@ -215,18 +211,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			if (class_exists(Dibi\Helpers::class) === true) {
-				$column = Dibi\Helpers::escape(
-					$driver,
-					$column,
-					\dibi::IDENTIFIER
-				);
-			} else {
-				$column = $driver->escape(
-					$column,
-					\dibi::IDENTIFIER
-				);
-			}
+			$column = Dibi\Helpers::escape($driver, $column, \dibi::IDENTIFIER);
 
 			if ($filter->isExactSearch()) {
 				$this->dataSource->where("$column = %s", $value);

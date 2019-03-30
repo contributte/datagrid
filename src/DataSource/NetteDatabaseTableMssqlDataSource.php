@@ -25,7 +25,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 		$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
-		$this->data_source->where(
+		$this->dataSource->where(
 			"CONVERT(varchar(10), {$filter->getColumn()}, 112) = ?",
 			$date->format('Ymd')
 		);
@@ -39,26 +39,26 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 	{
 		$conditions = $filter->getCondition();
 
-		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to = $conditions[$filter->getColumn()]['to'];
+		$valueFrom = $conditions[$filter->getColumn()]['from'];
+		$valueTo = $conditions[$filter->getColumn()]['to'];
 
-		if ($value_from) {
-			$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
-			$date_from->setTime(0, 0, 0);
+		if ($valueFrom) {
+			$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
+			$dateFrom->setTime(0, 0, 0);
 
-			$this->data_source->where(
+			$this->dataSource->where(
 				"CONVERT(varchar(10), {$filter->getColumn()}, 112) >= ?",
-				$date_from->format('Ymd')
+				$dateFrom->format('Ymd')
 			);
 		}
 
-		if ($value_to) {
-			$date_to = DateTimeHelper::tryConvertToDateTime($value_to, [$filter->getPhpFormat()]);
-			$date_to->setTime(23, 59, 59);
+		if ($valueTo) {
+			$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
+			$dateTo->setTime(23, 59, 59);
 
-			$this->data_source->where(
+			$this->dataSource->where(
 				"CONVERT(varchar(10), {$filter->getColumn()}, 112) <= ?",
-				$date_to->format('Ymd')
+				$dateTo->format('Ymd')
 			);
 		}
 	}

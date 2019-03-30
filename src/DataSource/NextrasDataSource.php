@@ -26,7 +26,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 {
 
 	/**
-	 * @var DbalCollection
+	 * @var ICollection
 	 */
 	protected $dataSource;
 
@@ -121,16 +121,31 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 		if (!empty($sort)) {
 			foreach ($sort as $column => $order) {
-				$this->dataSource = $this->dataSource->orderBy($this->prepareColumn($column), $order);
+				$this->dataSource = $this->dataSource->orderBy(
+					$this->prepareColumn((string) $column),
+					$order
+				);
 			}
 		} else {
+			if (!$this->dataSource instanceof DbalCollection) {
+				throw new \UnexpectedValueException(
+					sprintf(
+						'Expeting %s, got %s',
+						DbalCollection::class,
+						get_class($this->dataSource)
+					)
+				);
+			}
+
 			/**
 			 * Has the statement already a order by clause?
 			 */
 			$order = $this->dataSource->getQueryBuilder()->getClause('order');
 
 			if (ArraysHelper::testEmpty($order)) {
-				$this->dataSource = $this->dataSource->orderBy($this->prepareColumn($this->primaryKey));
+				$this->dataSource = $this->dataSource->orderBy(
+					$this->prepareColumn($this->primaryKey)
+				);
 			}
 		}
 
@@ -242,7 +257,17 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 		array_unshift($params, $expr);
 
-		call_user_func_array([$this->dataSource->getQueryBuilder(), 'andWhere'], $params);
+		if (!$this->dataSource instanceof DbalCollection) {
+			throw new \UnexpectedValueException(
+				sprintf(
+					'Expeting %s, got %s',
+					DbalCollection::class,
+					get_class($this->dataSource)
+				)
+			);
+		}
+
+		$this->dataSource->getQueryBuilder()->andWhere(... $params);
 	}
 
 

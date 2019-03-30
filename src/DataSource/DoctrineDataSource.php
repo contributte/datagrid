@@ -158,7 +158,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 		if (!empty($sort)) {
 			foreach ($sort as $column => $order) {
-				$this->dataSource->addOrderBy($this->checkAliases($column), $order);
+				$this->dataSource->addOrderBy($this->checkAliases((string) $column), $order);
 			}
 		} else {
 			/**
@@ -176,7 +176,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	/**
 	 * Get unique int value for each instance class (self)
 	 */
-	public function getPlaceholder(): int
+	public function getPlaceholder(): string
 	{
 		return 'param' . ($this->placeholder++);
 	}
@@ -360,8 +360,8 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		}
 
 		if (!isset($this->rootAlias)) {
-			$this->rootAlias = $this->dataSource->getRootAliases();
-			$this->rootAlias = current($this->rootAlias);
+			$rootAlias = $this->dataSource->getRootAliases();
+			$this->rootAlias = current($rootAlias);
 		}
 
 		return $this->rootAlias . '.' . $column;

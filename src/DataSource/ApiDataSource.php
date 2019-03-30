@@ -49,8 +49,15 @@ class ApiDataSource implements IDataSource
 	protected function getResponse(array $params = [])
 	{
 		$queryString = http_build_query($params + $this->queryParams);
+		$url = sprintf('%s?%s', $this->url, $queryString);
 
-		return json_decode(file_get_contents(sprintf('%s?%s', $this->url, $queryString)));
+		$content = file_get_contents($url);
+
+		if ($content === false) {
+			throw new \UnexpectedValueException(sprintf('Could not open URL %s', $url));
+		}
+
+		return json_decode($content);
 	}
 
 
@@ -86,7 +93,7 @@ class ApiDataSource implements IDataSource
 	/**
 	 * {@inheritDoc}
 	 */
-	public function filter(array $filters): IDataSource
+	public function filter(array $filters): self
 	{
 		/**
 		 * First, save all filter values to array
@@ -106,7 +113,7 @@ class ApiDataSource implements IDataSource
 		 * Apply possible user filter callbacks
 		 */
 		foreach ($filters as $filter) {
-			if ($filter->isValueSet() && $filter->hasConditionCallback()) {
+			if ($filter->isValueSet() && $filter->getConditionCallback() !== null) {
 				$this->data = (array) call_user_func_array(
 					$filter->getConditionCallback(),
 					[$this->data, $filter->getValue()]

@@ -9,6 +9,7 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
+use Nette\Forms\Controls\BaseControl;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
@@ -38,14 +39,9 @@ abstract class Filter
 	protected $key;
 
 	/**
-	 * @var string|null
+	 * @var string
 	 */
 	protected $name;
-
-	/**
-	 * @var string|array
-	 */
-	protected $column;
 
 	/**
 	 * @var string|null
@@ -70,25 +66,23 @@ abstract class Filter
 	];
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	private $placeholder;
 
 
-	/**
-	 * @param string|array $column
-	 */
 	public function __construct(
 		DataGrid $grid,
 		string $key,
-		string $name,
-		$column
+		string $name
 	) {
 		$this->grid = $grid;
 		$this->key = $key;
 		$this->name = $name;
-		$this->column = $column;
 	}
+
+
+	abstract public function getCondition(): array;
 
 
 	/**
@@ -110,15 +104,6 @@ abstract class Filter
 
 
 	/**
-	 * Get filter column
-	 */
-	public function getColumn(): string
-	{
-		return $this->column;
-	}
-
-
-	/**
 	 * Tell whether value has been set in this fitler
 	 */
 	public function isValueSet(): bool
@@ -128,7 +113,6 @@ abstract class Filter
 
 
 	/**
-	 * Set filter value
 	 * @param mixed $value
 	 */
 	public function setValue($value): self
@@ -141,7 +125,6 @@ abstract class Filter
 
 
 	/**
-	 * Get filter value
 	 * @return mixed
 	 */
 	public function getValue()
@@ -151,11 +134,9 @@ abstract class Filter
 
 
 	/**
-	 * Set html attr placeholder
-	 * @param  string $placeholder
-	 * @return static
+	 * Set HTML attribute "placeholder"
 	 */
-	public function setPlaceholder($placeholder)
+	public function setPlaceholder(string $placeholder): self
 	{
 		$this->placeholder = $placeholder;
 
@@ -163,97 +144,59 @@ abstract class Filter
 	}
 
 
-	/**
-	 * Get html attr placeholder
-	 * @return string
-	 */
-	public function getPlaceholder()
+	public function getPlaceholder(): ?string
 	{
 		return $this->placeholder;
 	}
 
 
-	/**|null
+	/**
 	 * Set custom condition on filter
-	 * @param  callable $conditionCallback
-	 * @return static|null
 	 */
-	p|nullublic function setCondition($conditionCallback)|null
+	public function setCondition(callable $conditionCallback): self
 	{
 		$this->conditionCallback = $conditionCallback;
-|null
-		return $this;|null|null
-	}
 
-
-	/**|null
-	 * Get filter condition|null
-	 * @return array
-	 */
-	public function getCondition()
-	{|null
-		return [$this->column => $this->getValue()];
-	}
-
-|null
-	|null|null/**
-	 * Tell whether custom conditionCallback on filter is set
-	 * @return bool
-	 */
-	public function hasConditionCallback()|null|null
-	|null{
-		return (bool) $this->conditionCallback;
-	}
-
-|null|null
-	/**
-	 * Get custom filter condition
-	 * @return callable
-	 */
-	public function getConditionCallbac|nullk()|null
-	{
-		return $this->conditionCallback;
-	}
-
-|null|null
-	/**
-	 * Filter may have its own template
-	 * @param  string $template
-	 * @return static
-	|null|null */|null
-	public function setTemplate($template)
-	{
-		$this->template = (string) $template;
-|null
 		return $this;
 	}
 
 
-	/**|null
-	 * Get filter template path
-	 * @return string
-	 */
-	public function getTemplate()
-	|null{
+	public function hasConditionCallback(): bool
+	{
+		return $this->conditionCallback !== null;
+	}
+
+
+	public function getConditionCallback(): ?callable
+	{
+		return $this->conditionCallback;
+	}
+
+
+	public function setTemplate(string $template): self
+	{
+		$this->template = $template;
+
+		return $this;
+	}
+
+
+	public function getTemplate(): ?string
+	{
 		return $this->template;
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getType()
+	public function getType(): ?string
 	{
 		return $this->type;
 	}
 
 
 	/**
-	 * @param string $name
 	 * @param mixed $value
-	 * @return static
 	 */
-	public function addAttribute($name, $value)
+	public function addAttribute(string $name, $value): self
 	{
 		$this->attributes[$name][] = $value;
 
@@ -262,11 +205,9 @@ abstract class Filter
 
 
 	/**
-	 * @param string $name
 	 * @param mixed $value
-	 * @return static
 	 */
-	public function setAttribute($name, $value)
+	public function setAttribute(string $name, $value): self
 	{
 		$this->attributes[$name] = (array) $value;
 
@@ -274,31 +215,13 @@ abstract class Filter
 	}
 
 
-	/**
-	 * @return array
-	 * @deprecated use getAttributes instead
-	 */
-	public function getAttribtues()
-	{
-		@trigger_error('getAttribtues is deprecated, use getAttributes instead', E_USER_DEPRECATED);
-		return $this->getAttributes();
-	}
-
-
-	/**
-	 * @return array
-	 */
-	public function getAttributes()
+	public function getAttributes(): array
 	{
 		return $this->attributes;
 	}
 
 
-	/**
-	 * @param Nette\Forms\Controls\BaseControl $input
-	 * @return Nette\Forms\Controls\BaseControl
-	 */
-	protected function addAttributes($input)
+	protected function addAttributes(BaseControl $input): BaseControl
 	{
 		if ($this->grid->hasAutoSubmit()) {
 			$input->setAttribute('data-autosubmit', true);

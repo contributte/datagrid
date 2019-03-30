@@ -8,6 +8,9 @@ use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Status\Option;
 use Ublaboo\DataGrid\Traits;
 
+/**
+ * @method onChange(string $id, string $value)
+ */
 class ColumnStatus extends Column
 {
 

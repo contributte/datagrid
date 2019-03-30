@@ -55,11 +55,16 @@ class SubmitButton extends Button
 	{
 		$el = parent::getControl($caption);
 
-		$el->type = 'submit';
-		$el->class = $this->getClass();
+		$el->setAttribute('type', 'submit');
+		$el->setAttribute('class', $this->getClass());
 
 		if ($this->getIcon()) {
-			$el->addHtml(Html::el('span')->class(DataGrid::$iconPrefix . $this->getIcon()));
+			$el->addHtml(
+				Html::el('span')->appendAttribute(
+					'class',
+					DataGrid::$iconPrefix . $this->getIcon()
+				)
+			);
 
 			if (strlen($this->getText())) {
 				$el->addHtml('&nbsp;');

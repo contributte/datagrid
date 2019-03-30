@@ -2,6 +2,8 @@
 
 namespace Ublaboo\DataGrid\GroupAction;
 
+use Nette\SmartObject;
+
 /**
  * @method void onSelect(array $ids, string $value)
  */

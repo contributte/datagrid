@@ -34,7 +34,7 @@ class Export
 	protected $callback;
 
 	/**
-	 * @var bool|null
+	 * @var bool
 	 */
 	protected $ajax;
 
@@ -95,7 +95,7 @@ class Export
 		$a->addText($this->grid->getTranslator()->translate($this->text));
 
 		if ($this->isAjax()) {
-			$a->class[] = 'ajax';
+			$a->appendAttribute('class', 'ajax');
 		}
 		
 		if ($this->confirmDialog !== null) {

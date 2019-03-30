@@ -59,11 +59,11 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * {@inheritDoc}
 	 */
-	public function filter(array $filters): IDataSource
+	public function filter(array $filters): self
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
-				if ($filter->hasConditionCallback()) {
+				if ($filter->getConditionCallback() !== null) {
 					$data = (array) call_user_func_array(
 						$filter->getConditionCallback(),
 						[$this->data, $filter->getValue()]
@@ -121,7 +121,7 @@ class ArrayDataSource implements IDataSource
 	 */
 	protected function applyFilter($row, Filter $filter)
 	{
-		if (is_array($row) || $row instanceof \Traversable) {
+		if (is_array($row) || $row instanceof \ArrayAccess) {
 			if ($filter instanceof FilterDate) {
 				return $this->applyFilterDate($row, $filter);
 			} elseif ($filter instanceof FilterMultiSelect) {

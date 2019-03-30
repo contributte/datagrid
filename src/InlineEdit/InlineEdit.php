@@ -102,7 +102,7 @@ class InlineEdit
 	}
 
 
-	public function getPrimaryWhereColumn(): string
+	public function getPrimaryWhereColumn(): ?string
 	{
 		return $this->primaryWhereColumn;
 	}
@@ -117,15 +117,18 @@ class InlineEdit
 
 		$a->addText($this->text);
 
-		if ($this->title) {
-			$a->title($this->grid->getTranslator()->translate($this->title));
+		if ($this->title !== null) {
+			$a->setAttribute(
+				'title',
+				$this->grid->getTranslator()->translate($this->title)
+			);
 		}
 
-		if ($this->class) {
-			$a->class[] = $this->class;
+		if ($this->class !== null) {
+			$a->appendAttribute('class', $this->class);
 		}
 
-		$a->class[] = 'datagrid-inline-edit-trigger';
+		$a->appendAttribute('class', 'datagrid-inline-edit-trigger');
 
 		return $a;
 	}
@@ -142,12 +145,15 @@ class InlineEdit
 
 		$a->addText($this->text);
 
-		if ($this->title) {
-			$a->title($this->grid->getTranslator()->translate($this->title));
+		if ($this->title !== null) {
+			$a->setAttribute(
+				'title',
+				$this->grid->getTranslator()->translate($this->title)
+			);
 		}
 
-		if ($this->class) {
-			$a->class($this->class);
+		if ($this->class !== null) {
+			$a->appendAttribute('class', $this->class);
 		}
 
 		return $a;

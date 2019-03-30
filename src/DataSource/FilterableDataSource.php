@@ -20,7 +20,7 @@ abstract class FilterableDataSource
 	 * 
 	 * @param array|Filter[] $filters
 	 */
-	public function filter(array $filters): IDataSource
+	public function filter(array $filters): self
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {

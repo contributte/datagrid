@@ -8,17 +8,21 @@
 
 namespace Ublaboo\DataGrid;
 
+use Doctrine\Common\Annotations\Values;
 use Nette;
 use Nette\Application\IPresenter;
+use Nette\Application\Request;
 use Nette\Application\UI\Component;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Link;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\PresenterComponent;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
 use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
+use Nette\Utils\ArrayHash;
 use Ublaboo\DataGrid\AggregationFunction\TDataGridAggregationFunction;
 use Ublaboo\DataGrid\Column\Action;
 use Ublaboo\DataGrid\Column\ActionCallback;
@@ -57,8 +61,9 @@ use Ublaboo\DataGrid\Utils\Sorting;
 
 /**
  * @method onRedraw()
- * @method onRender()
- * @method onColumnAdd()
+ * @method onRender(DataGrid $dataGrid)
+ * @method onColumnAdd(string $key, Column $column)
+ * @method onExport(DataGrid $dataGrid)
  */
 class DataGrid extends Nette\Application\UI\Control
 {
@@ -194,7 +199,7 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $columns = [];
 
 	/**
-	 * @var Action[]
+	 * @var Action[]|MultiAction[]
 	 */
 	protected $actions = [];
 
@@ -222,11 +227,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 * @var DataModel
 	 */
 	protected $dataModel;
-
-	/**
-	 * @var DataFilter
-	 */
-	protected $dataFilter;
 
 	/**
 	 * @var string
@@ -314,7 +314,7 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $collapsibleOuterFilters = true;
 
 	/**
-	 * @var array
+	 * @var array|string[]
 	 */
 	protected $columnsExportOrder = [];
 
@@ -414,8 +414,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
-		parent::__construct();
-
 		if ($parent !== null) {
 			$parent->addComponent($this, $name);
 		}
@@ -457,7 +455,11 @@ class DataGrid extends Nette\Application\UI\Control
 				 * Get session
 				 */
 				if ($this->rememberState) {
-					$this->gridSession = $presenter->getSession($this->getSessionSectionName());
+					$sessionSection = $presenter->getSession($this->getSessionSectionName());
+
+					if (!$sessionSection instanceof SessionSection) {
+						$this->gridSession = $sessionSection;
+					}
 				}
 			}
 		);
@@ -483,6 +485,11 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		$template = $this->getTemplate();
+
+		if (!$template instanceof Template) {
+			throw new \UnexpectedValueException;
+		}
+
 		$template->setTranslator($this->getTranslator());
 
 		/**
@@ -526,8 +533,8 @@ class DataGrid extends Nette\Application\UI\Control
 			 * Walkaround for item snippet - snippet is the <tr> element and its class has to be also updated
 			 */
 			if (!empty($this->redrawItem)) {
-				$this->getPresenter()->payload->_datagrid_redrawItem_class = $row->getControlClass();
-				$this->getPresenter()->payload->_datagrid_redrawItem_id = $row->getId();
+				$this->getPresenterInstance()->payload->_datagrid_redrawItem_class = $row->getControlClass();
+				$this->getPresenterInstance()->payload->_datagrid_redrawItem_id = $row->getId();
 			}
 		}
 
@@ -699,7 +706,7 @@ s	 */
 		}
 
 		$this->defaultSort = $sort;
-		$this->defaultSortUseOnReset = (bool) $useOnReset;
+		$this->defaultSortUseOnReset = $useOnReset;
 
 		return $this;
 	}
@@ -748,7 +755,7 @@ s	 */
 			throw new DataGridException('You can not use both sortable datagrid and items detail.');
 		}
 
-		$this->sortable = (bool) $sortable;
+		$this->sortable = $sortable;
 
 		return $this;
 	}
@@ -830,7 +837,7 @@ s	 */
 
 	public function isTreeView(): bool
 	{
-		return (bool) $this->treeViewChildrenCallback;
+		return $this->treeViewChildrenCallback;
 	}
 
 
@@ -1502,7 +1509,7 @@ s	 */
 
 		$values = $form->getValues();
 
-		if ($this->getPresenter()->isAjax()) {
+		if ($this->getPresenterInstance()->isAjax()) {
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
 				return;
 			}
@@ -1529,11 +1536,11 @@ s	 */
 
 				if ($edit['submit']->isSubmittedBy() && !$edit->getErrors()) {
 					$this->inlineEdit->onSubmit($id, $values->inline_edit);
-					$this->getPresenter()->payload->_datagrid_inline_edited = $id;
-					$this->getPresenter()->payload->_datagrid_name = $this->getName();
+					$this->getPresenterInstance()->payload->_datagrid_inline_edited = $id;
+					$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
 				} else {
-					$this->getPresenter()->payload->_datagrid_inline_edit_cancel = $id;
-					$this->getPresenter()->payload->_datagrid_name = $this->getName();
+					$this->getPresenterInstance()->payload->_datagrid_inline_edit_cancel = $id;
+					$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
 				}
 
 				if ($edit['submit']->isSubmittedBy() && !empty($this->inlineEdit->onCustomRedraw)) {
@@ -1557,8 +1564,8 @@ s	 */
 				if ($add['submit']->isSubmittedBy() && !$add->getErrors()) {
 					$this->inlineAdd->onSubmit($values->inline_add);
 
-					if ($this->getPresenter()->isAjax()) {
-						$this->getPresenter()->payload->_datagrid_inline_added = true;
+					if ($this->getPresenterInstance()->isAjax()) {
+						$this->getPresenterInstance()->payload->_datagrid_inline_added = true;
 					}
 				}
 
@@ -1570,6 +1577,10 @@ s	 */
 		 * Filter itself
 		 */
 		$values = $values['filter'];
+
+		if (!$values instanceof ArrayHash) {
+			throw new \UnexpectedValueException;
+		}
 
 		foreach ($values as $key => $value) {
 			/**
@@ -1595,12 +1606,12 @@ s	 */
 			$this->saveSessionData('_grid_has_filtered', 1);
 		}
 
-		if ($this->getPresenter()->isAjax()) {
-			$this->getPresenter()->payload->_datagrid_sort = [];
+		if ($this->getPresenterInstance()->isAjax()) {
+			$this->getPresenterInstance()->payload->_datagrid_sort = [];
 
 			foreach ($this->columns as $key => $column) {
 				if ($column->isSortable()) {
-					$this->getPresenter()->payload->_datagrid_sort[$key] = $this->link('sort!', [
+					$this->getPresenterInstance()->payload->_datagrid_sort[$key] = $this->link('sort!', [
 						'sort' => $column->getSortNext(),
 					]);
 				}
@@ -1646,7 +1657,7 @@ s	 */
 	}
 
 
-	public function getOuterFilterColumnsCount(): bool
+	public function getOuterFilterColumnsCount(): int
 	{
 		return $this->outerFilterColumnsCount;
 	}
@@ -1734,7 +1745,7 @@ s	 */
 					return;
 				}
 
-				if ($column && $column->isSortable() && is_callable($column->getSortableCallback())) {
+				if ($column->isSortable() && is_callable($column->getSortableCallback())) {
 					$this->sortCallback = $column->getSortableCallback();
 				}
 			}
@@ -1760,41 +1771,44 @@ s	 */
 	}
 
 
-	public function addExportCsv(
-		string $text,
-		string $csvFileName,
-		?string $outputEncoding = null,
-		?string $delimiter = null,
-		bool $includeBom = false
-	): ExportCsv {
-		return $this->addToExports(new ExportCsv(
-			$this,
-			$text,
-			$csvFileName,
-			false,
-			$outputEncoding,
-			$delimiter,
-			$includeBom
-		));
-	}
-
-
 	public function addExportCsvFiltered(
 		string $text,
 		string $csvFileName,
-		?string $outputEncoding = null,
-		?string $delimiter = null,
+		string $outputEncoding = 'utf-8',
+		string $delimiter = ';',
 		bool $includeBom = false
 	): ExportCsv {
-		return $this->addToExports(new ExportCsv(
+		return $this->addExportCsv(
+			$text,
+			$csvFileName,
+			$outputEncoding,
+			$delimiter,
+			true
+		);
+	}
+
+
+	public function addExportCsv(
+		string $text,
+		string $csvFileName,
+		string $outputEncoding = 'utf-8',
+		string $delimiter = ';',
+		bool $includeBom = false,
+		bool $filtered = false
+	): ExportCsv {
+		$exportCsv = new ExportCsv(
 			$this,
 			$text,
 			$csvFileName,
-			true,
+			$filtered,
 			$outputEncoding,
 			$delimiter,
 			$includeBom
-		));
+		);
+
+		$this->addToExports($exportCsv);
+
+		return $exportCsv;
 	}
 
 
@@ -1802,7 +1816,9 @@ s	 */
 	{
 		$id = ($s = sizeof($this->exports)) ? ($s + 1) : 1;
 
-		$export->setLink(new Link($this, 'export!', ['id' => $id]));
+		$link = new Link($this, 'export!', ['id' => $id]);
+
+		$export->setLink((string) $link);
 
 		return $this->exports[$id] = $export;
 	}
@@ -1811,7 +1827,9 @@ s	 */
 	public function resetExportsLinks(): void
 	{
 		foreach ($this->exports as $id => $export) {
-			$export->setLink(new Link($this, 'export!', ['id' => $id]));
+			$link = new Link($this, 'export!', ['id' => $id]);
+
+			$export->setLink((string) $link);
 		}
 	}
 
@@ -1910,7 +1928,7 @@ s	 */
 
 	public function hasGroupActions(): bool
 	{
-		return (bool) $this->groupActionCollection;
+		return $this->groupActionCollection instanceof GroupActionCollection;
 	}
 
 
@@ -2022,7 +2040,7 @@ s	 */
 
 	public function setColumnReset(bool $reset = true): self
 	{
-		$this->hasColumnReset = (bool) $reset;
+		$this->hasColumnReset = $reset;
 
 		return $this;
 	}
@@ -2051,7 +2069,7 @@ s	 */
 			}
 		}
 
-		$this->getPresenter()->payload->non_empty_filters = $non_empty_filters;
+		$this->getPresenterInstance()->payload->non_empty_filters = $non_empty_filters;
 	}
 
 
@@ -2101,7 +2119,7 @@ s	 */
 			$rows[] = new Row($this, $item, $this->getPrimaryKey());
 		}
 
-		if ($export instanceof Export\ExportCsv) {
+		if ($export instanceof ExportCsv) {
 			$export->invoke($rows);
 		} else {
 			$export->invoke($items);
@@ -2118,19 +2136,21 @@ s	 */
 	 */
 	public function handleGetChildren($parent): void
 	{
-		$this->setDataSource(
-			call_user_func($this->treeViewChildrenCallback, $parent)
-		);
+		if (!is_callable($this->treeViewChildrenCallback)) {
+			throw new \UnexpectedValueException;
+		}
 
-		if ($this->getPresenter()->isAjax()) {
-			$this->getPresenter()->payload->_datagrid_url = $this->refreshURL;
-			$this->getPresenter()->payload->_datagrid_tree = $parent;
+		$this->setDataSource(call_user_func($this->treeViewChildrenCallback, $parent));
+
+		if ($this->getPresenterInstance()->isAjax()) {
+			$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
+			$this->getPresenterInstance()->payload->_datagrid_tree = $parent;
 
 			$this->redrawControl('items');
 
 			$this->onRedraw();
 		} else {
-			$this->getPresenter()->redirect('this');
+			$this->getPresenterInstance()->redirect('this');
 		}
 	}
 
@@ -2140,24 +2160,30 @@ s	 */
 	 */
 	public function handleGetItemDetail($id): void
 	{
-		$this->getTemplate()->add('toggle_detail', $id);
+		$template = $this->getTemplate();
+
+		if (!$template instanceof Template) {
+			throw new \UnexpectedValueException;
+		}
+
+		$template->add('toggle_detail', $id);
 		$this->redrawItem = [$this->itemsDetail->getPrimaryWhereColumn() => $id];
 
-		if ($this->getPresenter()->isAjax()) {
-			$this->getPresenter()->payload->_datagrid_toggle_detail = $id;
-			$this->getPresenter()->payload->_datagrid_name = $this->getName();
+		if ($this->getPresenterInstance()->isAjax()) {
+			$this->getPresenterInstance()->payload->_datagrid_toggle_detail = $id;
+			$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
 			$this->redrawControl('items');
 
 			/**
 			 * Only for nette 2.4
 			 */
-			if (method_exists($this->getTemplate()->getLatte(), 'addProvider')) {
+			if (method_exists($template->getLatte(), 'addProvider')) {
 				$this->redrawControl('gridSnippets');
 			}
 
 			$this->onRedraw();
 		} else {
-			$this->getPresenter()->redirect('this');
+			$this->getPresenterInstance()->redirect('this');
 		}
 	}
 
@@ -2169,14 +2195,20 @@ s	 */
 	public function handleEdit($id, $key): void
 	{
 		$column = $this->getColumn($key);
-		$value = $this->getPresenter()->getRequest()->getPost('value');
+		$request = $this->getPresenterInstance()->getRequest();
+
+		if (!$request instanceof Request) {
+			throw new \UnexpectedValueException;
+		}
+
+		$value = $request->getPost('value');
 
 		/**
 		 * @var mixed Could be NULL of course
 		 */
 		$new_value = call_user_func_array($column->getEditableCallback(), [$id, $value]);
 
-		$this->getPresenter()->payload->_datagrid_editable_new_value = $new_value;
+		$this->getPresenterInstance()->payload->_datagrid_editable_new_value = $new_value;
 	}
 
 
@@ -2185,7 +2217,7 @@ s	 */
 	 */
 	public function reload(array $snippets = []): void
 	{
-		if ($this->getPresenter()->isAjax()) {
+		if ($this->getPresenterInstance()->isAjax()) {
 			$this->redrawControl('tbody');
 			$this->redrawControl('pagination');
 			$this->redrawControl('summary');
@@ -2201,27 +2233,27 @@ s	 */
 				$this->redrawControl($snippet);
 			}
 
-			$this->getPresenter()->payload->_datagrid_url = $this->refreshURL;
-			$this->getPresenter()->payload->_datagrid_name = $this->getName();
+			$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
+			$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
 
 			$this->onRedraw();
 		} else {
-			$this->getPresenter()->redirect('this');
+			$this->getPresenterInstance()->redirect('this');
 		}
 	}
 
 
 	public function reloadTheWholeGrid(): void
 	{
-		if ($this->getPresenter()->isAjax()) {
+		if ($this->getPresenterInstance()->isAjax()) {
 			$this->redrawControl('grid');
 
-			$this->getPresenter()->payload->_datagrid_url = $this->refreshURL;
-			$this->getPresenter()->payload->_datagrid_name = $this->getName();
+			$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
+			$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
 
 			$this->onRedraw();
 		} else {
-			$this->getPresenter()->redirect('this');
+			$this->getPresenterInstance()->redirect('this');
 		}
 	}
 
@@ -2230,6 +2262,10 @@ s	 */
 	{
 		if (empty($this->columns[$key])) {
 			throw new DataGridException(sprintf('ColumnStatus[%s] does not exist', $key));
+		}
+
+		if (!$this->columns[$key] instanceof ColumnStatus) {
+			throw new \UnexpectedValueException;
 		}
 
 		$this->columns[$key]->onChange($id, $value);
@@ -2247,7 +2283,7 @@ s	 */
 
 		$this->redrawControl('items');
 
-		$this->getPresenter()->payload->_datagrid_url = $this->refreshURL;
+		$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
 
 		$this->onRedraw();
 	}
@@ -2342,7 +2378,7 @@ s	 */
 
 
 	/**
-	 * @param array|int[]|string[]
+	 * @param array|int[]|string[] $itemsPerPageList
 	 */
 	public function setItemsPerPageList(array $itemsPerPageList, bool $includeAll = true): self
 	{
@@ -2400,7 +2436,10 @@ s	 */
 	}
 
 
-	public function getPerPage(): int
+	/**
+	 * @return int
+	 */
+	public function getPerPage()
 	{
 		$itemsPerPageList = $this->getItemsPerPageList();
 
@@ -2411,7 +2450,7 @@ s	 */
 			$perPage = reset($itemsPerPageList);
 		}
 
-		return $perPage;
+		return (int) $perPage;
 	}
 
 
@@ -2451,7 +2490,13 @@ s	 */
 	public function getPaginator(): ?DataGridPaginator
 	{
 		if ($this->isPaginated() && $this->getPerPage() !== 'all') {
-			return $this['paginator'];
+			$paginator = $this['paginator'];
+
+			if (!$paginator instanceof DataGridPaginator) {
+				throw new \UnexpectedValueException;
+			}
+
+			return $paginator;
 		}
 
 		return null;
@@ -2529,7 +2574,13 @@ s	 */
 
 	public function getSessionSectionName(): string
 	{
-		return $this->getPresenter()->getName() . ':' . $this->getUniqueId();
+		$presenter = $this->getPresenterInstance();
+
+		if (!$presenter instanceof Presenter) {
+			throw new \UnexpectedValueException;
+		}
+
+		return $presenter->getName() . ':' . $this->getUniqueId();
 	}
 
 
@@ -2588,7 +2639,7 @@ s	 */
 	/**
 	 * Get items detail parameters
 	 */
-	public function getItemsDetail(): array
+	public function getItemsDetail(): ?ItemDetail
 	{
 		return $this->itemsDetail;
 	}
@@ -2700,7 +2751,7 @@ s	 */
 			);
 		}
 
-		if (!$this->actions[$multiActionKey] instanceof Column\MultiAction) {
+		if (!$this->actions[$multiActionKey] instanceof MultiAction) {
 			throw new DataGridException(
 				sprintf('Action at key [%s] is not a MultiAction.', $multiActionKey)
 			);
@@ -2775,12 +2826,32 @@ s	 */
 
 			$primaryWhereColumn = $this->inlineEdit->getPrimaryWhereColumn();
 
-			$this['filter']['inline_edit']->addHidden('_id', $id);
-			$this['filter']['inline_edit']->addHidden('_primary_where_column', $primaryWhereColumn);
+			$filterContainer = $this['filter'];
 
-			if ($this->getPresenter()->isAjax()) {
-				$this->getPresenter()->payload->_datagrid_inline_editing = true;
-				$this->getPresenter()->payload->_datagrid_name = $this->getName();
+			if (!$filterContainer instanceof Container) {
+				throw new \UnexpectedValueException;
+			}
+
+			$inlineEditContainer = $filterContainer['inline_edit'];
+
+			if (!$inlineEditContainer instanceof Container) {
+				throw new \UnexpectedValueException;
+			}
+
+			$inlineEditContainer->addHidden('_id', $id);
+			$inlineEditContainer->addHidden('_primary_where_column', $primaryWhereColumn);
+
+			$presenter = $this->getPresenterInstance();
+
+			if (!$presenter instanceof Presenter) {
+				throw new \UnexpectedValueException(
+					sprintf('%s needs %s', self::class, Presenter::class)
+				);
+			}
+
+			if ($presenter->isAjax()) {
+				$presenter->payload->_datagrid_inline_editing = true;
+				$presenter->payload->_datagrid_name = $this->getName();
 			}
 
 			$this->redrawItem($id, $primaryWhereColumn);
@@ -2854,7 +2925,9 @@ s	 */
 	public function setColumnsSummary(array $columns, ?callable $rowCallback = null): ColumnsSummary
 	{
 		if ($this->hasSomeAggregationFunction()) {
-			throw new DataGridException('You can use either ColumnsSummary or AggregationFunctions');
+			throw new DataGridException(
+				'You can use either ColumnsSummary or AggregationFunctions'
+			);
 		}
 
 		if ($rowCallback !== null) {
@@ -2951,7 +3024,7 @@ s	 */
 
 
 	/**
-	 * @return Column\Column[]
+	 * @return array|Column[]
 	 * @internal
 	 */
 	public function getColumns(): array
@@ -3033,10 +3106,19 @@ s	 */
 
 	/**
 	 * @internal
+	 * @throws \UnexpectedValueException
 	 */
 	public function getSortableParentPath(): string
 	{
-		return $this->getParentComponent()->lookupPath(IPresenter::class, false);
+		$presenter = $this->getParentComponent()->lookupPath(IPresenter::class, false);
+
+		if ($presenter === null) {
+			throw new \UnexpectedValueException(
+				sprintf('%s needs %s', self::class, IPresenter::class)
+			);
+		}
+
+		return $presenter;
 	}
 
 
@@ -3073,7 +3155,7 @@ s	 */
 		$this->findDefaultSort();
 		$this->findDefaultPerPage();
 
-		$this->getPresenter()->payload->_datagrid_url = $this->refreshURL;
+		$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
 		$this->redrawControl('non-existing-snippet');
 	}
 
@@ -3084,5 +3166,17 @@ s	 */
 	public function setCustomPaginatorTemplate(string $templateFile): void
 	{
 		$this->customPaginatorTemplate = $templateFile;
+	}
+
+
+	private function getPresenterInstance(): Presenter
+	{
+		$presenter = $this->getPresenter();
+
+		if (!$presenter instanceof Presenter) {
+			throw new \UnexpectedValueException;
+		}
+
+		return $presenter;
 	}
 }

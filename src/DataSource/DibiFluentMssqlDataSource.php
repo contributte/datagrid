@@ -10,6 +10,8 @@ namespace Ublaboo\DataGrid\DataSource;
 
 use Dibi;
 use DibiFluent;
+use Dibi\Fluent;
+use Dibi\Result;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
@@ -20,25 +22,14 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 {
 
 	/**
-	 * @var DibiFluent
-	 */
-	protected $dataSource;
-
-	/**
 	 * @var array
 	 */
 	protected $data = [];
 
-	/**
-	 * @var string
-	 */
-	protected $primaryKey;
 
-
-	public function __construct(DibiFluent $dataSource, string $primaryKey)
+	public function __construct(Fluent $dataSource, string $primaryKey)
 	{
-		$this->dataSource = $dataSource;
-		$this->primaryKey = $primaryKey;
+		parent::__construct($dataSource, $primaryKey);
 	}
 
 
@@ -79,6 +70,10 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 		$result = $this->dataSource->getConnection()
 			->query('%sql OFFSET ? ROWS FETCH NEXT ? ROWS ONLY', $sql, $offset, $limit);
+
+		if (!$result instanceof Result) {
+			throw new \UnexpectedValueException;
+		}
 
 		$this->data = $result->fetchAll();
 
@@ -144,11 +139,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			if (class_exists(Dibi\Helpers::class) === true) {
-				$column = Dibi\Helpers::escape($driver, $column, \dibi::IDENTIFIER);
-			} else {
-				$column = $driver->escape($column, \dibi::IDENTIFIER);
-			}
+			$column = Dibi\Helpers::escape($driver, $column, \dibi::IDENTIFIER);
 
 			if ($filter->isExactSearch()) {
 				$this->dataSource->where("$column = %s", $value);

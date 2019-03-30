@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
 use Nette\Forms\Container;
+use Ublaboo\DataGrid\DataGrid;
 
 class FilterText extends Filter
 {
@@ -34,18 +35,38 @@ class FilterText extends Filter
 	 */
 	protected $splitWordsSearch = true;
 
+	/**
+	 * @var array|string[]
+	 */
+	protected $columns;
+
+
+	/**
+	 * @param array|string[] $columns
+	 */
+	public function __construct(
+		DataGrid $grid,
+		string $key,
+		string $name,
+		array $columns
+	) {
+		parent::__construct($grid, $key, $name);
+
+		$this->columns = $columns;
+	}
+
 
 	/**
 	 * Adds text field to filter form
 	 */
 	public function addToFormContainer(Container $container)
 	{
-		$container->addText($this->key, $this->name);
+		$control = $container->addText($this->key, $this->name);
 
-		$this->addAttributes($container[$this->key]);
+		$this->addAttributes($control);
 
 		if ($this->getPlaceholder()) {
-			$container[$this->key]->setAttribute('placeholder', $this->getPlaceholder());
+			$control->setAttribute('placeholder', $this->getPlaceholder());
 		}
 	}
 
@@ -55,11 +76,10 @@ class FilterText extends Filter
 	 * 	If more than one column exists in fitler text,
 	 * 	than there is OR clause put betweeen their conditions
 	 * Or callback in case of custom condition callback
-	 * @return array|callable
 	 */
-	public function getCondition()
+	public function getCondition(): array
 	{
-		return array_fill_keys($this->column, $this->getValue());
+		return array_fill_keys([$this->columns], $this->getValue());
 	}
 
 

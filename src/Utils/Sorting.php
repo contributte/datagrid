@@ -5,7 +5,7 @@ namespace Ublaboo\DataGrid\Utils;
 final class Sorting
 {
 
-	/** @var array */
+	/** @var array|string[] */
 	private $sort = [];
 
 	/** @var callable|null */
@@ -18,6 +18,9 @@ final class Sorting
 	}
 
 
+	/**
+	 * @return array|string[]
+	 */
 	public function getSort(): array
 	{
 		return $this->sort;

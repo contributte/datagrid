@@ -56,7 +56,7 @@
 			"php vendor/nette/tester/src/tester.php tests/Api/DatabaseTests -j 1 -C",
 			"php vendor/nette/tester/src/tester.php tests/Api/AcceptanceTests -j 1 -C"
 		],
-		"phpstan": "vendor/phpstan/phpstan/bin/phpstan analyse src --level 7",
+		"phpstan": "vendor/phpstan/phpstan/bin/phpstan analyse -c phpstan.neon src --level 7",
 		"phpcs": "vendor/bin/phpcs --standard=vendor/ninjify/coding-standard/ruleset.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests",
 		"phpcsfix": "vendor/bin/phpcbf --standard=vendor/ninjify/coding-standard/ruleset.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests"
 	}

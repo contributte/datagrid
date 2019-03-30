@@ -3,6 +3,7 @@
 namespace Ublaboo\DataGrid\AggregationFunction;
 
 use DibiFluent;
+use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Utils\Strings;
@@ -39,7 +40,7 @@ class FunctionSum implements IAggregationFunction
 
 	public function processDataSource(IDataSource $dataSource): void
 	{
-		if ($dataSource instanceof DibiFluent) {
+		if ($dataSource instanceof Fluent) {
 			$connection = $dataSource->getConnection();
 			$this->result = $connection->select('SUM(%n) AS sum', $this->column)
 				->from($dataSource, 's')

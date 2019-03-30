@@ -32,6 +32,10 @@ class GroupActionCollection
 		$translator = $form->getTranslator();
 		$main_options = [];
 
+		if ($translator === null) {
+			throw new \UnexpectedValueException;
+		}
+
 		/**
 		 * First foreach for filling "main" select
 		 */
@@ -39,7 +43,7 @@ class GroupActionCollection
 			$main_options[$id] = $action->getTitle();
 		}
 
-		$container->addSelect('group_action', '', $main_options)
+		$groupActionSelect = $container->addSelect('group_action', '', $main_options)
 			->setPrompt('ublaboo_datagrid.choose');
 
 		/**
@@ -65,7 +69,7 @@ class GroupActionCollection
 				$control = $container->addText($id, '');
 
 				$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id)
-					->addConditionOn($container['group_action'], Form::EQUAL, $id)
+					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
                     ->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
 					->endCondition();
 
@@ -73,7 +77,7 @@ class GroupActionCollection
 				$control = $container->addTextarea($id, '');
 
 				$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id)
-					->addConditionOn($container['group_action'], Form::EQUAL, $id)
+					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
                     ->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
 			}
 
@@ -95,16 +99,21 @@ class GroupActionCollection
 		}
 
 		foreach ($this->groupActions as $id => $action) {
-			$container['group_action']->addCondition(Form::EQUAL, $id)
+			$groupActionSelect->addCondition(Form::EQUAL, $id)
 				->toggle(self::ID_ATTRIBUTE_PREFIX . $id);
 		}
 
-		$container['group_action']->addCondition(Form::FILLED)
-			->toggle(strtolower($this->datagrid->getName()) . 'group_action_submit');
+		$groupActionSelect->addCondition(Form::FILLED)
+			->toggle(
+				strtolower((string) $this->datagrid->getName()) . 'group_action_submit'
+			);
 
 		$container->addSubmit('submit', 'ublaboo_datagrid.execute')
 			->setValidationScope([$container])
-			->setAttribute('id', strtolower($this->datagrid->getName()) . 'group_action_submit');
+			->setAttribute(
+				'id',
+				strtolower((string) $this->datagrid->getName()) . 'group_action_submit'
+			);
 
 		if ($form instanceof Nette\ComponentModel\IComponent) {
 			$form->onSubmit[] = [$this, 'submitted'];
@@ -121,7 +130,7 @@ class GroupActionCollection
 			return;
 		}
 
-		$values = $form->getValues();
+		$values = (array) $form->getValues();
 		$values = $values['group_action'];
 
 		if ($values->group_action === 0 || $values->group_action === null) {
@@ -131,7 +140,10 @@ class GroupActionCollection
 		/**
 		 * @todo Define items IDs
 		 */
-		$http_ids = $form->getHttpData(Form::DATA_LINE | Form::DATA_KEYS, strtolower($this->datagrid->getName()) . '_group_action_item[]');
+		$http_ids = $form->getHttpData(
+			Form::DATA_LINE | Form::DATA_KEYS,
+			strtolower((string) $this->datagrid->getName()) . '_group_action_item[]'
+		);
 		$ids = array_keys($http_ids);
 
 		$id = $values->group_action;

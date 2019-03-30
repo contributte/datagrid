@@ -3,6 +3,7 @@
 namespace Ublaboo\DataGrid;
 
 use Dibi;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Database\Drivers as NDBDrivers;
@@ -25,6 +26,11 @@ use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
 use Ublaboo\DataGrid\Utils\NetteDatabaseSelectionHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
+/**
+ * @method onBeforeFilter(IDataSource $dataSource)
+ * @method onAfterFilter(IDataSource $dataSource)
+ * @method onAfterPaginated(IDataSource $dataSource)
+ */
 final class DataModel
 {
 
@@ -42,9 +48,12 @@ final class DataModel
 	/** @var IDataSource */
 	private $dataSource;
 
-	public function __construct(IDataSource $source, string $primaryKey)
+	/**
+	 * @param mixed $source
+	 */
+	public function __construct($source, string $primaryKey)
 	{
-		if ($source instanceof IDataSource || $source instanceof ApiDataSource) {
+		if ($source instanceof IDataSource) {
 			/**
 			 * Custom user datasource is ready for use
 			 *
@@ -78,7 +87,7 @@ final class DataModel
 		} elseif ($source instanceof QueryBuilder) {
 			$source = new DoctrineDataSource($source, $primaryKey);
 
-		} elseif ($source instanceof Collection) {
+		} elseif ($source instanceof ArrayCollection) {
 			$source = new DoctrineCollectionDataSource($source, $primaryKey);
 
 		} elseif ($source instanceof ICollection) {

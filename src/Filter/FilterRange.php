@@ -13,13 +13,13 @@ use Nette\Forms\Container;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridFilterRangeException;
 
-class FilterRange extends Filter
+class FilterRange extends OneColumnFilter
 {
 
 	/**
 	 * @var array
 	 */
-	protected $placeholderArray = [];
+	protected $placeholders = [];
 
 	/**
 	 * @var string
@@ -61,26 +61,25 @@ class FilterRange extends Filter
 	{
 		$container = $container->addContainer($this->key);
 
-		$container->addText('from', $this->name);
+		$from = $container->addText('from', $this->name);
+		$to = $container->addText('to', $this->nameSecond);
 
-		$container->addText('to', $this->nameSecond);
+		$this->addAttributes($from);
+		$this->addAttributes($to);
 
-		$this->addAttributes($container['from']);
-		$this->addAttributes($container['to']);
+		$placeholders = $this->getPlaceholders();
 
-		$placeholderArray = $this->getPlaceholder()
-
-		if ($placeholderArray !== []) {
-			$text_from = reset($placeholderArray);
+		if ($placeholders !== []) {
+			$text_from = reset($placeholders);
 
 			if ($text_from) {
-				$container['from']->setAttribute('placeholder', $text_from);
+				$from->setAttribute('placeholder', $text_from);
 			}
 
-			$text_to = end($placeholderArray);
+			$text_to = end($placeholders);
 
 			if ($text_to && ($text_to != $text_from)) {
-				$container['to']->setAttribute('placeholder', $text_to);
+				$to->setAttribute('placeholder', $text_to);
 			}
 		}
 	}
@@ -89,9 +88,9 @@ class FilterRange extends Filter
 	/**
 	 * Set html attr placeholder of both inputs
 	 */
-	public function setPlaceholder(array $placeholderArray): self
+	public function setPlaceholders(array $placeholders): self
 	{
-		$this->placeholderArray = $placeholderArray;
+		$this->placeholders = $placeholders;
 
 		return $this;
 	}
@@ -100,9 +99,9 @@ class FilterRange extends Filter
 	/**
 	 * Get html attr placeholders
 	 */
-	public function getPlaceholder(): array
+	public function getPlaceholders(): array
 	{
-		return $this->placeholderArray;
+		return $this->placeholders;
 	}
 
 

@@ -9,8 +9,9 @@
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
+use Nette\Forms\Container;
 
-class FilterDate extends Filter implements IFilterDate
+class FilterDate extends OneColumnFilter implements IFilterDate
 {
 
 	/**
@@ -29,27 +30,24 @@ class FilterDate extends Filter implements IFilterDate
 	protected $type = 'date';
 
 
-	/**
-	 * Adds select box to filter form
-	 * @param Nette\Forms\Container $container
-	 */
-	public function addToFormContainer(Nette\Forms\Container $container)
+	public function addToFormContainer(Container $container): void
 	{
-		$container->addText($this->key, $this->name)
-			->setAttribute('data-provide', 'datepicker')
+		$control = $container->addText($this->key, $this->name);
+		
+		$control->setAttribute('data-provide', 'datepicker')
 			->setAttribute('data-date-orientation', 'bottom')
 			->setAttribute('data-date-format', $this->getJsFormat())
 			->setAttribute('data-date-today-highlight', 'true')
 			->setAttribute('data-date-autoclose', 'true');
 
-		$this->addAttributes($container[$this->key]);
+		$this->addAttributes($control);
 
 		if ($this->grid->hasAutoSubmit()) {
-			$container[$this->key]->setAttribute('data-autosubmit-change', true);
+			$control->setAttribute('data-autosubmit-change', true);
 		}
 
 		if ($this->getPlaceholder()) {
-			$container[$this->key]->setAttribute('placeholder', $this->getPlaceholder());
+			$control->setAttribute('placeholder', $this->getPlaceholder());
 		}
 	}
 
