@@ -20,6 +20,7 @@ use Nette\Application\UI\PresenterComponent;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\SubmitButton as FormsSubmitButton;
 use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
@@ -52,6 +53,7 @@ use Ublaboo\DataGrid\Filter\IFilterDate;
 use Ublaboo\DataGrid\Filter\SubmitButton;
 use Ublaboo\DataGrid\GroupAction\GroupAction;
 use Ublaboo\DataGrid\GroupAction\GroupActionCollection;
+use Ublaboo\DataGrid\InlineEdit\InlineAdd;
 use Ublaboo\DataGrid\InlineEdit\InlineEdit;
 use Ublaboo\DataGrid\Localization\SimpleTranslator;
 use Ublaboo\DataGrid\Toolbar\ToolbarButton;
@@ -367,7 +369,7 @@ class DataGrid extends Nette\Application\UI\Control
 	protected $inlineEdit = null;
 
 	/**
-	 * @var InlineEdit|null
+	 * @var InlineAdd|null
 	 */
 	protected $inlineAdd = null;
 
@@ -1393,7 +1395,7 @@ s	 */
 			$inline_edit_container->addSubmit('submit', 'ublaboo_datagrid.save')
 				->setValidationScope([$inline_edit_container]);
 			$inline_edit_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
-				->setValidationScope(false);
+				->setValidationScope(null);
 
 			$this->inlineEdit->onControlAdd($inline_edit_container);
 			$this->inlineEdit->onControlAfterAdd($inline_edit_container);
@@ -1402,66 +1404,66 @@ s	 */
 		/**
 		 * InlineAdd part
 		 */
-		$inline_add_container = $form->addContainer('inline_add');
+		$inlineAddContainer = $form->addContainer('inline_add');
 
-		if ($this->inlineAdd instanceof InlineEdit) {
-			$inline_add_container->addSubmit('submit', 'ublaboo_datagrid.save')
-				->setValidationScope([$inline_add_container]);
-			$inline_add_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
-				->setValidationScope(false)
+		if ($this->inlineAdd instanceof InlineAdd) {
+			$inlineAddContainer->addSubmit('submit', 'ublaboo_datagrid.save')
+				->setValidationScope([$inlineAddContainer]);
+			$inlineAddContainer->addSubmit('cancel', 'ublaboo_datagrid.cancel')
+				->setValidationScope(null)
 				->setAttribute('data-datagrid-cancel-inline-add', true);
 
-			$this->inlineAdd->onControlAdd($inline_add_container);
-			$this->inlineAdd->onControlAfterAdd($inline_add_container);
+			$this->inlineAdd->onControlAdd($inlineAddContainer);
+			$this->inlineAdd->onControlAfterAdd($inlineAddContainer);
 		}
 
 		/**
 		 * ItemDetail form part
 		 */
-		$itemsDetail_form = $this->getItemDetailForm();
+		$itemsDetailForm = $this->getItemDetailForm();
 
-		if ($itemsDetail_form instanceof Nette\Forms\Container) {
-			$form['itemsDetail_form'] = $itemsDetail_form;
+		if ($itemsDetailForm instanceof Nette\Forms\Container) {
+			$form['items_detail_form'] = $itemsDetailForm;
 		}
 
 		/**
 		 * Filter part
 		 */
-		$filter_container = $form->addContainer('filter');
+		$filterContainer = $form->addContainer('filter');
 
 		foreach ($this->filters as $filter) {
-			$filter->addToFormContainer($filter_container);
+			$filter->addToFormContainer($filterContainer);
 		}
 
 		if (!$this->hasAutoSubmit()) {
-			$filter_container['submit'] = $this->getFilterSubmitButton();
+			$filterContainer['submit'] = $this->getFilterSubmitButton();
 		}
 
 		/**
 		 * Group action part
 		 */
-		$group_action_container = $form->addContainer('group_action');
+		$groupActionContainer = $form->addContainer('group_action');
 
 		if ($this->hasGroupActions()) {
-			$this->getGroupActionCollection()->addToFormContainer($group_action_container);
+			$this->getGroupActionCollection()->addToFormContainer($groupActionContainer);
 		}
 
 		if (!$form->isSubmitted()) {
-			$this->setFilterContainerDefaults($form['filter'], $this->filter);
+			$this->setFilterContainerDefaults($filterContainer, $this->filter);
 		}
 
 		/**
 		 * Per page part
 		 */
-		$form->addSelect('perPage', '', $this->getItemsPerPageList())
+		$select = $form->addSelect('perPage', '', $this->getItemsPerPageList())
 			->setTranslator(null);
 
 		if (!$form->isSubmitted()) {
-			$form['perPage']->setValue($this->getPerPage());
+			$select->setValue($this->getPerPage());
 		}
 
 		$form->addSubmit('perPage_submit', 'ublaboo_datagrid.perPage_submit')
-			->setValidationScope([$form['perPage']]);
+			->setValidationScope([$select]);
 
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
 	}
@@ -1507,7 +1509,7 @@ s	 */
 			return;
 		}
 
-		$values = $form->getValues();
+		$values = (array) $form->getValues();
 
 		if ($this->getPresenterInstance()->isAjax()) {
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
@@ -1518,14 +1520,27 @@ s	 */
 		/**
 		 * Per page
 		 */
-		$this->saveSessionData('_grid_perPage', $values->perPage);
-		$this->perPage = $values->perPage;
+		$this->saveSessionData('_grid_perPage', $values['perPage']);
+		$this->perPage = $values['perPage'];
 
 		/**
 		 * Inline edit
 		 */
-		if (isset($form['inline_edit']) && isset($form['inline_edit']['submit']) && isset($form['inline_edit']['cancel'])) {
+		if (
+			isset($form['inline_edit'])
+			&& isset($form['inline_edit']['submit'])
+			&& isset($form['inline_edit']['cancel'])
+			&& $this->inlineEdit !== null
+		) {
 			$edit = $form['inline_edit'];
+
+			if (
+				!$edit instanceof Container
+				|| !$edit['submit'] instanceof FormsSubmitButton
+				|| !$edit['cancel'] instanceof FormsSubmitButton
+			) {
+				throw new \UnexpectedValueException;
+			}
 
 			if ($edit['submit']->isSubmittedBy() || $edit['cancel']->isSubmittedBy()) {
 				$id = $form->getHttpData(Form::DATA_LINE, 'inline_edit[_id]');
@@ -1535,7 +1550,7 @@ s	 */
 				);
 
 				if ($edit['submit']->isSubmittedBy() && !$edit->getErrors()) {
-					$this->inlineEdit->onSubmit($id, $values->inline_edit);
+					$this->inlineEdit->onSubmit($id, $values['inline_edit']);
 					$this->getPresenterInstance()->payload->_datagrid_inline_edited = $id;
 					$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
 				} else {
@@ -1557,12 +1572,25 @@ s	 */
 		/**
 		 * Inline add
 		 */
-		if (isset($form['inline_add']) && isset($form['inline_add']['submit']) && isset($form['inline_add']['cancel'])) {
+		if (
+			isset($form['inline_add'])
+			&& isset($form['inline_add']['submit'])
+			&& isset($form['inline_add']['cancel'])
+			&& $this->inlineAdd !== null
+		) {
 			$add = $form['inline_add'];
+
+			if (
+				!$add instanceof Container
+				|| !$add['submit'] instanceof FormsSubmitButton
+				|| !$add['cancel'] instanceof FormsSubmitButton
+			) {
+				throw new \UnexpectedValueException;
+			}
 
 			if ($add['submit']->isSubmittedBy() || $add['cancel']->isSubmittedBy()) {
 				if ($add['submit']->isSubmittedBy() && !$add->getErrors()) {
-					$this->inlineAdd->onSubmit($values->inline_add);
+					$this->inlineAdd->onSubmit($values['inline_add']);
 
 					if ($this->getPresenterInstance()->isAjax()) {
 						$this->getPresenterInstance()->payload->_datagrid_inline_added = true;
@@ -1586,7 +1614,7 @@ s	 */
 			/**
 			 * Session stuff
 			 */
-			if ($this->rememberState && $this->getSessionData($key) != $value) {
+			if ($this->rememberState && $this->getSessionData((string) $key) != $value) {
 				/**
 				 * Has been filter changed?
 				 */
@@ -1594,7 +1622,7 @@ s	 */
 				$this->saveSessionData('_grid_page', 1);
 			}
 
-			$this->saveSessionData($key, $value);
+			$this->saveSessionData((string) $key, $value);
 
 			/**
 			 * Other stuff
@@ -1602,7 +1630,7 @@ s	 */
 			$this->filter[$key] = $value;
 		}
 
-		if (!empty($values)) {
+		if ($values !== []) {
 			$this->saveSessionData('_grid_has_filtered', 1);
 		}
 
@@ -2615,7 +2643,7 @@ s	 */
 
 
 	/**
-	 * @param  mixed $value
+	 * @param mixed $value
 	 */
 	public function saveSessionData(string $key, $value): void
 	{
@@ -2864,9 +2892,9 @@ s	 */
 	 ********************************************************************************/
 
 
-	public function addInlineAdd(): InlineEdit
+	public function addInlineAdd(): InlineAdd
 	{
-		$this->inlineAdd = new InlineEdit($this);
+		$this->inlineAdd = new InlineAdd($this);
 
 		$this->inlineAdd
 			->setTitle('ublaboo_datagrid.add')
@@ -2877,7 +2905,7 @@ s	 */
 	}
 
 
-	public function getInlineAdd(): ?InlineEdit
+	public function getInlineAdd(): ?InlineAdd
 	{
 		return $this->inlineAdd;
 	}

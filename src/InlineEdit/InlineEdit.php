@@ -16,10 +16,10 @@ use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
 
 /**
  * @method onSubmit($id, Nette\Utils\ArrayHash $values)
- * @method onSubmit(Nette\Utils\ArrayHash $values)
  * @method onControlAdd(Nette\Forms\Container $container)
  * @method onControlAfterAdd(Nette\Forms\Container $container)
  * @method onSetDefaults(Nette\Forms\Container $container, $item)
+ * @method onCustomRedraw()
  */
 class InlineEdit
 {
