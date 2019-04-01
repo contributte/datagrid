@@ -1,9 +1,9 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use Tester\TestCase;
 use Tester\Assert;
+use Tester\TestCase;
 use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
@@ -12,15 +12,12 @@ require __DIR__ . '/../Files/XTestingDataGridFactory.php';
 final class ColumnLinkTest extends TestCase
 {
 
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
+	/** @var Ublaboo\DataGrid\DataGrid */
 	private $grid;
 
-
-	public function setUp()
+	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
 		$this->grid = $factory->createXTestingDataGrid();
 	}
 
@@ -33,7 +30,7 @@ final class ColumnLinkTest extends TestCase
 	}
 
 
-	public function testLink()
+	public function testLink(): void
 	{
 		$link = $this->grid->addColumnLink('name', 'Href');
 		Assert::same('<a href="name?id=1">John</a>', $this->render($link));
@@ -52,23 +49,23 @@ final class ColumnLinkTest extends TestCase
 
 		$link = $this->grid->addColumnLink('name6', 'Href', 'edit', 'id', [
 			'name' => 'id',
-			'id' => 'name'
+			'id' => 'name',
 		]);
 		Assert::same('<a href="edit?name=1&amp;id=John">1</a>', $this->render($link));
 	}
 
 
-	public function testLinkClass()
+	public function testLinkClass(): void
 	{
 		$link = $this->grid->addColumnLink('name', 'Href')->setClass('btn');
 		Assert::same('<a href="name?id=1" class="btn">John</a>', $this->render($link));
 
-		$link->setClass(NULL);
+		$link->setClass(null);
 		Assert::same('<a href="name?id=1">John</a>', $this->render($link));
 	}
 
 
-	public function testLinkTitle()
+	public function testLinkTitle(): void
 	{
 		$link = $this->grid->addColumnLink('name', 'Href')->setTitle('Hello');
 		Assert::same('<a href="name?id=1" title="Hello">John</a>', $this->render($link));
@@ -77,5 +74,5 @@ final class ColumnLinkTest extends TestCase
 }
 
 
-$test_case = new ColumnLinkTest;
+$test_case = new ColumnLinkTest();
 $test_case->run();

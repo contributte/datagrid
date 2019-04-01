@@ -1,11 +1,4 @@
-<?php
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Jakub Kontra <me@jakubkontra.cz>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -14,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
-use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
@@ -29,32 +22,25 @@ use Ublaboo\DataGrid\Utils\Sorting;
  */
 class DoctrineDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
+
 	/**
 	 * Event called when datagrid data is loaded.
-	 * @var callable[]
+     *
+     * @var callable[]
 	 */
 	public $onDataLoaded;
 
-	/**
-	 * @var QueryBuilder
-	 */
+	/** @var QueryBuilder */
 	protected $dataSource;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $primaryKey;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $rootAlias;
 
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	protected $placeholder;
-
 
 	public function __construct(QueryBuilder $dataSource, string $primaryKey)
 	{
@@ -74,7 +60,6 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -83,6 +68,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		if ($this->usePaginator()) {
 			return (new Paginator($this->getQuery()))->count();
 		}
+
 		$dataSource = clone $this->dataSource;
 		$dataSource->select(sprintf('COUNT(%s)', $this->checkAliases($this->primaryKey)));
 		$dataSource->resetDQLPart('orderBy');
@@ -182,12 +168,9 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */	
-	public function processAggregation(callable $aggregationCallback): void
+	public function processAggregation(IAggregationFunction $function): void
 	{
-		call_user_func($aggregationCallback, clone $this->dataSource);
+		$function->processDataSource(clone $this->dataSource);
 	}
 
 
@@ -286,14 +269,11 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 					$c,
 					$this->dataSource->expr()->literal($value)
 				);
+
 				continue;
 			}
 
-			if ($filter->hasSplitWordsSearch() === false) {
-				$words = [$value];
-			} else {
-				$words = explode(' ', $value);
-			}
+			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 			foreach ($words as $word) {
 				$exprs[] = $this->dataSource->expr()->like(
@@ -349,10 +329,6 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	}
 
 
-	/**
-	 * @param  string  $column
-	 * @return string
-	 */
 	private function checkAliases(string $column): string
 	{
 		if (Strings::contains($column, '.')) {
@@ -372,4 +348,5 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	{
 		return $this->dataSource->getDQLPart('join') || $this->dataSource->getDQLPart('groupBy');
 	}
+
 }

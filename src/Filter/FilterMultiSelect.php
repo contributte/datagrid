@@ -1,36 +1,24 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\SelectBox;
 use Ublaboo\DataGrid\DataGrid;
+use UnexpectedValueException;
 
 class FilterMultiSelect extends FilterSelect
 {
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $type = 'multi-select';
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $attributes = [
 		'class' => ['form-control', 'input-sm', 'selectpicker', 'form-control-sm'],
 		'data-selected-text-format' => ['count'],
 	];
-
 
 	public function __construct(
 		DataGrid $grid,
@@ -38,7 +26,8 @@ class FilterMultiSelect extends FilterSelect
 		string $name,
 		array $options,
 		string $column
-	) {
+	)
+    {
 		parent::__construct($grid, $key, $name, $options, $column);
 
 		$this->addAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
@@ -73,13 +62,13 @@ class FilterMultiSelect extends FilterSelect
 		$form = $container->lookup('Nette\Application\UI\Form');
 
 		if (!$form instanceof Form) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		$translator = $form->getTranslator();
 
 		if ($translator === null) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		$this->addAttribute(
@@ -100,4 +89,5 @@ class FilterMultiSelect extends FilterSelect
 
 		return $input;
 	}
+
 }

@@ -1,31 +1,21 @@
-<?php
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
 use Dibi;
-use DibiFluent;
 use Dibi\Fluent;
 use Dibi\Result;
-use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
+use UnexpectedValueException;
 
 class DibiFluentMssqlDataSource extends DibiFluentDataSource
 {
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $data = [];
-
 
 	public function __construct(Fluent $dataSource, string $primaryKey)
 	{
@@ -36,7 +26,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	/********************************************************************************
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
-
 
 	/**
 	 * {@inheritDoc}
@@ -72,7 +61,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 			->query('%sql OFFSET ? ROWS FETCH NEXT ? ROWS ONLY', $sql, $offset, $limit);
 
 		if (!$result instanceof Result) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		$this->data = $result->fetchAll();
@@ -143,6 +132,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 			if ($filter->isExactSearch()) {
 				$this->dataSource->where("$column = %s", $value);
+
 				continue;
 			}
 
@@ -155,4 +145,5 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 			$this->dataSource->where($or);
 		}
 	}
+
 }

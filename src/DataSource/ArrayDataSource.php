@@ -2,6 +2,7 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use ArrayAccess;
 use DateTime;
 use DateTimeInterface;
 use Nette\Utils\Strings;
@@ -121,7 +122,7 @@ class ArrayDataSource implements IDataSource
 	 */
 	protected function applyFilter($row, Filter $filter)
 	{
-		if (is_array($row) || $row instanceof \ArrayAccess) {
+		if (is_array($row) || $row instanceof ArrayAccess) {
 			if ($filter instanceof FilterDate) {
 				return $this->applyFilterDate($row, $filter);
 			} elseif ($filter instanceof FilterMultiSelect) {

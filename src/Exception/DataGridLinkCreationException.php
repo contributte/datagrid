@@ -1,7 +1,10 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Exception;
 
-class DataGridLinkCreationException extends \RuntimeException
+use RuntimeException;
+
+class DataGridLinkCreationException extends RuntimeException
 {
+
 }

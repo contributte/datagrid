@@ -1,17 +1,10 @@
-<?php
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
 use Nette\Utils\Strings;
 use Nextras\Orm\Collection\ICollection;
 use Nextras\Orm\Mapper\Dbal\DbalCollection;
-use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
@@ -21,25 +14,19 @@ use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Utils\ArraysHelper;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
+use UnexpectedValueException;
 
 class NextrasDataSource extends FilterableDataSource implements IDataSource
 {
 
-	/**
-	 * @var ICollection
-	 */
+	/** @var ICollection */
 	protected $dataSource;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $data = [];
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $primaryKey;
-
 
 	public function __construct(ICollection $dataSource, string $primaryKey)
 	{
@@ -51,7 +38,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	/********************************************************************************
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
-
 
 	/**
 	 * {@inheritDoc}
@@ -128,7 +114,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 			}
 		} else {
 			if (!$this->dataSource instanceof DbalCollection) {
-				throw new \UnexpectedValueException(
+				throw new UnexpectedValueException(
 					sprintf(
 						'Expeting %s, got %s',
 						DbalCollection::class,
@@ -181,6 +167,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		$dataCondition = [];
+
 		if ($value_from) {
 			$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
 			$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $date_from->setTime(0, 0, 0);
@@ -237,14 +224,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 				$expr .= '%column = %s OR ';
 				$params[] = $column;
 				$params[] = "$value";
+
 				continue;
 			}
 
-			if ($filter->hasSplitWordsSearch() === false) {
-				$words = [$value];
-			} else {
-				$words = explode(' ', $value);
-			}
+			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 			foreach ($words as $word) {
 				$expr .= '%column LIKE %s OR ';
@@ -258,7 +242,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		array_unshift($params, $expr);
 
 		if (!$this->dataSource instanceof DbalCollection) {
-			throw new \UnexpectedValueException(
+			throw new UnexpectedValueException(
 				sprintf(
 					'Expeting %s, got %s',
 					DbalCollection::class,
@@ -267,7 +251,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 			);
 		}
 
-		$this->dataSource->getQueryBuilder()->andWhere(... $params);
+		$this->dataSource->getQueryBuilder()->andWhere(...$params);
 	}
 
 
@@ -308,6 +292,8 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		if (Strings::contains($column, '.')) {
 			return 'this->' . str_replace('.', '->', $column);
 		}
+
 		return $column;
 	}
+
 }

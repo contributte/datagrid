@@ -1,18 +1,12 @@
-<?php
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
 use Dibi;
-use DibiFluent;
 use Dibi\Fluent;
+use ReflectionClass;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
-use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
@@ -25,21 +19,14 @@ use Ublaboo\DataGrid\Utils\Sorting;
 class DibiFluentDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
 
-	/**
-	 * @var Fluent
-	 */
+	/** @var Fluent */
 	protected $dataSource;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $data = [];
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $primaryKey;
-
 
 	public function __construct(Fluent $dataSource, string $primaryKey)
 	{
@@ -51,7 +38,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	/********************************************************************************
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
-
 
 	/**
 	 * {@inheritDoc}
@@ -121,7 +107,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			 */
 			$this->dataSource->clause('ORDER BY');
 
-			$reflection = new \ReflectionClass(Fluent::class);
+			$reflection = new ReflectionClass(Fluent::class);
 
 			$cursorProperty = $reflection->getProperty('cursor');
 			$cursorProperty->setAccessible(true);
@@ -136,9 +122,9 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	}
 
 
-	public function processAggregation(callable $aggregationCallback): void
+	public function processAggregation(IAggregationFunction $function): void
 	{
-		call_user_func($aggregationCallback, clone $this->dataSource);
+		$function->processDataSource(clone $this->dataSource);
 	}
 
 
@@ -191,11 +177,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		$valueFrom = $conditions[$filter->getColumn()]['from'];
 		$valueTo = $conditions[$filter->getColumn()]['to'];
 
-		if ($valueFrom || $valueFrom != '') {
+		if ($valueFrom || $valueFrom !== '') {
 			$this->dataSource->where('%n >= ?', $filter->getColumn(), $valueFrom);
 		}
 
-		if ($valueTo || $valueTo != '') {
+		if ($valueTo || $valueTo !== '') {
 			$this->dataSource->where('%n <= ?', $filter->getColumn(), $valueTo);
 		}
 	}
@@ -215,14 +201,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 			if ($filter->isExactSearch()) {
 				$this->dataSource->where("$column = %s", $value);
+
 				continue;
 			}
 
-			if ($filter->hasSplitWordsSearch() === false) {
-				$words = [$value];
-			} else {
-				$words = explode(' ', $value);
-			}
+			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 			foreach ($words as $word) {
 				$or[] = ["$column LIKE %~like~", $word];
@@ -254,7 +237,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			$this->dataSource->where('(%n = ?', $filter->getColumn(), $value1);
 
 			foreach ($values as $value) {
-				if ($i == $length) {
+				if ($i === $length) {
 					$this->dataSource->or('%n = ?)', $filter->getColumn(), $value);
 				} else {
 					$this->dataSource->or('%n = ?', $filter->getColumn(), $value);
@@ -284,4 +267,5 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	{
 		return $this->dataSource;
 	}
+
 }

@@ -3,6 +3,7 @@
 namespace Ublaboo\DataGrid\DataSource;
 
 use Ublaboo\DataGrid\Utils\Sorting;
+use UnexpectedValueException;
 
 class ApiDataSource implements IDataSource
 {
@@ -54,7 +55,7 @@ class ApiDataSource implements IDataSource
 		$content = file_get_contents($url);
 
 		if ($content === false) {
-			throw new \UnexpectedValueException(sprintf('Could not open URL %s', $url));
+			throw new UnexpectedValueException(sprintf('Could not open URL %s', $url));
 		}
 
 		return json_decode($content);

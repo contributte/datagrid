@@ -7,6 +7,7 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
+use UnexpectedValueException;
 
 class GroupActionCollection
 {
@@ -33,7 +34,7 @@ class GroupActionCollection
 		$main_options = [];
 
 		if ($translator === null) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		/**

@@ -23,7 +23,7 @@ interface IDataSource
      *
      * @param array|Filter[] $filters
 	 */
-	public function filter(array $filters);
+	public function filter(array $filters): void;
 
 	/**
 	 * Filter data - get one row

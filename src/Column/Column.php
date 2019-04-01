@@ -5,6 +5,8 @@ namespace Ublaboo\DataGrid\Column;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\Traits\TButtonRenderer;
+use Ublaboo\DataGrid\Traits\TLink;
 
 abstract class Column extends FilterableColumn
 {
@@ -42,7 +44,7 @@ abstract class Column extends FilterableColumn
 	/** @var array */
 	protected $templateVariables = [];
 
-	/** @var callable */
+	/** @var callable|null */
 	protected $editableCallback;
 
 	/** @var callable|null */
@@ -54,7 +56,7 @@ abstract class Column extends FilterableColumn
 	/** @var bool */
 	protected $defaultHide = false;
 
-	/** @var array */
+	/** @var array|Html[]|null[] */
 	protected $elementCache = ['td' => null, 'th' => null];
 
 	/** @var callable|null */
@@ -140,7 +142,7 @@ abstract class Column extends FilterableColumn
 	 */
 	public function isSortable(): bool
 	{
-		return $this->sortable;
+		return $this->sortable === false;
 	}
 
 
@@ -266,7 +268,7 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Get column template path
 	 */
-	public function getTemplate(): string
+	public function getTemplate(): ?string
 	{
 		return $this->template;
 	}
@@ -299,9 +301,15 @@ abstract class Column extends FilterableColumn
 	{
 		$defaultSort = $this->grid->getColumnDefaultSort($this->key);
 
-		if ($this->sort === 'ASC') {
+		if ($this->sort === []) {
+			return [$this->key => 'ASC'];
+		}
+
+		$sort = reset($this->sort);
+
+		if ($sort === 'ASC') {
 			return [$this->key => $defaultSort === 'DESC' ? false : 'DESC'];
-		} elseif ($this->sort === 'DESC') {
+		} elseif ($sort === 'DESC') {
 			return [$this->key => $defaultSort === 'DESC' ? 'ASC' : false];
 		}
 
@@ -321,7 +329,11 @@ abstract class Column extends FilterableColumn
 
 	public function isSortAsc(): bool
 	{
-		return $this->sort === 'ASC';
+		if ($this->sort === []) {
+			return false;
+		}
+
+		return reset($this->sort) === 'ASC';
 	}
 
 
@@ -357,7 +369,7 @@ abstract class Column extends FilterableColumn
 	public function setFitContent(bool $fitContent = true): self
 	{
 		$fitContent
-            ? $this->addAttributes(['class' => 'datagrid-fit-content'])
+            ? $this->addCellAttributes(['class' => 'datagrid-fit-content'])
             : null;
 
 		return $this;
@@ -378,7 +390,7 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Return callback that is used after inline editing
 	 */
-	public function getEditableCallback(): callable
+	public function getEditableCallback(): ?callable
 	{
 		return $this->editableCallback;
 	}
@@ -403,8 +415,17 @@ abstract class Column extends FilterableColumn
 
 	public function isEditable(?Row $row = null): bool
 	{
-		return ((bool) $this->getEditableCallback())
-			&& ($row === null || $this->getEditableOnConditionCallback() === null || call_user_func_array($this->getEditableOnConditionCallback(), [$row->getItem()]));
+		if ($this->getEditableCallback() !== null) {
+			if ($row === null) {
+				return true;
+			} elseif ($this->getEditableOnConditionCallback() === null) {
+				return true;
+			} else {
+				return $this->getEditableOnConditionCallback()($row->getItem());
+			}
+		}
+
+		return true;
 	}
 
 
@@ -428,11 +449,11 @@ abstract class Column extends FilterableColumn
 
 		foreach ($options as $value => $text) {
 			$select->create('option')
-				->value($value)
+				->setAttribute('value', $value)
 				->setText($text);
 		}
 
-		$this->addAttributes(['data-datagrid-editable-element' => (string) $select]);
+		$this->addCellAttributes(['data-datagrid-editable-element' => (string) $select]);
 
 		return $this->setEditableInputType('select', $attrs);
 	}
@@ -499,13 +520,13 @@ abstract class Column extends FilterableColumn
 			$class = $el->class;
 			unset($el->class);
 
-			$el->class[] = $class;
+			$el->appendAttribute('class', $class);
 		}
 
-		$el->class[] = sprintf('text-%s', $this->getAlign());
-		$el->class[] = sprintf('col-%s', $key);
+		$el->appendAttribute('class', sprintf('text-%s', $this->getAlign()));
+		$el->appendAttribute('class', sprintf('col-%s', $key));
 
-		if ($row && $tag === 'td' && $this->isEditable($row)) {
+		if ($row !== null && $tag === 'td' && $this->isEditable($row)) {
 			$link = $this->grid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
 
 			$el->data('datagrid-editable-url', $link);
@@ -513,10 +534,10 @@ abstract class Column extends FilterableColumn
 			$el->data('datagrid-editable-type', $this->editableElement[0]);
 			$el->data('datagrid-editable-attrs', json_encode($this->editableElement[1]));
 
-			if ($this->getEditableValueCallback()) {
+			if ($this->getEditableValueCallback() !== null) {
 				$el->data(
 					'datagrid-editable-value',
-					call_user_func_array($this->getEditableValueCallback(), [$row->getItem()])
+					$this->getEditableValueCallback()($row->getItem())
 				);
 			}
 		}
@@ -561,6 +582,14 @@ abstract class Column extends FilterableColumn
 	public function getColumn(): string
 	{
 		return $this->column;
+	}
+
+
+	public function setReplacement(array $replacements): self
+	{
+		$this->replacements = $replacements;
+
+		return $this;
 	}
 
 }

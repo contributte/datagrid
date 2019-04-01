@@ -2,12 +2,11 @@
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
-use DibiFluent;
 use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
+use Nette\Database\Table\Selection;
 use Nette\Utils\Strings;
-use Ublaboo\DataGrid\DataSource\IDataSource;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
 class FunctionSum implements IAggregationFunction
@@ -38,14 +37,16 @@ class FunctionSum implements IAggregationFunction
 	}
 
 
-	public function processDataSource(IDataSource $dataSource): void
+	/**
+	 * @param Fluent|QueryBuilder|Collection|Selection $dataSource
+	 */
+	public function processDataSource($dataSource): void
 	{
 		if ($dataSource instanceof Fluent) {
 			$connection = $dataSource->getConnection();
-			$this->result = $connection->select('SUM(%n) AS sum', $this->column)
+			$this->result = (int) $connection->select('SUM(%n)', $this->column)
 				->from($dataSource, 's')
-				->fetch()
-				->sum;
+				->fetchSingle();
 		}
 
 		if ($dataSource instanceof QueryBuilder) {

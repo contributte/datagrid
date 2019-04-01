@@ -138,7 +138,7 @@ class ColumnStatus extends Column
 	 */
 	public function getTemplateVariables(): array
 	{
-		return array_merge($this->template_variables, [
+		return array_merge($this->templateVariables, [
 			'options' => $this->getOptions(),
 			'column' => $this->getColumn(),
 			'key' => $this->getKey(),
@@ -147,7 +147,7 @@ class ColumnStatus extends Column
 	}
 
 
-	public function setReplacement(array $replacements): void
+	public function setReplacement(array $replacements): Column
 	{
 		throw new DataGridColumnStatusException(
 			'Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)'

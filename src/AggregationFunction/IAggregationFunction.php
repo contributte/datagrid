@@ -2,7 +2,10 @@
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
-use Ublaboo\DataGrid\DataSource\IDataSource;
+use Dibi\Fluent;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\QueryBuilder;
+use Nette\Database\Table\Selection;
 
 interface IAggregationFunction
 {
@@ -14,7 +17,10 @@ interface IAggregationFunction
 	public function getFilterDataType(): string;
 
 
-	public function processDataSource(IDataSource $dataSource): void;
+	/**
+	 * @param Fluent|QueryBuilder|Collection|Selection $dataSource
+	 */
+	public function processDataSource($dataSource): void;
 
 
 	/**

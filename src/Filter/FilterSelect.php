@@ -1,48 +1,30 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\SelectBox;
 use Ublaboo\DataGrid\DataGrid;
+use UnexpectedValueException;
 
 class FilterSelect extends OneColumnFilter
 {
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $options;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $translateOptions = false;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $template = 'datagrid_filter_select.latte';
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $type = 'select';
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $prompt = null;
-
 
 	public function __construct(
 		DataGrid $grid,
@@ -50,7 +32,8 @@ class FilterSelect extends OneColumnFilter
 		string $name,
 		array $options,
 		string $column
-	) {
+	)
+    {
 		parent::__construct($grid, $key, $name, $column);
 
 		$this->options = $options;
@@ -62,13 +45,13 @@ class FilterSelect extends OneColumnFilter
 		$form = $container->lookup(Form::class);
 
 		if (!$form instanceof Form) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		$translator = $form->getTranslator();
 
 		if ($translator === null) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		if (!$this->translateOptions) {
@@ -89,6 +72,7 @@ class FilterSelect extends OneColumnFilter
 	public function setTranslateOptions(bool $translateOptions = true): self
 	{
 		$this->translateOptions = (bool) $translateOptions;
+
 		return $this;
 	}
 
@@ -142,4 +126,5 @@ class FilterSelect extends OneColumnFilter
 
 		return $input;
 	}
+
 }

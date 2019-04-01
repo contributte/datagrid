@@ -1,15 +1,8 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Export;
 
 use Contributte\Application\Response\CSVResponse;
-use Nette;
 use Nette\Application\UI\Presenter;
 use Ublaboo\DataGrid\CsvDataModel;
 use Ublaboo\DataGrid\DataGrid;
@@ -25,7 +18,8 @@ class ExportCsv extends Export
 		string $outputEncoding = 'utf-8',
 		string $delimiter = ';',
 		bool $includeBom = false
-	) {
+	)
+    {
 		if (strpos($name, '.csv') === false) {
 			$name .= '.csv';
 		}
@@ -46,10 +40,15 @@ class ExportCsv extends Export
 		bool $includeBom
 	): callable
 	{
-		return function(
+		return function (
 			array $data,
 			DataGrid $grid
-		) use ($name, $outputEncoding, $delimiter, $includeBom): void {
+		) use (
+            $name,
+            $outputEncoding,
+            $delimiter,
+            $includeBom
+): void {
 			$columns = $this->getColumns() ?: $this->grid->getColumns();
 
 			$csvDataModel = new CsvDataModel($data, $columns, $this->grid->getTranslator());
@@ -67,4 +66,5 @@ class ExportCsv extends Export
 			}
 		};
 	}
+
 }

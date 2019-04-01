@@ -1,10 +1,4 @@
-<?php
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Martin Procházka <juniwalk@outlook.cz>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -12,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
-use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
@@ -27,21 +21,14 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	IAggregatable
 {
 
-	/**
-	 * @var ArrayCollection
-	 */
+	/** @var ArrayCollection */
 	protected $dataSource;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $primaryKey;
 
-	/**
-	 * @var Criteria
-	 */
+	/** @var Criteria */
 	protected $criteria;
-
 
 	public function __construct(ArrayCollection $collection, string $primaryKey)
 	{
@@ -54,7 +41,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	/********************************************************************************
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
-
 
 	/**
 	 * {@inheritDoc}
@@ -116,6 +102,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 		if ($sort = $sorting->getSort()) {
 			$this->criteria->orderBy($sort);
+
 			return $this;
 		}
 
@@ -125,9 +112,9 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	public function processAggregation(callable $aggregationCallback): void
+	public function processAggregation(IAggregationFunction $function): void
 	{
-		call_user_func($aggregationCallback, clone $this->dataSource);
+		$function->processDataSource(clone $this->dataSource);
 	}
 
 
@@ -203,14 +190,11 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 		foreach ($filter->getCondition() as $column => $value) {
 			if ($filter->isExactSearch()) {
 				$exprs[] = Criteria::expr()->eq($column, $value);
+
 				continue;
 			}
 
-			if ($filter->hasSplitWordsSearch() === false) {
-				$words = [$value];
-			} else {
-				$words = explode(' ', $value);
-			}
+			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 			foreach ($words as $word) {
 				$exprs[] = Criteria::expr()->contains($column, $word);
@@ -259,4 +243,5 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	{
 		return $this->dataSource->matching($this->criteria);
 	}
+
 }

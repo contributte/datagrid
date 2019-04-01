@@ -2,6 +2,7 @@
 
 namespace Ublaboo\DataGrid\Column;
 
+use LogicException;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridItemDetailException;
@@ -75,11 +76,14 @@ class ItemDetail
 		$a->addText($this->text);
 
 		if ($this->title) {
-			$a->title($this->grid->getTranslator()->translate($this->title));
+			$a->setAttribute(
+				'title',
+				$this->grid->getTranslator()->translate($this->title)
+			);
 		}
 
 		if ($this->class) {
-			$a->class($this->class);
+			$a->setAttribute('class', $this->class);
 		}
 
 		return $a;
@@ -96,6 +100,10 @@ class ItemDetail
 			throw new DataGridItemDetailException(
 				'ItemDetail is set to render as block, but block #detail is not defined'
 			);
+		}
+
+		if ($this->getRenderer() === null) {
+			throw new LogicException('Renderer is not set');
 		}
 
 		return call_user_func($this->getRenderer(), $item);
@@ -122,7 +130,7 @@ class ItemDetail
 	/**
 	 * Get item detail type
 	 */
-	public function getType(): string
+	public function getType(): ?string
 	{
 		return $this->type;
 	}
@@ -156,7 +164,7 @@ class ItemDetail
 	}
 
 
-	public function getRenderer(): callable
+	public function getRenderer(): ?callable
 	{
 		return $this->renderer;
 	}

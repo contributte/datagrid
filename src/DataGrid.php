@@ -1,14 +1,9 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid;
 
-use Doctrine\Common\Annotations\Values;
+use DateTime;
+use InvalidArgumentException;
 use Nette;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
@@ -16,7 +11,6 @@ use Nette\Application\UI\Component;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Link;
 use Nette\Application\UI\Presenter;
-use Nette\Application\UI\PresenterComponent;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
@@ -24,6 +18,7 @@ use Nette\Forms\Controls\SubmitButton as FormsSubmitButton;
 use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Traversable;
 use Ublaboo\DataGrid\AggregationFunction\TDataGridAggregationFunction;
 use Ublaboo\DataGrid\Column\Action;
 use Ublaboo\DataGrid\Column\ActionCallback;
@@ -35,7 +30,6 @@ use Ublaboo\DataGrid\Column\ColumnStatus;
 use Ublaboo\DataGrid\Column\ColumnText;
 use Ublaboo\DataGrid\Column\ItemDetail;
 use Ublaboo\DataGrid\Column\MultiAction;
-use Ublaboo\DataGrid\ColumnsSummary;
 use Ublaboo\DataGrid\Components\DataGridPaginator\DataGridPaginator;
 use Ublaboo\DataGrid\DataSource\IDataSource;
 use Ublaboo\DataGrid\Exception\DataGridColumnNotFoundException;
@@ -45,9 +39,11 @@ use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentExcept
 use Ublaboo\DataGrid\Export\Export;
 use Ublaboo\DataGrid\Export\ExportCsv;
 use Ublaboo\DataGrid\Filter\Filter;
+use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
 use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterSelect;
 use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Filter\IFilterDate;
 use Ublaboo\DataGrid\Filter\SubmitButton;
@@ -60,64 +56,58 @@ use Ublaboo\DataGrid\Toolbar\ToolbarButton;
 use Ublaboo\DataGrid\Utils\ArraysHelper;
 use Ublaboo\DataGrid\Utils\ItemDetailForm;
 use Ublaboo\DataGrid\Utils\Sorting;
+use UnexpectedValueException;
 
 /**
  * @method onRedraw()
  * @method onRender(DataGrid $dataGrid)
  * @method onColumnAdd(string $key, Column $column)
  * @method onExport(DataGrid $dataGrid)
+ * @method onFiltersAssembled(Filter[] $filters)
  */
 class DataGrid extends Nette\Application\UI\Control
 {
+
 	use TDataGridAggregationFunction;
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onRedraw = [];
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onRender = [];
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onExport = [];
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onColumnAdd = [];
 
-	/**
-	 * @var callable[]
-	 */
+	/** @var callable[] */
 	public $onFiltersAssembled = [];
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	public static $iconPrefix = 'fa fa-';
 
 	/**
 	 * Default form method
-	 * @var string
+     *
+     * @var string
 	 */
 	public static $formMethod = 'post';
 
 	/**
 	 * When set to TRUE, datagrid throws an exception
 	 * 	when tring to get related entity within join and entity does not exist
-	 * @var bool
+     *
+     * @var bool
 	 */
 	public $strictEntityProperty = false;
 
 	/**
 	 * When set to TRUE, datagrid throws an exception
 	 * 	when tring to set filter value, that does not exist (select, multiselect, etc)
-	 * @var bool
+     *
+     * @var bool
 	 */
 	public $strictSessionFilterValues = true;
 
@@ -139,24 +129,16 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public $sort = [];
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	public $defaultSort = [];
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	public $defaultFilter = [];
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	public $defaultFilterUseOnReset = true;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	public $defaultSortUseOnReset = true;
 
 	/**
@@ -165,254 +147,155 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public $filter = [];
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $sortCallback = null;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $useHappyComponents = true;
 
-	/**
-	 * @var callable
-	 */
+	/** @var callable */
 	protected $rowCallback;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $itemsPerPageList = [10, 20, 50, 'all'];
 
-	/**
-	 * @var int|null
-	 */
+	/** @var int|null */
 	protected $defaultPerPage = null;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $templateFile = null;
 
-	/**
-	 * @var Column[]
-	 */
+	/** @var Column[] */
 	protected $columns = [];
 
-	/**
-	 * @var Action[]|MultiAction[]
-	 */
+	/** @var Action[]|MultiAction[] */
 	protected $actions = [];
 
-	/**
-	 * @var GroupActionCollection|null
-	 */
+	/** @var GroupActionCollection|null */
 	protected $groupActionCollection;
 
-	/**
-	 * @var Filter[]
-	 */
+	/** @var Filter[] */
 	protected $filters = [];
 
-	/**
-	 * @var Export[]
-	 */
+	/** @var Export[] */
 	protected $exports = [];
 
-	/**
-	 * @var ToolbarButton[]
-	 */
+	/** @var ToolbarButton[] */
 	protected $toolbarButtons = [];
 
-	/**
-	 * @var DataModel
-	 */
+	/** @var DataModel */
 	protected $dataModel;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $primaryKey = 'id';
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $doPaginate = true;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $csvExport = true;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $csvExportFiltered = true;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $sortable = false;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $multiSort = false;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $sortableHandler = 'sort!';
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $originalTemplate = null;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $redrawItem = [];
 
-	/**
-	 * @var ITranslator|null
-	 */
+	/** @var ITranslator|null */
 	protected $translator = null;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $forceFilterActive = false;
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $treeViewChildrenCallback = null;
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $treeViewHasChildrenCallback = null;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $treeViewHasChildrenColumn = null;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $outerFilterRendering = false;
 
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	protected $outerFilterColumnsCount = 2;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $collapsibleOuterFilters = true;
 
-	/**
-	 * @var array|string[]
-	 */
+	/** @var array|string[] */
 	protected $columnsExportOrder = [];
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $rememberState = true;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $refreshURL = true;
 
-	/**
-	 * @var SessionSection
-	 */
+	/** @var SessionSection */
 	protected $gridSession;
 
-	/**
-	 * @var ItemDetail
-	 */
+	/** @var ItemDetail */
 	protected $itemsDetail;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $rowConditions = [
 		'group_action' => false,
 		'action' => [],
 	];
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $columnCallbacks = [];
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $canHideColumns = false;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $columnsVisibility = [];
 
-	/**
-	 * @var InlineEdit|null
-	 */
+	/** @var InlineEdit|null */
 	protected $inlineEdit = null;
 
-	/**
-	 * @var InlineAdd|null
-	 */
+	/** @var InlineAdd|null */
 	protected $inlineAdd = null;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $snippetsSet = false;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $someColumnDefaultHide = false;
 
-	/**
-	 * @var ColumnsSummary
-	 */
+	/** @var ColumnsSummary */
 	protected $columnsSummary;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $autoSubmit = true;
 
-	/**
-	 * @var SubmitButton|null
-	 */
+	/** @var SubmitButton|null */
 	protected $filterSubmitButton = null;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $hasColumnReset = true;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $showSelectedRowsCount = true;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	private $customPaginatorTemplate = null;
-
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
@@ -452,7 +335,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$this->monitor(
 			Presenter::class,
-			function(Presenter $presenter): void {
+			function (Presenter $presenter): void {
 				/**
 				 * Get session
 				 */
@@ -460,8 +343,10 @@ class DataGrid extends Nette\Application\UI\Control
 					$sessionSection = $presenter->getSession($this->getSessionSectionName());
 
 					if (!$sessionSection instanceof SessionSection) {
-						$this->gridSession = $sessionSection;
+						throw new UnexpectedValueException();
 					}
+
+					$this->gridSession = $sessionSection;
 				}
 			}
 		);
@@ -471,8 +356,6 @@ class DataGrid extends Nette\Application\UI\Control
 	/********************************************************************************
 	 *                                  RENDERING                                   *
 	 ********************************************************************************/
-
-
 	public function render(): void
 	{
 		/**
@@ -489,7 +372,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$template = $this->getTemplate();
 
 		if (!$template instanceof Template) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		$template->setTranslator($this->getTranslator());
@@ -504,20 +387,15 @@ class DataGrid extends Nette\Application\UI\Control
 		 */
 		$rows = [];
 
-		if (!empty($this->redrawItem)) {
-			$items = $this->dataModel->filterRow($this->redrawItem);
-		} else {
-			$items = Nette\Utils\Callback::invokeArgs(
-				[$this->dataModel, 'filterData'],
-				[
+		$items = !empty($this->redrawItem) ? $this->dataModel->filterRow($this->redrawItem) : Nette\Utils\Callback::invokeArgs(
+            [$this->dataModel, 'filterData'],
+            [
 					$this->getPaginator(),
 					$this->createSorting($this->sort, $this->sortCallback),
 					$this->assembleFilters(),
 				]
-			);
-		}
+        );
 
-		$callback = $this->rowCallback ?: null;
 		$hasGroupActionOnRows = false;
 
 		foreach ($items as $item) {
@@ -527,8 +405,8 @@ class DataGrid extends Nette\Application\UI\Control
 				$hasGroupActionOnRows = true;
 			}
 
-			if ($callback) {
-				$callback($item, $row->getControl());
+			if ($this->rowCallback !== null) {
+				($this->rowCallback)($item, $row->getControl());
 			}
 
 			/**
@@ -555,8 +433,8 @@ class DataGrid extends Nette\Application\UI\Control
 		$template->exports = $this->exports;
 		$template->filters = $this->filters;
 		$template->toolbarButtons = $this->toolbarButtons;
-		$template->aggregation_functions = $this->getAggregationFunctions();
-		$template->multiple_aggregation_function = $this->getMultipleAggregationFunction();
+		$template->aggregationFunctions = $this->getAggregationFunctions();
+		$template->multipleAggregationFunction = $this->getMultipleAggregationFunction();
 
 		$template->filter_active = $this->isFilterActive();
 		$template->originalTemplate = $this->getOriginalTemplateFile();
@@ -589,7 +467,6 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                 ROW CALLBACK                                 *
 	 ********************************************************************************/
 
-
 	/**
 	 * Each row can be modified with user defined callback
 s	 */
@@ -604,8 +481,6 @@ s	 */
 	/********************************************************************************
 	 *                                 DATA SOURCE                                  *
 	 ********************************************************************************/
-
-
 	public function setPrimaryKey(string $primaryKey): self
 	{
 		if ($this->dataModel instanceof DataModel) {
@@ -621,13 +496,13 @@ s	 */
 
 
 	/**
-	 * @param IDataSource|array
-	 * @throws \InvalidArgumentException
+	 * @param mixed $source
+	 * @throws InvalidArgumentException
 	 */
 	public function setDataSource($source): self
 	{
-		if (!is_array($source) && !$source instanceof IDataSource) {	
-			throw new \InvalidArgumentException(
+		if (!is_array($source) && !$source instanceof IDataSource) {
+			throw new InvalidArgumentException(
 				sprintf('Please provide an instance of %s or an array', IDataSource::class)
 			);
 		}
@@ -643,23 +518,19 @@ s	 */
 
 
 	/**
-	 * @return DataSource\IDataSource|null
+	 * @return IDataSource|array|null
 	 */
 	public function getDataSource()
 	{
-		if (!$this->dataModel) {
-			return null;
-		}
-
-		return $this->dataModel->getDataSource();
+		return isset($this->dataModel)
+            ? $this->dataModel->getDataSource()
+            : null;
 	}
 
 
 	/********************************************************************************
 	 *                                  TEMPLATING                                  *
 	 ********************************************************************************/
-
-
 	public function setTemplateFile(string $templateFile): self
 	{
 		$this->templateFile = $templateFile;
@@ -682,7 +553,7 @@ s	 */
 
 	public function useHappyComponents(bool $useHappyComponents): self
 	{
-		$this->useHappyComponents = $use;
+		$this->useHappyComponents = $useHappyComponents;
 
 		return $this;
 	}
@@ -698,14 +569,14 @@ s	 */
 	 *                                   SORTING                                    *
 	 ********************************************************************************/
 
-
-	public function setDefaultSort(array $sort, bool $useOnReset = true): self
+	/**
+	 * @param string|array $sort
+	 */
+	public function setDefaultSort($sort, bool $useOnReset = true): self
 	{
-		if (is_string($sort)) {
-			$sort = [$sort => 'ASC'];
-		} else {
-			$sort = (array) $sort;
-		}
+		$sort = is_string($sort)
+            ? [$sort => 'ASC']
+            : (array) $sort;
 
 		$this->defaultSort = $sort;
 		$this->defaultSortUseOnReset = $useOnReset;
@@ -835,11 +706,9 @@ s	 */
 	/********************************************************************************
 	 *                                  TREE VIEW                                   *
 	 ********************************************************************************/
-
-
 	public function isTreeView(): bool
 	{
-		return $this->treeViewChildrenCallback;
+		return $this->treeViewChildrenCallback !== null;
 	}
 
 
@@ -886,6 +755,10 @@ s	 */
 	 */
 	public function treeViewChildrenCallback($item): bool
 	{
+		if ($this->treeViewHasChildrenCallback === null) {
+			throw new UnexpectedValueException();
+		}
+
 		return (bool) call_user_func($this->treeViewHasChildrenCallback, $item);
 	}
 
@@ -893,8 +766,6 @@ s	 */
 	/********************************************************************************
 	 *                                    COLUMNS                                   *
 	 ********************************************************************************/
-
-
 	public function addColumnText(
 		string $key,
 		string $name,
@@ -903,7 +774,10 @@ s	 */
 	{
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new ColumnText($this, $key, $column, $name));
+		$columnText = new ColumnText($this, $key, $column, $name);
+		$this->addColumn($key, $columnText);
+
+		return $columnText;
 	}
 
 
@@ -922,7 +796,10 @@ s	 */
 			$params = [$this->primaryKey];
 		}
 
-		return $this->addColumn($key, new ColumnLink($this, $key, $column, $name, $href, $params));
+		$columnLink = new ColumnLink($this, $key, $column, $name, $href, $params);
+		$this->addColumn($key, $columnLink);
+
+		return $columnLink;
 	}
 
 
@@ -934,7 +811,10 @@ s	 */
 	{
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new ColumnNumber($this, $key, $column, $name));
+		$columnNumber = new ColumnNumber($this, $key, $column, $name);
+		$this->addColumn($key, $columnNumber);
+
+		return $columnNumber;
 	}
 
 
@@ -946,7 +826,10 @@ s	 */
 	{
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new ColumnDateTime($this, $key, $column, $name));
+		$columnDateTime = new ColumnDateTime($this, $key, $column, $name);
+		$this->addColumn($key, $columnDateTime);
+
+		return $columnDateTime;
 	}
 
 
@@ -958,7 +841,10 @@ s	 */
 	{
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new ColumnStatus($this, $key, $column, $name));
+		$columnStatus = new ColumnStatus($this, $key, $column, $name);
+		$this->addColumn($key, $columnStatus);
+
+		return $columnStatus;
 	}
 
 
@@ -1007,8 +893,6 @@ s	 */
 	/********************************************************************************
 	 *                                    ACTIONS                                   *
 	 ********************************************************************************/
-
-
 	public function addAction(
 		string $key,
 		string $name,
@@ -1024,7 +908,7 @@ s	 */
 			$params = [$this->primaryKey];
 		}
 
-		return $this->actions[$key] = new Action($this, $href, $name, $params);
+		return $this->actions[$key] = new Action($this, $key, $href, $name, $params);
 	}
 
 
@@ -1038,7 +922,7 @@ s	 */
 
 		$params = ['__id' => $this->primaryKey];
 
-		$this->actions[$key] = $action = new ActionCallback($this, $key, $name, $params);
+		$this->actions[$key] = $action = new ActionCallback($this, $key, '', $name, $params);
 
 		if ($callback !== null) {
 			$action->onClick[] = $callback;
@@ -1052,16 +936,17 @@ s	 */
 	{
 		$this->addActionCheck($key);
 
-		$this->actions[$key] = $action = new MultiAction($this, $name);
+		$this->actions[$key] = $action = new MultiAction($this, $key, $name);
 
 		return $action;
 	}
 
 
 	/**
+	 * @return Action|MultiAction
 	 * @throws DataGridException
 	 */
-	public function getAction(string $key): Action
+	public function getAction(string $key)
 	{
 		if (!isset($this->actions[$key])) {
 			throw new DataGridException(sprintf('There is no action at key [%s] defined.', $key));
@@ -1081,7 +966,8 @@ s	 */
 
 	/**
 	 * Check whether given key already exists in $this->filters
-	 * @throws DataGridException
+     *
+     * @throws DataGridException
 	 */
 	protected function addActionCheck(string $key): void
 	{
@@ -1096,7 +982,6 @@ s	 */
 	/********************************************************************************
 	 *                                    FILTERS                                   *
 	 ********************************************************************************/
-
 
 	/**
 	 * @param array|string $columns
@@ -1163,7 +1048,7 @@ s	 */
 		string $key,
 		string $name,
 		?string $column = null,
-		?string $nameSecond = '-'
+		string $nameSecond = '-'
 	): FilterRange
 	{
 		$column = $column ?? $key;
@@ -1187,8 +1072,9 @@ s	 */
 		string $key,
 		string $name,
 		?string $column = null,
-		?string $nameSecond = '-'
-	): FilterDateRange {
+		string $nameSecond = '-'
+	): FilterDateRange
+    {
 		$column = $column ?? $key;
 
 		$this->addFilterCheck($key);
@@ -1205,7 +1091,8 @@ s	 */
 
 	/**
 	 * Check whether given key already exists in $this->filters
-	 * @throws DataGridException
+     *
+     * @throws DataGridException
 	 */
 	protected function addFilterCheck(string $key): void
 	{
@@ -1220,7 +1107,8 @@ s	 */
 	/**
 	 * Fill array of Filter\Filter[] with values from $this->filter persistent parameter
 	 * Fill array of Column\Column[] with values from $this->sort   persistent parameter
-	 * @return array|Filter[]
+     *
+     * @return array|Filter[]
 	 */
 	public function assembleFilters(): array
 	{
@@ -1231,7 +1119,7 @@ s	 */
 				continue;
 			}
 
-			if (is_array($value) || $value instanceof \Traversable) {
+			if (is_array($value) || $value instanceof Traversable) {
 				if (!ArraysHelper::testEmpty($value)) {
 					$this->filters[$key]->setValue($value);
 				}
@@ -1283,8 +1171,6 @@ s	 */
 	/********************************************************************************
 	 *                                  FILTERING                                   *
 	 ********************************************************************************/
-
-
 	public function isFilterActive(): bool
 	{
 		$is_filter = ArraysHelper::testTruthy($this->filter);
@@ -1319,18 +1205,13 @@ s	 */
 
 	/**
 	 * If we want to sent some initial filter
-	 * @throws DataGridException
+     *
+     * @throws DataGridException
 	 */
 	public function setDefaultFilter(array $defaultFilter, bool $useOnReset = true): self
 	{
 		foreach ($defaultFilter as $key => $value) {
 			$filter = $this->getFilter($key);
-
-			if (!$filter) {
-				throw new DataGridException(
-					sprintf('Can not set default value to nonexisting filter [%s]', $key)
-				);
-			}
 
 			if ($filter instanceof FilterMultiSelect && !is_array($value)) {
 				throw new DataGridException(
@@ -1343,7 +1224,7 @@ s	 */
 					throw new DataGridException(
 						sprintf(
 							'Default value of filter [%s] - %s has to be an array [from/to => ...]',
-							DateRange::class,
+							FilterDateRange::class,
 							$key
 						)
 					);
@@ -1484,14 +1365,14 @@ s	 */
 
 			$value = $values[$key];
 
-			if ($value instanceof \DateTime && ($filter = $this->getFilter($key)) instanceof IFilterDate) {
+			if ($value instanceof DateTime && ($filter = $this->getFilter($key)) instanceof IFilterDate) {
 				$value = $value->format($filter->getPhpFormat());
 			}
 
 			try {
 				$control->setValue($value);
 
-			} catch (\InvalidArgumentException $e) {
+			} catch (InvalidArgumentException $e) {
 				if ($this->strictSessionFilterValues) {
 					throw $e;
 				}
@@ -1539,7 +1420,7 @@ s	 */
 				|| !$edit['submit'] instanceof FormsSubmitButton
 				|| !$edit['cancel'] instanceof FormsSubmitButton
 			) {
-				throw new \UnexpectedValueException;
+				throw new UnexpectedValueException();
 			}
 
 			if ($edit['submit']->isSubmittedBy() || $edit['cancel']->isSubmittedBy()) {
@@ -1585,7 +1466,7 @@ s	 */
 				|| !$add['submit'] instanceof FormsSubmitButton
 				|| !$add['cancel'] instanceof FormsSubmitButton
 			) {
-				throw new \UnexpectedValueException;
+				throw new UnexpectedValueException();
 			}
 
 			if ($add['submit']->isSubmittedBy() || $add['cancel']->isSubmittedBy()) {
@@ -1607,14 +1488,14 @@ s	 */
 		$values = $values['filter'];
 
 		if (!$values instanceof ArrayHash) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		foreach ($values as $key => $value) {
 			/**
 			 * Session stuff
 			 */
-			if ($this->rememberState && $this->getSessionData((string) $key) != $value) {
+			if ($this->rememberState && $this->getSessionData((string) $key) !== $value) {
 				/**
 				 * Has been filter changed?
 				 */
@@ -1665,14 +1546,14 @@ s	 */
 
 
 	/**
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function setOuterFilterColumnsCount(int $count): self
 	{
 		$columnsCounts = [1, 2, 3, 4, 6, 12];
 
 		if (!in_array($count, $columnsCounts, true)) {
-			throw new \InvalidArgumentException(sprintf(
+			throw new InvalidArgumentException(sprintf(
 				'Columns count must be one of following values: %s. Value %s given.',
 				implode(', ', $columnsCounts),
 				$count
@@ -1707,11 +1588,12 @@ s	 */
 
 	/**
 	 * Try to restore session stuff
-	 * @throws DataGridFilterNotFoundException
+     *
+     * @throws DataGridFilterNotFoundException
 	 */
 	public function findSessionValues(): void
 	{
-		if (!ArraysHelper::testEmpty($this->filter) || ($this->page != 1) || !empty($this->sort)) {
+		if (!ArraysHelper::testEmpty($this->filter) || ($this->page !== 1) || !empty($this->sort)) {
 			return;
 		}
 
@@ -1784,13 +1666,12 @@ s	 */
 	/********************************************************************************
 	 *                                    EXPORTS                                   *
 	 ********************************************************************************/
-
-
 	public function addExportCallback(
 		string $text,
 		callable $callback,
 		bool $filtered = false
-	): Export {
+	): Export
+    {
 		if (!is_callable($callback)) {
 			throw new DataGridException('Second parameter of ExportCallback must be callable.');
 		}
@@ -1805,7 +1686,8 @@ s	 */
 		string $outputEncoding = 'utf-8',
 		string $delimiter = ';',
 		bool $includeBom = false
-	): ExportCsv {
+	): ExportCsv
+    {
 		return $this->addExportCsv(
 			$text,
 			$csvFileName,
@@ -1823,7 +1705,8 @@ s	 */
 		string $delimiter = ';',
 		bool $includeBom = false,
 		bool $filtered = false
-	): ExportCsv {
+	): ExportCsv
+    {
 		$exportCsv = new ExportCsv(
 			$this,
 			$text,
@@ -1842,7 +1725,9 @@ s	 */
 
 	protected function addToExports(Export $export): Export
 	{
-		$id = ($s = sizeof($this->exports)) ? ($s + 1) : 1;
+		$id = ($s = sizeof($this->exports))
+            ? ($s + 1)
+            : 1;
 
 		$link = new Link($this, 'export!', ['id' => $id]);
 
@@ -1865,7 +1750,6 @@ s	 */
 	/********************************************************************************
 	 *                                TOOLBAR BUTTONS                               *
 	 ********************************************************************************/
-
 
 	/**
 	 * @throws DataGridException
@@ -1912,8 +1796,6 @@ s	 */
 	/********************************************************************************
 	 *                                 GROUP ACTIONS                                *
 	 ********************************************************************************/
-
-
 	public function addGroupAction(string $title, array $options = []): GroupAction
 	{
 		return $this->getGroupActionCollection()->addGroupSelectAction($title, $options);
@@ -1977,8 +1859,6 @@ s	 */
 	/********************************************************************************
 	 *                                   HANDLERS                                   *
 	 ********************************************************************************/
-
-
 	public function handlePage(int $page): void
 	{
 		$this->page = $page;
@@ -2003,6 +1883,7 @@ s	 */
 
 			} catch (DataGridColumnNotFoundException $e) {
 				unset($sort[$key]);
+
 				continue;
 			}
 
@@ -2107,7 +1988,7 @@ s	 */
 	public function handleExport($id): void
 	{
 		if (!isset($this->exports[$id])) {
-			throw new Nette\Application\ForbiddenRequestException;
+			throw new Nette\Application\ForbiddenRequestException();
 		}
 
 		if (!empty($this->columnsExportOrder)) {
@@ -2136,7 +2017,8 @@ s	 */
 		$rows = [];
 
 		$items = Nette\Utils\Callback::invokeArgs(
-			[$this->dataModel, 'filterData'], [
+			[$this->dataModel, 'filterData'],
+            [
 				null,
 				$this->createSorting($this->sort, $this->sortCallback),
 				$filter,
@@ -2165,7 +2047,7 @@ s	 */
 	public function handleGetChildren($parent): void
 	{
 		if (!is_callable($this->treeViewChildrenCallback)) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		$this->setDataSource(call_user_func($this->treeViewChildrenCallback, $parent));
@@ -2191,7 +2073,7 @@ s	 */
 		$template = $this->getTemplate();
 
 		if (!$template instanceof Template) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		$template->add('toggle_detail', $id);
@@ -2226,17 +2108,21 @@ s	 */
 		$request = $this->getPresenterInstance()->getRequest();
 
 		if (!$request instanceof Request) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		$value = $request->getPost('value');
 
 		/**
-		 * @var mixed Could be NULL of course
+		 * @var mixed Could be null of course
 		 */
-		$new_value = call_user_func_array($column->getEditableCallback(), [$id, $value]);
+		if ($column->getEditableCallback() === null) {
+			throw new UnexpectedValueException();
+		}
 
-		$this->getPresenterInstance()->payload->_datagrid_editable_new_value = $new_value;
+		$newValue = $column->getEditableCallback()($id, $value);
+
+		$this->getPresenterInstance()->payload->_datagrid_editable_new_value = $newValue;
 	}
 
 
@@ -2293,7 +2179,7 @@ s	 */
 		}
 
 		if (!$this->columns[$key] instanceof ColumnStatus) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		$this->columns[$key]->onChange($id, $value);
@@ -2404,7 +2290,6 @@ s	 */
 	 *                                  PAGINATION                                  *
 	 ********************************************************************************/
 
-
 	/**
 	 * @param array|int[]|string[] $itemsPerPageList
 	 */
@@ -2464,10 +2349,7 @@ s	 */
 	}
 
 
-	/**
-	 * @return int
-	 */
-	public function getPerPage()
+	public function getPerPage(): int
 	{
 		$itemsPerPageList = $this->getItemsPerPageList();
 
@@ -2521,7 +2403,7 @@ s	 */
 			$paginator = $this['paginator'];
 
 			if (!$paginator instanceof DataGridPaginator) {
-				throw new \UnexpectedValueException;
+				throw new UnexpectedValueException();
 			}
 
 			return $paginator;
@@ -2534,8 +2416,6 @@ s	 */
 	/********************************************************************************
 	 *                                     I18N                                     *
 	 ********************************************************************************/
-
-
 	public function setTranslator(ITranslator $translator): self
 	{
 		$this->translator = $translator;
@@ -2547,7 +2427,7 @@ s	 */
 	public function getTranslator(): ITranslator
 	{
 		if (!$this->translator) {
-			$this->translator = new SimpleTranslator;
+			$this->translator = new SimpleTranslator();
 		}
 
 		return $this->translator;
@@ -2558,10 +2438,10 @@ s	 */
 	 *                                 COLUMNS ORDER                                *
 	 ********************************************************************************/
 
-
 	/**
 	 * Set order of datagrid columns
-	 * @param array|string[] $order
+     *
+     * @param array|string[] $order
 	 */
 	public function setColumnsOrder(array $order): self
 	{
@@ -2585,7 +2465,8 @@ s	 */
 
 	/**
 	 * Columns order may be different for export and normal grid
-	 * @param array|string[] $order
+     *
+     * @param array|string[] $order
 	 */
 	public function setColumnsExportOrder(array $order): self
 	{
@@ -2598,14 +2479,12 @@ s	 */
 	/********************************************************************************
 	 *                                SESSION & URL                                 *
 	 ********************************************************************************/
-
-
 	public function getSessionSectionName(): string
 	{
 		$presenter = $this->getPresenterInstance();
 
 		if (!$presenter instanceof Presenter) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		return $presenter->getName() . ':' . $this->getUniqueId();
@@ -2623,7 +2502,6 @@ s	 */
 	public function setRefreshUrl(bool $refresh = true): self
 	{
 		$this->refreshURL = $refresh;
-
 
 		return $this;
 	}
@@ -2662,7 +2540,6 @@ s	 */
 	/********************************************************************************
 	 *                                  ITEM DETAIL                                 *
 	 ********************************************************************************/
-
 
 	/**
 	 * Get items detail parameters
@@ -2744,8 +2621,6 @@ s	 */
 	/********************************************************************************
 	 *                                ROW PRIVILEGES                                *
 	 ********************************************************************************/
-
-
 	public function allowRowsGroupAction(callable $condition): void
 	{
 		$this->rowConditions['group_action'] = $condition;
@@ -2811,8 +2686,6 @@ s	 */
 	/********************************************************************************
 	 *                               COLUMN CALLBACK                                *
 	 ********************************************************************************/
-
-
 	public function addColumnCallback(string $key, callable $callback): void
 	{
 		$this->columnCallbacks[$key] = $callback;
@@ -2828,8 +2701,6 @@ s	 */
 	/********************************************************************************
 	 *                                 INLINE EDIT                                  *
 	 ********************************************************************************/
-
-
 	public function addInlineEdit(?string $primaryWhereColumn = null): InlineEdit
 	{
 		$this->inlineEdit = new InlineEdit($this, $primaryWhereColumn ?? $this->primaryKey);
@@ -2857,13 +2728,13 @@ s	 */
 			$filterContainer = $this['filter'];
 
 			if (!$filterContainer instanceof Container) {
-				throw new \UnexpectedValueException;
+				throw new UnexpectedValueException();
 			}
 
 			$inlineEditContainer = $filterContainer['inline_edit'];
 
 			if (!$inlineEditContainer instanceof Container) {
-				throw new \UnexpectedValueException;
+				throw new UnexpectedValueException();
 			}
 
 			$inlineEditContainer->addHidden('_id', $id);
@@ -2872,7 +2743,7 @@ s	 */
 			$presenter = $this->getPresenterInstance();
 
 			if (!$presenter instanceof Presenter) {
-				throw new \UnexpectedValueException(
+				throw new UnexpectedValueException(
 					sprintf('%s needs %s', self::class, Presenter::class)
 				);
 			}
@@ -2890,8 +2761,6 @@ s	 */
 	/********************************************************************************
 	 *                                  INLINE ADD                                  *
 	 ********************************************************************************/
-
-
 	public function addInlineAdd(): InlineAdd
 	{
 		$this->inlineAdd = new InlineAdd($this);
@@ -2914,7 +2783,6 @@ s	 */
 	/********************************************************************************
 	 *                               COLUMNS HIDING                                 *
 	 ********************************************************************************/
-
 
 	/**
 	 * Can datagrid hide colums?
@@ -2939,8 +2807,6 @@ s	 */
 	/********************************************************************************
 	 *                                COLUMNS SUMMARY                               *
 	 ********************************************************************************/
-
-
 	public function hasColumnsSummary(): bool
 	{
 		return $this->columnsSummary instanceof ColumnsSummary;
@@ -2960,7 +2826,7 @@ s	 */
 
 		if ($rowCallback !== null) {
 			if (!is_callable($rowCallback)) {
-				throw new \InvalidArgumentException('Row summary callback must be callable');
+				throw new InvalidArgumentException('Row summary callback must be callable');
 			}
 		}
 
@@ -2979,7 +2845,6 @@ s	 */
 	/********************************************************************************
 	 *                                   INTERNAL                                   *
 	 ********************************************************************************/
-
 
 	/**
 	 * Tell grid filters to by submitted automatically
@@ -3017,7 +2882,6 @@ s	 */
 	/********************************************************************************
 	 *                                   INTERNAL                                   *
 	 ********************************************************************************/
-
 
 	/**
 	 * @internal
@@ -3088,7 +2952,6 @@ s	 */
 					unset($return[$column]);
 				}
 			}
-
 		} catch (DataGridHasToBeAttachedToPresenterComponentException $e) {
 		}
 
@@ -3134,14 +2997,14 @@ s	 */
 
 	/**
 	 * @internal
-	 * @throws \UnexpectedValueException
+	 * @throws UnexpectedValueException
 	 */
 	public function getSortableParentPath(): string
 	{
 		$presenter = $this->getParentComponent()->lookupPath(IPresenter::class, false);
 
 		if ($presenter === null) {
-			throw new \UnexpectedValueException(
+			throw new UnexpectedValueException(
 				sprintf('%s needs %s', self::class, IPresenter::class)
 			);
 		}
@@ -3152,7 +3015,8 @@ s	 */
 
 	/**
 	 * Some of datagrid columns may be hidden by default
-	 * @internal
+     *
+     * @internal
 	 */
 	public function setSomeColumnDefaultHide(bool $defaultHide): self
 	{
@@ -3164,7 +3028,8 @@ s	 */
 
 	/**
 	 * Are some of columns hidden bydefault?
-	 * @internal
+     *
+     * @internal
 	 */
 	public function hasSomeColumnDefaultHide(): bool
 	{
@@ -3174,7 +3039,8 @@ s	 */
 
 	/**
 	 * Simply refresh url
-	 * @internal
+     *
+     * @internal
 	 */
 	public function handleRefreshState(): void
 	{
@@ -3202,9 +3068,10 @@ s	 */
 		$presenter = $this->getPresenter();
 
 		if (!$presenter instanceof Presenter) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		return $presenter;
 	}
+
 }

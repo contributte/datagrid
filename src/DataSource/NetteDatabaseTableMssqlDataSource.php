@@ -1,14 +1,7 @@
-<?php
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
@@ -62,4 +55,5 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 			);
 		}
 	}
+
 }

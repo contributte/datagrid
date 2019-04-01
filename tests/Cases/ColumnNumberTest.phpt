@@ -1,9 +1,9 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use Tester\TestCase;
 use Tester\Assert;
+use Tester\TestCase;
 use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
@@ -12,15 +12,12 @@ require __DIR__ . '/../Files/XTestingDataGridFactory.php';
 final class ColumnNumberTest extends TestCase
 {
 
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
+	/** @var Ublaboo\DataGrid\DataGrid */
 	private $grid;
 
-
-	public function setUp()
+	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
 		$this->grid = $factory->createXTestingDataGrid();
 	}
 
@@ -33,7 +30,7 @@ final class ColumnNumberTest extends TestCase
 	}
 
 
-	public function testFormat()
+	public function testFormat(): void
 	{
 		$number = $this->grid->addColumnNumber('amount', 'Amount');
 		Assert::same('345 679', $this->render($number));
@@ -45,5 +42,5 @@ final class ColumnNumberTest extends TestCase
 }
 
 
-$test_case = new ColumnNumberTest;
+$test_case = new ColumnNumberTest();
 $test_case->run();

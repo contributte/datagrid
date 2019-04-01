@@ -7,6 +7,7 @@ use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Utils\Arrays;
 use Traversable;
+use UnexpectedValueException;
 
 final class ItemDetailForm extends Container
 {
@@ -35,7 +36,7 @@ final class ItemDetailForm extends Container
 
 	/**
 	 * @return mixed|null
-	 * @throws \UnexpectedValueException
+	 * @throws UnexpectedValueException
 	 */
 	private function getHttpData()
 	{
@@ -44,7 +45,7 @@ final class ItemDetailForm extends Container
 			$form = $this->getForm();
 
 			if ($lookupPath === null || $form === null) {
-				throw new \UnexpectedValueException;
+				throw new UnexpectedValueException();
 			}
 
 			$path = explode(self::NAME_SEPARATOR, $lookupPath);
@@ -83,14 +84,14 @@ final class ItemDetailForm extends Container
 
 
 	/**
-	 * @throws \UnexpectedValueException
+	 * @throws UnexpectedValueException
 	 */
 	private function loadHttpData(): void
 	{
 		$form = $this->getForm();
 
 		if ($form === null) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		if (!$form->isSubmitted()) {

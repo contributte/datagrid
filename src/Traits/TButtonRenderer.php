@@ -2,7 +2,6 @@
 
 namespace Ublaboo\DataGrid\Traits;
 
-use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\Column\Renderer;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -77,14 +76,6 @@ trait TButtonRenderer
 	public function getRenderer(): ?Renderer
 	{
 		return $this->renderer;
-	}
-
-
-	public function setReplacement(array $replacements): self
-	{
-		$this->replacements = $replacements;
-
-		return $this;
 	}
 
 

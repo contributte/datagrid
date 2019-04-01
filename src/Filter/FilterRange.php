@@ -1,56 +1,33 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
 use Nette\Forms\Container;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridFilterRangeException;
 
 class FilterRange extends OneColumnFilter
 {
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $placeholders = [];
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $nameSecond;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $template = 'datagrid_filter_range.latte';
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $type = 'range';
 
-
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $key
-	 * @param string   $name
-	 * @param string   $column
-	 * @param string   $nameSecond
-	 */
 	public function __construct(
 		DataGrid $grid,
 		string $key,
 		string $name,
 		string $column,
 		string $nameSecond
-	) {
+	)
+    {
 		parent::__construct($grid, $key, $name, $column);
 
 		$this->nameSecond = $nameSecond;
@@ -78,7 +55,7 @@ class FilterRange extends OneColumnFilter
 
 			$text_to = end($placeholders);
 
-			if ($text_to && ($text_to != $text_from)) {
+			if ($text_to && ($text_to !== $text_from)) {
 				$to->setAttribute('placeholder', $text_to);
 			}
 		}
@@ -114,9 +91,10 @@ class FilterRange extends OneColumnFilter
 
 		return [
 			$this->column => [
-				'from' => isset($value['from']) ? $value['from'] : '',
-				'to' => isset($value['to']) ? $value['to'] : '',
-			]
+				'from' => $value['from'] ?? '',
+				'to' => $value['to'] ?? '',
+			],
 		];
 	}
+
 }

@@ -68,7 +68,7 @@ class ColumnLink extends Column
 
 		$value = parent::render($row);
 
-		if (!$value && !$this->icon) {
+		if (!$value && $this->icon !== null) {
 			return null;
 		}
 
@@ -79,9 +79,9 @@ class ColumnLink extends Column
 				$this->getItemParams($row, $this->params) + $this->parameters
 			));
 
-		if (!empty($this->dataAttributes)) {
+		if ($this->dataAttributes !== []) {
 			foreach ($this->dataAttributes as $key => $attrValue) {
-				$a->data($key, $attrValue);
+				$a->data((string) $key, $attrValue);
 			}
 		}
 
@@ -89,18 +89,20 @@ class ColumnLink extends Column
 			$a->addAttributes(['target' => '_blank']);
 		}
 
-		if ($this->title) {
-			$a->title($this->title);
+		if ($this->title !== null) {
+			$a->setAttribute('title', $this->title);
 		}
 
-		if ($this->class) {
-			$a->class($this->class);
+		if ($this->class !== null) {
+			$a->setAttribute('class', $this->class);
 		}
 
 		$element = $a;
 
-		if ($this->icon) {
-			$a->addHtml(Html::el('span')->class(DataGrid::$iconPrefix . $this->icon));
+		if ($this->icon !== null) {
+			$a->addHtml(
+				Html::el('span')->setAttribute('class', DataGrid::$iconPrefix . $this->icon)
+			);
 
 			if (strlen($value)) {
 				$a->addHtml('&nbsp;');

@@ -37,10 +37,9 @@ class MultiAction extends Column
 	/** @var callable[] */
 	private $rowConditions = [];
 
-	public function __construct(DataGrid $grid, string $name)
+	public function __construct(DataGrid $grid, string $key, string $name)
 	{
-		$this->grid = $grid;
-		$this->name = $name;
+		parent::__construct($grid, $key, '', $name);
 
 		$this->setTemplate(__DIR__ . '/../templates/column_multi_action.latte');
 	}
@@ -49,7 +48,7 @@ class MultiAction extends Column
 	public function renderButton(): Html
 	{
 		$button = Html::el('button')
-			->type('button')
+			->setAttribute('type', 'button')
 			->data('toggle', 'dropdown');
 
 		$this->tryAddIcon($button, $this->getIcon(), $this->getName());
@@ -66,11 +65,14 @@ class MultiAction extends Column
 		}
 
 		if ($this->getTitle()) {
-			$button->title($this->grid->getTranslator()->translate($this->getTitle()));
+			$button->setAttribute(
+				'title',
+				$this->grid->getTranslator()->translate($this->getTitle())
+			);
 		}
 
 		if ($this->getClass()) {
-			$button->class($this->getClass() . ' dropdown-toggle');
+			$button->setAttribute('class', $this->getClass() . ' dropdown-toggle');
 		}
 
 		return $button;
@@ -96,7 +98,7 @@ class MultiAction extends Column
 			$params = [$this->grid->getPrimaryKey()];
 		}
 
-		$action = new Action($this->grid, $href, $name, $params);
+		$action = new Action($this->grid, $key, $href, $name, $params);
 
 		$action->setClass('');
 
@@ -132,7 +134,7 @@ class MultiAction extends Column
 	 */
 	public function getTemplateVariables(): array
 	{
-		return array_merge($this->template_variables, [
+		return array_merge($this->templateVariables, [
 			'multi_action' => $this,
 		]);
 	}

@@ -1,34 +1,20 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
 use Nette\Forms\Container;
 
 class FilterDateRange extends FilterRange implements IFilterDate
 {
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $template = 'datagrid_filter_daterange.latte';
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $format = ['j. n. Y', 'd. m. yyyy'];
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $type = 'date-range';
-
 
 	/**
 	 * Adds select box to filter form
@@ -70,7 +56,7 @@ class FilterDateRange extends FilterRange implements IFilterDate
 
 			$textTo = end($placeholders);
 
-			if ($textTo && ($textTo != $textFrom)) {
+			if ($textTo && ($textTo !== $textFrom)) {
 				$to->setAttribute('placeholder', $textTo);
 			}
 		}
@@ -107,4 +93,5 @@ class FilterDateRange extends FilterRange implements IFilterDate
 	{
 		return $this->format[1];
 	}
+
 }

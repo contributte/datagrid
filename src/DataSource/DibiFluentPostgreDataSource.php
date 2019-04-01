@@ -1,20 +1,12 @@
-<?php
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Dibi;
-use DibiFluent;
-use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Filter\FilterText;
 
 class DibiFluentPostgreDataSource extends DibiFluentDataSource
 {
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -30,14 +22,11 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 
 			if ($filter->isExactSearch()) {
 				$this->dataSource->where("$column = %s", $value);
+
 				continue;
 			}
 
-			if ($filter->hasSplitWordsSearch() === false) {
-				$words = [$value];
-			} else {
-				$words = explode(' ', $value);
-			}
+			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 			foreach ($words as $word) {
 				$escaped = $driver->escapeLike($word, 0);
@@ -51,4 +40,5 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 			$this->dataSource->where($or);
 		}
 	}
+
 }

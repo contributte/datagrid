@@ -16,9 +16,8 @@ abstract class FilterableDataSource
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * 
-	 * @param array|Filter[] $filters
+     *
+     * @param array|Filter[] $filters
 	 */
 	public function filter(array $filters): self
 	{
@@ -67,4 +66,5 @@ abstract class FilterableDataSource
 	abstract protected function applyFilterMultiSelect(FilterMultiSelect $filter): void;
 
 	abstract protected function applyFilterSelect(FilterSelect $filter): void;
+
 }

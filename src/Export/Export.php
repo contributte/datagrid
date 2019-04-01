@@ -1,18 +1,10 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Export;
 
 use Nette\Utils\Callback;
 use Nette\Utils\Html;
-use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Traits;
 use Ublaboo\DataGrid\Traits\TButtonClass;
 use Ublaboo\DataGrid\Traits\TButtonIcon;
 use Ublaboo\DataGrid\Traits\TButtonText;
@@ -28,48 +20,34 @@ class Export
 	use TButtonTitle;
 	use TButtonText;
 
-	/**
-	 * @var callable
-	 */
+	/** @var callable */
 	protected $callback;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $ajax;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $filtered;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	protected $link;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $columns = [];
 
-	/**
-	 * @var DataGrid
-	 */
+	/** @var DataGrid */
 	protected $grid;
-	
-	/**
-	 * @var string|null
-	 */
-	protected $confirmDialog = null;
 
+	/** @var string|null */
+	protected $confirmDialog = null;
 
 	public function __construct(
 		DataGrid $grid,
 		string $text,
 		callable $callback,
 		bool $filtered
-	) {
+	)
+    {
 		$this->grid = $grid;
 		$this->text = $text;
 		$this->callback = $callback;
@@ -97,24 +75,23 @@ class Export
 		if ($this->isAjax()) {
 			$a->appendAttribute('class', 'ajax');
 		}
-		
+
 		if ($this->confirmDialog !== null) {
 			$a->setAttribute('data-datagrid-confirm', $this->confirmDialog);
 		}
-		
-		
+
 		return $a;
 	}
-	
+
 
 	public function setConfirmDialog(string $confirmDialog): self
 	{
 		$this->confirmDialog = $confirmDialog;
-		
+
 		return $this;
 	}
-	
-	
+
+
 	/**
 	 * Tell export which columns to use when exporting data
 	 */
@@ -179,4 +156,5 @@ class Export
 	{
 		Callback::invokeArgs($this->callback, [$data, $this->grid]);
 	}
+
 }

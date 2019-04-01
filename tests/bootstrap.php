@@ -1,23 +1,22 @@
-<?php
+<?php declare(strict_types = 1);
 
-if (!@include __DIR__.'/../vendor/autoload.php') {
+if (!@include __DIR__ . '/../vendor/autoload.php') {
 	echo 'Please install required components using "composer install".';
 	exit(1);
 }
 
-
 Tester\Environment::setup();
 date_default_timezone_set('Europe/Prague');
 
-define('TMPDIR', __DIR__.'/tmp/'.lcg_value());
-@mkdir(TMPDIR, 0777, TRUE); // @ - base directory may already exist
-register_shutdown_function(function () {
+define('TMPDIR', __DIR__ . '/tmp/' . lcg_value());
+@mkdir(TMPDIR, 0777, true); // @ - base directory may already exist
+register_shutdown_function(function (): void {
 	Tester\Helpers::purge(TMPDIR);
 	rmdir(TMPDIR);
 });
 
 
-$_ENV = array_intersect_key($_ENV, ['TRAVIS' => TRUE]);
+$_ENV = array_intersect_key($_ENV, ['TRAVIS' => true]);
 $_SERVER['REQUEST_TIME'] = 1234567890;
 $_SERVER['REQUEST_ID'] = getmypid();
 $_SERVER['REQUEST_METHOD'] = 'GET';
@@ -28,7 +27,15 @@ if (isset($_SERVER['argv'])) {
 }
 
 $_SERVER = array_intersect_key($_SERVER, array_flip([
-	'HTTP_HOST', 'DOCUMENT_ROOT', 'OS', 'argc', 'argv',
-	'REQUEST_TIME', 'REQUEST_ID', 'SCRIPT_NAME',
-	'PHP_SELF', 'SERVER_ADDR','SERVER_SOFTWARE',
+	'HTTP_HOST',
+'DOCUMENT_ROOT',
+'OS',
+'argc',
+'argv',
+	'REQUEST_TIME',
+'REQUEST_ID',
+'SCRIPT_NAME',
+	'PHP_SELF',
+'SERVER_ADDR',
+'SERVER_SOFTWARE',
 ]));

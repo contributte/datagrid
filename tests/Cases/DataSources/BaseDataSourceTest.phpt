@@ -1,11 +1,10 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
-use Tester\TestCase;
 use Tester\Assert;
+use Tester\TestCase;
 use Ublaboo;
-use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Utils\Sorting;
 
@@ -24,22 +23,18 @@ abstract class BaseDataSourceTest extends TestCase
         ['id' => 40, 'name' => 'John Red', 'age' => 40, 'address' => 'Porto 53'],
     ];
 
-    /**
-     * @var Ublaboo\DataGrid\DataSource\IDataSource
-     */
+    /** @var Ublaboo\DataGrid\DataSource\IDataSource */
     protected $ds;
 
-    /**
-     * @var Ublaboo\DataGrid\DataGrid
-     */
+    /** @var Ublaboo\DataGrid\DataGrid */
     protected $grid;
 
-    public function testGetCount()
+    public function testGetCount(): void
     {
         Assert::same(6, $this->ds->getCount());
     }
 
-    public function testGetFilteredCount()
+    public function testGetFilteredCount(): void
     {
         $filter = new FilterText($this->grid, 'a', 'b', ['name']);
         $filter->setValue('John Red');
@@ -48,13 +43,13 @@ abstract class BaseDataSourceTest extends TestCase
         Assert::same(2, $this->ds->getCount());
     }
 
-    public function testGetData()
+    public function testGetData(): void
     {
         Assert::equal($this->data, $this->getActualResultAsArray());
     }
 
 
-    public function testFilterSingleColumn()
+    public function testFilterSingleColumn(): void
     {
         $filter = new FilterText($this->grid, 'a', 'b', ['name']);
         $filter->setValue('John Red');
@@ -62,32 +57,30 @@ abstract class BaseDataSourceTest extends TestCase
         $this->ds->filter([$filter]);
         Assert::equal([
             $this->data[0],
-            $this->data[5]
+            $this->data[5],
         ], $this->getActualResultAsArray());
     }
 
-    public function testFilterMultipleColumns()
+    public function testFilterMultipleColumns(): void
     {
         $filter = new FilterText($this->grid, 'a', 'b', ['name', 'address']);
         $filter->setValue('lu');
         $this->ds->filter([$filter]);
 
-
         Assert::equal([
             $this->data[0],
             $this->data[3],
-            $this->data[4]
+            $this->data[4],
         ], $this->getActualResultAsArray());
     }
 
-    public function testFilterFalseSplitWordsSearch()
+    public function testFilterFalseSplitWordsSearch(): void
     {
-
         /**
          * Single column - SplitWordsSearch => FALSE
          */
         $filter = new FilterText($this->grid, 'a', 'b', ['name']);
-        $filter->setSplitWordsSearch(FALSE);
+        $filter->setSplitWordsSearch(false);
         $filter->setValue('John Red');
 
         $this->ds->filter([$filter]);
@@ -95,23 +88,21 @@ abstract class BaseDataSourceTest extends TestCase
         Assert::equal([$this->data[5]], $this->getActualResultAsArray());
     }
 
-    public function testFilterRangeMin()
+    public function testFilterRangeMin(): void
     {
-
         $filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
-        $filter->setValue(['from' =>40]);
+        $filter->setValue(['from' => 40]);
         $this->ds->filter([$filter]);
 
         Assert::equal([
             $this->data[1],
             $this->data[4],
-            $this->data[5]
+            $this->data[5],
         ], $this->getActualResultAsArray());
     }
 
-    public function testFilterRangeMax()
+    public function testFilterRangeMax(): void
     {
-
         $filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
         $filter->setValue(['to' => 30]);
         $this->ds->filter([$filter]);
@@ -119,32 +110,31 @@ abstract class BaseDataSourceTest extends TestCase
         Assert::equal([
             $this->data[0],
             $this->data[2],
-            $this->data[3]
+            $this->data[3],
         ], $this->getActualResultAsArray());
     }
 
-    public function testFilterRangeMinMax()
+    public function testFilterRangeMinMax(): void
     {
-
         $filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
         $filter->setValue(['from' => 12, 'to' => 30]);
         $this->ds->filter([$filter]);
 
         Assert::equal([
             $this->data[0],
-            $this->data[2]
+            $this->data[2],
         ], $this->getActualResultAsArray());
     }
 
-    public function testFilterOne()
+    public function testFilterOne(): void
     {
         $this->ds->filterOne(['id' => 8]);
 
         Assert::equal([$this->data[3]], $this->getActualResultAsArray());
     }
 
-    public function testFilterExactSearch(){
-
+    public function testFilterExactSearch(): void
+    {
         $filter = new FilterText($this->grid, 'a', 'b', ['name']);
         $filter->setExactSearch();
         $filter->setValue('John Red');
@@ -154,8 +144,8 @@ abstract class BaseDataSourceTest extends TestCase
         Assert::equal([$this->data[5]], $this->getActualResultAsArray());
     }
 
-    public function testFilterExactSearchId(){
-
+    public function testFilterExactSearchId(): void
+    {
         $filter = new FilterText($this->grid, 'a', 'b', ['id']);
         $filter->setExactSearch();
         $filter->setValue('3');
@@ -165,18 +155,18 @@ abstract class BaseDataSourceTest extends TestCase
         Assert::equal([$this->data[2]], $this->getActualResultAsArray());
     }
 
-    public function testLimit()
+    public function testLimit(): void
     {
         $this->ds->limit(2, 2);
         $result = $this->getActualResultAsArray();
         Assert::equal([
             $this->data[2],
-            $this->data[3]
+            $this->data[3],
         ], $result);
     }
 
 
-    public function testSort()
+    public function testSort(): void
     {
         $this->ds->sort(new Sorting(['name' => 'DESC']));
 
@@ -188,7 +178,7 @@ abstract class BaseDataSourceTest extends TestCase
             $this->data[5],
             $this->data[0],
             $this->data[4],
-            $this->data[1]
+            $this->data[1],
         ], $result);
     }
 
@@ -197,10 +187,12 @@ abstract class BaseDataSourceTest extends TestCase
     {
         return array_values(
             json_decode(
-                json_encode($this->ds->getData())
-                , TRUE)
+                json_encode($this->ds->getData()),
+                true
+            )
         );
     }
+
 }
 
-Assert::true(TRUE);
+Assert::true(true);

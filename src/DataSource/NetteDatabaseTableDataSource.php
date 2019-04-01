@@ -1,16 +1,11 @@
-<?php
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use LogicException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Strings;
-use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
@@ -23,27 +18,16 @@ use Ublaboo\DataGrid\Utils\Sorting;
 class NetteDatabaseTableDataSource extends FilterableDataSource implements IDataSource
 {
 
-	/**
-	 * @var Selection
-	 */
+	/** @var Selection */
 	protected $dataSource;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $data = [];
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $primaryKey;
 
-
-	/**
-	 * @param Selection $dataSource
-	 * @param string $primaryKey
-	 */
-	public function __construct(Selection $dataSource, $primaryKey)
+	public function __construct(Selection $dataSource, string $primaryKey)
 	{
 		$this->dataSource = $dataSource;
 		$this->primaryKey = $primaryKey;
@@ -53,7 +37,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	/********************************************************************************
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
-
 
 	/**
 	 * {@inheritDoc}
@@ -65,7 +48,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		try {
 			$primary = $this->dataSource->getPrimary();
 
-		} catch (\LogicException $e) {
+		} catch (LogicException $e) {
 			if ($dataSourceSqlBuilder->getGroup() !== '') {
 				return $this->dataSource->count(
 					'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
@@ -154,9 +137,9 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
-	public function processAggregation(callable $aggregationCallback): void
+	public function processAggregation(IAggregationFunction $function): void
 	{
-		call_user_func($aggregationCallback, $this->dataSource);
+		$function->processDataSource(clone $this->dataSource);
 	}
 
 
@@ -241,16 +224,14 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 				$like .= "$column = ? OR ";
 				$args[] = "$value";
 			} else {
-				if ($filter->hasSplitWordsSearch() === false) {
-					$words = [$value];
-				} else {
-					$words = explode(' ', $value);
-				}
+				$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
+
 				foreach ($words as $word) {
 					$like .= "$column LIKE ? OR ";
 					$args[] = "%$word%";
 				}
 			}
+
 			$like = substr($like, 0, strlen($like) - 4) . ')';
 
 			$or[] = $like;
@@ -286,7 +267,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			$i = 1;
 
 			foreach ($values as $value) {
-				if ($i == $length) {
+				if ($i === $length) {
 					$or .= $filter->getColumn() . ' = ?)';
 				} else {
 					$or .= $filter->getColumn() . ' = ? OR ';
@@ -320,4 +301,5 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	{
 		return $this->dataSource;
 	}
+
 }

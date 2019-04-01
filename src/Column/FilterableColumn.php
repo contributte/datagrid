@@ -88,7 +88,7 @@ abstract class FilterableColumn
 
 	public function setFilterRange(
 		?string $column = null,
-		?string $nameSecond = '-'
+		string $nameSecond = '-'
 	): FilterRange
 	{
 		$column = $column ?? $this->column;
@@ -99,7 +99,7 @@ abstract class FilterableColumn
 
 	public function setFilterDateRange(
 		?string $column = null,
-		?string $nameSecond = '-'
+		string $nameSecond = '-'
 	): FilterDateRange
 	{
 		$column = $column ?? $this->column;

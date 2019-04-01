@@ -1,3 +1,4 @@
 parameters:
 	ignoreErrors:
 		- '/^Call to an undefined method Dibi\\Fluent::or\(\)\.$/'
+		- '/^Access to an undefined property Nette\\Bridges\\ApplicationLatte\\Template::\$.+\.$/'

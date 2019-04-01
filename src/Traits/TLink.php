@@ -10,6 +10,7 @@ use Nette\Application\UI\Presenter;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
 use Ublaboo\DataGrid\Exception\DataGridLinkCreationException;
+use UnexpectedValueException;
 
 trait TLink
 {
@@ -18,7 +19,7 @@ trait TLink
 	 * @throws DataGridHasToBeAttachedToPresenterComponentException
 	 * @throws InvalidArgumentException
 	 * @throws DataGridLinkCreationException
-	 * @throws \UnexpectedValueException
+	 * @throws UnexpectedValueException
 	 */
 	protected function createLink(
 		DataGrid $grid,
@@ -31,7 +32,7 @@ trait TLink
 		$presenter = $grid->getPresenter();
 
 		if (!$presenter instanceof Presenter) {
-			throw new \UnexpectedValueException(
+			throw new UnexpectedValueException(
 				sprintf('%s needs instanceof %s', self::class, Presenter::class)
 			);
 		}
@@ -91,7 +92,7 @@ trait TLink
 		$presenter = $grid->getPresenter();
 
 		if ($parent === null || $presenter === null) {
-			throw new \UnexpectedValueException(
+			throw new UnexpectedValueException(
 				sprintf('%s can not live withnout a parent component or presenter', self::class)
 			);
 		}

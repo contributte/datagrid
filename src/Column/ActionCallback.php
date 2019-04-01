@@ -11,7 +11,7 @@ class ActionCallback extends Action
 {
 
 	/** @var callable */
-	public $onClick = [];
+	public $onClick;
 
 	/**
 	 * Create link to datagrid::handleActionCallback() to fire custom callback

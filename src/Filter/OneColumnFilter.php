@@ -1,32 +1,22 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
-use Nette\Forms\Controls\BaseControl;
 use Ublaboo\DataGrid\DataGrid;
 
 abstract class OneColumnFilter extends Filter
 {
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $column;
-
 
 	public function __construct(
 		DataGrid $grid,
 		string $key,
 		string $name,
 		string $column
-	) {
+	)
+    {
 		parent::__construct($grid, $key, $name);
 
 		$this->column = $column;
@@ -46,4 +36,5 @@ abstract class OneColumnFilter extends Filter
 	{
 		return [$this->column => $this->getValue()];
 	}
+
 }

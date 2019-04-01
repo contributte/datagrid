@@ -7,4 +7,5 @@ namespace Ublaboo\DataGrid\InlineEdit;
  */
 class InlineAdd extends InlineEdit
 {
+
 }

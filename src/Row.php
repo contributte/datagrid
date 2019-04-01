@@ -2,14 +2,9 @@
 
 namespace Ublaboo\DataGrid;
 
-use DibiRow;
-use LeanMapper;
-use Nette;
-use Nette\Database\Table\ActiveRow;
+use LeanMapper\Entity;
 use Nette\Utils\Html;
-use Nextras;
 use Ublaboo\DataGrid\Column\Column;
-use Ublaboo\DataGrid\ColumnsSummary;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
@@ -67,13 +62,13 @@ class Row
 	 */
 	public function getValue($key)
 	{
-		if ($this->item instanceof \LeanMapper\Entity) {
+		if ($this->item instanceof Entity) {
 			return $this->getLeanMapperEntityProperty($this->item, $key);
 		} elseif ($this->item instanceof \Nextras\Orm\Entity\Entity) {
 			return $this->getNextrasEntityProperty($this->item, $key);
 		} elseif ($this->item instanceof \Dibi\Row) {
 			return $this->item->{$this->formatDibiRowKey($key)};
-		} elseif ($this->item instanceof \Nette\Database\Table\ActiveRow) {
+		} elseif ($this->item instanceof ActiveRow) {
 			return $this->getActiveRowProperty($this->item, $key);
 		} elseif ($this->item instanceof \Nette\Database\Row) {
 			return $this->item->{$key};
@@ -110,7 +105,7 @@ class Row
 	/**
 	 * @return mixed
 	 */
-	public function getActiveRowProperty(\Nette\Database\Table\ActiveRow $item, string $key)
+	public function getActiveRowProperty(ActiveRow $item, string $key)
 	{
 		if (preg_match('/^:([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/', $key, $matches)) {
 			$relatedTable = $matches[1];
@@ -146,7 +141,7 @@ class Row
      * @param  mixed $key
 	 * @return mixed
 	 */
-	public function getLeanMapperEntityProperty(\LeanMapper\Entity $item, $key)
+	public function getLeanMapperEntityProperty(Entity $item, $key)
 	{
 		$properties = explode('.', $key);
 		$value = $item;

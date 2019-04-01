@@ -13,10 +13,11 @@
 namespace Ublaboo\DataGrid\Components\DataGridPaginator;
 
 use Nette\Application\UI\Control;
-use Nette\ComponentModel\IContainer;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Paginator;
 use Ublaboo\DataGrid\DataGrid;
+use UnexpectedValueException;
 
 class DataGridPaginator extends Control
 {
@@ -35,13 +36,9 @@ class DataGridPaginator extends Control
 
 	public function __construct(
 		ITranslator $translator,
-		string $iconPrefix = 'fa fa-',
-		?IContainer $parent = null,
-		?string $name = null
+		string $iconPrefix = 'fa fa-'
 	)
     {
-		parent::__construct($parent, $name);
-
 		$this->translator = $translator;
 		$this->iconPrefix = $iconPrefix;
 	}
@@ -104,14 +101,18 @@ class DataGridPaginator extends Control
 			$steps = array_values(array_unique($arr));
 		}
 
+		if (!$this->getTemplate() instanceof Template) {
+			throw new UnexpectedValueException();
+		}
+
 		$this->getTemplate()->setTranslator($this->translator);
 
 		if (!isset($this->getTemplate()->steps)) {
-			$this->getTemplate()->add('steps', $steps);
+			$this->getTemplate()->steps = $steps;
 		}
 
 		if (!isset($this->getTemplate()->paginator)) {
-			$this->getTemplate()->add('paginator', $paginator);
+			$this->getTemplate()->paginator = $paginator;
 		}
 
 		$this->getTemplate()->iconPrefix = $this->iconPrefix;

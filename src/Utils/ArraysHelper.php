@@ -10,7 +10,7 @@ final class ArraysHelper
 	/**
 	 * Test recursively whether given array is empty
 	 */
-	public static function testEmpty(array $array): bool
+	public static function testEmpty(iterable $array): bool
 	{
 		foreach ($array as $key => $value) {
 			if (is_array($value)) {

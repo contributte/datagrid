@@ -4,14 +4,12 @@ namespace Ublaboo\DataGrid;
 
 use Dibi;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Database\Drivers as NDBDrivers;
 use Nette\Database\Table\Selection;
 use Nette\SmartObject;
 use Nextras\Orm\Collection\ICollection;
 use Ublaboo\DataGrid\Components\DataGridPaginator\DataGridPaginator;
-use Ublaboo\DataGrid\DataSource\ApiDataSource;
 use Ublaboo\DataGrid\DataSource\ArrayDataSource;
 use Ublaboo\DataGrid\DataSource\DibiFluentDataSource;
 use Ublaboo\DataGrid\DataSource\DibiFluentMssqlDataSource;

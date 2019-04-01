@@ -1,9 +1,9 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use Tester\TestCase;
 use Tester\Assert;
+use Tester\TestCase;
 use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
@@ -12,20 +12,17 @@ require __DIR__ . '/../Files/XTestingDataGridFactory.php';
 final class ColumnTranslatableTest extends TestCase
 {
 
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
+	/** @var Ublaboo\DataGrid\DataGrid */
 	private $grid;
 
-
-	public function setUp()
+	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
 		$this->grid = $factory->createXTestingDataGrid();
 	}
 
 
-	public function testTranslatable()
+	public function testTranslatable(): void
 	{
 		$grid = $this->grid;
 
@@ -33,22 +30,23 @@ final class ColumnTranslatableTest extends TestCase
 
 		$translatable = $grid->getColumn('translatable');
 
-		Assert::same(TRUE, $translatable->isTranslatableHeader());
+		Assert::same(true, $translatable->isTranslatableHeader());
 	}
-	
-	public function testDisabledTranslating()
+
+	public function testDisabledTranslating(): void
 	{
 		$grid = $this->grid;
 
 		$grid->addColumnText('non_translatable', 'non_translatable')
-			->setTranslatableHeader(FALSE);
+			->setTranslatableHeader(false);
 
 		$translatable = $grid->getColumn('non_translatable');
 
-		Assert::same(FALSE, $translatable->isTranslatableHeader());
+		Assert::same(false, $translatable->isTranslatableHeader());
 	}
+
 }
 
 
-$test_case = new ColumnTranslatableTest;
+$test_case = new ColumnTranslatableTest();
 $test_case->run();

@@ -5,6 +5,6 @@ namespace Ublaboo\DataGrid\AggregationFunction;
 interface IAggregatable
 {
 
-	public function processAggregation(callable $aggregationCallback): void;
+	public function processAggregation(IAggregationFunction $function): void;
 
 }

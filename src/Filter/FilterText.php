@@ -1,45 +1,27 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
 use Nette\Forms\Container;
 use Ublaboo\DataGrid\DataGrid;
 
 class FilterText extends Filter
 {
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $template = 'datagrid_filter_text.latte';
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $type = 'text';
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $exact = false;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $splitWordsSearch = true;
 
-	/**
-	 * @var array|string[]
-	 */
+	/** @var array|string[] */
 	protected $columns;
-
 
 	/**
 	 * @param array|string[] $columns
@@ -49,7 +31,8 @@ class FilterText extends Filter
 		string $key,
 		string $name,
 		array $columns
-	) {
+	)
+    {
 		parent::__construct($grid, $key, $name);
 
 		$this->columns = $columns;
@@ -59,7 +42,7 @@ class FilterText extends Filter
 	/**
 	 * Adds text field to filter form
 	 */
-	public function addToFormContainer(Container $container)
+	public function addToFormContainer(Container $container): void
 	{
 		$control = $container->addText($this->key, $this->name);
 
@@ -92,6 +75,7 @@ class FilterText extends Filter
 	public function setExactSearch(bool $exact = true): self
 	{
 		$this->exact = $exact;
+
 		return $this;
 	}
 
@@ -108,4 +92,5 @@ class FilterText extends Filter
 	{
 		return $this->splitWordsSearch;
 	}
+
 }

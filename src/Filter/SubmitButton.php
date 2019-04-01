@@ -1,18 +1,10 @@
-<?php declare(strict_types=1);
-
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
 use Nette\Forms\Controls\Button;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Traits;
 use Ublaboo\DataGrid\Traits\TButtonClass;
 use Ublaboo\DataGrid\Traits\TButtonIcon;
 use Ublaboo\DataGrid\Traits\TButtonText;
@@ -28,11 +20,8 @@ class SubmitButton extends Button
 	use TButtonTitle;
 	use TButtonText;
 
-	/**
-	 * @var DataGrid
-	 */
+	/** @var DataGrid */
 	protected $grid;
-
 
 	public function __construct(DataGrid $grid)
 	{
@@ -75,4 +64,5 @@ class SubmitButton extends Button
 
 		return $el;
 	}
+
 }
