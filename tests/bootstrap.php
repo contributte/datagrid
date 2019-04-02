@@ -8,13 +8,7 @@ if (!@include __DIR__ . '/../vendor/autoload.php') {
 Tester\Environment::setup();
 date_default_timezone_set('Europe/Prague');
 
-define('TMPDIR', __DIR__ . '/tmp/' . lcg_value());
-@mkdir(TMPDIR, 0777, true); // @ - base directory may already exist
-register_shutdown_function(function (): void {
-	Tester\Helpers::purge(TMPDIR);
-	rmdir(TMPDIR);
-});
-
+@mkdir(__DIR__ . '/tmp/' . lcg_value(), 0777, true); // @ - base directory may already exist
 
 $_ENV = array_intersect_key($_ENV, ['TRAVIS' => true]);
 $_SERVER['REQUEST_TIME'] = 1234567890;

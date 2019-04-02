@@ -7,23 +7,24 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactoryRouter;
+use Ublaboo\DataGrid\Traits\TLink;
 
 require __DIR__ . '/../bootstrap.php';
 
 final class CreateLinkTest extends TestCase
 {
 
-	use Ublaboo\DataGrid\Traits\TLink;
+	use TLink;
 
 	/** @var DataGrid */
 	private $grid;
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactoryRouter();
-		$this->grid = $factory->createXTestingDataGrid()->getComponent('grid');
+		$factory = new TestingDataGridFactoryRouter();
+		$this->grid = $factory->createTestingDataGrid()->getComponent('grid');
 	}
 
 
@@ -106,5 +107,4 @@ final class CreateLinkTest extends TestCase
 }
 
 
-$test_case = new CreateLinkTest();
-$test_case->run();
+(new CreateLinkTest())->run();

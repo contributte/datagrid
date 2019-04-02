@@ -9,7 +9,7 @@ use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Utils\Sorting;
 
 require __DIR__ . '/../../bootstrap.php';
-require __DIR__ . '/../../Files/XTestingDataGridFactory.php';
+require __DIR__ . '/../../Files/TestingDataGridFactory.php';
 
 abstract class BaseDataSourceTest extends TestCase
 {

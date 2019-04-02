@@ -13,8 +13,8 @@ final class DoctrineCollectionDataSourceTest extends BaseDataSourceTest
 	public function setUp(): void
 	{
 		$this->ds = new Ublaboo\DataGrid\DataSource\DoctrineCollectionDataSource(new ArrayCollection($this->data), 'id');
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
-		$this->grid = $factory->createXTestingDataGrid();
+		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
+		$this->grid = $factory->createTestingDataGrid();
 	}
 
 }

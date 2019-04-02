@@ -11,7 +11,7 @@ use Nextras\Orm\Model\Model;
 use Nextras\Orm\Model\SimpleModelFactory;
 use Nextras\Orm\Repository\Repository;
 use Ublaboo\DataGrid\DataSource\NextrasDataSource;
-use Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
@@ -37,8 +37,8 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 		$this->setUpDatabase();
 
 		$this->ds = new NextrasDataSource($this->model->users->findAll(), 'id');
-		$factory = new XTestingDataGridFactory();
-		$this->grid = $factory->createXTestingDataGrid();
+		$factory = new TestingDataGridFactory();
+		$this->grid = $factory->createTestingDataGrid();
 	}
 
 	protected function setUpDatabase(): void

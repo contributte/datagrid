@@ -2,20 +2,20 @@
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
+require __DIR__ . '/../bootstrap.php';
+
 use Nette\Application\AbortException;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
-
-require __DIR__ . '/../bootstrap.php';
+use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 final class ExportLinkTest extends TestCase
 {
 
 	public function testExportLink(): void
 	{
-		$factory = new XTestingDataGridFactory();
-		$grid = $factory->createXTestingDataGrid('ExportTesting');
+		$factory = new TestingDataGridFactory();
+		$grid = $factory->createTestingDataGrid('ExportTesting');
 		$grid->setDataSource([]);
 
 		Assert::exception(function () use ($grid): void {

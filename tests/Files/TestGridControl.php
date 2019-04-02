@@ -8,11 +8,9 @@ use Ublaboo\DataGrid\DataGrid;
 class TestGridControl extends Control
 {
 
-	public function createComponentGrid()
+	public function createComponentGrid(): DataGrid
 	{
-		$grid = new DataGrid();
-
-		return $grid;
+		return new DataGrid();
 	}
 
 }

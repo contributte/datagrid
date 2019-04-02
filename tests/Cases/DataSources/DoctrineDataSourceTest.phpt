@@ -28,8 +28,8 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 		$queryBuilder = $entityManager->getRepository('Ublaboo\\DataGrid\\Tests\\Cases\\DataSources\\User')->createQueryBuilder('e');
 
 		$this->ds = new DoctrineDataSource($queryBuilder, 'id');
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
-		$this->grid = $factory->createXTestingDataGrid();
+		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
+		$this->grid = $factory->createTestingDataGrid();
 	}
 
 	protected function setUpDatabase(): void

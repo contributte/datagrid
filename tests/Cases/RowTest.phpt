@@ -2,14 +2,18 @@
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use LeanMapper;
+require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../Files/TestingDataGridFactory.php';
+
 use Nette\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;
 use Ublaboo;
-
-require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/XTestingDataGridFactory.php';
+use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\Tests\Cases\Utils\TestingDDataGridEntity;
+use Ublaboo\DataGrid\Tests\Cases\Utils\TestingLMDataGridEntity;
+use Ublaboo\DataGrid\Tests\Cases\Utils\TestingLMDataGridEntity2;
+use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 final class RowTest extends TestCase
 {
@@ -19,8 +23,8 @@ final class RowTest extends TestCase
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
-		$this->grid = $factory->createXTestingDataGrid();
+		$factory = new TestingDataGridFactory();
+		$this->grid = $factory->createTestingDataGrid();
 	}
 
 
@@ -31,7 +35,7 @@ final class RowTest extends TestCase
 			$row->addClass('bg-warning');
 		};
 
-		$row = new Ublaboo\DataGrid\Row($this->grid, $item, 'id');
+		$row = new Row($this->grid, $item, 'id');
 		$callback($item, $row->getControl());
 
 		Assert::same(20, $row->getId());
@@ -43,7 +47,7 @@ final class RowTest extends TestCase
 	{
 		$item = ['id' => 20, 'name' => 'John Doe'];
 
-		$row = new Ublaboo\DataGrid\Row($this->grid, $item, 'id');
+		$row = new Row($this->grid, $item, 'id');
 
 		Assert::same(20, $row->getId());
 		Assert::same('John Doe', $row->getValue('name'));
@@ -54,7 +58,7 @@ final class RowTest extends TestCase
 	{
 		$item = (object) ['id' => 20, 'name' => 'John Doe'];
 
-		$row = new Ublaboo\DataGrid\Row($this->grid, $item, 'id');
+		$row = new Row($this->grid, $item, 'id');
 
 		Assert::same(20, $row->getId());
 	}
@@ -62,12 +66,12 @@ final class RowTest extends TestCase
 
 	public function testLeanMapperEntity(): void
 	{
-		$entity = new XTestingLMDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
-		$entity2 = new XTestingLMDataGridEntity2(['id' => 21, 'name' => 'Francis', 'age' => 20]);
+		$entity = new TestingLMDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
+		$entity2 = new TestingLMDataGridEntity2(['id' => 21, 'name' => 'Francis', 'age' => 20]);
 
 		$entity->setGirlfriend($entity2);
 
-		$row = new Ublaboo\DataGrid\Row($this->grid, $entity, 'id');
+		$row = new Row($this->grid, $entity, 'id');
 
 		Assert::same('John Doe', $row->getValue('name'));
 		Assert::same(23, $row->getValue('age'));
@@ -77,12 +81,12 @@ final class RowTest extends TestCase
 
 	public function testDoctrineEntity(): void
 	{
-		$entity = new XTestingDDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
-		$entity2 = new XTestingDDataGridEntity(['id' => 21, 'name' => 'Francis', 'age' => 20]);
+		$entity = new TestingDDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
+		$entity2 = new TestingDDataGridEntity(['id' => 21, 'name' => 'Francis', 'age' => 20]);
 
 		$entity->setPartner($entity2);
 
-		$row = new Ublaboo\DataGrid\Row($this->grid, $entity, 'id');
+		$row = new Row($this->grid, $entity, 'id');
 
 		Assert::same(20, $row->getId());
 		Assert::same('John Doe', $row->getValue('name'));
@@ -93,117 +97,4 @@ final class RowTest extends TestCase
 }
 
 
-/**
- * @property int $id
- * @property string $name
- * @property XTestingLMDataGridEntity2|null $girlfriend
- */
-class XTestingLMDataGridEntity extends LeanMapper\Entity
-{
-
-	private $age;
-
-	public function getAge()
-	{
-		return $this->age;
-	}
-
-
-	public function setAge($age): void
-	{
-		$this->age = $age;
-	}
-
-}
-
-
-/**
- * @property int $id
- * @property string $name
- */
-class XTestingLMDataGridEntity2 extends LeanMapper\Entity
-{
-
-	private $age;
-
-	public function getAge()
-	{
-		return $this->age;
-	}
-
-
-	public function setAge($age): void
-	{
-		$this->age = $age;
-	}
-
-}
-
-
-class XTestingDDataGridEntity
-{
-
-	/**
-	 * @ORM\Id
-	 * @ORM\Column(type="integer")
-	 * @ORM\GeneratedValue
-	 * @var int
-	 */
-	private $id;
-
-	/**
-	 * @ORM\Column(type="string")
-	 * @var string
-	 */
-	private $name;
-
-	/**
-	 * @ORM\Column(type="integer")
-	 * @var int
-	 */
-	private $age;
-
-	private $partner;
-
-	public function __construct($args)
-	{
-		$this->id = $args['id'];
-		$this->age = $args['age'];
-		$this->name = $args['name'];
-	}
-
-
-	public function getName()
-	{
-		return $this->name;
-	}
-
-
-	final public function getId(): int
-	{
-		return $this->id;
-	}
-
-
-	public function getAge()
-	{
-		return $this->age;
-	}
-
-
-	public function setPartner($p): void
-	{
-		$this->partner = $p;
-	}
-
-
-	public function getPartner()
-	{
-		return $this->partner;
-	}
-
-}
-
-
-$test_case = new RowTest();
-$test_case->run();
+(new RowTest())->run();

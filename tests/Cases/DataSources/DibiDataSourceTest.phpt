@@ -18,8 +18,8 @@ final class DibiFluentDataSourceTest extends BaseDataSourceTest
 	{
 		$this->setUpDatabase();
 		$this->ds = new Ublaboo\DataGrid\DataSource\DibiFluentDataSource($this->db->select('*')->from('users'), 'id');
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
-		$this->grid = $factory->createXTestingDataGrid();
+		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
+		$this->grid = $factory->createTestingDataGrid();
 	}
 
 	protected function setUpDatabase(): void

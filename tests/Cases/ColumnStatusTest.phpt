@@ -4,21 +4,23 @@ namespace Ublaboo\DataGrid\Tests\Cases;
 
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo;
+use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/XTestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDataGridFactory.php';
 
 final class ColumnStatusTest extends TestCase
 {
 
-	/** @var Ublaboo\DataGrid\DataGrid */
+	/** @var DataGrid */
 	private $grid;
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory();
-		$this->grid = $factory->createXTestingDataGrid();
+		$factory = new TestingDataGridFactory();
+		$this->grid = $factory->createTestingDataGrid();
 	}
 
 
@@ -45,9 +47,9 @@ final class ColumnStatusTest extends TestCase
 		$status = $grid->getColumn('status');
 
 		Assert::same('status', $status->getKey());
-		Assert::same(3, sizeof($status->getOptions()));
+		Assert::same(3, count($status->getOptions()));
 
-		$row = new Ublaboo\DataGrid\Row($grid, ['id' => 10, 'status' => 2], 'id');
+		$row = new Row($grid, ['id' => 10, 'status' => 2], 'id');
 
 		$current_option = $status->getCurrentOption($row);
 
@@ -66,5 +68,4 @@ final class ColumnStatusTest extends TestCase
 }
 
 
-$test_case = new ColumnStatusTest();
-$test_case->run();
+(new ColumnStatusTest())->run();
