@@ -387,13 +387,10 @@ class DataGrid extends Nette\Application\UI\Control
 		 */
 		$rows = [];
 
-		$items = !empty($this->redrawItem) ? $this->dataModel->filterRow($this->redrawItem) : Nette\Utils\Callback::invokeArgs(
-            [$this->dataModel, 'filterData'],
-            [
-					$this->getPaginator(),
-					$this->createSorting($this->sort, $this->sortCallback),
-					$this->assembleFilters(),
-				]
+		$items = $this->redrawItem !== [] ? $this->dataModel->filterRow($this->redrawItem) : $this->dataModel->filterData(
+            $this->getPaginator(),
+            $this->createSorting($this->sort, $this->sortCallback),
+            $this->assembleFilters()
         );
 
 		$hasGroupActionOnRows = false;
@@ -2016,13 +2013,10 @@ s	 */
 
 		$rows = [];
 
-		$items = Nette\Utils\Callback::invokeArgs(
-			[$this->dataModel, 'filterData'],
-            [
-				null,
-				$this->createSorting($this->sort, $this->sortCallback),
-				$filter,
-			]
+		$items = $this->dataModel->filterData(
+			null,
+			$this->createSorting($this->sort, $this->sortCallback),
+			$filter
 		);
 
 		foreach ($items as $item) {

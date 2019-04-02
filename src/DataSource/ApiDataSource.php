@@ -100,7 +100,7 @@ class ApiDataSource implements IDataSource
 		 * First, save all filter values to array
 		 */
 		foreach ($filters as $filter) {
-			if ($filter->isValueSet() && !$filter->hasConditionCallback()) {
+			if ($filter->isValueSet() && $filter->getConditionCallback() === null) {
 				$this->filter[$filter->getKey()] = $filter->getCondition();
 			}
 		}

@@ -2,7 +2,6 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Nette\Utils\Callback;
 use Ublaboo\DataGrid\Filter\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
@@ -23,11 +22,8 @@ abstract class FilterableDataSource
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
-				if ($filter->hasConditionCallback()) {
-					Callback::invokeArgs(
-						$filter->getConditionCallback(),
-						[$this->getDataSource(), $filter->getValue()]
-					);
+				if ($filter->getConditionCallback() !== null) {
+					($filter->getConditionCallback())($this->getDataSource(), $filter->getValue());
 				} else {
 					if ($filter instanceof FilterText) {
 						$this->applyFilterText($filter);

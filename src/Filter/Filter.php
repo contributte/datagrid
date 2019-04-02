@@ -135,12 +135,6 @@ abstract class Filter
 	}
 
 
-	public function hasConditionCallback(): bool
-	{
-		return $this->conditionCallback !== null;
-	}
-
-
 	public function getConditionCallback(): ?callable
 	{
 		return $this->conditionCallback;

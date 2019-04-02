@@ -2,7 +2,6 @@
 
 namespace Ublaboo\DataGrid\Export;
 
-use Nette\Utils\Callback;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Traits\TButtonClass;
@@ -154,7 +153,7 @@ class Export
 	 */
 	public function invoke(array $data): void
 	{
-		Callback::invokeArgs($this->callback, [$data, $this->grid]);
+		($this->callback)($data, $this->grid);
 	}
 
 }
