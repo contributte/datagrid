@@ -3,6 +3,7 @@
 namespace Ublaboo\DataGrid;
 
 use LeanMapper\Entity;
+use Nette\Database\Table\ActiveRow;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\Exception\DataGridException;

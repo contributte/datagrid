@@ -19,7 +19,7 @@ abstract class FilterableDataSource
      *
      * @param array|Filter[] $filters
 	 */
-	public function filter(array $filters): self
+	public function filter(array $filters): void
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
@@ -45,8 +45,6 @@ abstract class FilterableDataSource
 				}
 			}
 		}
-
-		return $this;
 	}
 
 

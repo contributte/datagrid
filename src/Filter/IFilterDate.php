@@ -8,7 +8,7 @@ interface IFilterDate
 	/**
 	 * Set format for datepicker etc
 	 */
-	public function setFormat(string $phpFormat, string $jsFormat): void;
+	public function setFormat(string $phpFormat, string $jsFormat): IFilterDate;
 
 
 	/**

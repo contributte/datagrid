@@ -94,7 +94,7 @@ class ApiDataSource implements IDataSource
 	/**
 	 * {@inheritDoc}
 	 */
-	public function filter(array $filters): self
+	public function filter(array $filters): void
 	{
 		/**
 		 * First, save all filter values to array
@@ -121,8 +121,6 @@ class ApiDataSource implements IDataSource
 				);
 			}
 		}
-
-		return $this;
 	}
 
 

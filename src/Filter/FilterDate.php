@@ -41,7 +41,7 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 	/**
 	 * Set format for datepicker etc
 	 */
-	public function setFormat(string $phpFormat, string $jsFormat): self
+	public function setFormat(string $phpFormat, string $jsFormat): IFilterDate
 	{
 		$this->format = [$phpFormat, $jsFormat];
 

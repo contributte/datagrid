@@ -107,7 +107,7 @@ trait TDataGridAggregationFunction
 			throw new DataGridException('Used DataSource has to implement IAggregatable for aggegations to work');
 		}
 
-		if ($this->multipleAggregationFunction) {
+		if ($this->multipleAggregationFunction !== null) {
 			if ($this->multipleAggregationFunction->getFilterDataType() === IAggregationFunction::DATA_TYPE_FILTERED) {
 				$dataSource->processAggregation($this->multipleAggregationFunction);
 			}
@@ -117,7 +117,7 @@ trait TDataGridAggregationFunction
 
 		foreach ($this->aggregationFunctions as $aggregationFunction) {
 			if ($aggregationFunction->getFilterDataType() === IAggregationFunction::DATA_TYPE_FILTERED) {
-				$dataSource->processAggregation($this->multipleAggregationFunction);
+				$dataSource->processAggregation($aggregationFunction);
 			}
 		}
 	}
@@ -136,7 +136,7 @@ trait TDataGridAggregationFunction
 			throw new DataGridException('Used DataSource has to implement IAggregatable for aggegations to work');
 		}
 
-		if ($this->multipleAggregationFunction) {
+		if ($this->multipleAggregationFunction !== null) {
 			if ($this->multipleAggregationFunction->getFilterDataType() === IAggregationFunction::DATA_TYPE_PAGINATED) {
 				$dataSource->processAggregation($this->multipleAggregationFunction);
 			}

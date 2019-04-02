@@ -60,7 +60,7 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * {@inheritDoc}
 	 */
-	public function filter(array $filters): self
+	public function filter(array $filters): void
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
@@ -78,8 +78,6 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 		}
-
-		return $this;
 	}
 
 
