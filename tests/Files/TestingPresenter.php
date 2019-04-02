@@ -3,6 +3,7 @@
 namespace Ublaboo\DataGrid\Tests\Files;
 
 use Nette\Application\UI\Component;
+use Nette\Application\UI\Presenter;
 use Ublaboo\DataGrid\DataGrid;
 
 final class TestingPresenter extends Presenter
