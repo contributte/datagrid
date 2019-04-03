@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Status;
 
@@ -7,31 +9,49 @@ use Ublaboo\DataGrid\Column\ColumnStatus;
 class Option
 {
 
-	/** @var ColumnStatus */
+	/**
+	 * @var ColumnStatus
+	 */
 	protected $columnStatus;
 
-	/** @var mixed */
+	/**
+	 * @var mixed
+	 */
 	protected $value;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $text;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $title;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $class = 'btn-success';
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $classSecondary = 'btn btn-xs';
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $classInDropdown = 'ajax dropdown-item';
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $icon;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $iconSecondary;
 
 	/**

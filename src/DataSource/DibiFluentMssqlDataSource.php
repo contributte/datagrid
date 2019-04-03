@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -14,7 +16,9 @@ use UnexpectedValueException;
 class DibiFluentMssqlDataSource extends DibiFluentDataSource
 {
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $data = [];
 
 	public function __construct(Fluent $dataSource, string $primaryKey)
@@ -27,9 +31,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getCount(): int
 	{
 		$clone = clone $this->dataSource;
@@ -50,9 +51,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$sql = (string) $this->dataSource;
@@ -70,29 +68,23 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
 
 		$date = DateTimeHelper::tryConvertToDateTime(
 			$conditions[$filter->getColumn()],
-			[$filter->getPhpFormat()]
+			[$filter->getPhpFormat()],
 		);
 
 		$this->dataSource->where(
 			'CONVERT(varchar(10), %n, 112) = ?',
 			$filter->getColumn(),
-			$date->format('Ymd')
+			$date->format('Ymd'),
 		);
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -104,7 +96,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 			$this->dataSource->where(
 				'CONVERT(varchar(10), %n, 112) >= ?',
 				$filter->getColumn(),
-				$valueFrom
+				$valueFrom,
 			);
 		}
 
@@ -112,15 +104,12 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 			$this->dataSource->where(
 				'CONVERT(varchar(10), %n, 112) <= ?',
 				$filter->getColumn(),
-				$valueTo
+				$valueTo,
 			);
 		}
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterText(FilterText $filter): void
 	{
 		$condition = $filter->getCondition();

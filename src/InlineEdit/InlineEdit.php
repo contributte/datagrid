@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\InlineEdit;
 
@@ -31,41 +33,57 @@ class InlineEdit
 	use TButtonTitle;
 	use TButtonText;
 
-	/** @var callable[] */
+	/**
+	 * @var array<callable>
+	 */
 	public $onSubmit = [];
 
-	/** @var callable[] */
+	/**
+	 * @var array<callable>
+	 */
 	public $onControlAdd = [];
 
-	/** @var callable[] */
+	/**
+	 * @var array<callable>
+	 */
 	public $onControlAfterAdd = [];
 
-	/** @var callable[] */
+	/**
+	 * @var array<callable>
+	 */
 	public $onSetDefaults = [];
 
-	/** @var callable[] */
+	/**
+	 * @var array<callable>
+	 */
 	public $onCustomRedraw = [];
 
-	/** @var mixed */
+	/**
+	 * @var mixed
+	 */
 	protected $itemID;
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	protected $grid;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $primaryWhereColumn = null;
 
 	/**
 	 * Inline adding - render on the top or in the bottom?
-     *
-     * @var bool
+	 *
+	 * @var bool
 	 */
 	protected $positionTop = false;
 
 	/**
 	 * Columns that are not edited can displey normal value instaad of nothing..
-     *
-     * @var bool
+	 *
+	 * @var bool
 	 */
 	protected $showNonEditingColumns = true;
 
@@ -120,7 +138,7 @@ class InlineEdit
 		if ($this->title !== null) {
 			$a->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->title)
+				$this->grid->getTranslator()->translate($this->title),
 			);
 		}
 
@@ -148,7 +166,7 @@ class InlineEdit
 		if ($this->title !== null) {
 			$a->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->title)
+				$this->grid->getTranslator()->translate($this->title),
 			);
 		}
 

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -27,27 +29,39 @@ class ItemDetail
 
 	/**
 	 * (renderer | template | block)
-     *
-     * @var string|null
+	 *
+	 * @var string|null
 	 */
 	protected $type;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $template;
 
-	/** @var callable|null */
+	/**
+	 * @var callable|null
+	 */
 	protected $renderer;
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	protected $grid;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $primaryWhereColumn;
 
-	/** @var ItemDetailForm */
+	/**
+	 * @var ItemDetailForm
+	 */
 	protected $form;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $templateParameters = [];
 
 	public function __construct(DataGrid $grid, string $primaryWhereColumn)
@@ -63,7 +77,7 @@ class ItemDetail
 
 	/**
 	 * Render row item detail button
-     */
+	 */
 	public function renderButton(Row $row): Html
 	{
 		$a = Html::el('a')
@@ -78,7 +92,7 @@ class ItemDetail
 		if ($this->title) {
 			$a->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->title)
+				$this->grid->getTranslator()->translate($this->title),
 			);
 		}
 
@@ -98,7 +112,7 @@ class ItemDetail
 	{
 		if ($this->getType() === 'block') {
 			throw new DataGridItemDetailException(
-				'ItemDetail is set to render as block, but block #detail is not defined'
+				'ItemDetail is set to render as block, but block #detail is not defined',
 			);
 		}
 

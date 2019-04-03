@@ -1,11 +1,15 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Traits;
 
 trait TButtonIcon
 {
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $icon;
 
 	public function setIcon(?string $icon): self

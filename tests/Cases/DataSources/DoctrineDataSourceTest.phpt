@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
@@ -15,7 +17,9 @@ require __DIR__ . '/BaseDataSourceTest.phpt';
 final class DoctrineDataSourceTest extends BaseDataSourceTest
 {
 
-	/** @var Connection */
+	/**
+	 * @var Connection
+	 */
 	private $db;
 
 	public function setUp(): void
@@ -60,16 +64,24 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 class User
 {
 
-	/** @Id @Column(type="integer") @GeneratedValue **/
+	/**
+	 * @Id @Column(type="integer") @GeneratedValue
+	 **/
 	public $id;
 
-	/** @Column(type="string") **/
+	/**
+	 * @Column(type="string")
+	 **/
 	public $name;
 
-	/** @Column(type="integer") **/
+	/**
+	 * @Column(type="integer")
+	 **/
 	public $age;
 
-	/** @Column(type="string") **/
+	/**
+	 * @Column(type="string")
+	 **/
 	public $address;
 
 	public function getId()

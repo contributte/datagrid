@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid;
 
@@ -34,16 +36,24 @@ final class DataModel
 
 	use SmartObject;
 
-	/** @var callable[] */
+	/**
+	 * @var array<callable>
+	 */
 	public $onBeforeFilter = [];
 
-	/** @var callable[] */
+	/**
+	 * @var array<callable>
+	 */
 	public $onAfterFilter = [];
 
-	/** @var callable[] */
+	/**
+	 * @var array<callable>
+	 */
 	public $onAfterPaginated = [];
 
-	/** @var IDataSource */
+	/**
+	 * @var IDataSource
+	 */
 	private $dataSource;
 
 	/**
@@ -94,7 +104,7 @@ final class DataModel
 		} else {
 			throw new DataGridWrongDataSourceException(sprintf(
 				'DataGrid can not take [%s] as data source.',
-				is_object($source) ? get_class($source) : 'NULL'
+				is_object($source) ? get_class($source) : 'NULL',
 			));
 		}
 
@@ -129,7 +139,7 @@ final class DataModel
 
 			$this->dataSource->sort($sorting)->limit(
 				$paginator->getOffset(),
-				$paginator->getItemsPerPage()
+				$paginator->getItemsPerPage(),
 			);
 
 			$this->onAfterPaginated($this->dataSource);

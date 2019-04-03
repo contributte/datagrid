@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -25,16 +27,24 @@ class MultiAction extends Column
 	use TButtonCaret;
 	use TLink;
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	protected $grid;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $name;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $actions = [];
 
-	/** @var callable[] */
+	/**
+	 * @var array<callable>
+	 */
 	private $rowConditions = [];
 
 	public function __construct(DataGrid $grid, string $key, string $name)
@@ -67,7 +77,7 @@ class MultiAction extends Column
 		if ($this->getTitle()) {
 			$button->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->getTitle())
+				$this->grid->getTranslator()->translate($this->getTitle()),
 			);
 		}
 
@@ -88,7 +98,7 @@ class MultiAction extends Column
 	{
 		if (isset($this->actions[$key])) {
 			throw new DataGridException(
-				"There is already action at key [$key] defined for MultiAction."
+				"There is already action at key [$key] defined for MultiAction.",
 			);
 		}
 
@@ -109,7 +119,7 @@ class MultiAction extends Column
 
 
 	/**
-	 * @return Action[]
+	 * @return array<Action>
 	 */
 	public function getActions(): array
 	{
@@ -121,7 +131,7 @@ class MultiAction extends Column
 	{
 		if (!isset($this->actions[$key])) {
 			throw new DataGridException(
-				"There is no action at key [$key] defined for MultiAction."
+				"There is no action at key [$key] defined for MultiAction.",
 			);
 		}
 

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
@@ -11,19 +13,29 @@ use UnexpectedValueException;
 class FilterSelect extends OneColumnFilter
 {
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $options;
 
-	/** @var bool */
+	/**
+	 * @var bool
+	 */
 	protected $translateOptions = false;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $template = 'datagrid_filter_select.latte';
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $type = 'select';
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $prompt = null;
 
 	public function __construct(
@@ -33,7 +45,7 @@ class FilterSelect extends OneColumnFilter
 		array $options,
 		string $column
 	)
-    {
+	{
 		parent::__construct($grid, $key, $name, $column);
 
 		$this->options = $options;
@@ -59,7 +71,7 @@ class FilterSelect extends OneColumnFilter
 				$container,
 				$this->key,
 				$translator->translate($this->name),
-				$this->options
+				$this->options,
 			);
 
 			$select->setTranslator(null);

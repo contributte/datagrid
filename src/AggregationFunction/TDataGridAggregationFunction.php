@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
@@ -9,10 +11,14 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 trait TDataGridAggregationFunction
 {
 
-	/** @var IAggregationFunction[] */
+	/**
+	 * @var array<IAggregationFunction>
+	 */
 	private $aggregationFunctions = [];
 
-	/** @var IMultipleAggregationFunction|null */
+	/**
+	 * @var IMultipleAggregationFunction|null
+	 */
 	private $multipleAggregationFunction = null;
 
 	/**
@@ -34,7 +40,7 @@ trait TDataGridAggregationFunction
 
 		if ($this->multipleAggregationFunction instanceof IMultipleAggregationFunction) {
 			throw new DataGridException(
-				'You can not use both AggregationFunctions and MultipleAggregationFunction'
+				'You can not use both AggregationFunctions and MultipleAggregationFunction',
 			);
 		}
 
@@ -159,7 +165,7 @@ trait TDataGridAggregationFunction
 
 
 	/**
-	 * @return IAggregationFunction[]
+	 * @return array<IAggregationFunction>
 	 */
 	public function getAggregationFunctions(): array
 	{

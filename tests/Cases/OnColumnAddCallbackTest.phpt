@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * TEST: OnColumnAddCallbackTest
@@ -18,7 +20,9 @@ require __DIR__ . '/../Files/TestingDataGridFactory.php';
 class OnColumnAddCallbackTest extends Tester\TestCase
 {
 
-	/** @var Ublaboo\DataGrid\DataGrid */
+	/**
+	 * @var Ublaboo\DataGrid\DataGrid
+	 */
 	private $grid;
 
 	public function setUp(): void

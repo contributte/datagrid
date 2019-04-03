@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -21,13 +23,19 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	IAggregatable
 {
 
-	/** @var ArrayCollection */
+	/**
+	 * @var ArrayCollection
+	 */
 	protected $dataSource;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $primaryKey;
 
-	/** @var Criteria */
+	/**
+	 * @var Criteria
+	 */
 	protected $criteria;
 
 	public function __construct(ArrayCollection $collection, string $primaryKey)
@@ -42,9 +50,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getCount(): int
 	{
 		return $this->getFilteredCollection()->count();
@@ -74,9 +79,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->criteria->setFirstResult($offset)->setMaxResults($limit);
@@ -85,16 +87,13 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function sort(Sorting $sorting): IDataSource
 	{
 		if (is_callable($sorting->getSortCallback())) {
 			call_user_func(
 				$sorting->getSortCallback(),
 				$this->criteria,
-				$sorting->getSort()
+				$sorting->getSort(),
 			);
 
 			return $this;
@@ -118,9 +117,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		foreach ($filter->getCondition() as $column => $value) {
@@ -134,9 +130,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -160,9 +153,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterRange(FilterRange $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -180,9 +170,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterText(FilterText $filter): void
 	{
 		$exprs = [];
@@ -206,9 +193,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterMultiSelect(FilterMultiSelect $filter): void
 	{
 		$values = $filter->getCondition()[$filter->getColumn()];
@@ -218,9 +202,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterSelect(FilterSelect $filter): void
 	{
 		foreach ($filter->getCondition() as $column => $value) {

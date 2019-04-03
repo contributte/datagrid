@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
@@ -20,7 +22,7 @@ require __DIR__ . '/BaseDataSourceTest.phpt';
 error_reporting(E_ERROR | E_PARSE);
 
 if (!extension_loaded('mysqli')) {
-    Environment::skip('Test requires MySQLi extension to be loaded.');
+	Environment::skip('Test requires MySQLi extension to be loaded.');
 }
 
 /**
@@ -29,11 +31,13 @@ if (!extension_loaded('mysqli')) {
 final class NextrasDataSourceTest extends BaseDataSourceTest
 {
 
-	/** @var Model */
+	/**
+	 * @var Model
+	 */
 	private $model;
 
 	public function setUp(): void
-    {
+	{
 		$this->setUpDatabase();
 
 		$this->ds = new NextrasDataSource($this->model->users->findAll(), 'id');
@@ -42,7 +46,7 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 	}
 
 	protected function setUpDatabase(): void
-    {
+	{
 		$args = Environment::loadData();
 
 		$storage = new DevNullStorage();
@@ -68,7 +72,7 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 	}
 
 	protected function getActualResultAsArray()
-    {
+	{
 		$result = [];
 
 		foreach ($this->ds->getData() as $row) { /** @var User $row */
@@ -102,7 +106,7 @@ class UsersRepository extends Repository
 {
 
 	public static function getEntityClassNames()
-    {
+	{
 		return [User::class];
 	}
 

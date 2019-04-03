@@ -1,11 +1,15 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\GroupAction;
 
 class GroupSelectAction extends GroupAction
 {
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $options;
 
 	public function __construct(string $title, array $options = [])

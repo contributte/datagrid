@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
@@ -20,7 +22,9 @@ class SubmitButton extends Button
 	use TButtonTitle;
 	use TButtonText;
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	protected $grid;
 
 	public function __construct(DataGrid $grid)
@@ -51,8 +55,8 @@ class SubmitButton extends Button
 			$el->addHtml(
 				Html::el('span')->appendAttribute(
 					'class',
-					DataGrid::$iconPrefix . $this->getIcon()
-				)
+					DataGrid::$iconPrefix . $this->getIcon(),
+				),
 			);
 
 			if (strlen($this->getText())) {

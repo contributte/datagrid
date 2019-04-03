@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
@@ -13,10 +15,14 @@ require __DIR__ . '/../Files/TestingDataGridFactory.php';
 final class ExportTest extends TestCase
 {
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	private $grid;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	private $data = [
 		[
 			'id' => 1,
@@ -64,7 +70,7 @@ final class ExportTest extends TestCase
 		Assert::exception(
 			$trigger,
 			'Ublaboo\DataGrid\Exception\DataGridException',
-			'You have to set a data source first.'
+			'You have to set a data source first.',
 		);
 
 		$this->grid->setDataSource($this->data);
@@ -93,7 +99,7 @@ final class ExportTest extends TestCase
 		Assert::exception(
 			$trigger,
 			'Ublaboo\DataGrid\Exception\DataGridException',
-			'You have to set a data source first.'
+			'You have to set a data source first.',
 		);
 
 		$this->grid->setDataSource($this->data);

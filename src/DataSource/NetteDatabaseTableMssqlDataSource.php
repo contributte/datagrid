@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -9,9 +11,6 @@ use Ublaboo\DataGrid\Utils\DateTimeHelper;
 class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource implements IDataSource
 {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -20,14 +19,11 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 		$this->dataSource->where(
 			"CONVERT(varchar(10), {$filter->getColumn()}, 112) = ?",
-			$date->format('Ymd')
+			$date->format('Ymd'),
 		);
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -41,7 +37,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 			$this->dataSource->where(
 				"CONVERT(varchar(10), {$filter->getColumn()}, 112) >= ?",
-				$dateFrom->format('Ymd')
+				$dateFrom->format('Ymd'),
 			);
 		}
 
@@ -51,7 +47,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 			$this->dataSource->where(
 				"CONVERT(varchar(10), {$filter->getColumn()}, 112) <= ?",
-				$dateTo->format('Ymd')
+				$dateTo->format('Ymd'),
 			);
 		}
 	}

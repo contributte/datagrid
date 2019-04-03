@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
@@ -18,7 +20,9 @@ final class CreateLinkTest extends TestCase
 
 	use TLink;
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	private $grid;
 
 	public function setUp(): void
@@ -98,9 +102,9 @@ final class CreateLinkTest extends TestCase
 				}
 
 				return $link; // Found signal handler!
-			} else {
-				continue; // Did not find signal handler
 			}
+
+			continue; // Did not find signal handler
 		}
 	}
 

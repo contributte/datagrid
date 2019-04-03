@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Localization;
 
@@ -7,7 +9,9 @@ use Nette\Localization\ITranslator;
 class SimpleTranslator implements ITranslator
 {
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	private $dictionary = [
 		'ublaboo_datagrid.no_item_found_reset' => 'No items found. You can reset the filter',
 		'ublaboo_datagrid.no_item_found' => 'No items found.',

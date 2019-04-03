@@ -1,14 +1,20 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column\Action\Confirmation;
 
 final class StringConfirmation implements IConfirmation
 {
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	private $question;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	private $placeholderName;
 
 	public function __construct(string $question, ?string $placeholderName = null)

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Files;
 
@@ -9,7 +11,9 @@ use Ublaboo\DataGrid\DataGrid;
 final class TestingPresenter extends Presenter
 {
 
-	/** @var bool */
+	/**
+	 * @var bool
+	 */
 	public $actionHandeled = false;
 
 	public function handleDoStuff(int $id): void

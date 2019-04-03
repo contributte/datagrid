@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
@@ -11,7 +13,9 @@ require __DIR__ . '/BaseDataSourceTest.phpt';
 final class DibiFluentDataSourceTest extends BaseDataSourceTest
 {
 
-	/** @var DibiConnection */
+	/**
+	 * @var DibiConnection
+	 */
 	private $db;
 
 	public function setUp(): void

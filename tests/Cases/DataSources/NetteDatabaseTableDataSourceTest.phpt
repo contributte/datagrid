@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
@@ -15,7 +17,9 @@ require __DIR__ . '/BaseDataSourceTest.phpt';
 final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 {
 
-	/** @var Context */
+	/**
+	 * @var Context
+	 */
 	private $db;
 
 	public function setUp(): void
@@ -59,8 +63,8 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 
 			foreach ($dataRow as $key => $value) {
 				$row[$key] = is_numeric($value)
-                    ? intval($value)
-                    : $value;
+					? intval($value)
+					: $value;
 			}
 
 			$rows[] = $row;

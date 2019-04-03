@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -19,13 +21,19 @@ use Ublaboo\DataGrid\Utils\Sorting;
 class DibiFluentDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
 
-	/** @var Fluent */
+	/**
+	 * @var Fluent
+	 */
 	protected $dataSource;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $data = [];
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $primaryKey;
 
 	public function __construct(Fluent $dataSource, string $primaryKey)
@@ -39,9 +47,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getCount(): int
 	{
 		return $this->dataSource->count();
@@ -68,9 +73,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->dataSource->limit($limit)->offset($offset);
@@ -81,16 +83,13 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function sort(Sorting $sorting): IDataSource
 	{
 		if (is_callable($sorting->getSortCallback())) {
 			call_user_func(
 				$sorting->getSortCallback(),
 				$this->dataSource,
-				$sorting->getSort()
+				$sorting->getSort(),
 			);
 
 			return $this;
@@ -128,9 +127,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -141,9 +137,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -167,9 +160,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterRange(FilterRange $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -187,9 +177,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterText(FilterText $filter): void
 	{
 		$condition = $filter->getCondition();
@@ -220,9 +207,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterMultiSelect(FilterMultiSelect $filter): void
 	{
 		$condition = $filter->getCondition();
@@ -251,9 +235,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterSelect(FilterSelect $filter): void
 	{
 		$this->dataSource->where($filter->getCondition());

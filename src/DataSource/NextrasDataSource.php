@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -19,13 +21,19 @@ use UnexpectedValueException;
 class NextrasDataSource extends FilterableDataSource implements IDataSource
 {
 
-	/** @var ICollection */
+	/**
+	 * @var ICollection
+	 */
 	protected $dataSource;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $data = [];
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $primaryKey;
 
 	public function __construct(ICollection $dataSource, string $primaryKey)
@@ -39,9 +47,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getCount(): int
 	{
 		return $this->dataSource->countStored();
@@ -77,9 +82,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->dataSource = $this->dataSource->limitBy($limit, $offset);
@@ -88,16 +90,13 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function sort(Sorting $sorting): IDataSource
 	{
 		if (is_callable($sorting->getSortCallback())) {
 			call_user_func(
 				$sorting->getSortCallback(),
 				$this->dataSource,
-				$sorting->getSort()
+				$sorting->getSort(),
 			);
 
 			return $this;
@@ -109,7 +108,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 			foreach ($sort as $column => $order) {
 				$this->dataSource = $this->dataSource->orderBy(
 					$this->prepareColumn((string) $column),
-					$order
+					$order,
 				);
 			}
 		} else {
@@ -118,8 +117,8 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 					sprintf(
 						'Expeting %s, got %s',
 						DbalCollection::class,
-						get_class($this->dataSource)
-					)
+						get_class($this->dataSource),
+					),
 				);
 			}
 
@@ -130,7 +129,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 			if (ArraysHelper::testEmpty($order)) {
 				$this->dataSource = $this->dataSource->orderBy(
-					$this->prepareColumn($this->primaryKey)
+					$this->prepareColumn($this->primaryKey),
 				);
 			}
 		}
@@ -139,9 +138,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		foreach ($filter->getCondition() as $column => $value) {
@@ -156,9 +152,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -184,9 +177,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterRange(FilterRange $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -210,9 +200,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterText(FilterText $filter): void
 	{
 		$condition = $filter->getCondition();
@@ -246,8 +233,8 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 				sprintf(
 					'Expeting %s, got %s',
 					DbalCollection::class,
-					get_class($this->dataSource)
-				)
+					get_class($this->dataSource),
+				),
 			);
 		}
 
@@ -255,22 +242,16 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterMultiSelect(FilterMultiSelect $filter): void
 	{
 		$this->applyFilterSelect($filter);
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterSelect(FilterSelect $filter): void
 	{
 		$this->dataSource = $this->dataSource->findBy(
-			[$this->prepareColumn($filter->getColumn()) => $filter->getValue()]
+			[$this->prepareColumn($filter->getColumn()) => $filter->getValue()],
 		);
 	}
 

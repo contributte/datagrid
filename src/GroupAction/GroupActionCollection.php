@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\GroupAction;
 
@@ -14,10 +16,14 @@ class GroupActionCollection
 
 	private const ID_ATTRIBUTE_PREFIX = 'group_action_item_';
 
-	/** @var GroupAction[] */
+	/**
+	 * @var array<GroupAction>
+	 */
 	protected $groupActions = [];
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	protected $datagrid;
 
 	public function __construct(DataGrid $datagrid)
@@ -71,7 +77,7 @@ class GroupActionCollection
 
 				$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
-                    ->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
+					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
 					->endCondition();
 
 			} elseif ($action instanceof GroupTextareaAction) {
@@ -79,7 +85,7 @@ class GroupActionCollection
 
 				$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
-                    ->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
+					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
 			}
 
 			if ($control) {
@@ -106,14 +112,14 @@ class GroupActionCollection
 
 		$groupActionSelect->addCondition(Form::FILLED)
 			->toggle(
-				strtolower((string) $this->datagrid->getName()) . 'group_action_submit'
+				strtolower((string) $this->datagrid->getName()) . 'group_action_submit',
 			);
 
 		$container->addSubmit('submit', 'ublaboo_datagrid.execute')
 			->setValidationScope([$container])
 			->setAttribute(
 				'id',
-				strtolower((string) $this->datagrid->getName()) . 'group_action_submit'
+				strtolower((string) $this->datagrid->getName()) . 'group_action_submit',
 			);
 
 		if ($form instanceof Nette\ComponentModel\IComponent) {
@@ -124,7 +130,7 @@ class GroupActionCollection
 
 	/**
 	 * Pass "sub"-form submission forward to custom submit function
-     */
+	 */
 	public function submitted(Form $form): void
 	{
 		if (!isset($form['group_action']['submit']) || !$form['group_action']['submit']->isSubmittedBy()) {
@@ -143,7 +149,7 @@ class GroupActionCollection
 		 */
 		$http_ids = $form->getHttpData(
 			Form::DATA_LINE | Form::DATA_KEYS,
-			strtolower((string) $this->datagrid->getName()) . '_group_action_item[]'
+			strtolower((string) $this->datagrid->getName()) . '_group_action_item[]',
 		);
 		$ids = array_keys($http_ids);
 
@@ -159,9 +165,9 @@ class GroupActionCollection
 	 */
 	public function addGroupSelectAction(string $title, array $options): GroupAction
 	{
-		$id = ($s = sizeof($this->groupActions))
-            ? ($s + 1)
-            : 1;
+		$id = $s = sizeof($this->groupActions)
+			? ($s + 1)
+			: 1;
 
 		return $this->groupActions[$id] = new GroupSelectAction($title, $options);
 	}
@@ -172,9 +178,9 @@ class GroupActionCollection
 	 */
 	public function addGroupMultiSelectAction(string $title, array $options): GroupAction
 	{
-		$id = ($s = sizeof($this->groupActions))
-            ? ($s + 1)
-            : 1;
+		$id = $s = sizeof($this->groupActions)
+			? ($s + 1)
+			: 1;
 
 		return $this->groupActions[$id] = new GroupMultiSelectAction($title, $options);
 	}
@@ -185,9 +191,9 @@ class GroupActionCollection
 	 */
 	public function addGroupTextAction(string $title): GroupAction
 	{
-		$id = ($s = sizeof($this->groupActions))
-            ? ($s + 1)
-            : 1;
+		$id = $s = sizeof($this->groupActions)
+			? ($s + 1)
+			: 1;
 
 		return $this->groupActions[$id] = new GroupTextAction($title);
 	}
@@ -198,9 +204,9 @@ class GroupActionCollection
 	 */
 	public function addGroupTextareaAction(string $title): GroupAction
 	{
-		$id = ($s = sizeof($this->groupActions))
-            ? ($s + 1)
-            : 1;
+		$id = $s = sizeof($this->groupActions)
+			? ($s + 1)
+			: 1;
 
 		return $this->groupActions[$id] = new GroupTextareaAction($title);
 	}

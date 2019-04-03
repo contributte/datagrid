@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
@@ -18,7 +20,9 @@ use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 final class RowTest extends TestCase
 {
 
-	/** @var Ublaboo\DataGrid\DataGrid */
+	/**
+	 * @var Ublaboo\DataGrid\DataGrid
+	 */
 	private $grid;
 
 	public function setUp(): void

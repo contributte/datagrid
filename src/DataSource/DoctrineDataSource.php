@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -25,21 +27,29 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 	/**
 	 * Event called when datagrid data is loaded.
-     *
-     * @var callable[]
+	 *
+	 * @var array<callable>
 	 */
 	public $onDataLoaded;
 
-	/** @var QueryBuilder */
+	/**
+	 * @var QueryBuilder
+	 */
 	protected $dataSource;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $primaryKey;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $rootAlias;
 
-	/** @var int */
+	/**
+	 * @var int
+	 */
 	protected $placeholder;
 
 	public function __construct(QueryBuilder $dataSource, string $primaryKey)
@@ -60,9 +70,6 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getCount(): int
 	{
 		if ($this->usePaginator()) {
@@ -114,9 +121,6 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->dataSource->setFirstResult($offset)->setMaxResults($limit);
@@ -125,16 +129,13 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function sort(Sorting $sorting): IDataSource
 	{
 		if (is_callable($sorting->getSortCallback())) {
 			call_user_func(
 				$sorting->getSortCallback(),
 				$this->dataSource,
-				$sorting->getSort()
+				$sorting->getSort(),
 			);
 
 			return $this;
@@ -174,9 +175,6 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		$p1 = $this->getPlaceholder();
@@ -193,9 +191,6 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -212,7 +207,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 			$this->dataSource->andWhere("$c >= :$p")->setParameter(
 				$p,
-				$dateFrom->format('Y-m-d H:i:s')
+				$dateFrom->format('Y-m-d H:i:s'),
 			);
 		}
 
@@ -224,15 +219,12 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 			$this->dataSource->andWhere("$c <= :$p")->setParameter(
 				$p,
-				$dateTo->format('Y-m-d H:i:s')
+				$dateTo->format('Y-m-d H:i:s'),
 			);
 		}
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterRange(FilterRange $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -253,9 +245,6 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterText(FilterText $filter): void
 	{
 		$condition = $filter->getCondition();
@@ -267,7 +256,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 			if ($filter->isExactSearch()) {
 				$exprs[] = $this->dataSource->expr()->eq(
 					$c,
-					$this->dataSource->expr()->literal($value)
+					$this->dataSource->expr()->literal($value),
 				);
 
 				continue;
@@ -278,7 +267,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 			foreach ($words as $word) {
 				$exprs[] = $this->dataSource->expr()->like(
 					$c,
-					$this->dataSource->expr()->literal("%$word%")
+					$this->dataSource->expr()->literal("%$word%"),
 				);
 			}
 		}
@@ -289,9 +278,6 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterMultiSelect(FilterMultiSelect $filter): void
 	{
 		$c = $this->checkAliases($filter->getColumn());
@@ -304,9 +290,6 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterSelect(FilterSelect $filter): void
 	{
 		$p = $this->getPlaceholder();

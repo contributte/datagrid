@@ -1,11 +1,15 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Traits;
 
 trait TButtonCaret
 {
 
-	/** @var bool */
+	/**
+	 * @var bool
+	 */
 	protected $caret = true;
 
 	public function setCaret(bool $useCaret): self

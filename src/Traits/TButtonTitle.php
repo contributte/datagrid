@@ -1,11 +1,15 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Traits;
 
 trait TButtonTitle
 {
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $title = '';
 
 	public function setTitle(string $title): self

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Traits;
 
@@ -33,7 +35,7 @@ trait TLink
 
 		if (!$presenter instanceof Presenter) {
 			throw new UnexpectedValueException(
-				sprintf('%s needs instanceof %s', self::class, Presenter::class)
+				sprintf('%s needs instanceof %s', self::class, Presenter::class),
 			);
 		}
 
@@ -93,7 +95,7 @@ trait TLink
 
 		if ($parent === null || $presenter === null) {
 			throw new UnexpectedValueException(
-				sprintf('%s can not live withnout a parent component or presenter', self::class)
+				sprintf('%s can not live withnout a parent component or presenter', self::class),
 			);
 		}
 
@@ -104,7 +106,7 @@ trait TLink
 			. $href . '" - did not find any signal handler in componenet hierarchy from '
 			. get_class($parent) . ' up to the '
 			. get_class($presenter) . '. '
-			. 'Try adding handler ' . $desiredHandler
+			. 'Try adding handler ' . $desiredHandler,
 		);
 	}
 

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -15,8 +17,8 @@ abstract class FilterableDataSource
 
 	/**
 	 * {@inheritDoc}
-     *
-     * @param array|Filter[] $filters
+	 *
+	 * @param array<Filter> $filters
 	 */
 	public function filter(array $filters): void
 	{

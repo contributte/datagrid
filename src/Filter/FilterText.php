@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
@@ -8,31 +10,41 @@ use Ublaboo\DataGrid\DataGrid;
 class FilterText extends Filter
 {
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $template = 'datagrid_filter_text.latte';
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $type = 'text';
 
-	/** @var bool */
+	/**
+	 * @var bool
+	 */
 	protected $exact = false;
 
-	/** @var bool */
+	/**
+	 * @var bool
+	 */
 	protected $splitWordsSearch = true;
 
-	/** @var array|string[] */
+	/**
+	 * @var array<string>
+	 */
 	protected $columns;
 
+
 	/**
-	 * @param array|string[] $columns
+	 * @param array<string> $columns
 	 */
 	public function __construct(
 		DataGrid $grid,
 		string $key,
 		string $name,
 		array $columns
-	)
-    {
+	) {
 		parent::__construct($grid, $key, $name);
 
 		$this->columns = $columns;
@@ -92,5 +104,4 @@ class FilterText extends Filter
 	{
 		return $this->splitWordsSearch;
 	}
-
 }

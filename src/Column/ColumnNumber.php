@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -7,10 +9,14 @@ use Ublaboo\DataGrid\Row;
 class ColumnNumber extends Column
 {
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $align = 'right';
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $numberFormat = [
 		0, // Decimals
 		'.', // Decimal point
@@ -32,7 +38,7 @@ class ColumnNumber extends Column
 			(float) $value,
 			(int) $this->numberFormat[0],
 			(string) $this->numberFormat[1],
-			(string) $this->numberFormat[2]
+			(string) $this->numberFormat[2],
 		);
 	}
 

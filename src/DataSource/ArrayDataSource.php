@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -20,10 +22,14 @@ use Ublaboo\DataGrid\Utils\Sorting;
 class ArrayDataSource implements IDataSource
 {
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $data = [];
 
-	/** @var int */
+	/**
+	 * @var int
+	 */
 	protected $count = 0;
 
 	/**
@@ -39,9 +45,6 @@ class ArrayDataSource implements IDataSource
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getCount(): int
 	{
 		return sizeof($this->data);
@@ -67,7 +70,7 @@ class ArrayDataSource implements IDataSource
 				if ($filter->getConditionCallback() !== null) {
 					$data = (array) call_user_func_array(
 						$filter->getConditionCallback(),
-						[$this->data, $filter->getValue()]
+						[$this->data, $filter->getValue()],
 					);
 					$this->setData($data);
 				} else {
@@ -102,9 +105,6 @@ class ArrayDataSource implements IDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$data = array_slice($this->data, $offset, $limit);
@@ -123,11 +123,17 @@ class ArrayDataSource implements IDataSource
 		if (is_array($row) || $row instanceof ArrayAccess) {
 			if ($filter instanceof FilterDate) {
 				return $this->applyFilterDate($row, $filter);
-			} elseif ($filter instanceof FilterMultiSelect) {
+			}
+
+			if ($filter instanceof FilterMultiSelect) {
 				return $this->applyFilterMultiSelect($row, $filter);
-			} elseif ($filter instanceof FilterDateRange) {
+			}
+
+			if ($filter instanceof FilterDateRange) {
 				return $this->applyFilterDateRange($row, $filter);
-			} elseif ($filter instanceof FilterRange) {
+			}
+
+			if ($filter instanceof FilterRange) {
 				return $this->applyFilterRange($row, $filter);
 			}
 
@@ -252,8 +258,8 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Apply fitler date and tell whether row value matches or not
-     *
-     * @param  mixed  $row
+	 *
+	 * @param  mixed  $row
 	 */
 	protected function applyFilterDate($row, FilterDate $filter): bool
 	{
@@ -284,16 +290,13 @@ class ArrayDataSource implements IDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function sort(Sorting $sorting): IDataSource
 	{
 		if (is_callable($sorting->getSortCallback())) {
 			$data = call_user_func(
 				$sorting->getSortCallback(),
 				$this->data,
-				$sorting->getSort()
+				$sorting->getSort(),
 			);
 
 			if (!is_array($data)) {
@@ -312,8 +315,8 @@ class ArrayDataSource implements IDataSource
 
 			foreach ($this->data as $item) {
 				$sort_by = is_object($item[$column]) && $item[$column] instanceof DateTimeInterface
-                    ? $item[$column]->format('Y-m-d H:i:s')
-                    : (string) $item[$column];
+					? $item[$column]->format('Y-m-d H:i:s')
+					: (string) $item[$column];
 
 				$data[$sort_by][] = $item;
 			}

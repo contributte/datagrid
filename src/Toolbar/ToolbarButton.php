@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Toolbar;
 
@@ -18,16 +20,24 @@ class ToolbarButton
 	use Traits\TButtonTitle;
 	use Traits\TLink;
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	protected $grid;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $href;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $params;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $attributes = [];
 
 	/**
@@ -44,7 +54,7 @@ class ToolbarButton
 
 	/**
 	 * Render toolbar button
-     */
+	 */
 	public function renderButton(): Html
 	{
 		try {
@@ -69,7 +79,7 @@ class ToolbarButton
 		if ($this->getTitle()) {
 			$a->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->getTitle())
+				$this->grid->getTranslator()->translate($this->getTitle()),
 			);
 		}
 

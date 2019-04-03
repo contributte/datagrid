@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -10,28 +12,44 @@ use Ublaboo\DataGrid\Row;
 class ColumnLink extends Column
 {
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $title;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $class;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $params;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $href;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $icon;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $dataAttributes = [];
 
-	/** @var bool */
+	/**
+	 * @var bool
+	 */
 	protected $openInNewTab = false;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $parameters = [];
 
 	public function __construct(
@@ -42,7 +60,7 @@ class ColumnLink extends Column
 		string $href,
 		array $params
 	)
-    {
+	{
 		parent::__construct($grid, $key, $column, $name);
 
 		$this->href = $href;
@@ -76,7 +94,7 @@ class ColumnLink extends Column
 			->href($this->createLink(
 				$this->grid,
 				$this->href,
-				$this->getItemParams($row, $this->params) + $this->parameters
+				$this->getItemParams($row, $this->params) + $this->parameters,
 			));
 
 		if ($this->dataAttributes !== []) {
@@ -101,7 +119,7 @@ class ColumnLink extends Column
 
 		if ($this->icon !== null) {
 			$a->addHtml(
-				Html::el('span')->setAttribute('class', DataGrid::$iconPrefix . $this->icon)
+				Html::el('span')->setAttribute('class', DataGrid::$iconPrefix . $this->icon),
 			);
 
 			if (strlen($value)) {

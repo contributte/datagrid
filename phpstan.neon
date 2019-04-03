@@ -1,3 +1,6 @@
+includes:
+	- ./vendor/gamee/php-code-checker-rules/phpstan.neon
+
 parameters:
 	ignoreErrors:
 		- '/^Call to an undefined method Dibi\\Fluent::or\(\)\.$/'

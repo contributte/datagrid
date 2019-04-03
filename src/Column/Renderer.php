@@ -1,21 +1,27 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
 class Renderer
 {
 
-	/** @var callable */
+	/**
+	 * @var callable
+	 */
 	protected $callback;
 
-	/** @var callable|null */
+	/**
+	 * @var callable|null
+	 */
 	protected $conditionCallback;
 
 	public function __construct(
 		callable $callback,
 		?callable $conditionCallback
 	)
-    {
+	{
 		$this->callback = $callback;
 		$this->conditionCallback = $conditionCallback;
 	}

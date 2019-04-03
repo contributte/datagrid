@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\Utils;
 
@@ -25,7 +27,9 @@ class TestingDDataGridEntity
 	 */
 	private $age;
 
-	/** @var TestingDDataGridEntity|null */
+	/**
+	 * @var TestingDDataGridEntity|null
+	 */
 	private $partner;
 
 	public function __construct($args)

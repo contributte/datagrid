@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
@@ -13,7 +15,9 @@ require __DIR__ . '/../Files/TestingDataGridFactory.php';
 final class ColumnDateTimeTest extends TestCase
 {
 
-	/** @var Ublaboo\DataGrid\DataGrid */
+	/**
+	 * @var Ublaboo\DataGrid\DataGrid
+	 */
 	private $grid;
 
 	public function setUp(): void

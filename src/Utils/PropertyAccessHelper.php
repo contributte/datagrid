@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Utils;
 
@@ -8,7 +10,9 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 final class PropertyAccessHelper
 {
 
-	/** @var PropertyAccessor */
+	/**
+	 * @var PropertyAccessor
+	 */
 	private static $accessor = null;
 
 	public static function getAccessor(): PropertyAccessor

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
@@ -11,10 +13,14 @@ use UnexpectedValueException;
 class FilterMultiSelect extends FilterSelect
 {
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $type = 'multi-select';
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $attributes = [
 		'class' => ['form-control', 'input-sm', 'selectpicker', 'form-control-sm'],
 		'data-selected-text-format' => ['count'],
@@ -27,7 +33,7 @@ class FilterMultiSelect extends FilterSelect
 		array $options,
 		string $column
 	)
-    {
+	{
 		parent::__construct($grid, $key, $name, $options, $column);
 
 		$this->addAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
@@ -73,11 +79,11 @@ class FilterMultiSelect extends FilterSelect
 
 		$this->addAttribute(
 			'title',
-			$translator->translate('ublaboo_datagrid.multiselect_choose')
+			$translator->translate('ublaboo_datagrid.multiselect_choose'),
 		);
 		$this->addAttribute(
 			'data-i18n-selected',
-			$translator->translate('ublaboo_datagrid.multiselect_selected')
+			$translator->translate('ublaboo_datagrid.multiselect_selected'),
 		);
 
 		/**

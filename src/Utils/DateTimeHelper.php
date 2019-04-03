@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Utils;
 
@@ -11,9 +13,9 @@ final class DateTimeHelper
 
 	/**
 	 * Try to convert string into DateTime object
-     *
-     * @param  mixed     $value
-	 * @param  string[]  $formats
+	 *
+	 * @param  mixed     $value
+	 * @param array<string> $formats
 	 * @throws DataGridDateTimeHelperException
 	 */
 	public static function tryConvertToDateTime($value, array $formats = []): DateTime
@@ -24,9 +26,9 @@ final class DateTimeHelper
 
 	/**
 	 * Try to convert string into DateTime object from more date formats
-     *
-     * @param  mixed     $value
-	 * @param  string[]  $formats
+	 *
+	 * @param  mixed     $value
+	 * @param array<string> $formats
 	 * @throws DataGridDateTimeHelperException
 	 */
 	public static function tryConvertToDate($value, array $formats = []): DateTime
@@ -37,9 +39,9 @@ final class DateTimeHelper
 
 	/**
 	 * Convert string into DateTime object from more date without time
-     *
-     * @param  mixed     $value
-	 * @param  string[]  $formats
+	 *
+	 * @param  mixed     $value
+	 * @param array<string> $formats
 	 * @throws DataGridDateTimeHelperException
 	 */
 	public static function fromString($value, array $formats = []): DateTime

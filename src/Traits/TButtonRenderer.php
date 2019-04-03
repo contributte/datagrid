@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Traits;
 
@@ -10,10 +12,14 @@ use Ublaboo\DataGrid\Row;
 trait TButtonRenderer
 {
 
-	/** @var Renderer|null */
+	/**
+	 * @var Renderer|null
+	 */
 	protected $renderer;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $replacements = [];
 
 	/**
@@ -44,8 +50,8 @@ trait TButtonRenderer
 
 	/**
 	 * Set renderer callback and (it may be optional - the condition callback will decide)
-     *
-     * @throws DataGridException
+	 *
+	 * @throws DataGridException
 	 */
 	public function setRenderer(
 		callable $renderer,
@@ -54,7 +60,7 @@ trait TButtonRenderer
 	{
 		if ($this->hasReplacements()) {
 			throw new DataGridException(
-				'Use either Column::setReplacement() or Column::setRenderer, not both.'
+				'Use either Column::setReplacement() or Column::setRenderer, not both.',
 			);
 		}
 

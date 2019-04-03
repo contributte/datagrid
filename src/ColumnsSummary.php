@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid;
 
@@ -10,33 +12,45 @@ use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 class ColumnsSummary
 {
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	protected $datagrid;
 
-	/** @var array|int[] */
+	/**
+	 * @var array<int>
+	 */
 	protected $summary;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $format = [];
 
-	/** @var callable|null */
+	/**
+	 * @var callable|null
+	 */
 	protected $rowCallback = null;
 
-	/** @var Renderer|null */
+	/**
+	 * @var Renderer|null
+	 */
 	protected $renderer;
 
-	/** @var bool */
+	/**
+	 * @var bool
+	 */
 	protected $positionTop = false;
 
 	/**
-	 * @param array|string[] $columns
+	 * @param array<string> $columns
 	 */
 	public function __construct(
 		DataGrid $datagrid,
 		array $columns,
 		?callable $rowCallback
 	)
-    {
+	{
 		$this->summary = array_fill_keys(array_values($columns), 0);
 		$this->datagrid = $datagrid;
 		$this->rowCallback = $rowCallback;
@@ -56,8 +70,8 @@ class ColumnsSummary
 
 	/**
 	 * Get value from column using Row::getValue() or custom callback
-     *
-     * @return mixed
+	 *
+	 * @return mixed
 	 */
 	private function getValue(Row $row, Column $column)
 	{
@@ -95,7 +109,7 @@ class ColumnsSummary
 			$this->summary[$key],
 			$this->format[$key][0],
 			$this->format[$key][1],
-			$this->format[$key][2]
+			$this->format[$key][2],
 		);
 	}
 
@@ -160,9 +174,7 @@ class ColumnsSummary
 
 	public function setPositionTop(bool $top = true): self
 	{
-		$this->positionTop = ($top === false)
-            ? false
-            : true;
+		$this->positionTop = $top !== false;
 
 		return $this;
 	}

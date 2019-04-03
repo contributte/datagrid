@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -18,13 +20,19 @@ use Ublaboo\DataGrid\Utils\Sorting;
 class NetteDatabaseTableDataSource extends FilterableDataSource implements IDataSource
 {
 
-	/** @var Selection */
+	/**
+	 * @var Selection
+	 */
 	protected $dataSource;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $data = [];
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $primaryKey;
 
 	public function __construct(Selection $dataSource, string $primaryKey)
@@ -38,9 +46,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getCount(): int
 	{
 		$dataSourceSqlBuilder = $this->dataSource->getSqlBuilder();
@@ -51,7 +56,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		} catch (LogicException $e) {
 			if ($dataSourceSqlBuilder->getGroup() !== '') {
 				return $this->dataSource->count(
-					'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
+					'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~'),
 				);
 			}
 
@@ -60,13 +65,13 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 		if ($dataSourceSqlBuilder->getGroup() !== '') {
 			return $this->dataSource->count(
-				'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
-			);
-		} else {
-			return $this->dataSource->count(
-				$this->dataSource->getName() . '.' . (is_array($primary) ? reset($primary) : $primary)
+				'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~'),
 			);
 		}
+
+		return $this->dataSource->count(
+			$this->dataSource->getName() . '.' . (is_array($primary) ? reset($primary) : $primary),
+		);
 	}
 
 
@@ -90,9 +95,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->data = $this->dataSource->limit($limit, $offset)->fetchAll();
@@ -101,16 +103,13 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function sort(Sorting $sorting): IDataSource
 	{
 		if (is_callable($sorting->getSortCallback())) {
 			call_user_func(
 				$sorting->getSortCallback(),
 				$this->dataSource,
-				$sorting->getSort()
+				$sorting->getSort(),
 			);
 
 			return $this;
@@ -143,9 +142,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -156,9 +152,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -172,7 +165,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 			$this->dataSource->where(
 				"DATE({$filter->getColumn()}) >= ?",
-				$dateFrom->format('Y-m-d')
+				$dateFrom->format('Y-m-d'),
 			);
 		}
 
@@ -185,9 +178,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterRange(FilterRange $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -205,9 +195,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterText(FilterText $filter): void
 	{
 		$or = [];
@@ -253,9 +240,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterMultiSelect(FilterMultiSelect $filter): void
 	{
 		$condition = $filter->getCondition();
@@ -285,9 +269,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterSelect(FilterSelect $filter): void
 	{
 		$this->dataSource->where($filter->getCondition());

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
@@ -7,13 +9,19 @@ use Nette\Forms\Container;
 class FilterDate extends OneColumnFilter implements IFilterDate
 {
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $template = 'datagrid_filter_date.latte';
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $format = ['j. n. Y', 'd. m. yyyy'];
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $type = 'date';
 
 	public function addToFormContainer(Container $container): void

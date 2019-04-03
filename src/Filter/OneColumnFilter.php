@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
@@ -7,7 +9,9 @@ use Ublaboo\DataGrid\DataGrid;
 abstract class OneColumnFilter extends Filter
 {
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $column;
 
 	public function __construct(
@@ -16,7 +20,7 @@ abstract class OneColumnFilter extends Filter
 		string $name,
 		string $column
 	)
-    {
+	{
 		parent::__construct($grid, $key, $name);
 
 		$this->column = $column;

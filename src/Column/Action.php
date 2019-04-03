@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -23,37 +25,59 @@ class Action extends Column
 	use TLink;
 	use TRenderCondition;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	public static $dataConfirmAttributeName = 'datagrid-confirm';
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $href;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $params;
 
-	/** @var IConfirmation|null */
+	/**
+	 * @var IConfirmation|null
+	 */
 	protected $confirmation;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $dataAttributes = [];
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $attributes = [];
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $parameters = [];
 
-	/** @var string|callable|null */
+	/**
+	 * @var string|callable|null
+	 */
 	protected $icon;
 
-	/** @var string|callable */
+	/**
+	 * @var string|callable
+	 */
 	protected $class = 'btn btn-xs btn-default btn-secondary';
 
-	/** @var bool */
+	/**
+	 * @var bool
+	 */
 	protected $openInNewTab = false;
 
-	/** @var string|callable */
+	/**
+	 * @var string|callable
+	 */
 	private $title;
 
 	public function __construct(
@@ -63,7 +87,7 @@ class Action extends Column
 		string $name,
 		array $params
 	)
-    {
+	{
 		parent::__construct($grid, $key, '', $name);
 
 		$this->href = $href;
@@ -88,7 +112,7 @@ class Action extends Column
 		$link = $this->createLink(
 			$this->grid,
 			$this->href,
-			$this->getItemParams($row, $this->params) + $this->parameters
+			$this->getItemParams($row, $this->params) + $this->parameters,
 		);
 
 		$a = Html::el('a')->href($link);
@@ -236,7 +260,9 @@ class Action extends Column
 
 		if ($this->confirmation instanceof CallbackConfirmation) {
 			return ($this->confirmation->getCallback())($row->getItem());
-		} elseif ($this->confirmation instanceof StringConfirmation) {
+		}
+
+		if ($this->confirmation instanceof StringConfirmation) {
 			$question = $this->translate($this->confirmation->getQuestion());
 
 			if ($this->confirmation->getPlaceholderName() === null) {
@@ -246,7 +272,7 @@ class Action extends Column
 			return str_replace(
 				'%s',
 				$row->getValue($this->confirmation->getPlaceholderName()),
-				$question
+				$question,
 			);
 		}
 	}
@@ -279,7 +305,7 @@ class Action extends Column
 	{
 		if (!is_string($property) && !is_callable($property) && $property !== null) {
 			throw new DataGridException(
-				"Action {$name} has to be either string or a callback returning string"
+				"Action {$name} has to be either string or a callback returning string",
 			);
 		}
 	}

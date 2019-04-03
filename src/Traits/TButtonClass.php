@@ -1,11 +1,15 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Traits;
 
 trait TButtonClass
 {
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $class = 'btn btn-xs btn-default btn-secondary';
 
 	public function setClass(string $class): self

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -16,13 +18,19 @@ class ColumnStatus extends Column
 
 	use Traits\TButtonCaret;
 
-	/** @var callable[] */
+	/**
+	 * @var array<callable>
+	 */
 	public $onChange = [];
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $key;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $options = [];
 
 	public function __construct(
@@ -31,7 +39,7 @@ class ColumnStatus extends Column
 		string $column,
 		string $name
 	)
-    {
+	{
 		parent::__construct($grid, $key, $column, $name);
 
 		$this->key = $key;
@@ -150,7 +158,7 @@ class ColumnStatus extends Column
 	public function setReplacement(array $replacements): Column
 	{
 		throw new DataGridColumnStatusException(
-			'Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)'
+			'Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)',
 		);
 	}
 

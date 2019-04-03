@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * Nette Framework Extras
@@ -22,23 +24,31 @@ use UnexpectedValueException;
 class DataGridPaginator extends Control
 {
 
-	/** @var ITranslator */
+	/**
+	 * @var ITranslator
+	 */
 	private $translator;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	private $iconPrefix;
 
-	/** @var Paginator */
+	/**
+	 * @var Paginator
+	 */
 	private $paginator;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	private $templateFile;
 
 	public function __construct(
 		ITranslator $translator,
 		string $iconPrefix = 'fa fa-'
 	)
-    {
+	{
 		$this->translator = $translator;
 		$this->iconPrefix = $iconPrefix;
 	}
@@ -86,8 +96,8 @@ class DataGridPaginator extends Control
 			/**
 			 * Something to do with steps in tempale...
 			 * [Default $count = 3;]
-             *
-             * @var int
+			 *
+			 * @var int
 			 */
 			$count = 1;
 

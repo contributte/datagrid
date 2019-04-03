@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Export;
 
@@ -19,25 +21,39 @@ class Export
 	use TButtonTitle;
 	use TButtonText;
 
-	/** @var callable */
+	/**
+	 * @var callable
+	 */
 	protected $callback;
 
-	/** @var bool */
+	/**
+	 * @var bool
+	 */
 	protected $ajax;
 
-	/** @var bool */
+	/**
+	 * @var bool
+	 */
 	protected $filtered;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $link;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $columns = [];
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	protected $grid;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $confirmDialog = null;
 
 	public function __construct(
@@ -46,7 +62,7 @@ class Export
 		callable $callback,
 		bool $filtered
 	)
-    {
+	{
 		$this->grid = $grid;
 		$this->text = $text;
 		$this->callback = $callback;
@@ -66,7 +82,7 @@ class Export
 		$this->tryAddIcon(
 			$a,
 			$this->getIcon(),
-			$this->grid->getTranslator()->translate($this->getTitle())
+			$this->grid->getTranslator()->translate($this->getTitle()),
 		);
 
 		$a->addText($this->grid->getTranslator()->translate($this->text));

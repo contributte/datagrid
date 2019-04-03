@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -10,7 +12,9 @@ use Ublaboo\DataGrid\DataGrid;
 class ActionCallback extends Action
 {
 
-	/** @var callable */
+	/**
+	 * @var callable
+	 */
 	public $onClick;
 
 	/**

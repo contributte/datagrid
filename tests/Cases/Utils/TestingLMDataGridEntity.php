@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\Utils;
 
@@ -10,7 +12,9 @@ namespace Ublaboo\DataGrid\Tests\Cases\Utils;
 class TestingLMDataGridEntity extends LeanMapper\Entity
 {
 
-	/** @var int */
+	/**
+	 * @var int
+	 */
 	private $age;
 
 	public function getAge(): int

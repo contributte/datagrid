@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid;
 
@@ -12,19 +14,29 @@ use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 class Row
 {
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	protected $datagrid;
 
-	/** @var mixed */
+	/**
+	 * @var mixed
+	 */
 	protected $item;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $primaryKey;
 
-	/** @var mixed */
+	/**
+	 * @var mixed
+	 */
 	protected $id;
 
-	/** @var Html */
+	/**
+	 * @var Html
+	 */
 	protected $control;
 
 	/**
@@ -65,15 +77,25 @@ class Row
 	{
 		if ($this->item instanceof Entity) {
 			return $this->getLeanMapperEntityProperty($this->item, $key);
-		} elseif ($this->item instanceof \Nextras\Orm\Entity\Entity) {
+		}
+
+		if ($this->item instanceof \Nextras\Orm\Entity\Entity) {
 			return $this->getNextrasEntityProperty($this->item, $key);
-		} elseif ($this->item instanceof \Dibi\Row) {
+		}
+
+		if ($this->item instanceof \Dibi\Row) {
 			return $this->item->{$this->formatDibiRowKey($key)};
-		} elseif ($this->item instanceof ActiveRow) {
+		}
+
+		if ($this->item instanceof ActiveRow) {
 			return $this->getActiveRowProperty($this->item, $key);
-		} elseif ($this->item instanceof \Nette\Database\Row) {
+		}
+
+		if ($this->item instanceof \Nette\Database\Row) {
 			return $this->item->{$key};
-		} elseif (is_array($this->item)) {
+		}
+
+		if (is_array($this->item)) {
 			$arrayValue = $this->item[$key];
 
 			if (is_object($arrayValue) && method_exists($arrayValue, '__toString')) {
@@ -81,9 +103,9 @@ class Row
 			}
 
 			return $arrayValue;
-		} else {
-			return $this->getDoctrineEntityProperty($this->item, $key);
 		}
+
+		return $this->getDoctrineEntityProperty($this->item, $key);
 	}
 
 
@@ -116,8 +138,8 @@ class Row
 			$relatedRow = $item->related($relatedTable, $throughColumn)->fetch();
 
 			return $relatedRow
-                ? $relatedRow->{$relatedColumn}
-                : null;
+				? $relatedRow->{$relatedColumn}
+				: null;
 		}
 
 		if (preg_match('/^([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/', $key, $matches)) {
@@ -128,8 +150,8 @@ class Row
 			$referencedRow = $item->ref($referencedTable, $throughColumn);
 
 			return $referencedRow
-                ? $referencedRow->{$referencedColumn}
-                : null;
+				? $referencedRow->{$referencedColumn}
+				: null;
 		}
 
 		return $item->{$key};
@@ -138,8 +160,8 @@ class Row
 
 	/**
 	 * LeanMapper: Access object properties to get a item value
-     *
-     * @param  mixed $key
+	 *
+	 * @param  mixed $key
 	 * @return mixed
 	 */
 	public function getLeanMapperEntityProperty(Entity $item, $key)
@@ -153,7 +175,7 @@ class Row
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
 						$value,
-                        str_replace('.', '->', $key)
+						str_replace('.', '->', $key),
 					));
 				}
 
@@ -169,8 +191,8 @@ class Row
 
 	/**
 	 * Nextras: Access object properties to get a item value
-     *
-     * @return mixed
+	 *
+	 * @return mixed
 	 */
 	public function getNextrasEntityProperty(\Nextras\Orm\Entity\Entity $item, string $key)
 	{
@@ -183,7 +205,7 @@ class Row
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
 						$value,
-                        str_replace('.', '->', $key)
+						str_replace('.', '->', $key),
 					));
 				}
 
@@ -199,8 +221,8 @@ class Row
 
 	/**
 	 * Doctrine: Access object properties to get a item value
-     *
-     * @param  mixed $item
+	 *
+	 * @param  mixed $item
 	 * @param  mixed $key
 	 * @return mixed
 	 */
@@ -216,7 +238,7 @@ class Row
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
 						$value,
-                        str_replace('.', '->', $key)
+						str_replace('.', '->', $key),
 					));
 				}
 
@@ -232,8 +254,8 @@ class Row
 
 	/**
 	 * Get original item
-     *
-     * @return mixed
+	 *
+	 * @return mixed
 	 */
 	public function getItem()
 	{
@@ -258,8 +280,8 @@ class Row
 
 	/**
 	 * Has particular row a action allowed?
-     *
-     * @param  mixed  $key
+	 *
+	 * @param  mixed  $key
 	 */
 	public function hasAction($key): bool
 	{

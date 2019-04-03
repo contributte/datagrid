@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
@@ -14,7 +16,9 @@ require __DIR__ . '/../Files/TestingDataGridFactory.php';
 final class ColumnStatusTest extends TestCase
 {
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	private $grid;
 
 	public function setUp(): void
@@ -31,17 +35,17 @@ final class ColumnStatusTest extends TestCase
 		$grid->addColumnStatus('status', 'Status')
 			->setCaret(false)
 			->addOption(1, 'Online')
-            ->setIcon('check')
-            ->setClass('btn-success')
-            ->endOption()
+			->setIcon('check')
+			->setClass('btn-success')
+			->endOption()
 			->addOption(2, 'Standby')
-            ->setIcon('user')
-            ->setClass('btn-primary')
-            ->endOption()
+			->setIcon('user')
+			->setClass('btn-primary')
+			->endOption()
 			->addOption(3, 'Offline')
-            ->setIcon('close')
-            ->setClass('btn-danger')
-            ->endOption()
+			->setIcon('close')
+			->setClass('btn-danger')
+			->endOption()
 			->onChange[] = [$this, 'statusChange'];
 
 		$status = $grid->getColumn('status');

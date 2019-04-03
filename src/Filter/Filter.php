@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
@@ -12,36 +14,56 @@ use Ublaboo\DataGrid\DataGrid;
 abstract class Filter
 {
 
-	/** @var mixed */
+	/**
+	 * @var mixed
+	 */
 	protected $value;
 
-	/** @var bool */
+	/**
+	 * @var bool
+	 */
 	protected $valueSet = false;
 
-	/** @var callable|null */
+	/**
+	 * @var callable|null
+	 */
 	protected $conditionCallback;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $key;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $name;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $template;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $type;
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	protected $grid;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $attributes = [
 		'class' => ['form-control', 'input-sm', 'form-control-sm'],
 	];
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	private $placeholder;
 
 	public function __construct(
@@ -49,7 +71,7 @@ abstract class Filter
 		string $key,
 		string $name
 	)
-    {
+	{
 		$this->grid = $grid;
 		$this->key = $key;
 		$this->name = $name;

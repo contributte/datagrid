@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -8,31 +10,49 @@ use UnexpectedValueException;
 class ApiDataSource implements IDataSource
 {
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $data = [];
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $url;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $queryParams;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $sortColumn;
 
-	/** @var string|null */
+	/**
+	 * @var string|null
+	 */
 	protected $orderColumn;
 
-	/** @var int|null */
+	/**
+	 * @var int|null
+	 */
 	protected $limit;
 
-	/** @var int|null */
+	/**
+	 * @var int|null
+	 */
 	protected $offset;
 
-	/** @var int */
+	/**
+	 * @var int
+	 */
 	protected $filterOne = 0;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $filter = [];
 
 	public function __construct(string $url, array $queryParams = [])
@@ -44,8 +64,8 @@ class ApiDataSource implements IDataSource
 
 	/**
 	 * Get data of remote source
-     *
-     * @return mixed
+	 *
+	 * @return mixed
 	 */
 	protected function getResponse(array $params = [])
 	{
@@ -66,9 +86,6 @@ class ApiDataSource implements IDataSource
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getCount(): int
 	{
 		return $this->getResponse(['count' => '']);
@@ -117,7 +134,7 @@ class ApiDataSource implements IDataSource
 			if ($filter->isValueSet() && $filter->getConditionCallback() !== null) {
 				$this->data = (array) call_user_func_array(
 					$filter->getConditionCallback(),
-					[$this->data, $filter->getValue()]
+					[$this->data, $filter->getValue()],
 				);
 			}
 		}
@@ -136,9 +153,6 @@ class ApiDataSource implements IDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->offset = $offset;
@@ -148,9 +162,6 @@ class ApiDataSource implements IDataSource
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function sort(Sorting $sorting): IDataSource
 	{
 		/**

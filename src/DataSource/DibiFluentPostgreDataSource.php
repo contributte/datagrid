@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -7,9 +9,6 @@ use Ublaboo\DataGrid\Filter\FilterText;
 class DibiFluentPostgreDataSource extends DibiFluentDataSource
 {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function applyFilterText(FilterText $filter): void
 	{
 		$condition = $filter->getCondition();

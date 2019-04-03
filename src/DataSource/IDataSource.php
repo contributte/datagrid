@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -20,8 +22,8 @@ interface IDataSource
 
 	/**
 	 * Filter data
-     *
-     * @param array|Filter[] $filters
+	 *
+	 * @param array<Filter> $filters
 	 */
 	public function filter(array $filters): void;
 

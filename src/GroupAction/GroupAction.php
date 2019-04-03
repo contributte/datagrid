@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\GroupAction;
 
@@ -12,16 +14,24 @@ abstract class GroupAction
 
 	use SmartObject;
 
-	/** @var callable[] */
+	/**
+	 * @var array<callable>
+	 */
 	public $onSelect = [];
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $title;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $class = 'form-control input-sm form-control-sm';
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $attributes = [];
 
 	public function __construct(string $title)

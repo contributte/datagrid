@@ -1,14 +1,20 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Utils;
 
 final class Sorting
 {
 
-	/** @var array|string[] */
+	/**
+	 * @var array<string>
+	 */
 	private $sort = [];
 
-	/** @var callable|null */
+	/**
+	 * @var callable|null
+	 */
 	private $sortCallback = null;
 
 	public function __construct(array $sort, ?callable $sortCallback = null)
@@ -19,7 +25,7 @@ final class Sorting
 
 
 	/**
-	 * @return array|string[]
+	 * @return array<string>
 	 */
 	public function getSort(): array
 	{

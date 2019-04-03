@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
@@ -18,12 +20,11 @@ final class ExportLinkTest extends TestCase
 		$grid = $factory->createTestingDataGrid('ExportTesting');
 		$grid->setDataSource([]);
 
-		Assert::exception(function () use ($grid): void {
+		Assert::exception(function() use ($grid): void {
 			$grid->handleExport(1);
 		}, AbortException::class);
 	}
 
 }
 
-$test_case = new ExportLinkTest();
-$test_case->run();
+(new ExportLinkTest)->run();

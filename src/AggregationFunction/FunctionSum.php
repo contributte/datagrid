@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
@@ -12,16 +14,24 @@ use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 class FunctionSum implements IAggregationFunction
 {
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $column;
 
-	/** @var int */
+	/**
+	 * @var int
+	 */
 	protected $result = 0;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $dataType;
 
-	/** @var callable|null */
+	/**
+	 * @var callable|null
+	 */
 	protected $renderer = null;
 
 	public function __construct(string $column, string $dataType = IAggregationFunction::DATA_TYPE_PAGINATED)

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Utils;
 
@@ -12,14 +14,21 @@ use UnexpectedValueException;
 final class ItemDetailForm extends Container
 {
 
-	/** @var callable */
+	/**
+	 * @var callable
+	 */
 	private $callableSetContainer;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	private $httpPost;
 
-	/** @var array|bool[] */
+	/**
+	 * @var array<bool>
+	 */
 	private $containerSetByName = [];
+
 
 	public function __construct(callable $callableSetContainer)
 	{
@@ -27,7 +36,7 @@ final class ItemDetailForm extends Container
 			Presenter::class,
 			function (Presenter $presenter): void {
 				$this->loadHttpData();
-			}
+			},
 		);
 
 		$this->callableSetContainer = $callableSetContainer;
@@ -58,7 +67,7 @@ final class ItemDetailForm extends Container
 
 
 	/**
-	 * {@inheritDoc}
+	 * @param string|int $name
 	 */
 	public function offsetGet($name): IComponent
 	{
@@ -67,7 +76,7 @@ final class ItemDetailForm extends Container
 
 
 	/**
-	 * @param string|int $name
+	 * @param mixed $name
 	 */
 	public function getComponentAndSetContainer($name): IComponent
 	{
@@ -94,7 +103,7 @@ final class ItemDetailForm extends Container
 			throw new UnexpectedValueException();
 		}
 
-		if (!$form->isSubmitted()) {
+		if ($form->isSubmitted() === false) {
 			return;
 		}
 
@@ -104,5 +113,4 @@ final class ItemDetailForm extends Container
 			}
 		}
 	}
-
 }

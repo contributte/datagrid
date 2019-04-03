@@ -34,13 +34,14 @@
 		"tracy/tracy": "^2.6",
 		"mockery/mockery": "~1.2",
 		"phpstan/phpstan": "^0.11",
-		"ninjify/coding-standard": "^0.8",
 		"tharos/leanmapper": "~3.4",
 		"nextras/orm": "~3.1",
 		"doctrine/orm": "~2.6",
 		"nette/database": "~3.0",
-		"dibi/dibi": "^3.0.0 || ^4.0.0"
-
+		"dibi/dibi": "^3.0.0 || ^4.0.0",
+		"phpstan/phpstan-strict-rules": "^0.11",
+		"ninjify/coding-standard": "^0.8",
+		"gamee/php-code-checker-rules": "^1.0"
 	},
 	"extra": {
 		"branch-alias": {
@@ -57,7 +58,7 @@
 			"php vendor/nette/tester/src/tester.php tests/Api/AcceptanceTests -j 1 -C"
 		],
 		"phpstan": "vendor/phpstan/phpstan/bin/phpstan analyse -c phpstan.neon src --level 7",
-		"phpcs": "vendor/bin/phpcs --standard=vendor/ninjify/coding-standard/ruleset.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests",
-		"phpcsfix": "vendor/bin/phpcbf --standard=vendor/ninjify/coding-standard/ruleset.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests"
+		"phpcs": "vendor/bin/phpcs --standard=vendor/ninjify/coding-standard/ruleset-gamee.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests",
+		"phpcsfix": "vendor/bin/phpcbf --standard=vendor/ninjify/coding-standard/ruleset-gamee.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests"
 	}
 }

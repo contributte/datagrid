@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -13,16 +15,24 @@ use Ublaboo\DataGrid\Filter\FilterText;
 abstract class FilterableColumn
 {
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $key;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $name;
 
-	/** @var DataGrid */
+	/**
+	 * @var DataGrid
+	 */
 	protected $grid;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	protected $column;
 
 	public function __construct(
@@ -31,7 +41,7 @@ abstract class FilterableColumn
 		string $column,
 		string $name
 	)
-    {
+	{
 		$this->grid = $grid;
 		$this->key = $key;
 		$this->column = $column;
@@ -48,8 +58,8 @@ abstract class FilterableColumn
 			$columns = [$this->column];
 		} else {
 			$columns = is_string($columns)
-                ? [$columns]
-                : $columns;
+				? [$columns]
+				: $columns;
 		}
 
 		return $this->grid->addFilterText($this->key, $this->name, $columns);
