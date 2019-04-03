@@ -112,7 +112,7 @@ class Action extends Column
 		$link = $this->createLink(
 			$this->grid,
 			$this->href,
-			$this->getItemParams($row, $this->params) + $this->parameters,
+			$this->getItemParams($row, $this->params) + $this->parameters
 		);
 
 		$a = Html::el('a')->href($link);
@@ -272,7 +272,7 @@ class Action extends Column
 			return str_replace(
 				'%s',
 				$row->getValue($this->confirmation->getPlaceholderName()),
-				$question,
+				$question
 			);
 		}
 	}
@@ -305,7 +305,7 @@ class Action extends Column
 	{
 		if (!is_string($property) && !is_callable($property) && $property !== null) {
 			throw new DataGridException(
-				"Action {$name} has to be either string or a callback returning string",
+				sprintf('Action %s has to be either string or a callback returning string', $name)
 			);
 		}
 	}
@@ -357,5 +357,4 @@ class Action extends Column
 
 		return $this;
 	}
-
 }

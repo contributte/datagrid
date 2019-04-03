@@ -93,7 +93,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 			call_user_func(
 				$sorting->getSortCallback(),
 				$this->criteria,
-				$sorting->getSort(),
+				$sorting->getSort()
 			);
 
 			return $this;
@@ -224,5 +224,4 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	{
 		return $this->dataSource->matching($this->criteria);
 	}
-
 }

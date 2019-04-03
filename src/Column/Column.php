@@ -575,7 +575,7 @@ abstract class Column extends FilterableColumn
 			if ($this->getEditableValueCallback() !== null) {
 				$el->data(
 					'datagrid-editable-value',
-					$this->getEditableValueCallback()($row->getItem()),
+					$this->getEditableValueCallback()($row->getItem())
 				);
 			}
 		}
@@ -629,5 +629,4 @@ abstract class Column extends FilterableColumn
 
 		return $this;
 	}
-
 }

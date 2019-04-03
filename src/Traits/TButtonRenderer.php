@@ -32,13 +32,13 @@ trait TButtonRenderer
 
 		$args = $row instanceof Row ? [$row->getItem()] : [];
 
-		if (!$renderer) {
-			throw new DataGridColumnRendererException();
+		if ($renderer === null) {
+			throw new DataGridColumnRendererException;
 		}
 
 		if ($renderer->getConditionCallback() !== null) {
-			if (!call_user_func_array($renderer->getConditionCallback(), $args)) {
-				throw new DataGridColumnRendererException();
+			if (call_user_func_array($renderer->getConditionCallback(), $args) == false) {
+				throw new DataGridColumnRendererException;
 			}
 
 			return call_user_func_array($renderer->getCallback(), $args);
@@ -60,7 +60,7 @@ trait TButtonRenderer
 	{
 		if ($this->hasReplacements()) {
 			throw new DataGridException(
-				'Use either Column::setReplacement() or Column::setRenderer, not both.',
+				'Use either Column::setReplacement() or Column::setRenderer, not both.'
 			);
 		}
 

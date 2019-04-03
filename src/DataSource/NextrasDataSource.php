@@ -96,7 +96,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 			call_user_func(
 				$sorting->getSortCallback(),
 				$this->dataSource,
-				$sorting->getSort(),
+				$sorting->getSort()
 			);
 
 			return $this;
@@ -108,7 +108,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 			foreach ($sort as $column => $order) {
 				$this->dataSource = $this->dataSource->orderBy(
 					$this->prepareColumn((string) $column),
-					$order,
+					$order
 				);
 			}
 		} else {
@@ -117,8 +117,8 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 					sprintf(
 						'Expeting %s, got %s',
 						DbalCollection::class,
-						get_class($this->dataSource),
-					),
+						get_class($this->dataSource)
+					)
 				);
 			}
 
@@ -129,7 +129,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 			if (ArraysHelper::testEmpty($order)) {
 				$this->dataSource = $this->dataSource->orderBy(
-					$this->prepareColumn($this->primaryKey),
+					$this->prepareColumn($this->primaryKey)
 				);
 			}
 		}
@@ -156,19 +156,25 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	{
 		$conditions = $filter->getCondition();
 
-		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to = $conditions[$filter->getColumn()]['to'];
+		$valueFrom = $conditions[$filter->getColumn()]['from'];
+		$valueTo = $conditions[$filter->getColumn()]['to'];
 
 		$dataCondition = [];
 
-		if ($value_from) {
-			$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
-			$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $date_from->setTime(0, 0, 0);
+		if ($valueFrom) {
+			$dateFrom = DateTimeHelper::tryConvertToDateTime(
+				$valueFrom,
+				[$filter->getPhpFormat()]
+			);
+			$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $dateFrom->setTime(0, 0, 0);
 		}
 
-		if ($value_to) {
-			$date_to = DateTimeHelper::tryConvertToDateTime($value_to, [$filter->getPhpFormat()]);
-			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $date_to->setTime(23, 59, 59);
+		if ($valueTo) {
+			$dateTo = DateTimeHelper::tryConvertToDateTime(
+				$valueTo,
+				[$filter->getPhpFormat()]
+			);
+			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $dateTo->setTime(23, 59, 59);
 		}
 
 		if (!empty($dataCondition)) {
@@ -181,17 +187,17 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	{
 		$conditions = $filter->getCondition();
 
-		$value_from = $conditions[$filter->getColumn()]['from'];
-		$value_to = $conditions[$filter->getColumn()]['to'];
+		$valueFrom = $conditions[$filter->getColumn()]['from'];
+		$valueTo = $conditions[$filter->getColumn()]['to'];
 
 		$dataCondition = [];
 
-		if ($value_from) {
-			$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $value_from;
+		if ($valueFrom) {
+			$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $valueFrom;
 		}
 
-		if ($value_to) {
-			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $value_to;
+		if ($valueTo) {
+			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $valueTo;
 		}
 
 		if (!empty($dataCondition)) {
@@ -233,8 +239,8 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 				sprintf(
 					'Expeting %s, got %s',
 					DbalCollection::class,
-					get_class($this->dataSource),
-				),
+					get_class($this->dataSource)
+				)
 			);
 		}
 
@@ -251,7 +257,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	protected function applyFilterSelect(FilterSelect $filter): void
 	{
 		$this->dataSource = $this->dataSource->findBy(
-			[$this->prepareColumn($filter->getColumn()) => $filter->getValue()],
+			[$this->prepareColumn($filter->getColumn()) => $filter->getValue()]
 		);
 	}
 
@@ -276,5 +282,4 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 		return $column;
 	}
-
 }

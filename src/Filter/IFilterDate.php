@@ -23,5 +23,4 @@ interface IFilterDate
 	 * Get js format for datepicker
 	 */
 	public function getJsFormat(): string;
-
 }

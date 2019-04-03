@@ -8,9 +8,10 @@ trait TButtonTitle
 {
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
-	protected $title = '';
+	protected $title;
+
 
 	public function setTitle(string $title): self
 	{
@@ -20,9 +21,8 @@ trait TButtonTitle
 	}
 
 
-	public function getTitle(): string
+	public function getTitle(): ?string
 	{
 		return $this->title;
 	}
-
 }

@@ -6,6 +6,7 @@ namespace Ublaboo\DataGrid;
 
 use LeanMapper\Entity;
 use Nette\Database\Table\ActiveRow;
+use Nette\MemberAccessException;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\Exception\DataGridException;
@@ -84,7 +85,7 @@ class Row
 		}
 
 		if ($this->item instanceof \Dibi\Row) {
-			return $this->item->{$this->formatDibiRowKey($key)};
+			return $this->item[$this->formatDibiRowKey($key)];
 		}
 
 		if ($this->item instanceof ActiveRow) {
@@ -117,7 +118,9 @@ class Row
 
 	public function getControlClass(): string
 	{
-		if (!$class = $this->control->getAttribute('class')) {
+		$class = $this->control->getAttribute('class');
+
+		if ($class === null) {
 			return '';
 		}
 
@@ -130,41 +133,44 @@ class Row
 	 */
 	public function getActiveRowProperty(ActiveRow $item, string $key)
 	{
-		if (preg_match('/^:([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/', $key, $matches)) {
+		if (preg_match('/^:([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/', $key, $matches) === 1) {
 			$relatedTable = $matches[1];
 			$relatedColumn = $matches[2];
 			$throughColumn = $matches[4] ?? null;
 
-			$relatedRow = $item->related($relatedTable, $throughColumn)->fetch();
+			try {
+				$relatedRow = $item->related($relatedTable, $throughColumn)->fetch();
+			} catch (MemberAccessException $e) {
+				return null;
+			}
 
-			return $relatedRow
-				? $relatedRow->{$relatedColumn}
-				: null;
+			return $relatedRow[$relatedColumn];
 		}
 
-		if (preg_match('/^([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/', $key, $matches)) {
+		if (preg_match('/^([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/', $key, $matches) === 1) {
 			$referencedTable = $matches[1];
 			$referencedColumn = $matches[2];
 			$throughColumn = $matches[4] ?? null;
 
-			$referencedRow = $item->ref($referencedTable, $throughColumn);
+			try {
+				$referencedRow = $item->ref($referencedTable, $throughColumn);
+			} catch (MemberAccessException $e) {
+				return null;
+			}
 
-			return $referencedRow
-				? $referencedRow->{$referencedColumn}
-				: null;
+			return $referencedRow === null ? null : $referencedRow[$referencedColumn];
 		}
 
-		return $item->{$key};
+		return $item[$key];
 	}
 
 
 	/**
 	 * LeanMapper: Access object properties to get a item value
 	 *
-	 * @param  mixed $key
 	 * @return mixed
 	 */
-	public function getLeanMapperEntityProperty(Entity $item, $key)
+	public function getLeanMapperEntityProperty(Entity $item, string $key)
 	{
 		$properties = explode('.', $key);
 		$value = $item;
@@ -175,7 +181,7 @@ class Row
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
 						$value,
-						str_replace('.', '->', $key),
+						str_replace('.', '->', $key)
 					));
 				}
 
@@ -205,7 +211,7 @@ class Row
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
 						$value,
-						str_replace('.', '->', $key),
+						str_replace('.', '->', $key)
 					));
 				}
 
@@ -238,7 +244,7 @@ class Row
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
 						$value,
-						str_replace('.', '->', $key),
+						str_replace('.', '->', $key)
 					));
 				}
 
@@ -333,5 +339,4 @@ class Row
 
 		return $key;
 	}
-
 }

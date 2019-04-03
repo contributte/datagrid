@@ -27,6 +27,7 @@ class SubmitButton extends Button
 	 */
 	protected $grid;
 
+
 	public function __construct(DataGrid $grid)
 	{
 		parent::__construct($this->text);
@@ -55,8 +56,8 @@ class SubmitButton extends Button
 			$el->addHtml(
 				Html::el('span')->appendAttribute(
 					'class',
-					DataGrid::$iconPrefix . $this->getIcon(),
-				),
+					DataGrid::$iconPrefix . $this->getIcon()
+				)
 			);
 
 			if (strlen($this->getText())) {
@@ -68,5 +69,4 @@ class SubmitButton extends Button
 
 		return $el;
 	}
-
 }

@@ -82,7 +82,7 @@ class Export
 		$this->tryAddIcon(
 			$a,
 			$this->getIcon(),
-			$this->grid->getTranslator()->translate($this->getTitle()),
+			$this->grid->getTranslator()->translate($this->getTitle())
 		);
 
 		$a->addText($this->grid->getTranslator()->translate($this->text));
@@ -171,5 +171,4 @@ class Export
 	{
 		($this->callback)($data, $this->grid);
 	}
-
 }

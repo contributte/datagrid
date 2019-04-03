@@ -40,5 +40,4 @@ abstract class OneColumnFilter extends Filter
 	{
 		return [$this->column => $this->getValue()];
 	}
-
 }

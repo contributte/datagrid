@@ -43,5 +43,4 @@ class Renderer
 	{
 		return $this->conditionCallback;
 	}
-
 }

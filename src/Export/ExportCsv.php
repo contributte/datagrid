@@ -30,7 +30,7 @@ class ExportCsv extends Export
 			$grid,
 			$text,
 			$this->getExportCallback($name, $outputEncoding, $delimiter, $includeBom),
-			$filtered,
+			$filtered
 		);
 	}
 
@@ -45,12 +45,7 @@ class ExportCsv extends Export
 		return function (
 			array $data,
 			DataGrid $grid
-		) use (
-			$name,
-			$outputEncoding,
-			$delimiter,
-			$includeBom
-): void {
+		) use ($name, $outputEncoding, $delimiter, $includeBom): void {
 			$columns = $this->getColumns() ?: $this->grid->getColumns();
 
 			$csvDataModel = new CsvDataModel($data, $columns, $this->grid->getTranslator());
@@ -61,12 +56,11 @@ class ExportCsv extends Export
 					$name,
 					$outputEncoding,
 					$delimiter,
-					$includeBom,
+					$includeBom
 				));
 
 				exit(0);
 			}
 		};
 	}
-
 }

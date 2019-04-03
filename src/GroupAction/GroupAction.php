@@ -72,5 +72,4 @@ abstract class GroupAction
 	{
 		return $this->attributes;
 	}
-
 }

@@ -58,5 +58,4 @@ class SimpleTranslator implements ITranslator
 	{
 		$this->dictionary = $dictionary;
 	}
-
 }

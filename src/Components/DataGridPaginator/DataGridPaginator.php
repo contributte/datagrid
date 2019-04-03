@@ -143,5 +143,4 @@ class DataGridPaginator extends Control
 			$this->getPaginator()->page = $this->getParent()->page;
 		}
 	}
-
 }

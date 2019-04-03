@@ -21,5 +21,4 @@ trait TButtonTryAddIcon
 			}
 		}
 	}
-
 }

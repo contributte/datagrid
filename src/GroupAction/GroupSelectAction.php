@@ -33,5 +33,4 @@ class GroupSelectAction extends GroupAction
 	{
 		return $this->options !== [];
 	}
-
 }

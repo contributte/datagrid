@@ -134,7 +134,7 @@ class ApiDataSource implements IDataSource
 			if ($filter->isValueSet() && $filter->getConditionCallback() !== null) {
 				$this->data = (array) call_user_func_array(
 					$filter->getConditionCallback(),
-					[$this->data, $filter->getValue()],
+					[$this->data, $filter->getValue()]
 				);
 			}
 		}
@@ -174,5 +174,4 @@ class ApiDataSource implements IDataSource
 
 		return $this;
 	}
-
 }

@@ -94,7 +94,7 @@ class ColumnLink extends Column
 			->href($this->createLink(
 				$this->grid,
 				$this->href,
-				$this->getItemParams($row, $this->params) + $this->parameters,
+				$this->getItemParams($row, $this->params) + $this->parameters
 			));
 
 		if ($this->dataAttributes !== []) {
@@ -119,7 +119,7 @@ class ColumnLink extends Column
 
 		if ($this->icon !== null) {
 			$a->addHtml(
-				Html::el('span')->setAttribute('class', DataGrid::$iconPrefix . $this->icon),
+				Html::el('span')->setAttribute('class', DataGrid::$iconPrefix . $this->icon)
 			);
 
 			if (strlen($value)) {
@@ -204,5 +204,4 @@ class ColumnLink extends Column
 
 		return $this;
 	}
-
 }

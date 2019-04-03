@@ -11,5 +11,4 @@ class GroupTextAction extends GroupAction
 	{
 		parent::__construct($title);
 	}
-
 }

@@ -109,7 +109,7 @@ class ColumnsSummary
 			$this->summary[$key],
 			$this->format[$key][0],
 			$this->format[$key][1],
-			$this->format[$key][2],
+			$this->format[$key][2]
 		);
 	}
 
@@ -184,5 +184,4 @@ class ColumnsSummary
 	{
 		return $this->positionTop;
 	}
-
 }

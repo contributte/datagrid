@@ -79,11 +79,11 @@ class FilterMultiSelect extends FilterSelect
 
 		$this->addAttribute(
 			'title',
-			$translator->translate('ublaboo_datagrid.multiselect_choose'),
+			$translator->translate('ublaboo_datagrid.multiselect_choose')
 		);
 		$this->addAttribute(
 			'data-i18n-selected',
-			$translator->translate('ublaboo_datagrid.multiselect_selected'),
+			$translator->translate('ublaboo_datagrid.multiselect_selected')
 		);
 
 		/**
@@ -95,5 +95,4 @@ class FilterMultiSelect extends FilterSelect
 
 		return $input;
 	}
-
 }

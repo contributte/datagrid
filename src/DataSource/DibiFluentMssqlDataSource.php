@@ -74,13 +74,13 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 		$date = DateTimeHelper::tryConvertToDateTime(
 			$conditions[$filter->getColumn()],
-			[$filter->getPhpFormat()],
+			[$filter->getPhpFormat()]
 		);
 
 		$this->dataSource->where(
 			'CONVERT(varchar(10), %n, 112) = ?',
 			$filter->getColumn(),
-			$date->format('Ymd'),
+			$date->format('Ymd')
 		);
 	}
 
@@ -96,7 +96,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 			$this->dataSource->where(
 				'CONVERT(varchar(10), %n, 112) >= ?',
 				$filter->getColumn(),
-				$valueFrom,
+				$valueFrom
 			);
 		}
 
@@ -104,7 +104,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 			$this->dataSource->where(
 				'CONVERT(varchar(10), %n, 112) <= ?',
 				$filter->getColumn(),
-				$valueTo,
+				$valueTo
 			);
 		}
 	}
@@ -134,5 +134,4 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 			$this->dataSource->where($or);
 		}
 	}
-
 }

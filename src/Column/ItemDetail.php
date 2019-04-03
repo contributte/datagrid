@@ -92,7 +92,7 @@ class ItemDetail
 		if ($this->title) {
 			$a->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->title),
+				$this->grid->getTranslator()->translate($this->title)
 			);
 		}
 
@@ -112,7 +112,7 @@ class ItemDetail
 	{
 		if ($this->getType() === 'block') {
 			throw new DataGridItemDetailException(
-				'ItemDetail is set to render as block, but block #detail is not defined',
+				'ItemDetail is set to render as block, but block #detail is not defined'
 			);
 		}
 

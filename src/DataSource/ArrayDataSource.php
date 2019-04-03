@@ -70,7 +70,7 @@ class ArrayDataSource implements IDataSource
 				if ($filter->getConditionCallback() !== null) {
 					$data = (array) call_user_func_array(
 						$filter->getConditionCallback(),
-						[$this->data, $filter->getValue()],
+						[$this->data, $filter->getValue()]
 					);
 					$this->setData($data);
 				} else {
@@ -296,7 +296,7 @@ class ArrayDataSource implements IDataSource
 			$data = call_user_func(
 				$sorting->getSortCallback(),
 				$this->data,
-				$sorting->getSort(),
+				$sorting->getSort()
 			);
 
 			if (!is_array($data)) {
@@ -351,5 +351,4 @@ class ArrayDataSource implements IDataSource
 
 		return $this;
 	}
-
 }

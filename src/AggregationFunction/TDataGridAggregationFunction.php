@@ -27,7 +27,9 @@ trait TDataGridAggregationFunction
 	public function addAggregationFunction(string $key, IAggregationFunction $aggregationFunction): self
 	{
 		if ($this->hasColumnsSummary()) {
-			throw new DataGridException('You can use either ColumnsSummary or AggregationFunctions');
+			throw new DataGridException(
+				'You can use either ColumnsSummary or AggregationFunctions'
+			);
 		}
 
 		if (!$this->dataModel instanceof DataModel) {
@@ -35,12 +37,14 @@ trait TDataGridAggregationFunction
 		}
 
 		if (isset($this->aggregationFunctions[$key])) {
-			throw new DataGridException('There is already a AggregationFunction defined on column ' . $key);
+			throw new DataGridException(
+				'There is already a AggregationFunction defined on column ' . $key
+			);
 		}
 
 		if ($this->multipleAggregationFunction instanceof IMultipleAggregationFunction) {
 			throw new DataGridException(
-				'You can not use both AggregationFunctions and MultipleAggregationFunction',
+				'You can not use both AggregationFunctions and MultipleAggregationFunction'
 			);
 		}
 
@@ -56,11 +60,15 @@ trait TDataGridAggregationFunction
 	public function setMultipleAggregationFunction(IMultipleAggregationFunction $multipleAggregationFunction): self
 	{
 		if ($this->hasColumnsSummary()) {
-			throw new DataGridException('You can use either ColumnsSummary or AggregationFunctions');
+			throw new DataGridException(
+				'You can use either ColumnsSummary or AggregationFunctions'
+			);
 		}
 
 		if (!empty($this->aggregationFunctions)) {
-			throw new DataGridException('You can not use both AggregationFunctions and MultipleAggregationFunction');
+			throw new DataGridException(
+				'You can not use both AggregationFunctions and MultipleAggregationFunction'
+			);
 		}
 
 		$this->multipleAggregationFunction = $multipleAggregationFunction;
@@ -79,7 +87,9 @@ trait TDataGridAggregationFunction
 		}
 
 		if (!$dataSource instanceof IAggregatable) {
-			throw new DataGridException('Used DataSource has to implement IAggregatable for aggegations to work');
+			throw new DataGridException(
+				'Used DataSource has to implement IAggregatable for aggegations to work'
+			);
 		}
 
 		if ($this->multipleAggregationFunction !== null) {
@@ -110,7 +120,9 @@ trait TDataGridAggregationFunction
 		}
 
 		if (!$dataSource instanceof IAggregatable) {
-			throw new DataGridException('Used DataSource has to implement IAggregatable for aggegations to work');
+			throw new DataGridException(
+				'Used DataSource has to implement IAggregatable for aggegations to work'
+			);
 		}
 
 		if ($this->multipleAggregationFunction !== null) {
@@ -139,7 +151,9 @@ trait TDataGridAggregationFunction
 		}
 
 		if (!$dataSource instanceof IAggregatable) {
-			throw new DataGridException('Used DataSource has to implement IAggregatable for aggegations to work');
+			throw new DataGridException(
+				'Used DataSource has to implement IAggregatable for aggegations to work'
+			);
 		}
 
 		if ($this->multipleAggregationFunction !== null) {
@@ -177,5 +191,4 @@ trait TDataGridAggregationFunction
 	{
 		return $this->multipleAggregationFunction;
 	}
-
 }

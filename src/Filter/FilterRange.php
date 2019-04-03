@@ -106,5 +106,4 @@ class FilterRange extends OneColumnFilter
 			],
 		];
 	}
-
 }

@@ -52,5 +52,4 @@ class ColumnDateTime extends Column
 
 		return $this;
 	}
-
 }

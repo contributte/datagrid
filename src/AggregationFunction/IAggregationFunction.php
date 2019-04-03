@@ -29,5 +29,4 @@ interface IAggregationFunction
 	 * @return mixed
 	 */
 	public function renderResult();
-
 }

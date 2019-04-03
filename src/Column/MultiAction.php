@@ -74,10 +74,10 @@ class MultiAction extends Column
 			$button->addHtml('<i class="caret"></i>');
 		}
 
-		if ($this->getTitle()) {
+		if ($this->getTitle() !== null) {
 			$button->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->getTitle()),
+				$this->grid->getTranslator()->translate($this->getTitle())
 			);
 		}
 
@@ -98,7 +98,7 @@ class MultiAction extends Column
 	{
 		if (isset($this->actions[$key])) {
 			throw new DataGridException(
-				"There is already action at key [$key] defined for MultiAction.",
+				sprintf('There is already action at key [%s] defined for MultiAction.', $key)
 			);
 		}
 
@@ -131,7 +131,7 @@ class MultiAction extends Column
 	{
 		if (!isset($this->actions[$key])) {
 			throw new DataGridException(
-				"There is no action at key [$key] defined for MultiAction.",
+				sprintf('There is no action at key [%s] defined for MultiAction.', $key)
 			);
 		}
 
@@ -167,5 +167,4 @@ class MultiAction extends Column
 
 		return (bool) call_user_func($this->rowConditions[$actionKey], $row->getItem());
 	}
-
 }

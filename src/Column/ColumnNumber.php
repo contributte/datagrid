@@ -38,7 +38,7 @@ class ColumnNumber extends Column
 			(float) $value,
 			(int) $this->numberFormat[0],
 			(string) $this->numberFormat[1],
-			(string) $this->numberFormat[2],
+			(string) $this->numberFormat[2]
 		);
 	}
 
@@ -63,5 +63,4 @@ class ColumnNumber extends Column
 			$this->numberFormat[2],
 		];
 	}
-
 }

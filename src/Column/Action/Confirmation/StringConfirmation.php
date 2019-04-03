@@ -34,5 +34,4 @@ final class StringConfirmation implements IConfirmation
 	{
 		return $this->placeholderName;
 	}
-
 }

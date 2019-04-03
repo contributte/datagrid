@@ -10,6 +10,7 @@ use Nette;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\UI\Component;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Link;
 use Nette\Application\UI\Presenter;
@@ -67,7 +68,7 @@ use UnexpectedValueException;
  * @method onExport(DataGrid $dataGrid)
  * @method onFiltersAssembled(array<Filter> $filters)
  */
-class DataGrid extends Nette\Application\UI\Control
+class DataGrid extends Control
 {
 
 	use TDataGridAggregationFunction;
@@ -468,7 +469,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 					$this->gridSession = $sessionSection;
 				}
-			},
+			}
 		);
 	}
 
@@ -510,7 +511,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$items = $this->redrawItem !== [] ? $this->dataModel->filterRow($this->redrawItem) : $this->dataModel->filterData(
 			$this->getPaginator(),
 			$this->createSorting($this->sort, $this->sortCallback),
-			$this->assembleFilters(),
+			$this->assembleFilters()
 		);
 
 		$hasGroupActionOnRows = false;
@@ -602,7 +603,7 @@ s	 */
 	{
 		if ($this->dataModel instanceof DataModel) {
 			throw new DataGridException(
-				'Please set datagrid primary key before setting datasource.',
+				'Please set datagrid primary key before setting datasource.'
 			);
 		}
 
@@ -620,7 +621,7 @@ s	 */
 	{
 		if (!is_array($source) && !$source instanceof IDataSource) {
 			throw new InvalidArgumentException(
-				sprintf('Please provide an instance of %s or an array', IDataSource::class),
+				sprintf('Please provide an instance of %s or an array', IDataSource::class)
 			);
 		}
 
@@ -972,7 +973,7 @@ s	 */
 	{
 		if (isset($this->columns[$key])) {
 			throw new DataGridException(
-				sprintf('There is already column at key [%s] defined.', $key),
+				sprintf('There is already column at key [%s] defined.', $key)
 			);
 		}
 
@@ -991,7 +992,7 @@ s	 */
 	{
 		if (!isset($this->columns[$key])) {
 			throw new DataGridColumnNotFoundException(
-				sprintf('There is no column at key [%s] defined.', $key),
+				sprintf('There is no column at key [%s] defined.', $key)
 			);
 		}
 
@@ -1090,7 +1091,7 @@ s	 */
 	{
 		if (isset($this->actions[$key])) {
 			throw new DataGridException(
-				sprintf('There is already action at key [%s] defined.', $key),
+				sprintf('There is already action at key [%s] defined.', $key)
 			);
 		}
 	}
@@ -1177,7 +1178,7 @@ s	 */
 			$key,
 			$name,
 			$column,
-			$nameSecond,
+			$nameSecond
 		);
 	}
 
@@ -1201,7 +1202,7 @@ s	 */
 			$key,
 			$name,
 			$column,
-			$nameSecond,
+			$nameSecond
 		);
 	}
 
@@ -1215,7 +1216,7 @@ s	 */
 	{
 		if (isset($this->filters[$key])) {
 			throw new DataGridException(
-				sprintf('There is already action at key [%s] defined.', $key),
+				sprintf('There is already action at key [%s] defined.', $key)
 			);
 		}
 	}
@@ -1332,7 +1333,7 @@ s	 */
 
 			if ($filter instanceof FilterMultiSelect && !is_array($value)) {
 				throw new DataGridException(
-					sprintf('Default value of filter [%s] - MultiSelect has to be an array', $key),
+					sprintf('Default value of filter [%s] - MultiSelect has to be an array', $key)
 				);
 			}
 
@@ -1342,8 +1343,8 @@ s	 */
 						sprintf(
 							'Default value of filter [%s] - %s has to be an array [from/to => ...]',
 							FilterDateRange::class,
-							$key,
-						),
+							$key
+						)
 					);
 				}
 			}
@@ -1544,7 +1545,7 @@ s	 */
 				$id = $form->getHttpData(Form::DATA_LINE, 'inline_edit[_id]');
 				$primaryWhereColumn = $form->getHttpData(
 					Form::DATA_LINE,
-					'inline_edit[_primary_where_column]',
+					'inline_edit[_primary_where_column]'
 				);
 
 				if ($edit['submit']->isSubmittedBy() && !$edit->getErrors()) {
@@ -1673,7 +1674,7 @@ s	 */
 			throw new InvalidArgumentException(sprintf(
 				'Columns count must be one of following values: %s. Value %s given.',
 				implode(', ', $columnsCounts),
-				$count,
+				$count
 			));
 		}
 
@@ -1750,7 +1751,7 @@ s	 */
 				} catch (DataGridException $e) {
 					if ($this->strictSessionFilterValues) {
 						throw new DataGridFilterNotFoundException(
-							sprintf('Session filter: Filter [%s] not found', $key),
+							sprintf('Session filter: Filter [%s] not found', $key)
 						);
 					}
 				}
@@ -1810,7 +1811,7 @@ s	 */
 			$csvFileName,
 			$outputEncoding,
 			$delimiter,
-			true,
+			true
 		);
 	}
 
@@ -1831,7 +1832,7 @@ s	 */
 			$filtered,
 			$outputEncoding,
 			$delimiter,
-			$includeBom,
+			$includeBom
 		);
 
 		$this->addToExports($exportCsv);
@@ -1879,7 +1880,7 @@ s	 */
 	{
 		if (isset($this->toolbarButtons[$href])) {
 			throw new DataGridException(
-				sprintf('There is already toolbar button at key [%s] defined.', $href),
+				sprintf('There is already toolbar button at key [%s] defined.', $href)
 			);
 		}
 
@@ -1894,7 +1895,7 @@ s	 */
 	{
 		if (!isset($this->toolbarButtons[$key])) {
 			throw new DataGridException(
-				sprintf('There is no toolbar button at key [%s] defined.', $key),
+				sprintf('There is no toolbar button at key [%s] defined.', $key)
 			);
 		}
 
@@ -2136,7 +2137,7 @@ s	 */
 		$items = $this->dataModel->filterData(
 			null,
 			$this->createSorting($this->sort, $this->sortCallback),
-			$filter,
+			$filter
 		);
 
 		foreach ($items as $item) {
@@ -2392,7 +2393,7 @@ s	 */
 
 		if (!($action instanceof ActionCallback)) {
 			throw new DataGridException(
-				sprintf('Action [%s] does not exist or is not an callback aciton.', $__key),
+				sprintf('Action [%s] does not exist or is not an callback aciton.', $__key)
 			);
 		}
 
@@ -2448,7 +2449,7 @@ s	 */
 	{
 		$component = new Components\DataGridPaginator\DataGridPaginator(
 			$this->getTranslator(),
-			static::$iconPrefix,
+			static::$iconPrefix
 		);
 		$paginator = $component->getPaginator();
 
@@ -2675,7 +2676,7 @@ s	 */
 
 		$this->itemsDetail = new ItemDetail(
 			$this,
-			$primaryWhereColumn ?: $this->primaryKey,
+			$primaryWhereColumn ?: $this->primaryKey
 		);
 
 		if (is_string($detail)) {
@@ -2700,7 +2701,7 @@ s	 */
 
 		} else {
 			throw new DataGridException(
-				'::setItemsDetail() can be called either with no parameters or with parameter = template path or callable renderer.',
+				'::setItemsDetail() can be called either with no parameters or with parameter = template path or callable renderer.'
 			);
 		}
 
@@ -2712,7 +2713,7 @@ s	 */
 	{
 		if ($this->itemsDetail instanceof ItemDetail) {
 			$this->itemsDetail->setForm(
-				new ItemDetailForm($callableSetContainer),
+				new ItemDetailForm($callableSetContainer)
 			);
 
 			return $this;
@@ -2764,13 +2765,13 @@ s	 */
 	{
 		if (!isset($this->actions[$multiActionKey])) {
 			throw new DataGridException(
-				sprintf('There is no action at key [%s] defined.', $multiActionKey),
+				sprintf('There is no action at key [%s] defined.', $multiActionKey)
 			);
 		}
 
 		if (!$this->actions[$multiActionKey] instanceof MultiAction) {
 			throw new DataGridException(
-				sprintf('Action at key [%s] is not a MultiAction.', $multiActionKey),
+				sprintf('Action at key [%s] is not a MultiAction.', $multiActionKey)
 			);
 		}
 
@@ -2858,7 +2859,7 @@ s	 */
 
 			if (!$presenter instanceof Presenter) {
 				throw new UnexpectedValueException(
-					sprintf('%s needs %s', self::class, Presenter::class),
+					sprintf('%s needs %s', self::class, Presenter::class)
 				);
 			}
 
@@ -2934,7 +2935,7 @@ s	 */
 	{
 		if ($this->hasSomeAggregationFunction()) {
 			throw new DataGridException(
-				'You can use either ColumnsSummary or AggregationFunctions',
+				'You can use either ColumnsSummary or AggregationFunctions'
 			);
 		}
 
@@ -2981,7 +2982,7 @@ s	 */
 	{
 		if ($this->hasAutoSubmit()) {
 			throw new DataGridException(
-				'DataGrid has auto-submit. Turn it off before setting filter submit button.',
+				'DataGrid has auto-submit. Turn it off before setting filter submit button.'
 			);
 		}
 
@@ -3100,8 +3101,8 @@ s	 */
 				sprintf(
 					'DataGrid is attached to: "%s", but instance of %s is needed.',
 					($parent ? get_class($parent) : 'null'),
-					Component::class,
-				),
+					Component::class
+				)
 			);
 		}
 
@@ -3119,7 +3120,7 @@ s	 */
 
 		if ($presenter === null) {
 			throw new UnexpectedValueException(
-				sprintf('%s needs %s', self::class, IPresenter::class),
+				sprintf('%s needs %s', self::class, IPresenter::class)
 			);
 		}
 

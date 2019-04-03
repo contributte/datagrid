@@ -9,6 +9,7 @@ use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Status\Option;
 use Ublaboo\DataGrid\Traits;
+use Ublaboo\DataGrid\Traits\TButtonCaret;
 
 /**
  * @method onChange(string $id, string $value)
@@ -16,7 +17,7 @@ use Ublaboo\DataGrid\Traits;
 class ColumnStatus extends Column
 {
 
-	use Traits\TButtonCaret;
+	use TButtonCaret;
 
 	/**
 	 * @var array<callable>
@@ -158,8 +159,7 @@ class ColumnStatus extends Column
 	public function setReplacement(array $replacements): Column
 	{
 		throw new DataGridColumnStatusException(
-			'Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)',
+			'Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)'
 		);
 	}
-
 }

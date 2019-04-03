@@ -135,7 +135,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 			call_user_func(
 				$sorting->getSortCallback(),
 				$this->dataSource,
-				$sorting->getSort(),
+				$sorting->getSort()
 			);
 
 			return $this;
@@ -207,7 +207,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 			$this->dataSource->andWhere("$c >= :$p")->setParameter(
 				$p,
-				$dateFrom->format('Y-m-d H:i:s'),
+				$dateFrom->format('Y-m-d H:i:s')
 			);
 		}
 
@@ -219,7 +219,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 			$this->dataSource->andWhere("$c <= :$p")->setParameter(
 				$p,
-				$dateTo->format('Y-m-d H:i:s'),
+				$dateTo->format('Y-m-d H:i:s')
 			);
 		}
 	}
@@ -256,7 +256,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 			if ($filter->isExactSearch()) {
 				$exprs[] = $this->dataSource->expr()->eq(
 					$c,
-					$this->dataSource->expr()->literal($value),
+					$this->dataSource->expr()->literal($value)
 				);
 
 				continue;
@@ -267,7 +267,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 			foreach ($words as $word) {
 				$exprs[] = $this->dataSource->expr()->like(
 					$c,
-					$this->dataSource->expr()->literal("%$word%"),
+					$this->dataSource->expr()->literal("%$word%")
 				);
 			}
 		}
@@ -331,5 +331,4 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	{
 		return $this->dataSource->getDQLPart('join') || $this->dataSource->getDQLPart('groupBy');
 	}
-
 }

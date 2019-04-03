@@ -56,7 +56,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		} catch (LogicException $e) {
 			if ($dataSourceSqlBuilder->getGroup() !== '') {
 				return $this->dataSource->count(
-					'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~'),
+					'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
 				);
 			}
 
@@ -65,12 +65,12 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 		if ($dataSourceSqlBuilder->getGroup() !== '') {
 			return $this->dataSource->count(
-				'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~'),
+				'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
 			);
 		}
 
 		return $this->dataSource->count(
-			$this->dataSource->getName() . '.' . (is_array($primary) ? reset($primary) : $primary),
+			$this->dataSource->getName() . '.' . (is_array($primary) ? reset($primary) : $primary)
 		);
 	}
 
@@ -109,7 +109,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			call_user_func(
 				$sorting->getSortCallback(),
 				$this->dataSource,
-				$sorting->getSort(),
+				$sorting->getSort()
 			);
 
 			return $this;
@@ -165,7 +165,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 			$this->dataSource->where(
 				"DATE({$filter->getColumn()}) >= ?",
-				$dateFrom->format('Y-m-d'),
+				$dateFrom->format('Y-m-d')
 			);
 		}
 
@@ -282,5 +282,4 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	{
 		return $this->dataSource;
 	}
-
 }

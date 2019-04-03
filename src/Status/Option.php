@@ -65,6 +65,9 @@ class Option
 	}
 
 
+	/**
+	 * @return mixed
+	 */
 	public function getValue()
 	{
 		return $this->value;
@@ -151,7 +154,7 @@ class Option
 	}
 
 
-	public function setIconSecondary(string $iconSecondary)
+	public function setIconSecondary(string $iconSecondary): self
 	{
 		$this->iconSecondary = $iconSecondary;
 
@@ -169,5 +172,4 @@ class Option
 	{
 		return $this->text;
 	}
-
 }

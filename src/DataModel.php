@@ -104,7 +104,7 @@ final class DataModel
 		} else {
 			throw new DataGridWrongDataSourceException(sprintf(
 				'DataGrid can not take [%s] as data source.',
-				is_object($source) ? get_class($source) : 'NULL',
+				is_object($source) ? get_class($source) : 'null'
 			));
 		}
 
@@ -139,7 +139,7 @@ final class DataModel
 
 			$this->dataSource->sort($sorting)->limit(
 				$paginator->getOffset(),
-				$paginator->getItemsPerPage(),
+				$paginator->getItemsPerPage()
 			);
 
 			$this->onAfterPaginated($this->dataSource);
@@ -161,5 +161,4 @@ final class DataModel
 
 		return $this->dataSource->filterOne($condition)->getData();
 	}
-
 }

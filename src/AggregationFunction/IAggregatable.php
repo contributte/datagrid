@@ -8,5 +8,4 @@ interface IAggregatable
 {
 
 	public function processAggregation(IAggregationFunction $function): void;
-
 }

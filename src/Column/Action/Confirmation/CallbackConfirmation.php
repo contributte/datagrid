@@ -22,5 +22,4 @@ final class CallbackConfirmation implements IConfirmation
 	{
 		return $this->callback;
 	}
-
 }

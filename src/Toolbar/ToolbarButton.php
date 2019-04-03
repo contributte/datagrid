@@ -8,17 +8,24 @@ use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Traits;
+use Ublaboo\DataGrid\Traits\TButtonClass;
+use Ublaboo\DataGrid\Traits\TButtonIcon;
+use Ublaboo\DataGrid\Traits\TButtonRenderer;
+use Ublaboo\DataGrid\Traits\TButtonText;
+use Ublaboo\DataGrid\Traits\TButtonTitle;
+use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
+use Ublaboo\DataGrid\Traits\TLink;
 
 class ToolbarButton
 {
 
-	use Traits\TButtonTryAddIcon;
-	use Traits\TButtonClass;
-	use Traits\TButtonIcon;
-	use Traits\TButtonRenderer;
-	use Traits\TButtonText;
-	use Traits\TButtonTitle;
-	use Traits\TLink;
+	use TButtonTryAddIcon;
+	use TButtonClass;
+	use TButtonIcon;
+	use TButtonRenderer;
+	use TButtonText;
+	use TButtonTitle;
+	use TLink;
 
 	/**
 	 * @var DataGrid
@@ -70,16 +77,16 @@ class ToolbarButton
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
-		if (!empty($this->attributes)) {
+		if ($this->attributes !== []) {
 			$a->addAttributes($this->attributes);
 		}
 
 		$a->addText($this->grid->getTranslator()->translate($this->text));
 
-		if ($this->getTitle()) {
+		if ($this->getTitle() !== null) {
 			$a->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->getTitle()),
+				$this->grid->getTranslator()->translate($this->getTitle())
 			);
 		}
 
@@ -99,5 +106,4 @@ class ToolbarButton
 
 		return $this;
 	}
-
 }

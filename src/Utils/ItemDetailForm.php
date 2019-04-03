@@ -34,9 +34,9 @@ final class ItemDetailForm extends Container
 	{
 		$this->monitor(
 			Presenter::class,
-			function (Presenter $presenter): void {
+			function(Presenter $presenter): void {
 				$this->loadHttpData();
-			},
+			}
 		);
 
 		$this->callableSetContainer = $callableSetContainer;
@@ -54,7 +54,7 @@ final class ItemDetailForm extends Container
 			$form = $this->getForm();
 
 			if ($lookupPath === null || $form === null) {
-				throw new UnexpectedValueException();
+				throw new UnexpectedValueException;
 			}
 
 			$path = explode(self::NAME_SEPARATOR, $lookupPath);
@@ -100,7 +100,7 @@ final class ItemDetailForm extends Container
 		$form = $this->getForm();
 
 		if ($form === null) {
-			throw new UnexpectedValueException();
+			throw new UnexpectedValueException;
 		}
 
 		if ($form->isSubmitted() === false) {

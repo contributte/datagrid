@@ -89,7 +89,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			call_user_func(
 				$sorting->getSortCallback(),
 				$this->dataSource,
-				$sorting->getSort(),
+				$sorting->getSort()
 			);
 
 			return $this;
@@ -248,5 +248,4 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	{
 		return $this->dataSource;
 	}
-
 }

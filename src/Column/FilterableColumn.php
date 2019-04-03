@@ -116,5 +116,4 @@ abstract class FilterableColumn
 
 		return $this->grid->addFilterDateRange($this->key, $this->name, $column, $nameSecond);
 	}
-
 }

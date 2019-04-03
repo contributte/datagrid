@@ -138,7 +138,7 @@ class InlineEdit
 		if ($this->title !== null) {
 			$a->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->title),
+				$this->grid->getTranslator()->translate($this->title)
 			);
 		}
 
@@ -166,7 +166,7 @@ class InlineEdit
 		if ($this->title !== null) {
 			$a->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->title),
+				$this->grid->getTranslator()->translate($this->title)
 			);
 		}
 
@@ -234,5 +234,4 @@ class InlineEdit
 	{
 		return $this->showNonEditingColumns;
 	}
-
 }

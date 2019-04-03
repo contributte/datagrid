@@ -71,7 +71,7 @@ class FilterSelect extends OneColumnFilter
 				$container,
 				$this->key,
 				$translator->translate($this->name),
-				$this->options,
+				$this->options
 			);
 
 			$select->setTranslator(null);
@@ -138,5 +138,4 @@ class FilterSelect extends OneColumnFilter
 
 		return $input;
 	}
-
 }

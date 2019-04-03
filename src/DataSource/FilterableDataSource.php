@@ -62,5 +62,4 @@ abstract class FilterableDataSource
 	abstract protected function applyFilterMultiSelect(FilterMultiSelect $filter): void;
 
 	abstract protected function applyFilterSelect(FilterSelect $filter): void;
-
 }

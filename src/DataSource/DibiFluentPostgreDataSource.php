@@ -39,5 +39,4 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 			$this->dataSource->where($or);
 		}
 	}
-
 }
