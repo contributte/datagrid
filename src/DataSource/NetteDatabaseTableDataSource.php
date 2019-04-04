@@ -251,7 +251,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			$length = sizeof($values);
 			$i = 1;
 
-			foreach ($values as $value) {
+			for ($iterator = 0; $iterator < count($values); $iterator++) { 
 				if ($i === $length) {
 					$or .= $filter->getColumn() . ' = ?)';
 				} else {

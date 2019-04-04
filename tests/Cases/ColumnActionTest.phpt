@@ -37,7 +37,7 @@ final class ColumnActionTest extends TestCase
 
 	public function testActionDuplcitColumn(): void
 	{
-		$action = $this->grid->addAction('action', 'Do', 'doStuff!');
+		$this->grid->addAction('action', 'Do', 'doStuff!');
 
 		$grid = $this->grid;
 		$add_action = function () use ($grid): void {

@@ -166,7 +166,11 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	 */
 	public function getPlaceholder(): string
 	{
-		return 'param' . ($this->placeholder++);
+		$return = 'param' . (string) ($this->placeholder + 1);
+
+		$this->placeholder++;
+
+		return $return;
 	}
 
 

@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid;
 
+use Dibi\Row as DibiRow;
 use LeanMapper\Entity;
+use Nette\Database\Row as NetteRow;
 use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
 use Nette\Utils\Html;
+use Nextras\Orm\Entity\Entity as NextrasEntity;
 use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
@@ -80,11 +83,11 @@ class Row
 			return $this->getLeanMapperEntityProperty($this->item, $key);
 		}
 
-		if ($this->item instanceof \Nextras\Orm\Entity\Entity) {
+		if ($this->item instanceof NextrasEntity) {
 			return $this->getNextrasEntityProperty($this->item, $key);
 		}
 
-		if ($this->item instanceof \Dibi\Row) {
+		if ($this->item instanceof DibiRow) {
 			return $this->item[$this->formatDibiRowKey($key)];
 		}
 
@@ -92,7 +95,7 @@ class Row
 			return $this->getActiveRowProperty($this->item, $key);
 		}
 
-		if ($this->item instanceof \Nette\Database\Row) {
+		if ($this->item instanceof NetteRow) {
 			return $this->item->{$key};
 		}
 
@@ -158,7 +161,9 @@ class Row
 				return null;
 			}
 
-			return $referencedRow === null ? null : $referencedRow[$referencedColumn];
+			return $referencedRow === null
+				? null
+				: $referencedRow[$referencedColumn];
 		}
 
 		return $item[$key];
@@ -206,7 +211,7 @@ class Row
 	 *
 	 * @return mixed
 	 */
-	public function getNextrasEntityProperty(\Nextras\Orm\Entity\Entity $item, string $key)
+	public function getNextrasEntityProperty(NextrasEntity $item, string $key)
 	{
 		$properties = explode('.', $key);
 		$value = $item;

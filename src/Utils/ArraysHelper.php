@@ -14,7 +14,7 @@ final class ArraysHelper
 	 */
 	public static function testEmpty(iterable $array): bool
 	{
-		foreach ($array as $key => $value) {
+		foreach ($array as $value) {
 			if (is_array($value)) {
 				if (!self::testEmpty($value)) {
 					return false;

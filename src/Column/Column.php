@@ -163,7 +163,9 @@ abstract class Column extends FilterableColumn
 	 */
 	public function setSortable($sortable = true): self
 	{
-		$this->sortable = is_string($sortable) ? $sortable : $sortable;
+		$this->sortable = is_string($sortable)
+			? $sortable
+			: $sortable;
 
 		return $this;
 	}
@@ -545,7 +547,9 @@ abstract class Column extends FilterableColumn
 	 */
 	public function getElementForRender(string $tag, string $key, ?Row $row = null): Html
 	{
-		$el = isset($this->elementCache[$tag]) ? clone $this->elementCache[$tag] : Html::el($tag);
+		$el = isset($this->elementCache[$tag])
+			? clone $this->elementCache[$tag]
+			: Html::el($tag);
 
 		/**
 		 * If class was set by user via $el->class = '', fix it

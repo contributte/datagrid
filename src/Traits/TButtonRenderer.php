@@ -37,7 +37,7 @@ trait TButtonRenderer
 		}
 
 		if ($renderer->getConditionCallback() !== null) {
-			if (call_user_func_array($renderer->getConditionCallback(), $args) == false) {
+			if (call_user_func_array($renderer->getConditionCallback(), $args) === false) {
 				throw new DataGridColumnRendererException;
 			}
 

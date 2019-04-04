@@ -6,7 +6,6 @@ namespace Ublaboo\DataGrid\GroupAction;
 
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
@@ -105,7 +104,7 @@ class GroupActionCollection
 			}
 		}
 
-		foreach ($this->groupActions as $id => $action) {
+		foreach (array_keys($this->groupActions) as $id) {
 			$groupActionSelect->addCondition(Form::EQUAL, $id)
 				->toggle(self::ID_ATTRIBUTE_PREFIX . $id);
 		}

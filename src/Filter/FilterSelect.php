@@ -77,7 +77,7 @@ class FilterSelect extends OneColumnFilter
 
 			$select->setTranslator(null);
 		} else {
-			$select = $this->addControl($container, $this->key, $this->name, $this->options);
+			$this->addControl($container, $this->key, $this->name, $this->options);
 		}
 	}
 

@@ -55,7 +55,7 @@ class ColumnsSummary
 		$this->datagrid = $datagrid;
 		$this->rowCallback = $rowCallback;
 
-		foreach ($this->summary as $key => $sum) {
+		foreach (array_keys($this->summary) as $key) {
 			$column = $this->datagrid->getColumn($key);
 
 			if ($column instanceof ColumnNumber) {
@@ -85,7 +85,7 @@ class ColumnsSummary
 
 	public function add(Row $row): void
 	{
-		foreach ($this->summary as $key => $sum) {
+		foreach (array_keys($this->summary) as $key) {
 			$column = $this->datagrid->getColumn($key);
 
 			$value = $this->getValue($row, $column);
@@ -162,7 +162,7 @@ class ColumnsSummary
 
 	public function someColumnsExist(array $columns): bool
 	{
-		foreach ($columns as $key => $column) {
+		foreach (array_keys($columns) as $key) {
 			if (isset($this->summary[$key])) {
 				return true;
 			}

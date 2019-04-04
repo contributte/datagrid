@@ -60,9 +60,9 @@ final class ExportTest extends TestCase
 			Assert::same($data, $source);
 		};
 
-		$export = $this->grid->addExportCallback('Export', $callback);
+		$this->grid->addExportCallback('Export', $callback);
 
-		$grid = $this->grid;
+		$this->grid;
 		$trigger = function (): void {
 			$this->grid->handleExport(1);
 		};
@@ -87,11 +87,11 @@ final class ExportTest extends TestCase
 			Assert::same($data, $source);
 		};
 
-		$export = $this->grid->addExportCallback('Export', $callback, true);
+		$this->grid->addExportCallback('Export', $callback, true);
 
 		$this->grid->addFilterText('name', 'Name');
 
-		$grid = $this->grid;
+		$this->grid;
 		$trigger = function (): void {
 			$this->grid->handleExport(1);
 		};

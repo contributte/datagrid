@@ -120,7 +120,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 	protected function applyFilterDate(FilterDate $filter): void
 	{
-		foreach ($filter->getCondition() as $column => $value) {
+		foreach ($filter->getCondition() as $value) {
 			$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
 
 			$from = Criteria::expr()->gte($filter->getColumn(), $date->format('Y-m-d 00:00:00'));
@@ -136,7 +136,9 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 		$conditions = $filter->getCondition();
 		$values = $conditions[$filter->getColumn()];
 
-		if ($valueFrom = $values['from']) {
+		$valueFrom = $values['from'];
+
+		if ((bool) $valueFrom) {
 			$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
 			$dateFrom->setTime(0, 0, 0);
 
@@ -144,7 +146,9 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 			$this->criteria->andWhere($expr);
 		}
 
-		if ($valueTo = $values['to']) {
+		$valueTo = $values['to'];
+
+		if ((bool) $valueTo) {
 			$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
 			$dateTo->setTime(23, 59, 59);
 
@@ -159,12 +163,16 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 		$conditions = $filter->getCondition();
 		$values = $conditions[$filter->getColumn()];
 
-		if ($valueFrom = $values['from']) {
+		$valueFrom = $values['from'];
+
+		if ((bool) $valueFrom) {
 			$expr = Criteria::expr()->gte($filter->getColumn(), $valueFrom);
 			$this->criteria->andWhere($expr);
 		}
 
-		if ($valueTo = $values['to']) {
+		$valueTo = $values['to'];
+
+		if ((bool) $valueTo) {
 			$expr = Criteria::expr()->lte($filter->getColumn(), $valueTo);
 			$this->criteria->andWhere($expr);
 		}

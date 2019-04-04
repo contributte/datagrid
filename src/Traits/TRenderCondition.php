@@ -26,6 +26,8 @@ trait TRenderCondition
 	{
 		$condition = $this->renderConditionCallback;
 
-		return is_callable($condition) ? ($condition)($row->getItem()) : true;
+		return is_callable($condition)
+			? ($condition)($row->getItem())
+			: true;
 	}
 }

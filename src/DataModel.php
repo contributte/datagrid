@@ -91,7 +91,11 @@ final class DataModel
 		} elseif ($source instanceof Selection) {
 			$driver = NetteDatabaseSelectionHelper::getDriver($source);
 
-			$source = $driver instanceof NDBDrivers\MsSqlDriver || $driver instanceof NDBDrivers\SqlsrvDriver ? new NetteDatabaseTableMssqlDataSource($source, $primaryKey) : new NetteDatabaseTableDataSource($source, $primaryKey);
+			if ($driver instanceof NDBDrivers\MsSqlDriver || $driver instanceof NDBDrivers\SqlsrvDriver) {
+				$source = new NetteDatabaseTableMssqlDataSource($source, $primaryKey);
+			} else {
+				$source = new NetteDatabaseTableDataSource($source, $primaryKey);
+			}
 		} elseif ($source instanceof QueryBuilder) {
 			$source = new DoctrineDataSource($source, $primaryKey);
 

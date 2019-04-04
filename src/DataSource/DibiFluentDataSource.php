@@ -212,7 +212,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
-		$or = [];
 
 		if (sizeof($values) > 1) {
 			$value1 = array_shift($values);

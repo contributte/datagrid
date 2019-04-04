@@ -693,7 +693,9 @@ s	 */
 	 */
 	public function setDefaultSort($sort, bool $useOnReset = true): self
 	{
-		$sort = is_string($sort) ? [$sort => 'ASC'] : $sort;
+		$sort = is_string($sort)
+			? [$sort => 'ASC']
+			: $sort;
 
 		$this->defaultSort = $sort;
 		$this->defaultSortUseOnReset = $useOnReset;
@@ -1053,7 +1055,9 @@ s	 */
 	{
 		$this->addActionCheck($key);
 
-		$this->actions[$key] = $action = new MultiAction($this, $key, $name);
+		$action = new MultiAction($this, $key, $name);
+
+		$this->actions[$key] = $action;
 
 		return $action;
 	}
@@ -1477,8 +1481,9 @@ s	 */
 			}
 
 			$value = $values[$key];
+			$filter = $this->getFilter($key);
 
-			if ($value instanceof DateTime && ($filter = $this->getFilter($key)) instanceof IFilterDate) {
+			if ($value instanceof DateTime && $filter instanceof IFilterDate) {
 				$value = $value->format($filter->getPhpFormat());
 			}
 
@@ -1763,7 +1768,7 @@ s	 */
 		 * When column is sorted via custom callback, apply it
 		 */
 		if ($this->sortCallback === null && $this->sort !== []) {
-			foreach ($this->sort as $key => $order) {
+			foreach (array_keys($this->sort) as $key) {
 				try {
 					$column = $this->getColumn((string) $key);
 
@@ -1994,7 +1999,7 @@ s	 */
 			$sort = $this->defaultSort;
 		}
 
-		foreach ($sort as $key => $value) {
+		foreach (array_keys($sort) as $key) {
 			try {
 				$column = $this->getColumn($key);
 
@@ -2035,7 +2040,7 @@ s	 */
 			$this->deleteSessionData('_grid_has_sorted');
 		}
 
-		foreach ($this->getSessionData() as $key => $value) {
+		foreach (array_keys($this->getSessionData()) as $key) {
 			if (!in_array($key, [
 				'_grid_perPage',
 				'_grid_sort',
@@ -2045,7 +2050,7 @@ s	 */
 				'_grid_hidden_columns',
 				'_grid_hidden_columns_manipulated',
 			], true)) {
-				$this->deleteSessionData($key);
+				$this->deleteSessionData((string) $key);
 			}
 		}
 
@@ -2135,7 +2140,7 @@ s	 */
 
 		$items = $this->dataModel->filterData(
 			null,
-			$this->createSorting($this->sort, $this->sortCallback),
+			$this->createSorting($sort, $this->sortCallback),
 			$filter
 		);
 
@@ -2490,7 +2495,7 @@ s	 */
 	{
 		$list = array_flip($this->itemsPerPageList);
 
-		foreach ($list as $key => $value) {
+		foreach (array_keys($list) as $key) {
 			$list[$key] = $key;
 		}
 
@@ -2629,7 +2634,9 @@ s	 */
 	public function getSessionData(?string $key = null, $defaultValue = null)
 	{
 		if (!$this->rememberState) {
-			return $key === null ? [] : $defaultValue;
+			return $key === null
+				? []
+				: $defaultValue;
 		}
 
 		return ($key !== null ? $this->gridSession[$key] : $this->gridSession) ?: $defaultValue;
@@ -3074,7 +3081,7 @@ s	 */
 	{
 		$return = $this->columnsVisibility;
 
-		foreach ($this->columnsVisibility as $key => $column) {
+		foreach (array_keys($this->columnsVisibility) as $key) {
 			$return[$key]['column'] = $this->columns[$key];
 		}
 
