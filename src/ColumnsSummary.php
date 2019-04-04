@@ -75,7 +75,7 @@ class ColumnsSummary
 	 */
 	private function getValue(Row $row, Column $column)
 	{
-		if (!$this->rowCallback) {
+		if ($this->rowCallback === null) {
 			return $row->getValue($column->getColumn());
 		}
 
@@ -94,7 +94,7 @@ class ColumnsSummary
 	}
 
 
-	public function render(string $key)
+	public function render(string $key): string
 	{
 		try {
 			return $this->useRenderer($key);
@@ -102,7 +102,7 @@ class ColumnsSummary
 		}
 
 		if (!isset($this->summary[$key])) {
-			return null;
+			return '';
 		}
 
 		return number_format(
@@ -125,8 +125,8 @@ class ColumnsSummary
 
 		$renderer = $this->getRenderer();
 
-		if (!$renderer) {
-			throw new DataGridColumnRendererException();
+		if ($renderer === null) {
+			throw new DataGridColumnRendererException;
 		}
 
 		return call_user_func_array($renderer->getCallback(), [$this->summary[$key], $key]);

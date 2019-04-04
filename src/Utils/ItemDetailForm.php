@@ -67,7 +67,7 @@ final class ItemDetailForm extends Container
 
 
 	/**
-	 * @param string|int $name
+	 * @param mixed $name
 	 */
 	public function offsetGet($name): IComponent
 	{

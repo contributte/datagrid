@@ -231,7 +231,7 @@ class DataGrid extends Control
 	protected $toolbarButtons = [];
 
 	/**
-	 * @var DataModel
+	 * @var DataModel|null
 	 */
 	protected $dataModel;
 
@@ -341,7 +341,7 @@ class DataGrid extends Control
 	protected $gridSession;
 
 	/**
-	 * @var ItemDetail
+	 * @var ItemDetail|null
 	 */
 	protected $itemsDetail;
 
@@ -389,7 +389,7 @@ class DataGrid extends Control
 	protected $someColumnDefaultHide = false;
 
 	/**
-	 * @var ColumnsSummary
+	 * @var ColumnsSummary|null
 	 */
 	protected $columnsSummary;
 
@@ -464,7 +464,7 @@ class DataGrid extends Control
 					$sessionSection = $presenter->getSession($this->getSessionSectionName());
 
 					if (!$sessionSection instanceof SessionSection) {
-						throw new UnexpectedValueException();
+						throw new UnexpectedValueException;
 					}
 
 					$this->gridSession = $sessionSection;
@@ -486,14 +486,14 @@ class DataGrid extends Control
 			throw new DataGridException('You have to set a data source first.');
 		}
 
-		if (empty($this->columns)) {
+		if ($this->columns === []) {
 			throw new DataGridException('You have to add at least one column.');
 		}
 
 		$template = $this->getTemplate();
 
 		if (!$template instanceof Template) {
-			throw new UnexpectedValueException();
+			throw new UnexpectedValueException;
 		}
 
 		$template->setTranslator($this->getTranslator());
@@ -530,7 +530,7 @@ class DataGrid extends Control
 			/**
 			 * Walkaround for item snippet - snippet is the <tr> element and its class has to be also updated
 			 */
-			if (!empty($this->redrawItem)) {
+			if ($this->redrawItem !== []) {
 				$this->getPresenterInstance()->payload->_datagrid_redrawItem_class = $row->getControlClass();
 				$this->getPresenterInstance()->payload->_datagrid_redrawItem_id = $row->getId();
 			}
@@ -692,9 +692,7 @@ s	 */
 	 */
 	public function setDefaultSort($sort, bool $useOnReset = true): self
 	{
-		$sort = is_string($sort)
-			? [$sort => 'ASC']
-			: (array) $sort;
+		$sort = is_string($sort) ? [$sort => 'ASC'] : $sort;
 
 		$this->defaultSort = $sort;
 		$this->defaultSortUseOnReset = $useOnReset;
@@ -725,7 +723,7 @@ s	 */
 			return;
 		}
 
-		if ($this->getSessionData('_grid_has_sorted')) {
+		if ((bool) $this->getSessionData('_grid_has_sorted')) {
 			return;
 		}
 
@@ -742,7 +740,7 @@ s	 */
 	 */
 	public function setSortable(bool $sortable = true): self
 	{
-		if ($this->getItemsDetail()) {
+		if ($this->getItemsDetail() !== null) {
 			throw new DataGridException('You can not use both sortable datagrid and items detail.');
 		}
 
@@ -813,7 +811,7 @@ s	 */
 			$sort[$column->getSortingColumn()] = $order;
 		}
 
-		if (!$sortCallback && isset($column)) {
+		if ($sortCallback !== null && isset($column)) {
 			$sortCallback = $column->getSortableCallback();
 		}
 
@@ -854,7 +852,7 @@ s	 */
 		/**
 		 * Set tree view template file
 		 */
-		if (!$this->templateFile) {
+		if ($this->templateFile !== null) {
 			$this->setTemplateFile(__DIR__ . '/templates/datagrid_tree.latte');
 		}
 
@@ -874,7 +872,7 @@ s	 */
 	public function treeViewChildrenCallback($item): bool
 	{
 		if ($this->treeViewHasChildrenCallback === null) {
-			throw new UnexpectedValueException();
+			throw new UnexpectedValueException;
 		}
 
 		return (bool) call_user_func($this->treeViewHasChildrenCallback, $item);
@@ -1111,10 +1109,6 @@ s	 */
 	): FilterText
 	{
 		$columns = $columns === null ? [$key] : (is_string($columns) ? [$columns] : $columns);
-
-		if (!is_array($columns)) {
-			throw new DataGridException('Filter Text can accept only array or string.');
-		}
 
 		$this->addFilterCheck($key);
 
@@ -1359,15 +1353,15 @@ s	 */
 
 	public function findDefaultFilter(): void
 	{
-		if (!empty($this->filter)) {
+		if ($this->filter !== []) {
 			return;
 		}
 
-		if ($this->getSessionData('_grid_has_filtered')) {
+		if ((bool) $this->getSessionData('_grid_has_filtered')) {
 			return;
 		}
 
-		if (!empty($this->defaultFilter)) {
+		if ($this->defaultFilter !== []) {
 			$this->filter = $this->defaultFilter;
 		}
 
@@ -1447,7 +1441,7 @@ s	 */
 			$this->getGroupActionCollection()->addToFormContainer($groupActionContainer);
 		}
 
-		if (!$form->isSubmitted()) {
+		if ($form->isSubmitted() === false) {
 			$this->setFilterContainerDefaults($filterContainer, $this->filter);
 		}
 
@@ -1457,7 +1451,7 @@ s	 */
 		$select = $form->addSelect('perPage', '', $this->getItemsPerPageList())
 			->setTranslator(null);
 
-		if (!$form->isSubmitted()) {
+		if ($form->isSubmitted() === false) {
 			$select->setValue($this->getPerPage());
 		}
 
@@ -1538,7 +1532,7 @@ s	 */
 				|| !$edit['submit'] instanceof FormsSubmitButton
 				|| !$edit['cancel'] instanceof FormsSubmitButton
 			) {
-				throw new UnexpectedValueException();
+				throw new UnexpectedValueException;
 			}
 
 			if ($edit['submit']->isSubmittedBy() || $edit['cancel']->isSubmittedBy()) {
@@ -1548,7 +1542,7 @@ s	 */
 					'inline_edit[_primary_where_column]'
 				);
 
-				if ($edit['submit']->isSubmittedBy() && !$edit->getErrors()) {
+				if ($edit['submit']->isSubmittedBy() && $edit->getErrors() !== []) {
 					$this->inlineEdit->onSubmit($id, $values['inline_edit']);
 					$this->getPresenterInstance()->payload->_datagrid_inline_edited = $id;
 					$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
@@ -1557,7 +1551,7 @@ s	 */
 					$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
 				}
 
-				if ($edit['submit']->isSubmittedBy() && !empty($this->inlineEdit->onCustomRedraw)) {
+				if ($edit['submit']->isSubmittedBy() && $this->inlineEdit->onCustomRedraw !== []) {
 					$this->inlineEdit->onCustomRedraw();
 				} else {
 					$this->redrawItem($id, $primaryWhereColumn);
@@ -1584,11 +1578,11 @@ s	 */
 				|| !$add['submit'] instanceof FormsSubmitButton
 				|| !$add['cancel'] instanceof FormsSubmitButton
 			) {
-				throw new UnexpectedValueException();
+				throw new UnexpectedValueException;
 			}
 
 			if ($add['submit']->isSubmittedBy() || $add['cancel']->isSubmittedBy()) {
-				if ($add['submit']->isSubmittedBy() && !$add->getErrors()) {
+				if ($add['submit']->isSubmittedBy() && $add->getErrors() !== []) {
 					$this->inlineAdd->onSubmit($values['inline_add']);
 
 					if ($this->getPresenterInstance()->isAjax()) {
@@ -1606,7 +1600,7 @@ s	 */
 		$values = $values['filter'];
 
 		if (!$values instanceof ArrayHash) {
-			throw new UnexpectedValueException();
+			throw new UnexpectedValueException;
 		}
 
 		foreach ($values as $key => $value) {
@@ -1629,7 +1623,7 @@ s	 */
 			$this->filter[$key] = $value;
 		}
 
-		if ($values !== []) {
+		if ($values->count() > 0) {
 			$this->saveSessionData('_grid_has_filtered', 1);
 		}
 
@@ -1678,7 +1672,7 @@ s	 */
 			));
 		}
 
-		$this->outerFilterColumnsCount = (int) $count;
+		$this->outerFilterColumnsCount = $count;
 
 		return $this;
 	}
@@ -1711,7 +1705,7 @@ s	 */
 	 */
 	public function findSessionValues(): void
 	{
-		if (!ArraysHelper::testEmpty($this->filter) || ($this->page !== 1) || !empty($this->sort)) {
+		if (!ArraysHelper::testEmpty($this->filter) || ($this->page !== 1) || $this->sort !== []) {
 			return;
 		}
 
@@ -1719,15 +1713,21 @@ s	 */
 			return;
 		}
 
-		if ($page = $this->getSessionData('_grid_page')) {
-			$this->page = $page;
+		$page = $this->getSessionData('_grid_page');
+
+		if ($page !== null) {
+			$this->page = (int) $page;
 		}
 
-		if ($perPage = $this->getSessionData('_grid_perPage')) {
+		$perPage = $this->getSessionData('_grid_perPage');
+
+		if ($perPage !== null) {
 			$this->perPage = $perPage;
 		}
 
-		if ($sort = $this->getSessionData('_grid_sort')) {
+		$sort = $this->getSessionData('_grid_sort');
+
+		if (is_array($sort) && $sort !== []) {
 			$this->sort = $sort;
 		}
 
@@ -1761,10 +1761,10 @@ s	 */
 		/**
 		 * When column is sorted via custom callback, apply it
 		 */
-		if (empty($this->sortCallback) && !empty($this->sort)) {
+		if ($this->sortCallback === null && $this->sort !== []) {
 			foreach ($this->sort as $key => $order) {
 				try {
-					$column = $this->getColumn($key);
+					$column = $this->getColumn((string) $key);
 
 				} catch (DataGridColumnNotFoundException $e) {
 					$this->deleteSessionData('_grid_sort');
@@ -1790,10 +1790,6 @@ s	 */
 		bool $filtered = false
 	): Export
 	{
-		if (!is_callable($callback)) {
-			throw new DataGridException('Second parameter of ExportCallback must be callable.');
-		}
-
 		return $this->addToExports(new Export($this, $text, $callback, $filtered));
 	}
 
@@ -1843,9 +1839,11 @@ s	 */
 
 	protected function addToExports(Export $export): Export
 	{
-		$id = $s = sizeof($this->exports)
-			? ($s + 1)
-			: 1;
+		if (sizeof($this->exports) > 0) {
+			$id = sizeof($this->exports) + 1;
+		} else {
+			$id = 1;
+		}
 
 		$link = new Link($this, 'export!', ['id' => $id]);
 
@@ -1946,7 +1944,7 @@ s	 */
 
 	public function getGroupActionCollection(): GroupActionCollection
 	{
-		if (!$this->groupActionCollection) {
+		if ($this->groupActionCollection === null) {
 			$this->groupActionCollection = new GroupActionCollection($this);
 		}
 
@@ -2009,7 +2007,7 @@ s	 */
 				$this->saveSessionData('_grid_page', $this->page = 1);
 			}
 
-			if ($column->getSortableCallback()) {
+			if ($column->getSortableCallback() !== null) {
 				$this->sortCallback = $column->getSortableCallback();
 			}
 		}
@@ -2106,10 +2104,10 @@ s	 */
 	public function handleExport($id): void
 	{
 		if (!isset($this->exports[$id])) {
-			throw new Nette\Application\ForbiddenRequestException();
+			throw new Nette\Application\ForbiddenRequestException;
 		}
 
-		if (!empty($this->columnsExportOrder)) {
+		if ($this->columnsExportOrder !== []) {
 			$this->setColumnsOrder($this->columnsExportOrder);
 		}
 
@@ -2162,7 +2160,7 @@ s	 */
 	public function handleGetChildren($parent): void
 	{
 		if (!is_callable($this->treeViewChildrenCallback)) {
-			throw new UnexpectedValueException();
+			throw new UnexpectedValueException;
 		}
 
 		$this->setDataSource(call_user_func($this->treeViewChildrenCallback, $parent));
@@ -2188,10 +2186,15 @@ s	 */
 		$template = $this->getTemplate();
 
 		if (!$template instanceof Template) {
-			throw new UnexpectedValueException();
+			throw new UnexpectedValueException;
 		}
 
 		$template->add('toggle_detail', $id);
+
+		if ($this->itemsDetail === null) {
+			throw new \UnexpectedValueException;
+		}
+
 		$this->redrawItem = [$this->itemsDetail->getPrimaryWhereColumn() => $id];
 
 		if ($this->getPresenterInstance()->isAjax()) {
@@ -2223,7 +2226,7 @@ s	 */
 		$request = $this->getPresenterInstance()->getRequest();
 
 		if (!$request instanceof Request) {
-			throw new UnexpectedValueException();
+			throw new UnexpectedValueException;
 		}
 
 		$value = $request->getPost('value');
@@ -2232,7 +2235,7 @@ s	 */
 		 * @var mixed Could be null of course
 		 */
 		if ($column->getEditableCallback() === null) {
-			throw new UnexpectedValueException();
+			throw new UnexpectedValueException;
 		}
 
 		$newValue = $column->getEditableCallback()($id, $value);
@@ -2289,12 +2292,12 @@ s	 */
 
 	public function handleChangeStatus(string $id, string $key, string $value): void
 	{
-		if (empty($this->columns[$key])) {
+		if (!isset($this->columns[$key])) {
 			throw new DataGridException(sprintf('ColumnStatus[%s] does not exist', $key));
 		}
 
 		if (!$this->columns[$key] instanceof ColumnStatus) {
-			throw new UnexpectedValueException();
+			throw new UnexpectedValueException;
 		}
 
 		$this->columns[$key]->onChange($id, $value);
@@ -2344,7 +2347,7 @@ s	 */
 	{
 		$columns = $this->getSessionData('_grid_hidden_columns');
 
-		if (!empty($columns)) {
+		if ($columns !== []) {
 			$pos = array_search($column, $columns, true);
 
 			if ($pos !== false) {
@@ -2368,7 +2371,7 @@ s	 */
 		 */
 		$columns = $this->getSessionData('_grid_hidden_columns');
 
-		if (empty($columns)) {
+		if ($columns === []) {
 			$columns = [$column];
 		} elseif (!in_array($column, $columns, true)) {
 			array_push($columns, $column);
@@ -2433,11 +2436,11 @@ s	 */
 	 */
 	public function findDefaultPerPage(): void
 	{
-		if (!empty($this->perPage)) {
+		if ($this->perPage !== null) {
 			return;
 		}
 
-		if (!empty($this->defaultPerPage)) {
+		if ($this->defaultPerPage !== null) {
 			$this->perPage = $this->defaultPerPage;
 		}
 
@@ -2456,7 +2459,7 @@ s	 */
 		$paginator->setPage($this->page);
 		$paginator->setItemsPerPage($this->getPerPage());
 
-		if ($this->customPaginatorTemplate) {
+		if ($this->customPaginatorTemplate !== null) {
 			$component->setTemplateFile($this->customPaginatorTemplate);
 		}
 
@@ -2514,11 +2517,11 @@ s	 */
 
 	public function getPaginator(): ?DataGridPaginator
 	{
-		if ($this->isPaginated() && $this->getPerPage() !== 'all') {
+		if ($this->isPaginated() && $this->perPage !== 'all') {
 			$paginator = $this['paginator'];
 
 			if (!$paginator instanceof DataGridPaginator) {
-				throw new UnexpectedValueException();
+				throw new UnexpectedValueException;
 			}
 
 			return $paginator;
@@ -2541,8 +2544,8 @@ s	 */
 
 	public function getTranslator(): ITranslator
 	{
-		if (!$this->translator) {
-			$this->translator = new SimpleTranslator();
+		if ($this->translator === null) {
+			$this->translator = new SimpleTranslator;
 		}
 
 		return $this->translator;
@@ -2585,7 +2588,7 @@ s	 */
 	 */
 	public function setColumnsExportOrder(array $order): self
 	{
-		$this->columnsExportOrder = (array) $order;
+		$this->columnsExportOrder = $order;
 
 		return $this;
 	}
@@ -2597,10 +2600,6 @@ s	 */
 	public function getSessionSectionName(): string
 	{
 		$presenter = $this->getPresenterInstance();
-
-		if (!$presenter instanceof Presenter) {
-			throw new UnexpectedValueException();
-		}
 
 		return $presenter->getName() . ':' . $this->getUniqueId();
 	}
@@ -2623,15 +2622,16 @@ s	 */
 
 
 	/**
+	 * @param mixed $defaultValue
 	 * @return mixed
 	 */
 	public function getSessionData(?string $key = null, $defaultValue = null)
 	{
 		if (!$this->rememberState) {
-			return $key ? $defaultValue : [];
+			return $key === null ? [] : $defaultValue;
 		}
 
-		return ($key ? $this->gridSession->{$key} : $this->gridSession) ?: $defaultValue;
+		return ($key !== null ? $this->gridSession[$key] : $this->gridSession) ?: $defaultValue;
 	}
 
 
@@ -2641,14 +2641,14 @@ s	 */
 	public function saveSessionData(string $key, $value): void
 	{
 		if ($this->rememberState) {
-			$this->gridSession->{$key} = $value;
+			$this->gridSession[$key] = $value;
 		}
 	}
 
 
 	public function deleteSessionData(string $key): void
 	{
-		unset($this->gridSession->{$key});
+		unset($this->gridSession[$key]);
 	}
 
 
@@ -2775,7 +2775,7 @@ s	 */
 			);
 		}
 
-		$this->actions[$multiActionKey]->setRowCondition((string) $actionKey, $condition);
+		$this->actions[$multiActionKey]->setRowCondition($actionKey, $condition);
 	}
 
 
@@ -2835,7 +2835,7 @@ s	 */
 	 */
 	public function handleInlineEdit($id): void
 	{
-		if ($this->inlineEdit) {
+		if ($this->inlineEdit !== null) {
 			$this->inlineEdit->setItemId($id);
 
 			$primaryWhereColumn = $this->inlineEdit->getPrimaryWhereColumn();
@@ -2843,25 +2843,19 @@ s	 */
 			$filterContainer = $this['filter'];
 
 			if (!$filterContainer instanceof Container) {
-				throw new UnexpectedValueException();
+				throw new UnexpectedValueException;
 			}
 
 			$inlineEditContainer = $filterContainer['inline_edit'];
 
 			if (!$inlineEditContainer instanceof Container) {
-				throw new UnexpectedValueException();
+				throw new UnexpectedValueException;
 			}
 
 			$inlineEditContainer->addHidden('_id', $id);
 			$inlineEditContainer->addHidden('_primary_where_column', $primaryWhereColumn);
 
 			$presenter = $this->getPresenterInstance();
-
-			if (!$presenter instanceof Presenter) {
-				throw new UnexpectedValueException(
-					sprintf('%s needs %s', self::class, Presenter::class)
-				);
-			}
 
 			if ($presenter->isAjax()) {
 				$presenter->payload->_datagrid_inline_editing = true;
@@ -2940,9 +2934,7 @@ s	 */
 		}
 
 		if ($rowCallback !== null) {
-			if (!is_callable($rowCallback)) {
-				throw new InvalidArgumentException('Row summary callback must be callable');
-			}
+			throw new InvalidArgumentException('Row summary callback must be callable');
 		}
 
 		$this->columnsSummary = new ColumnsSummary($this, $columns, $rowCallback);
@@ -3005,11 +2997,11 @@ s	 */
 	{
 		$count = sizeof($this->getColumns());
 
-		if (!empty($this->actions)
+		if ($this->actions !== []
 			|| $this->isSortable()
-			|| $this->getItemsDetail()
-			|| $this->getInlineEdit()
-			|| $this->getInlineAdd()) {
+			|| $this->getItemsDetail() !== null
+			|| $this->getInlineEdit() !== null
+			|| $this->getInlineAdd() !== null) {
 			$count++;
 		}
 
@@ -3041,7 +3033,7 @@ s	 */
 		try {
 			$this->getParentComponent();
 
-			if (!$this->getSessionData('_grid_hidden_columns_manipulated', false)) {
+			if (! (bool) $this->getSessionData('_grid_hidden_columns_manipulated', false)) {
 				$columns_to_hide = [];
 
 				foreach ($this->columns as $key => $column) {
@@ -3050,7 +3042,7 @@ s	 */
 					}
 				}
 
-				if (!empty($columns_to_hide)) {
+				if ($columns_to_hide !== []) {
 					$this->saveSessionData('_grid_hidden_columns', $columns_to_hide);
 					$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 				}
@@ -3059,7 +3051,7 @@ s	 */
 			$hidden_columns = $this->getSessionData('_grid_hidden_columns', []);
 
 			foreach ($hidden_columns as $column) {
-				if (!empty($this->columns[$column])) {
+				if (isset($this->columns[$column])) {
 					$this->columnsVisibility[$column] = [
 						'visible' => false,
 					];
@@ -3100,7 +3092,7 @@ s	 */
 			throw new DataGridHasToBeAttachedToPresenterComponentException(
 				sprintf(
 					'DataGrid is attached to: "%s", but instance of %s is needed.',
-					($parent ? get_class($parent) : 'null'),
+					($parent !== null ? get_class($parent) : 'null'),
 					Component::class
 				)
 			);
@@ -3183,7 +3175,7 @@ s	 */
 		$presenter = $this->getPresenter();
 
 		if (!$presenter instanceof Presenter) {
-			throw new UnexpectedValueException();
+			throw new UnexpectedValueException;
 		}
 
 		return $presenter;

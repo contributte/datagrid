@@ -119,7 +119,7 @@ class Action extends Column
 
 		$this->tryAddIcon($a, $this->getIcon($row), $this->getName());
 
-		if (!empty($this->dataAttributes)) {
+		if ($this->dataAttributes !== []) {
 			foreach ($this->dataAttributes as $key => $value) {
 				$a->data((string) $key, $value);
 			}
@@ -301,7 +301,7 @@ class Action extends Column
 	 * @param  mixed $property
 	 * @throws DataGridException
 	 */
-	protected function checkPropertyStringOrCallable($property, $name): void
+	protected function checkPropertyStringOrCallable($property, string $name): void
 	{
 		if (!is_string($property) && !is_callable($property) && $property !== null) {
 			throw new DataGridException(

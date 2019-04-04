@@ -63,7 +63,7 @@ class MultiAction extends Column
 
 		$this->tryAddIcon($button, $this->getIcon(), $this->getName());
 
-		if (!empty($this->attributes)) {
+		if ($this->attributes !== []) {
 			$button->addAttributes($this->attributes);
 		}
 
@@ -81,7 +81,7 @@ class MultiAction extends Column
 			);
 		}
 
-		if ($this->getClass()) {
+		if ($this->getClass() !== '') {
 			$button->setAttribute('class', $this->getClass() . ' dropdown-toggle');
 		}
 

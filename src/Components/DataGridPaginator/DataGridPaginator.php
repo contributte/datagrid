@@ -101,7 +101,9 @@ class DataGridPaginator extends Control
 			 */
 			$count = 1;
 
-			$quotient = ($paginator->pageCount - 1) / $count;
+			$perPage = (int) $paginator->pageCount;
+
+			$quotient = ($perPage - 1) / $count;
 
 			for ($i = 0; $i <= $count; $i++) {
 				$arr[] = round($quotient * $i) + $paginator->firstPage;

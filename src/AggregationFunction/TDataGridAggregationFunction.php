@@ -12,7 +12,7 @@ trait TDataGridAggregationFunction
 {
 
 	/**
-	 * @var array<IAggregationFunction>
+	 * @var array|IAggregationFunction[]
 	 */
 	private $aggregationFunctions = [];
 
@@ -24,7 +24,10 @@ trait TDataGridAggregationFunction
 	/**
 	 * @throws DataGridException
 	 */
-	public function addAggregationFunction(string $key, IAggregationFunction $aggregationFunction): self
+	public function addAggregationFunction(
+		string $key,
+		IAggregationFunction $aggregationFunction
+	): self
 	{
 		if ($this->hasColumnsSummary()) {
 			throw new DataGridException(
@@ -57,7 +60,9 @@ trait TDataGridAggregationFunction
 	/**
 	 * @throws DataGridException
 	 */
-	public function setMultipleAggregationFunction(IMultipleAggregationFunction $multipleAggregationFunction): self
+	public function setMultipleAggregationFunction(
+		IMultipleAggregationFunction $multipleAggregationFunction
+	): self
 	{
 		if ($this->hasColumnsSummary()) {
 			throw new DataGridException(
@@ -65,7 +70,7 @@ trait TDataGridAggregationFunction
 			);
 		}
 
-		if (!empty($this->aggregationFunctions)) {
+		if ($this->aggregationFunctions !== []) {
 			throw new DataGridException(
 				'You can not use both AggregationFunctions and MultipleAggregationFunction'
 			);
@@ -174,7 +179,7 @@ trait TDataGridAggregationFunction
 
 	public function hasSomeAggregationFunction(): bool
 	{
-		return !empty($this->aggregationFunctions) || $this->multipleAggregationFunction;
+		return $this->aggregationFunctions !== [] || $this->multipleAggregationFunction;
 	}
 
 

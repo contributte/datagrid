@@ -86,7 +86,7 @@ class ColumnLink extends Column
 
 		$value = parent::render($row);
 
-		if (!$value && $this->icon !== null) {
+		if (! (bool) $value && $this->icon !== null) {
 			return null;
 		}
 
@@ -122,7 +122,7 @@ class ColumnLink extends Column
 				Html::el('span')->setAttribute('class', DataGrid::$iconPrefix . $this->icon)
 			);
 
-			if (strlen($value)) {
+			if (strlen($value) > 0) {
 				$a->addHtml('&nbsp;');
 			}
 		}

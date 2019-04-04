@@ -87,7 +87,7 @@ abstract class Column extends FilterableColumn
 	protected $defaultHide = false;
 
 	/**
-	 * @var array|array<Html>|array<null>
+	 * @var array|Html[][|null[][]
 	 */
 	protected $elementCache = ['td' => null, 'th' => null];
 
@@ -127,7 +127,7 @@ abstract class Column extends FilterableColumn
 	 */
 	public function setTemplateEscaping(bool $templateEscaping = true): self
 	{
-		$this->templateEscaping = (bool) $templateEscaping;
+		$this->templateEscaping = $templateEscaping;
 
 		return $this;
 	}
@@ -163,9 +163,7 @@ abstract class Column extends FilterableColumn
 	 */
 	public function setSortable($sortable = true): self
 	{
-		$this->sortable = is_string($sortable)
-			? $sortable
-			: (bool) $sortable;
+		$this->sortable = is_string($sortable) ? $sortable : $sortable;
 
 		return $this;
 	}
@@ -378,7 +376,7 @@ abstract class Column extends FilterableColumn
 	 */
 	public function setAlign(string $align): self
 	{
-		$this->align = (string) $align;
+		$this->align = $align;
 
 		return $this;
 	}
@@ -547,9 +545,7 @@ abstract class Column extends FilterableColumn
 	 */
 	public function getElementForRender(string $tag, string $key, ?Row $row = null): Html
 	{
-		$el = $this->elementCache[$tag]
-			? clone $this->elementCache[$tag]
-			: Html::el($tag);
+		$el = $this->elementCache[$tag] ? clone $this->elementCache[$tag] : Html::el($tag);
 
 		/**
 		 * If class was set by user via $el->class = '', fix it

@@ -89,14 +89,14 @@ class ItemDetail
 
 		$a->addText($this->text);
 
-		if ($this->title) {
+		if ($this->title !== null) {
 			$a->setAttribute(
 				'title',
 				$this->grid->getTranslator()->translate($this->title)
 			);
 		}
 
-		if ($this->class) {
+		if ($this->class !== null) {
 			$a->setAttribute('class', $this->class);
 		}
 
@@ -135,7 +135,7 @@ class ItemDetail
 	 */
 	public function setType(string $type): self
 	{
-		$this->type = (string) $type;
+		$this->type = $type;
 
 		return $this;
 	}
@@ -153,7 +153,7 @@ class ItemDetail
 	/**
 	 * Set item detail template
 	 */
-	public function setTemplate(string $template)
+	public function setTemplate(string $template): self
 	{
 		$this->template = $template;
 
@@ -170,7 +170,7 @@ class ItemDetail
 	}
 
 
-	public function setRenderer(callable $renderer)
+	public function setRenderer(callable $renderer): self
 	{
 		$this->renderer = $renderer;
 
