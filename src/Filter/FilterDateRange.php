@@ -55,7 +55,9 @@ class FilterDateRange extends FilterRange implements IFilterDate
 			$to->setAttribute('data-autosubmit-change', true);
 		}
 
-		if ($placeholders = $this->getPlaceholders()) {
+		$placeholders = $this->getPlaceholders();
+
+		if ($placeholders !== []) {
 			$textFrom = reset($placeholders);
 
 			if ($textFrom) {

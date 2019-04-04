@@ -83,7 +83,7 @@ class FilterSelect extends OneColumnFilter
 
 	public function setTranslateOptions(bool $translateOptions = true): self
 	{
-		$this->translateOptions = (bool) $translateOptions;
+		$this->translateOptions = $translateOptions;
 
 		return $this;
 	}

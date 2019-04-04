@@ -224,7 +224,7 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 
-			if ($row_value->getTimeStamp() < $date_from->getTimeStamp()) {
+			if ($row_value->getTimestamp() < $date_from->getTimestamp()) {
 				return false;
 			}
 		}
@@ -247,7 +247,7 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 
-			if ($row_value->getTimeStamp() > $date_to->getTimeStamp()) {
+			if ($row_value->getTimestamp() > $date_to->getTimestamp()) {
 				return false;
 			}
 		}

@@ -40,7 +40,7 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 			$control->setAttribute('data-autosubmit-change', true);
 		}
 
-		if ($this->getPlaceholder()) {
+		if ($this->getPlaceholder() !== null) {
 			$control->setAttribute('placeholder', $this->getPlaceholder());
 		}
 	}

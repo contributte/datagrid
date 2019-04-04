@@ -74,27 +74,27 @@ class DataGrid extends Control
 	use TDataGridAggregationFunction;
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onRedraw = [];
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onRender = [];
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onExport = [];
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onColumnAdd = [];
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onFiltersAssembled = [];
 
@@ -321,7 +321,7 @@ class DataGrid extends Control
 	protected $collapsibleOuterFilters = true;
 
 	/**
-	 * @var array<string>
+	 * @var array|string[]
 	 */
 	protected $columnsExportOrder = [];
 
@@ -2242,7 +2242,7 @@ s	 */
 
 
 	/**
-	 * @param array<string> $snippets
+	 * @param array|string[] $snippets
 	 */
 	public function reload(array $snippets = []): void
 	{
@@ -2406,7 +2406,7 @@ s	 */
 	 ********************************************************************************/
 
 	/**
-	 * @param array|array<int>|array<string> $itemsPerPageList
+	 * @param array|array|int[]|array|string[] $itemsPerPageList
 	 */
 	public function setItemsPerPageList(array $itemsPerPageList, bool $includeAll = true): self
 	{
@@ -2480,7 +2480,7 @@ s	 */
 
 
 	/**
-	 * @return array|array<int>|array<string>
+	 * @return array|array|int[]|array|string[]
 	 */
 	public function getItemsPerPageList(): array
 	{
@@ -2556,7 +2556,7 @@ s	 */
 	/**
 	 * Set order of datagrid columns
 	 *
-	 * @param array<string> $order
+	 * @param array|string[] $order
 	 */
 	public function setColumnsOrder(array $order): self
 	{
@@ -2581,7 +2581,7 @@ s	 */
 	/**
 	 * Columns order may be different for export and normal grid
 	 *
-	 * @param array<string> $order
+	 * @param array|string[] $order
 	 */
 	public function setColumnsExportOrder(array $order): self
 	{
@@ -2929,7 +2929,7 @@ s	 */
 
 
 	/**
-	 * @param array<string> $columns
+	 * @param array|string[] $columns
 	 */
 	public function setColumnsSummary(array $columns, ?callable $rowCallback = null): ColumnsSummary
 	{

@@ -117,7 +117,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 		$sort = $sorting->getSort();
 
-		if (!empty($sort)) {
+		if ($sort !== []) {
 			$this->dataSource->getSqlBuilder()->setOrder([], []);
 
 			foreach ($sort as $column => $order) {
@@ -127,7 +127,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			/**
 			 * Has the statement already a order by clause?
 			 */
-			if (!$this->dataSource->getSqlBuilder()->getOrder()) {
+			if ($this->dataSource->getSqlBuilder()->getOrder() === []) {
 				$this->dataSource->order($this->primaryKey);
 			}
 		}

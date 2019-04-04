@@ -97,7 +97,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 		$sort = $sorting->getSort();
 
-		if (!empty($sort)) {
+		if ($sort !== []) {
 			$this->dataSource->removeClause('ORDER BY');
 			$this->dataSource->orderBy($sort);
 		} else {
@@ -112,7 +112,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			$cursorProperty->setAccessible(true);
 			$cursor = $cursorProperty->getValue($this->dataSource);
 
-			if (!$cursor) {
+			if (! (bool) $cursor) {
 				$this->dataSource->orderBy($this->primaryKey);
 			}
 		}
@@ -222,9 +222,9 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 			foreach ($values as $value) {
 				if ($i === $length) {
-					$this->dataSource->or('%n = ?)', $filter->getColumn(), $value);
+					$this->dataSource->__call('or', ['%n = ?)', $filter->getColumn(), $value]);
 				} else {
-					$this->dataSource->or('%n = ?', $filter->getColumn(), $value);
+					$this->dataSource->__call('or', ['%n = ?', $filter->getColumn(), $value]);
 				}
 
 				$i++;

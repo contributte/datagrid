@@ -15,7 +15,7 @@ abstract class GroupAction
 	use SmartObject;
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onSelect = [];
 
@@ -48,7 +48,7 @@ abstract class GroupAction
 
 	public function setClass(string $class): self
 	{
-		$this->class = (string) $class;
+		$this->class = $class;
 
 		return $this;
 	}
@@ -60,6 +60,9 @@ abstract class GroupAction
 	}
 
 
+	/**
+	 * @param mixed $value
+	 */
 	public function setAttribute(string $key, $value): self
 	{
 		$this->attributes[$key] = $value;

@@ -97,7 +97,7 @@ class ApiDataSource implements IDataSource
 	 */
 	public function getData(): array
 	{
-		return !empty($this->data) ? $this->data : $this->getResponse([
+		return $this->data !== [] ? $this->data : $this->getResponse([
 			'sort' => $this->sortColumn,
 			'order' => $this->orderColumn,
 			'limit' => $this->limit,

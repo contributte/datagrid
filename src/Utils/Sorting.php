@@ -8,7 +8,7 @@ final class Sorting
 {
 
 	/**
-	 * @var array<string>
+	 * @var array|string[]
 	 */
 	private $sort = [];
 
@@ -25,7 +25,7 @@ final class Sorting
 
 
 	/**
-	 * @return array<string>
+	 * @return array|string[]
 	 */
 	public function getSort(): array
 	{

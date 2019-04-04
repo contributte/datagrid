@@ -18,7 +18,7 @@ class ColumnsSummary
 	protected $datagrid;
 
 	/**
-	 * @var array<int>
+	 * @var array|int[]
 	 */
 	protected $summary;
 
@@ -43,7 +43,7 @@ class ColumnsSummary
 	protected $positionTop = false;
 
 	/**
-	 * @param array<string> $columns
+	 * @param array|string[] $columns
 	 */
 	public function __construct(
 		DataGrid $datagrid,

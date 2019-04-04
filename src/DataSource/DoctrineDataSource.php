@@ -28,7 +28,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	/**
 	 * Event called when datagrid data is loaded.
 	 *
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onDataLoaded;
 
@@ -143,7 +143,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 		$sort = $sorting->getSort();
 
-		if (!empty($sort)) {
+		if ($sort !== []) {
 			foreach ($sort as $column => $order) {
 				$this->dataSource->addOrderBy($this->checkAliases((string) $column), $order);
 			}
@@ -151,7 +151,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 			/**
 			 * Has the statement already a order by clause?
 			 */
-			if (!$this->dataSource->getDQLPart('orderBy')) {
+			if (! (bool) $this->dataSource->getDQLPart('orderBy')) {
 				$this->dataSource->orderBy($this->checkAliases($this->primaryKey));
 			}
 		}
@@ -329,6 +329,9 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 	private function usePaginator(): bool
 	{
-		return $this->dataSource->getDQLPart('join') || $this->dataSource->getDQLPart('groupBy');
+		$hasJoin = (bool) $this->dataSource->getDQLPart('join');
+		$hasGroupBy = (bool) $this->dataSource->getDQLPart('groupBy');
+
+		return $hasJoin || $hasGroupBy;
 	}
 }

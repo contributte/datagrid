@@ -43,7 +43,7 @@ class MultiAction extends Column
 	protected $actions = [];
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	private $rowConditions = [];
 

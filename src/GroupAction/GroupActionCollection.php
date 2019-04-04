@@ -6,6 +6,7 @@ namespace Ublaboo\DataGrid\GroupAction;
 
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
@@ -81,20 +82,18 @@ class GroupActionCollection
 					->endCondition();
 
 			} elseif ($action instanceof GroupTextareaAction) {
-				$control = $container->addTextarea($id, '');
+				$control = $container->addTextArea($id, '');
 
 				$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
 					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
 			}
 
-			if ($control) {
+			if (isset($control)) {
 				/**
 				 * User may set a class to the form control
 				 */
-				if ($class = $action->getClass()) {
-					$control->setAttribute('class', $class);
-				}
+				$control->setAttribute('class', $action->getClass());
 
 				/**
 				 * User may set additional attribtues to the form control
@@ -122,9 +121,7 @@ class GroupActionCollection
 				strtolower((string) $this->datagrid->getName()) . 'group_action_submit'
 			);
 
-		if ($form instanceof Nette\ComponentModel\IComponent) {
-			$form->onSubmit[] = [$this, 'submitted'];
-		}
+		$form->onSubmit[] = [$this, 'submitted'];
 	}
 
 
@@ -155,7 +152,7 @@ class GroupActionCollection
 		$ids = array_keys($http_ids);
 
 		$id = $values->group_action;
-		$this->groupActions[$id]->onSelect($ids, $values->{$id} ?? null);
+		$this->groupActions[$id]->onSelect($ids, $values[$id] ?? null);
 
 		$form['group_action']['group_action']->setValue(null);
 	}
@@ -166,7 +163,11 @@ class GroupActionCollection
 	 */
 	public function addGroupSelectAction(string $title, array $options): GroupAction
 	{
-		$id = $s = count($this->groupActions) ? ($s + 1) : 1;
+		if (count($this->groupActions) > 0) {
+			$id = count($this->groupActions) + 1;
+		} else {
+			$id = 1;
+		}
 
 		return $this->groupActions[$id] = new GroupSelectAction($title, $options);
 	}
@@ -177,7 +178,11 @@ class GroupActionCollection
 	 */
 	public function addGroupMultiSelectAction(string $title, array $options): GroupAction
 	{
-		$id = $s = count($this->groupActions) ? ($s + 1) : 1;
+		if (count($this->groupActions) > 0) {
+			$id = count($this->groupActions) + 1;
+		} else {
+			$id = 1;
+		}
 
 		return $this->groupActions[$id] = new GroupMultiSelectAction($title, $options);
 	}
@@ -188,7 +193,11 @@ class GroupActionCollection
 	 */
 	public function addGroupTextAction(string $title): GroupAction
 	{
-		$id = $s = count($this->groupActions) ? ($s + 1) : 1;
+		if (count($this->groupActions) > 0) {
+			$id = count($this->groupActions) + 1;
+		} else {
+			$id = 1;
+		}
 
 		return $this->groupActions[$id] = new GroupTextAction($title);
 	}
@@ -199,7 +208,11 @@ class GroupActionCollection
 	 */
 	public function addGroupTextareaAction(string $title): GroupAction
 	{
-		$id = $s = count($this->groupActions) ? ($s + 1) : 1;
+		if (count($this->groupActions) > 0) {
+			$id = count($this->groupActions) + 1;
+		} else {
+			$id = 1;
+		}
 
 		return $this->groupActions[$id] = new GroupTextareaAction($title);
 	}

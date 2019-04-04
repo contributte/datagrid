@@ -34,27 +34,27 @@ class InlineEdit
 	use TButtonText;
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onSubmit = [];
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onControlAdd = [];
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onControlAfterAdd = [];
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onSetDefaults = [];
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onCustomRedraw = [];
 
@@ -212,7 +212,7 @@ class InlineEdit
 
 					break;
 				default:
-					if (empty($control->getControl()->getClass())) {
+					if ($control->getControl()->getAttribute('class') === null) {
 						$control->setAttribute('class', 'form-control input-sm form-control-sm');
 					}
 

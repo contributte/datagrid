@@ -20,7 +20,7 @@ class ColumnStatus extends Column
 	use TButtonCaret;
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onChange = [];
 

@@ -66,7 +66,7 @@ class Export
 		$this->grid = $grid;
 		$this->text = $text;
 		$this->callback = $callback;
-		$this->filtered = (bool) $filtered;
+		$this->filtered = $filtered;
 		$this->title = $text;
 	}
 

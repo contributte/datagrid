@@ -37,17 +37,17 @@ final class DataModel
 	use SmartObject;
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onBeforeFilter = [];
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onAfterFilter = [];
 
 	/**
-	 * @var array<callable>
+	 * @var array|callable[]
 	 */
 	public $onAfterPaginated = [];
 
@@ -133,7 +133,7 @@ final class DataModel
 		/**
 		 * Paginator is optional
 		 */
-		if ($paginatorComponent) {
+		if ($paginatorComponent !== null) {
 			$paginator = $paginatorComponent->getPaginator();
 			$paginator->setItemCount($this->dataSource->getCount());
 

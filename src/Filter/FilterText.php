@@ -31,13 +31,13 @@ class FilterText extends Filter
 	protected $splitWordsSearch = true;
 
 	/**
-	 * @var array<string>
+	 * @var array|string[]
 	 */
 	protected $columns;
 
 
 	/**
-	 * @param array<string> $columns
+	 * @param array|string[] $columns
 	 */
 	public function __construct(
 		DataGrid $grid,
@@ -60,7 +60,7 @@ class FilterText extends Filter
 
 		$this->addAttributes($control);
 
-		if ($this->getPlaceholder()) {
+		if ($this->getPlaceholder() !== null) {
 			$control->setAttribute('placeholder', $this->getPlaceholder());
 		}
 	}

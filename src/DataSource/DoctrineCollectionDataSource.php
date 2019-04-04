@@ -99,8 +99,8 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 			return $this;
 		}
 
-		if ($sort = $sorting->getSort()) {
-			$this->criteria->orderBy($sort);
+		if ($sorting->getSort() !== []) {
+			$this->criteria->orderBy($sorting->getSort());
 
 			return $this;
 		}

@@ -175,8 +175,14 @@ class Row
 		$properties = explode('.', $key);
 		$value = $item;
 
-		while ($property = array_shift($properties)) {
-			if (!isset($value->{$property})) {
+		for (;;) {
+			$property = array_shift($properties);
+
+			if ($property === null) {
+				break;
+			}
+
+			if ($value->__isset($property)) {
 				if ($this->datagrid->strictEntityProperty) {
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
@@ -188,7 +194,7 @@ class Row
 				return null;
 			}
 
-			$value = $value->{$property};
+			$value = $value->__get($property);
 		}
 
 		return $value;
@@ -206,7 +212,7 @@ class Row
 		$value = $item;
 
 		while ($property = array_shift($properties)) {
-			if (!isset($value->{$property})) {
+			if ($value->__isset($property)) {
 				if ($this->datagrid->strictEntityProperty) {
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
@@ -218,7 +224,7 @@ class Row
 				return null;
 			}
 
-			$value = $value->{$property};
+			$value = $value->__get($property);
 		}
 
 		return $value;
@@ -239,7 +245,7 @@ class Row
 		$accessor = PropertyAccessHelper::getAccessor();
 
 		while ($property = array_shift($properties)) {
-			if (!is_object($value) && !$value) {
+			if (!is_object($value) && ! (bool) $value) {
 				if ($this->datagrid->strictEntityProperty) {
 					throw new DataGridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
@@ -333,7 +339,9 @@ class Row
 	 */
 	private function formatDibiRowKey(string $key): string
 	{
-		if ($offset = strpos($key, '.')) {
+		$offset = strpos($key, '.');
+
+		if ($offset !== false) {
 			return substr($key, $offset + 1);
 		}
 

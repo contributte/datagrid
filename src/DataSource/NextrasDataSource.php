@@ -104,7 +104,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 		$sort = $sorting->getSort();
 
-		if (!empty($sort)) {
+		if ($sort !== []) {
 			foreach ($sort as $column => $order) {
 				$this->dataSource = $this->dataSource->orderBy(
 					$this->prepareColumn((string) $column),
@@ -177,7 +177,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $dateTo->setTime(23, 59, 59);
 		}
 
-		if (!empty($dataCondition)) {
+		if ($dataCondition !== []) {
 			$this->dataSource = $this->dataSource->findBy($dataCondition);
 		}
 	}
@@ -200,7 +200,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $valueTo;
 		}
 
-		if (!empty($dataCondition)) {
+		if ($dataCondition !== []) {
 			$this->dataSource = $this->dataSource->findBy($dataCondition);
 		}
 	}

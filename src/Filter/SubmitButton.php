@@ -52,7 +52,7 @@ class SubmitButton extends Button
 		$el->setAttribute('type', 'submit');
 		$el->setAttribute('class', $this->getClass());
 
-		if ($this->getIcon()) {
+		if ($this->getIcon() !== null) {
 			$el->addHtml(
 				Html::el('span')->appendAttribute(
 					'class',
@@ -60,7 +60,7 @@ class SubmitButton extends Button
 				)
 			);
 
-			if (strlen($this->getText())) {
+			if ($this->getText() !== '') {
 				$el->addHtml('&nbsp;');
 			}
 		}
