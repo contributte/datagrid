@@ -80,6 +80,7 @@ class Action extends Column
 	 */
 	private $title;
 
+
 	public function __construct(
 		DataGrid $grid,
 		string $key,

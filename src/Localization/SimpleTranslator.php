@@ -42,6 +42,7 @@ class SimpleTranslator implements ITranslator
 		'ublaboo_datagrid.per_page_submit' => 'Change',
 	];
 
+
 	public function __construct(array $dictionary = [])
 	{
 		$this->dictionary = $dictionary;

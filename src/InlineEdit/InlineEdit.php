@@ -87,6 +87,7 @@ class InlineEdit
 	 */
 	protected $showNonEditingColumns = true;
 
+
 	public function __construct(DataGrid $grid, ?string $primaryWhereColumn = null)
 	{
 		$this->grid = $grid;

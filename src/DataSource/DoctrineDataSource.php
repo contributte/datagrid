@@ -52,6 +52,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	 */
 	protected $placeholder;
 
+
 	public function __construct(QueryBuilder $dataSource, string $primaryKey)
 	{
 		$this->placeholder = count($dataSource->getParameters());

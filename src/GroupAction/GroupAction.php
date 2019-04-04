@@ -34,6 +34,7 @@ abstract class GroupAction
 	 */
 	protected $attributes = [];
 
+
 	public function __construct(string $title)
 	{
 		$this->title = $title;

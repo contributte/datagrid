@@ -27,6 +27,7 @@ class GroupActionCollection
 	 */
 	protected $datagrid;
 
+
 	public function __construct(DataGrid $datagrid)
 	{
 		$this->datagrid = $datagrid;

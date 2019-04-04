@@ -35,6 +35,7 @@ abstract class FilterableColumn
 	 */
 	protected $column;
 
+
 	public function __construct(
 		DataGrid $grid,
 		string $key,

@@ -35,6 +35,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 */
 	protected $primaryKey;
 
+
 	public function __construct(Selection $dataSource, string $primaryKey)
 	{
 		$this->dataSource = $dataSource;

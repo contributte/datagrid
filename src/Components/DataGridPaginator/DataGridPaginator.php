@@ -44,6 +44,7 @@ class DataGridPaginator extends Control
 	 */
 	private $templateFile;
 
+
 	public function __construct(
 		ITranslator $translator,
 		string $iconPrefix = 'fa fa-'

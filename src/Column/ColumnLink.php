@@ -52,6 +52,7 @@ class ColumnLink extends Column
 	 */
 	protected $parameters = [];
 
+
 	public function __construct(
 		DataGrid $grid,
 		string $key,
@@ -122,7 +123,7 @@ class ColumnLink extends Column
 				Html::el('span')->setAttribute('class', DataGrid::$iconPrefix . $this->icon)
 			);
 
-			if (strlen($value) > 0) {
+			if (strlen($value) > 0) {
 				$a->addHtml('&nbsp;');
 			}
 		}

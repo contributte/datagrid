@@ -17,6 +17,7 @@ final class Sorting
 	 */
 	private $sortCallback = null;
 
+
 	public function __construct(array $sort, ?callable $sortCallback = null)
 	{
 		$this->sort = $sort;

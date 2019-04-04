@@ -21,6 +21,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	 */
 	protected $data = [];
 
+
 	public function __construct(Fluent $dataSource, string $primaryKey)
 	{
 		parent::__construct($dataSource, $primaryKey);

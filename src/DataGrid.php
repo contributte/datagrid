@@ -418,6 +418,7 @@ class DataGrid extends Control
 	 */
 	private $customPaginatorTemplate = null;
 
+
 	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
 		if ($parent !== null) {

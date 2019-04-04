@@ -32,6 +32,7 @@ class TestingDDataGridEntity
 	 */
 	private $partner;
 
+
 	public function __construct($args)
 	{
 		$this->id = $args['id'];

@@ -12,6 +12,7 @@ final class CallbackConfirmation implements IConfirmation
 	 */
 	private $callback;
 
+
 	public function __construct(callable $callback)
 	{
 		$this->callback = $callback;

@@ -34,6 +34,7 @@ class ColumnStatus extends Column
 	 */
 	protected $options = [];
 
+
 	public function __construct(
 		DataGrid $grid,
 		string $key,

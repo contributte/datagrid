@@ -12,6 +12,7 @@ class GroupSelectAction extends GroupAction
 	 */
 	protected $options;
 
+
 	public function __construct(string $title, array $options = [])
 	{
 		parent::__construct($title);

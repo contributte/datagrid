@@ -17,6 +17,7 @@ final class StringConfirmation implements IConfirmation
 	 */
 	private $placeholderName;
 
+
 	public function __construct(string $question, ?string $placeholderName = null)
 	{
 		$this->question = $question;

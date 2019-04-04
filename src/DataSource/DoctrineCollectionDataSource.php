@@ -38,6 +38,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	 */
 	protected $criteria;
 
+
 	public function __construct(ArrayCollection $collection, string $primaryKey)
 	{
 		$this->criteria = Criteria::create();

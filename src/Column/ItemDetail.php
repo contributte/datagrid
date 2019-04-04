@@ -64,6 +64,7 @@ class ItemDetail
 	 */
 	protected $templateParameters = [];
 
+
 	public function __construct(DataGrid $grid, string $primaryWhereColumn)
 	{
 		$this->grid = $grid;

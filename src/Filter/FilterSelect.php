@@ -38,6 +38,7 @@ class FilterSelect extends OneColumnFilter
 	 */
 	protected $prompt = null;
 
+
 	public function __construct(
 		DataGrid $grid,
 		string $key,

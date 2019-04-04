@@ -56,6 +56,7 @@ class Export
 	 */
 	protected $confirmDialog = null;
 
+
 	public function __construct(
 		DataGrid $grid,
 		string $text,

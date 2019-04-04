@@ -179,7 +179,7 @@ trait TDataGridAggregationFunction
 
 	public function hasSomeAggregationFunction(): bool
 	{
-		return $this->aggregationFunctions !== [] || $this->multipleAggregationFunction;
+		return $this->aggregationFunctions !== [] || $this->multipleAggregationFunction !== null;
 	}
 
 

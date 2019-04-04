@@ -87,7 +87,7 @@ abstract class Column extends FilterableColumn
 	protected $defaultHide = false;
 
 	/**
-	 * @var array|Html[][|null[][]
+	 * @var array|Html[]|null[]
 	 */
 	protected $elementCache = ['td' => null, 'th' => null];
 
@@ -532,7 +532,7 @@ abstract class Column extends FilterableColumn
 	 */
 	public function getElementPrototype(string $tag): Html
 	{
-		if ($this->elementCache[$tag]) {
+		if (isset($this->elementCache[$tag])) {
 			return $this->elementCache[$tag];
 		}
 
@@ -545,14 +545,14 @@ abstract class Column extends FilterableColumn
 	 */
 	public function getElementForRender(string $tag, string $key, ?Row $row = null): Html
 	{
-		$el = $this->elementCache[$tag] ? clone $this->elementCache[$tag] : Html::el($tag);
+		$el = isset($this->elementCache[$tag]) ? clone $this->elementCache[$tag] : Html::el($tag);
 
 		/**
 		 * If class was set by user via $el->class = '', fix it
 		 */
-		if (!empty($el->class) && is_string($el->class)) {
-			$class = $el->class;
-			unset($el->class);
+		if (is_string($el->getAttribute('class'))) {
+			$class = $el->getAttribute('class');
+			$el->__unset('class');
 
 			$el->appendAttribute('class', $class);
 		}

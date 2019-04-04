@@ -17,6 +17,7 @@ class Renderer
 	 */
 	protected $conditionCallback;
 
+
 	public function __construct(
 		callable $callback,
 		?callable $conditionCallback

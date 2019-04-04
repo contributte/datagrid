@@ -14,6 +14,7 @@ abstract class OneColumnFilter extends Filter
 	 */
 	protected $column;
 
+
 	public function __construct(
 		DataGrid $grid,
 		string $key,

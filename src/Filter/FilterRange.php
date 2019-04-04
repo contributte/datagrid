@@ -30,6 +30,7 @@ class FilterRange extends OneColumnFilter
 	 */
 	protected $type = 'range';
 
+
 	public function __construct(
 		DataGrid $grid,
 		string $key,

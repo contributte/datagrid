@@ -47,6 +47,7 @@ class MultiAction extends Column
 	 */
 	private $rowConditions = [];
 
+
 	public function __construct(DataGrid $grid, string $key, string $name)
 	{
 		parent::__construct($grid, $key, '', $name);
@@ -62,10 +63,6 @@ class MultiAction extends Column
 			->data('toggle', 'dropdown');
 
 		$this->tryAddIcon($button, $this->getIcon(), $this->getName());
-
-		if ($this->attributes !== []) {
-			$button->addAttributes($this->attributes);
-		}
 
 		$button->addText($this->grid->getTranslator()->translate($this->name));
 

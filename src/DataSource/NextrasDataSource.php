@@ -36,6 +36,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	protected $primaryKey;
 
+
 	public function __construct(ICollection $dataSource, string $primaryKey)
 	{
 		$this->dataSource = $dataSource;

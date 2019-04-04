@@ -34,6 +34,7 @@ class FunctionSum implements IAggregationFunction
 	 */
 	protected $renderer = null;
 
+
 	public function __construct(
 		string $column,
 		string $dataType = IAggregationFunction::DATA_TYPE_PAGINATED

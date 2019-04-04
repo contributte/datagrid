@@ -26,6 +26,7 @@ class FilterMultiSelect extends FilterSelect
 		'data-selected-text-format' => ['count'],
 	];
 
+
 	public function __construct(
 		DataGrid $grid,
 		string $key,

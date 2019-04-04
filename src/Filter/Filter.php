@@ -66,6 +66,7 @@ abstract class Filter
 	 */
 	private $placeholder;
 
+
 	public function __construct(
 		DataGrid $grid,
 		string $key,

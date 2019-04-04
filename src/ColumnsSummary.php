@@ -42,6 +42,7 @@ class ColumnsSummary
 	 */
 	protected $positionTop = false;
 
+
 	/**
 	 * @param array|string[] $columns
 	 */
@@ -49,8 +50,7 @@ class ColumnsSummary
 		DataGrid $datagrid,
 		array $columns,
 		?callable $rowCallback
-	)
-	{
+	) {
 		$this->summary = array_fill_keys(array_values($columns), 0);
 		$this->datagrid = $datagrid;
 		$this->rowCallback = $rowCallback;

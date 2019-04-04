@@ -25,6 +25,7 @@ class CsvDataModel
 	 */
 	protected $translator;
 
+
 	public function __construct(
 		array $data,
 		array $columns,
