@@ -3,7 +3,7 @@
  * @param Action[]        $actions            Available actions
  * @param Export[]        $exports            Available exports
  * @param Filter[]        $filters            Available filters
- * @param ToolBarButton[] $toolbar_buttons    Available toolbar_buttons
+ * @param ToolBarButton[] $toolbarButtons    Available toolbarButtons
  * @param Form            $filter             Workaround for latte snippets
  * @param Row[]           $rows               List of rows (each contain a item from data source)
  * @param DataGrid        $control            Parent (DataGrid)
@@ -74,7 +74,7 @@
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered table-sm{/block}" n:snippet="table" n:block="data">
 				<thead n:block="header">
-					<tr class="row-group-actions" n:if="$hasGroupActions || $exports || $toolbar_buttons || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
+					<tr class="row-group-actions" n:if="$hasGroupActions || $exports || $toolbarButtons || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
 						<th colspan="{$control->getColumnsCount()}" class="ublaboo-datagrid-th-form-inline">
 							{if $hasGroupActions}
 								{block group_actions}
@@ -94,9 +94,9 @@
 								{/block}
 							{/if}
 
-							<div class="datagrid-toolbar" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbar_buttons">
-								<span n:if="$toolbar_buttons">
-									{foreach $toolbar_buttons as $toolbar_button}{$toolbar_button->renderButton()}{/foreach}
+							<div class="datagrid-toolbar" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
+								<span n:if="$toolbarButtons">
+									{foreach $toolbarButtons as $toolbar_button}{$toolbar_button->renderButton()}{/foreach}
 								</span>
 
 								<span class="datagrid-exports" n:if="$exports" n:snippet="exports" n:block="exports">
@@ -200,7 +200,7 @@
 								</div>
 							{$th->endTag()|noescape}
 						{/foreach}
-						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-center">
+						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center">
 							{='ublaboo_datagrid.action'|translate}
 						</th>
 					</tr>
@@ -228,7 +228,7 @@
 							{/if}
 							{$th->endTag()|noescape}
 						{/foreach}
-						<th n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action text-center">
+						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center">
 							{if !$control->hasAutoSubmit() && !$control->hasOuterFilterRendering()}
 								{input $filter['filter']['submit']}
 							{/if}
@@ -299,7 +299,7 @@
 												{include column-value, column => $column, row => $row, key => $key}
 											{$td->endTag()|noescape}
 										{/foreach}
-										<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action">
+										<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action">
 											{foreach $actions as $key => $action}
 												{if $row->hasAction($key)}
 													{if $action->hasTemplate()}
@@ -315,8 +315,8 @@
 											{if $inlineEdit && $row->hasInlineEdit()}
 												{$inlineEdit->renderButton($row)|noescape}
 											{/if}
-											{if $items_detail && $items_detail->shouldBeRendered($row)}
-												{$items_detail->renderButton($row)|noescape}
+											{if $itemsDetail && $itemsDetail->shouldBeRendered($row)}
+												{$itemsDetail->renderButton($row)|noescape}
 											{/if}
 										</td>
 									</tr>
@@ -326,13 +326,13 @@
 							{**
 							 * Item detail
 							 *}
-							{if $items_detail && $items_detail->shouldBeRendered($row)}
+							{if $itemsDetail && $itemsDetail->shouldBeRendered($row)}
 								<tr class="row-item-detail item-detail-{$row->getId()}" n:snippet="item-{$row->getId()}-detail">
 									{if isset($toggle_detail) && $toggle_detail == $row->getId()}
-										{var $item_detail_params = ['item' => $item, '_form' => $filter] + $items_detail->getTemplateVariables()}
+										{var $item_detail_params = ['item' => $item, '_form' => $filter] + $itemsDetail->getTemplateVariables()}
 
-										{if isset($filter['items_detail_form'])}
-											{var $item_detail_params['items_detail_form'] = $filter['items_detail_form']}
+										{if isset($filter['itemsDetail_form'])}
+											{var $item_detail_params['itemsDetail_form'] = $filter['itemsDetail_form']}
 										{/if}
 
 										{ifset #detail}
@@ -341,13 +341,13 @@
 													{include #detail, (expand) $item_detail_params}
 												</div>
 											</td>
-										{elseif $items_detail}
+										{elseif $itemsDetail}
 											<td colspan="{$control->getColumnsCount()}">
 												<div class="item-detail-content">
-													{if $items_detail->getType() == 'template'}
-														{include $items_detail->getTemplate(), (expand) $item_detail_params}
+													{if $itemsDetail->getType() == 'template'}
+														{include $itemsDetail->getTemplate(), (expand) $item_detail_params}
 													{else}
-														{$items_detail->render($item)|noescape}
+														{$itemsDetail->render($item)|noescape}
 													{/if}
 												</div>
 											</td>
@@ -409,8 +409,8 @@
 										*}
 										<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{='ublaboo_datagrid.reset_filter'|translate}</a>
 										{if $control->isPaginated()}
-											{input $filter['per_page'], data-autosubmit-per-page => TRUE, class => 'form-control input-sm form-control-sm'}
-											{input $filter['per_page_submit'], class => 'datagrid-per-page-submit'}
+											{input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'form-control input-sm form-control-sm'}
+											{input $filter['perPage_submit'], class => 'datagrid-per-page-submit'}
 										{/if}
 									</div>
 								</td>
@@ -470,7 +470,7 @@
 			{include aggregationFunctions, columns => $columns}
 		{/if}
 
-		<td n:if="$actions || $control->isSortable() || $items_detail || $inlineEdit || $inlineAdd" class="col-action"></td>
+		<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action"></td>
 	</tr>
 
 {/define}
