@@ -1464,6 +1464,8 @@ s	 */
 			->setValidationScope([$select]);
 
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
+
+		return $form;
 	}
 
 
