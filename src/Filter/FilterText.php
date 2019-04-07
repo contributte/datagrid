@@ -74,7 +74,7 @@ class FilterText extends Filter
 	 */
 	public function getCondition(): array
 	{
-		return array_fill_keys([$this->columns], $this->getValue());
+		return array_fill_keys($this->columns, $this->getValue());
 	}
 
 
