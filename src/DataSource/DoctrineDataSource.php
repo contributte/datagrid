@@ -7,6 +7,7 @@ namespace Ublaboo\DataGrid\DataSource;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Nette\SmartObject;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
 use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
@@ -24,6 +25,8 @@ use Ublaboo\DataGrid\Utils\Sorting;
  */
 class DoctrineDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
+
+	use SmartObject;
 
 	/**
 	 * Event called when datagrid data is loaded.
