@@ -44,7 +44,7 @@ abstract class Column extends FilterableColumn
 	/**
 	 * @var array
 	 */
-	protected $sort;
+	protected $sort = [];
 
 	/**
 	 * @var bool
