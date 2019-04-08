@@ -8,6 +8,7 @@
 
 namespace Ublaboo\DataGrid\Traits;
 
+use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\Column\Renderer;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Exception\DataGridException;
