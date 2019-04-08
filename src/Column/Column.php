@@ -176,7 +176,14 @@ abstract class Column extends FilterableColumn
 	 */
 	public function isSortable(): bool
 	{
-		return $this->sortable === false;
+		$sortable = $this->sortable;
+		if (is_bool($sortable)) {
+			return $sortable;
+		}
+		if (is_string($sortable) && $sortable !== '') {
+			return true;
+		}
+		return false;
 	}
 
 
@@ -339,7 +346,10 @@ abstract class Column extends FilterableColumn
 			return [$this->key => 'ASC'];
 		}
 
-		$sort = reset($this->sort);
+		$sort = $this->sort;
+		if (is_array($sort)) {
+			$sort = reset($sort);
+		}
 
 		if ($sort === 'ASC') {
 			return [$this->key => $defaultSort === 'DESC' ? false : 'DESC'];
@@ -369,7 +379,12 @@ abstract class Column extends FilterableColumn
 			return false;
 		}
 
-		return reset($this->sort) === 'ASC';
+		$sort = $this->sort;
+		if (is_array($sort)) {
+			$sort = reset($sort);
+		}
+
+		return $sort === 'ASC';
 	}
 
 
