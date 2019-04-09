@@ -69,14 +69,8 @@ trait TLink
 				}
 
 				return $link; // Found signal handler!
-			} else {
-				continue; // Did not find signal handler
 			}
-
-			if ($targetComponent instanceof Presenter) {
-				// Went the whole way up to the UI\Presenter and did not find any signal handler
-				throw $this->createHierarchyLookupException($grid, $href, $params);
-			}
+			continue; // Did not find signal handler
 		}
 
 		// Went 10 steps up to the Presenter and did not find any signal handler
