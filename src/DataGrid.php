@@ -11,9 +11,9 @@ namespace Ublaboo\DataGrid;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Link;
-use Nette\Application\UI\PresenterComponent;
+use Nette\Application\UI\Component;
+use Nette\ComponentModel\IComponent;
 use Ublaboo\DataGrid\AggregationFunction\TDataGridAggregationFunction;
-use Ublaboo\DataGrid\ColumnsSummary;
 use Ublaboo\DataGrid\Exception\DataGridColumnNotFoundException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridFilterNotFoundException;
@@ -386,20 +386,8 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	private $custom_paginator_template;
 
-	/**
-	 * @param Nette\ComponentModel\IContainer|NULL $parent
-	 * @param string                               $name
-	 */
-	public function __construct(Nette\ComponentModel\IContainer $parent = null, $name = null)
+	public function __construct()
 	{
-		parent::__construct();
-
-		if ($parent !== null) {
-			$parent->addComponent($this, $name);
-		}
-
-		$this->monitor('Nette\Application\UI\Presenter');
-
 		/**
 		 * Try to find previous filters, pagination, per_page and other values in session
 		 */
@@ -427,27 +415,24 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Notify about that json js extension
 		 */
 		$this->onFiltersAssembled[] = [$this, 'sendNonEmptyFiltersInPayload'];
-	}
 
-
-	/**
-	 * {inheritDoc}
-	 * @return void
-	 */
-	public function attached($presenter)
-	{
-		parent::attached($presenter);
-
-		if ($presenter instanceof Nette\Application\UI\Presenter) {
-			/**
-			 * Get session
-			 */
-			if ($this->remember_state) {
-				$this->grid_session = $presenter->getSession($this->getSessionSectionName());
+		$this->monitor(IComponent::class, function (IComponent $component) {
+			if (!($component instanceof Component)) {
+				throw new DataGridHasToBeAttachedToPresenterComponentException(
+					"DataGrid is attached to: '" . ($component ? get_class($component) : 'null') . "', but instance of Component is needed."
+				);
 			}
-		}
-	}
 
+			if ($component instanceof Nette\Application\UI\Presenter) {
+				/**
+				 * Get session
+				 */
+				if ($this->remember_state) {
+					$this->grid_session = $component->getSession($this->getSessionSectionName());
+				}
+			}
+		});
+	}
 
 	/********************************************************************************
 	 *                                  RENDERING                                   *
@@ -487,17 +472,14 @@ class DataGrid extends Nette\Application\UI\Control
 		if (!empty($this->redraw_item)) {
 			$items = $this->dataModel->filterRow($this->redraw_item);
 		} else {
-			$items = Nette\Utils\Callback::invokeArgs(
-				[$this->dataModel, 'filterData'],
-				[
-					$this->getPaginator(),
-					$this->createSorting($this->sort, $this->sort_callback),
-					$this->assembleFilters(),
-				]
+			$items = $this->dataModel->filterData(
+				$this->getPaginator(),
+				$this->createSorting($this->sort, $this->sort_callback),
+				$this->assembleFilters()
 			);
 		}
 
-		$callback = $this->rowCallback ?: null;
+		$callback = $this->rowCallback ?? null;
 		$hasGroupActionOnRows = false;
 
 		foreach ($items as $item) {
@@ -2415,12 +2397,10 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$rows = [];
 
-		$items = Nette\Utils\Callback::invokeArgs(
-			[$this->dataModel, 'filterData'], [
-				null,
-				$this->createSorting($this->sort, $this->sort_callback),
-				$filter,
-			]
+		$items = $this->dataModel->filterData(
+			null,
+			$this->createSorting($this->sort, $this->sort_callback),
+			$filter
 		);
 
 		foreach ($items as $item) {
@@ -2878,7 +2858,14 @@ class DataGrid extends Nette\Application\UI\Control
 	public function getTranslator()
 	{
 		if (!$this->translator) {
-			$this->translator = new Localization\SimpleTranslator;
+			$reflection = new \ReflectionMethod(Nette\Localization\ITranslator::class, 'translate');
+
+			if ($reflection->getParameters()[1]->isVariadic()) {
+				$this->translator = new Localization\SimpleTranslatorNette3;
+			}
+			else {
+				$this->translator = new Localization\SimpleTranslator;
+			}
 		}
 
 		return $this->translator;
@@ -3509,24 +3496,6 @@ class DataGrid extends Nette\Application\UI\Control
 		return $return;
 	}
 
-
-	/**
-	 * @return PresenterComponent
-	 */
-	public function getParent()
-	{
-		$parent = parent::getParent();
-
-		if (!($parent instanceof PresenterComponent)) {
-			throw new DataGridHasToBeAttachedToPresenterComponentException(
-                "DataGrid is attached to: '" . ($parent ? get_class($parent) : 'null') . "', but instance of PresenterComponent is needed."
-			);
-		}
-
-		return $parent;
-	}
-
-
 	/**
 	 * @return string
 	 */
@@ -3580,4 +3549,3 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->custom_paginator_template = $template_file;
 	}
 }
-

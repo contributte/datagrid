@@ -21,21 +21,25 @@
 		}
 	},
 	"require": {
-		"php": "^5.6|^7.0",
-		"nette/application": "^2.4.0",
-		"nette/utils": "^2.4.0",
-		"nette/forms": "^2.3.0",
-		"ublaboo/responses": "~1.0.0 || ~2.0.0",
+		"php": "^7.1",
+		"nette/application": "^2.4.0 || ^3.0",
+		"nette/caching": "^2.5.0 || ^3.0",
+		"nette/component-model": "^2.4.0 || ^3.0",
+		"nette/http": "^2.4.0 || ^3.0",
+		"nette/utils": "^2.5 || ^3.0",
+		"nette/forms": "^2.3.0 || ^3.0",
+		"ublaboo/responses": "~1.0.7 || ~2.0.0",
 		"symfony/property-access": "^3.0.0 || ^4.0.0"
 	},
 	"require-dev": {
-		"nette/tester": "^1.6.1",
-		"tracy/tracy": "^2.3.0",
+		"nette/tester": "^2.2",
+		"latte/latte": "^2.5.1",
+		"tracy/tracy": "^2.3.0 || ^2.6.2",
 		"mockery/mockery": "~0.9",
 		"tharos/leanmapper": "~2.2.0",
 		"nextras/orm": "~2.3.0",
 		"doctrine/orm": "~2.5",
-		"nette/database": "^2.3",
+		"nette/database": "^2.4 || ^3.0",
 		"dibi/dibi": "^3.0"
 	},
 	"extra": {

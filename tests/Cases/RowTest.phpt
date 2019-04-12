@@ -3,14 +3,15 @@
 namespace Ublaboo\DataGrid\Tests\Cases;
 
 use Nette\Utils\Html;
+use Tester\Environment;
 use Tester\TestCase;
 use Tester\Assert;
 use Ublaboo;
-use Nette\SmartObject;
-use LeanMapper;
+use Ublaboo\DataGrid\Tests\Files\XTestingDDataGridEntity;
+use Ublaboo\DataGrid\Tests\Files\XTestingLMDataGridEntity;
+use Ublaboo\DataGrid\Tests\Files\XTestingLMDataGridEntity2;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/XTestingDataGridFactory.php';
 
 final class RowTest extends TestCase
 {
@@ -64,21 +65,6 @@ final class RowTest extends TestCase
 	}
 
 
-	public function testLeanMapperEntity()
-	{
-		$entity = new XTestingLMDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
-		$entity2 = new XTestingLMDataGridEntity2(['id' => 21, 'name' => 'Francis', 'age' => 20]);
-
-		$entity->setGirlfriend($entity2);
-
-		$row = new Ublaboo\DataGrid\Row($this->grid, $entity, 'id');
-
-		Assert::same('John Doe', $row->getValue('name'));
-		Assert::same(23, $row->getValue('age'));
-		Assert::same(20, $row->getValue('girlfriend.age'));
-	}
-
-
 	public function testDoctrineEntity()
 	{
 		$entity = new XTestingDDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
@@ -94,124 +80,23 @@ final class RowTest extends TestCase
 		Assert::same(20, $row->getValue('partner.age'));
 	}
 
-}
 
-
-/**
- * @property int $id
- * @property string $name
- * @property XTestingLMDataGridEntity2|NULL $girlfriend
- */
-class XTestingLMDataGridEntity extends LeanMapper\Entity
-{
-
-	private $age;
-
-
-	public function getAge()
+	public function testLeanMapperEntity()
 	{
-		return $this->age;
-	}
+		if (!class_exists('LeanMapper\Entity')) {
+			Environment::skip('Test requires LeanMapper dependency.');
+		}
 
+		$entity = new XTestingLMDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
+		$entity2 = new XTestingLMDataGridEntity2(['id' => 21, 'name' => 'Francis', 'age' => 20]);
 
-	public function setAge($age)
-	{
-		$this->age = $age;
-	}
+		$entity->setGirlfriend($entity2);
 
-}
+		$row = new Ublaboo\DataGrid\Row($this->grid, $entity, 'id');
 
-
-/**
- * @property int $id
- * @property string $name
- */
-class XTestingLMDataGridEntity2 extends LeanMapper\Entity
-{
-
-	private $age;
-
-
-	public function getAge()
-	{
-		return $this->age;
-	}
-
-
-	public function setAge($age)
-	{
-		$this->age = $age;
-	}
-
-}
-
-
-class XTestingDDataGridEntity
-{
-
-	use SmartObject;
-
-	/**
-	 * @ORM\Id
-	 * @ORM\Column(type="integer")
-	 * @ORM\GeneratedValue
-	 * @var integer
-	 */
-	private $id;
-
-	/**
-	 * @ORM\Column(type="string")
-	 * @var string
-	 */
-	private $name;
-
-	/**
-	 * @ORM\Column(type="integer")
-	 * @var integer
-	 */
-	private $age;
-
-	private $partner;
-
-
-	public function __construct($args)
-	{
-		$this->id = $args['id'];
-		$this->age = $args['age'];
-		$this->name = $args['name'];
-	}
-
-
-	public function getName()
-	{
-		return $this->name;
-	}
-
-
-	/**
-	 * @return integer
-	 */
-	final public function getId()
-	{
-		return $this->id;
-	}
-
-
-	public function getAge()
-	{
-		return $this->age;
-	}
-
-
-	public function setPartner($p)
-	{
-		$this->partner = $p;
-	}
-
-
-	public function getPartner()
-	{
-		return $this->partner;
+		Assert::same('John Doe', $row->getValue('name'));
+		Assert::same(23, $row->getValue('age'));
+		Assert::same(20, $row->getValue('girlfriend.age'));
 	}
 
 }

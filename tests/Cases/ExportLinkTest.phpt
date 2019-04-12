@@ -18,6 +18,7 @@ final class ExportLinkTest extends TestCase
 	public function testExportLink()
 	{
 		$factory = new XTestingDataGridFactory;
+		/** @var Ublaboo\DataGrid\DataGrid $grid */
 		$grid = $factory->createXTestingDataGrid('ExportTesting');
 		$grid->setDataSource([]);
 

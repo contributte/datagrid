@@ -2,20 +2,20 @@
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
+use Nette;
+use Nextras;
 use Nextras\Orm\Relationships\OneHasMany;
 use Tester\Environment;
-use Tester\TestCase;
-use Tester\Assert;
 use Ublaboo\DataGrid\DataSource\NextrasDataSource;
+use Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
-// Temporary cause:
-// E_USER_DEPRECATED: Replace deprecated Nette\Object with trait Nette\SmartObject in BaseMapper
-error_reporting(E_ERROR | E_PARSE);
-
 if (!extension_loaded('mysqli')) {
-    \Tester\Environment::skip('Test requires MySQLi extension to be loaded.');
+	Environment::skip('Test requires MySQLi extension to be loaded.');
+}
+if (!class_exists('Nextras\Orm\Entity\Entity')) {
+	Environment::skip('Test requires Nextras\Orm dependency.');
 }
 
 /**
@@ -23,23 +23,23 @@ if (!extension_loaded('mysqli')) {
  */
 final class NextrasDataSourceTest extends BaseDataSourceTest {
 
-	/** @var \Nextras\Orm\Model\Model */
+	/** @var Nextras\Orm\Model\Model */
 	private $model;
 
 	public function setUp() {
 		$this->setUpDatabase();
 
 		$this->ds = new NextrasDataSource($this->model->users->findAll(), 'id');
-		$factory = new \Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
+		$factory = new XTestingDataGridFactory;
 		$this->grid = $factory->createXTestingDataGrid();
 	}
 
 	protected function setUpDatabase() {
-		$args = \Tester\Environment::loadData();
+		$args = Environment::loadData();
 
-		$storage = new \Nette\Caching\Storages\DevNullStorage();
-		$cache = new \Nette\Caching\Cache($storage);
-		$connection = new \Nextras\Dbal\Connection($args);
+		$storage = new Nette\Caching\Storages\DevNullStorage();
+		$cache = new Nette\Caching\Cache($storage);
+		$connection = new Nextras\Dbal\Connection($args);
 
 		$connection->query("DROP TABLE IF EXISTS `users`");
 		$connection->query("CREATE TABLE `users` (
@@ -50,7 +50,7 @@ final class NextrasDataSourceTest extends BaseDataSourceTest {
 								PRIMARY KEY (`id`)
 							) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_czech_ci;");
 
-		$simpleModelFactory = new \Nextras\Orm\Model\SimpleModelFactory($cache, [
+		$simpleModelFactory = new Nextras\Orm\Model\SimpleModelFactory($cache, [
 			'users' => new UsersRepository(new UsersMapper($connection, $cache)),
 		]);
 
@@ -71,7 +71,7 @@ final class NextrasDataSourceTest extends BaseDataSourceTest {
 
 /**
  * User
- * 
+ *
  * @property int $id {primary}
  * @property string $name
  * @property int $age

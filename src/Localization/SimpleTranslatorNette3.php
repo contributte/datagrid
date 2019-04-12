@@ -11,16 +11,15 @@ namespace Ublaboo\DataGrid\Localization;
 use Nette;
 use Nette\SmartObject;
 
-class SimpleTranslator extends BaseSimpleTranslator
+class SimpleTranslatorNette3 extends BaseSimpleTranslator
 {
 
 	/**
 	 * Translates the given string
 	 *
 	 * @param  string
-	 * @param  int
 	 */
-	public function translate($message, $count = null): string
+	public function translate($message, ...$parameters): string
 	{
 		return isset($this->dictionary[$message]) ? $this->dictionary[$message] : $message;
 	}

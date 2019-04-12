@@ -1,8 +1,6 @@
 language: php
 
 php:
-  - 5.6
-  - 7.0
   - 7.1
   - 7.2
   - 7.3
@@ -29,6 +27,14 @@ jobs:
       php: 7.1
       install:
         - travis_retry composer update --no-progress --prefer-dist --prefer-lowest
+      script:
+        - vendor/bin/tester tests/ -c tests/php.ini
+
+    - env: title="Highest Dependencies 7.3"
+      php: 7.3
+      install:
+        - composer remove --dev tharos/leanmapper nextras/orm # Dependencies with no Nette v3 support, yet
+        - travis_retry composer update --no-progress --prefer-dist
       script:
         - vendor/bin/tester tests/ -c tests/php.ini
 
