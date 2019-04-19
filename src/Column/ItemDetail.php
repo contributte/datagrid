@@ -55,7 +55,7 @@ class ItemDetail
 	protected $primaryWhereColumn;
 
 	/**
-	 * @var ItemDetailForm
+	 * @var ItemDetailForm|null
 	 */
 	protected $form;
 
@@ -193,7 +193,7 @@ class ItemDetail
 	}
 
 
-	public function getForm(): ItemDetailForm
+	public function getForm(): ?ItemDetailForm
 	{
 		return $this->form;
 	}

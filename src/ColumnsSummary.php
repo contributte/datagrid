@@ -94,7 +94,7 @@ class ColumnsSummary
 	}
 
 
-	public function render(string $key): string
+	public function render(string $key): ?string
 	{
 		try {
 			return $this->useRenderer($key);

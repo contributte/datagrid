@@ -63,12 +63,12 @@ class GroupActionCollection
 			if ($action instanceof GroupSelectAction) {
 				if ($action->hasOptions()) {
 					if ($action instanceof GroupMultiSelectAction) {
-						$control = $container->addMultiSelect($id, '', $action->getOptions());
+						$control = $container->addMultiSelect((string) $id, '', $action->getOptions());
 						$control->setAttribute('data-datagrid-multiselect-id', self::ID_ATTRIBUTE_PREFIX . $id);
 						$control->setAttribute('data-style', 'hidden');
 						$control->setAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
 					} else {
-						$control = $container->addSelect($id, '', $action->getOptions());
+						$control = $container->addSelect((string) $id, '', $action->getOptions());
 					}
 
 					$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id);

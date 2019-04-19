@@ -9,7 +9,7 @@
  * @param DataGrid        $control            Parent (DataGrid)
  * @param string          $originalTemplate   Original template file path
  * @param string          $iconPrefix         Icon prefix (fa fa-)
- * @param array           $columns_visibility What columns are visible
+ * @param array           $columnsVisibility What columns are visible
  * @param InlineEdit|null $inlineEdit  Inline editing data
  * @param InlineEdit|null $inlineAdd   Inline add data
  *}
@@ -119,7 +119,7 @@
 											<i n:block = "icon-gear" class="{$iconPrefix}gear"></i>
 										</button>
 										<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
-											<li n:foreach="$columns_visibility as $v_key => $visibility">
+											<li n:foreach="$columnsVisibility as $v_key => $visibility">
 												{if $visibility['visible']}
 													<a n:href="hideColumn!, column => $v_key" class="ajax dropdown-item">
 														<i n:block = "icon-checked" class="{$iconPrefix}check-square-o"></i>

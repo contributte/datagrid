@@ -1414,7 +1414,7 @@ s	 */
 		 */
 		$itemsDetailForm = $this->getItemDetailForm();
 
-		if ($itemsDetailForm instanceof Nette\Forms\Container) {
+		if ($itemsDetailForm instanceof Container) {
 			$form['items_detail_form'] = $itemsDetailForm;
 		}
 
