@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
 use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
+use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
@@ -121,12 +122,16 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		foreach ($filter->getCondition() as $value) {
-			$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+			try {
+				$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
 
-			$from = Criteria::expr()->gte($filter->getColumn(), $date->format('Y-m-d 00:00:00'));
-			$to = Criteria::expr()->lte($filter->getColumn(), $date->format('Y-m-d 23:59:59'));
+				$from = Criteria::expr()->gte($filter->getColumn(), $date->format('Y-m-d 00:00:00'));
+				$to = Criteria::expr()->lte($filter->getColumn(), $date->format('Y-m-d 23:59:59'));
 
-			$this->criteria->andWhere($from)->andWhere($to);
+				$this->criteria->andWhere($from)->andWhere($to);
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
 		}
 	}
 
@@ -139,21 +144,29 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 		$valueFrom = $values['from'];
 
 		if ((bool) $valueFrom) {
-			$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
-			$dateFrom->setTime(0, 0, 0);
+			try {
+				$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
+				$dateFrom->setTime(0, 0, 0);
 
-			$expr = Criteria::expr()->gte($filter->getColumn(), $dateFrom->format('Y-m-d H:i:s'));
-			$this->criteria->andWhere($expr);
+				$expr = Criteria::expr()->gte($filter->getColumn(), $dateFrom->format('Y-m-d H:i:s'));
+				$this->criteria->andWhere($expr);
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
 		}
 
 		$valueTo = $values['to'];
 
 		if ((bool) $valueTo) {
-			$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
-			$dateTo->setTime(23, 59, 59);
+			try {
+				$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
+				$dateTo->setTime(23, 59, 59);
 
-			$expr = Criteria::expr()->lte($filter->getColumn(), $dateTo->format('Y-m-d H:i:s'));
-			$this->criteria->andWhere($expr);
+				$expr = Criteria::expr()->lte($filter->getColumn(), $dateTo->format('Y-m-d H:i:s'));
+				$this->criteria->andWhere($expr);
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
 		}
 	}
 
