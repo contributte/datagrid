@@ -10,6 +10,7 @@ namespace Ublaboo\DataGrid\DataSource;
 
 use Dibi;
 use DibiFluent;
+use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 
@@ -83,9 +84,13 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	{
 		$conditions = $filter->getCondition();
 
-		$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
+		try {
+			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
-		$this->data_source->where('CONVERT(varchar(10), %n, 112) = ?', $filter->getColumn(), $date->format('Ymd'));
+			$this->data_source->where('CONVERT(varchar(10), %n, 112) = ?', $filter->getColumn(), $date->format('Ymd'));
+		} catch (DataGridDateTimeHelperException $ex) {
+			// ignore the invalid filter value
+		}
 	}
 
 
