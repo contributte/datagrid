@@ -11,6 +11,7 @@ use Nette\SmartObject;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
 use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
+use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
@@ -189,12 +190,16 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		$p2 = $this->getPlaceholder();
 
 		foreach ($filter->getCondition() as $column => $value) {
-			$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
-			$c = $this->checkAliases($column);
+			try {
+				$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+				$c = $this->checkAliases($column);
 
-			$this->dataSource->andWhere("$c >= :$p1 AND $c <= :$p2")
-				->setParameter($p1, $date->format('Y-m-d 00:00:00'))
-				->setParameter($p2, $date->format('Y-m-d 23:59:59'));
+				$this->dataSource->andWhere("$c >= :$p1 AND $c <= :$p2")
+					->setParameter($p1, $date->format('Y-m-d 00:00:00'))
+					->setParameter($p2, $date->format('Y-m-d 23:59:59'));
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
 		}
 	}
 
@@ -208,27 +213,35 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		$valueTo = $conditions[$filter->getColumn()]['to'];
 
 		if ($valueFrom) {
-			$dateFrom = DateTimeHelper::tryConvertToDate($valueFrom, [$filter->getPhpFormat()]);
-			$dateFrom->setTime(0, 0, 0);
+			try {
+				$dateFrom = DateTimeHelper::tryConvertToDate($valueFrom, [$filter->getPhpFormat()]);
+				$dateFrom->setTime(0, 0, 0);
 
-			$p = $this->getPlaceholder();
+				$p = $this->getPlaceholder();
 
-			$this->dataSource->andWhere("$c >= :$p")->setParameter(
-				$p,
-				$dateFrom->format('Y-m-d H:i:s')
-			);
+				$this->dataSource->andWhere("$c >= :$p")->setParameter(
+					$p,
+					$dateFrom->format('Y-m-d H:i:s')
+				);
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
 		}
 
 		if ($valueTo) {
-			$dateTo = DateTimeHelper::tryConvertToDate($valueTo, [$filter->getPhpFormat()]);
-			$dateTo->setTime(23, 59, 59);
+			try {
+				$dateTo = DateTimeHelper::tryConvertToDate($valueTo, [$filter->getPhpFormat()]);
+				$dateTo->setTime(23, 59, 59);
 
-			$p = $this->getPlaceholder();
+				$p = $this->getPlaceholder();
 
-			$this->dataSource->andWhere("$c <= :$p")->setParameter(
-				$p,
-				$dateTo->format('Y-m-d H:i:s')
-			);
+				$this->dataSource->andWhere("$c <= :$p")->setParameter(
+					$p,
+					$dateTo->format('Y-m-d H:i:s')
+				);
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
 		}
 	}
 

@@ -7,6 +7,7 @@ namespace Ublaboo\DataGrid\DataSource;
 use Nette\Utils\Strings;
 use Nextras\Orm\Collection\ICollection;
 use Nextras\Orm\Mapper\Dbal\DbalCollection;
+use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
@@ -142,13 +143,17 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		foreach ($filter->getCondition() as $column => $value) {
-			$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
-			$date_end = clone $date;
+			try {
+				$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+				$date_end = clone $date;
 
-			$this->dataSource = $this->dataSource->findBy([
-				$this->prepareColumn($column) . '>=' => $date->setTime(0, 0, 0),
-				$this->prepareColumn($column) . '<=' => $date_end->setTime(23, 59, 59),
-			]);
+				$this->dataSource = $this->dataSource->findBy([
+					$this->prepareColumn($column) . '>=' => $date->setTime(0, 0, 0),
+					$this->prepareColumn($column) . '<=' => $date_end->setTime(23, 59, 59),
+				]);
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
 		}
 	}
 
@@ -163,19 +168,27 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		$dataCondition = [];
 
 		if ($valueFrom) {
-			$dateFrom = DateTimeHelper::tryConvertToDateTime(
-				$valueFrom,
-				[$filter->getPhpFormat()]
-			);
-			$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $dateFrom->setTime(0, 0, 0);
+			try {
+				$dateFrom = DateTimeHelper::tryConvertToDateTime(
+					$valueFrom,
+					[$filter->getPhpFormat()]
+				);
+				$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $dateFrom->setTime(0, 0, 0);
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
 		}
 
 		if ($valueTo) {
-			$dateTo = DateTimeHelper::tryConvertToDateTime(
-				$valueTo,
-				[$filter->getPhpFormat()]
-			);
-			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $dateTo->setTime(23, 59, 59);
+			try {
+				$dateTo = DateTimeHelper::tryConvertToDateTime(
+					$valueTo,
+					[$filter->getPhpFormat()]
+				);
+				$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $dateTo->setTime(23, 59, 59);
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
 		}
 
 		if ($dataCondition !== []) {

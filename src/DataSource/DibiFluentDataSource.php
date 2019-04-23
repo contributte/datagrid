@@ -9,6 +9,7 @@ use Dibi\Fluent;
 use ReflectionClass;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
 use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
+use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
@@ -132,9 +133,13 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	{
 		$conditions = $filter->getCondition();
 
-		$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
+		try {
+			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
-		$this->dataSource->where('DATE(%n) = ?', $filter->getColumn(), $date->format('Y-m-d'));
+			$this->dataSource->where('DATE(%n) = ?', $filter->getColumn(), $date->format('Y-m-d'));
+		} catch (DataGridDateTimeHelperException $ex) {
+			// ignore the invalid filter value
+		}
 	}
 
 
@@ -146,17 +151,25 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		$valueTo = $conditions[$filter->getColumn()]['to'];
 
 		if ($valueFrom) {
-			$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
-			$dateFrom->setTime(0, 0, 0);
+			try {
+				$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
+				$dateFrom->setTime(0, 0, 0);
 
-			$this->dataSource->where('DATE(%n) >= ?', $filter->getColumn(), $dateFrom);
+				$this->dataSource->where('DATE(%n) >= ?', $filter->getColumn(), $dateFrom);
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
 		}
 
 		if ($valueTo) {
-			$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
-			$dateTo->setTime(23, 59, 59);
+			try {
+				$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
+				$dateTo->setTime(23, 59, 59);
 
-			$this->dataSource->where('DATE(%n) <= ?', $filter->getColumn(), $dateTo);
+				$this->dataSource->where('DATE(%n) <= ?', $filter->getColumn(), $dateTo);
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
 		}
 	}
 
