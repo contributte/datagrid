@@ -78,6 +78,8 @@ class FunctionSum implements IAggregationFunction
 
 			$this->result = $dataSource
 				->select(sprintf('SUM(%s)', $column))
+				->setMaxResults(1)
+				->setFirstResult(0)
 				->getQuery()
 				->getSingleScalarResult();
 		}

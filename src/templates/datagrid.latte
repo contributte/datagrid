@@ -362,7 +362,7 @@
 							{include inlineAddRow, columns => $columns}
 						{/if}
 
-						{if $columnsSummary && !$columnsSummary->getPositionTop()}
+						{if ($control->hasSomeAggregationFunction()) || ($columnsSummary && !$columnsSummary->getPositionTop())}
 							{include columnSummary}
 						{/if}
 
