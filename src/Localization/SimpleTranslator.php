@@ -45,7 +45,7 @@ class SimpleTranslator implements ITranslator
 
 	public function __construct(array $dictionary = [])
 	{
-		$this->dictionary = $dictionary;
+		$this->dictionary = array_merge($this->dictionary, $dictionary);
 	}
 
 
