@@ -478,7 +478,7 @@ abstract class Column extends FilterableColumn
 			return $this->getEditableOnConditionCallback()($row->getItem());
 		}
 
-		return true;
+		return false;
 	}
 
 
