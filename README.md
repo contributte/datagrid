@@ -32,7 +32,7 @@ composer require ublaboo/datagrid
 |-------------|-----------|----------|-------|----------|--|
 | dev         | `^6.0.0`  | `master` | >=2.4 | `>= 7.1` | `minimum-stability: dev, prefer-stable: true` |
 | next        | `^5.8.0`  | `v5.x`   | >=2.4 | `>= 5.6` | `minimum-stability: dev, prefer-stable: true` |
-| stable      | `^5.7.0`  | `v5.x`   | >=2.3 | `>= 5.6` |  |
+| stable      | `^5.7.1`  | `v5.x`   | >=2.3 | `>= 5.6` |  |
 | stable      | `^4.4.22` | `v5.x`   | >=2.3 | `>= 5.6` |  |
 | stable      | `^3.3.1`  | `v5.x`   | >=2.3 | `>= 5.3` |  |
 
@@ -40,7 +40,7 @@ composer require ublaboo/datagrid
 
 :construction: :construction: :construction:
 
-At this time we're working on new strict-typed (PHP >=7.2) **^6.0.0** in master branch. 
+At this time we're working on new strict-typed (PHP >=7.3) **^6.0.0** in master branch. 
 It will go throw the massive refactoring (namespace, classes, snake-case -> camelCase, etc.). 
 We'll looking for some help (testers, PR).
 
@@ -56,12 +56,12 @@ You can test it using this composer setup.
 }
 ```
 
-If you're looking for rock stable version, use **^5.6.0** in v5.x branch.
+If you're looking for rock stable version, use **^5.7.1** in v5.x branch.
 
 ```json
 {
     "require": {
-      "ublaboo/datagrid": "^5.6.0"
+      "ublaboo/datagrid": "^5.7.1"
     }
 }
 ```
@@ -90,7 +90,7 @@ Current documentation - https://ublaboo.org/datagrid/.
         <a href="https://github.com/f3l1x">Milan Felix Šulc</a>
       </td>
     </tr>
-  <tbody>
+  </tbody>
 </table>
 
 ### Former maintainers
@@ -106,7 +106,7 @@ Current documentation - https://ublaboo.org/datagrid/.
         <a href="https://github.com/juniwalk">Martin Procházka</a>
       </td>
     </tr>
-  <tbody>
+  </tbody>
 </table>
 
 -----

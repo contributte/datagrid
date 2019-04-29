@@ -619,7 +619,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set Grid data source
-	 * @param DataSource\IDataSource|array|\DibiFluent|\Dibi\Fluent|Nette\Database\Table\Selection|\Doctrine\ORM\QueryBuilder $source
+	 * @param DataSource\IDataSource|array|\DibiFluent|\Dibi\Fluent|Nette\Database\Table\Selection|\Doctrine\ORM\QueryBuilder|\Nextras\Orm\Collection\ICollection $source
 	 * @return static
 	 */
 	public function setDataSource($source)
@@ -2487,6 +2487,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if ($this->getPresenter()->isAjax()) {
 			$this->getPresenter()->payload->_datagrid_toggle_detail = $id;
+			$this->getPresenter()->payload->_datagrid_name = $this->getName();
 			$this->redrawControl('items');
 
 			/**
@@ -2790,7 +2791,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function getPerPage()
 	{
-		$items_per_page_list = $this->getItemsPerPageList();
+		$items_per_page_list = array_keys($this->getItemsPerPageList());
 
 		$per_page = $this->per_page ?: reset($items_per_page_list);
 
@@ -3538,7 +3539,7 @@ class DataGrid extends Nette\Application\UI\Control
 
 		if (!($parent instanceof PresenterComponent)) {
 			throw new DataGridHasToBeAttachedToPresenterComponentException(
-				"DataGrid is attached to: '" . get_class($parent) . "', but instance of PresenterComponent is needed."
+                "DataGrid is attached to: '" . ($parent ? get_class($parent) : 'null') . "', but instance of PresenterComponent is needed."
 			);
 		}
 

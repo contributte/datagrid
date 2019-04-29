@@ -1,26 +1,59 @@
 language: php
+
 php:
   - 5.6
   - 7.0
   - 7.1
+  - 7.2
+  - 7.3
+  - 7.4snapshot
 
-matrix:
-  fast_finish: true
+before_install:
+  # Turn off XDebug
+  - phpenv config-rm xdebug.ini || return 0
 
 install:
-  - composer self-update
-  - composer install --no-interaction --prefer-source
+  # Composer
+  - travis_retry composer install --no-progress --prefer-dist
 
 before_script:
   - mysql -e 'create database datagridTest;'
   - mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 
 script:
-  - vendor/bin/tester tests/ -c tests/php.ini --coverage coverage.xml --coverage-src src/
+  - vendor/bin/tester tests/ -c tests/php.ini
 
-after_script:
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover coverage.xml
+jobs:
+  include:
+    - env: title="Lowest Dependencies 7.1"
+      php: 7.1
+      install:
+        - travis_retry composer update --no-progress --prefer-dist --prefer-lowest
+      script:
+        - vendor/bin/tester tests/ -c tests/php.ini
+
+    - stage: Test Coverage
+      if: branch = master AND type = push
+      php: 7.1
+      script:
+        - vendor/bin/tester tests/ -c tests/php.ini --coverage coverage.xml --coverage-src src/
+      after_script:
+        - composer global require php-coveralls/php-coveralls ^2.1.0
+        - ~/.composer/vendor/bin/php-coveralls --verbose --config tests/.coveralls.yml
+
+    - stage: Outdated Dependencies
+      if: branch = master AND type = cron
+      php: 7.1
+      script:
+        - composer outdated --direct --strict
+
+  allow_failures:
+    - php: 7.2
+    - php: 7.3
+    - php: 7.4snapshot
+    - stage: Test Coverage
+
+sudo: false
 
 cache:
   directories:

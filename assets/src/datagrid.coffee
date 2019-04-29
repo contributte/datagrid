@@ -410,7 +410,8 @@ $.nette.ext('datargid.item_detail', {
 	before: (xhr, settings) ->
 		if settings.nette and settings.nette.el.attr('data-toggle-detail')
 			id = settings.nette.el.attr('data-toggle-detail')
-			row_detail = $('.item-detail-' + id)
+			grid = $('.datagrid-' + settings.nette.el.attr('data-toggle-detail-grid'))
+			row_detail = grid.find('.item-detail-' + id)
 			#row = row_detail.closest('.datagrid').find('tr[data-id=' + id + ']')
 
 			#if row_detail.hasClass('loaded') and row.hasClass('detail-loaded')
@@ -436,7 +437,8 @@ $.nette.ext('datargid.item_detail', {
 	success: (payload) ->
 		if payload._datagrid_toggle_detail
 			id = payload._datagrid_toggle_detail
-			row_detail = $('.item-detail-' + id)
+			grid = $('.datagrid-' + payload._datagrid_name)
+			row_detail = grid.find('.item-detail-' + id)
 
 			row_detail.toggleClass('toggled')
 			row_detail.find('.item-detail-content').slideToggle('fast')
