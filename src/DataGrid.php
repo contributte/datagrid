@@ -381,9 +381,9 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $show_selected_rows_count = true;
 
-    /**
-     * @var  string
-     */
+	/**
+	 * @var  string
+	 */
 	protected $componentFullName;
 
 	/**
@@ -391,25 +391,12 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	private $custom_paginator_template;
 
-    /**
-     * @var  string
-     */
-	protected $componentFullName;
-
 	/**
 	 * @param Nette\ComponentModel\IContainer|NULL $parent
 	 * @param string                               $name
 	 */
-	public function __construct(Nette\ComponentModel\IContainer $parent = null, $name = null)
+	public function __construct()
 	{
-		parent::__construct();
-
-		if ($parent !== null) {
-			$parent->addComponent($this, $name);
-		}
-
-		$this->monitor('Nette\Application\UI\Presenter');
-
 		/**
 		 * Try to find previous filters, pagination, per_page and other values in session
 		 */
@@ -437,27 +424,14 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Notify about that json js extension
 		 */
 		$this->onFiltersAssembled[] = [$this, 'sendNonEmptyFiltersInPayload'];
-	}
 
-
-	/**
-	 * {inheritDoc}
-	 * @return void
-	 */
-	public function attached($presenter)
-	{
-		parent::attached($presenter);
-
-		if ($presenter instanceof Nette\Application\UI\Presenter) {
-			/**
-			 * Get session
-			 */
+		$this->monitor(Nette\Application\UI\Presenter::class, function (Nette\Application\UI\Presenter $presenter) {
 			if ($this->remember_state) {
 				$this->grid_session = $presenter->getSession($this->getSessionSectionName());
 			}
-		}
 
-		$this->componentFullName = $this->lookupPath();
+			$this->componentFullName = $this->lookupPath();
+		});
 	}
 
 
@@ -499,14 +473,11 @@ class DataGrid extends Nette\Application\UI\Control
 		if (!empty($this->redraw_item)) {
 			$items = $this->dataModel->filterRow($this->redraw_item);
 		} else {
-			$items = Nette\Utils\Callback::invokeArgs(
-				[$this->dataModel, 'filterData'],
-				[
-					$this->getPaginator(),
-					$this->createSorting($this->sort, $this->sort_callback),
-					$this->assembleFilters(),
-				]
-			);
+			$items = call_user_func_array([$this->dataModel, 'filterData'], [
+				$this->getPaginator(),
+                		$this->createSorting($this->sort, $this->sort_callback),
+				$this->assembleFilters(),
+			]);
 		}
 
 		$callback = $this->rowCallback ?: null;
@@ -1597,7 +1568,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$inline_edit_container->addSubmit('submit', 'ublaboo_datagrid.save')
 				->setValidationScope([$inline_edit_container]);
 			$inline_edit_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
-				->setValidationScope(false);
+				->setValidationScope(null);
 
 			$this->inlineEdit->onControlAdd($inline_edit_container);
 			$this->inlineEdit->onControlAfterAdd($inline_edit_container);
@@ -1612,7 +1583,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$inline_add_container->addSubmit('submit', 'ublaboo_datagrid.save')
 				->setValidationScope([$inline_add_container]);
 			$inline_add_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
-				->setValidationScope(false)
+				->setValidationScope(null)
 				->setAttribute('data-datagrid-cancel-inline-add', true);
 
 			$this->inlineAdd->onControlAdd($inline_add_container);
@@ -2427,13 +2398,11 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$rows = [];
 
-		$items = Nette\Utils\Callback::invokeArgs(
-			[$this->dataModel, 'filterData'], [
-				null,
-				$this->createSorting($this->sort, $this->sort_callback),
-				$filter,
-			]
-		);
+		$items = call_user_func_array([$this->dataModel, 'filterData'], [
+			null,
+			$this->createSorting($this->sort, $this->sort_callback),
+			$filter,
+		]);
 
 		foreach ($items as $item) {
 			$rows[] = new Row($this, $item, $this->getPrimaryKey());
@@ -3531,23 +3500,6 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @return PresenterComponent
-	 */
-	public function getParent()
-	{
-		$parent = parent::getParent();
-
-		if (!($parent instanceof PresenterComponent)) {
-			throw new DataGridHasToBeAttachedToPresenterComponentException(
-                "DataGrid is attached to: '" . ($parent ? get_class($parent) : 'null') . "', but instance of PresenterComponent is needed."
-			);
-		}
-
-		return $parent;
-	}
-
-
-	/**
 	 * @return string
 	 */
 	public function getSortableParentPath()
@@ -3600,4 +3552,3 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->custom_paginator_template = $template_file;
 	}
 }
-
