@@ -2415,6 +2415,10 @@ s	 */
 	 */
 	public function setItemsPerPageList(array $itemsPerPageList, bool $includeAll = true): self
 	{
+		if ($itemsPerPageList === []) {
+			throw new \InvalidArgumentException('$itemsPerPageList can not be an empty array');
+		}
+
 		$this->itemsPerPageList = $itemsPerPageList;
 
 		if ($includeAll) {
