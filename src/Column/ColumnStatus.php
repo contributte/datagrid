@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
+use Nette\SmartObject;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Row;
@@ -17,6 +18,7 @@ class ColumnStatus extends Column
 {
 
 	use TButtonCaret;
+	use SmartObject;
 
 	/**
 	 * @var array|callable[]

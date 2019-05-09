@@ -3,13 +3,14 @@
  * @param $status Ublaboo\DataGrid\Column\ColumnStatus
  *}
 
-{var $active_option = $status->getCurrentOption($row)}
+{var $activeOption = $status->getCurrentOption($row)}
 
 <div class="dropdown">
-	{if $active_option}
-		<button class="dropdown-toggle {$active_option->getClass()} {$active_option->getClassSecondary()}" type="button" data-toggle="dropdown">
-			{if $active_option->getIcon()}<i class="{$iconPrefix}{$active_option->getIcon()}"></i> {/if}
-			{$active_option->getText()|translate} <i n:if="$status->hasCaret()" class="caret"></i>
+	{dump $activeOption}
+	{if $activeOption}
+		<button class="dropdown-toggle {$activeOption->getClass()} {$activeOption->getClassSecondary()}" type="button" data-toggle="dropdown">
+			{if $activeOption->getIcon()}<i class="{$iconPrefix}{$activeOption->getIcon()}"></i> {/if}
+			{$activeOption->getText()|translate} <i n:if="$status->hasCaret()" class="caret"></i>
 		</button>
 	{else}
 		{$row->getValue($status->getColumn())}
