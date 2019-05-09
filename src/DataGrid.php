@@ -2456,14 +2456,17 @@ s	 */
 
 	public function createComponentPaginator(): DataGridPaginator
 	{
-		$component = new Components\DataGridPaginator\DataGridPaginator(
+		$component = new DataGridPaginator(
 			$this->getTranslator(),
 			static::$iconPrefix
 		);
 		$paginator = $component->getPaginator();
 
 		$paginator->setPage($this->page);
-		$paginator->setItemsPerPage($this->getPerPage());
+
+		if (is_int($this->getPerPage())) {
+			$paginator->setItemsPerPage($this->getPerPage());
+		}
 
 		if ($this->customPaginatorTemplate !== null) {
 			$component->setTemplateFile($this->customPaginatorTemplate);
@@ -2473,7 +2476,10 @@ s	 */
 	}
 
 
-	public function getPerPage(): int
+	/**
+	 * @return int|string
+	 */
+	public function getPerPage()
 	{
 		$itemsPerPageList = $this->getItemsPerPageList();
 
@@ -2484,7 +2490,7 @@ s	 */
 			$perPage = reset($itemsPerPageList);
 		}
 
-		return (int) $perPage;
+		return $perPage === 'all' ? 'all' : (int) $perPage;
 	}
 
 
