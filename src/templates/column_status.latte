@@ -6,7 +6,6 @@
 {var $activeOption = $status->getCurrentOption($row)}
 
 <div class="dropdown">
-	{dump $activeOption}
 	{if $activeOption}
 		<button class="dropdown-toggle {$activeOption->getClass()} {$activeOption->getClassSecondary()}" type="button" data-toggle="dropdown">
 			{if $activeOption->getIcon()}<i class="{$iconPrefix}{$activeOption->getIcon()}"></i> {/if}
