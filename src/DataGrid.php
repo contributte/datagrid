@@ -2373,7 +2373,7 @@ s	 */
 		 */
 		$columns = $this->getSessionData('_grid_hidden_columns');
 
-		if ($columns === []) {
+		if ($columns === [] || $columns === null) {
 			$columns = [$column];
 		} elseif (!in_array($column, $columns, true)) {
 			array_push($columns, $column);
