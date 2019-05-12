@@ -185,20 +185,23 @@
 	display: none !important
 }
 
-.datagrid table thead tr th .datagrid-col-filter-date-range .input-group .datagrid-filter-date-range-last, .datagrid table thead tr th .datagrid-col-filter-range .input-group .datagrid-filter-date-range-last {
-	-webkit-border-radius: 3px 0 0 3px;
-	-moz-border-radius: 3px 0 0 3px;
-	border-radius: 3px 0 0 3px
+.datagrid .datagrid-col-filter-date-range {
+	width: auto;
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
 }
 
-.datagrid table thead tr th .datagrid-col-filter-date-range .input-group .input-group-addon-first, .datagrid table thead tr th .datagrid-col-filter-range .input-group .input-group-addon-first {
-	-webkit-border-radius: 0 3px 3px 0;
-	-moz-border-radius: 0 3px 3px 0;
-	border-radius: 0 3px 3px 0;
-	border-left: 0
+.datagrid .datagrid-col-filter-date-range > .input-group {
+	position: relative;
+	-ms-flex: 1 1 auto;
+	flex: 1 1 auto;
+	width: 1%;
+	margin-bottom: 0;
 }
 
-.datagrid table thead tr th .datagrid-col-filter-date-range .input-group .datagrid-col-filter-datte-range-delimiter, .datagrid table thead tr th .datagrid-col-filter-range .input-group .datagrid-col-filter-datte-range-delimiter {
+.datagrid .datagrid-col-filter-datte-range-delimiter {
 	background-color: inherit;
 	border: none;
 	padding: .25rem .5rem
