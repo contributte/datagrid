@@ -3124,6 +3124,10 @@ s	 */
 	 */
 	public function getSortableParentPath(): string
 	{
+		if ($this->getParentComponent() instanceof IPresenter) {
+			return '';
+		}
+
 		$presenter = $this->getParentComponent()->lookupPath(IPresenter::class, false);
 
 		if ($presenter === null) {
