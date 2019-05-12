@@ -585,6 +585,10 @@
 		width: 100%
 	}
 
+	.datagrid .input-group-text {
+		height: calc(1.5em + 0.5rem + 2px);
+	}
+
 	.datagrid .ublaboo-datagrid-th-form-inline .control-label {
 		margin-bottom: 0;
 		vertical-align: middle
