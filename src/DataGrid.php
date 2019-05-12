@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid;
 
-use DateTime;
 use InvalidArgumentException;
 use Nette;
 use Nette\Application\IPresenter;
@@ -1471,16 +1470,19 @@ s	 */
 			}
 
 			if ($control instanceof Container) {
-				$this->setFilterContainerDefaults($control, $values[$key]);
+				$this->setFilterContainerDefaults($control, (array) $values[$key]);
 
 				continue;
 			}
 
 			$value = $values[$key];
-			$filter = $this->getFilter($key);
 
-			if ($value instanceof DateTime && $filter instanceof IFilterDate) {
-				$value = $value->format($filter->getPhpFormat());
+			if ($value instanceof \DateTime) {
+				$filter = $this->getFilter($key);
+
+				if ($filter instanceof IFilterDate) {
+					$value = $value->format($filter->getPhpFormat());
+				}
 			}
 
 			try {

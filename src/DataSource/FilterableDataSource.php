@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Nette\Utils\ArrayHash;
 use Ublaboo\DataGrid\Filter\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
@@ -25,7 +26,13 @@ abstract class FilterableDataSource
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
 				if ($filter->getConditionCallback() !== null) {
-					($filter->getConditionCallback())($this->getDataSource(), $filter->getValue());
+					$value = $filter->getValue();
+
+					if (is_array($value)) {
+						$value = ArrayHash::from($filter->getValue());
+					}
+
+					($filter->getConditionCallback())($this->getDataSource(), $value);
 				} else {
 					if ($filter instanceof FilterText) {
 						$this->applyFilterText($filter);
