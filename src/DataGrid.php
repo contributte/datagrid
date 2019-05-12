@@ -1028,13 +1028,13 @@ s	 */
 		string $key,
 		string $name,
 		?callable $callback = null
-	): Action
+	): ActionCallback
 	{
 		$this->addActionCheck($key);
 
 		$params = ['__id' => $this->primaryKey];
 
-		$this->actions[$key] = $action = new ActionCallback($this, $key, '', $name, $params);
+		$this->actions[$key] = $action = new ActionCallback($this, $key, $key, $name, $params);
 
 		if ($callback !== null) {
 			$action->onClick[] = $callback;
