@@ -1558,7 +1558,7 @@ s	 */
 				if ($edit['submit']->isSubmittedBy() && $this->inlineEdit->onCustomRedraw !== []) {
 					$this->inlineEdit->onCustomRedraw();
 				} else {
-					$this->redrawItem($id, $primaryWhereColumn);
+					$this->redrawItem((int) $id, $primaryWhereColumn);
 					$this->redrawControl('summary');
 				}
 
@@ -2879,7 +2879,7 @@ s	 */
 				$presenter->payload->_datagrid_name = $this->getName();
 			}
 
-			$this->redrawItem($id, $primaryWhereColumn);
+			$this->redrawItem((int) $id, $primaryWhereColumn);
 		}
 	}
 
