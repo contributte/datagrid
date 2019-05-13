@@ -95,7 +95,7 @@ class InlineEdit
 
 		$this->title = 'ublaboo_datagrid.edit';
 		$this->class = 'btn btn-xs btn-default btn-secondary ajax';
-		$this->icon = 'pencil';
+		$this->icon = 'pencil pencil-alt';
 
 		$this->onControlAfterAdd[] = [$this, 'addControlsClasses'];
 	}

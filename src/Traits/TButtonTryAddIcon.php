@@ -13,8 +13,13 @@ trait TButtonTryAddIcon
 	public function tryAddIcon(Html $el, ?string $icon, string $name): void
 	{
 		if ($icon !== null) {
-			$el->addHtml(Html::el('span')
-				->setAttribute('class', DataGrid::$iconPrefix . $icon));
+			$iconClass = '';
+
+			foreach (explode(' ', $icon) as $icon) {
+				$iconClass .= ' ' .  DataGrid::$iconPrefix . $icon;
+			}
+
+			$el->addHtml(Html::el('span')->setAttribute('class', $iconClass));
 
 			if (mb_strlen($name) > 1) {
 				$el->addHtml('&nbsp;');
