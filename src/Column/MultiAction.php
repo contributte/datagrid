@@ -107,7 +107,7 @@ class MultiAction extends Column
 
 		$action = new Action($this->grid, $key, $href, $name, $params);
 
-		$action->setClass('');
+		$action->setClass('dropdown-item datagrid-multiaction-dropdown-item');
 
 		$this->actions[$key] = $action;
 
@@ -142,7 +142,7 @@ class MultiAction extends Column
 	public function getTemplateVariables(): array
 	{
 		return array_merge($this->templateVariables, [
-			'multi_action' => $this,
+			'multiAction' => $this,
 		]);
 	}
 

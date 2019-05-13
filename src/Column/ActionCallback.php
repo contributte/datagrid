@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
+use Nette\SmartObject;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
@@ -12,10 +13,13 @@ use Ublaboo\DataGrid\DataGrid;
 class ActionCallback extends Action
 {
 
+	use SmartObject;
+
 	/**
 	 * @var callable
 	 */
 	public $onClick;
+
 
 	/**
 	 * Create link to datagrid::handleActionCallback() to fire custom callback

@@ -74,7 +74,7 @@ class GroupActionCollection
 					$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id);
 				}
 			} elseif ($action instanceof GroupTextAction) {
-				$control = $container->addText($id, '');
+				$control = $container->addText((string) $id, '');
 
 				$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)

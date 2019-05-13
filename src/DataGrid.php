@@ -1028,13 +1028,13 @@ s	 */
 		string $key,
 		string $name,
 		?callable $callback = null
-	): Action
+	): ActionCallback
 	{
 		$this->addActionCheck($key);
 
 		$params = ['__id' => $this->primaryKey];
 
-		$this->actions[$key] = $action = new ActionCallback($this, $key, '', $name, $params);
+		$this->actions[$key] = $action = new ActionCallback($this, $key, $key, $name, $params);
 
 		if ($callback !== null) {
 			$action->onClick[] = $callback;
@@ -3124,6 +3124,10 @@ s	 */
 	 */
 	public function getSortableParentPath(): string
 	{
+		if ($this->getParentComponent() instanceof IPresenter) {
+			return '';
+		}
+
 		$presenter = $this->getParentComponent()->lookupPath(IPresenter::class, false);
 
 		if ($presenter === null) {
