@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Export;
 
+use Nette\Application\UI\Link;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Traits\TButtonClass;
@@ -29,7 +30,7 @@ class Export
 	/**
 	 * @var bool
 	 */
-	protected $ajax;
+	protected $ajax = false;
 
 	/**
 	 * @var bool
@@ -37,7 +38,7 @@ class Export
 	protected $filtered;
 
 	/**
-	 * @var string|null
+	 * @var Link|null
 	 */
 	protected $link;
 
@@ -131,7 +132,7 @@ class Export
 	/**
 	 * Export signal url
 	 */
-	public function setLink(string $link): self
+	public function setLink(Link $link): self
 	{
 		$this->link = $link;
 

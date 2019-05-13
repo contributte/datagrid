@@ -1811,6 +1811,7 @@ s	 */
 			$csvFileName,
 			$outputEncoding,
 			$delimiter,
+			$includeBom,
 			true
 		);
 	}
@@ -1851,7 +1852,7 @@ s	 */
 
 		$link = new Link($this, 'export!', ['id' => $id]);
 
-		$export->setLink((string) $link);
+		$export->setLink($link);
 
 		return $this->exports[$id] = $export;
 	}
@@ -1862,7 +1863,7 @@ s	 */
 		foreach ($this->exports as $id => $export) {
 			$link = new Link($this, 'export!', ['id' => $id]);
 
-			$export->setLink((string) $link);
+			$export->setLink($link);
 		}
 	}
 
