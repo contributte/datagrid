@@ -841,14 +841,14 @@ s	 */
 		$this->treeViewHasChildrenColumn = $treeViewHasChildrenColumn;
 
 		/**
-		 * TUrn off pagination
+		 * Torn off pagination
 		 */
 		$this->setPagination(false);
 
 		/**
 		 * Set tree view template file
 		 */
-		if ($this->templateFile !== null) {
+		if ($this->templateFile === null) {
 			$this->setTemplateFile(__DIR__ . '/templates/datagrid_tree.latte');
 		}
 
