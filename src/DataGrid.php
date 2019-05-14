@@ -1546,7 +1546,7 @@ s	 */
 					'inline_edit[_primary_where_column]'
 				);
 
-				if ($edit['submit']->isSubmittedBy() && $edit->getErrors() !== []) {
+				if ($edit['submit']->isSubmittedBy() && $edit->getErrors() === []) {
 					$this->inlineEdit->onSubmit($id, $values['inline_edit']);
 					$this->getPresenterInstance()->payload->_datagrid_inline_edited = $id;
 					$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
