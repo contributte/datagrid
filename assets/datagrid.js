@@ -628,8 +628,8 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
 
 $.nette.ext('datagrid.after_inline_edit', {
 	success: function(payload) {
-		var grid;
-		grid = $('.datagrid-' + payload._datagrid_name);
+		var grid = $('.datagrid-' + payload._datagrid_name);
+
 		if (payload._datagrid_inline_edited) {
 			grid.find('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited');
 			return grid.find('.datagrid-inline-edit-trigger').removeClass('hidden');
@@ -639,20 +639,8 @@ $.nette.ext('datagrid.after_inline_edit', {
 	}
 });
 
-$(document).on('click', '[data-datagrid-toggle-inline-add]', function(e) {
-	var row;
-	e.stopPropagation();
-	e.preventDefault();
-	row = $(this).closest('.datagrid').find('.datagrid-row-inline-add');
-	if (row.hasClass('datagrid-row-inline-add-hidden')) {
-		row.removeClass('datagrid-row-inline-add-hidden');
-	}
-	return row.find('input:not([readonly]),textarea:not([readonly])').first().focus();
-});
-
 $(document).on('mouseup', '[data-datagrid-cancel-inline-add]', function(e) {
-	var code;
-	code = e.which || e.keyCode || 0;
+	var code = e.which || e.keyCode || 0;
 	if (code === 1) {
 		e.stopPropagation();
 		e.preventDefault();
@@ -662,17 +650,23 @@ $(document).on('mouseup', '[data-datagrid-cancel-inline-add]', function(e) {
 
 $.nette.ext('datagrid-toggle-inline-add', {
 	success: function(payload) {
-		if (payload._datagrid_inline_added) {
-			$('.datagrid-row-inline-add').find('textarea').html('');
-			$('.datagrid-row-inline-add').find('input[type!=submit]').val('');
-			return $('.datagrid-row-inline-add').addClass('datagrid-row-inline-add-hidden');
+		var grid = $('.datagrid-' + payload._datagrid_name);
+
+		if (payload._datagrid_inline_adding) {
+			var row = grid.find('.datagrid-row-inline-add');
+
+			if (row.hasClass('datagrid-row-inline-add-hidden')) {
+				row.removeClass('datagrid-row-inline-add-hidden');
+			}
+
+			row.find('input:not([readonly]),textarea:not([readonly])').first().focus();
 		}
 	}
 });
 
 datagridFitlerMultiSelect = function() {
-	var select;
-	select = $('.selectpicker').first();
+	var select = $('.selectpicker').first();
+
 	if ($.fn.selectpicker) {
 		return $.fn.selectpicker.defaults = {
 			countSelectedText: select.data('i18n-selected'),
@@ -688,10 +682,13 @@ $(function() {
 
 datagridGroupActionMultiSelect = function() {
 	var selects;
+
 	if (!$.fn.selectpicker) {
 		return;
 	}
+
 	selects = $('[data-datagrid-multiselect-id]');
+
 	return selects.each(function() {
 		var id;
 		if ($(this).hasClass('selectpicker')) {

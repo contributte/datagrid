@@ -158,7 +158,8 @@ class InlineEdit
 	 */
 	public function renderButtonAdd(): Html
 	{
-		$a = Html::el('a')->href('')->data('datagrid-toggle-inline-add', true);
+		$a = Html::el('a')
+			->href($this->grid->link('showInlineAdd!'));
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 

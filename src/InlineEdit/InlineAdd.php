@@ -10,4 +10,17 @@ namespace Ublaboo\DataGrid\InlineEdit;
 class InlineAdd extends InlineEdit
 {
 
+	private $shouldBeRendered = false;
+
+
+	public function shouldBeRendered(): bool
+	{
+		return $this->shouldBeRendered;
+	}
+	
+	
+	public function setShouldBeRendered(bool $shouldBeRendered): void
+	{
+		$this->shouldBeRendered = $shouldBeRendered;
+	}
 }

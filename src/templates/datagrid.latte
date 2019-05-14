@@ -426,34 +426,36 @@
 
 
 {define inlineAddRow}
-	{php $inlineAdd->onSetDefaults($filter['inline_add']); }
+	{if $inlineAdd->shouldBeRendered()}
+		{php $inlineAdd->onSetDefaults($filter['inline_add']); }
 
-	<tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden">
-		<td n:if="$hasGroupActions" class="col-checkbox"></td>
+		<tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden">
+			<td n:if="$hasGroupActions" class="col-checkbox"></td>
 
-		{foreach $columns as $key => $column}
-			{var $col = 'col-' . $key}
+			{foreach $columns as $key => $column}
+				{var $col = 'col-' . $key}
 
-			{var $td = clone $column->getElementForRender('td', $key)}
-			{var $td->class[] = 'datagrid-inline-edit'}
-			{$td->startTag()|noescape}
-				{if isset($filter['inline_add'][$key])}
-					{if $filter['inline_add'][$key] instanceof \Nette\Forms\Container}
-						{foreach $filter['inline_add'][$key]->getControls() as $inlineAddControl}
-							{input $inlineAddControl}
-						{/foreach}
-					{else}
-						{input $filter['inline_add'][$key]}
+				{var $td = clone $column->getElementForRender('td', $key)}
+				{var $td->class[] = 'datagrid-inline-edit'}
+				{$td->startTag()|noescape}
+					{if isset($filter['inline_add'][$key])}
+						{if $filter['inline_add'][$key] instanceof \Nette\Forms\Container}
+							{foreach $filter['inline_add'][$key]->getControls() as $inlineAddControl}
+								{input $inlineAddControl}
+							{/foreach}
+						{else}
+							{input $filter['inline_add'][$key]}
+						{/if}
 					{/if}
-				{/if}
-			{$td->endTag()|noescape}
-		{/foreach}
+				{$td->endTag()|noescape}
+			{/foreach}
 
-		<td class="col-action col-action-inline-edit">
-			{input $filter['inline_add']['cancel']}
-			{input $filter['inline_add']['submit']}
-		</td>
-	</tr>
+			<td class="col-action col-action-inline-edit">
+				{input $filter['inline_add']['cancel']}
+				{input $filter['inline_add']['submit']}
+			</td>
+		</tr>
+	{/if}
 {/define}
 
 

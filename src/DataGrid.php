@@ -1586,13 +1586,13 @@ s	 */
 			}
 
 			if ($add['submit']->isSubmittedBy() || $add['cancel']->isSubmittedBy()) {
-				if ($add['submit']->isSubmittedBy() && $add->getErrors() !== []) {
+				if ($add['submit']->isSubmittedBy() && $add->getErrors() === []) {
 					$this->inlineAdd->onSubmit($values['inline_add']);
-
-					if ($this->getPresenterInstance()->isAjax()) {
-						$this->getPresenterInstance()->payload->_datagrid_inline_added = true;
-					}
 				}
+
+				$this->redrawControl('tbody');
+
+				$this->onRedraw();
 
 				return;
 			}
@@ -2847,6 +2847,25 @@ s	 */
 	}
 
 
+	public function handleShowInlineAdd(): void
+	{
+		if ($this->inlineAdd !== null) {
+			$this->inlineAdd->setShouldBeRendered(true);
+		}
+
+		$presenter = $this->getPresenterInstance();
+
+		if ($presenter->isAjax()) {
+			$presenter->payload->_datagrid_inline_adding = true;
+			$presenter->payload->_datagrid_name = $this->getName();
+
+			$this->redrawControl('tbody');
+
+			$this->onRedraw();
+		}
+	}
+
+
 	/**
 	 * @param mixed $id
 	 */
@@ -2893,8 +2912,7 @@ s	 */
 
 		$this->inlineAdd
 			->setTitle('ublaboo_datagrid.add')
-			->setIcon('plus')
-			->setClass('btn btn-xs btn-default btn-secondary');
+			->setIcon('plus');
 
 		return $this->inlineAdd;
 	}
