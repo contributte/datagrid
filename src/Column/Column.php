@@ -42,9 +42,9 @@ abstract class Column extends FilterableColumn
 	protected $sortableCallback = null;
 
 	/**
-	 * @var array
+	 * @var string
 	 */
-	protected $sort = [];
+	protected $sort;
 
 	/**
 	 * @var bool
@@ -176,13 +176,14 @@ abstract class Column extends FilterableColumn
 	 */
 	public function isSortable(): bool
 	{
-		$sortable = $this->sortable;
-		if (is_bool($sortable)) {
-			return $sortable;
+		if (is_bool($this->sortable)) {
+			return $this->sortable;
 		}
-		if (is_string($sortable) && $sortable !== '') {
+
+		if ($this->sortable !== '') {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -327,9 +328,9 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Tell column his sorting options
 	 */
-	public function setSort(array $sort): self
+	public function setSort(string $sort): self
 	{
-		$this->sort = $sort[$this->key];
+		$this->sort = $sort;
 
 		return $this;
 	}
@@ -342,20 +343,11 @@ abstract class Column extends FilterableColumn
 	{
 		$defaultSort = $this->grid->getColumnDefaultSort($this->key);
 
-		if ($this->sort === []) {
-			return [$this->key => 'ASC'];
-		}
-
-		$sort = $this->sort;
-		if (is_array($sort)) {
-			$sort = reset($sort);
-		}
-
-		if ($sort === 'ASC') {
+		if ($this->sort === 'ASC') {
 			return [$this->key => $defaultSort === 'DESC' ? false : 'DESC'];
 		}
 
-		if ($sort === 'DESC') {
+		if ($this->sort === 'DESC') {
 			return [$this->key => $defaultSort === 'DESC' ? 'ASC' : false];
 		}
 
@@ -375,16 +367,7 @@ abstract class Column extends FilterableColumn
 
 	public function isSortAsc(): bool
 	{
-		if ($this->sort === []) {
-			return false;
-		}
-
-		$sort = $this->sort;
-		if (is_array($sort)) {
-			$sort = reset($sort);
-		}
-
-		return $sort === 'ASC';
+		return $this->sort === 'ASC';
 	}
 
 

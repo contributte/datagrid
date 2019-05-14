@@ -10,6 +10,9 @@ namespace Ublaboo\DataGrid\InlineEdit;
 class InlineAdd extends InlineEdit
 {
 
+	/**
+	 * @var bool
+	 */
 	private $shouldBeRendered = false;
 
 

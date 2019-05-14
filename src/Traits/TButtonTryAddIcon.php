@@ -10,12 +10,12 @@ use Ublaboo\DataGrid\DataGrid;
 trait TButtonTryAddIcon
 {
 
-	public function tryAddIcon(Html $el, ?string $icon, string $name): void
+	public function tryAddIcon(Html $el, ?string $iconString, string $name): void
 	{
-		if ($icon !== null) {
+		if ($iconString !== null) {
 			$iconClass = '';
 
-			foreach (explode(' ', $icon) as $icon) {
+			foreach (explode(' ', $iconString) as $icon) {
 				$iconClass .= ' ' .  DataGrid::$iconPrefix . $icon;
 			}
 

@@ -1242,7 +1242,7 @@ s	 */
 
 		foreach ($this->columns as $key => $column) {
 			if (isset($this->sort[$key])) {
-				$column->setSort($this->sort);
+				$column->setSort($this->sort[$key]);
 			}
 		}
 
