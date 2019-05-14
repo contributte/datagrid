@@ -209,6 +209,7 @@ class InlineEdit
 
 					break;
 				case 'cancel':
+					$control->setValidationScope([]);
 					$control->setAttribute('class', 'btn btn-xs btn-danger');
 
 					break;
