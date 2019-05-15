@@ -15,20 +15,14 @@
  *}
 
 <div class="datagrid datagrid-{$control->getName()}" data-refresh-state="{link refreshState!}">
-	{**
-	 * Own data
-	 *}
 	<div n:snippet="grid">
 	{snippetArea gridSnippets}
 		{form filter, class => 'ajax'}
-			{**
-			 * Filter form
-			 *}
 			{if $control->hasOuterFilterRendering()}
 				{block outer-filters}
 					<div class="row text-right datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
 						<div class="col-sm-12">
-							<button class="btn btn-xs btn-primary active" type="button" data-toggle="collapse" data-target="#datagrid-{$control->getName()}-row-filters">
+							<button class="btn btn-xs btn-primary" type="button" data-toggle="collapse" data-target="#datagrid-{$control->getName()}-row-filters">
 								<i n:block="icon-filter" class="{$iconPrefix}filter"></i> {='ublaboo_datagrid.show_filter'|translate}
 							</button>
 						</div>
@@ -104,16 +98,10 @@
 								</span>
 
 								<div class="datagrid-settings" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
-									{**
-									 * Inline add
-									 *}
 									{if $inlineAdd}
 										{$inlineAdd->renderButtonAdd()}
 									{/if}
 
-									{**
-									 * Hideable columns
-									 *}
 									<div class="btn-group">
 										<button type="button" class="btn btn-xs btn-default btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
 											<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
@@ -398,15 +386,9 @@
 										</small>
 									</div>
 									<div class="col-pagination text-center">
-										{**
-										* Pagination
-										*}
 										{control paginator}
 									</div>
 									<div class="col-per-page text-right">
-										{**
-										* Items per page form (display only beside paginated grido)
-										*}
 										<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{='ublaboo_datagrid.reset_filter'|translate}</a>
 										{if $control->isPaginated()}
 											{input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'form-control input-sm form-control-sm'}
