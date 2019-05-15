@@ -1556,7 +1556,9 @@ s	 */
 				}
 
 				if ($edit['submit']->isSubmittedBy() && $this->inlineEdit->onCustomRedraw !== []) {
-					$this->inlineEdit->onCustomRedraw();
+					$this->inlineEdit->onCustomRedraw('submit');
+				} elseif ($edit['cancel']->isSubmittedBy() && $this->inlineEdit->onCustomRedraw !== [])) {
+					$this->inlineEdit->onCustomRedraw('cancel');
 				} else {
 					$this->redrawItem((int) $id, $primaryWhereColumn);
 					$this->redrawControl('summary');
