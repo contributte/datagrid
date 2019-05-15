@@ -21,28 +21,45 @@
 		}
 	},
 	"require": {
-		"php": "^5.6|^7.0",
-		"nette/application": "^2.4.0",
-		"nette/utils": "^2.4.0",
-		"nette/forms": "^2.3.0",
-		"ublaboo/responses": "~1.0.0 || ~2.0.0",
+		"php": "^7.2",
+		"nette/application": "^3.0",
+		"nette/utils": "^3.0",
+		"nette/forms": "^3.0",
+		"nette/di": "^3.0",
+		"contributte/application": "^0.4",
 		"symfony/property-access": "^3.0.0 || ^4.0.0"
 	},
 	"require-dev": {
-		"nette/tester": "^1.6.1",
-		"tracy/tracy": "^2.3.0",
-		"mockery/mockery": "~0.9",
-		"tharos/leanmapper": "~2.2.0",
-		"nextras/orm": "~2.3.0",
-		"doctrine/orm": "~2.5",
-		"nette/database": "^2.3",
-		"dibi/dibi": "^3.0"
+		"nette/tester": "^2.2",
+		"tracy/tracy": "^2.6",
+		"mockery/mockery": "~1.2",
+		"phpstan/phpstan": "^0.11",
+		"tharos/leanmapper": "~3.4",
+		"nextras/orm": "~3.1",
+		"doctrine/orm": "~2.6",
+		"nette/database": "~3.0",
+		"dibi/dibi": "^3.0.0 || ^4.0.0",
+		"phpstan/phpstan-strict-rules": "^0.11",
+		"ninjify/coding-standard": "^0.8",
+		"gamee/php-code-checker-rules": "^1.0"
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-v5.x": "5.8.x-dev"
+			"dev-v5.x": "5.8.x-dev",
+			"dev-v6.x": "6.0.x-dev"
 		}
 	},
 	"prefer-stable": true,
-	"minimum-stability": "dev"
+	"minimum-stability": "dev",
+	"scripts": {
+		"tests": [
+			"php vendor/nette/tester/src/tester.php tests/Api/UnitTests -C",
+			"php vendor/nette/tester/src/tester.php tests/Api/IntegrationTests -C",
+			"php vendor/nette/tester/src/tester.php tests/Api/DatabaseTests -j 1 -C",
+			"php vendor/nette/tester/src/tester.php tests/Api/AcceptanceTests -j 1 -C"
+		],
+		"phpstan": "vendor/phpstan/phpstan/bin/phpstan analyse -c phpstan.neon src --level 7",
+		"phpcs": "vendor/bin/phpcs --standard=vendor/ninjify/coding-standard/ruleset-gamee.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests",
+		"phpcsfix": "vendor/bin/phpcbf --standard=vendor/ninjify/coding-standard/ruleset-gamee.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests"
+	}
 }

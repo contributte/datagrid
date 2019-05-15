@@ -1,55 +1,49 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Utils;
 
-use Nette\SmartObject;
+use DateTimeImmutable;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 
 final class DateTimeHelper
 {
 
-	use SmartObject;
-
 	/**
-	 * Try to convert string into DateTime object
+	 * Try to convert string into \DateTime object
+	 *
 	 * @param  mixed     $value
-	 * @param  string[]  $formats
-	 * @return \DateTime
+	 * @param array|string[] $formats
 	 * @throws DataGridDateTimeHelperException
 	 */
-	public static function tryConvertToDateTime($value, array $formats = [])
+	public static function tryConvertToDateTime($value, array $formats = []): \DateTime
 	{
-		return static::fromString($value, $formats);
+		return self::fromString($value, $formats);
 	}
 
 
 	/**
-	 * Try to convert string into DateTime object from more date formats
+	 * Try to convert string into \DateTime object from more date formats
+	 *
 	 * @param  mixed     $value
-	 * @param  string[]  $formats
-	 * @return \DateTime
+	 * @param array|string[] $formats
 	 * @throws DataGridDateTimeHelperException
 	 */
-	public static function tryConvertToDate($value, array $formats = [])
+	public static function tryConvertToDate($value, array $formats = []): \DateTime
 	{
-		return static::fromString($value, $formats);
+		return self::fromString($value, $formats);
 	}
 
 
 	/**
-	 * Convert string into DateTime object from more date without time
+	 * Convert string into \DateTime object from more date without time
+	 *
 	 * @param  mixed     $value
-	 * @param  string[]  $formats
-	 * @return \DateTime
+	 * @param array|string[] $formats
 	 * @throws DataGridDateTimeHelperException
 	 */
-	public static function fromString($value, array $formats = [])
+	public static function fromString($value, array $formats = []): \DateTime
 	{
 		$formats = array_merge($formats, [
 			'Y-m-d H:i:s.u',
@@ -65,7 +59,7 @@ final class DateTimeHelper
 			return $value;
 		}
 
-		if ($value instanceof \DateTimeImmutable) {
+		if ($value instanceof DateTimeImmutable) {
 			$date = new \DateTime('now', $value->getTimezone());
 			$date->setTimestamp($value->getTimestamp());
 
@@ -73,7 +67,9 @@ final class DateTimeHelper
 		}
 
 		foreach ($formats as $format) {
-			if (!is_string($format) || !$date = \DateTime::createFromFormat($format, $value)) {
+			$date = \DateTime::createFromFormat($format, $value);
+
+			if ($date === false) {
 				continue;
 			}
 
@@ -89,6 +85,7 @@ final class DateTimeHelper
 			return $date;
 		}
 
-		throw new DataGridDateTimeHelperException;
+		throw new DataGridDateTimeHelperException();
 	}
+
 }

@@ -1,14 +1,10 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
+use Nette\Forms\Container;
 
 class FilterDateRange extends FilterRange implements IFilterDate
 {
@@ -28,48 +24,50 @@ class FilterDateRange extends FilterRange implements IFilterDate
 	 */
 	protected $type = 'date-range';
 
-
 	/**
 	 * Adds select box to filter form
-	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer(Nette\Forms\Container $container)
+	public function addToFormContainer(Container $container): void
 	{
 		$container = $container->addContainer($this->key);
 
-		$container->addText('from', $this->name)
-			->setAttribute('data-provide', 'datepicker')
+		$from = $container->addText('from', $this->name);
+
+		$from->setAttribute('data-provide', 'datepicker')
 			->setAttribute('data-date-orientation', 'bottom')
 			->setAttribute('data-date-format', $this->getJsFormat())
 			->setAttribute('data-date-today-highlight', 'true')
 			->setAttribute('data-date-autoclose', 'true');
 
-		$container->addText('to', $this->name_second)
-			->setAttribute('data-provide', 'datepicker')
+		$to = $container->addText('to', $this->nameSecond);
+
+		$to->setAttribute('data-provide', 'datepicker')
 			->setAttribute('data-date-orientation', 'bottom')
 			->setAttribute('data-date-format', $this->getJsFormat())
 			->setAttribute('data-date-today-highlight', 'true')
 			->setAttribute('data-date-autoclose', 'true');
 
-		$this->addAttributes($container['from']);
-		$this->addAttributes($container['to']);
+		$this->addAttributes($from);
+		$this->addAttributes($to);
 
 		if ($this->grid->hasAutoSubmit()) {
-			$container['from']->setAttribute('data-autosubmit-change', true);
-			$container['to']->setAttribute('data-autosubmit-change', true);
+			$from->setAttribute('data-autosubmit-change', true);
+			$to->setAttribute('data-autosubmit-change', true);
 		}
 
-		if ($placeholder_array = $this->getPlaceholder()) {
-			$text_from = reset($placeholder_array);
+		$placeholders = $this->getPlaceholders();
 
-			if ($text_from) {
-				$container['from']->setAttribute('placeholder', $text_from);
+		if ($placeholders !== []) {
+			$textFrom = reset($placeholders);
+
+			if ($textFrom) {
+				$from->setAttribute('placeholder', $textFrom);
 			}
 
-			$text_to = end($placeholder_array);
+			$textTo = end($placeholders);
 
-			if ($text_to && ($text_to != $text_from)) {
-				$container['to']->setAttribute('placeholder', $text_to);
+			if ($textTo && ($textTo !== $textFrom)) {
+				$to->setAttribute('placeholder', $textTo);
 			}
 		}
 	}
@@ -77,13 +75,10 @@ class FilterDateRange extends FilterRange implements IFilterDate
 
 	/**
 	 * Set format for datepicker etc
-	 * @param  string $php_format
-	 * @param  string $js_format
-	 * @return static
 	 */
-	public function setFormat($php_format, $js_format)
+	public function setFormat(string $phpFormat, string $jsFormat): IFilterDate
 	{
-		$this->format = [$php_format, $js_format];
+		$this->format = [$phpFormat, $jsFormat];
 
 		return $this;
 	}
@@ -91,9 +86,8 @@ class FilterDateRange extends FilterRange implements IFilterDate
 
 	/**
 	 * Get php format for datapicker
-	 * @return string
 	 */
-	public function getPhpFormat()
+	public function getPhpFormat(): string
 	{
 		return $this->format[0];
 	}
@@ -101,10 +95,10 @@ class FilterDateRange extends FilterRange implements IFilterDate
 
 	/**
 	 * Get js format for datepicker
-	 * @return string
 	 */
-	public function getJsFormat()
+	public function getJsFormat(): string
 	{
 		return $this->format[1];
 	}
+
 }

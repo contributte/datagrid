@@ -1,29 +1,24 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
+use Nette\Forms\Container;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridFilterRangeException;
 
-class FilterRange extends Filter
+class FilterRange extends OneColumnFilter
 {
 
 	/**
 	 * @var array
 	 */
-	protected $placeholder_array;
+	protected $placeholders = [];
 
 	/**
 	 * @var string
 	 */
-	protected $name_second;
+	protected $nameSecond;
 
 	/**
 	 * @var string
@@ -36,47 +31,43 @@ class FilterRange extends Filter
 	protected $type = 'range';
 
 
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $key
-	 * @param string   $name
-	 * @param string   $column
-	 * @param string   $name_second
-	 */
-	public function __construct($grid, $key, $name, $column, $name_second)
+	public function __construct(
+		DataGrid $grid,
+		string $key,
+		string $name,
+		string $column,
+		string $nameSecond
+	)
 	{
 		parent::__construct($grid, $key, $name, $column);
 
-		$this->name_second = $name_second;
+		$this->nameSecond = $nameSecond;
 	}
 
 
-	/**
-	 * Adds select box to filter form
-	 * @param Nette\Forms\Container $container
-	 */
-	public function addToFormContainer(Nette\Forms\Container $container)
+	public function addToFormContainer(Container $container): void
 	{
 		$container = $container->addContainer($this->key);
 
-		$container->addText('from', $this->name);
+		$from = $container->addText('from', $this->name);
+		$to = $container->addText('to', $this->nameSecond);
 
-		$container->addText('to', $this->name_second);
+		$this->addAttributes($from);
+		$this->addAttributes($to);
 
-		$this->addAttributes($container['from']);
-		$this->addAttributes($container['to']);
+		$placeholders = $this->getPlaceholders();
 
-		if ($placeholder_array = $this->getPlaceholder()) {
-			$text_from = reset($placeholder_array);
+		if ($placeholders !== []) {
+			$text_from = reset($placeholders);
 
 			if ($text_from) {
-				$container['from']->setAttribute('placeholder', $text_from);
+				$from->setAttribute('placeholder', $text_from);
 			}
 
-			$text_to = end($placeholder_array);
+			$text_to = end($placeholders);
 
-			if ($text_to && ($text_to != $text_from)) {
-				$container['to']->setAttribute('placeholder', $text_to);
+			if ($text_to && ($text_to !== $text_from)) {
+				$to->setAttribute('placeholder', $text_to);
 			}
 		}
 	}
@@ -84,18 +75,10 @@ class FilterRange extends Filter
 
 	/**
 	 * Set html attr placeholder of both inputs
-	 * @param string $placeholder_array
-	 * @return static
 	 */
-	public function setPlaceholder($placeholder_array)
+	public function setPlaceholders(array $placeholders): self
 	{
-		if (!is_array($placeholder_array)) {
-			throw new DataGridFilterRangeException(
-				'FilterRange::setPlaceholder can only accept array of placeholders'
-			);
-		}
-
-		$this->placeholder_array = $placeholder_array;
+		$this->placeholders = $placeholders;
 
 		return $this;
 	}
@@ -103,25 +86,25 @@ class FilterRange extends Filter
 
 	/**
 	 * Get html attr placeholders
-	 * @return string
 	 */
-	public function getPlaceholder()
+	public function getPlaceholders(): array
 	{
-		return $this->placeholder_array;
+		return $this->placeholders;
 	}
 
 
 	/**
 	 * Get filter condition
-	 * @return array
 	 */
-	public function getCondition()
+	public function getCondition(): array
 	{
 		$value = $this->getValue();
 
-		return [$this->column => [
-			'from' => isset($value['from']) ? $value['from'] : '',
-			'to' => isset($value['to']) ? $value['to'] : '',
-		]];
+		return [
+			$this->column => [
+				'from' => $value['from'] ?? '',
+				'to' => $value['to'] ?? '',
+			],
+		];
 	}
 }

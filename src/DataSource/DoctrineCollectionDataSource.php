@@ -1,33 +1,38 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Martin Procházka <juniwalk@outlook.cz>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
+use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Filter;
+use Ublaboo\DataGrid\Filter\FilterDate;
+use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter\FilterMultiSelect;
+use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterSelect;
+use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
-final class DoctrineCollectionDataSource extends FilterableDataSource implements IDataSource, IAggregatable
+final class DoctrineCollectionDataSource extends FilterableDataSource implements
+	IDataSource,
+	IAggregatable
 {
 
 	/**
-	 * @var Collection
+	 * @var ArrayCollection
 	 */
-	protected $data_source;
+	protected $dataSource;
 
 	/**
 	 * @var string
 	 */
-	protected $primary_key;
+	protected $primaryKey;
 
 	/**
 	 * @var Criteria
@@ -35,24 +40,11 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	protected $criteria;
 
 
-	/**
-	 * @param Collection  $collection
-	 * @param string      $primary_key
-	 */
-	public function __construct(Collection $collection, $primary_key)
+	public function __construct(ArrayCollection $collection, string $primaryKey)
 	{
 		$this->criteria = Criteria::create();
-		$this->data_source = $collection;
-		$this->primary_key = $primary_key;
-	}
-
-
-	/**
-	 * @return Collection
-	 */
-	private function getFilteredCollection()
-	{
-		return $this->data_source->matching($this->criteria);
+		$this->dataSource = $collection;
+		$this->primaryKey = $primaryKey;
 	}
 
 
@@ -60,33 +52,25 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-
-	/**
-	 * Get count of data
-	 * @return int
-	 */
-	public function getCount()
+	public function getCount(): int
 	{
 		return $this->getFilteredCollection()->count();
 	}
 
 
 	/**
-	 * Get the data
-	 * @return array
+	 * {@inheritDoc}
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		return $this->getFilteredCollection()->toArray();
 	}
 
 
 	/**
-	 * Filter data - get one row
-	 * @param array $condition
-	 * @return static
+	 * {@inheritDoc}
 	 */
-	public function filterOne(array $condition)
+	public function filterOne(array $condition): IDataSource
 	{
 		foreach ($condition as $column => $value) {
 			$expr = Criteria::expr()->eq($column, $value);
@@ -97,14 +81,47 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * Filter by date
-	 * @param  Filter\FilterDate $filter
-	 * @return void
-	 */
-	public function applyFilterDate(Filter\FilterDate $filter)
+	public function limit(int $offset, int $limit): IDataSource
 	{
-		foreach ($filter->getCondition() as $column => $value) {
+		$this->criteria->setFirstResult($offset)->setMaxResults($limit);
+
+		return $this;
+	}
+
+
+	public function sort(Sorting $sorting): IDataSource
+	{
+		if (is_callable($sorting->getSortCallback())) {
+			call_user_func(
+				$sorting->getSortCallback(),
+				$this->criteria,
+				$sorting->getSort()
+			);
+
+			return $this;
+		}
+
+		if ($sorting->getSort() !== []) {
+			$this->criteria->orderBy($sorting->getSort());
+
+			return $this;
+		}
+
+		$this->criteria->orderBy([$this->primaryKey => 'ASC']);
+
+		return $this;
+	}
+
+
+	public function processAggregation(IAggregationFunction $function): void
+	{
+		$function->processDataSource(clone $this->dataSource);
+	}
+
+
+	protected function applyFilterDate(FilterDate $filter): void
+	{
+		foreach ($filter->getCondition() as $value) {
 			try {
 				$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
 
@@ -119,34 +136,33 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * Filter by date range
-	 * @param  Filter\FilterDateRange $filter
-	 * @return void
-	 */
-	public function applyFilterDateRange(Filter\FilterDateRange $filter)
+	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
 		$conditions = $filter->getCondition();
 		$values = $conditions[$filter->getColumn()];
 
-		if ($value_from = $values['from']) {
-			try {
-				$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
-				$date_from->setTime(0, 0, 0);
+		$valueFrom = $values['from'];
 
-				$expr = Criteria::expr()->gte($filter->getColumn(), $date_from->format('Y-m-d H:i:s'));
+		if ((bool) $valueFrom) {
+			try {
+				$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
+				$dateFrom->setTime(0, 0, 0);
+
+				$expr = Criteria::expr()->gte($filter->getColumn(), $dateFrom->format('Y-m-d H:i:s'));
 				$this->criteria->andWhere($expr);
 			} catch (DataGridDateTimeHelperException $ex) {
 				// ignore the invalid filter value
 			}
 		}
 
-		if ($value_to = $values['to']) {
-			try {
-				$date_to = DateTimeHelper::tryConvertToDateTime($value_to, [$filter->getPhpFormat()]);
-				$date_to->setTime(23, 59, 59);
+		$valueTo = $values['to'];
 
-				$expr = Criteria::expr()->lte($filter->getColumn(), $date_to->format('Y-m-d H:i:s'));
+		if ((bool) $valueTo) {
+			try {
+				$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
+				$dateTo->setTime(23, 59, 59);
+
+				$expr = Criteria::expr()->lte($filter->getColumn(), $dateTo->format('Y-m-d H:i:s'));
 				$this->criteria->andWhere($expr);
 			} catch (DataGridDateTimeHelperException $ex) {
 				// ignore the invalid filter value
@@ -155,48 +171,39 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * Filter by range
-	 * @param  Filter\FilterRange $filter
-	 * @return void
-	 */
-	public function applyFilterRange(Filter\FilterRange $filter)
+	protected function applyFilterRange(FilterRange $filter): void
 	{
 		$conditions = $filter->getCondition();
 		$values = $conditions[$filter->getColumn()];
 
-		if ($value_from = $values['from']) {
-			$expr = Criteria::expr()->gte($filter->getColumn(), $value_from);
+		$valueFrom = $values['from'];
+
+		if ((bool) $valueFrom) {
+			$expr = Criteria::expr()->gte($filter->getColumn(), $valueFrom);
 			$this->criteria->andWhere($expr);
 		}
 
-		if ($value_to = $values['to']) {
-			$expr = Criteria::expr()->lte($filter->getColumn(), $value_to);
+		$valueTo = $values['to'];
+
+		if ((bool) $valueTo) {
+			$expr = Criteria::expr()->lte($filter->getColumn(), $valueTo);
 			$this->criteria->andWhere($expr);
 		}
 	}
 
 
-	/**
-	 * Filter by keyword
-	 * @param  Filter\FilterText $filter
-	 * @return void
-	 */
-	public function applyFilterText(Filter\FilterText $filter)
+	protected function applyFilterText(FilterText $filter): void
 	{
 		$exprs = [];
 
 		foreach ($filter->getCondition() as $column => $value) {
 			if ($filter->isExactSearch()) {
 				$exprs[] = Criteria::expr()->eq($column, $value);
+
 				continue;
 			}
 
-			if ($filter->hasSplitWordsSearch() === false) {
-				$words = [$value];
-			} else {
-				$words = explode(' ', $value);
-			}
+			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 			foreach ($words as $word) {
 				$exprs[] = Criteria::expr()->contains($column, $word);
@@ -208,12 +215,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * Filter by multi select value
-	 * @param  Filter\FilterMultiSelect $filter
-	 * @return void
-	 */
-	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter)
+	protected function applyFilterMultiSelect(FilterMultiSelect $filter): void
 	{
 		$values = $filter->getCondition()[$filter->getColumn()];
 
@@ -222,12 +224,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/**
-	 * Filter by select value
-	 * @param  Filter\FilterSelect $filter
-	 * @return void
-	 */
-	public function applyFilterSelect(Filter\FilterSelect $filter)
+	protected function applyFilterSelect(FilterSelect $filter): void
 	{
 		foreach ($filter->getCondition() as $column => $value) {
 			$expr = Criteria::expr()->eq($column, $value);
@@ -237,53 +234,16 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 
 	/**
-	 * Apply limit and offset on data
-	 * @param int $offset
-	 * @param int $limit
-	 * @return static
+	 * {@inheritDoc}
 	 */
-	public function limit($offset, $limit)
+	public function getDataSource()
 	{
-		$this->criteria->setFirstResult($offset)->setMaxResults($limit);
-
-		return $this;
+		return $this->dataSource;
 	}
 
 
-	/**
-	 * Sort data
-	 * @param Sorting $sorting
-	 * @return static
-	 */
-	public function sort(Sorting $sorting)
+	private function getFilteredCollection(): Collection
 	{
-		if (is_callable($sorting->getSortCallback())) {
-			call_user_func(
-				$sorting->getSortCallback(),
-				$this->criteria,
-				$sorting->getSort()
-			);
-
-			return $this;
-		}
-
-		if ($sort = $sorting->getSort()) {
-			$this->criteria->orderBy($sort);
-			return $this;
-		}
-
-		$this->criteria->orderBy([$this->primary_key => 'ASC']);
-
-		return $this;
-	}
-
-
-	/**
-	 * @param  callable  $aggregationCallback
-	 * @return void
-	 */
-	public function processAggregation(callable $aggregationCallback)
-	{
-		call_user_func($aggregationCallback, clone $this->data_source);
+		return $this->dataSource->matching($this->criteria);
 	}
 }

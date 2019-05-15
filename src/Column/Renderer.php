@@ -1,20 +1,11 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette\SmartObject;
-use Ublaboo;
-
 class Renderer
 {
-
-	use SmartObject;
 
 	/**
 	 * @var callable
@@ -22,27 +13,25 @@ class Renderer
 	protected $callback;
 
 	/**
-	 * @var callable|NULL
+	 * @var callable|null
 	 */
-	protected $condition_callback;
+	protected $conditionCallback;
 
 
-	/**
-	 * @param callable      $callback
-	 * @param callable|NULL $condition_callback
-	 */
-	public function __construct($callback, $condition_callback)
+	public function __construct(
+		callable $callback,
+		?callable $conditionCallback
+	)
 	{
 		$this->callback = $callback;
-		$this->condition_callback = $condition_callback;
+		$this->conditionCallback = $conditionCallback;
 	}
 
 
 	/**
 	 * Get custom renderer callback
-	 * @return callable
 	 */
-	public function getCallback()
+	public function getCallback(): callable
 	{
 		return $this->callback;
 	}
@@ -50,10 +39,9 @@ class Renderer
 
 	/**
 	 * Get custom renderer condition callback
-	 * @return callable|NULL
 	 */
-	public function getConditionCallback()
+	public function getConditionCallback(): ?callable
 	{
-		return $this->condition_callback;
+		return $this->conditionCallback;
 	}
 }

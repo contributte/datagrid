@@ -1,7 +1,8 @@
 <?php
 
-namespace Ublaboo\DataGrid\Tests\Files;
+declare(strict_types=1);
 
+namespace Ublaboo\DataGrid\Tests\Files;
 
 use Nette\Application\UI\Control;
 use Ublaboo\DataGrid\DataGrid;
@@ -9,11 +10,9 @@ use Ublaboo\DataGrid\DataGrid;
 class TestGridControl extends Control
 {
 
-	public function createComponentGrid()
+	public function createComponentGrid(): DataGrid
 	{
-		$grid = new DataGrid();
-
-		return $grid;
+		return new DataGrid();
 	}
 
 }

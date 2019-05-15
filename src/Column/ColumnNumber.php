@@ -1,10 +1,6 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -12,6 +8,7 @@ use Ublaboo\DataGrid\Row;
 
 class ColumnNumber extends Column
 {
+
 	/**
 	 * @var string
 	 */
@@ -20,16 +17,13 @@ class ColumnNumber extends Column
 	/**
 	 * @var array
 	 */
-	protected $number_format = [
+	protected $numberFormat = [
 		0, // Decimals
 		'.', // Decimal point
 		' ',  // Thousands separator
 	];
 
-
 	/**
-	 * Format row item value
-	 * @param  Row   $row
 	 * @return mixed
 	 */
 	public function getColumnValue(Row $row)
@@ -42,36 +36,31 @@ class ColumnNumber extends Column
 
 		return number_format(
 			(float) $value,
-			(int) $this->number_format[0],
-			(string) $this->number_format[1],
-			(string) $this->number_format[2]
+			(int) $this->numberFormat[0],
+			(string) $this->numberFormat[1],
+			(string) $this->numberFormat[2]
 		);
 	}
 
 
-	/**
-	 * Set number format
-	 * @param int    $decimals
-	 * @param string $dec_point
-	 * @param string $thousands_sep
-	 */
-	public function setFormat($decimals = 0, $dec_point = '.', $thousands_sep = ' ')
+	public function setFormat(
+		int $decimals = 0,
+		string $decPoint = '.',
+		string $thousandsSep = ' '
+	): self
 	{
-		$this->number_format = [$decimals, $dec_point, $thousands_sep];
+		$this->numberFormat = [$decimals, $decPoint, $thousandsSep];
 
 		return $this;
 	}
 
 
-	/**
-	 * @return array
-	 */
-	public function getFormat()
+	public function getFormat(): array
 	{
 		return [
-			$this->number_format[0],
-			$this->number_format[1],
-			$this->number_format[2],
+			$this->numberFormat[0],
+			$this->numberFormat[1],
+			$this->numberFormat[2],
 		];
 	}
 }

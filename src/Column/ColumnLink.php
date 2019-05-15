@@ -1,10 +1,6 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -17,12 +13,12 @@ class ColumnLink extends Column
 {
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $title;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $class;
 
@@ -37,20 +33,19 @@ class ColumnLink extends Column
 	protected $href;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $icon;
 
 	/**
 	 * @var array
 	 */
-	protected $data_attributes = [];
+	protected $dataAttributes = [];
 
 	/**
 	 * @var bool
 	 */
-	protected $open_in_new_tab = false;
-
+	protected $openInNewTab = false;
 
 	/**
 	 * @var array
@@ -58,15 +53,14 @@ class ColumnLink extends Column
 	protected $parameters = [];
 
 
-	/**
-	 * @param DataGrid $grid
-	 * @param string $key
-	 * @param string $column
-	 * @param string $name
-	 * @param string $href
-	 * @param array  $params
-	 */
-	public function __construct(DataGrid $grid, $key, $column, $name, $href, $params)
+	public function __construct(
+		DataGrid $grid,
+		string $key,
+		string $column,
+		string $name,
+		string $href,
+		array $params
+	)
 	{
 		parent::__construct($grid, $key, $column, $name);
 
@@ -76,8 +70,6 @@ class ColumnLink extends Column
 
 
 	/**
-	 * Render row item into template
-	 * @param  Row   $row
 	 * @return mixed
 	 */
 	public function render(Row $row)
@@ -95,7 +87,7 @@ class ColumnLink extends Column
 
 		$value = parent::render($row);
 
-		if (!$value && !$this->icon) {
+		if (! (bool) $value && $this->icon !== null) {
 			return null;
 		}
 
@@ -106,29 +98,32 @@ class ColumnLink extends Column
 				$this->getItemParams($row, $this->params) + $this->parameters
 			));
 
-		if (!empty($this->data_attributes)) {
-			foreach ($this->data_attributes as $key => $attr_value) {
-				$a->data($key, $attr_value);
+		if ($this->dataAttributes !== []) {
+			foreach ($this->dataAttributes as $key => $attrValue) {
+				$a->data((string) $key, $attrValue);
 			}
 		}
 
-		if ($this->open_in_new_tab) {
+		if ($this->openInNewTab) {
 			$a->addAttributes(['target' => '_blank']);
 		}
 
-		if ($this->title) {
-			$a->title($this->title);
+		if ($this->title !== null) {
+			$a->setAttribute('title', $this->title);
 		}
-		if ($this->class) {
-			$a->class($this->class);
+
+		if ($this->class !== null) {
+			$a->setAttribute('class', $this->class);
 		}
 
 		$element = $a;
 
-		if ($this->icon) {
-			$a->addHtml(Html::el('span')->class(DataGrid::$icon_prefix . $this->icon));
+		if ($this->icon !== null) {
+			$a->addHtml(
+				Html::el('span')->setAttribute('class', DataGrid::$iconPrefix . $this->icon)
+			);
 
-			if (strlen($value)) {
+			if (strlen($value) > 0) {
 				$a->addHtml('&nbsp;');
 			}
 		}
@@ -143,12 +138,7 @@ class ColumnLink extends Column
 	}
 
 
-	/**
-	 * Add parameters to link
-	 * @param array $parameters
-	 * @return static
-	 */
-	public function addParameters(array $parameters)
+	public function addParameters(array $parameters): self
 	{
 		$this->parameters = $parameters;
 
@@ -156,12 +146,7 @@ class ColumnLink extends Column
 	}
 
 
-	/**
-	 * Set icon before simple link
-	 * @param string      $icon
-	 * @return ColumnLink
-	 */
-	public function setIcon($icon = null)
+	public function setIcon(?string $icon = null): self
 	{
 		$this->icon = $icon;
 
@@ -170,24 +155,17 @@ class ColumnLink extends Column
 
 
 	/**
-	 * Setting data attributes
-	 * @param string $key
-	 * @param mixed  $value
-	 * @return static
+	 * @param mixed $value
 	 */
-	public function setDataAttribute($key, $value)
+	public function setDataAttribute(string $key, $value): self
 	{
-		$this->data_attributes[$key] = $value;
+		$this->dataAttributes[$key] = $value;
 
 		return $this;
 	}
 
 
-	/**
-	 * Set attribute title
-	 * @param string $title
-	 */
-	public function setTitle($title)
+	public function setTitle(string $title): self
 	{
 		$this->title = $title;
 
@@ -195,21 +173,13 @@ class ColumnLink extends Column
 	}
 
 
-	/**
-	 * Get attribute title
-	 */
-	public function getTitle()
+	public function getTitle(): ?string
 	{
 		return $this->title;
 	}
 
 
-	/**
-	 * Set attribute class
-	 * @param string $class
-	 * @return $this
-	 */
-	public function setClass($class)
+	public function setClass(string $class): self
 	{
 		$this->class = $class;
 
@@ -217,33 +187,22 @@ class ColumnLink extends Column
 	}
 
 
-	/**
-	 * Get attribute class
-	 */
-	public function getClass()
+	public function getClass(): ?string
 	{
 		return $this->class;
 	}
 
 
-	/**
-	 * Open link in new window/tab?
-	 * @return boolean
-	 */
-	public function isOpenInNewTab()
+	public function isOpenInNewTab(): bool
 	{
-		return $this->open_in_new_tab;
+		return $this->openInNewTab;
 	}
 
 
-	/**
-	 * Set link to open in new tab/window or not
-	 * @param bool $open_in_new_tab
-	 * @return $this
-	 */
-	public function setOpenInNewTab($open_in_new_tab = true)
+	public function setOpenInNewTab(bool $openInNewTab = true): self
 	{
-		$this->open_in_new_tab = $open_in_new_tab;
+		$this->openInNewTab = $openInNewTab;
+
 		return $this;
 	}
 }

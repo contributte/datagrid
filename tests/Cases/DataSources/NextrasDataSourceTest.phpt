@@ -1,12 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
-use Nextras\Orm\Relationships\OneHasMany;
-use Tester\Environment;
-use Tester\TestCase;
-use Tester\Assert;
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\DevNullStorage;
+use Nextras\Dbal\Connection;
+use Nextras\Orm\Entity\Entity;
+use Nextras\Orm\Mapper\Mapper;
+use Nextras\Orm\Model\Model;
+use Nextras\Orm\Model\SimpleModelFactory;
+use Nextras\Orm\Repository\Repository;
 use Ublaboo\DataGrid\DataSource\NextrasDataSource;
+use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
@@ -15,42 +22,47 @@ require __DIR__ . '/BaseDataSourceTest.phpt';
 error_reporting(E_ERROR | E_PARSE);
 
 if (!extension_loaded('mysqli')) {
-    \Tester\Environment::skip('Test requires MySQLi extension to be loaded.');
+	Environment::skip('Test requires MySQLi extension to be loaded.');
 }
 
 /**
  * @dataProvider nextrasDatasource.ini
  */
-final class NextrasDataSourceTest extends BaseDataSourceTest {
+final class NextrasDataSourceTest extends BaseDataSourceTest
+{
 
-	/** @var \Nextras\Orm\Model\Model */
+	/**
+	 * @var Model
+	 */
 	private $model;
 
-	public function setUp() {
+	public function setUp(): void
+	{
 		$this->setUpDatabase();
 
 		$this->ds = new NextrasDataSource($this->model->users->findAll(), 'id');
-		$factory = new \Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
-		$this->grid = $factory->createXTestingDataGrid();
+		$factory = new TestingDataGridFactory();
+		$this->grid = $factory->createTestingDataGrid();
 	}
 
-	protected function setUpDatabase() {
-		$args = \Tester\Environment::loadData();
+	protected function setUpDatabase(): void
+	{
+		$args = Environment::loadData();
 
-		$storage = new \Nette\Caching\Storages\DevNullStorage();
-		$cache = new \Nette\Caching\Cache($storage);
-		$connection = new \Nextras\Dbal\Connection($args);
+		$storage = new DevNullStorage();
+		$cache = new Cache($storage);
+		$connection = new Connection($args);
 
-		$connection->query("DROP TABLE IF EXISTS `users`");
-		$connection->query("CREATE TABLE `users` (
+		$connection->query('DROP TABLE IF EXISTS `users`');
+		$connection->query('CREATE TABLE `users` (
 								`id` int(11) NOT NULL AUTO_INCREMENT,
 								`name` varchar(50) COLLATE utf8_czech_ci NOT NULL,
 								`age` int(11) NOT NULL,
 								`address` varchar(50) NOT NULL,
 								PRIMARY KEY (`id`)
-							) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_czech_ci;");
+							) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_czech_ci;');
 
-		$simpleModelFactory = new \Nextras\Orm\Model\SimpleModelFactory($cache, [
+		$simpleModelFactory = new SimpleModelFactory($cache, [
 			'users' => new UsersRepository(new UsersMapper($connection, $cache)),
 		]);
 
@@ -59,11 +71,14 @@ final class NextrasDataSourceTest extends BaseDataSourceTest {
 		$connection->query('INSERT INTO [users] %values[]', $this->data);
 	}
 
-	protected function getActualResultAsArray() {
+	protected function getActualResultAsArray()
+	{
 		$result = [];
-		foreach ($this->ds->getData() as $row) { /* @var $row User */
+
+		foreach ($this->ds->getData() as $row) { /** @var User $row */
 			$result[] = $row->toArray();
 		}
+
 		return $result;
 	}
 
@@ -71,27 +86,31 @@ final class NextrasDataSourceTest extends BaseDataSourceTest {
 
 /**
  * User
- * 
+ *
  * @property int $id {primary}
  * @property string $name
  * @property int $age
  * @property string $address
  */
-class User extends \Nextras\Orm\Entity\Entity {
+class User extends Entity
+{
 
 }
 
-class UsersMapper extends \Nextras\Orm\Mapper\Mapper {
+class UsersMapper extends Mapper
+{
 
 }
 
-class UsersRepository extends \Nextras\Orm\Repository\Repository {
+class UsersRepository extends Repository
+{
 
-	public static function getEntityClassNames() {
+	public static function getEntityClassNames()
+	{
 		return [User::class];
 	}
 
 }
 
-$test_case = new NextrasDataSourceTest;
+$test_case = new NextrasDataSourceTest();
 $test_case->run();

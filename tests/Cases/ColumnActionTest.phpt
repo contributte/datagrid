@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use Tester\TestCase;
 use Tester\Assert;
-use Mockery;
-use Ublaboo\DataGrid\DataGrid;
+use Tester\TestCase;
 use Ublaboo;
+use Ublaboo\DataGrid\DataGrid;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/XTestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDataGridFactory.php';
 
 final class ColumnActionTest extends TestCase
 {
@@ -19,11 +20,10 @@ final class ColumnActionTest extends TestCase
 	 */
 	private $grid;
 
-
-	public function setUp()
+	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
-		$this->grid = $factory->createXTestingDataGrid();
+		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
+		$this->grid = $factory->createTestingDataGrid();
 	}
 
 
@@ -35,104 +35,105 @@ final class ColumnActionTest extends TestCase
 	}
 
 
-	public function testActionDuplcitColumn()
+	public function testActionDuplcitColumn(): void
 	{
-		$action = $this->grid->addAction('action', 'Do', 'doStuff!');
+		$this->grid->addAction('action', 'Do', 'doStuff!');
 
 		$grid = $this->grid;
-		$add_action = function() use ($grid) {
+		$add_action = function () use ($grid): void {
 			$grid->addAction('action', 'Do', 'doStuff!');
 		};
 
 		Assert::exception(
 			$add_action,
 			'Ublaboo\DataGrid\Exception\DataGridException',
-			'There is already action at key [action] defined.'
+			'There is already action at key [action] defined.',
 		);
 	}
 
 
-	public function testActionLink()
+	public function testActionLink(): void
 	{
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!');
 
 		Assert::same(
 			'<a href="doStuff!?id=1" class="btn btn-xs btn-default btn-secondary">Do</a>',
-			$this->render($action)
+			$this->render($action),
 		);
 
 		$action = $this->grid->addAction('detail', 'Do');
 
 		Assert::same(
 			'<a href="detail?id=1" class="btn btn-xs btn-default btn-secondary">Do</a>',
-			$this->render($action)
+			$this->render($action),
 		);
 
 		$action = $this->grid->addAction('title', 'Do', 'detail', ['id', 'name']);
 		Assert::same(
 			'<a href="detail?id=1&amp;name=John" class="btn btn-xs btn-default btn-secondary">Do</a>',
-			$this->render($action)
+			$this->render($action),
 		);
 
 		$action = $this->grid->addAction('title2', 'Do', 'detail', [
-			'id' => 'name', 'name' => 'id'
+			'id' => 'name',
+		'name' => 'id',
 		]);
 		Assert::same(
 			'<a href="detail?id=John&amp;name=1" class="btn btn-xs btn-default btn-secondary">Do</a>',
-			$this->render($action)
+			$this->render($action),
 		);
 	}
 
 
-	public function testActionIcon()
+	public function testActionIcon(): void
 	{
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!');
 
-		DataGrid::$icon_prefix = 'icon-';
+		DataGrid::$iconPrefix = 'icon-';
 		$action->setIcon('user');
 
 		Assert::same(
 			'<a href="doStuff!?id=1" class="btn btn-xs btn-default btn-secondary"><span class="icon-user"></span>&nbsp;Do</a>',
-			$this->render($action)
+			$this->render($action),
 		);
 	}
 
 
-	public function testActionClass()
+	public function testActionClass(): void
 	{
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->setClass('btn');
 
 		Assert::same('<a href="doStuff!?id=1" class="btn">Do</a>', $this->render($action));
 
-		$action->setClass(NULL);
+		$action->setClass(null);
 
 		Assert::same('<a href="doStuff!?id=1">Do</a>', $this->render($action));
 	}
 
 
-	public function testActionTitle()
+	public function testActionTitle(): void
 	{
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->setTitle('hello');
 
 		Assert::same(
 			'<a href="doStuff!?id=1" title="hello" class="btn btn-xs btn-default btn-secondary">Do</a>',
-			$this->render($action)
+			$this->render($action),
 		);
 	}
 
 
-	public function testActionConfirm()
+	public function testActionConfirm(): void
 	{
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->setConfirm('Really?');
 
 		Assert::same(
 			'<a href="doStuff!?id=1" class="btn btn-xs btn-default btn-secondary" data-datagrid-confirm="Really?">Do</a>',
-			$this->render($action)
+			$this->render($action),
 		);
 	}
 
 
-	public function testActionRenderCondition()
+	public function testActionRenderCondition(): void
 	{
 		$action = $this->grid->addAction('action1', 'Do', 'doStuff!')->setRenderCondition(function () {
 			return true;
@@ -150,5 +151,5 @@ final class ColumnActionTest extends TestCase
 }
 
 
-$test_case = new ColumnActionTest;
+$test_case = new ColumnActionTest();
 $test_case->run();
