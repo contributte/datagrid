@@ -90,7 +90,7 @@ Current documentation - https://ublaboo.org/datagrid/.
         <a href="https://github.com/f3l1x">Milan Felix Šulc</a>
       </td>
     </tr>
-  <tbody>
+  </tbody>
 </table>
 
 ### Former maintainers
@@ -106,7 +106,7 @@ Current documentation - https://ublaboo.org/datagrid/.
         <a href="https://github.com/juniwalk">Martin Procházka</a>
       </td>
     </tr>
-  <tbody>
+  </tbody>
 </table>
 
 -----
