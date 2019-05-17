@@ -27,10 +27,7 @@ abstract class FilterableDataSource
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
 				if ($filter->hasConditionCallback()) {
-					Callback::invokeArgs(
-						$filter->getConditionCallback(),
-						[$this->data_source, $filter->getValue()]
-					);
+					call_user_func_array($filter->getConditionCallback(), [$this->data_source, $filter->getValue()]);
 				} else {
 					if ($filter instanceof Filter\FilterText) {
 						$this->applyFilterText($filter);
