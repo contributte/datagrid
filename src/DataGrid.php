@@ -2486,7 +2486,7 @@ s	 */
 	 */
 	public function getPerPage()
 	{
-		$itemsPerPageList = $this->getItemsPerPageList();
+		$itemsPerPageList = array_keys($this->getItemsPerPageList());
 
 		$perPage = $this->perPage ?: reset($itemsPerPageList);
 
