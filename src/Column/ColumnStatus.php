@@ -17,6 +17,7 @@ use Ublaboo\DataGrid\Traits;
 class ColumnStatus extends Column
 {
 	use Traits\TButtonCaret;
+	use Traits\TRenderCondition;
 
 	/**
 	 * @var callable[]
