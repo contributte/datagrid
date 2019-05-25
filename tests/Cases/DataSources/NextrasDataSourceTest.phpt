@@ -8,6 +8,7 @@ use Nette\Caching\Cache;
 use Nette\Caching\Storages\DevNullStorage;
 use Nextras\Dbal\Connection;
 use Nextras\Orm\Entity\Entity;
+use Nextras\Orm\Mapper\Dbal\DbalMapperCoordinator;
 use Nextras\Orm\Mapper\Mapper;
 use Nextras\Orm\Model\Model;
 use Nextras\Orm\Model\SimpleModelFactory;
@@ -64,7 +65,9 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 							) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_czech_ci;');
 
 		$simpleModelFactory = new SimpleModelFactory($cache, [
-			'users' => new UsersRepository(new UsersMapper($connection, $cache)),
+			'users' => new UsersRepository(
+				new UsersMapper($connection, new DbalMapperCoordinator($connection), $cache)
+			),
 		]);
 
 		$this->model = $simpleModelFactory->create();
