@@ -1,8 +1,14 @@
+Table of contents
+
+- [Inline editing](#inline-editing)
+	- [Small inline editing](#small-inline-editing)
+		- [Different input types and element attributes](#different-input-types-and-element-attributes)
+		- [Render different content then is edited](#render-different-content-then-is-edited)
+	- [Big inline editing](#big-inline-editing)
+		- [What happens after editing](#what-happens-after-editing)
+		- [Show non editing Columns](#show-non-editing-columns)
+
 # Inline editing
-
-- [Small inline edit](#small-inline-editing)
-- [Big inline edit](#big-inline-editing)
-
 
 ## Small inline editing
 

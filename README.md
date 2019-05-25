@@ -20,11 +20,9 @@ Please see the [full documentation](http://ublaboo.org/datagrid/).
 
 [![Join the chat](https://img.shields.io/gitter/room/contributte/contributte.svg?style=flat-square)](http://bit.ly/ctteg)
 
-## Install
+## 🔍 Documentation 🔍
 
-```
-composer require ublaboo/datagrid
-```
+See the documentation **[HERE](.docs/index.md)**. Or you can view the online **[demo](http://examples.planette.io/contributte/datagrid/)**.
 
 ## Versions
 
@@ -35,9 +33,7 @@ composer require ublaboo/datagrid
 | stable      | `^4.4.22` | `v5.x`   | >=2.3 | `>= 5.6` |  |
 | stable      | `^3.3.1`  | `v5.x`   | >=2.3 | `>= 5.3` |  |
 
-## Overview
-
-Current documentation - https://ublaboo.org/datagrid/.
+## Are u using datagrid? Give us a star :) ⭐️
 
 ## Maintainers
 
