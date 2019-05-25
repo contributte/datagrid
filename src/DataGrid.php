@@ -3378,14 +3378,15 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                   INTERNAL                                   *
 	 ********************************************************************************/
 
-    /**
-     * Gets conponent's full name in component tree
-     * @return string
-     */
+	/**
+	 * Gets conponent's full name in component tree
+	 * @return string
+	 */
 	public function getFullName()
-    {
-        return $this->componentFullName;
-    }
+	{
+		return $this->componentFullName;
+	}
+	
 
 	/**
 	 * Tell grid filters to by submitted automatically
