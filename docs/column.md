@@ -97,7 +97,7 @@ $grid->addColumnText('name', 'Name')
 
 ### Escaping values
 
-By default, latte escapes all values from datasource. You can disable that:
+By default, latte escapes all values from data source. You can disable that:
 
 ```php
 $grid->addColumnText('link_html', 'Link')
