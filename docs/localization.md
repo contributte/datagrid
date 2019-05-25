@@ -1,8 +1,9 @@
+Table of contents
+
+- [Localization](#localization)
+	- [Filters localization](#filters-localization)
+
 # Localization
-
-## Table of contents
-
-- [Filters localization](#filters-localization)
 
 As you can see in the example below, a `SimpleTranslator` class comes with datagrid (the example was translated to czech). You can use it as shown (you will do that probably in some factory for all datagrids in your application). Of course you can use your own translator - it just has to implement `Nette\Localization\ITranslator`.
 

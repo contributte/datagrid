@@ -1,11 +1,12 @@
+Table of contents
+
+- [Datasources](#datasources)
+	- [ORM Relations](#orm-relations)
+	- [ApiDataSource](#apidatasource)
+	- [NextrasDataSource](#nextrasdatasource)
+	- [NetteDatabaseTableDataSource](#nettedatabasetabledatasource)
+
 # Datasources
-
-## Table of contents
-
-- [ORM Relations](#orm-relations)
-- [ApiDataSource](#apidatasource)
-- [NextrasDataSource](#nextrasdatasource)
-- [NetteDatabaseTableDataSource](#nettedatabasetabledatasource)
 
 There are these supported datasources so far:
 

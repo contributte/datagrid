@@ -1,25 +1,26 @@
+Table of contents
+
+- [Action](#action)
+	- [Api](#api)
+		- [Parameters](#parameters)
+		- [Icon](#icon)
+		- [Class](#class)
+		- [Title](#title)
+		- [Confirmation](#confirmation)
+	- [Ajax](#ajax)
+		- [Redrawing the data](#redrawing-the-data)
+		- [Redrawing one row](#redrawing-one-row)
+	- [Sortable](#sortable)
+		- [Sorting hander](#sorting-hander)
+	- [MultiAction](#multiaction)
+	- [Item detail](#item-detail)
+		- [Item detail form](#item-detail-form)
+		- [Item detail template variables](#item-detail-template-variables)
+		- [Item detail render condition](#item-detail-render-condition)
+	- [ActionCallback](#actioncallback)
+	- [Toolbar button](#toolbar-button)
+
 # Action
-
-## Table of contents
-
-- [Api](#api)
-	- [Parameters](#parameters)
-	- [Icon](#icon)
-	- [Class](#class)
-	- [Title](#title)
-	- [Confirmation](#confirmation)
-- [Ajax](#ajax)
-	- [Redrawing the data](#redrawing-the-data)
-	- [Redrawing one row](#redrawing-one-row)
-- [Sortable](#sortable)
-	- [Sorting hander](#sorting-hander)
-- [MultiAction](#multiaction)
-- [Item detail](#item-detail)
-	- [Item detail form](#item-detail-form)
-	- [Item detail template variables](#item-detail-template-variables)
-	- [Item detail render condition](#item-detail-render-condition)
-- [ActionCallback](#actioncallback)
-- [Toolbar button](#toolbar-button)
 
 ## Api
 

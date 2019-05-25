@@ -1,13 +1,14 @@
+Table of contents
+
+- [Row](#row)
+	- [Row conditions](#row-conditions)
+		- [Allow Group Action](#allow-group-action)
+		- [Allow Inline Edit](#allow-inline-edit)
+		- [Allow Actions](#allow-actions)
+		- [Allow Action of MultiAction](#allow-action-of-multiaction)
+	- [Row callback](#row-callback)
+
 # Row
-
-## Table of contents
-
-- [Row conditions](#row-conditions)
-	- [Allow Group Action](#allow-group-action)
-	- [Allow Inline Edit](#allow-inline-edit)
-	- [Allow Actions](#allow-actions)
-	- [Allow Action of MultiAction](#allow-action-of-multiaction)
-- [Row callback](#row-callback)
 
 ## Row conditions
 

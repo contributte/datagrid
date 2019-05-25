@@ -1,10 +1,11 @@
+Table of contents
+
+- [Tree view](#tree-view)
+	- [Api](#api)
+	- [Example table structure](#example-table-structure)
+	- [Redrawing one row \(ajax\)](#redrawing-one-row-ajax)
+
 # Tree view
-
-## Table of contents
-
-- [Api](#api)
-- [Example table structure](#example-table-structure)
-- [Redrawing one row \(ajax\)](#redrawing-one-row-ajax)
 
 ## Api
 

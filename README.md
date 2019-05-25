@@ -37,7 +37,9 @@ composer require ublaboo/datagrid
 
 ## Overview
 
-Current documentation - https://ublaboo.org/datagrid/.
+Current documentation - https://contributte.org/packages/contributte/datagrid.html.
+
+## Are u using datagrid? Give us a star. :) ⭐️
 
 ## Maintainers
 

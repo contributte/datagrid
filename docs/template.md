@@ -1,12 +1,13 @@
+Table of contents
+
+- [Template](#template)
+	- [Extending](#extending)
+	- [Column definition](#column-definition)
+	- [Column header definition](#column-header-definition)
+	- [Table class definition](#table-class-definition)
+	- [Icons definition](#icons-definition)
+
 # Template
-
-## Table of contents
-
-- [Extending](#extending)
-- [Column definition](#column-definition)
-- [Column header definition](#column-header-definition)
-- [Table class definition](#table-class-definition)
-- [Icons definition](#icons-definition)
 
 ## Extending
 

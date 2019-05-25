@@ -1,8 +1,9 @@
+Table of contents
+
+- [Inline adding](#inline-adding)
+	- [Position of new item row](#position-of-new-item-row)
+
 # Inline adding
-
-## Table of contents
-
-- [Position of new item row](#position-of-new-item-row)
 
 Since version `3.3.0` there is a feature "inline adding" available. Up above is a demo where you can try that out. Just hit the "plus" button, fill some inputs and save the container. Example implementation:
 
