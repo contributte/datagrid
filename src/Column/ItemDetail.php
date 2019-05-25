@@ -1,43 +1,46 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
+use LogicException;
 use Nette\Utils\Html;
-use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridItemDetailException;
 use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits;
+use Ublaboo\DataGrid\Traits\TButtonClass;
+use Ublaboo\DataGrid\Traits\TButtonIcon;
+use Ublaboo\DataGrid\Traits\TButtonText;
+use Ublaboo\DataGrid\Traits\TButtonTitle;
+use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
+use Ublaboo\DataGrid\Traits\TRenderCondition;
 use Ublaboo\DataGrid\Utils\ItemDetailForm;
 
 class ItemDetail
 {
-	use Traits\TButtonTryAddIcon;
-	use Traits\TButtonIcon;
-	use Traits\TButtonClass;
-	use Traits\TButtonTitle;
-	use Traits\TButtonText;
-	use Traits\TRenderCondition;
+
+	use TButtonTryAddIcon;
+	use TButtonIcon;
+	use TButtonClass;
+	use TButtonTitle;
+	use TButtonText;
+	use TRenderCondition;
 
 	/**
 	 * (renderer | template | block)
-	 * @var string
+	 *
+	 * @var string|null
 	 */
 	protected $type;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $template;
 
 	/**
-	 * @var callable
+	 * @var callable|null
 	 */
 	protected $renderer;
 
@@ -47,29 +50,25 @@ class ItemDetail
 	protected $grid;
 
 	/**
-	 * @var string|bool
+	 * @var string
 	 */
-	protected $primary_where_column;
+	protected $primaryWhereColumn;
 
 	/**
-	 * @var ItemDetailForm
+	 * @var ItemDetailForm|null
 	 */
 	protected $form;
 
 	/**
 	 * @var array
 	 */
-	protected $template_parameters = [];
+	protected $templateParameters = [];
 
 
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $primary_where_column
-	 */
-	public function __construct(DataGrid $grid, $primary_where_column)
+	public function __construct(DataGrid $grid, string $primaryWhereColumn)
 	{
 		$this->grid = $grid;
-		$this->primary_where_column = $primary_where_column;
+		$this->primaryWhereColumn = $primaryWhereColumn;
 
 		$this->title = 'ublaboo_datagrid.show';
 		$this->class = 'btn btn-xs btn-default btn-secondary ajax';
@@ -79,10 +78,8 @@ class ItemDetail
 
 	/**
 	 * Render row item detail button
-	 * @param  Row $row
-	 * @return Html
 	 */
-	public function renderButton($row)
+	public function renderButton(Row $row): Html
 	{
 		$a = Html::el('a')
 			->href($this->grid->link('getItemDetail!', ['id' => $row->getId()]))
@@ -93,12 +90,15 @@ class ItemDetail
 
 		$a->addText($this->text);
 
-		if ($this->title) {
-			$a->title($this->grid->getTranslator()->translate($this->title));
+		if ($this->title !== null) {
+			$a->setAttribute(
+				'title',
+				$this->grid->getTranslator()->translate($this->title)
+			);
 		}
 
-		if ($this->class) {
-			$a->class($this->class);
+		if ($this->class !== null) {
+			$a->setAttribute('class', $this->class);
 		}
 
 		return $a;
@@ -106,39 +106,37 @@ class ItemDetail
 
 
 	/**
-	 * Render item detail
 	 * @param  mixed $item
 	 * @return mixed
 	 */
 	public function render($item)
 	{
-		if ($this->getType() == 'block') {
+		if ($this->getType() === 'block') {
 			throw new DataGridItemDetailException(
 				'ItemDetail is set to render as block, but block #detail is not defined'
 			);
+		}
+
+		if ($this->getRenderer() === null) {
+			throw new LogicException('Renderer is not set');
 		}
 
 		return call_user_func($this->getRenderer(), $item);
 	}
 
 
-	/**
-	 * Get primary column for where clause
-	 * @return string|bool
-	 */
-	public function getPrimaryWhereColumn()
+	public function getPrimaryWhereColumn(): string
 	{
-		return $this->primary_where_column;
+		return $this->primaryWhereColumn;
 	}
 
 
 	/**
 	 * Set item detail type
-	 * @param string $type
 	 */
-	public function setType($type)
+	public function setType(string $type): self
 	{
-		$this->type = (string) $type;
+		$this->type = $type;
 
 		return $this;
 	}
@@ -146,9 +144,8 @@ class ItemDetail
 
 	/**
 	 * Get item detail type
-	 * @return string
 	 */
-	public function getType()
+	public function getType(): ?string
 	{
 		return $this->type;
 	}
@@ -156,11 +153,10 @@ class ItemDetail
 
 	/**
 	 * Set item detail template
-	 * @param string $template
 	 */
-	public function setTemplate($template)
+	public function setTemplate(string $template): self
 	{
-		$this->template = (string) $template;
+		$this->template = $template;
 
 		return $this;
 	}
@@ -168,19 +164,14 @@ class ItemDetail
 
 	/**
 	 * Get item detail template
-	 * @return string
 	 */
-	public function getTemplate()
+	public function getTemplate(): ?string
 	{
 		return $this->template;
 	}
 
 
-	/**
-	 * Set item detail renderer
-	 * @param callable $renderer
-	 */
-	public function setRenderer($renderer)
+	public function setRenderer(callable $renderer): self
 	{
 		$this->renderer = $renderer;
 
@@ -188,21 +179,13 @@ class ItemDetail
 	}
 
 
-	/**
-	 * Get item detail renderer
-	 * @return callable
-	 */
-	public function getRenderer()
+	public function getRenderer(): ?callable
 	{
 		return $this->renderer;
 	}
 
 
-	/**
-	 * @param ItemDetailForm $form
-	 * @return static
-	 */
-	public function setForm(ItemDetailForm $form)
+	public function setForm(ItemDetailForm $form): self
 	{
 		$this->form = $form;
 
@@ -210,29 +193,23 @@ class ItemDetail
 	}
 
 
-	/**
-	 * @return ItemDetailForm
-	 */
-	public function getForm()
+	public function getForm(): ?ItemDetailForm
 	{
 		return $this->form;
 	}
 
 
-	/**
-	 * @param array $template_parameters
-	 * @return static
-	 */
-	public function setTemplateParameters(array $template_parameters)
+	public function setTemplateParameters(array $templateParameters): self
 	{
-		$this->template_parameters = $template_parameters;
+		$this->templateParameters = $templateParameters;
 
 		return $this;
 	}
 
 
-	public function getTemplateVariables()
+	public function getTemplateVariables(): array
 	{
-		return $this->template_parameters;
+		return $this->templateParameters;
 	}
+
 }

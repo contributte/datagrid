@@ -1,10 +1,6 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Traits;
 
@@ -12,29 +8,21 @@ trait TButtonCaret
 {
 
 	/**
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $caret = true;
 
-
-	/**
-	 * Should be a "caret" present in status dropdown?
-	 * @param bool $use_caret
-	 * @return static
-	 */
-	public function setCaret($use_caret)
+	public function setCaret(bool $useCaret): self
 	{
-		$this->caret = (bool) $use_caret;
+		$this->caret = $useCaret;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return boolean
-	 */
-	public function hasCaret()
+	public function hasCaret(): bool
 	{
 		return $this->caret;
 	}
+
 }

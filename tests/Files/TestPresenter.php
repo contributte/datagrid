@@ -1,17 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ublaboo\DataGrid\Tests\Files;
 
-final class TestPresenter extends \Nette\Application\UI\Presenter
+use Mockery;
+use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Presenter;
+
+final class TestPresenter extends Presenter
 {
 
-	protected function createComponentGrid()
+	protected function createComponentGrid(): TestGridControl
 	{
 		return new TestGridControl();
 	}
 
-	protected function createTemplate($class = null)
+	protected function createTemplate(): ITemplate
 	{
+		return Mockery::mock(ITemplate::class)
+			->shouldReceive('getFile')
+			->andReturn(__DIR__ . '/template.latte')
+			->getMock();
 	}
-
 }

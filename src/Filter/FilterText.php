@@ -1,14 +1,11 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
+use Nette\Forms\Container;
+use Ublaboo\DataGrid\DataGrid;
 
 class FilterText extends Filter
 {
@@ -31,21 +28,40 @@ class FilterText extends Filter
 	/**
 	 * @var bool
 	 */
-	protected $split_words_search = true;
+	protected $splitWordsSearch = true;
+
+	/**
+	 * @var array|string[]
+	 */
+	protected $columns;
+
+
+	/**
+	 * @param array|string[] $columns
+	 */
+	public function __construct(
+		DataGrid $grid,
+		string $key,
+		string $name,
+		array $columns
+	) {
+		parent::__construct($grid, $key, $name);
+
+		$this->columns = $columns;
+	}
 
 
 	/**
 	 * Adds text field to filter form
-	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer(Nette\Forms\Container $container)
+	public function addToFormContainer(Container $container): void
 	{
-		$container->addText($this->key, $this->name);
+		$control = $container->addText($this->key, $this->name);
 
-		$this->addAttributes($container[$this->key]);
+		$this->addAttributes($control);
 
-		if ($this->getPlaceholder()) {
-			$container[$this->key]->setAttribute('placeholder', $this->getPlaceholder());
+		if ($this->getPlaceholder() !== null) {
+			$control->setAttribute('placeholder', $this->getPlaceholder());
 		}
 	}
 
@@ -55,51 +71,37 @@ class FilterText extends Filter
 	 * 	If more than one column exists in fitler text,
 	 * 	than there is OR clause put betweeen their conditions
 	 * Or callback in case of custom condition callback
-	 * @return array|callable
 	 */
-	public function getCondition()
+	public function getCondition(): array
 	{
-		return array_fill_keys($this->column, $this->getValue());
+		return array_fill_keys($this->columns, $this->getValue());
 	}
 
 
-	/**
-	 * @return boolean
-	 */
-	public function isExactSearch()
+	public function isExactSearch(): bool
 	{
 		return $this->exact;
 	}
 
 
-	/**
-	 * @param boolean $exact
-	 * @return FilterText
-	 */
-	public function setExactSearch($exact = true)
+	public function setExactSearch(bool $exact = true): self
 	{
 		$this->exact = $exact;
-		return $this;
-	}
-
-
-	/**
-	 * @param bool $split_words_search
-	 * @return FilterText
-	 */
-	public function setSplitWordsSearch($split_words_search)
-	{
-		$this->split_words_search = (bool) $split_words_search;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function hasSplitWordsSearch()
+	public function setSplitWordsSearch(bool $splitWordsSearch): self
 	{
-		return $this->split_words_search;
+		$this->splitWordsSearch = $splitWordsSearch;
+
+		return $this;
+	}
+
+
+	public function hasSplitWordsSearch(): bool
+	{
+		return $this->splitWordsSearch;
 	}
 }

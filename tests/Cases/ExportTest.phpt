@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use Tester\TestCase;
 use Tester\Assert;
+use Tester\TestCase;
+use Tracy\Debugger;
 use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/XTestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDataGridFactory.php';
 
 final class ExportTest extends TestCase
 {
@@ -24,44 +27,43 @@ final class ExportTest extends TestCase
 		[
 			'id' => 1,
 			'name' => 'John Doe',
-			'age' => 20
+			'age' => 20,
 		],
 		[
 			'id' => 2,
 			'name' => 'Susie',
-			'age' => 23
+			'age' => 23,
 		],
 		[
 			'id' => 3,
 			'name' => 'Alexa',
-			'age' => 19
+			'age' => 19,
 		],
 		[
 			'id' => 4,
 			'name' => 'Alex',
-			'age' => 22
-		]
+			'age' => 22,
+		],
 	];
 
-
-	public function setUp()
+	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
-		$this->grid = $factory->createXTestingDataGrid();
+		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
+		$this->grid = $factory->createTestingDataGrid();
 	}
 
 
-	public function testExportNotFiltered()
+	public function testExportNotFiltered(): void
 	{
 		$data = $this->data;
-		$callback = function($source) use ($data) {
+		$callback = function ($source) use ($data): void {
 			Assert::same($data, $source);
 		};
 
-		$export = $this->grid->addExportCallback('Export', $callback);
+		$this->grid->addExportCallback('Export', $callback);
 
-		$grid = $this->grid;
-		$trigger = function() use ($grid) {
+		$this->grid;
+		$trigger = function (): void {
 			$this->grid->handleExport(1);
 		};
 
@@ -78,19 +80,19 @@ final class ExportTest extends TestCase
 
 
 
-	public function testExportFiltered()
+	public function testExportFiltered(): void
 	{
 		$data = $this->data;
-		$callback = function($source) use ($data) {
+		$callback = function ($source) use ($data): void {
 			Assert::same($data, $source);
 		};
 
-		$export = $this->grid->addExportCallback('Export', $callback, TRUE);
+		$this->grid->addExportCallback('Export', $callback, true);
 
 		$this->grid->addFilterText('name', 'Name');
 
-		$grid = $this->grid;
-		$trigger = function() use ($grid) {
+		$this->grid;
+		$trigger = function (): void {
 			$this->grid->handleExport(1);
 		};
 
@@ -107,7 +109,7 @@ final class ExportTest extends TestCase
 
 }
 
-\Tracy\Debugger::enable();
+Debugger::enable();
 
-$test_case = new ExportTest;
+$test_case = new ExportTest();
 $test_case->run();

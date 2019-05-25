@@ -1,15 +1,15 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Utils;
 
-use Nette;
+use Nette\Application\UI\Presenter;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
+use Nette\Utils\Arrays;
+use Traversable;
+use UnexpectedValueException;
 
 final class ItemDetailForm extends Container
 {
@@ -17,94 +17,100 @@ final class ItemDetailForm extends Container
 	/**
 	 * @var callable
 	 */
-	private $callable_set_container;
+	private $callableSetContainer;
 
 	/**
 	 * @var array
 	 */
-	private $http_post;
-
+	private $httpPost;
 
 	/**
-	 * @param callable $callable_set_container
+	 * @var array<bool>
 	 */
-	public function __construct(callable $callable_set_container)
+	private $containerSetByName = [];
+
+
+	public function __construct(callable $callableSetContainer)
 	{
-		parent::__construct();
+		$this->monitor(
+			Presenter::class,
+			function(Presenter $presenter): void {
+				$this->loadHttpData();
+			}
+		);
 
-		$this->monitor('Nette\Application\UI\Presenter');
-
-		$this->callable_set_container = $callable_set_container;
+		$this->callableSetContainer = $callableSetContainer;
 	}
 
 
 	/**
-	 * @param \Nette\ComponentModel\IContainer
+	 * @return mixed|null
+	 * @throws UnexpectedValueException
 	 */
-	protected function attached($presenter)
+	private function getHttpData()
 	{
-		parent::attached($presenter);
+		if ($this->httpPost === null) {
+			$lookupPath = $this->lookupPath('Nette\Forms\Form');
+			$form = $this->getForm();
 
-		if (!$presenter instanceof Nette\Application\UI\Presenter) {
-			return;
+			if ($lookupPath === null || $form === null) {
+				throw new UnexpectedValueException;
+			}
+
+			$path = explode(self::NAME_SEPARATOR, $lookupPath);
+
+			$this->httpPost = Arrays::get($form->getHttpData(), $path, null);
 		}
 
-		$this->loadHttpData();
+		return $this->httpPost;
 	}
 
 
 	/**
-	 * @return void
+	 * @param mixed $name
 	 */
-	public function loadHttpData()
+	public function offsetGet($name): IComponent
 	{
-		if (!$this->getForm()->isSubmitted()) {
+		return $this->getComponentAndSetContainer($name);
+	}
+
+
+	/**
+	 * @param mixed $name
+	 */
+	public function getComponentAndSetContainer($name): IComponent
+	{
+		$container = $this->addContainer($name);
+
+		if (!isset($this->containerSetByName[$name])) {
+			call_user_func($this->callableSetContainer, $container);
+
+			$this->containerSetByName[$name] = true;
+		}
+
+		return $container;
+	}
+
+
+	/**
+	 * @throws UnexpectedValueException
+	 */
+	private function loadHttpData(): void
+	{
+		$form = $this->getForm();
+
+		if ($form === null) {
+			throw new UnexpectedValueException;
+		}
+
+		if ($form->isSubmitted() === false) {
 			return;
 		}
 
 		foreach ((array) $this->getHttpData() as $name => $value) {
-			if ((is_array($value) || $value instanceof \Traversable) && !$this->getComponent($name, false)) {
-				$this->getComponent($name);
+			if ((is_array($value) || $value instanceof Traversable)) {
+				$this->getComponentAndSetContainer($name);
 			}
 		}
-	}
-
-
-	/**
-	 * @return mixed|NULL
-	 */
-	private function getHttpData()
-	{
-		if ($this->http_post === null) {
-			$path = explode(self::NAME_SEPARATOR, $this->lookupPath('Nette\Forms\Form'));
-
-			$this->http_post = Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, null);
-		}
-
-		return $this->http_post;
-	}
-
-
-	/**
-	 * @param  string $name
-	 * @return Container
-	 */
-	public function offsetGet($name)
-	{
-		return $this->getComponent($name);
-	}
-
-
-	/**
-	 * @param  string $name
-	 * @return Container
-	 */
-	public function getComponent($name, $throw = true)
-	{
-		$container = $this->addContainer($name);
-
-		call_user_func($this->callable_set_container, $container);
-
-		return $container;
 	}
 }

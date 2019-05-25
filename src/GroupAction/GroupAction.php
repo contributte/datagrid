@@ -1,10 +1,6 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\GroupAction;
 
@@ -19,7 +15,7 @@ abstract class GroupAction
 	use SmartObject;
 
 	/**
-	 * @var callable[]
+	 * @var array|callable[]
 	 */
 	public $onSelect = [];
 
@@ -39,52 +35,36 @@ abstract class GroupAction
 	protected $attributes = [];
 
 
-	/**
-	 * @param string $title
-	 */
-	public function __construct($title)
+	public function __construct(string $title)
 	{
 		$this->title = $title;
 	}
 
 
-	/**
-	 * Get action title
-	 * @return string
-	 */
-	public function getTitle()
+	public function getTitle(): string
 	{
 		return $this->title;
 	}
 
 
-	/**
-	 * @param string $class
-	 * @return static
-	 */
-	public function setClass($class)
+	public function setClass(string $class): self
 	{
-		$this->class = (string) $class;
+		$this->class = $class;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getClass()
+	public function getClass(): string
 	{
 		return $this->class;
 	}
 
 
 	/**
-	 * @param string $key
 	 * @param mixed $value
-	 * @return static
 	 */
-	public function setAttribute($key, $value)
+	public function setAttribute(string $key, $value): self
 	{
 		$this->attributes[$key] = $value;
 
@@ -92,10 +72,7 @@ abstract class GroupAction
 	}
 
 
-	/**
-	 * @return array
-	 */
-	public function getAttributes()
+	public function getAttributes(): array
 	{
 		return $this->attributes;
 	}

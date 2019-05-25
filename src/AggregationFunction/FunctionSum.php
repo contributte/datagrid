@@ -1,21 +1,19 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
-use DibiFluent;
+use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
+use Nette\Database\Table\Selection;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
 class FunctionSum implements IAggregationFunction
 {
+
 	/**
 	 * @var string
 	 */
@@ -27,48 +25,41 @@ class FunctionSum implements IAggregationFunction
 	protected $result = 0;
 
 	/**
-	 * @var int
+	 * @var string
 	 */
 	protected $dataType;
 
 	/**
-	 * @var callable
+	 * @var callable|null
 	 */
-	protected $renderer;
+	protected $renderer = null;
 
 
-	/**
-	 * @param string $column
-	 * @param int $dataType
-	 */
-	public function __construct($column, $dataType = IAggregationFunction::DATA_TYPE_PAGINATED)
-	{
+	public function __construct(
+		string $column,
+		string $dataType = IAggregationFunction::DATA_TYPE_PAGINATED
+	) {
 		$this->column = $column;
 		$this->dataType = $dataType;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function getFilterDataType()
+	public function getFilterDataType(): string
 	{
 		return $this->dataType;
 	}
 
 
 	/**
-	 * @param  mixed  $dataSource
-	 * @return void
+	 * @param Fluent|QueryBuilder|Collection|Selection $dataSource
 	 */
-	public function processDataSource($dataSource)
+	public function processDataSource($dataSource): void
 	{
-		if ($dataSource instanceof DibiFluent) {
+		if ($dataSource instanceof Fluent) {
 			$connection = $dataSource->getConnection();
-			$this->result = $connection->select('SUM(%n) AS sum', $this->column)
+			$this->result = (int) $connection->select('SUM(%n)', $this->column)
 				->from($dataSource, 's')
-				->fetch()
-				->sum;
+				->fetchSingle();
 		}
 
 		if ($dataSource instanceof QueryBuilder) {
@@ -78,6 +69,8 @@ class FunctionSum implements IAggregationFunction
 
 			$this->result = $dataSource
 				->select(sprintf('SUM(%s)', $column))
+				->setMaxResults(1)
+				->setFirstResult(0)
 				->getQuery()
 				->getSingleScalarResult();
 		}
@@ -85,6 +78,7 @@ class FunctionSum implements IAggregationFunction
 		if ($dataSource instanceof Collection) {
 			$dataSource->forAll(function ($key, $value) {
 				$this->result += PropertyAccessHelper::getValue($value, $this->column);
+
 				return true;
 			});
 		}
@@ -106,13 +100,10 @@ class FunctionSum implements IAggregationFunction
 	}
 
 
-	/**
-	 * @param  callable|NULL  $callback
-	 * @return static
-	 */
-	public function setRenderer(callable $callback = null)
+	public function setRenderer(?callable $callback = null): self
 	{
 		$this->renderer = $callback;
+
 		return $this;
 	}
 }

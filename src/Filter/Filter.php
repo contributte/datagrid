@@ -1,15 +1,11 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
 use Nette;
-use Nette\SmartObject;
+use Nette\Forms\Controls\BaseControl;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
@@ -17,8 +13,6 @@ use Ublaboo\DataGrid\DataGrid;
  */
 abstract class Filter
 {
-
-	use SmartObject;
 
 	/**
 	 * @var mixed
@@ -28,12 +22,12 @@ abstract class Filter
 	/**
 	 * @var bool
 	 */
-	protected $value_set = false;
+	protected $valueSet = false;
 
 	/**
-	 * @var callable
+	 * @var callable|null
 	 */
-	protected $condition_callback;
+	protected $conditionCallback;
 
 	/**
 	 * @var string
@@ -46,17 +40,12 @@ abstract class Filter
 	protected $name;
 
 	/**
-	 * @var string|array
-	 */
-	protected $column;
-
-	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $template;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $type;
 
@@ -73,31 +62,30 @@ abstract class Filter
 	];
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	private $placeholder;
 
 
-	/**
-	 * @param DataGrid     $grid
-	 * @param string       $key
-	 * @param string       $name
-	 * @param string|array $column
-	 */
-	public function __construct($grid, $key, $name, $column)
+	public function __construct(
+		DataGrid $grid,
+		string $key,
+		string $name
+	)
 	{
 		$this->grid = $grid;
 		$this->key = $key;
 		$this->name = $name;
-		$this->column = $column;
 	}
+
+
+	abstract public function getCondition(): array;
 
 
 	/**
 	 * Get filter key
-	 * @return mixed
 	 */
-	public function getKey()
+	public function getKey(): string
 	{
 		return $this->key;
 	}
@@ -105,50 +93,35 @@ abstract class Filter
 
 	/**
 	 * Get filter name
-	 * @return string
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->name;
 	}
 
 
 	/**
-	 * Get filter column
-	 * @return string
-	 */
-	public function getColumn()
-	{
-		return $this->column;
-	}
-
-
-	/**
 	 * Tell whether value has been set in this fitler
-	 * @return boolean
 	 */
-	public function isValueSet()
+	public function isValueSet(): bool
 	{
-		return $this->value_set;
+		return $this->valueSet;
 	}
 
 
 	/**
-	 * Set filter value
 	 * @param mixed $value
-	 * @return static
 	 */
-	public function setValue($value)
+	public function setValue($value): self
 	{
 		$this->value = $value;
-		$this->value_set = true;
+		$this->valueSet = true;
 
 		return $this;
 	}
 
 
 	/**
-	 * Get filter value
 	 * @return mixed
 	 */
 	public function getValue()
@@ -158,11 +131,9 @@ abstract class Filter
 
 
 	/**
-	 * Set html attr placeholder
-	 * @param  string $placeholder
-	 * @return static
+	 * Set HTML attribute "placeholder"
 	 */
-	public function setPlaceholder($placeholder)
+	public function setPlaceholder(string $placeholder): self
 	{
 		$this->placeholder = $placeholder;
 
@@ -170,11 +141,7 @@ abstract class Filter
 	}
 
 
-	/**
-	 * Get html attr placeholder
-	 * @return string
-	 */
-	public function getPlaceholder()
+	public function getPlaceholder(): ?string
 	{
 		return $this->placeholder;
 	}
@@ -182,85 +149,45 @@ abstract class Filter
 
 	/**
 	 * Set custom condition on filter
-	 * @param  callable $condition_callback
-	 * @return static
 	 */
-	public function setCondition($condition_callback)
+	public function setCondition(callable $conditionCallback): self
 	{
-		$this->condition_callback = $condition_callback;
+		$this->conditionCallback = $conditionCallback;
 
 		return $this;
 	}
 
 
-	/**
-	 * Get filter condition
-	 * @return array
-	 */
-	public function getCondition()
+	public function getConditionCallback(): ?callable
 	{
-		return [$this->column => $this->getValue()];
+		return $this->conditionCallback;
 	}
 
 
-	/**
-	 * Tell whether custom condition_callback on filter is set
-	 * @return bool
-	 */
-	public function hasConditionCallback()
+	public function setTemplate(string $template): self
 	{
-		return (bool) $this->condition_callback;
-	}
-
-
-	/**
-	 * Get custom filter condition
-	 * @return callable
-	 */
-	public function getConditionCallback()
-	{
-		return $this->condition_callback;
-	}
-
-
-	/**
-	 * Filter may have its own template
-	 * @param  string $template
-	 * @return static
-	 */
-	public function setTemplate($template)
-	{
-		$this->template = (string) $template;
+		$this->template = $template;
 
 		return $this;
 	}
 
 
-	/**
-	 * Get filter template path
-	 * @return string
-	 */
-	public function getTemplate()
+	public function getTemplate(): ?string
 	{
 		return $this->template;
 	}
 
 
-	/**
-	 * @return string
-	 */
-	public function getType()
+	public function getType(): ?string
 	{
 		return $this->type;
 	}
 
 
 	/**
-	 * @param string $name
 	 * @param mixed $value
-	 * @return static
 	 */
-	public function addAttribute($name, $value)
+	public function addAttribute(string $name, $value): self
 	{
 		$this->attributes[$name][] = $value;
 
@@ -269,11 +196,9 @@ abstract class Filter
 
 
 	/**
-	 * @param string $name
 	 * @param mixed $value
-	 * @return static
 	 */
-	public function setAttribute($name, $value)
+	public function setAttribute(string $name, $value): self
 	{
 		$this->attributes[$name] = (array) $value;
 
@@ -281,31 +206,13 @@ abstract class Filter
 	}
 
 
-	/**
-	 * @return array
-	 * @deprecated use getAttributes instead
-	 */
-	public function getAttribtues()
-	{
-		@trigger_error('getAttribtues is deprecated, use getAttributes instead', E_USER_DEPRECATED);
-		return $this->getAttributes();
-	}
-
-
-	/**
-	 * @return array
-	 */
-	public function getAttributes()
+	public function getAttributes(): array
 	{
 		return $this->attributes;
 	}
 
 
-	/**
-	 * @param Nette\Forms\Controls\BaseControl $input
-	 * @return Nette\Forms\Controls\BaseControl
-	 */
-	protected function addAttributes($input)
+	protected function addAttributes(BaseControl $input): BaseControl
 	{
 		if ($this->grid->hasAutoSubmit()) {
 			$input->setAttribute('data-autosubmit', true);
@@ -324,4 +231,5 @@ abstract class Filter
 
 		return $input;
 	}
+
 }

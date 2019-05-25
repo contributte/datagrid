@@ -1,7 +1,7 @@
 {**
  * @param Filter                         $filter
  * @param Nette\Forms\Controls\TextInput $input
- * @param string                         $icon_prefix       Icon prefix (fa fa-)
+ * @param string                         $iconPrefix       Icon prefix (fa fa-)
  *}
 
 {if $outer}
@@ -12,7 +12,7 @@
 				{input $input}
 				<label n:name="$input" class="input-group-addon input-group-append">
 					<span class="input-group-text">
-						<i class="{$icon_prefix}calendar"></i>
+						<i class="{$iconPrefix}calendar"></i>
 					</span>
 				</label>
 			</div>
@@ -24,11 +24,9 @@
 			{input $input}
 			<label n:name="$input" class="input-group-addon input-group-append">
 				<span class="input-group-text">
-					<i class="{$icon_prefix}calendar"></i>
+					<i class="{$iconPrefix}calendar"></i>
 				</span>
 			</label>
 		</div>
 	</div>
 {/if}
-
-

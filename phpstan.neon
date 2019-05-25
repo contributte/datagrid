@@ -1,0 +1,9 @@
+includes:
+	- ./vendor/gamee/php-code-checker-rules/phpstan.neon
+
+parameters:
+	ignoreErrors:
+		#- '/^Call to an undefined method Dibi\\Fluent::or\(\)\.$/'
+		- '/^Access to an undefined property Nette\\Bridges\\ApplicationLatte\\Template::\$.+\.$/'
+		- '/Method Ublaboo\\DataGrid\\Localization\\SimpleTranslator::translate\(\) has parameter \$message with no typehint specified\./'
+		- '/Method Ublaboo\\DataGrid\\Localization\\SimpleTranslator::translate\(\) has parameter \$parameters with no typehint specified\./'

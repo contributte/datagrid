@@ -1,13 +1,12 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use ArrayAccess;
+use DateTime;
+use DateTimeInterface;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Exception\DataGridArrayDataSourceException;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
@@ -33,13 +32,12 @@ class ArrayDataSource implements IDataSource
 	 */
 	protected $count = 0;
 
-
 	/**
-	 * @param array $data_source
+	 * @param array $dataSource
 	 */
-	public function __construct(array $data_source)
+	public function __construct(array $dataSource)
 	{
-		$this->setData($data_source);
+		$this->setData($dataSource);
 	}
 
 
@@ -47,50 +45,29 @@ class ArrayDataSource implements IDataSource
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-
-	/**
-	 * Get count of data
-	 * @return int
-	 */
-	public function getCount()
+	public function getCount(): int
 	{
 		return sizeof($this->data);
 	}
 
 
 	/**
-	 * Get the data
-	 * @return array
+	 * {@inheritDoc}
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		return $this->data;
 	}
 
 
 	/**
-	 * Set the data
-	 * @param array $data_source
-	 * @return static
+	 * {@inheritDoc}
 	 */
-	private function setData(array $data_source)
-	{
-		$this->data = $data_source;
-
-		return $this;
-	}
-
-
-	/**
-	 * Filter data
-	 * @param Filter[] $filters
-	 * @return static
-	 */
-	public function filter(array $filters)
+	public function filter(array $filters): void
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
-				if ($filter->hasConditionCallback()) {
+				if ($filter->getConditionCallback() !== null) {
 					$data = (array) call_user_func_array(
 						$filter->getConditionCallback(),
 						[$this->data, $filter->getValue()]
@@ -104,21 +81,17 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 		}
-
-		return $this;
 	}
 
 
 	/**
-	 * Filter data - get one row
-	 * @param array $condition
-	 * @return ArrayDataSource
+	 * {@inheritDoc}
 	 */
-	public function filterOne(array $condition)
+	public function filterOne(array $condition): IDataSource
 	{
 		foreach ($this->data as $item) {
 			foreach ($condition as $key => $value) {
-				if ($item[$key] == $value) {
+				if ($item[$key] === $value) {
 					$this->setData([$item]);
 
 					return $this;
@@ -132,13 +105,7 @@ class ArrayDataSource implements IDataSource
 	}
 
 
-	/**
-	 * Apply limit and offset on data
-	 * @param int $offset
-	 * @param int $limit
-	 * @return static
-	 */
-	public function limit($offset, $limit)
+	public function limit(int $offset, int $limit): IDataSource
 	{
 		$data = array_slice($this->data, $offset, $limit);
 		$this->setData($data);
@@ -148,21 +115,25 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * Apply fitler and tell whether row passes conditions or not
-	 * @param  mixed  $row
-	 * @param  Filter $filter
+	 * @param  mixed $row
 	 * @return mixed
 	 */
 	protected function applyFilter($row, Filter $filter)
 	{
-		if (is_array($row) || $row instanceof \Traversable) {
+		if (is_array($row) || $row instanceof ArrayAccess) {
 			if ($filter instanceof FilterDate) {
 				return $this->applyFilterDate($row, $filter);
-			} elseif ($filter instanceof FilterMultiSelect) {
+			}
+
+			if ($filter instanceof FilterMultiSelect) {
 				return $this->applyFilterMultiSelect($row, $filter);
-			} elseif ($filter instanceof FilterDateRange) {
+			}
+
+			if ($filter instanceof FilterDateRange) {
 				return $this->applyFilterDateRange($row, $filter);
-			} elseif ($filter instanceof FilterRange) {
+			}
+
+			if ($filter instanceof FilterRange) {
 				return $this->applyFilterRange($row, $filter);
 			}
 
@@ -170,14 +141,10 @@ class ArrayDataSource implements IDataSource
 
 			foreach ($condition as $column => $value) {
 				if ($filter instanceof FilterText && $filter->isExactSearch()) {
-					return $row[$column] == $value;
+					return $row[$column] === $value;
 				}
 
-				if ($filter instanceof FilterText && $filter->hasSplitWordsSearch() === false) {
-					$words = [$value];
-				} else {
-					$words = explode(' ', $value);
-				}
+				$words = $filter instanceof FilterText && $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 				$row_value = strtolower(Strings::toAscii($row[$column]));
 
@@ -194,12 +161,9 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * Filter by multi select value
-	 * @param  mixed  $row
-	 * @param  FilterMultiSelect $filter
-	 * @return void
+	 * @param mixed $row
 	 */
-	public function applyFilterMultiSelect($row, FilterMultiSelect $filter)
+	protected function applyFilterMultiSelect($row, FilterMultiSelect $filter): bool
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -209,11 +173,9 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * @param  mixed  $row
-	 * @param  FilterRange $filter
-	 * @return void
+	 * @param mixed $row
 	 */
-	public function applyFilterRange($row, FilterRange $filter)
+	protected function applyFilterRange($row, FilterRange $filter): bool
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -235,11 +197,9 @@ class ArrayDataSource implements IDataSource
 
 
 	/**
-	 * @param  mixed  $row
-	 * @param  FilterDateRange $filter
-	 * @return void
+	 * @param mixed $row
 	 */
-	public function applyFilterDateRange($row, FilterDateRange $filter)
+	protected function applyFilterDateRange($row, FilterDateRange $filter): bool
 	{
 		$format = $filter->getPhpFormat();
 		$condition = $filter->getCondition();
@@ -250,7 +210,7 @@ class ArrayDataSource implements IDataSource
 			$date_from = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
 			$date_from->setTime(0, 0, 0);
 
-			if (!($row_value instanceof \DateTime)) {
+			if (!($row_value instanceof DateTime)) {
 				/**
 				 * Try to convert string to DateTime object
 				 */
@@ -264,7 +224,7 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 
-			if ($row_value->getTimeStamp() < $date_from->getTimeStamp()) {
+			if ($row_value->getTimestamp() < $date_from->getTimestamp()) {
 				return false;
 			}
 		}
@@ -273,7 +233,7 @@ class ArrayDataSource implements IDataSource
 			$date_to = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
 			$date_to->setTime(23, 59, 59);
 
-			if (!($row_value instanceof \DateTime)) {
+			if (!($row_value instanceof DateTime)) {
 				/**
 				 * Try to convert string to DateTime object
 				 */
@@ -287,7 +247,7 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 
-			if ($row_value->getTimeStamp() > $date_to->getTimeStamp()) {
+			if ($row_value->getTimestamp() > $date_to->getTimestamp()) {
 				return false;
 			}
 		}
@@ -298,11 +258,10 @@ class ArrayDataSource implements IDataSource
 
 	/**
 	 * Apply fitler date and tell whether row value matches or not
+	 *
 	 * @param  mixed  $row
-	 * @param  Filter $filter
-	 * @return mixed
 	 */
-	protected function applyFilterDate($row, FilterDate $filter)
+	protected function applyFilterDate($row, FilterDate $filter): bool
 	{
 		$format = $filter->getPhpFormat();
 		$condition = $filter->getCondition();
@@ -312,7 +271,7 @@ class ArrayDataSource implements IDataSource
 
 			$date = DateTimeHelper::tryConvertToDateTime($value, [$format]);
 
-			if (!($row_value instanceof \DateTime)) {
+			if (!($row_value instanceof DateTime)) {
 				/**
 				 * Try to convert string to DateTime object
 				 */
@@ -326,17 +285,12 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 
-			return $row_value->format($format) == $date->format($format);
+			return $row_value->format($format) === $date->format($format);
 		}
 	}
 
 
-	/**
-	 * Sort data
-	 * @param  Sorting $sorting
-	 * @return static
-	 */
-	public function sort(Sorting $sorting)
+	public function sort(Sorting $sorting): IDataSource
 	{
 		if (is_callable($sorting->getSortCallback())) {
 			$data = call_user_func(
@@ -360,11 +314,10 @@ class ArrayDataSource implements IDataSource
 			$data = [];
 
 			foreach ($this->data as $item) {
-				if (is_object($item[$column]) && $item[$column] instanceof \DateTimeInterface) {
-					$sort_by = $item[$column]->format('Y-m-d H:i:s');
-				} else {
-					$sort_by = (string) $item[$column];
-				}
+				$sort_by = is_object($item[$column]) && $item[$column] instanceof DateTimeInterface
+					? $item[$column]->format('Y-m-d H:i:s')
+					: (string) $item[$column];
+
 				$data[$sort_by][] = $item;
 			}
 
@@ -374,16 +327,27 @@ class ArrayDataSource implements IDataSource
 				krsort($data);
 			}
 
-			$data_source = [];
+			$dataSource = [];
 
 			foreach ($data as $i) {
 				foreach ($i as $item) {
-					$data_source[] = $item;
+					$dataSource[] = $item;
 				}
 			}
 
-			$this->setData($data_source);
+			$this->setData($dataSource);
 		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Set the data
+	 */
+	private function setData(array $dataSource): IDataSource
+	{
+		$this->data = $dataSource;
 
 		return $this;
 	}

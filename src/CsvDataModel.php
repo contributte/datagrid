@@ -1,14 +1,11 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid;
 
-use Nette;
+use Nette\Localization\ITranslator;
+use Ublaboo\DataGrid\Column\Column;
 
 class CsvDataModel
 {
@@ -19,19 +16,21 @@ class CsvDataModel
 	protected $data;
 
 	/**
-	 * @var Column\Column[]
+	 * @var array<Column>
 	 */
 	protected $columns;
 
-	/** @var Nette\Localization\ITranslator */
+	/**
+	 * @var ITranslator
+	 */
 	protected $translator;
 
 
-	/**
-	 * @param array $data
-	 * @param array $columns
-	 */
-	public function __construct(array $data, array $columns, Nette\Localization\ITranslator $translator)
+	public function __construct(
+		array $data,
+		array $columns,
+		ITranslator $translator
+	)
 	{
 		$this->data = $data;
 		$this->columns = $columns;
@@ -41,13 +40,12 @@ class CsvDataModel
 
 	/**
 	 * Get data with header and "body"
-	 * @return array
 	 */
-	public function getSimpleData($include_header = true)
+	public function getSimpleData(bool $includeHeader = true): array
 	{
 		$return = [];
 
-		if ($include_header) {
+		if ($includeHeader) {
 			$return[] = $this->getHeader();
 		}
 
@@ -59,11 +57,7 @@ class CsvDataModel
 	}
 
 
-	/**
-	 * Get data header
-	 * @return array
-	 */
-	public function getHeader()
+	public function getHeader(): array
 	{
 		$header = [];
 
@@ -77,10 +71,10 @@ class CsvDataModel
 
 	/**
 	 * Get item values saved into row
+	 *
 	 * @param  mixed $item
-	 * @return array
 	 */
-	public function getRow($item)
+	public function getRow($item): array
 	{
 		$row = [];
 
@@ -90,4 +84,5 @@ class CsvDataModel
 
 		return $row;
 	}
+
 }

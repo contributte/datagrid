@@ -1,17 +1,16 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
+use Nette\Application\UI\Form;
+use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 use Ublaboo\DataGrid\DataGrid;
+use UnexpectedValueException;
 
-class FilterSelect extends Filter
+class FilterSelect extends OneColumnFilter
 {
 
 	/**
@@ -35,19 +34,18 @@ class FilterSelect extends Filter
 	protected $type = 'select';
 
 	/**
-	 * @var string|NULL
+	 * @var string|null
 	 */
 	protected $prompt = null;
 
 
-	/**
-	 * @param DataGrid $grid
-	 * @param string   $key
-	 * @param string   $name
-	 * @param string   $options
-	 * @param string   $column
-	 */
-	public function __construct($grid, $key, $name, array $options, $column)
+	public function __construct(
+		DataGrid $grid,
+		string $key,
+		string $name,
+		array $options,
+		string $column
+	)
 	{
 		parent::__construct($grid, $key, $name, $column);
 
@@ -55,14 +53,19 @@ class FilterSelect extends Filter
 	}
 
 
-	/**
-	 * Adds select box to filter form
-	 * @param Nette\Forms\Container $container
-	 */
-	public function addToFormContainer(Nette\Forms\Container $container)
+	public function addToFormContainer(Container $container): void
 	{
-		$form = $container->lookup('Nette\Application\UI\Form');
+		$form = $container->lookup(Form::class);
+
+		if (!$form instanceof Form) {
+			throw new UnexpectedValueException();
+		}
+
 		$translator = $form->getTranslator();
+
+		if ($translator === null) {
+			throw new UnexpectedValueException();
+		}
 
 		if (!$this->translateOptions) {
 			$select = $this->addControl(
@@ -74,88 +77,66 @@ class FilterSelect extends Filter
 
 			$select->setTranslator(null);
 		} else {
-			$select = $this->addControl($container, $this->key, $this->name, $this->options);
+			$this->addControl($container, $this->key, $this->name, $this->options);
 		}
 	}
 
 
-	/**
-	 * @param  bool  $translateOptions
-	 * @return static
-	 */
-	public function setTranslateOptions($translateOptions = true)
+	public function setTranslateOptions(bool $translateOptions = true): self
 	{
-		$this->translateOptions = (bool) $translateOptions;
+		$this->translateOptions = $translateOptions;
+
 		return $this;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function getTranslateOptions()
+	public function getOptions(): array
+	{
+		return $this->options;
+	}
+
+
+	public function getTranslateOptions(): bool
 	{
 		return $this->translateOptions;
 	}
 
 
-	/**
-	 * Get filter condition
-	 * @return array
-	 */
-	public function getCondition()
+	public function getCondition(): array
 	{
 		return [$this->column => $this->getValue()];
 	}
 
 
-	/**
-	 * Get filter prompt
-	 * @return string|NULL
-	 */
-	public function getPrompt()
+	public function getPrompt(): ?string
 	{
 		return $this->prompt;
 	}
 
 
-	/**
-	 * Set filter prompt value
-	 * @param string|NULL $prompt
-	 * @return static
-	 */
-	public function setPrompt($prompt)
+	public function setPrompt(?string $prompt): self
 	{
 		$this->prompt = $prompt;
+
 		return $this;
 	}
 
 
-	/**
-	 * Tell if prompt has been set in this fitler
-	 * @return bool
-	 */
-	public function isPromptEnabled()
-	{
-		return isset($this->prompt);
-	}
-
-
-	/**
-	 * @param Nette\Forms\Container $container
-	 * @param string                $key
-	 * @param string                $name
-	 * @param array                $options
-	 * @return Nette\Forms\Controls\SelectBox
-	 */
-	protected function addControl(Nette\Forms\Container $container, $key, $name, $options)
+	protected function addControl(
+		Container $container,
+		string $key,
+		string $name,
+		array $options
+	): BaseControl
 	{
 		$input = $container->addSelect($key, $name, $options);
 
-		if ($this->isPromptEnabled()) {
-			$input->setPrompt($this->prompt);
+		if ($this->getPrompt() !== null) {
+			$input->setPrompt($this->getPrompt());
 		}
 
-		return $this->addAttributes($input);
+		$this->addAttributes($input);
+
+		return $input;
 	}
 }

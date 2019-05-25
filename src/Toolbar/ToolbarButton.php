@@ -1,27 +1,30 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Toolbar;
 
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Traits;
+use Ublaboo\DataGrid\Traits\TButtonClass;
+use Ublaboo\DataGrid\Traits\TButtonIcon;
+use Ublaboo\DataGrid\Traits\TButtonRenderer;
+use Ublaboo\DataGrid\Traits\TButtonText;
+use Ublaboo\DataGrid\Traits\TButtonTitle;
+use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
+use Ublaboo\DataGrid\Traits\TLink;
 
 class ToolbarButton
 {
-	use Traits\TButtonTryAddIcon;
-	use Traits\TButtonClass;
-	use Traits\TButtonIcon;
-	use Traits\TButtonRenderer;
-	use Traits\TButtonText;
-	use Traits\TButtonTitle;
-	use Traits\TLink;
+
+	use TButtonTryAddIcon;
+	use TButtonClass;
+	use TButtonIcon;
+	use TButtonRenderer;
+	use TButtonText;
+	use TButtonTitle;
+	use TLink;
 
 	/**
 	 * @var DataGrid
@@ -43,14 +46,10 @@ class ToolbarButton
 	 */
 	protected $attributes = [];
 
-
 	/**
-	 * @param DataGrid $grid
-	 * @param string   $href
-	 * @param string   $text
 	 * @param array    $params
 	 */
-	public function __construct(DataGrid $grid, $href, $text, $params = [])
+	public function __construct(DataGrid $grid, string $href, string $text, array $params = [])
 	{
 		$this->grid = $grid;
 		$this->href = $href;
@@ -61,9 +60,8 @@ class ToolbarButton
 
 	/**
 	 * Render toolbar button
-	 * @return Html
 	 */
-	public function renderButton()
+	public function renderButton(): Html
 	{
 		try {
 			// Renderer function may be used
@@ -78,19 +76,20 @@ class ToolbarButton
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
-		if (!empty($this->attributes)) {
+		if ($this->attributes !== []) {
 			$a->addAttributes($this->attributes);
 		}
 
 		$a->addText($this->grid->getTranslator()->translate($this->text));
 
-		if ($this->getTitle()) {
-			$a->title($this->grid->getTranslator()->translate($this->getTitle()));
+		if ($this->getTitle() !== null) {
+			$a->setAttribute(
+				'title',
+				$this->grid->getTranslator()->translate($this->getTitle())
+			);
 		}
 
-		if ($this->getClass()) {
-			$a->class($this->getClass());
-		}
+		$a->setAttribute('class', $this->getClass());
 
 		return $a;
 	}
@@ -102,7 +101,7 @@ class ToolbarButton
 	 */
 	public function addAttributes(array $attrs)
 	{
-		$this->attributes = $this->attributes + $attrs;
+		$this->attributes += $attrs;
 
 		return $this;
 	}

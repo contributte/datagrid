@@ -1,26 +1,26 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Export;
 
-use Nette\Utils\Callback;
+use Nette\Application\UI\Link;
 use Nette\Utils\Html;
-use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Traits;
+use Ublaboo\DataGrid\Traits\TButtonClass;
+use Ublaboo\DataGrid\Traits\TButtonIcon;
+use Ublaboo\DataGrid\Traits\TButtonText;
+use Ublaboo\DataGrid\Traits\TButtonTitle;
+use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
 
 class Export
 {
-	use Traits\TButtonTryAddIcon;
-	use Traits\TButtonIcon;
-	use Traits\TButtonClass;
-	use Traits\TButtonTitle;
-	use Traits\TButtonText;
+
+	use TButtonTryAddIcon;
+	use TButtonIcon;
+	use TButtonClass;
+	use TButtonTitle;
+	use TButtonText;
 
 	/**
 	 * @var callable
@@ -30,7 +30,7 @@ class Export
 	/**
 	 * @var bool
 	 */
-	protected $ajax;
+	protected $ajax = false;
 
 	/**
 	 * @var bool
@@ -38,7 +38,7 @@ class Export
 	protected $filtered;
 
 	/**
-	 * @var string
+	 * @var Link|null
 	 */
 	protected $link;
 
@@ -51,33 +51,29 @@ class Export
 	 * @var DataGrid
 	 */
 	protected $grid;
-	
+
 	/**
-	 * @var null|string
+	 * @var string|null
 	 */
 	protected $confirmDialog = null;
-	
-	/**
-	 * @param DataGrid   $grid
-	 * @param string     $text
-	 * @param callable   $callback
-	 * @param boolean    $filtered
-	 */
-	public function __construct($grid, $text, $callback, $filtered)
+
+
+	public function __construct(
+		DataGrid $grid,
+		string $text,
+		callable $callback,
+		bool $filtered
+	)
 	{
 		$this->grid = $grid;
 		$this->text = $text;
 		$this->callback = $callback;
-		$this->filtered = (bool) $filtered;
+		$this->filtered = $filtered;
 		$this->title = $text;
 	}
 
 
-	/**
-	 * Render export button
-	 * @return Html
-	 */
-	public function render()
+	public function render(): Html
 	{
 		$a = Html::el('a', [
 			'class' => [$this->class],
@@ -94,36 +90,29 @@ class Export
 		$a->addText($this->grid->getTranslator()->translate($this->text));
 
 		if ($this->isAjax()) {
-			$a->class[] = 'ajax';
+			$a->appendAttribute('class', 'ajax');
 		}
-		
+
 		if ($this->confirmDialog !== null) {
 			$a->setAttribute('data-datagrid-confirm', $this->confirmDialog);
 		}
-		
-		
+
 		return $a;
 	}
-	
-	/**
-	 * Add Confirm dialog
-	 * @param string $confirmDialog
-	 * @return self
-	 */
-	public function setConfirmDialog($confirmDialog)
+
+
+	public function setConfirmDialog(string $confirmDialog): self
 	{
 		$this->confirmDialog = $confirmDialog;
-		
+
 		return $this;
 	}
-	
-	
+
+
 	/**
 	 * Tell export which columns to use when exporting data
-	 * @param array $columns
-	 * @return self
 	 */
-	public function setColumns($columns)
+	public function setColumns(array $columns): self
 	{
 		$this->columns = $columns;
 
@@ -133,9 +122,8 @@ class Export
 
 	/**
 	 * Get columns for export
-	 * @return array
 	 */
-	public function getColumns()
+	public function getColumns(): array
 	{
 		return $this->columns;
 	}
@@ -143,10 +131,8 @@ class Export
 
 	/**
 	 * Export signal url
-	 * @param string $link
-	 * @return self
 	 */
-	public function setLink($link)
+	public function setLink(Link $link): self
 	{
 		$this->link = $link;
 
@@ -156,21 +142,16 @@ class Export
 
 	/**
 	 * Tell export whether to be called via ajax or not
-	 * @param bool $ajax
 	 */
-	public function setAjax($ajax = true)
+	public function setAjax(bool $ajax = true): self
 	{
-		$this->ajax = (bool) $ajax;
+		$this->ajax = $ajax;
 
 		return $this;
 	}
 
 
-	/**
-	 * Is export called via ajax?
-	 * @return bool
-	 */
-	public function isAjax()
+	public function isAjax(): bool
 	{
 		return $this->ajax;
 	}
@@ -178,9 +159,8 @@ class Export
 
 	/**
 	 * Is export filtered?
-	 * @return bool
 	 */
-	public function isFiltered()
+	public function isFiltered(): bool
 	{
 		return $this->filtered;
 	}
@@ -188,11 +168,9 @@ class Export
 
 	/**
 	 * Call export callback
-	 * @param  array    $data
-	 * @return void
 	 */
-	public function invoke(array $data)
+	public function invoke(array $data): void
 	{
-		Callback::invokeArgs($this->callback, [$data, $this->grid]);
+		($this->callback)($data, $this->grid);
 	}
 }

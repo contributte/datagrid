@@ -1,14 +1,11 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
 use Ublaboo\DataGrid\Utils\Sorting;
+use UnexpectedValueException;
 
 class ApiDataSource implements IDataSource
 {
@@ -26,32 +23,32 @@ class ApiDataSource implements IDataSource
 	/**
 	 * @var array
 	 */
-	protected $query_params;
+	protected $queryParams;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
-	protected $sort_column;
+	protected $sortColumn;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
-	protected $order_column;
+	protected $orderColumn;
 
 	/**
-	 * @var int
+	 * @var int|null
 	 */
 	protected $limit;
 
 	/**
-	 * @var int
+	 * @var int|null
 	 */
 	protected $offset;
 
 	/**
 	 * @var int
 	 */
-	protected $filter_one = 0;
+	protected $filterOne = 0;
 
 	/**
 	 * @var array
@@ -59,26 +56,30 @@ class ApiDataSource implements IDataSource
 	protected $filter = [];
 
 
-	/**
-	 * @param string $url
-	 */
-	public function __construct($url, array $query_params = [])
+	public function __construct(string $url, array $queryParams = [])
 	{
 		$this->url = $url;
-		$this->query_params = $query_params;
+		$this->queryParams = $queryParams;
 	}
 
 
 	/**
 	 * Get data of remote source
-	 * @param  array  $params
+	 *
 	 * @return mixed
 	 */
 	protected function getResponse(array $params = [])
 	{
-		$query_string = http_build_query($params + $this->query_params);
+		$queryString = http_build_query($params + $this->queryParams);
+		$url = sprintf('%s?%s', $this->url, $queryString);
 
-		return json_decode(file_get_contents("{$this->url}?$query_string"));
+		$content = file_get_contents($url);
+
+		if ($content === false) {
+			throw new UnexpectedValueException(sprintf('Could not open URL %s', $url));
+		}
+
+		return json_decode($content);
 	}
 
 
@@ -86,46 +87,38 @@ class ApiDataSource implements IDataSource
 	 *                          IDataSource implementation                          *
 	 ********************************************************************************/
 
-
-	/**
-	 * Get count of data
-	 * @return int
-	 */
-	public function getCount()
+	public function getCount(): int
 	{
 		return $this->getResponse(['count' => '']);
 	}
 
 
 	/**
-	 * Get the data
-	 * @return array
+	 * {@inheritDoc}
 	 */
-	public function getData()
+	public function getData(): array
 	{
-		return !empty($this->data) ? $this->data : $this->getResponse([
-			'sort' => $this->sort_column,
-			'order' => $this->order_column,
+		return $this->data !== [] ? $this->data : $this->getResponse([
+			'sort' => $this->sortColumn,
+			'order' => $this->orderColumn,
 			'limit' => $this->limit,
 			'offset' => $this->offset,
 			'filter' => $this->filter,
-			'one' => $this->filter_one,
+			'one' => $this->filterOne,
 		]);
 	}
 
 
 	/**
-	 * Filter data
-	 * @param array $filters
-	 * @return static
+	 * {@inheritDoc}
 	 */
-	public function filter(array $filters)
+	public function filter(array $filters): void
 	{
 		/**
 		 * First, save all filter values to array
 		 */
 		foreach ($filters as $filter) {
-			if ($filter->isValueSet() && !$filter->hasConditionCallback()) {
+			if ($filter->isValueSet() && $filter->getConditionCallback() === null) {
 				$this->filter[$filter->getKey()] = $filter->getCondition();
 			}
 		}
@@ -139,39 +132,29 @@ class ApiDataSource implements IDataSource
 		 * Apply possible user filter callbacks
 		 */
 		foreach ($filters as $filter) {
-			if ($filter->isValueSet() && $filter->hasConditionCallback()) {
+			if ($filter->isValueSet() && $filter->getConditionCallback() !== null) {
 				$this->data = (array) call_user_func_array(
 					$filter->getConditionCallback(),
 					[$this->data, $filter->getValue()]
 				);
 			}
 		}
-
-		return $this;
 	}
 
 
 	/**
-	 * Filter data - get one row
-	 * @param array $condition
-	 * @return static
+	 * {@inheritDoc}
 	 */
-	public function filterOne(array $condition)
+	public function filterOne(array $condition): IDataSource
 	{
 		$this->filter = $condition;
-		$this->filter_one = 1;
+		$this->filterOne = 1;
 
 		return $this;
 	}
 
 
-	/**
-	 * Apply limit and offset on data
-	 * @param int $offset
-	 * @param int $limit
-	 * @return static
-	 */
-	public function limit($offset, $limit)
+	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->offset = $offset;
 		$this->limit = $limit;
@@ -180,19 +163,14 @@ class ApiDataSource implements IDataSource
 	}
 
 
-	/**
-	 * Sort data
-	 * @param Sorting $sorting
-	 * @return static
-	 */
-	public function sort(Sorting $sorting)
+	public function sort(Sorting $sorting): IDataSource
 	{
 		/**
 		 * there is only one iteration
 		 */
 		foreach ($sorting->getSort() as $column => $order) {
-			$this->sort_column = $column;
-			$this->order_column = $order;
+			$this->sortColumn = $column;
+			$this->orderColumn = $order;
 		}
 
 		return $this;

@@ -1,93 +1,129 @@
 <?php
 
-/**
- * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
- * @author      Pavel Janda <me@paveljanda.com>
- * @package     Ublaboo
- */
+declare(strict_types=1);
 
 namespace Ublaboo\DataGrid;
 
+use InvalidArgumentException;
 use Nette;
+use Nette\Application\IPresenter;
+use Nette\Application\Request;
+use Nette\Application\UI\Component;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Link;
-use Nette\Application\UI\PresenterComponent;
+use Nette\Application\UI\Presenter;
+use Nette\Bridges\ApplicationLatte\Template;
+use Nette\ComponentModel\IContainer;
+use Nette\Forms\Container;
+use Nette\Forms\Controls\SubmitButton as FormsSubmitButton;
+use Nette\Http\SessionSection;
+use Nette\Localization\ITranslator;
+use Nette\Utils\ArrayHash;
+use Traversable;
 use Ublaboo\DataGrid\AggregationFunction\TDataGridAggregationFunction;
-use Ublaboo\DataGrid\ColumnsSummary;
+use Ublaboo\DataGrid\Column\Action;
+use Ublaboo\DataGrid\Column\ActionCallback;
+use Ublaboo\DataGrid\Column\Column;
+use Ublaboo\DataGrid\Column\ColumnDateTime;
+use Ublaboo\DataGrid\Column\ColumnLink;
+use Ublaboo\DataGrid\Column\ColumnNumber;
+use Ublaboo\DataGrid\Column\ColumnStatus;
+use Ublaboo\DataGrid\Column\ColumnText;
+use Ublaboo\DataGrid\Column\ItemDetail;
+use Ublaboo\DataGrid\Column\MultiAction;
+use Ublaboo\DataGrid\Components\DataGridPaginator\DataGridPaginator;
+use Ublaboo\DataGrid\DataSource\IDataSource;
 use Ublaboo\DataGrid\Exception\DataGridColumnNotFoundException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridFilterNotFoundException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
+use Ublaboo\DataGrid\Export\Export;
+use Ublaboo\DataGrid\Export\ExportCsv;
+use Ublaboo\DataGrid\Filter\Filter;
+use Ublaboo\DataGrid\Filter\FilterDate;
+use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter\FilterMultiSelect;
+use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterSelect;
+use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Filter\IFilterDate;
+use Ublaboo\DataGrid\Filter\SubmitButton;
+use Ublaboo\DataGrid\GroupAction\GroupAction;
+use Ublaboo\DataGrid\GroupAction\GroupActionCollection;
+use Ublaboo\DataGrid\InlineEdit\InlineAdd;
 use Ublaboo\DataGrid\InlineEdit\InlineEdit;
+use Ublaboo\DataGrid\Localization\SimpleTranslator;
 use Ublaboo\DataGrid\Toolbar\ToolbarButton;
 use Ublaboo\DataGrid\Utils\ArraysHelper;
+use Ublaboo\DataGrid\Utils\ItemDetailForm;
 use Ublaboo\DataGrid\Utils\Sorting;
+use UnexpectedValueException;
 
 /**
  * @method onRedraw()
- * @method onRender()
- * @method onColumnAdd()
+ * @method onRender(DataGrid $dataGrid)
+ * @method onColumnAdd(string $key, Column $column)
+ * @method onExport(DataGrid $dataGrid)
+ * @method onFiltersAssembled(array<Filter> $filters)
  */
-class DataGrid extends Nette\Application\UI\Control
+class DataGrid extends Control
 {
+
 	use TDataGridAggregationFunction;
 
 	/**
-	 * @var callable[]
+	 * @var array|callable[]
 	 */
-	public $onRedraw;
+	public $onRedraw = [];
 
 	/**
-	 * @var callable[]
+	 * @var array|callable[]
 	 */
 	public $onRender = [];
 
 	/**
-	 * @var callable[]
+	 * @var array|callable[]
 	 */
-	public $onExport;
+	public $onExport = [];
 
 	/**
-	 * @var callable[]
+	 * @var array|callable[]
 	 */
-	public $onColumnAdd;
+	public $onColumnAdd = [];
 
 	/**
-	 * @var callable[]
-	 * @deprecated use $onFiltersAssembled
+	 * @var array|callable[]
 	 */
-	public $onFiltersAssabled;
-
-	/**
-	 * @var callable[]
-	 */
-	public $onFiltersAssembled;
+	public $onFiltersAssembled = [];
 
 	/**
 	 * @var string
 	 */
-	public static $icon_prefix = 'fa fa-';
+	public static $iconPrefix = 'fa fa-';
 
 	/**
 	 * Default form method
+	 *
 	 * @var string
 	 */
-	public static $form_method = 'post';
+	public static $formMethod = 'post';
 
 	/**
 	 * When set to TRUE, datagrid throws an exception
 	 * 	when tring to get related entity within join and entity does not exist
+	 *
 	 * @var bool
 	 */
-	public $strict_entity_property = false;
+	public $strictEntityProperty = false;
 
 	/**
 	 * When set to TRUE, datagrid throws an exception
 	 * 	when tring to set filter value, that does not exist (select, multiselect, etc)
+	 *
 	 * @var bool
 	 */
-	public $strict_session_filter_values = true;
+	public $strictSessionFilterValues = true;
 
 	/**
 	 * @var int
@@ -96,10 +132,10 @@ class DataGrid extends Nette\Application\UI\Control
 	public $page = 1;
 
 	/**
-	 * @var int|string
+	 * @var int|string|null
 	 * @persistent
 	 */
-	public $per_page;
+	public $perPage = null;
 
 	/**
 	 * @var array
@@ -110,22 +146,22 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var array
 	 */
-	public $default_sort = [];
+	public $defaultSort = [];
 
 	/**
 	 * @var array
 	 */
-	public $default_filter = [];
+	public $defaultFilter = [];
 
 	/**
 	 * @var bool
 	 */
-	public $default_filter_use_on_reset = true;
+	public $defaultFilterUseOnReset = true;
 
 	/**
 	 * @var bool
 	 */
-	public $default_sort_use_on_reset = true;
+	public $defaultSortUseOnReset = true;
 
 	/**
 	 * @var array
@@ -136,12 +172,12 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var callable|null
 	 */
-	protected $sort_callback = null;
+	protected $sortCallback = null;
 
 	/**
 	 * @var bool
 	 */
-	protected $use_happy_components = true;
+	protected $useHappyComponents = true;
 
 	/**
 	 * @var callable
@@ -151,77 +187,72 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var array
 	 */
-	protected $items_per_page_list;
+	protected $itemsPerPageList = [10, 20, 50, 'all'];
 
 	/**
-	 * @var int
+	 * @var int|null
 	 */
-	protected $default_per_page;
+	protected $defaultPerPage = null;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
-	protected $template_file;
+	protected $templateFile = null;
 
 	/**
-	 * @var Column\Column[]
+	 * @var array<Column>
 	 */
 	protected $columns = [];
 
 	/**
-	 * @var Column\Action[]
+	 * @var array<Action>|array<MultiAction>
 	 */
 	protected $actions = [];
 
 	/**
-	 * @var GroupAction\GroupActionCollection
+	 * @var GroupActionCollection|null
 	 */
-	protected $group_action_collection;
+	protected $groupActionCollection;
 
 	/**
-	 * @var Filter\Filter[]
+	 * @var array<Filter>
 	 */
 	protected $filters = [];
 
 	/**
-	 * @var Export\Export[]
+	 * @var array<Export>
 	 */
 	protected $exports = [];
 
 	/**
-	 * @var ToolbarButton[]
+	 * @var array<ToolbarButton>
 	 */
-	protected $toolbar_buttons = [];
+	protected $toolbarButtons = [];
 
 	/**
-	 * @var DataModel
+	 * @var DataModel|null
 	 */
 	protected $dataModel;
 
 	/**
-	 * @var DataFilter
-	 */
-	protected $dataFilter;
-
-	/**
 	 * @var string
 	 */
-	protected $primary_key = 'id';
+	protected $primaryKey = 'id';
 
 	/**
 	 * @var bool
 	 */
-	protected $do_paginate = true;
+	protected $doPaginate = true;
 
 	/**
 	 * @var bool
 	 */
-	protected $csv_export = true;
+	protected $csvExport = true;
 
 	/**
 	 * @var bool
 	 */
-	protected $csv_export_filtered = true;
+	protected $csvExportFiltered = true;
 
 	/**
 	 * @var bool
@@ -236,87 +267,87 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var string
 	 */
-	protected $sortable_handler = 'sort!';
+	protected $sortableHandler = 'sort!';
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
-	protected $original_template;
+	protected $originalTemplate = null;
 
 	/**
 	 * @var array
 	 */
-	protected $redraw_item;
+	protected $redrawItem = [];
 
 	/**
-	 * @var mixed
+	 * @var ITranslator|null
 	 */
-	protected $translator;
-
-	/**
-	 * @var bool
-	 */
-	protected $force_filter_active;
-
-	/**
-	 * @var callable
-	 */
-	protected $tree_view_children_callback;
-
-	/**
-	 * @var callable
-	 */
-	protected $tree_view_has_children_callback;
-
-	/**
-	 * @var string
-	 */
-	protected $tree_view_has_children_column;
+	protected $translator = null;
 
 	/**
 	 * @var bool
 	 */
-	protected $outer_filter_rendering = false;
+	protected $forceFilterActive = false;
+
+	/**
+	 * @var callable|null
+	 */
+	protected $treeViewChildrenCallback = null;
+
+	/**
+	 * @var callable|null
+	 */
+	protected $treeViewHasChildrenCallback = null;
+
+	/**
+	 * @var string|null
+	 */
+	protected $treeViewHasChildrenColumn = null;
+
+	/**
+	 * @var bool
+	 */
+	protected $outerFilterRendering = false;
 
 	/**
 	 * @var int
 	 */
-	protected $outer_filter_columns_count = 2;
+	protected $outerFilterColumnsCount = 2;
 
 	/**
 	 * @var bool
 	 */
-	protected $collapsible_outer_filters = true;
+	protected $collapsibleOuterFilters = true;
+
+	/**
+	 * @var array|string[]
+	 */
+	protected $columnsExportOrder = [];
+
+	/**
+	 * @var bool
+	 */
+	protected $rememberState = true;
+
+	/**
+	 * @var bool
+	 */
+	protected $refreshURL = true;
+
+	/**
+	 * @var SessionSection
+	 */
+	protected $gridSession;
+
+	/**
+	 * @var ItemDetail|null
+	 */
+	protected $itemsDetail;
 
 	/**
 	 * @var array
 	 */
-	protected $columns_export_order = [];
-
-	/**
-	 * @var bool
-	 */
-	protected $remember_state = true;
-
-	/**
-	 * @var bool
-	 */
-	protected $refresh_url = true;
-
-	/**
-	 * @var Nette\Http\SessionSection
-	 */
-	protected $grid_session;
-
-	/**
-	 * @var Column\ItemDetail
-	 */
-	protected $items_detail;
-
-	/**
-	 * @var array
-	 */
-	protected $row_conditions = [
+	protected $rowConditions = [
 		'group_action' => false,
 		'action' => [],
 	];
@@ -324,76 +355,71 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var array
 	 */
-	protected $column_callbacks = [];
+	protected $columnCallbacks = [];
 
 	/**
 	 * @var bool
 	 */
-	protected $can_hide_columns = false;
+	protected $canHideColumns = false;
 
 	/**
 	 * @var array
 	 */
-	protected $columns_visibility = [];
+	protected $columnsVisibility = [];
 
 	/**
-	 * @var InlineEdit
+	 * @var InlineEdit|null
 	 */
-	protected $inlineEdit;
+	protected $inlineEdit = null;
 
 	/**
-	 * @var InlineEdit
+	 * @var InlineAdd|null
 	 */
-	protected $inlineAdd;
+	protected $inlineAdd = null;
 
 	/**
 	 * @var bool
 	 */
-	protected $snippets_set = false;
+	protected $snippetsSet = false;
 
 	/**
 	 * @var bool
 	 */
-	protected $some_column_default_hide = false;
+	protected $someColumnDefaultHide = false;
 
 	/**
-	 * @var ColumnsSummary
+	 * @var ColumnsSummary|null
 	 */
 	protected $columnsSummary;
 
 	/**
 	 * @var bool
 	 */
-	protected $auto_submit = true;
+	protected $autoSubmit = true;
 
 	/**
-	 * @var Filter\SubmitButton|NULL
+	 * @var SubmitButton|null
 	 */
-	protected $filter_submit_button = null;
-
-	/**
-	 * @var bool
-	 */
-	protected $has_column_reset = true;
+	protected $filterSubmitButton = null;
 
 	/**
 	 * @var bool
 	 */
-	protected $show_selected_rows_count = true;
+	protected $hasColumnReset = true;
 
 	/**
-	 * @var string
+	 * @var bool
 	 */
-	private $custom_paginator_template;
+	protected $showSelectedRowsCount = true;
 
 	/**
-	 * @param Nette\ComponentModel\IContainer|NULL $parent
-	 * @param string                               $name
+	 * @var string|null
 	 */
-	public function __construct(Nette\ComponentModel\IContainer $parent = null, $name = null)
+	private $customPaginatorTemplate = null;
+
+
+	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
-		parent::__construct();
-
 		if ($parent !== null) {
 			$parent->addComponent($this, $name);
 		}
@@ -401,7 +427,7 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->monitor('Nette\Application\UI\Presenter');
 
 		/**
-		 * Try to find previous filters, pagination, per_page and other values in session
+		 * Try to find previous filters, pagination, perPage and other values in session
 		 */
 		$this->onRender[] = [$this, 'findSessionValues'];
 		$this->onExport[] = [$this, 'findSessionValues'];
@@ -427,38 +453,31 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Notify about that json js extension
 		 */
 		$this->onFiltersAssembled[] = [$this, 'sendNonEmptyFiltersInPayload'];
-	}
 
+		$this->monitor(
+			Presenter::class,
+			function (Presenter $presenter): void {
+				/**
+				 * Get session
+				 */
+				if ($this->rememberState) {
+					$sessionSection = $presenter->getSession($this->getSessionSectionName());
 
-	/**
-	 * {inheritDoc}
-	 * @return void
-	 */
-	public function attached($presenter)
-	{
-		parent::attached($presenter);
+					if (!$sessionSection instanceof SessionSection) {
+						throw new UnexpectedValueException;
+					}
 
-		if ($presenter instanceof Nette\Application\UI\Presenter) {
-			/**
-			 * Get session
-			 */
-			if ($this->remember_state) {
-				$this->grid_session = $presenter->getSession($this->getSessionSectionName());
+					$this->gridSession = $sessionSection;
+				}
 			}
-		}
+		);
 	}
 
 
 	/********************************************************************************
 	 *                                  RENDERING                                   *
 	 ********************************************************************************/
-
-
-	/**
-	 * Render template
-	 * @return void
-	 */
-	public function render()
+	public function render(): void
 	{
 		/**
 		 * Check whether datagrid has set some columns, initiated data source, etc
@@ -467,11 +486,16 @@ class DataGrid extends Nette\Application\UI\Control
 			throw new DataGridException('You have to set a data source first.');
 		}
 
-		if (empty($this->columns)) {
+		if ($this->columns === []) {
 			throw new DataGridException('You have to add at least one column.');
 		}
 
 		$template = $this->getTemplate();
+
+		if (!$template instanceof Template) {
+			throw new UnexpectedValueException;
+		}
+
 		$template->setTranslator($this->getTranslator());
 
 		/**
@@ -484,20 +508,12 @@ class DataGrid extends Nette\Application\UI\Control
 		 */
 		$rows = [];
 
-		if (!empty($this->redraw_item)) {
-			$items = $this->dataModel->filterRow($this->redraw_item);
-		} else {
-			$items = Nette\Utils\Callback::invokeArgs(
-				[$this->dataModel, 'filterData'],
-				[
-					$this->getPaginator(),
-					$this->createSorting($this->sort, $this->sort_callback),
-					$this->assembleFilters(),
-				]
-			);
-		}
+		$items = $this->redrawItem !== [] ? $this->dataModel->filterRow($this->redrawItem) : $this->dataModel->filterData(
+			$this->getPaginator(),
+			$this->createSorting($this->sort, $this->sortCallback),
+			$this->assembleFilters()
+		);
 
-		$callback = $this->rowCallback ?: null;
 		$hasGroupActionOnRows = false;
 
 		foreach ($items as $item) {
@@ -507,16 +523,16 @@ class DataGrid extends Nette\Application\UI\Control
 				$hasGroupActionOnRows = true;
 			}
 
-			if ($callback) {
-				$callback($item, $row->getControl());
+			if ($this->rowCallback !== null) {
+				($this->rowCallback)($item, $row->getControl());
 			}
 
 			/**
 			 * Walkaround for item snippet - snippet is the <tr> element and its class has to be also updated
 			 */
-			if (!empty($this->redraw_item)) {
-				$this->getPresenter()->payload->_datagrid_redraw_item_class = $row->getControlClass();
-				$this->getPresenter()->payload->_datagrid_redraw_item_id = $row->getId();
+			if ($this->redrawItem !== []) {
+				$this->getPresenterInstance()->payload->_datagrid_redrawItem_class = $row->getControlClass();
+				$this->getPresenterInstance()->payload->_datagrid_redrawItem_id = $row->getId();
 			}
 		}
 
@@ -525,7 +541,7 @@ class DataGrid extends Nette\Application\UI\Control
 		}
 
 		if ($this->isTreeView()) {
-			$template->add('tree_view_has_children_column', $this->tree_view_has_children_column);
+			$template->add('treeViewHasChildrenColumn', $this->treeViewHasChildrenColumn);
 		}
 
 		$template->rows = $rows;
@@ -534,16 +550,16 @@ class DataGrid extends Nette\Application\UI\Control
 		$template->actions = $this->actions;
 		$template->exports = $this->exports;
 		$template->filters = $this->filters;
-		$template->toolbar_buttons = $this->toolbar_buttons;
-		$template->aggregation_functions = $this->getAggregationFunctions();
-		$template->multiple_aggregation_function = $this->getMultipleAggregationFunction();
+		$template->toolbarButtons = $this->toolbarButtons;
+		$template->aggregationFunctions = $this->getAggregationFunctions();
+		$template->multipleAggregationFunction = $this->getMultipleAggregationFunction();
 
 		$template->filter_active = $this->isFilterActive();
-		$template->original_template = $this->getOriginalTemplateFile();
-		$template->icon_prefix = static::$icon_prefix;
-		$template->icon_prefix = static::$icon_prefix;
-		$template->items_detail = $this->items_detail;
-		$template->columns_visibility = $this->getColumnsVisibility();
+		$template->originalTemplate = $this->getOriginalTemplateFile();
+		$template->iconPrefix = static::$iconPrefix;
+		$template->iconPrefix = static::$iconPrefix;
+		$template->itemsDetail = $this->itemsDetail;
+		$template->columnsVisibility = $this->getColumnsVisibility();
 		$template->columnsSummary = $this->columnsSummary;
 
 		$template->inlineEdit = $this->inlineEdit;
@@ -569,13 +585,10 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                 ROW CALLBACK                                 *
 	 ********************************************************************************/
 
-
 	/**
-	 * Each row can be modified with user callback
-	 * @param  callable  $callback
-	 * @return static
-	 */
-	public function setRowCallback(callable $callback)
+	 * Each row can be modified with user defined callback
+s	 */
+	public function setRowCallback(callable $callback): self
 	{
 		$this->rowCallback = $callback;
 
@@ -586,33 +599,27 @@ class DataGrid extends Nette\Application\UI\Control
 	/********************************************************************************
 	 *                                 DATA SOURCE                                  *
 	 ********************************************************************************/
-
-
-	/**
-	 * By default ID, you can change that
-	 * @param string $primary_key
-	 * @return static
-	 */
-	public function setPrimaryKey($primary_key)
+	public function setPrimaryKey(string $primaryKey): self
 	{
 		if ($this->dataModel instanceof DataModel) {
-			throw new DataGridException('Please set datagrid primary key before setting datasource.');
+			throw new DataGridException(
+				'Please set datagrid primary key before setting datasource.'
+			);
 		}
 
-		$this->primary_key = $primary_key;
+		$this->primaryKey = $primaryKey;
 
 		return $this;
 	}
 
 
 	/**
-	 * Set Grid data source
-	 * @param DataSource\IDataSource|array|\DibiFluent|\Dibi\Fluent|Nette\Database\Table\Selection|\Doctrine\ORM\QueryBuilder|\Nextras\Orm\Collection\ICollection $source
-	 * @return static
+	 * @param mixed $source
+	 * @throws InvalidArgumentException
 	 */
-	public function setDataSource($source)
+	public function setDataSource($source): self
 	{
-		$this->dataModel = new DataModel($source, $this->primary_key);
+		$this->dataModel = new DataModel($source, $this->primaryKey);
 
 		$this->dataModel->onBeforeFilter[] = [$this, 'beforeDataModelFilter'];
 		$this->dataModel->onAfterFilter[] = [$this, 'afterDataModelFilter'];
@@ -623,69 +630,50 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @return DataSource\IDataSource|NULL
+	 * @return IDataSource|array|null
 	 */
 	public function getDataSource()
 	{
-		if (!$this->dataModel) {
-			return null;
-		}
-
-		return $this->dataModel->getDataSource();
+		return isset($this->dataModel)
+			? $this->dataModel->getDataSource()
+			: null;
 	}
 
 
 	/********************************************************************************
 	 *                                  TEMPLATING                                  *
 	 ********************************************************************************/
-
-
-	/**
-	 * Set custom template file to render
-	 * @param string $template_file
-	 * @return static
-	 */
-	public function setTemplateFile($template_file)
+	public function setTemplateFile(string $templateFile): self
 	{
-		$this->template_file = $template_file;
+		$this->templateFile = $templateFile;
 
 		return $this;
 	}
 
 
-	/**
-	 * Get DataGrid template file
-	 * @return string
-	 * @return static
-	 */
-	public function getTemplateFile()
+	public function getTemplateFile(): string
 	{
-		return $this->template_file ?: $this->getOriginalTemplateFile();
+		return $this->templateFile ?: $this->getOriginalTemplateFile();
 	}
 
 
-	/**
-	 * Get DataGrid original template file
-	 * @return string
-	 */
-	public function getOriginalTemplateFile()
+	public function getOriginalTemplateFile(): string
 	{
 		return __DIR__ . '/templates/datagrid.latte';
 	}
 
 
-	/**
-	 * Tell datagrid wheteher to use or not happy components
-	 * @param  bool|NULL $use If not given, return value of static::$use_happy_components
-	 * @return void|bool
-	 */
-	public function useHappyComponents($use = null)
+	public function useHappyComponents(bool $useHappyComponents): self
 	{
-		if ($use === null) {
-			return $this->use_happy_components;
-		}
+		$this->useHappyComponents = $useHappyComponents;
 
-		$this->use_happy_components = (bool) $use;
+		return $this;
+	}
+
+
+	public function shouldUseHappyComponents(): bool
+	{
+		return $this->useHappyComponents;
 	}
 
 
@@ -693,23 +681,17 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                   SORTING                                    *
 	 ********************************************************************************/
 
-
 	/**
-	 * Set default sorting
-	 * @param array $sort
-	 * @param bool  $use_on_reset
-	 * @return static
+	 * @param string|array $sort
 	 */
-	public function setDefaultSort($sort, $use_on_reset = true)
+	public function setDefaultSort($sort, bool $useOnReset = true): self
 	{
-		if (is_string($sort)) {
-			$sort = [$sort => 'ASC'];
-		} else {
-			$sort = (array) $sort;
-		}
+		$sort = is_string($sort)
+			? [$sort => 'ASC']
+			: $sort;
 
-		$this->default_sort = $sort;
-		$this->default_sort_use_on_reset = (bool) $use_on_reset;
+		$this->defaultSort = $sort;
+		$this->defaultSortUseOnReset = $useOnReset;
 
 		return $this;
 	}
@@ -717,35 +699,32 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Return default sort for column, if specified
-	 * @param string $columnKey
-	 * @return string|NULL
 	 */
-	public function getColumnDefaultSort($columnKey)
+	public function getColumnDefaultSort(string $columnKey): ?string
 	{
-		if (isset($this->default_sort[$columnKey])) {
-			return $this->default_sort[$columnKey];
+		if (isset($this->defaultSort[$columnKey])) {
+			return $this->defaultSort[$columnKey];
 		}
 
-		return NULL;
+		return null;
 	}
 
 
 	/**
 	 * User may set default sorting, apply it
-	 * @return void
 	 */
-	public function findDefaultSort()
+	public function findDefaultSort(): void
 	{
-		if (!empty($this->sort)) {
+		if ($this->sort !== []) {
 			return;
 		}
 
-		if ($this->getSessionData('_grid_has_sorted')) {
+		if ((bool) $this->getSessionData('_grid_has_sorted')) {
 			return;
 		}
 
-		if (!empty($this->default_sort)) {
-			$this->sort = $this->default_sort;
+		if ($this->defaultSort !== []) {
+			$this->sort = $this->defaultSort;
 		}
 
 		$this->saveSessionData('_grid_sort', $this->sort);
@@ -753,84 +732,55 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * Set grido to be sortable
-	 * @param bool $sortable
-	 * @return static
+	 * @throws DataGridException
 	 */
-	public function setSortable($sortable = true)
+	public function setSortable(bool $sortable = true): self
 	{
-		if ($this->getItemsDetail()) {
+		if ($this->getItemsDetail() !== null) {
 			throw new DataGridException('You can not use both sortable datagrid and items detail.');
 		}
 
-		$this->sortable = (bool) $sortable;
+		$this->sortable = $sortable;
 
 		return $this;
 	}
 
 
-	/**
-	 * Tell whether DataGrid is sortable
-	 * @return bool
-	 */
-	public function isSortable()
+	public function isSortable(): bool
 	{
 		return $this->sortable;
 	}
 
 
-	/**
-	 * Enable multi-sorting capability
-	 * @param bool  $multiSort
-	 * @return static
-	 */
-	public function setMultiSortEnabled($multiSort = true)
+	public function setMultiSortEnabled(bool $multiSort = true): self
 	{
-		$this->multiSort = (bool) $multiSort;
+		$this->multiSort = $multiSort;
 
 		return $this;
 	}
 
 
-	/**
-	 * Tell wether DataGrid can be sorted by multiple columns
-	 * @return bool
-	 */
-	public function isMultiSortEnabled()
+	public function isMultiSortEnabled(): bool
 	{
 		return $this->multiSort;
 	}
 
 
-	/**
-	 * Set sortable handle
-	 * @param string $handler
-	 * @return static
-	 */
-	public function setSortableHandler($handler = 'sort!')
+	public function setSortableHandler(string $handler = 'sort!'): self
 	{
-		$this->sortable_handler = (string) $handler;
+		$this->sortableHandler = $handler;
 
 		return $this;
 	}
 
 
-	/**
-	 * Return sortable handle name
-	 * @return string
-	 */
-	public function getSortableHandler()
+	public function getSortableHandler(): string
 	{
-		return $this->sortable_handler;
+		return $this->sortableHandler;
 	}
 
 
-	/**
-	 * @param Column  $column
-	 * @return array
-	 * @internal
-	 */
-	public function getSortNext(\Ublaboo\DataGrid\Column\Column $column)
+	public function getSortNext(Column $column): array
 	{
 		$sort = $column->getSortNext();
 
@@ -842,12 +792,7 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @param  array         $sort
-	 * @param  callable|NULL $sort_callback
-	 * @return Sorting
-	 */
-	protected function createSorting(array $sort, callable $sort_callback = null)
+	protected function createSorting(array $sort, ?callable $sortCallback = null): Sorting
 	{
 		foreach ($sort as $key => $order) {
 			unset($sort[$key]);
@@ -862,60 +807,48 @@ class DataGrid extends Nette\Application\UI\Control
 			$sort[$column->getSortingColumn()] = $order;
 		}
 
-		if (!$sort_callback && isset($column)) {
-			$sort_callback = $column->getSortableCallback();
+		if ($sortCallback !== null && isset($column)) {
+			$sortCallback = $column->getSortableCallback();
 		}
 
-		return new Sorting($sort, $sort_callback);
+		return new Sorting($sort, $sortCallback);
 	}
 
 
 	/********************************************************************************
 	 *                                  TREE VIEW                                   *
 	 ********************************************************************************/
-
-
-	/**
-	 * Is tree view set?
-	 * @return bool
-	 */
-	public function isTreeView()
+	public function isTreeView(): bool
 	{
-		return (bool) $this->tree_view_children_callback;
+		return $this->treeViewChildrenCallback !== null;
 	}
 
 
 	/**
-	 * Setting tree view
-	 * @param callable $get_children_callback
-	 * @param string|callable $tree_view_has_children_column
-	 * @return static
+	 * @param string|callable $treeViewHasChildrenColumn
 	 */
-	public function setTreeView($get_children_callback, $tree_view_has_children_column = 'has_children')
+	public function setTreeView(
+		callable $getChildrenCallback,
+		$treeViewHasChildrenColumn = 'has_children'
+	): self
 	{
-		if (!is_callable($get_children_callback)) {
-			throw new DataGridException(
-				'Parameters to method DataGrid::setTreeView must be of type callable'
-			);
+		if (is_callable($treeViewHasChildrenColumn)) {
+			$this->treeViewHasChildrenCallback = $treeViewHasChildrenColumn;
+			$treeViewHasChildrenColumn = null;
 		}
 
-		if (is_callable($tree_view_has_children_column)) {
-			$this->tree_view_has_children_callback = $tree_view_has_children_column;
-			$tree_view_has_children_column = null;
-		}
-
-		$this->tree_view_children_callback = $get_children_callback;
-		$this->tree_view_has_children_column = $tree_view_has_children_column;
+		$this->treeViewChildrenCallback = $getChildrenCallback;
+		$this->treeViewHasChildrenColumn = $treeViewHasChildrenColumn;
 
 		/**
-		 * TUrn off pagination
+		 * Torn off pagination
 		 */
 		$this->setPagination(false);
 
 		/**
 		 * Set tree view template file
 		 */
-		if (!$this->template_file) {
+		if ($this->templateFile === null) {
 			$this->setTemplateFile(__DIR__ . '/templates/datagrid_tree.latte');
 		}
 
@@ -923,222 +856,187 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Is tree view children callback set?
-	 * @return bool
-	 */
-	public function hasTreeViewChildrenCallback()
+	public function hasTreeViewChildrenCallback(): bool
 	{
-		return is_callable($this->tree_view_has_children_callback);
+		return is_callable($this->treeViewHasChildrenCallback);
 	}
 
 
 	/**
 	 * @param  mixed $item
-	 * @return bool
 	 */
-	public function treeViewChildrenCallback($item)
+	public function treeViewChildrenCallback($item): bool
 	{
-		return call_user_func($this->tree_view_has_children_callback, $item);
+		if ($this->treeViewHasChildrenCallback === null) {
+			throw new UnexpectedValueException;
+		}
+
+		return (bool) call_user_func($this->treeViewHasChildrenCallback, $item);
 	}
 
 
 	/********************************************************************************
 	 *                                    COLUMNS                                   *
 	 ********************************************************************************/
-
-
-	/**
-	 * Add text column with no other formating
-	 * @param  string      $key
-	 * @param  string      $name
-	 * @param  string|null $column
-	 * @return Column\ColumnText
-	 */
-	public function addColumnText($key, $name, $column = null)
+	public function addColumnText(
+		string $key,
+		string $name,
+		?string $column = null
+	): ColumnText
 	{
-		$this->addColumnCheck($key);
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new Column\ColumnText($this, $key, $column, $name));
+		$columnText = new ColumnText($this, $key, $column, $name);
+		$this->addColumn($key, $columnText);
+
+		return $columnText;
 	}
 
 
-	/**
-	 * Add column with link
-	 * @param  string      $key
-	 * @param  string      $name
-	 * @param  string|null $column
-	 * @return Column\ColumnLink
-	 */
-	public function addColumnLink($key, $name, $href = null, $column = null, array $params = null)
+	public function addColumnLink(
+		string $key,
+		string $name,
+		?string $href = null,
+		?string $column = null,
+		?array $params = null
+	): ColumnLink
 	{
-		$this->addColumnCheck($key);
 		$column = $column ?: $key;
 		$href = $href ?: $key;
 
 		if ($params === null) {
-			$params = [$this->primary_key];
+			$params = [$this->primaryKey];
 		}
 
-		return $this->addColumn($key, new Column\ColumnLink($this, $key, $column, $name, $href, $params));
+		$columnLink = new ColumnLink($this, $key, $column, $name, $href, $params);
+		$this->addColumn($key, $columnLink);
+
+		return $columnLink;
 	}
 
 
-	/**
-	 * Add column with possible number formating
-	 * @param  string      $key
-	 * @param  string      $name
-	 * @param  string|null $column
-	 * @return Column\ColumnNumber
-	 */
-	public function addColumnNumber($key, $name, $column = null)
+	public function addColumnNumber(
+		string $key,
+		string $name,
+		?string $column = null
+	): ColumnNumber
 	{
-		$this->addColumnCheck($key);
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new Column\ColumnNumber($this, $key, $column, $name));
+		$columnNumber = new ColumnNumber($this, $key, $column, $name);
+		$this->addColumn($key, $columnNumber);
+
+		return $columnNumber;
 	}
 
 
-	/**
-	 * Add column with date formating
-	 * @param  string      $key
-	 * @param  string      $name
-	 * @param  string|null $column
-	 * @return Column\ColumnDateTime
-	 */
-	public function addColumnDateTime($key, $name, $column = null)
+	public function addColumnDateTime(
+		string $key,
+		string $name,
+		?string $column = null
+	): ColumnDateTime
 	{
-		$this->addColumnCheck($key);
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new Column\ColumnDateTime($this, $key, $column, $name));
+		$columnDateTime = new ColumnDateTime($this, $key, $column, $name);
+		$this->addColumn($key, $columnDateTime);
+
+		return $columnDateTime;
 	}
 
 
-	/**
-	 * Add column status
-	 * @param  string      $key
-	 * @param  string      $name
-	 * @param  string|null $column
-	 * @return Column\ColumnStatus
-	 */
-	public function addColumnStatus($key, $name, $column = null)
+	public function addColumnStatus(
+		string $key,
+		string $name,
+		?string $column = null
+	): ColumnStatus
 	{
-		$this->addColumnCheck($key);
 		$column = $column ?: $key;
 
-		return $this->addColumn($key, new Column\ColumnStatus($this, $key, $column, $name));
+		$columnStatus = new ColumnStatus($this, $key, $column, $name);
+		$this->addColumn($key, $columnStatus);
+
+		return $columnStatus;
 	}
 
 
 	/**
-	 * @param string $key
-	 * @param Column\Column $column
-	 * @return Column\Column
+	 * @throws DataGridException
 	 */
-	protected function addColumn($key, Column\Column $column)
+	protected function addColumn(string $key, Column $column): Column
 	{
+		if (isset($this->columns[$key])) {
+			throw new DataGridException(
+				sprintf('There is already column at key [%s] defined.', $key)
+			);
+		}
+
 		$this->onColumnAdd($key, $column);
 
-		$this->columns_visibility[$key] = [
-			'visible' => true,
-		];
+		$this->columnsVisibility[$key] = ['visible' => true];
 
 		return $this->columns[$key] = $column;
 	}
 
 
 	/**
-	 * Return existing column
-	 * @param  string $key
-	 * @return Column\Column
-	 * @throws DataGridException
+	 * @throws DataGridColumnNotFoundException
 	 */
-	public function getColumn($key)
+	public function getColumn(string $key): Column
 	{
 		if (!isset($this->columns[$key])) {
-			throw new DataGridColumnNotFoundException("There is no column at key [$key] defined.");
+			throw new DataGridColumnNotFoundException(
+				sprintf('There is no column at key [%s] defined.', $key)
+			);
 		}
 
 		return $this->columns[$key];
 	}
 
 
-	/**
-	 * Remove column
-	 * @param string $key
-	 * @return static
-	 */
-	public function removeColumn($key)
+	public function removeColumn(string $key): self
 	{
-		unset($this->columns_visibility[$key], $this->columns[$key]);
-
+		unset($this->columnsVisibility[$key], $this->columns[$key]);
 
 		return $this;
-	}
-
-
-	/**
-	 * Check whether given key already exists in $this->columns
-	 * @param  string $key
-	 * @throws DataGridException
-	 */
-	protected function addColumnCheck($key)
-	{
-		if (isset($this->columns[$key])) {
-			throw new DataGridException("There is already column at key [$key] defined.");
-		}
 	}
 
 
 	/********************************************************************************
 	 *                                    ACTIONS                                   *
 	 ********************************************************************************/
-
-
-	/**
-	 * Create action
-	 * @param string     $key
-	 * @param string     $name
-	 * @param string     $href
-	 * @param array|null $params
-	 * @return Column\Action
-	 */
-	public function addAction($key, $name, $href = null, array $params = null)
+	public function addAction(
+		string $key,
+		string $name,
+		?string $href = null,
+		?array $params = null
+	): Action
 	{
 		$this->addActionCheck($key);
 
 		$href = $href ?: $key;
 
 		if ($params === null) {
-			$params = [$this->primary_key];
+			$params = [$this->primaryKey];
 		}
 
-		return $this->actions[$key] = new Column\Action($this, $href, $name, $params);
+		return $this->actions[$key] = new Action($this, $key, $href, $name, $params);
 	}
 
 
-	/**
-	 * Create action callback
-	 * @param string     $key
-	 * @param string     $name
-	 * @return Column\Action
-	 */
-	public function addActionCallback($key, $name, $callback = null)
+	public function addActionCallback(
+		string $key,
+		string $name,
+		?callable $callback = null
+	): ActionCallback
 	{
 		$this->addActionCheck($key);
 
-		$params = ['__id' => $this->primary_key];
+		$params = ['__id' => $this->primaryKey];
 
-		$this->actions[$key] = $action = new Column\ActionCallback($this, $key, $name, $params);
+		$this->actions[$key] = $action = new ActionCallback($this, $key, $key, $name, $params);
 
-		if ($callback) {
-			if (!is_callable($callback)) {
-				throw new DataGridException('ActionCallback callback has to be callable.');
-			}
-
+		if ($callback !== null) {
 			$action->onClick[] = $callback;
 		}
 
@@ -1146,41 +1044,33 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @param string $key
-	 */
-	public function addMultiAction($key, $name)
+	public function addMultiAction(string $key, string $name): MultiAction
 	{
 		$this->addActionCheck($key);
 
-		$this->actions[$key] = $action = new Column\MultiAction($this, $name);
+		$action = new MultiAction($this, $key, $name);
+
+		$this->actions[$key] = $action;
 
 		return $action;
 	}
 
 
 	/**
-	 * Get existing action
-	 * @param  string       $key
-	 * @return Column\Action
+	 * @return Action|MultiAction
 	 * @throws DataGridException
 	 */
-	public function getAction($key)
+	public function getAction(string $key)
 	{
 		if (!isset($this->actions[$key])) {
-			throw new DataGridException("There is no action at key [$key] defined.");
+			throw new DataGridException(sprintf('There is no action at key [%s] defined.', $key));
 		}
 
 		return $this->actions[$key];
 	}
 
 
-	/**
-	 * Remove action
-	 * @param string $key
-	 * @return static
-	 */
-	public function removeAction($key)
+	public function removeAction(string $key): self
 	{
 		unset($this->actions[$key]);
 
@@ -1190,13 +1080,15 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Check whether given key already exists in $this->filters
-	 * @param  string $key
+	 *
 	 * @throws DataGridException
 	 */
-	protected function addActionCheck($key)
+	protected function addActionCheck(string $key): void
 	{
 		if (isset($this->actions[$key])) {
-			throw new DataGridException("There is already action at key [$key] defined.");
+			throw new DataGridException(
+				sprintf('There is already action at key [%s] defined.', $key)
+			);
 		}
 	}
 
@@ -1205,150 +1097,119 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                    FILTERS                                   *
 	 ********************************************************************************/
 
-
 	/**
-	 * Add filter fot text search
-	 * @param string       $key
-	 * @param string       $name
 	 * @param array|string $columns
-	 * @return Filter\FilterText
-	 * @throws DataGridException
 	 */
-	public function addFilterText($key, $name, $columns = null)
+	public function addFilterText(
+		string $key,
+		string $name,
+		$columns = null
+	): FilterText
 	{
-		$columns = $columns === null? [$key] : (is_string($columns) ? [$columns] : $columns);
-
-		if (!is_array($columns)) {
-			throw new DataGridException('Filter Text can accept only array or string.');
-		}
+		$columns = $columns === null ? [$key] : (is_string($columns) ? [$columns] : $columns);
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new Filter\FilterText($this, $key, $name, $columns);
+		return $this->filters[$key] = new FilterText($this, $key, $name, $columns);
+	}
+
+
+	public function addFilterSelect(
+		string $key,
+		string $name,
+		array $options,
+		?string $column = null
+	): FilterSelect
+	{
+		$column = $column ?? $key;
+
+		$this->addFilterCheck($key);
+
+		return $this->filters[$key] = new FilterSelect($this, $key, $name, $options, $column);
+	}
+
+
+	public function addFilterMultiSelect(
+		string $key,
+		string $name,
+		array $options,
+		?string $column = null
+	): FilterMultiSelect
+	{
+		$column = $column ?? $key;
+
+		$this->addFilterCheck($key);
+
+		return $this->filters[$key] = new FilterMultiSelect($this, $key, $name, $options, $column);
+	}
+
+
+	public function addFilterDate(string $key, string $name, ?string $column = null): FilterDate
+	{
+		$column = $column ?: $key;
+
+		$this->addFilterCheck($key);
+
+		return $this->filters[$key] = new FilterDate($this, $key, $name, $column);
+	}
+
+
+	public function addFilterRange(
+		string $key,
+		string $name,
+		?string $column = null,
+		string $nameSecond = '-'
+	): FilterRange
+	{
+		$column = $column ?? $key;
+
+		$this->addFilterCheck($key);
+
+		return $this->filters[$key] = new FilterRange(
+			$this,
+			$key,
+			$name,
+			$column,
+			$nameSecond
+		);
 	}
 
 
 	/**
-	 * Add select box filter
-	 * @param string $key
-	 * @param string $name
-	 * @param array  $options
-	 * @param string $column
-	 * @return Filter\FilterSelect
 	 * @throws DataGridException
 	 */
-	public function addFilterSelect($key, $name, array $options, $column = null)
+	public function addFilterDateRange(
+		string $key,
+		string $name,
+		?string $column = null,
+		string $nameSecond = '-'
+	): FilterDateRange
 	{
-		$column = $column ?: $key;
-
-		if (!is_string($column)) {
-			throw new DataGridException('Filter Select can only filter in one column.');
-		}
+		$column = $column ?? $key;
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new Filter\FilterSelect($this, $key, $name, $options, $column);
-	}
-
-
-	/**
-	 * Add multi select box filter
-	 * @param string $key
-	 * @param string $name
-	 * @param array  $options
-	 * @param string $column
-	 * @return Filter\FilterSelect
-	 * @throws DataGridException
-	 */
-	public function addFilterMultiSelect($key, $name, array $options, $column = null)
-	{
-		$column = $column ?: $key;
-
-		if (!is_string($column)) {
-			throw new DataGridException('Filter MultiSelect can only filter in one column.');
-		}
-
-		$this->addFilterCheck($key);
-
-		return $this->filters[$key] = new Filter\FilterMultiSelect($this, $key, $name, $options, $column);
-	}
-
-
-	/**
-	 * Add datepicker filter
-	 * @param string $key
-	 * @param string $name
-	 * @param string $column
-	 * @return Filter\FilterDate
-	 * @throws DataGridException
-	 */
-	public function addFilterDate($key, $name, $column = null)
-	{
-		$column = $column ?: $key;
-
-		if (!is_string($column)) {
-			throw new DataGridException('FilterDate can only filter in one column.');
-		}
-
-		$this->addFilterCheck($key);
-
-		return $this->filters[$key] = new Filter\FilterDate($this, $key, $name, $column);
-	}
-
-
-	/**
-	 * Add range filter (from - to)
-	 * @param string $key
-	 * @param string $name
-	 * @param string $column
-	 * @return Filter\FilterRange
-	 * @throws DataGridException
-	 */
-	public function addFilterRange($key, $name, $column = null, $name_second = '-')
-	{
-		$column = $column ?: $key;
-
-		if (!is_string($column)) {
-			throw new DataGridException('FilterRange can only filter in one column.');
-		}
-
-		$this->addFilterCheck($key);
-
-		return $this->filters[$key] = new Filter\FilterRange($this, $key, $name, $column, $name_second);
-	}
-
-
-	/**
-	 * Add datepicker filter (from - to)
-	 * @param string $key
-	 * @param string $name
-	 * @param string $column
-	 * @return Filter\FilterDateRange
-	 * @throws DataGridException
-	 */
-	public function addFilterDateRange($key, $name, $column = null, $name_second = '-')
-	{
-		$column = $column ?: $key;
-
-		if (!is_string($column)) {
-			throw new DataGridException('FilterDateRange can only filter in one column.');
-		}
-
-		$this->addFilterCheck($key);
-
-		return $this->filters[$key] = new Filter\FilterDateRange($this, $key, $name, $column, $name_second);
+		return $this->filters[$key] = new FilterDateRange(
+			$this,
+			$key,
+			$name,
+			$column,
+			$nameSecond
+		);
 	}
 
 
 	/**
 	 * Check whether given key already exists in $this->filters
-	 * @param  string $key
+	 *
 	 * @throws DataGridException
 	 */
-	protected function addFilterCheck($key)
+	protected function addFilterCheck(string $key): void
 	{
 		if (isset($this->filters[$key])) {
-			throw new DataGridException("There is already action at key [$key] defined.");
+			throw new DataGridException(
+				sprintf('There is already action at key [%s] defined.', $key)
+			);
 		}
 	}
 
@@ -1356,9 +1217,10 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * Fill array of Filter\Filter[] with values from $this->filter persistent parameter
 	 * Fill array of Column\Column[] with values from $this->sort   persistent parameter
-	 * @return Filter\Filter[] $this->filters === Filter\Filter[]
+	 *
+	 * @return array<Filter>
 	 */
-	public function assembleFilters()
+	public function assembleFilters(): array
 	{
 		foreach ($this->filter as $key => $value) {
 			if (!isset($this->filters[$key])) {
@@ -1367,7 +1229,7 @@ class DataGrid extends Nette\Application\UI\Control
 				continue;
 			}
 
-			if (is_array($value) || $value instanceof \Traversable) {
+			if (is_array($value) || $value instanceof Traversable) {
 				if (!ArraysHelper::testEmpty($value)) {
 					$this->filters[$key]->setValue($value);
 				}
@@ -1380,42 +1242,17 @@ class DataGrid extends Nette\Application\UI\Control
 
 		foreach ($this->columns as $key => $column) {
 			if (isset($this->sort[$key])) {
-				$column->setSort($this->sort);
+				$column->setSort($this->sort[$key]);
 			}
 		}
 
-		/**
-		 * Invoke possible events
-		 */
-		if (!empty($this->onFiltersAssabled)) {
-			@trigger_error('onFiltersAssabled is deprecated, use onFiltersAssembled instead', E_USER_DEPRECATED);
-			$this->onFiltersAssabled($this->filters);
-		}
-
 		$this->onFiltersAssembled($this->filters);
+
 		return $this->filters;
 	}
 
 
-	/**
-	 * Fill array of Filter\Filter[] with values from $this->filter persistent parameter
-	 * Fill array of Column\Column[] with values from $this->sort   persistent parameter
-	 * @return Filter\Filter[] $this->filters === Filter\Filter[]
-	 * @deprecated use assembleFilters instead
-	 */
-	public function assableFilters()
-	{
-		@trigger_error('assableFilters is deprecated, use assembleFilters instead', E_USER_DEPRECATED);
-		return $this->assembleFilters();
-	}
-
-
-	/**
-	 * Remove filter
-	 * @param string $key
-	 * @return static
-	 */
-	public function removeFilter($key)
+	public function removeFilter(string $key): self
 	{
 		unset($this->filters[$key]);
 
@@ -1423,28 +1260,19 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Get defined filter
-	 * @param  string $key
-	 * @return Filter\Filter
-	 */
-	public function getFilter($key)
+	public function getFilter(string $key): Filter
 	{
 		if (!isset($this->filters[$key])) {
-			throw new DataGridException("Filter [{$key}] is not defined");
+			throw new DataGridException(sprintf('Filter [%s] is not defined', $key));
 		}
 
 		return $this->filters[$key];
 	}
 
 
-	/**
-	 * @param bool $strict
-	 * @return static
-	 */
-	public function setStrictSessionFilterValues($strict = true)
+	public function setStrictSessionFilterValues(bool $strictSessionFilterValues = true): self
 	{
-		$this->strict_session_filter_values = (bool) $strict;
+		$this->strictSessionFilterValues = $strictSessionFilterValues;
 
 		return $this;
 	}
@@ -1453,27 +1281,20 @@ class DataGrid extends Nette\Application\UI\Control
 	/********************************************************************************
 	 *                                  FILTERING                                   *
 	 ********************************************************************************/
-
-
-	/**
-	 * Is filter active?
-	 * @return bool
-	 */
-	public function isFilterActive()
+	public function isFilterActive(): bool
 	{
 		$is_filter = ArraysHelper::testTruthy($this->filter);
 
-		return ($is_filter) || $this->force_filter_active;
+		return $is_filter || $this->forceFilterActive;
 	}
 
 
 	/**
 	 * Tell that filter is active from whatever reasons
-	 * return static
 	 */
-	public function setFilterActive()
+	public function setFilterActive(): self
 	{
-		$this->force_filter_active = true;
+		$this->forceFilterActive = true;
 
 		return $this;
 	}
@@ -1481,10 +1302,8 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set filter values (force - overwrite user data)
-	 * @param array $filter
-	 * @return static
 	 */
-	public function setFilter(array $filter)
+	public function setFilter(array $filter): self
 	{
 		$this->filter = $filter;
 
@@ -1496,66 +1315,52 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * If we want to sent some initial filter
-	 * @param array $filter
-	 * @param bool  $use_on_reset
-	 * @return static
+	 *
+	 * @throws DataGridException
 	 */
-	public function setDefaultFilter(array $default_filter, $use_on_reset = true)
+	public function setDefaultFilter(array $defaultFilter, bool $useOnReset = true): self
 	{
-		foreach ($default_filter as $key => $value) {
+		foreach ($defaultFilter as $key => $value) {
 			$filter = $this->getFilter($key);
 
-			if (!$filter) {
-				throw new DataGridException("Can not set default value to nonexisting filter [$key]");
-			}
-
-			if ($filter instanceof Filter\FilterMultiSelect && !is_array($value)) {
+			if ($filter instanceof FilterMultiSelect && !is_array($value)) {
 				throw new DataGridException(
-					"Default value of filter [$key] - MultiSelect has to be an array"
+					sprintf('Default value of filter [%s] - MultiSelect has to be an array', $key)
 				);
 			}
 
-			if ($filter instanceof Filter\FilterRange || $filter instanceof Filter\FilterDateRange) {
-				if (!is_array($value)) {
+			if ($filter instanceof FilterRange || $filter instanceof FilterDateRange) {
+				if (!is_array($value) || !isset($value['from'], $value['to'])) {
 					throw new DataGridException(
-						"Default value of filter [$key] - Range/DateRange has to be an array [from/to => ...]"
-					);
-				}
-
-				$temp = $value;
-				unset($temp['from'], $temp['to']);
-
-				if (!empty($temp)) {
-					throw new DataGridException(
-						"Default value of filter [$key] - Range/DateRange can contain only [from/to => ...] values"
+						sprintf(
+							'Default value of filter [%s] - %s has to be an array [from/to => ...]',
+							FilterDateRange::class,
+							$key
+						)
 					);
 				}
 			}
 		}
 
-		$this->default_filter = $default_filter;
-		$this->default_filter_use_on_reset = (bool) $use_on_reset;
+		$this->defaultFilter = $defaultFilter;
+		$this->defaultFilterUseOnReset = $useOnReset;
 
 		return $this;
 	}
 
 
-	/**
-	 * User may set default filter, find it
-	 * @return void
-	 */
-	public function findDefaultFilter()
+	public function findDefaultFilter(): void
 	{
-		if (!empty($this->filter)) {
+		if ($this->filter !== []) {
 			return;
 		}
 
-		if ($this->getSessionData('_grid_has_filtered')) {
+		if ((bool) $this->getSessionData('_grid_has_filtered')) {
 			return;
 		}
 
-		if (!empty($this->default_filter)) {
-			$this->filter = $this->default_filter;
+		if ($this->defaultFilter !== []) {
+			$this->filter = $this->defaultFilter;
 		}
 
 		foreach ($this->filter as $key => $value) {
@@ -1564,15 +1369,11 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * FilterAndGroupAction form factory
-	 * @return Form
-	 */
-	public function createComponentFilter()
+	public function createComponentFilter(): Form
 	{
 		$form = new Form($this, 'filter');
 
-		$form->setMethod(static::$form_method);
+		$form->setMethod(static::$formMethod);
 
 		$form->setTranslator($this->getTranslator());
 
@@ -1585,7 +1386,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$inline_edit_container->addSubmit('submit', 'ublaboo_datagrid.save')
 				->setValidationScope([$inline_edit_container]);
 			$inline_edit_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
-				->setValidationScope(false);
+				->setValidationScope(null);
 
 			$this->inlineEdit->onControlAdd($inline_edit_container);
 			$this->inlineEdit->onControlAfterAdd($inline_edit_container);
@@ -1594,100 +1395,101 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * InlineAdd part
 		 */
-		$inline_add_container = $form->addContainer('inline_add');
+		$inlineAddContainer = $form->addContainer('inline_add');
 
-		if ($this->inlineAdd instanceof InlineEdit) {
-			$inline_add_container->addSubmit('submit', 'ublaboo_datagrid.save')
-				->setValidationScope([$inline_add_container]);
-			$inline_add_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
-				->setValidationScope(false)
+		if ($this->inlineAdd instanceof InlineAdd) {
+			$inlineAddContainer->addSubmit('submit', 'ublaboo_datagrid.save')
+				->setValidationScope([$inlineAddContainer]);
+			$inlineAddContainer->addSubmit('cancel', 'ublaboo_datagrid.cancel')
+				->setValidationScope(null)
 				->setAttribute('data-datagrid-cancel-inline-add', true);
 
-			$this->inlineAdd->onControlAdd($inline_add_container);
-			$this->inlineAdd->onControlAfterAdd($inline_add_container);
+			$this->inlineAdd->onControlAdd($inlineAddContainer);
+			$this->inlineAdd->onControlAfterAdd($inlineAddContainer);
 		}
 
 		/**
 		 * ItemDetail form part
 		 */
-		$items_detail_form = $this->getItemDetailForm();
+		$itemsDetailForm = $this->getItemDetailForm();
 
-		if ($items_detail_form instanceof Nette\Forms\Container) {
-			$form['items_detail_form'] = $items_detail_form;
+		if ($itemsDetailForm instanceof Container) {
+			$form['items_detail_form'] = $itemsDetailForm;
 		}
 
 		/**
 		 * Filter part
 		 */
-		$filter_container = $form->addContainer('filter');
+		$filterContainer = $form->addContainer('filter');
 
 		foreach ($this->filters as $filter) {
-			$filter->addToFormContainer($filter_container);
+			$filter->addToFormContainer($filterContainer);
 		}
 
 		if (!$this->hasAutoSubmit()) {
-			$filter_container['submit'] = $this->getFilterSubmitButton();
+			$filterContainer['submit'] = $this->getFilterSubmitButton();
 		}
 
 		/**
 		 * Group action part
 		 */
-		$group_action_container = $form->addContainer('group_action');
+		$groupActionContainer = $form->addContainer('group_action');
 
 		if ($this->hasGroupActions()) {
-			$this->getGroupActionCollection()->addToFormContainer($group_action_container);
+			$this->getGroupActionCollection()->addToFormContainer($groupActionContainer);
 		}
 
-		if (!$form->isSubmitted()) {
-			$this->setFilterContainerDefaults($form['filter'], $this->filter);
+		if ($form->isSubmitted() === false) {
+			$this->setFilterContainerDefaults($filterContainer, $this->filter);
 		}
 
 		/**
 		 * Per page part
 		 */
-		$form->addSelect('per_page', '', $this->getItemsPerPageList())
+		$select = $form->addSelect('perPage', '', $this->getItemsPerPageList())
 			->setTranslator(null);
 
-		if (!$form->isSubmitted()) {
-			$form['per_page']->setValue($this->getPerPage());
+		if ($form->isSubmitted() === false) {
+			$select->setValue($this->getPerPage());
 		}
 
-		$form->addSubmit('per_page_submit', 'ublaboo_datagrid.per_page_submit')
-			->setValidationScope([$form['per_page']]);
+		$form->addSubmit('perPage_submit', 'ublaboo_datagrid.perPage_submit')
+			->setValidationScope([$select]);
 
 		$form->onSubmit[] = [$this, 'filterSucceeded'];
+
+		return $form;
 	}
 
 
-	/**
-	 * @param  Nette\Forms\Container  $container
-	 * @param  array|\Iterator  $values
-	 * @return void
-	 */
-	public function setFilterContainerDefaults(Nette\Forms\Container $container, $values)
+	public function setFilterContainerDefaults(Container $container, array $values): void
 	{
 		foreach ($container->getComponents() as $key => $control) {
 			if (!isset($values[$key])) {
 				continue;
 			}
 
-			if ($control instanceof Nette\Forms\Container) {
-				$this->setFilterContainerDefaults($control, $values[$key]);
+			if ($control instanceof Container) {
+				$this->setFilterContainerDefaults($control, (array) $values[$key]);
 
 				continue;
 			}
 
 			$value = $values[$key];
 
-			if ($value instanceof \DateTime && ($filter = $this->getFilter($key)) instanceof IFilterDate) {
-				$value = $value->format($filter->getPhpFormat());
+			if ($value instanceof \DateTime) {
+				$filter = $this->getFilter($key);
+
+				if ($filter instanceof IFilterDate) {
+					$value = $value->format($filter->getPhpFormat());
+				}
 			}
 
 			try {
 				$control->setValue($value);
 
-			} catch (Nette\InvalidArgumentException $e) {
-				if ($this->strict_session_filter_values) {
+			} catch (InvalidArgumentException $e) {
+				if ($this->strictSessionFilterValues) {
 					throw $e;
 				}
 			}
@@ -1697,18 +1499,16 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Set $this->filter values after filter form submitted
-	 * @param  Form $form
-	 * @return void
 	 */
-	public function filterSucceeded(Form $form)
+	public function filterSucceeded(Form $form): void
 	{
-		if ($this->snippets_set) {
+		if ($this->snippetsSet) {
 			return;
 		}
 
-		$values = $form->getValues();
+		$values = (array) $form->getValues();
 
-		if ($this->getPresenter()->isAjax()) {
+		if ($this->getPresenterInstance()->isAjax()) {
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
 				return;
 			}
@@ -1717,35 +1517,50 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Per page
 		 */
-		$this->saveSessionData('_grid_per_page', $values->per_page);
-		$this->per_page = $values->per_page;
+		$this->saveSessionData('_grid_perPage', $values['perPage']);
+		$this->perPage = $values['perPage'];
 
 		/**
 		 * Inline edit
 		 */
-		if (isset($form['inline_edit']) && isset($form['inline_edit']['submit']) && isset($form['inline_edit']['cancel'])) {
+		if (
+			isset($form['inline_edit'])
+			&& isset($form['inline_edit']['submit'])
+			&& isset($form['inline_edit']['cancel'])
+			&& $this->inlineEdit !== null
+		) {
 			$edit = $form['inline_edit'];
+
+			if (
+				!$edit instanceof Container
+				|| !$edit['submit'] instanceof FormsSubmitButton
+				|| !$edit['cancel'] instanceof FormsSubmitButton
+			) {
+				throw new UnexpectedValueException;
+			}
 
 			if ($edit['submit']->isSubmittedBy() || $edit['cancel']->isSubmittedBy()) {
 				$id = $form->getHttpData(Form::DATA_LINE, 'inline_edit[_id]');
-				$primary_where_column = $form->getHttpData(
+				$primaryWhereColumn = $form->getHttpData(
 					Form::DATA_LINE,
 					'inline_edit[_primary_where_column]'
 				);
 
-				if ($edit['submit']->isSubmittedBy() && !$edit->getErrors()) {
-					$this->inlineEdit->onSubmit($id, $values->inline_edit);
-					$this->getPresenter()->payload->_datagrid_inline_edited = $id;
-					$this->getPresenter()->payload->_datagrid_name = $this->getName();
+				if ($edit['submit']->isSubmittedBy() && $edit->getErrors() === []) {
+					$this->inlineEdit->onSubmit($id, $values['inline_edit']);
+					$this->getPresenterInstance()->payload->_datagrid_inline_edited = $id;
+					$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
 				} else {
-					$this->getPresenter()->payload->_datagrid_inline_edit_cancel = $id;
-					$this->getPresenter()->payload->_datagrid_name = $this->getName();
+					$this->getPresenterInstance()->payload->_datagrid_inline_edit_cancel = $id;
+					$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
 				}
 
-				if ($edit['submit']->isSubmittedBy() && !empty($this->inlineEdit->onCustomRedraw)) {
-					$this->inlineEdit->onCustomRedraw();
+				if ($edit['submit']->isSubmittedBy() && $this->inlineEdit->onCustomRedraw !== []) {
+					$this->inlineEdit->onCustomRedraw('submit');
+				} elseif ($edit['cancel']->isSubmittedBy() && $this->inlineEdit->onCustomRedraw !== []) {
+					$this->inlineEdit->onCustomRedraw('cancel');
 				} else {
-					$this->redrawItem($id, $primary_where_column);
+					$this->redrawItem((int) $id, $primaryWhereColumn);
 					$this->redrawControl('summary');
 				}
 
@@ -1756,17 +1571,30 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * Inline add
 		 */
-		if (isset($form['inline_add']) && isset($form['inline_add']['submit']) && isset($form['inline_add']['cancel'])) {
+		if (
+			isset($form['inline_add'])
+			&& isset($form['inline_add']['submit'])
+			&& isset($form['inline_add']['cancel'])
+			&& $this->inlineAdd !== null
+		) {
 			$add = $form['inline_add'];
 
-			if ($add['submit']->isSubmittedBy() || $add['cancel']->isSubmittedBy()) {
-				if ($add['submit']->isSubmittedBy() && !$add->getErrors()) {
-					$this->inlineAdd->onSubmit($values->inline_add);
+			if (
+				!$add instanceof Container
+				|| !$add['submit'] instanceof FormsSubmitButton
+				|| !$add['cancel'] instanceof FormsSubmitButton
+			) {
+				throw new UnexpectedValueException;
+			}
 
-					if ($this->getPresenter()->isAjax()) {
-						$this->getPresenter()->payload->_datagrid_inline_added = true;
-					}
+			if ($add['submit']->isSubmittedBy() || $add['cancel']->isSubmittedBy()) {
+				if ($add['submit']->isSubmittedBy() && $add->getErrors() === []) {
+					$this->inlineAdd->onSubmit($values['inline_add']);
 				}
+
+				$this->redrawControl('tbody');
+
+				$this->onRedraw();
 
 				return;
 			}
@@ -1777,11 +1605,15 @@ class DataGrid extends Nette\Application\UI\Control
 		 */
 		$values = $values['filter'];
 
+		if (!$values instanceof ArrayHash) {
+			throw new UnexpectedValueException;
+		}
+
 		foreach ($values as $key => $value) {
 			/**
 			 * Session stuff
 			 */
-			if ($this->remember_state && $this->getSessionData($key) != $value) {
+			if ($this->rememberState && $this->getSessionData((string) $key) !== $value) {
 				/**
 				 * Has been filter changed?
 				 */
@@ -1789,7 +1621,7 @@ class DataGrid extends Nette\Application\UI\Control
 				$this->saveSessionData('_grid_page', 1);
 			}
 
-			$this->saveSessionData($key, $value);
+			$this->saveSessionData((string) $key, $value);
 
 			/**
 			 * Other stuff
@@ -1797,16 +1629,16 @@ class DataGrid extends Nette\Application\UI\Control
 			$this->filter[$key] = $value;
 		}
 
-		if (!empty($values)) {
+		if ($values->count() > 0) {
 			$this->saveSessionData('_grid_has_filtered', 1);
 		}
 
-		if ($this->getPresenter()->isAjax()) {
-			$this->getPresenter()->payload->_datagrid_sort = [];
+		if ($this->getPresenterInstance()->isAjax()) {
+			$this->getPresenterInstance()->payload->_datagrid_sort = [];
 
 			foreach ($this->columns as $key => $column) {
 				if ($column->isSortable()) {
-					$this->getPresenter()->payload->_datagrid_sort[$key] = $this->link('sort!', [
+					$this->getPresenterInstance()->payload->_datagrid_sort[$key] = $this->link('sort!', [
 						'sort' => $column->getSortNext(),
 					]);
 				}
@@ -1817,106 +1649,97 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Should be datagrid filters rendered separately?
-	 * @param bool $out
-	 * @return static
-	 */
-	public function setOuterFilterRendering($out = true)
+	public function setOuterFilterRendering(bool $outerFilterRendering = true): self
 	{
-		$this->outer_filter_rendering = (bool) $out;
+		$this->outerFilterRendering = $outerFilterRendering;
 
 		return $this;
 	}
 
 
-	/**
-	 * Are datagrid filters rendered separately?
-	 * @return bool
-	 */
-	public function hasOuterFilterRendering()
+	public function hasOuterFilterRendering(): bool
 	{
-		return $this->outer_filter_rendering;
+		return $this->outerFilterRendering;
 	}
 
 
 	/**
-	 * Set the number of columns in the outer filter
-	 * @param int $count
-	 * @return static
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
-	public function setOuterFilterColumnsCount($count)
+	public function setOuterFilterColumnsCount(int $count): self
 	{
-		if (!in_array($count, [1, 2, 3, 4, 6, 12], true)) {
-			throw new \InvalidArgumentException(
-				"Columns count must be one of following values: 1, 2, 3, 4, 6, 12. Value {$count} given."
-			);
+		$columnsCounts = [1, 2, 3, 4, 6, 12];
+
+		if (!in_array($count, $columnsCounts, true)) {
+			throw new InvalidArgumentException(sprintf(
+				'Columns count must be one of following values: %s. Value %s given.',
+				implode(', ', $columnsCounts),
+				$count
+			));
 		}
 
-		$this->outer_filter_columns_count = (int) $count;
+		$this->outerFilterColumnsCount = $count;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function getOuterFilterColumnsCount()
+	public function getOuterFilterColumnsCount(): int
 	{
-		return $this->outer_filter_columns_count;
+		return $this->outerFilterColumnsCount;
 	}
 
 
-	/**
-	 * @param bool $collapsible_outer_filters
-	 */
-	public function setCollapsibleOuterFilters($collapsible_outer_filters = true)
+	public function setCollapsibleOuterFilters(bool $collapsibleOuterFilters = true): self
 	{
-		$this->collapsible_outer_filters = (bool) $collapsible_outer_filters;
+		$this->collapsibleOuterFilters = $collapsibleOuterFilters;
+
+		return $this;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function hasCollapsibleOuterFilters()
+	public function hasCollapsibleOuterFilters(): bool
 	{
-		return $this->collapsible_outer_filters;
+		return $this->collapsibleOuterFilters;
 	}
 
 
 	/**
 	 * Try to restore session stuff
-	 * @return void
+	 *
 	 * @throws DataGridFilterNotFoundException
 	 */
-	public function findSessionValues()
+	public function findSessionValues(): void
 	{
-		if (!ArraysHelper::testEmpty($this->filter) || ($this->page != 1) || !empty($this->sort)) {
+		if (!ArraysHelper::testEmpty($this->filter) || ($this->page !== 1) || $this->sort !== []) {
 			return;
 		}
 
-		if (!$this->remember_state) {
+		if (!$this->rememberState) {
 			return;
 		}
 
-		if ($page = $this->getSessionData('_grid_page')) {
-			$this->page = $page;
+		$page = $this->getSessionData('_grid_page');
+
+		if ($page !== null) {
+			$this->page = (int) $page;
 		}
 
-		if ($per_page = $this->getSessionData('_grid_per_page')) {
-			$this->per_page = $per_page;
+		$perPage = $this->getSessionData('_grid_perPage');
+
+		if ($perPage !== null) {
+			$this->perPage = $perPage;
 		}
 
-		if ($sort = $this->getSessionData('_grid_sort')) {
+		$sort = $this->getSessionData('_grid_sort');
+
+		if (is_array($sort) && $sort !== []) {
 			$this->sort = $sort;
 		}
 
 		foreach ($this->getSessionData() as $key => $value) {
 			$other_session_keys = [
-				'_grid_per_page',
+				'_grid_perPage',
 				'_grid_sort',
 				'_grid_page',
 				'_grid_has_sorted',
@@ -1932,8 +1755,10 @@ class DataGrid extends Nette\Application\UI\Control
 					$this->filter[$key] = $value;
 
 				} catch (DataGridException $e) {
-					if ($this->strict_session_filter_values) {
-						throw new DataGridFilterNotFoundException("Session filter: Filter [$key] not found");
+					if ($this->strictSessionFilterValues) {
+						throw new DataGridFilterNotFoundException(
+							sprintf('Session filter: Filter [%s] not found', $key)
+						);
 					}
 				}
 			}
@@ -1942,10 +1767,10 @@ class DataGrid extends Nette\Application\UI\Control
 		/**
 		 * When column is sorted via custom callback, apply it
 		 */
-		if (empty($this->sort_callback) && !empty($this->sort)) {
-			foreach ($this->sort as $key => $order) {
+		if ($this->sortCallback === null && $this->sort !== []) {
+			foreach (array_keys($this->sort) as $key) {
 				try {
-					$column = $this->getColumn($key);
+					$column = $this->getColumn((string) $key);
 
 				} catch (DataGridColumnNotFoundException $e) {
 					$this->deleteSessionData('_grid_sort');
@@ -1954,8 +1779,8 @@ class DataGrid extends Nette\Application\UI\Control
 					return;
 				}
 
-				if ($column && $column->isSortable() && is_callable($column->getSortableCallback())) {
-					$this->sort_callback = $column->getSortableCallback();
+				if ($column->isSortable() && is_callable($column->getSortableCallback())) {
+					$this->sortCallback = $column->getSortableCallback();
 				}
 			}
 		}
@@ -1965,103 +1790,82 @@ class DataGrid extends Nette\Application\UI\Control
 	/********************************************************************************
 	 *                                    EXPORTS                                   *
 	 ********************************************************************************/
-
-
-	/**
-	 * Add export of type callback
-	 * @param string $text
-	 * @param callable $callback
-	 * @param bool $filtered
-	 * @return Export\Export
-	 */
-	public function addExportCallback($text, $callback, $filtered = false)
+	public function addExportCallback(
+		string $text,
+		callable $callback,
+		bool $filtered = false
+	): Export
 	{
-		if (!is_callable($callback)) {
-			throw new DataGridException('Second parameter of ExportCallback must be callable.');
+		return $this->addToExports(new Export($this, $text, $callback, $filtered));
+	}
+
+
+	public function addExportCsvFiltered(
+		string $text,
+		string $csvFileName,
+		string $outputEncoding = 'utf-8',
+		string $delimiter = ';',
+		bool $includeBom = false
+	): ExportCsv
+	{
+		return $this->addExportCsv(
+			$text,
+			$csvFileName,
+			$outputEncoding,
+			$delimiter,
+			$includeBom,
+			true
+		);
+	}
+
+
+	public function addExportCsv(
+		string $text,
+		string $csvFileName,
+		string $outputEncoding = 'utf-8',
+		string $delimiter = ';',
+		bool $includeBom = false,
+		bool $filtered = false
+	): ExportCsv
+	{
+		$exportCsv = new ExportCsv(
+			$this,
+			$text,
+			$csvFileName,
+			$filtered,
+			$outputEncoding,
+			$delimiter,
+			$includeBom
+		);
+
+		$this->addToExports($exportCsv);
+
+		return $exportCsv;
+	}
+
+
+	protected function addToExports(Export $export): Export
+	{
+		if (sizeof($this->exports) > 0) {
+			$id = sizeof($this->exports) + 1;
+		} else {
+			$id = 1;
 		}
 
-		return $this->addToExports(new Export\Export($this, $text, $callback, $filtered));
-	}
+		$link = new Link($this, 'export!', ['id' => $id]);
 
-
-	/**
-	 * Add already implemented csv export
-	 * @param string $text
-	 * @param string $csv_file_name
-	 * @param string|null $output_encoding
-	 * @param string|null $delimiter
-	 * @param bool $include_bom
-	 * @return Export\Export
-	 */
-	public function addExportCsv(
-		$text,
-		$csv_file_name,
-		$output_encoding = null,
-		$delimiter = null,
-		$include_bom = false
-	) {
-		return $this->addToExports(new Export\ExportCsv(
-			$this,
-			$text,
-			$csv_file_name,
-			false,
-			$output_encoding,
-			$delimiter,
-			$include_bom
-		));
-	}
-
-
-	/**
-	 * Add already implemented csv export, but for filtered data
-	 * @param string $text
-	 * @param string $csv_file_name
-	 * @param string|null $output_encoding
-	 * @param string|null $delimiter
-	 * @param bool $include_bom
-	 * @return Export\Export
-	 */
-	public function addExportCsvFiltered(
-		$text,
-		$csv_file_name,
-		$output_encoding = null,
-		$delimiter = null,
-		$include_bom = false
-	) {
-		return $this->addToExports(new Export\ExportCsv(
-			$this,
-			$text,
-			$csv_file_name,
-			true,
-			$output_encoding,
-			$delimiter,
-			$include_bom
-		));
-	}
-
-
-	/**
-	 * Add export to array
-	 * @param Export\Export $export
-	 * @return Export\Export
-	 */
-	protected function addToExports(Export\Export $export)
-	{
-		$id = ($s = sizeof($this->exports)) ? ($s + 1) : 1;
-
-		$export->setLink(new Link($this, 'export!', ['id' => $id]));
+		$export->setLink($link);
 
 		return $this->exports[$id] = $export;
 	}
 
 
-	/**
-	 * @return void
-	 */
-	public function resetExportsLinks()
+	public function resetExportsLinks(): void
 	{
 		foreach ($this->exports as $id => $export) {
-			$export->setLink(new Link($this, 'export!', ['id' => $id]));
+			$link = new Link($this, 'export!', ['id' => $id]);
+
+			$export->setLink($link);
 		}
 	}
 
@@ -2070,49 +1874,43 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                TOOLBAR BUTTONS                               *
 	 ********************************************************************************/
 
-
 	/**
-	 * Add toolbar button
-	 * @param  string  $href
-	 * @param  string  $text
-	 * @param  array   $params
-	 * @return ToolbarButton
 	 * @throws DataGridException
 	 */
-	public function addToolbarButton($href, $text = '', $params = [])
+	public function addToolbarButton(
+		string $href,
+		string $text = '',
+		array $params = []
+	): ToolbarButton
 	{
-		if (isset($this->toolbar_buttons[$href])) {
-			throw new DataGridException("There is already toolbar button at key [$href] defined.");
+		if (isset($this->toolbarButtons[$href])) {
+			throw new DataGridException(
+				sprintf('There is already toolbar button at key [%s] defined.', $href)
+			);
 		}
 
-		return $this->toolbar_buttons[$href] = new ToolbarButton($this, $href, $text, $params);
+		return $this->toolbarButtons[$href] = new ToolbarButton($this, $href, $text, $params);
 	}
 
 
 	/**
-	 * Get existing toolbar button
-	 * @param  string  $key
-	 * @return ToolbarButton
 	 * @throws DataGridException
 	 */
-	public function getToolbarButton($key)
+	public function getToolbarButton(string $key): ToolbarButton
 	{
-		if (!isset($this->toolbar_buttons[$key])) {
-			throw new DataGridException("There is no toolbar button at key [$key] defined.");
+		if (!isset($this->toolbarButtons[$key])) {
+			throw new DataGridException(
+				sprintf('There is no toolbar button at key [%s] defined.', $key)
+			);
 		}
 
-		return $this->toolbar_buttons[$key];
+		return $this->toolbarButtons[$key];
 	}
 
 
-	/**
-	 * Remove toolbar button.
-	 * @param  string $key
-	 * @return static
-	 */
-	public function removeToolbarButton($key)
+	public function removeToolbarButton(string $key): self
 	{
-		unset($this->toolbar_buttons[$key]);
+		unset($this->toolbarButtons[$key]);
 
 		return $this;
 	}
@@ -2121,105 +1919,61 @@ class DataGrid extends Nette\Application\UI\Control
 	/********************************************************************************
 	 *                                 GROUP ACTIONS                                *
 	 ********************************************************************************/
-
-
-	/**
-	 * Alias for add group select action
-	 * @param string $title
-	 * @param array  $options
-	 * @return GroupAction\GroupAction
-	 */
-	public function addGroupAction($title, $options = [])
+	public function addGroupAction(string $title, array $options = []): GroupAction
 	{
 		return $this->getGroupActionCollection()->addGroupSelectAction($title, $options);
 	}
 
 
-	/**
-	 * Add group action (select box)
-	 * @param string $title
-	 * @param array  $options
-	 * @return GroupAction\GroupAction
-	 */
-	public function addGroupSelectAction($title, $options = [])
+	public function addGroupSelectAction(string $title, array $options = []): GroupAction
 	{
 		return $this->getGroupActionCollection()->addGroupSelectAction($title, $options);
 	}
 
 
-	/**
-	 * Add group action (multiselect box)
-	 * @param string $title
-	 * @param array  $options
-	 * @return GroupAction\GroupAction
-	 */
-	public function addGroupMultiSelectAction($title, $options = [])
+	public function addGroupMultiSelectAction(string $title, array $options = []): GroupAction
 	{
 		return $this->getGroupActionCollection()->addGroupMultiSelectAction($title, $options);
 	}
 
 
-	/**
-	 * Add group action (text input)
-	 * @param string $title
-	 * @return GroupAction\GroupAction
-	 */
-	public function addGroupTextAction($title)
+	public function addGroupTextAction(string $title): GroupAction
 	{
 		return $this->getGroupActionCollection()->addGroupTextAction($title);
 	}
 
 
-	/**
-	 * Add group action (textarea)
-	 * @param string $title
-	 * @return GroupAction\GroupAction
-	 */
-	public function addGroupTextareaAction($title)
+	public function addGroupTextareaAction(string $title): GroupAction
 	{
 		return $this->getGroupActionCollection()->addGroupTextareaAction($title);
 	}
 
 
-	/**
-	 * Get collection of all group actions
-	 * @return GroupAction\GroupActionCollection
-	 */
-	public function getGroupActionCollection()
+	public function getGroupActionCollection(): GroupActionCollection
 	{
-		if (!$this->group_action_collection) {
-			$this->group_action_collection = new GroupAction\GroupActionCollection($this);
+		if ($this->groupActionCollection === null) {
+			$this->groupActionCollection = new GroupActionCollection($this);
 		}
 
-		return $this->group_action_collection;
+		return $this->groupActionCollection;
 	}
 
 
-	/**
-	 * Has datagrid some group actions?
-	 * @return bool
-	 */
-	public function hasGroupActions()
+	public function hasGroupActions(): bool
 	{
-		return (bool) $this->group_action_collection;
+		return $this->groupActionCollection instanceof GroupActionCollection;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function shouldShowSelectedRowsCount()
+	public function shouldShowSelectedRowsCount(): bool
 	{
-		return $this->show_selected_rows_count;
+		return $this->showSelectedRowsCount;
 	}
 
 
-	/**
-	 * @return static
-	 */
-	public function setShowSelectedRowsCount($show = true)
+	public function setShowSelectedRowsCount(bool $show = true): self
 	{
-		$this->show_selected_rows_count = (bool) $show;
+		$this->showSelectedRowsCount = $show;
 
 		return $this;
 	}
@@ -2228,18 +1982,8 @@ class DataGrid extends Nette\Application\UI\Control
 	/********************************************************************************
 	 *                                   HANDLERS                                   *
 	 ********************************************************************************/
-
-
-	/**
-	 * Handler for changind page (just refresh site with page as persistent paramter set)
-	 * @param  int  $page
-	 * @return void
-	 */
-	public function handlePage($page)
+	public function handlePage(int $page): void
 	{
-		/**
-		 * Session stuff
-		 */
 		$this->page = $page;
 		$this->saveSessionData('_grid_page', $page);
 
@@ -2248,23 +1992,21 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * Handler for sorting
-	 * @param array $sort
-	 * @return void
 	 * @throws DataGridColumnNotFoundException
 	 */
-	public function handleSort(array $sort)
+	public function handleSort(array $sort): void
 	{
 		if (count($sort) === 0) {
-			$sort = $this->default_sort;
+			$sort = $this->defaultSort;
 		}
 
-		foreach ($sort as $key => $value) {
+		foreach (array_keys($sort) as $key) {
 			try {
 				$column = $this->getColumn($key);
 
 			} catch (DataGridColumnNotFoundException $e) {
 				unset($sort[$key]);
+
 				continue;
 			}
 
@@ -2272,8 +2014,8 @@ class DataGrid extends Nette\Application\UI\Control
 				$this->saveSessionData('_grid_page', $this->page = 1);
 			}
 
-			if ($column->getSortableCallback()) {
-				$this->sort_callback = $column->getSortableCallback();
+			if ($column->getSortableCallback() !== null) {
+				$this->sortCallback = $column->getSortableCallback();
 			}
 		}
 
@@ -2284,28 +2026,24 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Handler for reseting the filter
-	 * @return void
-	 */
-	public function handleResetFilter()
+	public function handleResetFilter(): void
 	{
 		/**
 		 * Session stuff
 		 */
 		$this->deleteSessionData('_grid_page');
 
-		if ($this->default_filter_use_on_reset) {
+		if ($this->defaultFilterUseOnReset) {
 			$this->deleteSessionData('_grid_has_filtered');
 		}
 
-		if ($this->default_sort_use_on_reset) {
+		if ($this->defaultSortUseOnReset) {
 			$this->deleteSessionData('_grid_has_sorted');
 		}
 
-		foreach ($this->getSessionData() as $key => $value) {
+		foreach ($this->getSessionData() as $key => $val) {
 			if (!in_array($key, [
-				'_grid_per_page',
+				'_grid_perPage',
 				'_grid_sort',
 				'_grid_page',
 				'_grid_has_filtered',
@@ -2313,7 +2051,7 @@ class DataGrid extends Nette\Application\UI\Control
 				'_grid_hidden_columns',
 				'_grid_hidden_columns_manipulated',
 			], true)) {
-				$this->deleteSessionData($key);
+				$this->deleteSessionData((string) $key);
 			}
 		}
 
@@ -2323,11 +2061,7 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @param  string $key
-	 * @return void
-	 */
-	public function handleResetColumnFilter($key)
+	public function handleResetColumnFilter(string $key): void
 	{
 		$this->deleteSessionData($key);
 		unset($this->filter[$key]);
@@ -2336,32 +2070,24 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @param bool $reset
-	 * @return static
-	 */
-	public function setColumnReset($reset = true)
+	public function setColumnReset(bool $reset = true): self
 	{
-		$this->has_column_reset = (bool) $reset;
+		$this->hasColumnReset = $reset;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function hasColumnReset()
+	public function hasColumnReset(): bool
 	{
-		return $this->has_column_reset;
+		return $this->hasColumnReset;
 	}
 
 
 	/**
-	 * @param  Filter\Filter[] $filters
-	 * @return void
+	 * @param array<Filter> $filters
 	 */
-	public function sendNonEmptyFiltersInPayload($filters)
+	public function sendNonEmptyFiltersInPayload(array $filters): void
 	{
 		if (!$this->hasColumnReset()) {
 			return;
@@ -2375,23 +2101,21 @@ class DataGrid extends Nette\Application\UI\Control
 			}
 		}
 
-		$this->getPresenter()->payload->non_empty_filters = $non_empty_filters;
+		$this->getPresenterInstance()->payload->non_empty_filters = $non_empty_filters;
 	}
 
 
 	/**
-	 * Handler for export
-	 * @param  int $id Key for particular export class in array $this->exports
-	 * @return void
+	 * @param mixed $id
 	 */
-	public function handleExport($id)
+	public function handleExport($id): void
 	{
 		if (!isset($this->exports[$id])) {
 			throw new Nette\Application\ForbiddenRequestException;
 		}
 
-		if (!empty($this->columns_export_order)) {
-			$this->setColumnsOrder($this->columns_export_order);
+		if ($this->columnsExportOrder !== []) {
+			$this->setColumnsOrder($this->columnsExportOrder);
 		}
 
 		$export = $this->exports[$id];
@@ -2405,7 +2129,7 @@ class DataGrid extends Nette\Application\UI\Control
 			$sort = $this->sort;
 			$filter = $this->assembleFilters();
 		} else {
-			$sort = [$this->primary_key => 'ASC'];
+			$sort = [$this->primaryKey => 'ASC'];
 			$filter = [];
 		}
 
@@ -2415,19 +2139,17 @@ class DataGrid extends Nette\Application\UI\Control
 
 		$rows = [];
 
-		$items = Nette\Utils\Callback::invokeArgs(
-			[$this->dataModel, 'filterData'], [
-				null,
-				$this->createSorting($this->sort, $this->sort_callback),
-				$filter,
-			]
+		$items = $this->dataModel->filterData(
+			null,
+			$this->createSorting($sort, $this->sortCallback),
+			$filter
 		);
 
 		foreach ($items as $item) {
 			$rows[] = new Row($this, $item, $this->getPrimaryKey());
 		}
 
-		if ($export instanceof Export\ExportCsv) {
+		if ($export instanceof ExportCsv) {
 			$export->invoke($rows);
 		} else {
 			$export->invoke($items);
@@ -2440,85 +2162,101 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * Handler for getting children of parent item (e.g. category)
-	 * @param  int $parent
-	 * @return void
+	 * @param mixed $parent
 	 */
-	public function handleGetChildren($parent)
+	public function handleGetChildren($parent): void
 	{
-		$this->setDataSource(
-			call_user_func($this->tree_view_children_callback, $parent)
-		);
+		if (!is_callable($this->treeViewChildrenCallback)) {
+			throw new UnexpectedValueException;
+		}
 
-		if ($this->getPresenter()->isAjax()) {
-			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
-			$this->getPresenter()->payload->_datagrid_tree = $parent;
+		$this->setDataSource(call_user_func($this->treeViewChildrenCallback, $parent));
+
+		if ($this->getPresenterInstance()->isAjax()) {
+			$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
+			$this->getPresenterInstance()->payload->_datagrid_tree = $parent;
 
 			$this->redrawControl('items');
 
 			$this->onRedraw();
 		} else {
-			$this->getPresenter()->redirect('this');
+			$this->getPresenterInstance()->redirect('this');
 		}
 	}
 
 
 	/**
-	 * Handler for getting item detail
-	 * @param  mixed $id
-	 * @return void
+	 * @param mixed $id
 	 */
-	public function handleGetItemDetail($id)
+	public function handleGetItemDetail($id): void
 	{
-		$this->getTemplate()->add('toggle_detail', $id);
-		$this->redraw_item = [$this->items_detail->getPrimaryWhereColumn() => $id];
+		$template = $this->getTemplate();
 
-		if ($this->getPresenter()->isAjax()) {
-			$this->getPresenter()->payload->_datagrid_toggle_detail = $id;
-			$this->getPresenter()->payload->_datagrid_name = $this->getName();
+		if (!$template instanceof Template) {
+			throw new UnexpectedValueException;
+		}
+
+		$template->add('toggle_detail', $id);
+
+		if ($this->itemsDetail === null) {
+			throw new \UnexpectedValueException;
+		}
+
+		$this->redrawItem = [$this->itemsDetail->getPrimaryWhereColumn() => $id];
+
+		if ($this->getPresenterInstance()->isAjax()) {
+			$this->getPresenterInstance()->payload->_datagrid_toggle_detail = $id;
+			$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
 			$this->redrawControl('items');
 
 			/**
 			 * Only for nette 2.4
 			 */
-			if (method_exists($this->getTemplate()->getLatte(), 'addProvider')) {
+			if (method_exists($template->getLatte(), 'addProvider')) {
 				$this->redrawControl('gridSnippets');
 			}
 
 			$this->onRedraw();
 		} else {
-			$this->getPresenter()->redirect('this');
+			$this->getPresenterInstance()->redirect('this');
 		}
 	}
 
 
 	/**
-	 * Handler for inline editing
 	 * @param  mixed $id
 	 * @param  mixed $key
-	 * @return void
 	 */
-	public function handleEdit($id, $key)
+	public function handleEdit($id, $key): void
 	{
 		$column = $this->getColumn($key);
-		$value = $this->getPresenter()->getRequest()->getPost('value');
+		$request = $this->getPresenterInstance()->getRequest();
+
+		if (!$request instanceof Request) {
+			throw new UnexpectedValueException;
+		}
+
+		$value = $request->getPost('value');
 
 		/**
-		 * @var mixed Could be NULL of course
+		 * @var mixed Could be null of course
 		 */
-		$new_value = call_user_func_array($column->getEditableCallback(), [$id, $value]);
+		if ($column->getEditableCallback() === null) {
+			throw new UnexpectedValueException;
+		}
 
-		$this->getPresenter()->payload->_datagrid_editable_new_value = $new_value;
+		$newValue = $column->getEditableCallback()($id, $value);
+
+		$this->getPresenterInstance()->payload->_datagrid_editable_new_value = $newValue;
 	}
 
 
 	/**
-	 * Redraw $this
-	 * @return void
+	 * @param array|string[] $snippets
 	 */
-	public function reload($snippets = [])
+	public function reload(array $snippets = []): void
 	{
-		if ($this->getPresenter()->isAjax()) {
+		if ($this->getPresenterInstance()->isAjax()) {
 			$this->redrawControl('tbody');
 			$this->redrawControl('pagination');
 			$this->redrawControl('summary');
@@ -2534,45 +2272,39 @@ class DataGrid extends Nette\Application\UI\Control
 				$this->redrawControl($snippet);
 			}
 
-			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
-			$this->getPresenter()->payload->_datagrid_name = $this->getName();
+			$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
+			$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
 
 			$this->onRedraw();
 		} else {
-			$this->getPresenter()->redirect('this');
+			$this->getPresenterInstance()->redirect('this');
 		}
 	}
 
 
-	/**
-	 * @return void
-	 */
-	public function reloadTheWholeGrid()
+	public function reloadTheWholeGrid(): void
 	{
-		if ($this->getPresenter()->isAjax()) {
+		if ($this->getPresenterInstance()->isAjax()) {
 			$this->redrawControl('grid');
 
-			$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
-			$this->getPresenter()->payload->_datagrid_name = $this->getName();
+			$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
+			$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
 
 			$this->onRedraw();
 		} else {
-			$this->getPresenter()->redirect('this');
+			$this->getPresenterInstance()->redirect('this');
 		}
 	}
 
 
-	/**
-	 * Handler for column status
-	 * @param  string $id
-	 * @param  string $key
-	 * @param  string $value
-	 * @return void
-	 */
-	public function handleChangeStatus($id, $key, $value)
+	public function handleChangeStatus(string $id, string $key, string $value): void
 	{
-		if (empty($this->columns[$key])) {
-			throw new DataGridException("ColumnStatus[$key] does not exist");
+		if (!isset($this->columns[$key])) {
+			throw new DataGridException(sprintf('ColumnStatus[%s] does not exist', $key));
+		}
+
+		if (!$this->columns[$key] instanceof ColumnStatus) {
+			throw new UnexpectedValueException;
 		}
 
 		$this->columns[$key]->onChange($id, $value);
@@ -2580,30 +2312,23 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * Redraw just one row via ajax
-	 * @param  int   $id
-	 * @param  mixed $primary_where_column
-	 * @return void
+	 * @param mixed $primaryWhereColumn
 	 */
-	public function redrawItem($id, $primary_where_column = null)
+	public function redrawItem(int $id, $primaryWhereColumn = null): void
 	{
-		$this->snippets_set = true;
+		$this->snippetsSet = true;
 
-		$this->redraw_item = [($primary_where_column ?: $this->primary_key) => $id];
+		$this->redrawItem = [($primaryWhereColumn ?: $this->primaryKey) => $id];
 
 		$this->redrawControl('items');
 
-		$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
+		$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
 
 		$this->onRedraw();
 	}
 
 
-	/**
-	 * Tell datagrid to display all columns
-	 * @return void
-	 */
-	public function handleShowAllColumns()
+	public function handleShowAllColumns(): void
 	{
 		$this->deleteSessionData('_grid_hidden_columns');
 		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
@@ -2614,11 +2339,7 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Tell datagrid to display default columns
-	 * @return void
-	 */
-	public function handleShowDefaultColumns()
+	public function handleShowDefaultColumns(): void
 	{
 		$this->deleteSessionData('_grid_hidden_columns');
 		$this->saveSessionData('_grid_hidden_columns_manipulated', false);
@@ -2629,16 +2350,11 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Reveal particular column
-	 * @param  string $column
-	 * @return void
-	 */
-	public function handleShowColumn($column)
+	public function handleShowColumn(string $column): void
 	{
 		$columns = $this->getSessionData('_grid_hidden_columns');
 
-		if (!empty($columns)) {
+		if ($columns !== []) {
 			$pos = array_search($column, $columns, true);
 
 			if ($pos !== false) {
@@ -2655,19 +2371,14 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Notice datagrid to not display particular columns
-	 * @param  string $column
-	 * @return void
-	 */
-	public function handleHideColumn($column)
+	public function handleHideColumn(string $column): void
 	{
 		/**
 		 * Store info about hiding a column to session
 		 */
 		$columns = $this->getSessionData('_grid_hidden_columns');
 
-		if (empty($columns)) {
+		if ($columns === [] || $columns === null) {
 			$columns = [$column];
 		} elseif (!in_array($column, $columns, true)) {
 			array_push($columns, $column);
@@ -2682,12 +2393,18 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	public function handleActionCallback($__key, $__id)
+	/**
+	 * @param mixed $__key
+	 * @param mixed $__id
+	 */
+	public function handleActionCallback($__key, $__id): void
 	{
 		$action = $this->getAction($__key);
 
-		if (!($action instanceof Column\ActionCallback)) {
-			throw new DataGridException("Action [$__key] does not exist or is not an callback aciton.");
+		if (!($action instanceof ActionCallback)) {
+			throw new DataGridException(
+				sprintf('Action [%s] does not exist or is not an callback aciton.', $__key)
+			);
 		}
 
 		$action->onClick($__id);
@@ -2698,32 +2415,28 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                  PAGINATION                                  *
 	 ********************************************************************************/
 
-
 	/**
-	 * Set options of select "items_per_page"
-	 * @param array $items_per_page_list
-	 * @return static
+	 * @param array|array|int[]|array|string[] $itemsPerPageList
 	 */
-	public function setItemsPerPageList(array $items_per_page_list, $include_all = true)
+	public function setItemsPerPageList(array $itemsPerPageList, bool $includeAll = true): self
 	{
-		$this->items_per_page_list = $items_per_page_list;
+		if ($itemsPerPageList === []) {
+			throw new \InvalidArgumentException('$itemsPerPageList can not be an empty array');
+		}
 
-		if ($include_all) {
-			$this->items_per_page_list[] = 'all';
+		$this->itemsPerPageList = $itemsPerPageList;
+
+		if ($includeAll) {
+			$this->itemsPerPageList[] = 'all';
 		}
 
 		return $this;
 	}
 
 
-	/**
-	 * Set default "items per page" value in pagination select
-	 * @param $count
-	 * @return static
-	 */
-	public function setDefaultPerPage($count)
+	public function setDefaultPerPage(int $count): self
 	{
-		$this->default_per_page = $count;
+		$this->defaultPerPage = $count;
 
 		return $this;
 	}
@@ -2731,42 +2444,37 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * User may set default "items per page" value, apply it
-	 * @return void
 	 */
-	public function findDefaultPerPage()
+	public function findDefaultPerPage(): void
 	{
-		if (!empty($this->per_page)) {
+		if ($this->perPage !== null) {
 			return;
 		}
 
-		if (!empty($this->default_per_page)) {
-			$this->per_page = $this->default_per_page;
+		if ($this->defaultPerPage !== null) {
+			$this->perPage = $this->defaultPerPage;
 		}
 
-		$this->saveSessionData('_grid_per_page', $this->per_page);
+		$this->saveSessionData('_grid_perPage', $this->perPage);
 	}
 
 
-	/**
-	 * Paginator factory
-	 * @return Components\DataGridPaginator\DataGridPaginator
-	 */
-	public function createComponentPaginator()
+	public function createComponentPaginator(): DataGridPaginator
 	{
-		/**
-		 * Init paginator
-		 */
-		$component = new Components\DataGridPaginator\DataGridPaginator(
+		$component = new DataGridPaginator(
 			$this->getTranslator(),
-			static::$icon_prefix
+			static::$iconPrefix
 		);
 		$paginator = $component->getPaginator();
 
 		$paginator->setPage($this->page);
-		$paginator->setItemsPerPage($this->getPerPage());
 
-		if ($this->custom_paginator_template) {
-			$component->setTemplateFile($this->custom_paginator_template);
+		if (is_int($this->getPerPage())) {
+			$paginator->setItemsPerPage($this->getPerPage());
+		}
+
+		if ($this->customPaginatorTemplate !== null) {
+			$component->setTemplateFile($this->customPaginatorTemplate);
 		}
 
 		return $component;
@@ -2774,37 +2482,31 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * Get parameter per_page
-	 * @return int
+	 * @return int|string
 	 */
 	public function getPerPage()
 	{
-		$items_per_page_list = $this->getItemsPerPageList();
+		$itemsPerPageList = array_keys($this->getItemsPerPageList());
 
-		$per_page = $this->per_page ?: reset($items_per_page_list);
+		$perPage = $this->perPage ?: reset($itemsPerPageList);
 
-		if (($per_page !== 'all' && !in_array((int) $this->per_page, $items_per_page_list, true))
-			|| ($per_page === 'all' && !in_array($this->per_page, $items_per_page_list, true))) {
-			$per_page = reset($items_per_page_list);
+		if (($perPage !== 'all' && !in_array((int) $this->perPage, $itemsPerPageList, true))
+			|| ($perPage === 'all' && !in_array($this->perPage, $itemsPerPageList, true))) {
+			$perPage = reset($itemsPerPageList);
 		}
 
-		return $per_page;
+		return $perPage === 'all' ? 'all' : (int) $perPage;
 	}
 
 
 	/**
-	 * Get associative array of items_per_page_list
-	 * @return array
+	 * @return array|array|int[]|array|string[]
 	 */
-	public function getItemsPerPageList()
+	public function getItemsPerPageList(): array
 	{
-		if (empty($this->items_per_page_list)) {
-			$this->setItemsPerPageList([10, 20, 50], true);
-		}
+		$list = array_flip($this->itemsPerPageList);
 
-		$list = array_flip($this->items_per_page_list);
-
-		foreach ($list as $key => $value) {
+		foreach (array_keys($list) as $key) {
 			$list[$key] = $key;
 		}
 
@@ -2816,37 +2518,30 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Order Grid to "be paginated"
-	 * @param bool $do
-	 * @return static
-	 */
-	public function setPagination($do)
+	public function setPagination(bool $doPaginate): self
 	{
-		$this->do_paginate = (bool) $do;
+		$this->doPaginate = $doPaginate;
 
 		return $this;
 	}
 
 
-	/**
-	 * Tell whether Grid is paginated
-	 * @return bool
-	 */
-	public function isPaginated()
+	public function isPaginated(): bool
 	{
-		return $this->do_paginate;
+		return $this->doPaginate;
 	}
 
 
-	/**
-	 * Return current paginator class
-	 * @return NULL|Components\DataGridPaginator\DataGridPaginator
-	 */
-	public function getPaginator()
+	public function getPaginator(): ?DataGridPaginator
 	{
-		if ($this->isPaginated() && $this->getPerPage() !== 'all') {
-			return $this['paginator'];
+		if ($this->isPaginated() && $this->perPage !== 'all') {
+			$paginator = $this['paginator'];
+
+			if (!$paginator instanceof DataGridPaginator) {
+				throw new UnexpectedValueException;
+			}
+
+			return $paginator;
 		}
 
 		return null;
@@ -2856,14 +2551,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/********************************************************************************
 	 *                                     I18N                                     *
 	 ********************************************************************************/
-
-
-	/**
-	 * Set datagrid translator
-	 * @param Nette\Localization\ITranslator $translator
-	 * @return static
-	 */
-	public function setTranslator(Nette\Localization\ITranslator $translator)
+	public function setTranslator(ITranslator $translator): self
 	{
 		$this->translator = $translator;
 
@@ -2871,14 +2559,10 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * Get translator for datagrid
-	 * @return Nette\Localization\ITranslator
-	 */
-	public function getTranslator()
+	public function getTranslator(): ITranslator
 	{
-		if (!$this->translator) {
-			$this->translator = new Localization\SimpleTranslator;
+		if ($this->translator === null) {
+			$this->translator = new SimpleTranslator;
 		}
 
 		return $this->translator;
@@ -2889,13 +2573,12 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                 COLUMNS ORDER                                *
 	 ********************************************************************************/
 
-
 	/**
 	 * Set order of datagrid columns
-	 * @param array $order
-	 * @return static
+	 *
+	 * @param array|string[] $order
 	 */
-	public function setColumnsOrder($order)
+	public function setColumnsOrder(array $order): self
 	{
 		$new_order = [];
 
@@ -2917,104 +2600,74 @@ class DataGrid extends Nette\Application\UI\Control
 
 	/**
 	 * Columns order may be different for export and normal grid
-	 * @param array $order
+	 *
+	 * @param array|string[] $order
 	 */
-	public function setColumnsExportOrder($order)
+	public function setColumnsExportOrder(array $order): self
 	{
-		$this->columns_export_order = (array) $order;
+		$this->columnsExportOrder = $order;
+
+		return $this;
 	}
 
 
 	/********************************************************************************
 	 *                                SESSION & URL                                 *
 	 ********************************************************************************/
-
-
-	/**
-	 * Find some unique session key name
-	 * @return string
-	 */
-	public function getSessionSectionName()
+	public function getSessionSectionName(): string
 	{
-		return $this->getPresenter()->getName() . ':' . $this->getUniqueId();
+		$presenter = $this->getPresenterInstance();
+
+		return $presenter->getName() . ':' . $this->getUniqueId();
 	}
 
 
-	/**
-	 * Should datagrid remember its filters/pagination/etc using session?
-	 * @param bool $remember
-	 * @return static
-	 */
-	public function setRememberState($remember = true)
+	public function setRememberState(bool $remember = true): self
 	{
-		$this->remember_state = (bool) $remember;
+		$this->rememberState = $remember;
+
+		return $this;
+	}
+
+
+	public function setRefreshUrl(bool $refresh = true): self
+	{
+		$this->refreshURL = $refresh;
 
 		return $this;
 	}
 
 
 	/**
-	 * Should datagrid refresh url using history API?
-	 * @param bool $refresh
-	 * @return static
-	 */
-	public function setRefreshUrl($refresh = true)
-	{
-		$this->refresh_url = (bool) $refresh;
-
-
-		return $this;
-	}
-
-
-	/**
-	 * Get session data if functionality is enabled
-	 * @param  string $key
+	 * @param mixed $defaultValue
 	 * @return mixed
 	 */
-	public function getSessionData($key = null, $default_value = null)
+	public function getSessionData(?string $key = null, $defaultValue = null)
 	{
-		if (!$this->remember_state) {
-			return $key ? $default_value : [];
+		if (!$this->rememberState) {
+			return $key === null
+				? []
+				: $defaultValue;
 		}
 
-		return ($key ? $this->grid_session->{$key} : $this->grid_session) ?: $default_value;
+		return ($key !== null ? $this->gridSession[$key] : $this->gridSession) ?: $defaultValue;
 	}
 
 
 	/**
-	 * Save session data - just if it is enabled
-	 * @param  string $key
-	 * @param  mixed  $value
-	 * @return void
+	 * @param mixed $value
 	 */
-	public function saveSessionData($key, $value)
+	public function saveSessionData(string $key, $value): void
 	{
-		if ($this->remember_state) {
-			$this->grid_session->{$key} = $value;
+		if ($this->rememberState) {
+			$this->gridSession[$key] = $value;
 		}
 	}
 
 
-	/**
-	 * Delete session data
-	 * @return void
-	 */
-	public function deleteSessionData($key)
+	public function deleteSessionData(string $key): void
 	{
-		unset($this->grid_session->{$key});
-	}
-
-
-	/**
-	 * Delete session data
-	 * @return void
-	 * @deprecated
-	 */
-	public function deleteSesssionData($key)
-	{
-		@trigger_error('deleteSesssionData is deprecated, use deleteSessionData instead', E_USER_DEPRECATED);
-		return $this->deleteSessionData($key);
+		unset($this->gridSession[$key]);
 	}
 
 
@@ -3022,53 +2675,48 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                  ITEM DETAIL                                 *
 	 ********************************************************************************/
 
-
 	/**
 	 * Get items detail parameters
-	 * @return array
 	 */
-	public function getItemsDetail()
+	public function getItemsDetail(): ?ItemDetail
 	{
-		return $this->items_detail;
+		return $this->itemsDetail;
 	}
 
 
 	/**
-	 * Items can have thair detail - toggled
 	 * @param mixed $detail callable|string|bool
-	 * @param string|null $primary_where_column
-	 * @return Column\ItemDetail
 	 */
-	public function setItemsDetail($detail = true, $primary_where_column = null)
+	public function setItemsDetail($detail = true, ?string $primaryWhereColumn = null): ItemDetail
 	{
 		if ($this->isSortable()) {
 			throw new DataGridException('You can not use both sortable datagrid and items detail.');
 		}
 
-		$this->items_detail = new Column\ItemDetail(
+		$this->itemsDetail = new ItemDetail(
 			$this,
-			$primary_where_column ?: $this->primary_key
+			$primaryWhereColumn ?: $this->primaryKey
 		);
 
 		if (is_string($detail)) {
 			/**
 			 * Item detail will be in separate template
 			 */
-			$this->items_detail->setType('template');
-			$this->items_detail->setTemplate($detail);
+			$this->itemsDetail->setType('template');
+			$this->itemsDetail->setTemplate($detail);
 
 		} elseif (is_callable($detail)) {
 			/**
 			 * Item detail will be rendered via custom callback renderer
 			 */
-			$this->items_detail->setType('renderer');
-			$this->items_detail->setRenderer($detail);
+			$this->itemsDetail->setType('renderer');
+			$this->itemsDetail->setRenderer($detail);
 
 		} elseif ($detail === true) {
 			/**
 			 * Item detail will be rendered probably via block #detail
 			 */
-			$this->items_detail->setType('block');
+			$this->itemsDetail->setType('block');
 
 		} else {
 			throw new DataGridException(
@@ -3076,19 +2724,15 @@ class DataGrid extends Nette\Application\UI\Control
 			);
 		}
 
-		return $this->items_detail;
+		return $this->itemsDetail;
 	}
 
 
-	/**
-	 * @param callable $callable_set_container
-	 * @return static
-	 */
-	public function setItemsDetailForm(callable $callable_set_container)
+	public function setItemsDetailForm(callable $callableSetContainer): self
 	{
-		if ($this->items_detail instanceof Column\ItemDetail) {
-			$this->items_detail->setForm(
-				new Utils\ItemDetailForm($callable_set_container)
+		if ($this->itemsDetail instanceof ItemDetail) {
+			$this->itemsDetail->setForm(
+				new ItemDetailForm($callableSetContainer)
 			);
 
 			return $this;
@@ -3098,13 +2742,10 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return Nette\Forms\Container|NULL
-	 */
-	public function getItemDetailForm()
+	public function getItemDetailForm(): ?Container
 	{
-		if ($this->items_detail instanceof Column\ItemDetail) {
-			return $this->items_detail->getForm();
+		if ($this->itemsDetail instanceof ItemDetail) {
+			return $this->itemsDetail->getForm();
 		}
 
 		return null;
@@ -3114,151 +2755,152 @@ class DataGrid extends Nette\Application\UI\Control
 	/********************************************************************************
 	 *                                ROW PRIVILEGES                                *
 	 ********************************************************************************/
-
-
-	/**
-	 * @param  callable $condition
-	 * @return void
-	 */
-	public function allowRowsGroupAction(callable $condition)
+	public function allowRowsGroupAction(callable $condition): void
 	{
-		$this->row_conditions['group_action'] = $condition;
+		$this->rowConditions['group_action'] = $condition;
+	}
+
+
+	public function allowRowsInlineEdit(callable $condition): void
+	{
+		$this->rowConditions['inline_edit'] = $condition;
+	}
+
+
+	public function allowRowsAction(string $key, callable $condition): void
+	{
+		$this->rowConditions['action'][$key] = $condition;
 	}
 
 
 	/**
-	 * @param  callable $condition
-	 * @return void
+	 * @throws DataGridException
 	 */
-	public function allowRowsInlineEdit(callable $condition)
-	{
-		$this->row_conditions['inline_edit'] = $condition;
-	}
-
-
-	/**
-	 * @param  string   $key
-	 * @param  callable $condition
-	 * @return void
-	 */
-	public function allowRowsAction($key, callable $condition)
-	{
-		$this->row_conditions['action'][$key] = $condition;
-	}
-
-
-	/**
-	 * @param  string   $multiActionKey
-	 * @param  string   $actionKey
-	 * @param  callable $condition
-	 * @return void
-	 */
-	public function allowRowsMultiAction($multiActionKey, $actionKey, callable $condition)
+	public function allowRowsMultiAction(
+		string $multiActionKey,
+		string $actionKey,
+		callable $condition
+	): void
 	{
 		if (!isset($this->actions[$multiActionKey])) {
-			throw new DataGridException("There is no action at key [$multiActionKey] defined.");
+			throw new DataGridException(
+				sprintf('There is no action at key [%s] defined.', $multiActionKey)
+			);
 		}
 
-		if (!$this->actions[$multiActionKey] instanceof Column\MultiAction) {
-			throw new DataGridException("Action at key [$multiActionKey] is not a MultiAction.");
+		if (!$this->actions[$multiActionKey] instanceof MultiAction) {
+			throw new DataGridException(
+				sprintf('Action at key [%s] is not a MultiAction.', $multiActionKey)
+			);
 		}
 
-		$this->actions[$multiActionKey]->setRowCondition((string) $actionKey, $condition);
+		$this->actions[$multiActionKey]->setRowCondition($actionKey, $condition);
 	}
 
 
 	/**
-	 * @param  string      $name
-	 * @param  string|null $key
 	 * @return bool|callable
 	 */
-	public function getRowCondition($name, $key = null)
+	public function getRowCondition(string $name, ?string $key = null)
 	{
-		if (!isset($this->row_conditions[$name])) {
+		if (!isset($this->rowConditions[$name])) {
 			return false;
 		}
 
-		$condition = $this->row_conditions[$name];
+		$condition = $this->rowConditions[$name];
 
-		if (!$key) {
+		if ($key === null) {
 			return $condition;
 		}
 
-		return isset($condition[$key]) ? $condition[$key] : false;
+		return $condition[$key] ?? false;
 	}
 
 
 	/********************************************************************************
 	 *                               COLUMN CALLBACK                                *
 	 ********************************************************************************/
-
-
-	/**
-	 * @param  string   $key
-	 * @param  callable $callback
-	 * @return void
-	 */
-	public function addColumnCallback($key, callable $callback)
+	public function addColumnCallback(string $key, callable $callback): void
 	{
-		$this->column_callbacks[$key] = $callback;
+		$this->columnCallbacks[$key] = $callback;
 	}
 
 
-	/**
-	 * @param  string $key
-	 * @return callable|null
-	 */
-	public function getColumnCallback($key)
+	public function getColumnCallback(string $key): ?callable
 	{
-		return empty($this->column_callbacks[$key]) ? null : $this->column_callbacks[$key];
+		return $this->columnCallbacks[$key] ?? null;
 	}
 
 
 	/********************************************************************************
 	 *                                 INLINE EDIT                                  *
 	 ********************************************************************************/
-
-
-	/**
-	 * @return InlineEdit
-	 */
-	public function addInlineEdit($primary_where_column = null)
+	public function addInlineEdit(?string $primaryWhereColumn = null): InlineEdit
 	{
-		$this->inlineEdit = new InlineEdit($this, $primary_where_column ?: $this->primary_key);
+		$this->inlineEdit = new InlineEdit($this, $primaryWhereColumn ?? $this->primaryKey);
 
 		return $this->inlineEdit;
 	}
 
 
-	/**
-	 * @return InlineEdit|null
-	 */
-	public function getInlineEdit()
+	public function getInlineEdit(): ?InlineEdit
 	{
 		return $this->inlineEdit;
 	}
 
 
-	/**
-	 * @param  mixed $id
-	 * @return void
-	 */
-	public function handleInlineEdit($id)
+	public function handleShowInlineAdd(): void
 	{
-		if ($this->inlineEdit) {
+		if ($this->inlineAdd !== null) {
+			$this->inlineAdd->setShouldBeRendered(true);
+		}
+
+		$presenter = $this->getPresenterInstance();
+
+		if ($presenter->isAjax()) {
+			$presenter->payload->_datagrid_inline_adding = true;
+			$presenter->payload->_datagrid_name = $this->getName();
+
+			$this->redrawControl('tbody');
+
+			$this->onRedraw();
+		}
+	}
+
+
+	/**
+	 * @param mixed $id
+	 */
+	public function handleInlineEdit($id): void
+	{
+		if ($this->inlineEdit !== null) {
 			$this->inlineEdit->setItemId($id);
 
-			$primary_where_column = $this->inlineEdit->getPrimaryWhereColumn();
+			$primaryWhereColumn = $this->inlineEdit->getPrimaryWhereColumn();
 
-			$this['filter']['inline_edit']->addHidden('_id', $id);
-			$this['filter']['inline_edit']->addHidden('_primary_where_column', $primary_where_column);
+			$filterContainer = $this['filter'];
 
-			if ($this->getPresenter()->isAjax()) {
-				$this->getPresenter()->payload->_datagrid_inline_editing = true;
-				$this->getPresenter()->payload->_datagrid_name = $this->getName();
+			if (!$filterContainer instanceof Container) {
+				throw new UnexpectedValueException;
 			}
 
-			$this->redrawItem($id, $primary_where_column);
+			$inlineEditContainer = $filterContainer['inline_edit'];
+
+			if (!$inlineEditContainer instanceof Container) {
+				throw new UnexpectedValueException;
+			}
+
+			$inlineEditContainer->addHidden('_id', $id);
+			$inlineEditContainer->addHidden('_primary_where_column', $primaryWhereColumn);
+
+			$presenter = $this->getPresenterInstance();
+
+			if ($presenter->isAjax()) {
+				$presenter->payload->_datagrid_inline_editing = true;
+				$presenter->payload->_datagrid_name = $this->getName();
+			}
+
+			$this->redrawItem((int) $id, $primaryWhereColumn);
 		}
 	}
 
@@ -3266,55 +2908,43 @@ class DataGrid extends Nette\Application\UI\Control
 	/********************************************************************************
 	 *                                  INLINE ADD                                  *
 	 ********************************************************************************/
-
-
-	/**
-	 * @return InlineEdit
-	 */
-	public function addInlineAdd()
+	public function addInlineAdd(): InlineAdd
 	{
-		$this->inlineAdd = new InlineEdit($this);
+		$this->inlineAdd = new InlineAdd($this);
 
 		$this->inlineAdd
 			->setTitle('ublaboo_datagrid.add')
-			->setIcon('plus')
-			->setClass('btn btn-xs btn-default btn-secondary');
+			->setIcon('plus');
 
 		return $this->inlineAdd;
 	}
 
 
-	/**
-	 * @return InlineEdit|null
-	 */
-	public function getInlineAdd()
+	public function getInlineAdd(): ?InlineAdd
 	{
 		return $this->inlineAdd;
 	}
 
 
 	/********************************************************************************
-	 *                               HIDEABLE COLUMNS                               *
+	 *                               COLUMNS HIDING                                 *
 	 ********************************************************************************/
-
 
 	/**
 	 * Can datagrid hide colums?
-	 * @return bool
 	 */
-	public function canHideColumns()
+	public function canHideColumns(): bool
 	{
-		return (bool) $this->can_hide_columns;
+		return $this->canHideColumns;
 	}
 
 
 	/**
 	 * Order Grid to set columns hideable.
-	 * @return static
 	 */
-	public function setColumnsHideable()
+	public function setColumnsHideable(): self
 	{
-		$this->can_hide_columns = true;
+		$this->canHideColumns = true;
 
 		return $this;
 	}
@@ -3323,34 +2953,25 @@ class DataGrid extends Nette\Application\UI\Control
 	/********************************************************************************
 	 *                                COLUMNS SUMMARY                               *
 	 ********************************************************************************/
-
-
-	/**
-	 * Will datagrid show summary in the end?
-	 * @return bool
-	 */
-	public function hasColumnsSummary()
+	public function hasColumnsSummary(): bool
 	{
 		return $this->columnsSummary instanceof ColumnsSummary;
 	}
 
 
 	/**
-	 * Set columns to be summarized in the end.
-	 * @param array    $columns
-	 * @param callable $rowCallback
-	 * @return \Ublaboo\DataGrid\ColumnsSummary
+	 * @param array|string[] $columns
 	 */
-	public function setColumnsSummary(array $columns, $rowCallback = null)
+	public function setColumnsSummary(array $columns, ?callable $rowCallback = null): ColumnsSummary
 	{
 		if ($this->hasSomeAggregationFunction()) {
-			throw new DataGridException('You can use either ColumnsSummary or AggregationFunctions');
+			throw new DataGridException(
+				'You can use either ColumnsSummary or AggregationFunctions'
+			);
 		}
 
-		if (!empty($rowCallback)) {
-			if (!is_callable($rowCallback)) {
-				throw new \InvalidArgumentException('Row summary callback must be callable');
-			}
+		if ($rowCallback !== null) {
+			throw new InvalidArgumentException('Row summary callback must be callable');
 		}
 
 		$this->columnsSummary = new ColumnsSummary($this, $columns, $rowCallback);
@@ -3359,10 +2980,7 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	/**
-	 * @return ColumnsSummary|NULL
-	 */
-	public function getColumnsSummary()
+	public function getColumnsSummary(): ?ColumnsSummary
 	{
 		return $this->columnsSummary;
 	}
@@ -3372,33 +2990,24 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                   INTERNAL                                   *
 	 ********************************************************************************/
 
-
 	/**
 	 * Tell grid filters to by submitted automatically
-	 * @param bool $auto
 	 */
-	public function setAutoSubmit($auto = true)
+	public function setAutoSubmit(bool $autoSubmit = true): self
 	{
-		$this->auto_submit = (bool) $auto;
+		$this->autoSubmit = $autoSubmit;
 
 		return $this;
 	}
 
 
-	/**
-	 * @return bool
-	 */
-	public function hasAutoSubmit()
+	public function hasAutoSubmit(): bool
 	{
-		return $this->auto_submit;
+		return $this->autoSubmit;
 	}
 
 
-	/**
-	 * Submit button when no auto-submitting is used
-	 * @return Filter\SubmitButton
-	 */
-	public function getFilterSubmitButton()
+	public function getFilterSubmitButton(): SubmitButton
 	{
 		if ($this->hasAutoSubmit()) {
 			throw new DataGridException(
@@ -3406,11 +3015,11 @@ class DataGrid extends Nette\Application\UI\Control
 			);
 		}
 
-		if ($this->filter_submit_button === null) {
-			$this->filter_submit_button = new Filter\SubmitButton($this);
+		if ($this->filterSubmitButton === null) {
+			$this->filterSubmitButton = new SubmitButton($this);
 		}
 
-		return $this->filter_submit_button;
+		return $this->filterSubmitButton;
 	}
 
 
@@ -3418,20 +3027,18 @@ class DataGrid extends Nette\Application\UI\Control
 	 *                                   INTERNAL                                   *
 	 ********************************************************************************/
 
-
 	/**
-	 * Get count of columns
-	 * @return int
+	 * @internal
 	 */
-	public function getColumnsCount()
+	public function getColumnsCount(): int
 	{
 		$count = sizeof($this->getColumns());
 
-		if (!empty($this->actions)
+		if ($this->actions !== []
 			|| $this->isSortable()
-			|| $this->getItemsDetail()
-			|| $this->getInlineEdit()
-			|| $this->getInlineAdd()) {
+			|| $this->getItemsDetail() !== null
+			|| $this->getInlineEdit() !== null
+			|| $this->getInlineAdd() !== null) {
 			$count++;
 		}
 
@@ -3444,27 +3051,26 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * Get primary key of datagrid data source
-	 * @return string
+	 * @internal
 	 */
-	public function getPrimaryKey()
+	public function getPrimaryKey(): string
 	{
-		return $this->primary_key;
+		return $this->primaryKey;
 	}
 
 
 	/**
-	 * Get set of set columns
-	 * @return Column\Column[]
+	 * @return array<Column>
+	 * @internal
 	 */
-	public function getColumns()
+	public function getColumns(): array
 	{
 		$return = $this->columns;
 
 		try {
-			$this->getParent();
+			$this->getParentComponent();
 
-			if (!$this->getSessionData('_grid_hidden_columns_manipulated', false)) {
+			if (! (bool) $this->getSessionData('_grid_hidden_columns_manipulated', false)) {
 				$columns_to_hide = [];
 
 				foreach ($this->columns as $key => $column) {
@@ -3473,7 +3079,7 @@ class DataGrid extends Nette\Application\UI\Control
 					}
 				}
 
-				if (!empty($columns_to_hide)) {
+				if ($columns_to_hide !== []) {
 					$this->saveSessionData('_grid_hidden_columns', $columns_to_hide);
 					$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 				}
@@ -3482,15 +3088,14 @@ class DataGrid extends Nette\Application\UI\Control
 			$hidden_columns = $this->getSessionData('_grid_hidden_columns', []);
 
 			foreach ($hidden_columns as $column) {
-				if (!empty($this->columns[$column])) {
-					$this->columns_visibility[$column] = [
+				if (isset($this->columns[$column])) {
+					$this->columnsVisibility[$column] = [
 						'visible' => false,
 					];
 
 					unset($return[$column]);
 				}
 			}
-
 		} catch (DataGridHasToBeAttachedToPresenterComponentException $e) {
 		}
 
@@ -3498,11 +3103,14 @@ class DataGrid extends Nette\Application\UI\Control
 	}
 
 
-	public function getColumnsVisibility()
+	/**
+	 * @internal
+	 */
+	public function getColumnsVisibility(): array
 	{
-		$return = $this->columns_visibility;
+		$return = $this->columnsVisibility;
 
-		foreach ($this->columns_visibility as $key => $column) {
+		foreach (array_keys($this->columnsVisibility) as $key) {
 			$return[$key]['column'] = $this->columns[$key];
 		}
 
@@ -3511,15 +3119,19 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @return PresenterComponent
+	 * @internal
 	 */
-	public function getParent()
+	public function getParentComponent(): Component
 	{
 		$parent = parent::getParent();
 
-		if (!($parent instanceof PresenterComponent)) {
+		if (!$parent instanceof Component) {
 			throw new DataGridHasToBeAttachedToPresenterComponentException(
-                "DataGrid is attached to: '" . ($parent ? get_class($parent) : 'null') . "', but instance of PresenterComponent is needed."
+				sprintf(
+					'DataGrid is attached to: "%s", but instance of %s is needed.',
+					($parent !== null ? get_class($parent) : 'null'),
+					Component::class
+				)
 			);
 		}
 
@@ -3528,56 +3140,86 @@ class DataGrid extends Nette\Application\UI\Control
 
 
 	/**
-	 * @return string
+	 * @internal
+	 * @throws UnexpectedValueException
 	 */
-	public function getSortableParentPath()
+	public function getSortableParentPath(): string
 	{
-		return $this->getParent()->lookupPath(Nette\Application\IPresenter::class, false);
+		if ($this->getParentComponent() instanceof IPresenter) {
+			return '';
+		}
+
+		$presenter = $this->getParentComponent()->lookupPath(IPresenter::class, false);
+
+		if ($presenter === null) {
+			throw new UnexpectedValueException(
+				sprintf('%s needs %s', self::class, IPresenter::class)
+			);
+		}
+
+		return $presenter;
 	}
 
 
 	/**
-	 * Some of datagrid columns is hidden by default
-	 * @param bool $default_hide
+	 * Some of datagrid columns may be hidden by default
+	 *
+	 * @internal
 	 */
-	public function setSomeColumnDefaultHide($default_hide)
+	public function setSomeColumnDefaultHide(bool $defaultHide): self
 	{
-		$this->some_column_default_hide = $default_hide;
+		$this->someColumnDefaultHide = $defaultHide;
+
+		return $this;
 	}
 
 
 	/**
 	 * Are some of columns hidden bydefault?
+	 *
+	 * @internal
 	 */
-	public function hasSomeColumnDefaultHide()
+	public function hasSomeColumnDefaultHide(): bool
 	{
-		return $this->some_column_default_hide;
+		return $this->someColumnDefaultHide;
 	}
 
 
 	/**
 	 * Simply refresh url
-	 * @return void
+	 *
+	 * @internal
 	 */
-	public function handleRefreshState()
+	public function handleRefreshState(): void
 	{
 		$this->findSessionValues();
 		$this->findDefaultFilter();
 		$this->findDefaultSort();
 		$this->findDefaultPerPage();
 
-		$this->getPresenter()->payload->_datagrid_url = $this->refresh_url;
+		$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
 		$this->redrawControl('non-existing-snippet');
 	}
 
 
 	/**
-	 * @param string $template_file
-	 * @return void
+	 * @internal
 	 */
-	public function setCustomPaginatortemplate($template_file)
+	public function setCustomPaginatorTemplate(string $templateFile): void
 	{
-		$this->custom_paginator_template = $template_file;
+		$this->customPaginatorTemplate = $templateFile;
 	}
-}
 
+
+	private function getPresenterInstance(): Presenter
+	{
+		$presenter = $this->getPresenter();
+
+		if (!$presenter instanceof Presenter) {
+			throw new UnexpectedValueException;
+		}
+
+		return $presenter;
+	}
+
+}
