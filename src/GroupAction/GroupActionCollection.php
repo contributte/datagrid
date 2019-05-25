@@ -111,14 +111,14 @@ class GroupActionCollection
 
 		$groupActionSelect->addCondition(Form::FILLED)
 			->toggle(
-				strtolower((string) $this->datagrid->getName()) . 'group_action_submit'
+				strtolower((string) $this->datagrid->componentFullName) . 'group_action_submit'
 			);
 
 		$container->addSubmit('submit', 'ublaboo_datagrid.execute')
 			->setValidationScope([$container])
 			->setAttribute(
 				'id',
-				strtolower((string) $this->datagrid->getName()) . 'group_action_submit'
+				strtolower((string) $this->datagrid->componentFullName) . 'group_action_submit'
 			);
 
 		$form->onSubmit[] = [$this, 'submitted'];
@@ -146,7 +146,7 @@ class GroupActionCollection
 		 */
 		$http_ids = $form->getHttpData(
 			Form::DATA_LINE | Form::DATA_KEYS,
-			strtolower((string) $this->datagrid->getName()) . '_group_action_item[]'
+			strtolower((string) $this->datagrid->componentFullName) . '_group_action_item[]'
 		);
 
 		$ids = array_keys($http_ids);

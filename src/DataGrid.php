@@ -417,6 +417,11 @@ class DataGrid extends Control
 	 */
 	private $customPaginatorTemplate = null;
 
+	/**
+	 * @var  string
+	 */
+	protected $componentFullName;
+
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
@@ -470,7 +475,9 @@ class DataGrid extends Control
 					$this->gridSession = $sessionSection;
 				}
 			}
-		);
+		}
+
+		$this->componentFullName = $this->lookupPath();
 	}
 
 
@@ -1549,10 +1556,10 @@ s	 */
 				if ($edit['submit']->isSubmittedBy() && $edit->getErrors() === []) {
 					$this->inlineEdit->onSubmit($id, $values['inline_edit']);
 					$this->getPresenterInstance()->payload->_datagrid_inline_edited = $id;
-					$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
+					$this->getPresenterInstance()->payload->_datagrid_name = $this->componentFullName;
 				} else {
 					$this->getPresenterInstance()->payload->_datagrid_inline_edit_cancel = $id;
-					$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
+					$this->getPresenterInstance()->payload->_datagrid_name = $this->componentFullName;
 				}
 
 				if ($edit['submit']->isSubmittedBy() && $this->inlineEdit->onCustomRedraw !== []) {
@@ -2273,7 +2280,7 @@ s	 */
 			}
 
 			$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
-			$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
+			$this->getPresenterInstance()->payload->_datagrid_name = $this->componentFullName;
 
 			$this->onRedraw();
 		} else {
@@ -2288,7 +2295,7 @@ s	 */
 			$this->redrawControl('grid');
 
 			$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
-			$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
+			$this->getPresenterInstance()->payload->_datagrid_name = $this->componentFullName;
 
 			$this->onRedraw();
 		} else {
@@ -2897,7 +2904,7 @@ s	 */
 
 			if ($presenter->isAjax()) {
 				$presenter->payload->_datagrid_inline_editing = true;
-				$presenter->payload->_datagrid_name = $this->getName();
+				$presenter->payload->_datagrid_name = $this->componentFullName;
 			}
 
 			$this->redrawItem((int) $id, $primaryWhereColumn);
@@ -2989,6 +2996,16 @@ s	 */
 	/********************************************************************************
 	 *                                   INTERNAL                                   *
 	 ********************************************************************************/
+
+	/**
+	 * Gets conponent's full name in component tree
+	 * @return string
+	 */
+	public function getFullName()
+	{
+		return $this->componentFullName;
+	}
+	
 
 	/**
 	 * Tell grid filters to by submitted automatically
