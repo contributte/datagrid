@@ -13,8 +13,6 @@ use Tester\TestCase;
 use Ublaboo;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Tests\Cases\Utils\TestingDDataGridEntity;
-use Ublaboo\DataGrid\Tests\Cases\Utils\TestingLMDataGridEntity;
-use Ublaboo\DataGrid\Tests\Cases\Utils\TestingLMDataGridEntity2;
 use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 final class RowTest extends TestCase
@@ -65,21 +63,6 @@ final class RowTest extends TestCase
 		$row = new Row($this->grid, $item, 'id');
 
 		Assert::same(20, $row->getId());
-	}
-
-
-	public function testLeanMapperEntity(): void
-	{
-		$entity = new TestingLMDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
-		$entity2 = new TestingLMDataGridEntity2(['id' => 21, 'name' => 'Francis', 'age' => 20]);
-
-		$entity->setGirlfriend($entity2);
-
-		$row = new Row($this->grid, $entity, 'id');
-
-		Assert::same('John Doe', $row->getValue('name'));
-		Assert::same(23, $row->getValue('age'));
-		Assert::same(20, $row->getValue('girlfriend.age'));
 	}
 
 

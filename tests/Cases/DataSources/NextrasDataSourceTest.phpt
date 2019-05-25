@@ -12,6 +12,7 @@ use Nextras\Orm\Mapper\Mapper;
 use Nextras\Orm\Model\Model;
 use Nextras\Orm\Model\SimpleModelFactory;
 use Nextras\Orm\Repository\Repository;
+use Tester\Environment;
 use Ublaboo\DataGrid\DataSource\NextrasDataSource;
 use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
@@ -105,7 +106,7 @@ class UsersMapper extends Mapper
 class UsersRepository extends Repository
 {
 
-	public static function getEntityClassNames()
+	public static function getEntityClassNames(): array
 	{
 		return [User::class];
 	}

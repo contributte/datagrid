@@ -179,7 +179,7 @@ class ColumnLink extends Column
 	}
 
 
-	public function setClass(string $class): self
+	public function setClass(?string $class): self
 	{
 		$this->class = $class;
 

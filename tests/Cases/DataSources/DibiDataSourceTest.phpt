@@ -33,13 +33,14 @@ final class DibiFluentDataSourceTest extends BaseDataSourceTest
 				'dsn' => 'sqlite::memory:',
 			]);
 
-		$this->db->query('CREATE TABLE users (
-								id      INTEGER      PRIMARY KEY AUTOINCREMENT,
-								name    VARCHAR (50),
-								age     INTEGER (3),
-								address VARCHAR (50) 
-							);
-		');
+		$this->db->query(
+			'CREATE TABLE users (
+				id      INTEGER      PRIMARY KEY AUTOINCREMENT,
+				name    VARCHAR (50),
+				age     INTEGER (3),
+				address VARCHAR (50) 
+			);'
+		);
 
 		foreach ($this->data as $row) {
 			$this->db->insert('users', $row)->execute();

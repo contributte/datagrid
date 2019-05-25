@@ -21,7 +21,7 @@ use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
  * @method onControlAdd(Nette\Forms\Container $container)
  * @method onControlAfterAdd(Nette\Forms\Container $container)
  * @method onSetDefaults(Nette\Forms\Container $container, $item)
- * @method onCustomRedraw()
+ * @method onCustomRedraw(string $buttonName)
  */
 class InlineEdit
 {

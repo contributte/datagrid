@@ -39,12 +39,10 @@ final class ColumnNumberTest extends TestCase
 		$number = $this->grid->addColumnNumber('amount', 'Amount');
 		Assert::same('345 679', $this->render($number));
 
-		$number = $this->grid->addColumnNumber('amount2', 'Amount', 'amount')->setFormat('2', '.', ',');
+		$number = $this->grid->addColumnNumber('amount2', 'Amount', 'amount')->setFormat(2, '.', ',');
 		Assert::same('345,678.57', $this->render($number));
 	}
 
 }
 
-
-$test_case = new ColumnNumberTest();
-$test_case->run();
+(new ColumnNumberTest)->run();

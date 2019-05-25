@@ -34,7 +34,7 @@ final class TestingPresenter extends Presenter
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function createRequest(
+	/*protected function createRequest(
 		Component $component,
 		string $destination,
 		array $args,
@@ -42,11 +42,10 @@ final class TestingPresenter extends Presenter
 	): ?string
 	{
 		return ucfirst($component->getName()) . $this->link($destination, $args);
-	}
+	}*/
 
 	protected function createComponentGrid(string $name): DataGrid
 	{
 		return new DataGrid($this, $name);
 	}
-
 }

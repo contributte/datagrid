@@ -8,6 +8,7 @@ use Nette\Application\PresenterFactory;
 use Nette\ComponentModel\IComponent;
 use Nette\Http\Request;
 use Nette\Http\Response;
+use Nette\Http\Session;
 use Nette\Http\UrlScript;
 
 class TestingDataGridFactory
@@ -20,14 +21,13 @@ class TestingDataGridFactory
 
 		$presenter = $presenterFactory->createPresenter($presenterName);
 
-		$url = new UrlScript('localhost');
+		$url = new UrlScript('http://localhost');
 		$request = new Request($url);
-		$response = new Response();
+		$response = new Response;
 		$session = new Session($request, $response);
 
 		$presenter->injectPrimary(null, null, null, $request, $response, $session);
 
 		return $presenter->getComponent('grid');
 	}
-
 }

@@ -70,7 +70,7 @@ final class ExportTest extends TestCase
 		Assert::exception(
 			$trigger,
 			'Ublaboo\DataGrid\Exception\DataGridException',
-			'You have to set a data source first.',
+			'You have to set a data source first.'
 		);
 
 		$this->grid->setDataSource($this->data);
@@ -99,7 +99,7 @@ final class ExportTest extends TestCase
 		Assert::exception(
 			$trigger,
 			'Ublaboo\DataGrid\Exception\DataGridException',
-			'You have to set a data source first.',
+			'You have to set a data source first.'
 		);
 
 		$this->grid->setDataSource($this->data);

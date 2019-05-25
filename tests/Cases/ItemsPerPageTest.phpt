@@ -11,7 +11,7 @@ use Tester;
 use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/XTestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDataGridFactory.php';
 
 
 class ItemsPerPageTest extends Tester\TestCase
@@ -25,8 +25,8 @@ class ItemsPerPageTest extends Tester\TestCase
 
 	public function setUp()
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\XTestingDataGridFactory;
-		$this->grid = $factory->createXTestingDataGrid();
+		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
+		$this->grid = $factory->createTestingDataGrid();
 	}
 
 
@@ -34,10 +34,10 @@ class ItemsPerPageTest extends Tester\TestCase
 	{
 	    $this->grid->setItemsPerPageList([10, 20, 50], false);
 
-        $this->grid->per_page = 20;
+        $this->grid->perPage = 20;
         Tester\Assert::same(20, $this->grid->getPerPage());
 
-        $this->grid->per_page = 'all';
+        $this->grid->perPage = 'all';
         Tester\Assert::same(10, $this->grid->getPerPage());
 	}
 
@@ -45,10 +45,10 @@ class ItemsPerPageTest extends Tester\TestCase
     {
         $this->grid->setItemsPerPageList([10, 20, 50], true);
 
-        $this->grid->per_page = 20;
+        $this->grid->perPage = 20;
         Tester\Assert::same(20, $this->grid->getPerPage());
 
-        $this->grid->per_page = 'all';
+        $this->grid->perPage = 'all';
         Tester\Assert::same('all', $this->grid->getPerPage());
     }
 
@@ -61,10 +61,10 @@ class ItemsPerPageTest extends Tester\TestCase
 
         $this->grid->setItemsPerPageList([10, 20, 50], true);
 
-        $this->grid->per_page = 20;
+        $this->grid->perPage = 20;
         Tester\Assert::same(20, $this->grid->getPerPage());
 
-        $this->grid->per_page = 'all';
+        $this->grid->perPage = 'all';
         Tester\Assert::same('all', $this->grid->getPerPage());
     }
 }

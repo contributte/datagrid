@@ -154,7 +154,7 @@ abstract class BaseDataSourceTest extends TestCase
 	{
 		$filter = new FilterText($this->grid, 'a', 'b', ['id']);
 		$filter->setExactSearch();
-		$filter->setValue('3');
+		$filter->setValue(3);
 
 		$this->ds->filter([$filter]);
 
@@ -194,8 +194,8 @@ abstract class BaseDataSourceTest extends TestCase
 		return array_values(
 			json_decode(
 				json_encode($this->ds->getData()),
-				true,
-			),
+				true
+			)
 		);
 	}
 

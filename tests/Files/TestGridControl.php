@@ -14,5 +14,4 @@ class TestGridControl extends Control
 	{
 		return new DataGrid();
 	}
-
 }
