@@ -381,19 +381,14 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	protected $show_selected_rows_count = true;
 
-    /**
-     * @var  string
-     */
-	protected $componentFullName;
-
 	/**
 	 * @var string
 	 */
 	private $custom_paginator_template;
 
-    /**
-     * @var  string
-     */
+	/**
+	 * @var  string
+	 */
 	protected $componentFullName;
 
 	/**
