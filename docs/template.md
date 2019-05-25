@@ -1,5 +1,13 @@
 # Template
 
+## Table of contents
+
+- [Extending](#extending)
+- [Column definition](#column-definition)
+- [Column header definition](#column-header-definition)
+- [Table class definition](#table-class-definition)
+- [Icons definition](#icons-definition)
+
 ## Extending
 
 When you set custom datagrid template, you will probably want to extend it. There are some `blocks` defined, so you can extend just some blocks. Presenter:

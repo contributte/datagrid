@@ -1,5 +1,7 @@
 # Inline editing
 
+## Table of contents
+
 - [Small inline edit](#small-inline-editing)
 - [Big inline edit](#big-inline-editing)
 

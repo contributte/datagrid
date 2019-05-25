@@ -1,5 +1,11 @@
 # Tree view
 
+## Table of contents
+
+- [Api](#api)
+- [Example table structure](#example-table-structure)
+- [Redrawing one row \(ajax\)](#redrawing-one-row-ajax)
+
 ## Api
 
 There is a possibility to render the data as a tree:

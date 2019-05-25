@@ -1,4 +1,6 @@
-# Columns
+# Column
+
+## Table of contents
 
 - [Api](#api)
 	- [Parameters](#parameters)
@@ -29,10 +31,8 @@
 
 There are several column classes and they all have some common behaviour and properties.
 
-<a id="api"></a>
 ## Api
 
-<a id="parameters"></a>
 ### Parameters
 
 Lets add a simple text column like we've done before:
@@ -49,7 +49,6 @@ $grid->addColumnText('name2', 'Name', 'name');
 $grid->addColumnText('name3', 'Name', 'name');
 ```
 
-<a id="templates"></a>
 ### Templates
 
 Column may have it's own template. I will add one more parameter (optional) to the method `::setTemplate()`, just for fun:
@@ -62,7 +61,6 @@ $grid->addColumnText('name', 'Name')
 In that template (name.latte), we will have two variables available: `$item` and `$foo`. The parameter (expanded array) is there just in case you need it sometime.
 
 
-<a id="renderers"></a>
 ### Renderers
 
 We can also modify data outputting via renderer callbacks:
@@ -85,7 +83,6 @@ $grid->addColumnText('name', 'Name')
 	});
 ```
 
-<a id="replacement"></a>
 ### Replacement
 
 Outputted data could have a simple array replacement instead of renderer callback:
@@ -98,7 +95,6 @@ $grid->addColumnText('name', 'Name')
 	]);
 ```
 
-<a id="escaping-values"></a>
 ### Escaping values
 
 By default, latte escapes all values from datasource. You can disable that:
@@ -108,7 +104,6 @@ $grid->addColumnText('link_html', 'Link')
 	->setTemplateEscaping(FALSE);
 ```
 
-<a id="sorting"></a>
 ### Sorting
 
 You can set the column as sortable.
@@ -125,7 +120,6 @@ $grid->addColumnText('role', 'User role', 'role.name')
 	->setSortable('r.name')
 ```
 
-<a id="resetting-pagination-after-sorting"></a>
 ### Resetting pagination after sorting
 
 ```php
@@ -134,7 +128,6 @@ $grid->addColumnText('name', 'Name')
 	->setSortableResetPagination();
 ```
 
-<a id="default-sort"></a>
 ### Default sort
 
 `DataGrid` implements default sorting mechanism:
@@ -143,7 +136,6 @@ $grid->addColumnText('name', 'Name')
 $grid->setDefaultSort(['name' => 'DESC']);
 ```
 
-<a id="resetting-default-sort"></a>
 ### Resetting default sort
 
 By default, once you reset the filter, default sort is applied. If you don't want to apply it after resetting the filter, pass FALSE as a second parameter to `DataGrid::setDefaultSort()`:
@@ -152,7 +144,6 @@ By default, once you reset the filter, default sort is applied. If you don't wan
 $grid->setDefaultSort('id' => 'DESC', FALSE);
 ```
 
-<a id="multiple-columns-sort"></a>
 ### Multiple columns sort
 
 Sorting by multiple columns is disabled by default. But can be enaled:
@@ -161,7 +152,6 @@ Sorting by multiple columns is disabled by default. But can be enaled:
 $grid->setMultiSortEnabled($enabled = TRUE); // Pass FALSE to disable
 ```
 
-<a id="default-per-page"></a>
 ### Default per page
 
 You can also set default "items per page" value:
@@ -170,7 +160,6 @@ You can also set default "items per page" value:
 $grid->setDefaultPerPage(20);
 ```
 
-<a id="custom-sorting-callback"></a>
 ### Custom sorting Callback
 
 You can define your own sorting callback:
@@ -186,7 +175,6 @@ $grid->addColumnText('name', 'Name')
 	});
 ```
 
-<a id="align"></a>
 ### Align
 
 Column can be aligned to one side:
@@ -196,7 +184,6 @@ $grid->addColumnText('name', 'Name')
 	->setAlign('center');
 ```
 
-<a id="removing-column"></a>
 ### Removing column
 
 You can remove column from grid like so:
@@ -206,12 +193,10 @@ $grid->addColumnText('foo', 'Name', 'name');
 $grid->removeColumn('foo');
 ```
 
-<a id="column-text"></a>
 ## Column Text
 
 We have discussed this in examples above - it's pretty basic column.
 
-<a id="column-number"></a>
 ## Column Number
 
 What more can ColumnNumber offer? Number formatting:
@@ -225,7 +210,6 @@ $grid->addColumnNumber('price2', 'Price', 'price')
 	->setFormat(2, ',', '.');
 ```
 
-<a id="column-datetime"></a>
 ## Column DateTime
 
 DateTime formatting (or just date or just time):
@@ -238,7 +222,6 @@ $grid->addColumnDateTime('created', 'Date registered')
 	->setFormat('H:i:s');
 ```
 
-<a id="column-link"></a>
 ## Column Link
 
 We can use column link to output &lt;a&gt; element:
@@ -265,7 +248,6 @@ $grid->addColumnLink('name', 'Name', 'edit', 'name', ['id', 'surname' => 'name']
 
 Now, suppose the row in database with <strong>name = John</strong> and <strong>id = 5</strong>. Then the link will look something like that: `/edit?id=5&amp;surname=John`!
 
-<a id="open-in-new-tab"></a>
 ### Open in new tab
 
 You can tell `ColumnLink` to open its link in new tab:
@@ -275,7 +257,6 @@ $grid->addColumnLink('name', 'Name', 'edit')
 	->setOpenInNewTab();
 ```
 
-<a id="column-status"></a>
 ## Column Status
 
 ![Status 1](assets/status1.gif)
@@ -357,7 +338,6 @@ $grid->getColumn('status')->getOption(2)
 	->setClass('btn-primary'); // For example
 ```
 
-<a id="hideable-columns"></a>
 ## Hideable columns
 
 ![Columns Hiding](assets/hideable_columns.gif)
@@ -370,7 +350,6 @@ $grid->setColumnsHideable();
 
 Hidden columns are saved into session, so they will remain hidden along all next requests.
 
-<a id="default-hide"></a>
 ### Default hide
 
 Columns can be hidden by default:
@@ -384,7 +363,6 @@ If default hide is used, new button is shown in that settings (gear) dropdown - 
 
 ![Columns Hiding](assets/hideable_columns_reset.gif)
 
-<a id="columns-summary"></a>
 ## Columns Summary
 
 Datagrid implements a feature that allows you to display <strong>sum</strong> of column of displayed items at the bootom of the grid. Try it out:
@@ -427,7 +405,6 @@ $grid->setColumnsSummary(['price', 'amount'])
 	});
 ```
 
-<a id="column-th-td-attributes"></a>
 ## Column (&lt;th&gt;, &lt;td&gt;) attributes 
 
 Since table cell elements are rendered using `Nette\Utils\Html`, you can easily alter their html attributes (class, data-attributes etc):
@@ -447,7 +424,6 @@ $grid->addColumnText('name', 'Name')
     ->addCellAttributes(['class' => 'text-center']);
 ```
 
-<a id="column-callback"></a>
 ## Column callback
 
 When you need to modify columns just before rendering (meybe remove some status options or completely change renderer for partucular items), you can create column callback, that will be called with `$column` and `$item` in parameter:
