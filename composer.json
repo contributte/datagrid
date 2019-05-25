@@ -45,8 +45,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-v5.x": "5.8.x-dev",
-			"dev-v6.x": "6.0.x-dev"
+			"dev-master": "6.1.x-dev"
 		}
 	},
 	"prefer-stable": true,
