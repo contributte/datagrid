@@ -1,5 +1,8 @@
 language: php
 
+services:
+  - mysql
+
 php:
   - 7.2
   - 7.3
@@ -8,13 +11,13 @@ php:
 before_install:
   # Turn off XDebug
   - phpenv config-rm xdebug.ini || return 0
+  - mysql -e 'CREATE DATABASE datagridTest;'
 
 install:
   # Composer
   - travis_retry composer install --no-progress --prefer-dist
 
 before_script:
-  - mysql -e 'create database datagridTest;'
   - mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 
 script:
