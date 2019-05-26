@@ -420,7 +420,7 @@ class DataGrid extends Control
 	/**
 	 * @var  string
 	 */
-	protected $componentFullName;
+	private $componentFullName;
 
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
@@ -2997,12 +2997,19 @@ s	 */
 	 *                                   INTERNAL                                   *
 	 ********************************************************************************/
 
-	/**
-	 * Gets conponent's full name in component tree
-	 * @return string
-	 */
-	public function getFullName()
+    /**
+     * Gets component's full name in component tree
+     * @return string
+     * @throws DataGridHasToBeAttachedToPresenterComponentException
+     */
+	public function getFullName() : string
 	{
+	    if (!$this->componentFullName) {
+	        throw new DataGridHasToBeAttachedToPresenterComponentException(
+	            'Datagrid needs to be attached to presenter in order to get its full name.'
+            );
+        }
+
 		return $this->componentFullName;
 	}
 	
