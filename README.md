@@ -22,7 +22,7 @@ Please see the [full documentation](http://ublaboo.org/datagrid/).
 
 ## 🔍 Documentation 🔍
 
-See the documentation **[HERE](.docs/index.md)**. Or you can view the online **[demo](http://examples.planette.io/contributte/datagrid/)**.
+See the documentation **[HERE](.docs/)**. Or you can view the online **[demo](http://examples.planette.io/contributte/datagrid/)**.
 
 ## Versions
 
