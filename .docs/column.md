@@ -73,7 +73,7 @@ $grid->addColumnText('name', 'Name')
 	});
 ```
 
-But hey, what if i want to replace <strong>just some</strong> rows? No problem, the second optional argument tells me (callback again) whether the datagrid should use your renderer or not. Example:
+But hey, what if i want to replace **just some** rows? No problem, the second optional argument tells me (callback again) whether the datagrid should use your renderer or not. Example:
 
 ```php
 $grid->addColumnText('name', 'Name')
@@ -247,7 +247,7 @@ That is still not all. You can pass the parameters under different name:
 $grid->addColumnLink('name', 'Name', 'edit', 'name', ['id', 'surname' => 'name']);
 ```
 
-Now, suppose the row in database with <strong>name = John</strong> and <strong>id = 5</strong>. Then the link will look something like that: `/edit?id=5&amp;surname=John`!
+Now, suppose the row in database with **name = John** and **id = 5**. Then the link will look something like that: `/edit?id=5&amp;surname=John`!
 
 ### Open in new tab
 
@@ -360,13 +360,13 @@ $grid->addColumnText('name', 'Name')
 	->setDefaultHide(); // Or disable default hide: ::setDefaultHide(FALSE)
 ```
 
-If default hide is used, new button is shown in that settings (gear) dropdown - <strong>Show default columns</strong>:
+If default hide is used, new button is shown in that settings (gear) dropdown - **Show default columns**:
 
-![Columns Hiding](assets/hideable_columns_reset.gif)
+![Columns Hiding](assets/hideable_columns_reset.png)
 
 ## Columns Summary
 
-Datagrid implements a feature that allows you to display <strong>sum</strong> of column of displayed items at the bootom of the grid. Try it out:
+Datagrid implements a feature that allows you to display **sum** of column of displayed items at the bootom of the grid. Try it out:
 
 ```php
 $grid->addColumnNumber('in', 'Income')
