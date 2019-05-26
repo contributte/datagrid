@@ -8,7 +8,7 @@ Table of contents
 		- [What happens after editing](#what-happens-after-editing)
 		- [Show non editing Columns](#show-non-editing-columns)
 
-# Inline editing
+# Inline editting
 
 ## Small inline editing
 

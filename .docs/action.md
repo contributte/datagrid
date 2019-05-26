@@ -319,13 +319,13 @@ DataGrid user template:
 {extends $original_template}
 
 {block detail}
-	&lt;h2&gt;{$item-&gt;name}&lt;/h2&gt;
+	<h2>{$item->name}</h2>
 
-	&lt;p&gt;Lorem ipsum ...&lt;/p&gt;
+	<p>Lorem ipsum ...</p>
 
-	{formContainer items_detail_form-$item-&gt;id}
-		{input id, value =&gt; $item-&gt;id}
-		{input name, value =&gt; $item-&gt;name}
+	{formContainer items_detail_form-$item->id}
+		{input id, value => $item->id}
+		{input name, value => $item->name}
 		{input save}
 	{/formContainer}
 

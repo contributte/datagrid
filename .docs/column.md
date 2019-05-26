@@ -25,7 +25,7 @@ Table of contents
 	- [Hideable columns](#hideable-columns)
 		- [Default hide](#default-hide)
 	- [Columns Summary](#columns-summary)
-	- [Column \(&lt;th&gt;, &lt;td&gt;\) attributes](#column-th-td-attributes)
+	- [Column \(th&gt;, td&gt;\) attributes](#column-th-td-attributes)
 	- [Column callback](#column-callback)
 
 # Column
@@ -225,7 +225,7 @@ $grid->addColumnDateTime('created', 'Date registered')
 
 ## Column Link
 
-We can use column link to output &lt;a&gt; element:
+We can use column link to output a&gt; element:
 
 ```php
 /**
@@ -406,19 +406,19 @@ $grid->setColumnsSummary(['price', 'amount'])
 	});
 ```
 
-## Column (&lt;th&gt;, &lt;td&gt;) attributes 
+## Column (th&gt;, td&gt;) attributes 
 
 Since table cell elements are rendered using `Nette\Utils\Html`, you can easily alter their html attributes (class, data-attributes etc):
 
 ```php
 $th = $grid->addColumnText('name', 'Name')
-    ->getElementPrototype('td'); // Or element element &lt;th&gt; via Column::getElementPrototype('th')
+    ->getElementPrototype('td'); // Or element <th> via Column::getElementPrototype('th')
 
 $th->data('foo', 'bar');
 $th->class('super-column')
 ```
 
-If you want to modify attributes for both &lt;th&gt; and &lt;td&gt; at one time, use directly Column::addCellAttributes():
+If you want to modify attributes for both th&gt; and td&gt; at one time, use directly Column::addCellAttributes():
 
 ```php
 $grid->addColumnText('name', 'Name')

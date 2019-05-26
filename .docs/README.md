@@ -10,6 +10,6 @@ Table of contents
 - [Template](template.md)
 - [Export](export.md)
 - [Tree view](tree-view.md)
-- [Edit](edit.md)
-- [Add](add.md)
+- [Inline edit](inline-edit.md)
+- [Inline add](inline-add.md)
 - [Localization](localization.md)
