@@ -1555,10 +1555,10 @@ s	 */
 				if ($edit['submit']->isSubmittedBy() && $edit->getErrors() === []) {
 					$this->inlineEdit->onSubmit($id, $values['inline_edit']);
 					$this->getPresenterInstance()->payload->_datagrid_inline_edited = $id;
-					$this->getPresenterInstance()->payload->_datagrid_name = $this->componentFullName;
+					$this->getPresenterInstance()->payload->_datagrid_name = $this->getFullName();
 				} else {
 					$this->getPresenterInstance()->payload->_datagrid_inline_edit_cancel = $id;
-					$this->getPresenterInstance()->payload->_datagrid_name = $this->componentFullName;
+					$this->getPresenterInstance()->payload->_datagrid_name = $this->getFullName();
 				}
 
 				if ($edit['submit']->isSubmittedBy() && $this->inlineEdit->onCustomRedraw !== []) {
@@ -2279,7 +2279,7 @@ s	 */
 			}
 
 			$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
-			$this->getPresenterInstance()->payload->_datagrid_name = $this->componentFullName;
+			$this->getPresenterInstance()->payload->_datagrid_name = $this->getFullName();
 
 			$this->onRedraw();
 		} else {
@@ -2294,7 +2294,7 @@ s	 */
 			$this->redrawControl('grid');
 
 			$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
-			$this->getPresenterInstance()->payload->_datagrid_name = $this->componentFullName;
+			$this->getPresenterInstance()->payload->_datagrid_name = $this->getFullName();
 
 			$this->onRedraw();
 		} else {
@@ -2903,7 +2903,7 @@ s	 */
 
 			if ($presenter->isAjax()) {
 				$presenter->payload->_datagrid_inline_editing = true;
-				$presenter->payload->_datagrid_name = $this->componentFullName;
+				$presenter->payload->_datagrid_name = $this->getFullName();
 			}
 
 			$this->redrawItem((int) $id, $primaryWhereColumn);
@@ -3003,7 +3003,7 @@ s	 */
      */
 	public function getFullName() : string
 	{
-	    if (!$this->componentFullName) {
+	    if ($this->componentFullName === null) {
 	        throw new DataGridHasToBeAttachedToPresenterComponentException(
 	            'Datagrid needs to be attached to presenter in order to get its full name.'
             );
