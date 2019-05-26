@@ -1,6 +1,6 @@
 Table of contents
 
-- [Action](#action)
+- [Actions](#actions)
 	- [Api](#api)
 		- [Parameters](#parameters)
 		- [Icon](#icon)
@@ -20,7 +20,7 @@ Table of contents
 	- [ActionCallback](#actioncallback)
 	- [Toolbar button](#toolbar-button)
 
-# Action
+# Actions
 
 ## Api
 

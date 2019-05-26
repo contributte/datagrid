@@ -1,6 +1,6 @@
 Table of contents
 
-- [Column](#column)
+- [Columns](#columns)
 	- [Api](#api)
 		- [Parameters](#parameters)
 		- [Templates](#templates)
@@ -28,7 +28,7 @@ Table of contents
 	- [Column \(th&gt;, td&gt;\) attributes](#column-th-td-attributes)
 	- [Column callback](#column-callback)
 
-# Column
+# Columns
 
 There are several column classes and they all have some common behaviour and properties.
 

@@ -1,14 +1,14 @@
 Table of contents
 
 - [Introduction](index.md)
-- [Data sources](data-source.md)
-- [Column](column.md)
+- [Data sources](data-sources.md)
+- [Columns](columns.md)
 - [Filter](filter.md) 🚧
-- [Action](action.md)
+- [Actions](actions.md)
 - [Group action](group-action.md) 🚧
 - [Row](row.md)
-- [Template](template.md)
-- [Export](export.md)
+- [Templates](templates.md)
+- [Exports](exports.md)
 - [Tree view](tree-view.md)
 - [Inline edit](inline-edit.md)
 - [Inline add](inline-add.md)

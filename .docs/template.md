@@ -1,13 +1,13 @@
 Table of contents
 
-- [Template](#template)
+- [Templates](#templates)
 	- [Extending](#extending)
 	- [Column definition](#column-definition)
 	- [Column header definition](#column-header-definition)
 	- [Table class definition](#table-class-definition)
 	- [Icons definition](#icons-definition)
 
-# Template
+# Templates
 
 ## Extending
 

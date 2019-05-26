@@ -1,13 +1,13 @@
 Table of contents
 
-- [Export](#export)
+- [Exports](#exports)
 	- [ExportCallback](#exportcallback)
 	- [CSV export](#csv-export)
 		- [\(Not\) Using templates in CSV export](#not-using-templates-in-csv-export)
 	- [Export columns](#export-columns)
 	- [Export encoding, delimiter](#export-encoding-delimiter)
 
-# Export
+# Exports
 
 ## ExportCallback
 
