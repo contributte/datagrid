@@ -5,7 +5,7 @@ Table of contents
 - [Columns](columns.md)
 - [Filter](filter.md)
 - [Actions](actions.md)
-- [Group action](group-action.md) 🚧
+- [Group action](group-action.md)
 - [Row](row.md)
 - [Templates](templates.md)
 - [Exports](exports.md)
