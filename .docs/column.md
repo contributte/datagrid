@@ -362,7 +362,7 @@ $grid->addColumnText('name', 'Name')
 
 If default hide is used, new button is shown in that settings (gear) dropdown - **Show default columns**:
 
-![Columns Hiding](assets/hideable_columns_reset.png)
+<img title="Columns Hiding" src="assets/hideable_columns_reset.png" width="267" height="256">
 
 ## Columns Summary
 
