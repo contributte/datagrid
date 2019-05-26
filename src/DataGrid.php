@@ -2996,18 +2996,18 @@ s	 */
 	 *                                   INTERNAL                                   *
 	 ********************************************************************************/
 
-    /**
-     * Gets component's full name in component tree
-     * @return string
-     * @throws DataGridHasToBeAttachedToPresenterComponentException
-     */
+	/**
+	 * Gets component's full name in component tree
+	 * @return string
+	 * @throws DataGridHasToBeAttachedToPresenterComponentException
+	 */
 	public function getFullName() : string
 	{
 	    if ($this->componentFullName === null) {
 	        throw new DataGridHasToBeAttachedToPresenterComponentException(
 	            'Datagrid needs to be attached to presenter in order to get its full name.'
-            );
-        }
+	        );
+	    }
 
 		return $this->componentFullName;
 	}
