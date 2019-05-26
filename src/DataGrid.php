@@ -474,10 +474,9 @@ class DataGrid extends Control
 
 					$this->gridSession = $sessionSection;
 				}
-			}
-		}
 
-		$this->componentFullName = $this->lookupPath();
+				$this->componentFullName = $this->lookupPath();
+			});
 	}
 
 
