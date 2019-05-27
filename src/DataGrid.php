@@ -418,7 +418,7 @@ class DataGrid extends Control
 	private $customPaginatorTemplate = null;
 
 	/**
-	 * @var  string
+	 * @var string|null
 	 */
 	private $componentFullName;
 
@@ -2047,7 +2047,7 @@ s	 */
 			$this->deleteSessionData('_grid_has_sorted');
 		}
 
-		foreach ($this->getSessionData() as $key => $val) {
+		foreach (array_keys($this->getSessionData()) as $key) {
 			if (!in_array($key, [
 				'_grid_perPage',
 				'_grid_sort',
@@ -2501,7 +2501,9 @@ s	 */
 			$perPage = reset($itemsPerPageList);
 		}
 
-		return $perPage === 'all' ? 'all' : (int) $perPage;
+		return $perPage === 'all'
+			? 'all'
+			: (int) $perPage;
 	}
 
 
@@ -2998,10 +3000,9 @@ s	 */
 
 	/**
 	 * Gets component's full name in component tree
-	 * @return string
 	 * @throws DataGridHasToBeAttachedToPresenterComponentException
 	 */
-	public function getFullName() : string
+	public function getFullName(): string
 	{
 		if ($this->componentFullName === null) {
 			throw new DataGridHasToBeAttachedToPresenterComponentException(

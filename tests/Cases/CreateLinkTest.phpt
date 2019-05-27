@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use InvalidArgumentException;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Tester\Assert;
 use Tester\TestCase;

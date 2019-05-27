@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Files;
 
-use Nette\Application\UI\Component;
 use Nette\Application\UI\Presenter;
 use Ublaboo\DataGrid\DataGrid;
 
@@ -31,9 +30,6 @@ final class TestingPresenter extends Presenter
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	/*protected function createRequest(
 		Component $component,
 		string $destination,

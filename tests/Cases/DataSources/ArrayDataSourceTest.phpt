@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
-use Ublaboo;
 use Ublaboo\DataGrid\DataSource\ArrayDataSource;
 use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 

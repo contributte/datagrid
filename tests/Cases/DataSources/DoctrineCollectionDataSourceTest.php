@@ -6,7 +6,6 @@ namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Tester\Assert;
-use Ublaboo;
 use Ublaboo\DataGrid\DataSource\DoctrineCollectionDataSource;
 use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;

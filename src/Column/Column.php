@@ -180,11 +180,7 @@ abstract class Column extends FilterableColumn
 			return $this->sortable;
 		}
 
-		if ($this->sortable !== '') {
-			return true;
-		}
-
-		return false;
+		return $this->sortable !== '';
 	}
 
 
