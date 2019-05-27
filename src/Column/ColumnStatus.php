@@ -10,6 +10,7 @@ use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Status\Option;
 use Ublaboo\DataGrid\Traits\TButtonCaret;
+use Ublaboo\DataGrid\Traits\TRenderCondition;
 
 /**
  * @method onChange(string $id, string $value)
@@ -19,6 +20,7 @@ class ColumnStatus extends Column
 
 	use TButtonCaret;
 	use SmartObject;
+	use TRenderCondition;
 
 	/**
 	 * @var array|callable[]
