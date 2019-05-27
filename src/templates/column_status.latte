@@ -7,10 +7,14 @@
 
 <div class="dropdown">
 	{if $activeOption}
-		<button class="dropdown-toggle {$activeOption->getClass()} {$activeOption->getClassSecondary()}" type="button" data-toggle="dropdown">
-			{if $activeOption->getIcon()}<i class="{$iconPrefix}{$activeOption->getIcon()}"></i> {/if}
-			{$activeOption->getText()|translate} <i n:if="$status->hasCaret()" class="caret"></i>
-		</button>
+		{if $status->shouldBeRendered($row)}
+			<button class="dropdown-toggle {$activeOption->getClass()} {$activeOption->getClassSecondary()}" type="button" data-toggle="dropdown">
+				{if $activeOption->getIcon()}<i class="{$iconPrefix}{$activeOption->getIcon()}"></i> {/if}
+				{$activeOption->getText()|translate} <i n:if="$status->hasCaret()" class="caret"></i>
+			</button>
+		{else}
+			{$active_option->getText()|translate}
+		{/if}
 	{else}
 		{$row->getValue($status->getColumn())}
 	{/if}
