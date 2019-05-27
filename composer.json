@@ -40,7 +40,7 @@
 		"nette/database": "~3.0",
 		"dibi/dibi": "^3.0.0 || ^4.0.0",
 		"phpstan/phpstan-strict-rules": "^0.11",
-		"ninjify/coding-standard": "^0.8",
+		"ninjify/coding-standard": "^0.9",
 		"gamee/php-code-checker-rules": "^1.0"
 	},
 	"extra": {
