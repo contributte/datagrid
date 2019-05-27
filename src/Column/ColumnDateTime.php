@@ -38,7 +38,7 @@ class ColumnDateTime extends Column
 				/**
 				 * Otherwise just return raw string
 				 */
-				return $value;
+				return (string) $value;
 			}
 		}
 

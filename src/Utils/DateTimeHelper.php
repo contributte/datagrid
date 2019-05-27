@@ -67,7 +67,7 @@ final class DateTimeHelper
 		}
 
 		foreach ($formats as $format) {
-			$date = \DateTime::createFromFormat($format, $value);
+			$date = \DateTime::createFromFormat($format, (string) $value);
 
 			if ($date === false) {
 				continue;
@@ -76,7 +76,7 @@ final class DateTimeHelper
 			return $date;
 		}
 
-		$timestamp = strtotime($value);
+		$timestamp = strtotime((string) $value);
 
 		if ($timestamp !== false) {
 			$date = new \DateTime;
@@ -87,5 +87,4 @@ final class DateTimeHelper
 
 		throw new DataGridDateTimeHelperException();
 	}
-
 }
