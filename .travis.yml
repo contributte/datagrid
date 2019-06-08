@@ -27,7 +27,7 @@ script:
 
 jobs:
   include:
-    - env: title="Lowest Dependencies 7.1"
+    - env: title="Lowest Dependencies 7.2"
       php: 7.2
       install:
         - travis_retry composer update --no-progress --prefer-dist --prefer-lowest
