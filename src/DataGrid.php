@@ -2212,7 +2212,7 @@ s	 */
 
 		if ($this->getPresenterInstance()->isAjax()) {
 			$this->getPresenterInstance()->payload->_datagrid_toggle_detail = $id;
-			$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
+			$this->getPresenterInstance()->payload->_datagrid_name = $this->getFullName();
 			$this->redrawControl('items');
 
 			/**
@@ -2867,7 +2867,7 @@ s	 */
 
 		if ($presenter->isAjax()) {
 			$presenter->payload->_datagrid_inline_adding = true;
-			$presenter->payload->_datagrid_name = $this->getName();
+			$presenter->payload->_datagrid_name = $this->getFullName();
 
 			$this->redrawControl('tbody');
 
