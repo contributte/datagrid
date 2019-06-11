@@ -4,7 +4,10 @@ First class DataGrid for Nette Framework.
 
 Supported features: filtering, sorting, pagination, tree view, table view, translator, etc
 
-Please see the [full documentation](http://ublaboo.org/datagrid/).
+:mag: Take a look at the [full documentation](https://contributte.org/packages/contributte/datagrid/). 
+:eyes: You can also browse the online **[demo](https://examples.planette.io/contributte/datagrid/)**.
+
+> Give us a star, it makes us so happy. Thanks ⭐.️
 
 -----
 
@@ -20,20 +23,15 @@ Please see the [full documentation](http://ublaboo.org/datagrid/).
 
 [![Join the chat](https://img.shields.io/gitter/room/contributte/contributte.svg?style=flat-square)](http://bit.ly/ctteg)
 
-## 🔍 Documentation 🔍
-
-See the documentation **[HERE](.docs/)**. Or you can view the online **[demo](http://examples.planette.io/contributte/datagrid/)**.
-
 ## Versions
 
-| State       | Version   | Branch   | Nette | PHP      |  |
-|-------------|-----------|----------|-------|----------|--|
-| stable      | `^6.0.0`  | `master` | >=3.0 | `>= 7.2` |  |
-| stable      | `^5.7.1`  | `v5.x`   | >=2.3 | `>= 5.6` |  |
-| stable      | `^4.4.22` | `v5.x`   | >=2.3 | `>= 5.6` |  |
-| stable      | `^3.3.1`  | `v5.x`   | >=2.3 | `>= 5.3` |  |
-
-## Are u using datagrid? Give us a star :) ⭐️
+| State       | Version   | Branch   | Nette | PHP      |
+|-------------|-----------|----------|-------|----------|
+| dev         | `^6.1.0`  | `master` | >=3.0 | `^7.2` |
+| stable      | `^6.0.0`  | `master` | >=3.0 | `^7.2` |
+| stable      | `^5.7.1`  | `v5.x`   | >=2.3 | `^5.6` |
+| stable      | `^4.4.22` | `v5.x`   | >=2.3 | `^5.6` |
+| stable      | `^3.3.1`  | `v5.x`   | >=2.3 | `^5.3` |
 
 ## Maintainers
 

@@ -3,7 +3,7 @@
 
 # Sources
 /src
-/docs
+/.docs
 
 # Assets
 /bower.json
@@ -16,6 +16,7 @@
 /composer.json
 /composer.lock
 /vendor
+/phpstan.*
 
 # Tests
 /tests

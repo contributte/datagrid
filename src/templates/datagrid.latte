@@ -493,7 +493,7 @@
 
 
 {define column-header}
-	{if $column->isHeaderEscaped()}
+	{if !$column->isHeaderEscaped()}
 		{if $column instanceof \Nette\Utils\Html || !$column->isTranslatableHeader()}
 			{$column->getName()|noescape}
 		{else}

@@ -1,6 +1,6 @@
 {
   "name": "ublaboo-datagrid",
-  "version": "5.7.0",
+  "version": "6.0.1",
   "description": "Assets for php composer package ublaboo/datagrid",
   "keywords": [
     "ublaboo",
@@ -9,14 +9,9 @@
   ],
   "author": "Pavel Janda <me@paveljanda.com>",
   "license": "MIT",
-  "main": "assets/dist/datagrid.js",
-  "devDependencies": {
-    "coffee-script": "^1.12.7",
-    "node-sass": "^4.9.3"
-  },
+  "main": "assets/datagrid.js",
   "scripts": {
-    "build": "npm run build:css & npm run build:js",
-    "build:css": "node-sass -o assets/dist assets/src",
-    "build:js": "coffee --compile --output assets/dist/ assets/src/*.coffee"
+    "release-dry": "npm publish --dry-run",
+    "release": "npm publish"
   }
 }
