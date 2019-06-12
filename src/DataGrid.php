@@ -2047,7 +2047,7 @@ s	 */
 			$this->deleteSessionData('_grid_has_sorted');
 		}
 
-		foreach (array_keys($this->getSessionData()) as $key) {
+		foreach (array_keys(iterator_to_array($this->getSessionData())) as $key) {
 			if (!in_array($key, [
 				'_grid_perPage',
 				'_grid_sort',
