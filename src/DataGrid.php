@@ -65,7 +65,7 @@ use UnexpectedValueException;
  * @method onRender(DataGrid $dataGrid)
  * @method onColumnAdd(string $key, Column $column)
  * @method onExport(DataGrid $dataGrid)
- * @method onFiltersAssembled(array<Filter> $filters)
+ * @method onFiltersAssembled(Filter[] $filters)
  */
 class DataGrid extends Control
 {
