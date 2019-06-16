@@ -65,7 +65,7 @@ use UnexpectedValueException;
  * @method onRender(DataGrid $dataGrid)
  * @method onColumnAdd(string $key, Column $column)
  * @method onExport(DataGrid $dataGrid)
- * @method onFiltersAssembled(array<Filter> $filters)
+ * @method onFiltersAssembled(Filter[] $filters)
  */
 class DataGrid extends Control
 {
@@ -1566,7 +1566,7 @@ s	 */
 				} elseif ($edit['cancel']->isSubmittedBy() && $this->inlineEdit->onCustomRedraw !== []) {
 					$this->inlineEdit->onCustomRedraw('cancel');
 				} else {
-					$this->redrawItem((int) $id, $primaryWhereColumn);
+					$this->redrawItem($id, $primaryWhereColumn);
 					$this->redrawControl('summary');
 				}
 
@@ -2318,9 +2318,10 @@ s	 */
 
 
 	/**
+	 * @param string|int $id
 	 * @param mixed $primaryWhereColumn
 	 */
-	public function redrawItem(int $id, $primaryWhereColumn = null): void
+	public function redrawItem($id, $primaryWhereColumn = null): void
 	{
 		$this->snippetsSet = true;
 
@@ -2908,7 +2909,7 @@ s	 */
 				$presenter->payload->_datagrid_name = $this->getFullName();
 			}
 
-			$this->redrawItem((int) $id, $primaryWhereColumn);
+			$this->redrawItem($id, $primaryWhereColumn);
 		}
 	}
 
