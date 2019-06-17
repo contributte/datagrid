@@ -100,6 +100,9 @@ class FunctionSum implements IAggregationFunction
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setRenderer(?callable $callback = null): self
 	{
 		$this->renderer = $callback;

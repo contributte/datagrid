@@ -13,6 +13,9 @@ trait TButtonTitle
 	protected $title;
 
 
+	/**
+	 * @return static
+	 */
 	public function setTitle(string $title): self
 	{
 		$this->title = $title;

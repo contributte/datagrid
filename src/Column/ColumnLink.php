@@ -138,6 +138,9 @@ class ColumnLink extends Column
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function addParameters(array $parameters): self
 	{
 		$this->parameters = $parameters;
@@ -146,6 +149,9 @@ class ColumnLink extends Column
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setIcon(?string $icon = null): self
 	{
 		$this->icon = $icon;
@@ -156,6 +162,7 @@ class ColumnLink extends Column
 
 	/**
 	 * @param mixed $value
+	 * @return static
 	 */
 	public function setDataAttribute(string $key, $value): self
 	{
@@ -165,6 +172,9 @@ class ColumnLink extends Column
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setTitle(string $title): self
 	{
 		$this->title = $title;
@@ -179,6 +189,9 @@ class ColumnLink extends Column
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setClass(?string $class): self
 	{
 		$this->class = $class;
@@ -199,6 +212,9 @@ class ColumnLink extends Column
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setOpenInNewTab(bool $openInNewTab = true): self
 	{
 		$this->openInNewTab = $openInNewTab;

@@ -51,6 +51,7 @@ trait TButtonRenderer
 	/**
 	 * Set renderer callback and (it may be optional - the condition callback will decide)
 	 *
+	 * @return static
 	 * @throws DataGridException
 	 */
 	public function setRenderer(
@@ -70,6 +71,9 @@ trait TButtonRenderer
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setRendererOnCondition(
 		callable $renderer,
 		callable $conditionCallback

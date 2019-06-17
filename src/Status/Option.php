@@ -80,6 +80,9 @@ class Option
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setTitle(string $title): self
 	{
 		$this->title = $title;
@@ -94,6 +97,9 @@ class Option
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setClass(string $class, ?string $classSecondary = null): self
 	{
 		$this->class = $class;
@@ -112,6 +118,9 @@ class Option
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setClassSecondary(string $classSecondary): self
 	{
 		$this->classSecondary = $classSecondary;
@@ -126,6 +135,9 @@ class Option
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setClassInDropdown(string $classInDropdown): self
 	{
 		$this->classInDropdown = $classInDropdown;
@@ -140,6 +152,9 @@ class Option
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setIcon(string $icon): self
 	{
 		$this->icon = $icon;
@@ -154,6 +169,9 @@ class Option
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setIconSecondary(string $iconSecondary): self
 	{
 		$this->iconSecondary = $iconSecondary;
