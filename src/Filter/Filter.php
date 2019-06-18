@@ -111,6 +111,7 @@ abstract class Filter
 
 	/**
 	 * @param mixed $value
+	 * @return static
 	 */
 	public function setValue($value): self
 	{
@@ -132,6 +133,8 @@ abstract class Filter
 
 	/**
 	 * Set HTML attribute "placeholder"
+	 *
+	 * @return static
 	 */
 	public function setPlaceholder(string $placeholder): self
 	{
@@ -149,6 +152,8 @@ abstract class Filter
 
 	/**
 	 * Set custom condition on filter
+	 *
+	 * @return static
 	 */
 	public function setCondition(callable $conditionCallback): self
 	{
@@ -164,6 +169,9 @@ abstract class Filter
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setTemplate(string $template): self
 	{
 		$this->template = $template;
@@ -186,6 +194,7 @@ abstract class Filter
 
 	/**
 	 * @param mixed $value
+	 * @return static
 	 */
 	public function addAttribute(string $name, $value): self
 	{
@@ -197,6 +206,7 @@ abstract class Filter
 
 	/**
 	 * @param mixed $value
+	 * @return static
 	 */
 	public function setAttribute(string $name, $value): self
 	{

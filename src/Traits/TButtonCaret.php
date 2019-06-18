@@ -12,6 +12,9 @@ trait TButtonCaret
 	 */
 	protected $caret = true;
 
+	/**
+	 * @return static
+	 */
 	public function setCaret(bool $useCaret): self
 	{
 		$this->caret = $useCaret;

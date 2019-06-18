@@ -82,6 +82,9 @@ class FilterSelect extends OneColumnFilter
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setTranslateOptions(bool $translateOptions = true): self
 	{
 		$this->translateOptions = $translateOptions;
@@ -114,6 +117,9 @@ class FilterSelect extends OneColumnFilter
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setPrompt(?string $prompt): self
 	{
 		$this->prompt = $prompt;

@@ -75,6 +75,8 @@ class FilterRange extends OneColumnFilter
 
 	/**
 	 * Set html attr placeholder of both inputs
+	 *
+	 * @return static
 	 */
 	public function setPlaceholders(array $placeholders): self
 	{

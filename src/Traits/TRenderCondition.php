@@ -14,6 +14,9 @@ trait TRenderCondition
 	 */
 	protected $renderConditionCallback;
 
+	/**
+	 * @return static
+	 */
 	public function setRenderCondition(callable $condition): self
 	{
 		$this->renderConditionCallback = $condition;

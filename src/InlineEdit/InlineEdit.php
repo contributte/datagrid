@@ -103,6 +103,7 @@ class InlineEdit
 
 	/**
 	 * @param mixed $id
+	 * @return static
 	 */
 	public function setItemId($id): self
 	{
@@ -180,6 +181,9 @@ class InlineEdit
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setPositionTop(bool $positionTop = true): self
 	{
 		$this->positionTop = $positionTop;
@@ -225,6 +229,9 @@ class InlineEdit
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setShowNonEditingColumns(bool $show = true): self
 	{
 		$this->showNonEditingColumns = $show;

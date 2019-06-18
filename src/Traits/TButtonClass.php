@@ -12,6 +12,9 @@ trait TButtonClass
 	 */
 	protected $class = 'btn btn-xs btn-default btn-secondary';
 
+	/**
+	 * @return static
+	 */
 	public function setClass(string $class): self
 	{
 		$this->class = $class;
