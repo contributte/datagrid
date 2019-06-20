@@ -629,6 +629,9 @@
       margin-bottom: 0;
       vertical-align: middle;
     }
+    .ublaboo-datagrid-th-form-inline .form-control[hidden] {
+      display: none;
+    }
     .ublaboo-datagrid-th-form-inline .form-control {
       display: inline-block;
       width: auto;

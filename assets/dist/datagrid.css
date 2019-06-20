@@ -338,6 +338,9 @@
       display: inline-block;
       margin-bottom: 0;
       vertical-align: middle; }
+    .datagrid .ublaboo-datagrid-th-form-inline .form-control[hidden] {
+      display:none;
+    }
     .datagrid .ublaboo-datagrid-th-form-inline .form-control {
       display: inline-block;
       width: auto;
