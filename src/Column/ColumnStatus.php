@@ -91,7 +91,7 @@ class ColumnStatus extends Column
 	public function getCurrentOption(Row $row): ?Option
 	{
 		foreach ($this->getOptions() as $option) {
-			if ($option->getValue() === $row->getValue($this->getColumn())) {
+			if ($option->getValue() == $row->getValue($this->getColumn())) {
 				return $option;
 			}
 		}
