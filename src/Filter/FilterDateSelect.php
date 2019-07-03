@@ -94,7 +94,7 @@ class FilterDateSelect extends FilterRange implements IFilterDate
 	 * Get js format for datepicker
 	 * @return string
 	 */
-	public function getJsFormat(): string 
+	public function getJsFormat(): string
 	{
 		return $this->format[1];
 	}
