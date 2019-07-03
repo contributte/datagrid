@@ -38,7 +38,7 @@ class FilterDateSelect extends FilterRange implements IFilterDate
 		$this->options = $options;
 	}
 
-	public function getCondition() {
+	public function getCondition():array {
 		$date = $this->getValue();
 		$start = new Nette\Utils\DateTime($date["date"]);
 		$end = $start->modifyClone("last day of this month");
@@ -55,7 +55,7 @@ class FilterDateSelect extends FilterRange implements IFilterDate
 	 * Adds select box to filter form
 	 * @param Nette\Forms\Container $container
 	 */
-	public function addToFormContainer(Nette\Forms\Container $container)
+	public function addToFormContainer(Nette\Forms\Container $container):void
 	{
 		$container = $container->addContainer($this->key);
 		$container->addSelect("date",$this->name,$this->options)->setPrompt("-- vyberte --");
@@ -72,7 +72,7 @@ class FilterDateSelect extends FilterRange implements IFilterDate
 	 * @param  string $js_format
 	 * @return static
 	 */
-	public function setFormat($php_format, $js_format)
+	public function setFormat($php_format, $js_format):IFilterDate
 	{
 		$this->format = [$php_format, $js_format];
 
@@ -84,7 +84,7 @@ class FilterDateSelect extends FilterRange implements IFilterDate
 	 * Get php format for datapicker
 	 * @return string
 	 */
-	public function getPhpFormat()
+	public function getPhpFormat() :string
 	{
 		return $this->format[0];
 	}
@@ -94,7 +94,7 @@ class FilterDateSelect extends FilterRange implements IFilterDate
 	 * Get js format for datepicker
 	 * @return string
 	 */
-	public function getJsFormat()
+	public function getJsFormat(): string 
 	{
 		return $this->format[1];
 	}
