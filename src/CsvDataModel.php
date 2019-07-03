@@ -79,7 +79,9 @@ class CsvDataModel
 		$row = [];
 
 		foreach ($this->columns as $column) {
-			$row[] = strip_tags($column->render($item));
+			//bugfix
+			//$row[] = strip_tags($column->render($item));
+			$row[] = strip_tags((string) $column->render($item));
 		}
 
 		return $row;
