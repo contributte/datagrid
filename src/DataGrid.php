@@ -2049,7 +2049,22 @@ s	 */
 			$this->deleteSessionData('_grid_has_sorted');
 		}
 
-		foreach (array_keys($this->getSessionData()) as $key) {
+		/*foreach (array_keys($this->getSessionData()) as $key) {
+			if (!in_array($key, [
+				'_grid_perPage',
+				'_grid_sort',
+				'_grid_page',
+				'_grid_has_filtered',
+				'_grid_has_sorted',
+				'_grid_hidden_columns',
+				'_grid_hidden_columns_manipulated',
+			], true)) {
+				$this->deleteSessionData((string) $key);
+			}
+		}*/
+		//bugfix
+
+		foreach($this->getSessionData() as $key => $value){
 			if (!in_array($key, [
 				'_grid_perPage',
 				'_grid_sort',
