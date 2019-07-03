@@ -209,6 +209,8 @@ class DataGrid extends Control
 	 */
 	protected $actions = [];
 
+	/** @var array  */
+	protected $actionsOrder = [];
 	/**
 	 * @var GroupActionCollection|null
 	 */
