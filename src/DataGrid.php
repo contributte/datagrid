@@ -43,6 +43,7 @@ use Ublaboo\DataGrid\Export\ExportCsv;
 use Ublaboo\DataGrid\Filter\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter\FilterDateSelect;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
 use Ublaboo\DataGrid\Filter\FilterRange;
 use Ublaboo\DataGrid\Filter\FilterSelect;
@@ -1206,6 +1207,18 @@ s	 */
 		);
 	}
 
+	public function addFilterDateSelect($key, $name, $column = null, array $options = [])
+	{
+		$column = $column ?: $key;
+
+		if (!is_string($column)) {
+			throw new DataGridException('FilterDateRange can only filter in one column.');
+		}
+
+		$this->addFilterCheck($key);
+
+		return $this->filters[$key] = new FilterDateSelect($this, $key, $name, $column, $options);
+	}
 
 	/**
 	 * Check whether given key already exists in $this->filters

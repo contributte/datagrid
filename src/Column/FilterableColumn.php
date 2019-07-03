@@ -7,6 +7,7 @@ namespace Ublaboo\DataGrid\Column;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter\FilterDateSelect;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
 use Ublaboo\DataGrid\Filter\FilterRange;
 use Ublaboo\DataGrid\Filter\FilterSelect;
@@ -116,5 +117,10 @@ abstract class FilterableColumn
 		$column = $column ?? $this->column;
 
 		return $this->grid->addFilterDateRange($this->key, $this->name, $column, $nameSecond);
+	}
+	public function setFilterDateSelect(array $options, $column = null): FilterDateSelect{
+		$column = $column === null ? $this->column : $column;
+
+		return$this->grid->addFilterDateSelect($this->key, $this->name, $column,$options);
 	}
 }

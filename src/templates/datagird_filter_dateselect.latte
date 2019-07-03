@@ -1,0 +1,16 @@
+{**
+ * @param Filter                $filter
+ * @param Nette\Forms\Container $input
+ * @param string                $icon_prefix       Icon prefix (fa fa-)
+ *}
+
+{var $container = $input}
+{if $outer}
+	<div>
+		{input $container['date']}
+	</div>
+{else}
+	<div>
+		{input $container['date']}
+	</div>
+{/if}
