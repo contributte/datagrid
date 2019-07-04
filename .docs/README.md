@@ -3,7 +3,7 @@ Table of contents
 - [Introduction](index.md)
 - [Data sources](data-sources.md)
 - [Columns](columns.md)
-- [Filter](filter.md)
+- [Filters](filters.md)
 - [Actions](actions.md)
 - [Group action](group-action.md)
 - [Row](row.md)
