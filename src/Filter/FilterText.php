@@ -84,6 +84,9 @@ class FilterText extends Filter
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setExactSearch(bool $exact = true): self
 	{
 		$this->exact = $exact;
@@ -92,6 +95,9 @@ class FilterText extends Filter
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setSplitWordsSearch(bool $splitWordsSearch): self
 	{
 		$this->splitWordsSearch = $splitWordsSearch;

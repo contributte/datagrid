@@ -46,6 +46,9 @@ class ColumnDateTime extends Column
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setFormat(string $format): self
 	{
 		$this->format = $format;

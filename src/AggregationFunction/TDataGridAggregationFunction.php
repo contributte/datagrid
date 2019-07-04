@@ -22,6 +22,7 @@ trait TDataGridAggregationFunction
 	private $multipleAggregationFunction = null;
 
 	/**
+	 * @return static
 	 * @throws DataGridException
 	 */
 	public function addAggregationFunction(
@@ -58,6 +59,7 @@ trait TDataGridAggregationFunction
 
 
 	/**
+	 * @return static
 	 * @throws DataGridException
 	 */
 	public function setMultipleAggregationFunction(

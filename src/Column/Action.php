@@ -156,6 +156,9 @@ class Action extends Column
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function addParameters(array $parameters): self
 	{
 		$this->parameters = $parameters;
@@ -166,6 +169,7 @@ class Action extends Column
 
 	/**
 	 * @param string|callable $title
+	 * @return static
 	 * @throws DataGridException
 	 */
 	public function setTitle($title): self
@@ -192,6 +196,7 @@ class Action extends Column
 
 	/**
 	 * @param string|callable $class
+	 * @return static
 	 * @throws DataGridException
 	 */
 	public function setClass($class): self
@@ -218,6 +223,7 @@ class Action extends Column
 
 	/**
 	 * @param string|callable $icon
+	 * @return static
 	 * @throws DataGridException
 	 */
 	public function setIcon($icon): self
@@ -242,6 +248,9 @@ class Action extends Column
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setConfirmation(IConfirmation $confirmation): self
 	{
 		$this->confirmation = $confirmation;
@@ -281,6 +290,7 @@ class Action extends Column
 
 	/**
 	 * @param mixed $value
+	 * @return static
 	 */
 	public function setDataAttribute(string $key, $value): self
 	{
@@ -290,6 +300,9 @@ class Action extends Column
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function addAttributes(array $attrs): self
 	{
 		$this->attributes += $attrs;
@@ -352,6 +365,9 @@ class Action extends Column
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setOpenInNewTab(bool $openInNewTab = true): self
 	{
 		$this->openInNewTab = $openInNewTab;

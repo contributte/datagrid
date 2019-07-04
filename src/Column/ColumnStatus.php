@@ -122,6 +122,8 @@ class ColumnStatus extends Column
 
 	/**
 	 * Set all options at once
+	 *
+	 * @return static
 	 */
 	public function setOptions(array $options): self
 	{

@@ -43,6 +43,9 @@ class ColumnNumber extends Column
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setFormat(
 		int $decimals = 0,
 		string $decPoint = '.',

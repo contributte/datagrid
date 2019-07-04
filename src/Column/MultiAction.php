@@ -86,6 +86,9 @@ class MultiAction extends Column
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function addAction(
 		string $key,
 		string $name,

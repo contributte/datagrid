@@ -133,6 +133,8 @@ class ItemDetail
 
 	/**
 	 * Set item detail type
+	 *
+	 * @return static
 	 */
 	public function setType(string $type): self
 	{
@@ -153,6 +155,8 @@ class ItemDetail
 
 	/**
 	 * Set item detail template
+	 *
+	 * @return static
 	 */
 	public function setTemplate(string $template): self
 	{
@@ -171,6 +175,9 @@ class ItemDetail
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setRenderer(callable $renderer): self
 	{
 		$this->renderer = $renderer;
@@ -185,6 +192,9 @@ class ItemDetail
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setForm(ItemDetailForm $form): self
 	{
 		$this->form = $form;
@@ -199,6 +209,9 @@ class ItemDetail
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setTemplateParameters(array $templateParameters): self
 	{
 		$this->templateParameters = $templateParameters;

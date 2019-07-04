@@ -124,6 +124,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Should be column values escaped in latte?
+	 *
+	 * @return static
 	 */
 	public function setTemplateEscaping(bool $templateEscaping = true): self
 	{
@@ -141,6 +143,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Should be column header escaped in latte?
+	 *
+	 * @return static
 	 */
 	public function setHeaderEscaping(bool $headerEscaping = false): self
 	{
@@ -160,6 +164,7 @@ abstract class Column extends FilterableColumn
 	 * Set column sortable or not
 	 *
 	 * @param bool|string $sortable
+	 * @return static
 	 */
 	public function setSortable($sortable = true): self
 	{
@@ -186,6 +191,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Set column translatable or not
+	 *
+	 * @return static
 	 */
 	public function setTranslatableHeader(bool $translatableHeader = true): self
 	{
@@ -206,6 +213,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Shoud be the pagination reseted after sorting?
+	 *
+	 * @return static
 	 */
 	public function setSortableResetPagination(bool $sortableResetPagination = true): self
 	{
@@ -226,6 +235,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Set custom ORDER BY clause
+	 *
+	 * @return static
 	 */
 	public function setSortableCallback(callable $sortableCallback): self
 	{
@@ -275,6 +286,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Column may have its own template
+	 *
+	 * @return static
 	 */
 	public function setTemplate(string $template, array $templateVariables = []): self
 	{
@@ -323,6 +336,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Tell column his sorting options
+	 *
+	 * @return static
 	 */
 	public function setSort(string $sort): self
 	{
@@ -369,6 +384,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Set column alignment
+	 *
+	 * @return static
 	 */
 	public function setAlign(string $align): self
 	{
@@ -396,6 +413,9 @@ abstract class Column extends FilterableColumn
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setFitContent(bool $fitContent = true): self
 	{
 		$fitContent
@@ -408,6 +428,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Set callback that will be called after inline editing
+	 *
+	 * @return static
 	 */
 	public function setEditableCallback(callable $editableCallback): self
 	{
@@ -428,6 +450,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Set inline editing just if condition is truthy
+	 *
+	 * @return static
 	 */
 	public function setEditableOnConditionCallback(callable $editableConditionCallback): self
 	{
@@ -463,6 +487,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Element is by default textarea, user can change that
+	 *
+	 * @return static
 	 */
 	public function setEditableInputType(string $elType, array $attrs = []): self
 	{
@@ -474,6 +500,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Change small inline edit input type to select
+	 *
+	 * @return static
 	 */
 	public function setEditableInputTypeSelect(array $options = [], array $attrs = []): self
 	{
@@ -491,6 +519,9 @@ abstract class Column extends FilterableColumn
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setEditableValueCallback(callable $editableValueCallback): self
 	{
 		$this->editableValueCallback = $editableValueCallback;
@@ -513,6 +544,8 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Set attributes for both th and td element
+	 *
+	 * @return static
 	 */
 	public function addCellAttributes(array $attrs): self
 	{
@@ -578,6 +611,9 @@ abstract class Column extends FilterableColumn
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setDefaultHide(bool $defaultHide = true): self
 	{
 		$this->defaultHide = $defaultHide;
@@ -616,7 +652,9 @@ abstract class Column extends FilterableColumn
 		return $this->column;
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function setReplacement(array $replacements): self
 	{
 		$this->replacements = $replacements;

@@ -265,6 +265,10 @@ class Row
 			$value = $accessor->getValue($value, $property);
 		}
 
+		if (is_object($value) && method_exists($value, '__toString')) {
+			return (string) $value;
+		}
+
 		return $value;
 	}
 

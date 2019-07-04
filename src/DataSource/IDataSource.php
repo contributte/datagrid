@@ -29,16 +29,22 @@ interface IDataSource
 
 	/**
 	 * Filter data - get one row
+	 *
+	 * @return static
 	 */
 	public function filterOne(array $condition): self;
 
 	/**
 	 * Apply limit and offset on data
+	 *
+	 * @return static
 	 */
 	public function limit(int $offset, int $limit): self;
 
 	/**
 	 * Sort data
+	 *
+	 * @return static
 	 */
 	public function sort(Sorting $sorting): self;
 
