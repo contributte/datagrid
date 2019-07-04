@@ -62,7 +62,7 @@ class ColumnsSummary
 				$arg = $column->getFormat();
 				array_unshift($arg, $key);
 
-				call_user_func_array([$this, 'setFormat'], $arg);
+				$this->setFormat(...$arg);
 			}
 		}
 	}
