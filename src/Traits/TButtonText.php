@@ -12,6 +12,9 @@ trait TButtonText
 	 */
 	protected $text = '';
 
+	/**
+	 * @return static
+	 */
 	public function setText(string $text): self
 	{
 		$this->text = $text;

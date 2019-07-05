@@ -65,7 +65,7 @@ use UnexpectedValueException;
  * @method onRender(DataGrid $dataGrid)
  * @method onColumnAdd(string $key, Column $column)
  * @method onExport(DataGrid $dataGrid)
- * @method onFiltersAssembled(array<Filter> $filters)
+ * @method onFiltersAssembled(Filter[] $filters)
  */
 class DataGrid extends Control
 {
@@ -593,7 +593,9 @@ class DataGrid extends Control
 
 	/**
 	 * Each row can be modified with user defined callback
-s	 */
+	 *
+	 * @return static
+	 */
 	public function setRowCallback(callable $callback): self
 	{
 		$this->rowCallback = $callback;
@@ -605,6 +607,10 @@ s	 */
 	/********************************************************************************
 	 *                                 DATA SOURCE                                  *
 	 ********************************************************************************/
+
+	/**
+	 * @return static
+	 */
 	public function setPrimaryKey(string $primaryKey): self
 	{
 		if ($this->dataModel instanceof DataModel) {
@@ -621,6 +627,7 @@ s	 */
 
 	/**
 	 * @param mixed $source
+	 * @return static
 	 * @throws InvalidArgumentException
 	 */
 	public function setDataSource($source): self
@@ -649,6 +656,10 @@ s	 */
 	/********************************************************************************
 	 *                                  TEMPLATING                                  *
 	 ********************************************************************************/
+
+	/**
+	 * @return static
+	 */
 	public function setTemplateFile(string $templateFile): self
 	{
 		$this->templateFile = $templateFile;
@@ -668,7 +679,9 @@ s	 */
 		return __DIR__ . '/templates/datagrid.latte';
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function useHappyComponents(bool $useHappyComponents): self
 	{
 		$this->useHappyComponents = $useHappyComponents;
@@ -689,6 +702,7 @@ s	 */
 
 	/**
 	 * @param string|array $sort
+	 * @return static
 	 */
 	public function setDefaultSort($sort, bool $useOnReset = true): self
 	{
@@ -738,6 +752,7 @@ s	 */
 
 
 	/**
+	 * @return static
 	 * @throws DataGridException
 	 */
 	public function setSortable(bool $sortable = true): self
@@ -757,7 +772,9 @@ s	 */
 		return $this->sortable;
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function setMultiSortEnabled(bool $multiSort = true): self
 	{
 		$this->multiSort = $multiSort;
@@ -771,7 +788,9 @@ s	 */
 		return $this->multiSort;
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function setSortableHandler(string $handler = 'sort!'): self
 	{
 		$this->sortableHandler = $handler;
@@ -832,6 +851,7 @@ s	 */
 
 	/**
 	 * @param string|callable $treeViewHasChildrenColumn
+	 * @return static
 	 */
 	public function setTreeView(
 		callable $getChildrenCallback,
@@ -999,7 +1019,9 @@ s	 */
 		return $this->columns[$key];
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function removeColumn(string $key): self
 	{
 		unset($this->columnsVisibility[$key], $this->columns[$key]);
@@ -1075,7 +1097,9 @@ s	 */
 		return $this->actions[$key];
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function removeAction(string $key): self
 	{
 		unset($this->actions[$key]);
@@ -1257,7 +1281,9 @@ s	 */
 		return $this->filters;
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function removeFilter(string $key): self
 	{
 		unset($this->filters[$key]);
@@ -1275,7 +1301,9 @@ s	 */
 		return $this->filters[$key];
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function setStrictSessionFilterValues(bool $strictSessionFilterValues = true): self
 	{
 		$this->strictSessionFilterValues = $strictSessionFilterValues;
@@ -1297,6 +1325,8 @@ s	 */
 
 	/**
 	 * Tell that filter is active from whatever reasons
+	 *
+	 * @return static
 	 */
 	public function setFilterActive(): self
 	{
@@ -1308,6 +1338,8 @@ s	 */
 
 	/**
 	 * Set filter values (force - overwrite user data)
+	 *
+	 * @return static
 	 */
 	public function setFilter(array $filter): self
 	{
@@ -1322,6 +1354,7 @@ s	 */
 	/**
 	 * If we want to sent some initial filter
 	 *
+	 * @return static
 	 * @throws DataGridException
 	 */
 	public function setDefaultFilter(array $defaultFilter, bool $useOnReset = true): self
@@ -1566,7 +1599,7 @@ s	 */
 				} elseif ($edit['cancel']->isSubmittedBy() && $this->inlineEdit->onCustomRedraw !== []) {
 					$this->inlineEdit->onCustomRedraw('cancel');
 				} else {
-					$this->redrawItem((int) $id, $primaryWhereColumn);
+					$this->redrawItem($id, $primaryWhereColumn);
 					$this->redrawControl('summary');
 				}
 
@@ -1654,7 +1687,9 @@ s	 */
 		$this->reload();
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function setOuterFilterRendering(bool $outerFilterRendering = true): self
 	{
 		$this->outerFilterRendering = $outerFilterRendering;
@@ -1670,6 +1705,7 @@ s	 */
 
 
 	/**
+	 * @return static
 	 * @throws InvalidArgumentException
 	 */
 	public function setOuterFilterColumnsCount(int $count): self
@@ -1695,7 +1731,9 @@ s	 */
 		return $this->outerFilterColumnsCount;
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function setCollapsibleOuterFilters(bool $collapsibleOuterFilters = true): self
 	{
 		$this->collapsibleOuterFilters = $collapsibleOuterFilters;
@@ -1913,7 +1951,9 @@ s	 */
 		return $this->toolbarButtons[$key];
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function removeToolbarButton(string $key): self
 	{
 		unset($this->toolbarButtons[$key]);
@@ -1976,7 +2016,9 @@ s	 */
 		return $this->showSelectedRowsCount;
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function setShowSelectedRowsCount(bool $show = true): self
 	{
 		$this->showSelectedRowsCount = $show;
@@ -2047,7 +2089,7 @@ s	 */
 			$this->deleteSessionData('_grid_has_sorted');
 		}
 
-		foreach (array_keys($this->getSessionData()) as $key) {
+		foreach (array_keys(iterator_to_array($this->getSessionData())) as $key) {
 			if (!in_array($key, [
 				'_grid_perPage',
 				'_grid_sort',
@@ -2075,7 +2117,9 @@ s	 */
 		$this->reloadTheWholeGrid();
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function setColumnReset(bool $reset = true): self
 	{
 		$this->hasColumnReset = $reset;
@@ -2212,7 +2256,7 @@ s	 */
 
 		if ($this->getPresenterInstance()->isAjax()) {
 			$this->getPresenterInstance()->payload->_datagrid_toggle_detail = $id;
-			$this->getPresenterInstance()->payload->_datagrid_name = $this->getName();
+			$this->getPresenterInstance()->payload->_datagrid_name = $this->getFullName();
 			$this->redrawControl('items');
 
 			/**
@@ -2318,9 +2362,10 @@ s	 */
 
 
 	/**
+	 * @param string|int $id
 	 * @param mixed $primaryWhereColumn
 	 */
-	public function redrawItem(int $id, $primaryWhereColumn = null): void
+	public function redrawItem($id, $primaryWhereColumn = null): void
 	{
 		$this->snippetsSet = true;
 
@@ -2423,6 +2468,7 @@ s	 */
 
 	/**
 	 * @param array|array|int[]|array|string[] $itemsPerPageList
+	 * @return static
 	 */
 	public function setItemsPerPageList(array $itemsPerPageList, bool $includeAll = true): self
 	{
@@ -2439,7 +2485,9 @@ s	 */
 		return $this;
 	}
 
-
+	/**
+	 * @return static
+	 */
 	public function setDefaultPerPage(int $count): self
 	{
 		$this->defaultPerPage = $count;
@@ -2526,6 +2574,9 @@ s	 */
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setPagination(bool $doPaginate): self
 	{
 		$this->doPaginate = $doPaginate;
@@ -2559,6 +2610,10 @@ s	 */
 	/********************************************************************************
 	 *                                     I18N                                     *
 	 ********************************************************************************/
+
+	/**
+	 * @return static
+	 */
 	public function setTranslator(ITranslator $translator): self
 	{
 		$this->translator = $translator;
@@ -2585,6 +2640,7 @@ s	 */
 	 * Set order of datagrid columns
 	 *
 	 * @param array|string[] $order
+	 * @return static
 	 */
 	public function setColumnsOrder(array $order): self
 	{
@@ -2610,6 +2666,7 @@ s	 */
 	 * Columns order may be different for export and normal grid
 	 *
 	 * @param array|string[] $order
+	 * @return static
 	 */
 	public function setColumnsExportOrder(array $order): self
 	{
@@ -2630,6 +2687,9 @@ s	 */
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setRememberState(bool $remember = true): self
 	{
 		$this->rememberState = $remember;
@@ -2638,6 +2698,9 @@ s	 */
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setRefreshUrl(bool $refresh = true): self
 	{
 		$this->refreshURL = $refresh;
@@ -2736,6 +2799,9 @@ s	 */
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setItemsDetailForm(callable $callableSetContainer): self
 	{
 		if ($this->itemsDetail instanceof ItemDetail) {
@@ -2867,7 +2933,7 @@ s	 */
 
 		if ($presenter->isAjax()) {
 			$presenter->payload->_datagrid_inline_adding = true;
-			$presenter->payload->_datagrid_name = $this->getName();
+			$presenter->payload->_datagrid_name = $this->getFullName();
 
 			$this->redrawControl('tbody');
 
@@ -2908,7 +2974,7 @@ s	 */
 				$presenter->payload->_datagrid_name = $this->getFullName();
 			}
 
-			$this->redrawItem((int) $id, $primaryWhereColumn);
+			$this->redrawItem($id, $primaryWhereColumn);
 		}
 	}
 
@@ -2949,6 +3015,8 @@ s	 */
 
 	/**
 	 * Order Grid to set columns hideable.
+	 *
+	 * @return static
 	 */
 	public function setColumnsHideable(): self
 	{
@@ -3012,6 +3080,8 @@ s	 */
 
 	/**
 	 * Tell grid filters to by submitted automatically
+	 *
+	 * @return static
 	 */
 	public function setAutoSubmit(bool $autoSubmit = true): self
 	{
@@ -3185,6 +3255,7 @@ s	 */
 	 * Some of datagrid columns may be hidden by default
 	 *
 	 * @internal
+	 * @return static
 	 */
 	public function setSomeColumnDefaultHide(bool $defaultHide): self
 	{

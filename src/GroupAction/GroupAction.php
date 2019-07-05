@@ -47,6 +47,9 @@ abstract class GroupAction
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setClass(string $class): self
 	{
 		$this->class = $class;
@@ -63,6 +66,7 @@ abstract class GroupAction
 
 	/**
 	 * @param mixed $value
+	 * @return static
 	 */
 	public function setAttribute(string $key, $value): self
 	{

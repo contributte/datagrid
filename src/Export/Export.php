@@ -101,6 +101,9 @@ class Export
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setConfirmDialog(string $confirmDialog): self
 	{
 		$this->confirmDialog = $confirmDialog;
@@ -111,6 +114,8 @@ class Export
 
 	/**
 	 * Tell export which columns to use when exporting data
+	 *
+	 * @return static
 	 */
 	public function setColumns(array $columns): self
 	{
@@ -131,6 +136,8 @@ class Export
 
 	/**
 	 * Export signal url
+	 *
+	 * @return static
 	 */
 	public function setLink(Link $link): self
 	{
@@ -142,6 +149,8 @@ class Export
 
 	/**
 	 * Tell export whether to be called via ajax or not
+	 *
+	 * @return static
 	 */
 	public function setAjax(bool $ajax = true): self
 	{

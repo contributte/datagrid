@@ -12,6 +12,9 @@ trait TButtonIcon
 	 */
 	protected $icon;
 
+	/**
+	 * @return static
+	 */
 	public function setIcon(?string $icon): self
 	{
 		$this->icon = $icon;

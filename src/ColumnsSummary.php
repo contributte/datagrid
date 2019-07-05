@@ -62,7 +62,7 @@ class ColumnsSummary
 				$arg = $column->getFormat();
 				array_unshift($arg, $key);
 
-				call_user_func_array([$this, 'setFormat'], $arg);
+				$this->setFormat(...$arg);
 			}
 		}
 	}
@@ -139,6 +139,9 @@ class ColumnsSummary
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setRenderer(callable $renderer): self
 	{
 		$this->renderer = new Renderer($renderer, null);
@@ -147,6 +150,9 @@ class ColumnsSummary
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setFormat(
 		string $key,
 		int $decimals = 0,
@@ -172,6 +178,9 @@ class ColumnsSummary
 	}
 
 
+	/**
+	 * @return static
+	 */
 	public function setPositionTop(bool $top = true): self
 	{
 		$this->positionTop = $top !== false;
