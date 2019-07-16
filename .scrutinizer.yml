@@ -6,5 +6,5 @@ tools:
 
 filter:
   excluded_paths:
-    - docs/*
+    - .docs/*
     - tests/*
