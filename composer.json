@@ -22,34 +22,37 @@
 	},
 	"require": {
 		"php": "^7.2",
-		"nette/application": "^3.0",
-		"nette/utils": "^3.0",
-		"nette/forms": "^3.0",
-		"nette/di": "^3.0",
-		"contributte/application": "^0.4",
+		"contributte/application": "^0.4.0",
+		"nette/application": "^3.0.1",
+		"nette/di": "^3.0.0",
+		"nette/forms": "^3.0.1",
+		"nette/utils": "^3.0.1",
 		"symfony/property-access": "^3.0.0 || ^4.0.0"
 	},
 	"require-dev": {
-		"nette/tester": "^2.2",
-		"tracy/tracy": "^2.6",
-		"mockery/mockery": "~1.2",
-		"phpstan/phpstan": "^0.11",
-		"tharos/leanmapper": "~3.4",
-		"nextras/orm": "~3.1",
-		"doctrine/orm": "~2.6",
-		"nette/database": "~3.0",
 		"dibi/dibi": "^3.0.0 || ^4.0.0",
-		"phpstan/phpstan-strict-rules": "^0.11",
-		"ninjify/coding-standard": "^0.9",
-		"gamee/php-code-checker-rules": "^1.0"
+		"doctrine/orm": "~2.6.3",
+		"gamee/php-code-checker-rules": "^1.0",
+		"mockery/mockery": "~1.2.2",
+		"nette/database": "~3.0.2",
+		"nette/tester": "^2.2",
+		"nextras/orm": "~3.1.0",
+		"ninjify/coding-standard": "^0.9.0",
+		"phpstan/phpstan": "^0.11.12",
+		"phpstan/phpstan-strict-rules": "^0.11.1",
+		"tharos/leanmapper": "~3.4.1",
+		"tracy/tracy": "~2.6.3"
+	},
+	"prefer-stable": true,
+	"minimum-stability": "dev",
+	"config": {
+		"sort-packages": true
 	},
 	"extra": {
 		"branch-alias": {
 			"dev-master": "6.3.x-dev"
 		}
 	},
-	"prefer-stable": true,
-	"minimum-stability": "dev",
 	"scripts": {
 		"tests": [
 			"php vendor/nette/tester/src/tester.php tests/Api/UnitTests -C",
