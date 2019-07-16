@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ublaboo\DataGrid;
 
 use Dibi;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Database\Drivers as NDBDrivers;
 use Nette\Database\Table\Selection;
@@ -99,7 +99,7 @@ final class DataModel
 		} elseif ($source instanceof QueryBuilder) {
 			$source = new DoctrineDataSource($source, $primaryKey);
 
-		} elseif ($source instanceof ArrayCollection) {
+		} elseif ($source instanceof Collection) {
 			$source = new DoctrineCollectionDataSource($source, $primaryKey);
 
 		} elseif ($source instanceof ICollection) {
