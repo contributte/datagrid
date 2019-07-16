@@ -7,7 +7,11 @@
 	"authors": [
 		{
 			"name": "Pavel Janda",
-			"homepage": "http://paveljanda.com"
+			"homepage": "https://paveljanda.com"
+		},
+		{
+			"name": "Milan Felix Šulc",
+			"homepage": "https://f3l1x.io"
 		}
 	],
 	"autoload": {
