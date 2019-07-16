@@ -7,6 +7,7 @@ php:
   - 7.2
   - 7.3
   - 7.4snapshot
+  - nightly
 
 before_install:
   # Turn off XDebug
@@ -14,16 +15,13 @@ before_install:
   - mysql -e 'CREATE DATABASE datagridTest;'
 
 install:
-  # Composer
-  - travis_retry composer install --no-progress --prefer-dist
+  - travis_retry composer install --no-progress --prefer-dist # Install dependencies
 
 before_script:
   - mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 
 script:
-  - composer phpstan
-  - composer phpcs
-  - vendor/bin/tester tests/ -c tests/php.ini
+  - composer tests
 
 jobs:
   include:
@@ -32,27 +30,33 @@ jobs:
       install:
         - travis_retry composer update --no-progress --prefer-dist --prefer-lowest
       script:
-        - vendor/bin/tester tests/ -c tests/php.ini
+        - composer tests
+
+    - stage: Quality Assurance
+      php: 7.3
+      script:
+        - composer phpstan
+        - composer phpcs
 
     - stage: Test Coverage
       if: branch = master AND type = push
-      php: 7.2
+      php: 7.3
       script:
-        - vendor/bin/tester tests/ -c tests/php.ini --coverage coverage.xml --coverage-src src/
+        - composer coverage
       after_script:
         - composer global require php-coveralls/php-coveralls ^2.1.0
         - ~/.composer/vendor/bin/php-coveralls --verbose --config tests/.coveralls.yml
 
     - stage: Outdated Dependencies
       if: branch = master AND type = cron
-      php: 7.2
+      php: 7.3
       script:
         - composer outdated --direct --strict
 
   allow_failures:
-    - php: 7.3
-    - php: 7.4snapshot
     - stage: Test Coverage
+    - php: 7.4snapshot
+    - php: nightly
 
 sudo: false
 
