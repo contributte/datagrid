@@ -7,7 +7,6 @@ namespace Ublaboo\DataGrid\DataSource;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
-use LogicException;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
 use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
@@ -44,7 +43,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	public function __construct(Collection $collection, string $primaryKey)
 	{
 		if (!($collection instanceof Selectable)) {
-			throw new LogicException(sprintf('Given collection must implement Selectable'));
+			throw new \LogicException(sprintf('Given collection must implement Selectable'));
 		}
 
 		$this->criteria = Criteria::create();
