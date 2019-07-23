@@ -3080,7 +3080,7 @@ class DataGrid extends Control
 
 		return $this->componentFullName;
 	}
-	
+
 
 	/**
 	 * Tell grid filters to by submitted automatically
