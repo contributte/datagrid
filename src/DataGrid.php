@@ -46,6 +46,7 @@ use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterDateSelect;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
 use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterSearchSelect;
 use Ublaboo\DataGrid\Filter\FilterSelect;
 use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Filter\IFilterDate;
@@ -1152,6 +1153,20 @@ s	 */
 		return $this->filters[$key] = new FilterMultiSelect($this, $key, $name, $options, $column);
 	}
 
+	public function addFilterSearchSelect(
+		string $key,
+		string $name,
+		array $options,
+		?string $column = null
+	): FilterSearchSelect
+	{
+		$column = $column ?? $key;
+
+		$this->addFilterCheck($key);
+
+		return $this->filters[$key] = new FilterSearchSelect($this, $key, $name, $options, $column);
+	}
+
 
 	public function addFilterDate(string $key, string $name, ?string $column = null): FilterDate
 	{
@@ -1185,6 +1200,12 @@ s	 */
 
 
 	/**
+	 * @param string $key
+	 * @param string $name
+	 * @param string|null $column
+	 * @param string $nameSecond
+	 *
+	 * @return FilterDateRange
 	 * @throws DataGridException
 	 */
 	public function addFilterDateRange(

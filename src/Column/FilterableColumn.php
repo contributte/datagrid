@@ -88,6 +88,10 @@ abstract class FilterableColumn
 
 		return $this->grid->addFilterMultiSelect($this->key, $this->name, $options, $column);
 	}
+	public function setFilterSearchSelect(array $options, ?string $column = null): FilterSearchSelect{
+		$column = $column ?? $this->column;
+		return $this->grid->addFilterSearchSelect($this->key,$this->name,$options,$column);
+	}
 
 
 	public function setFilterDate(?string $column = null): FilterDate
