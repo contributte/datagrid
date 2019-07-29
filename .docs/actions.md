@@ -78,24 +78,22 @@ $grid->addAction('delete', '', 'delete!')
 	->setIcon('trash')
 	->setTitle('Smazat')
 	->setClass('btn btn-xs btn-danger <strong class="text-danger">ajax</strong>')
-	->setConfirm('Do you really want to delete row %s?', 'name'); // Second parameter is optional
+	->setConfirmation(
+		new StringConfirmation('Do you really want to delete row %s?', 'name') // Second parameter is optional
+	);
 ```
 
-If you want to define confirmation dialog with a callback, the callback has to return string. It can optionally return string containing `%s` placeholder. In that case you should provide column name as the second argument to `::setConfirm()` method.
+If you want to define confirmation dialog with a callback, the callback has to return string.
 
 ```php
 $grid->addAction('delete', '', 'delete!')
-	->setConfirm(function($item) {
-		return 'Do you really want to delete row with id ' . $item->id . ' and name %s?';
-	}, 'name');
-
-/**
- * Same result
- */
-$grid->addAction('delete', '', 'delete!')
-	->setConfirm(function($item) {
-		return 'Do you really want to delete row with id ' . $item->id . ' and name ' . $item->name . '?';
-	});
+	->setConfirmation(
+		new CallbackConfirmation(
+			function($item) {
+				return 'Do you really want to delete row with id ' . $item->id . ' and name ' . $item->name . '?';
+			}
+		)
+	);
 ```
 
 ## Ajax
