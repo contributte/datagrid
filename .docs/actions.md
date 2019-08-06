@@ -11,7 +11,7 @@ Table of contents
 		- [Redrawing the data](#redrawing-the-data)
 		- [Redrawing one row](#redrawing-one-row)
 	- [Sortable](#sortable)
-		- [Sorting hander](#sorting-hander)
+		- [Sorting handler](#sorting-handler)
 	- [MultiAction](#multiaction)
 	- [Item detail](#item-detail)
 		- [Item detail form](#item-detail-form)
@@ -234,7 +234,7 @@ public function handleSort($item_id, $prev_id, $next_id)
 }
 ```
 
-### Sorting hander
+### Sorting handler
 
 The name of the handler used for sorting can be changed:
 
