@@ -289,7 +289,7 @@ abstract class Column extends FilterableColumn
 	 *
 	 * @return static
 	 */
-	public function setTemplate(string $template, array $templateVariables = []): self
+	public function setTemplate(?string $template, array $templateVariables = []): self
 	{
 		$this->template = $template;
 		$this->templateVariables = $templateVariables;
