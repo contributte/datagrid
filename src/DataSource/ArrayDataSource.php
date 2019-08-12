@@ -140,13 +140,15 @@ class ArrayDataSource implements IDataSource
 			$condition = $filter->getCondition();
 
 			foreach ($condition as $column => $value) {
+				$value = (string) $value;
+				$rowVal = (string) $row[$column];
 				if ($filter instanceof FilterText && $filter->isExactSearch()) {
-					return $row[$column] === $value;
+					return $rowVal === $value;
 				}
 
 				$words = $filter instanceof FilterText && $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
-				$row_value = strtolower(Strings::toAscii($row[$column]));
+				$row_value = strtolower(Strings::toAscii($rowVal));
 
 				foreach ($words as $word) {
 					if (strpos($row_value, strtolower(Strings::toAscii($word))) !== false) {
