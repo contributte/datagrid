@@ -296,8 +296,9 @@ datagridSortable = function() {
 		items: 'tr',
 		axis: 'y',
 		update: function(event, ui) {
-			var component_prefix, data, item_id, next_id, prev_id, row, url;
+			var component_prefix, data, item_id, next_id, prev_id, row, url, handle;
 			row = ui.item.closest('tr[data-id]');
+			handle = ui.item.find('.handle-sort');
 			item_id = row.data('id');
 			prev_id = null;
 			next_id = null;
@@ -324,7 +325,7 @@ datagridSortable = function() {
 				error: function(jqXHR, textStatus, errorThrown) {
 					return alert(jqXHR.statusText);
 				}
-			});
+			}, handle, event);
 		},
 		helper: function(e, ui) {
 			ui.children().each(function() {
@@ -350,9 +351,10 @@ if (typeof datagridSortableTree === 'undefined') {
 			toleranceElement: '> .datagrid-tree-item-content',
 			connectWith: '.datagrid-tree-item-children',
 			update: function(event, ui) {
-				var component_prefix, data, item_id, next_id, parent, parent_id, prev_id, row, url;
+				var component_prefix, data, item_id, next_id, parent, parent_id, prev_id, row, url, handle;
 				$('.toggle-tree-to-delete').remove();
 				row = ui.item.closest('.datagrid-tree-item[data-id]');
+				handle = ui.item.find('.handle-sort');
 				item_id = row.data('id');
 				prev_id = null;
 				next_id = null;
@@ -395,7 +397,7 @@ if (typeof datagridSortableTree === 'undefined') {
 							return alert(jqXHR.statusText);
 						}
 					}
-				});
+				}, handle, event);
 			},
 			stop: function(event, ui) {
 				return $('.toggle-tree-to-delete').removeClass('toggle-tree-to-delete');

@@ -297,7 +297,7 @@
 													{/if}
 												{/if}
 											{/foreach}
-											<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
+											<span class="handle-sort btn btn-xs btn-default btn-secondary" data-ajax-pass="true" n:if="$control->isSortable()">
 												<i n:block="icon-arrows-v" class="{$iconPrefix}arrows-v {$iconPrefix}arrows-alt-v"></i>
 											</span>
 											{if $inlineEdit && $row->hasInlineEdit()}
