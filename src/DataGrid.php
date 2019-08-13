@@ -2089,7 +2089,11 @@ class DataGrid extends Control
 			$this->deleteSessionData('_grid_has_sorted');
 		}
 
-		foreach (array_keys(iterator_to_array($this->getSessionData())) as $key) {
+		$sessionData = is_array($this->getSessionData())
+			? $this->getSessionData()
+			: iterator_to_array($this->getSessionData());
+
+		foreach (array_keys($sessionData) as $key) {
 			if (!in_array($key, [
 				'_grid_perPage',
 				'_grid_sort',
