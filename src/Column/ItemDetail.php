@@ -84,6 +84,7 @@ class ItemDetail
 		$a = Html::el('a')
 			->href($this->grid->link('getItemDetail!', ['id' => $row->getId()]))
 			->data('toggle-detail', $row->getId())
+			->data('toggle-detail-grid-fullname', $this->grid->getFullName())
 			->data('toggle-detail-grid', $this->grid->getName());
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
