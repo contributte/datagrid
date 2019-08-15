@@ -451,10 +451,11 @@ $.nette.ext('datagrid.sort', {
 
 $.nette.ext('datargid.item_detail', {
 	before: function(xhr, settings) {
-		var id, row_detail;
+		var id, row_detail, grid_fullname;
 		if (settings.nette && settings.nette.el.attr('data-toggle-detail')) {
 			id = settings.nette.el.attr('data-toggle-detail');
-			row_detail = $('.item-detail-' + id);
+			grid_fullname = settings.nette.el.attr('data-toggle-detail-grid-fullname');
+			row_detail = $('.item-detail-' + grid_fullname + '-id-' + id);
 			if (row_detail.hasClass('loaded')) {
 				if (!row_detail.find('.item-detail-content').length) {
 					row_detail.removeClass('toggled');
@@ -477,10 +478,11 @@ $.nette.ext('datargid.item_detail', {
 		}
 	},
 	success: function(payload) {
-		var id, row_detail;
-		if (payload._datagrid_toggle_detail) {
+		var id, row_detail, grid_fullname;
+		if (payload._datagrid_toggle_detail && payload._datagrid_name) {
 			id = payload._datagrid_toggle_detail;
-			row_detail = $('.item-detail-' + id);
+			grid_fullname = payload._datagrid_name;
+			row_detail = $('.item-detail-' + grid_fullname + '-id-' + id);
 			row_detail.toggleClass('toggled');
 			return row_detail.find('.item-detail-content').slideToggle('fast');
 		}
