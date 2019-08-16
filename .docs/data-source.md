@@ -18,7 +18,7 @@ There are these supported datasources so far:
 - Nette\Database (Please see it's documentation [here](https://github.com/contributte/datagrid-nette-database-data-source))
 - Nette\Database\Table
 - Nette\Database\Table (for MS-SQL)
-- Nette\Database\Table (for PostreSQL)
+- Nette\Database\Table (for PostgreSQL)
 - Array
 - Elasticsearch (Please see the documentation [here](https://github.com/contributte/datagrid-elasticsearch-data-source))
 - Remote Api
