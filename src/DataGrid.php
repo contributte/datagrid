@@ -3029,9 +3029,9 @@ s	 */
 			);
 		}
 
-		if ($rowCallback !== null) {
-			throw new InvalidArgumentException('Row summary callback must be callable');
-		}
+		//if ($rowCallback !== null) {
+			//throw new InvalidArgumentException('Row summary callback must be callable');
+		//}
 
 		$this->columnsSummary = new ColumnsSummary($this, $columns, $rowCallback);
 

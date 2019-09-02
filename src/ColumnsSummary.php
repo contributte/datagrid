@@ -110,7 +110,7 @@ class ColumnsSummary
 			$this->format[$key][0],
 			$this->format[$key][1],
 			$this->format[$key][2]
-		);
+		) . $this->format[$key][3];
 	}
 
 
@@ -151,10 +151,11 @@ class ColumnsSummary
 		string $key,
 		int $decimals = 0,
 		string $dec_point = '.',
-		string $thousands_sep = ' '
+		string $thousands_sep = ' ',
+		string $postfix = ''
 	): self
 	{
-		$this->format[$key] = [$decimals, $dec_point, $thousands_sep];
+		$this->format[$key] = [$decimals, $dec_point, $thousands_sep, $postfix];
 
 		return $this;
 	}
