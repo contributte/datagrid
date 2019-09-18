@@ -138,6 +138,15 @@ final class ColumnActionTest extends TestCase
 			'<a href="https://www.example.com/?name=John" class="btn btn-xs btn-default btn-secondary">Do</a>',
 			$this->render($action)
 		);
+
+		$action = $this->grid->addAction('action3', 'Do')->setCustomHref(function($rowItem) {
+			return '/preview/user/?id=' . $rowItem['id'];
+		});
+
+		Assert::same(
+			'<a href="/preview/user/?id=1" class="btn btn-xs btn-default btn-secondary">Do</a>',
+			$this->render($action)
+		);
 	}
 
 
