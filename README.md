@@ -25,7 +25,7 @@ Supported features: filtering, sorting, pagination, tree view, table view, trans
 
 ## GitHub Issues
 
-Sometimes, when there is a new issue opened (wither with a new feature request or a bug report), we assign a label with a dollar sign (**$**) and an amount of dollars to the issue. This is an opportunity for you to support datagrid vendor creators and resolve particular issue.
+Sometimes, when there is a new issue opened (either with a new feature request or a bug report), we assign a label with a dollar sign (**$**) and an amount of dollars to the issue. This is an opportunity for you to support datagrid vendor creators and resolve particular issue.
 
 Thank you for your support. ❤
 
