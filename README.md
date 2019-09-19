@@ -23,6 +23,12 @@ Supported features: filtering, sorting, pagination, tree view, table view, trans
 
 [![Join the chat](https://img.shields.io/gitter/room/contributte/contributte.svg?style=flat-square)](http://bit.ly/ctteg)
 
+## GitHub Issues
+
+Sometimes, when there is a new issue opened (wither with a new feature request or a bug report), we assign a label with a dollar sign (**$**) and an amount of dollars to the issue. This is an opportunity for you to support datagrid vendor creators and resolve particular issue.
+
+Thank you for your support. ❤
+
 ## Versions
 
 | State       | Version   | Branch   | Nette | PHP      |
