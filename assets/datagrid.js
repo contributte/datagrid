@@ -1,3 +1,66 @@
+var dataGridRegisterExtension, dataGridRegisterAjaxCall, dataGridLoad;
+
+if (naja) {
+	dataGridRegisterExtension = function (name, extension) {
+		var init = extension.init;
+		var success = extension.success;
+		var before = extension.before;
+		var complete = extension.complete;
+
+
+		var NewExtension = function NewExtension(naja, name) {
+			this.name = name;
+
+			if(init) {
+				naja.addEventListener('init', function (params)  {
+					init(params.defaultOptions);
+				}).bind(this);
+			}
+
+			if(success) {
+				naja.addEventListener('success', function (params)  {
+					success(params.response, params.options);
+				}).bind(this);
+			}
+
+			if(before) {
+				naja.addEventListener('before', function (params) {
+					before(params.xhr, params.options);
+				}).bind(this);
+			}
+
+			if(complete) {
+				naja.addEventListener('complete', function (params) {
+					complete(params.xhr, params.options);
+				}).bind(this);
+			}
+		
+			return this;
+		}
+
+		naja.registerExtension(NewExtension, name);
+	};
+
+
+	dataGridRegisterAjaxCall = function (params) {
+        var method = params.type || 'GET';
+        var data = params.data || null;
+
+		naja.makeRequest(method, params.url, data, {})
+			.then(params.success)
+			.catch(params.error);
+	};
+	
+	dataGridLoad = naja.load;
+} else if ($.nette) {
+	dataGridRegisterExtension = $.nette.ext;
+	dataGridRegisterAjaxCall = $.nette.ajax;
+	dataGridLoad = $.nette.load;
+} else {
+	throw new Error("Include Naja.js or nette.ajax for datagrids to work!")
+}
+
+
 var datagridFitlerMultiSelect, datagridGroupActionMultiSelect, datagridShiftGroupSelection, datagridSortable, datagridSortableTree, getEventDomPath,
 	indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
@@ -8,7 +71,7 @@ $(document).on('click', '[data-datagrid-confirm]:not(.ajax)', function(e) {
 	}
 });
 
-$.nette.ext('datagrid.confirm', {
+dataGridRegisterExtension('datagrid.confirm', {
 	before: function(xhr, settings) {
 		var confirm_message;
 		if (settings.nette) {
@@ -254,7 +317,7 @@ datagridSortable = function() {
 			if (next_id !== null) {
 				data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id;
 			}
-			return $.nette.ajax({
+			return dataGridRegisterAjaxCall({
 				type: 'GET',
 				url: url,
 				data: data,
@@ -323,7 +386,7 @@ if (typeof datagridSortableTree === 'undefined') {
 					data[(component_prefix + '-next_id').replace(/^-/, '')] = next_id;
 				}
 				data[(component_prefix + '-parent_id').replace(/^-/, '')] = parent_id;
-				return $.nette.ajax({
+				return dataGridRegisterAjaxCall({
 					type: 'GET',
 					url: url,
 					data: data,
@@ -354,7 +417,7 @@ $(function() {
 	return datagridSortableTree();
 });
 
-$.nette.ext('datagrid.happy', {
+dataGridRegisterExtension('datagrid.happy', {
 	success: function() {
 		var c, checked_rows, class_selector, classes, event, grid, grids, i, ie, input, j, len, len1, results;
 		if (window.happy) {
@@ -396,13 +459,13 @@ $.nette.ext('datagrid.happy', {
 	}
 });
 
-$.nette.ext('datagrid.sortable', {
+dataGridRegisterExtension('datagrid.sortable', {
 	success: function() {
 		return datagridSortable();
 	}
 });
 
-$.nette.ext('datagrid.forms', {
+dataGridRegisterExtension('datagrid.forms', {
 	success: function() {
 		return $('.datagrid').find('form').each(function() {
 			return window.Nette.initForm(this);
@@ -410,7 +473,7 @@ $.nette.ext('datagrid.forms', {
 	}
 });
 
-$.nette.ext('datagrid.url', {
+dataGridRegisterExtension('datagrid.url', {
 	success: function(payload) {
 		var host, path, query, url;
 		if (payload._datagrid_url) {
@@ -434,7 +497,7 @@ $.nette.ext('datagrid.url', {
 	}
 });
 
-$.nette.ext('datagrid.sort', {
+dataGridRegisterExtension('datagrid.sort', {
 	success: function(payload) {
 		var href, key, ref, results;
 		if (payload._datagrid_sort) {
@@ -449,7 +512,7 @@ $.nette.ext('datagrid.sort', {
 	}
 });
 
-$.nette.ext('datargid.item_detail', {
+dataGridRegisterExtension('datargid.item_detail', {
 	before: function(xhr, settings) {
 		var id, row_detail;
 		if (settings.nette && settings.nette.el.attr('data-toggle-detail')) {
@@ -487,7 +550,7 @@ $.nette.ext('datargid.item_detail', {
 	}
 });
 
-$.nette.ext('datagrid.tree', {
+dataGridRegisterExtension('datagrid.tree', {
 	before: function(xhr, settings) {
 		var children_block;
 		if (settings.nette && settings.nette.el.attr('data-toggle-tree')) {
@@ -520,7 +583,7 @@ $.nette.ext('datagrid.tree', {
 			}
 			children_block.addClass('loaded');
 			children_block.slideToggle('fast');
-			$.nette.load();
+			dataGridLoad();
 		}
 		return datagridSortableTree();
 	}
@@ -574,7 +637,7 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
 			var value;
 			value = el.val();
 			if (value !== cell.data('valueToEdit')) {
-				$.nette.ajax({
+				dataGridRegisterAjaxCall({
 					url: cell.data('datagrid-editable-url'),
 					data: {
 						value: value
@@ -626,7 +689,7 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
 	}
 });
 
-$.nette.ext('datagrid.after_inline_edit', {
+dataGridRegisterExtension('datagrid.after_inline_edit', {
 	success: function(payload) {
 		var grid = $('.datagrid-' + payload._datagrid_name);
 
@@ -648,7 +711,7 @@ $(document).on('mouseup', '[data-datagrid-cancel-inline-add]', function(e) {
 	}
 });
 
-$.nette.ext('datagrid-toggle-inline-add', {
+dataGridRegisterExtension('datagrid-toggle-inline-add', {
 	success: function(payload) {
 		var grid = $('.datagrid-' + payload._datagrid_name);
 
@@ -709,7 +772,7 @@ $(function() {
 	return datagridGroupActionMultiSelect();
 });
 
-$.nette.ext('datagrid.fitlerMultiSelect', {
+dataGridRegisterExtension('datagrid.fitlerMultiSelect', {
 	success: function() {
 		datagridFitlerMultiSelect();
 		if ($.fn.selectpicker) {
@@ -720,13 +783,13 @@ $.nette.ext('datagrid.fitlerMultiSelect', {
 	}
 });
 
-$.nette.ext('datagrid.groupActionMultiSelect', {
+dataGridRegisterExtension('datagrid.groupActionMultiSelect', {
 	success: function() {
 		return datagridGroupActionMultiSelect();
 	}
 });
 
-$.nette.ext('datagrid.inline-editing', {
+dataGridRegisterExtension('datagrid.inline-editing', {
 	success: function(payload) {
 		var grid;
 		if (payload._datagrid_inline_editing) {
@@ -736,7 +799,7 @@ $.nette.ext('datagrid.inline-editing', {
 	}
 });
 
-$.nette.ext('datagrid.redraw-item', {
+dataGridRegisterExtension('datagrid.redraw-item', {
 	success: function(payload) {
 		var row;
 		if (payload._datagrid_redraw_item_class) {
@@ -746,7 +809,7 @@ $.nette.ext('datagrid.redraw-item', {
 	}
 });
 
-$.nette.ext('datagrid.reset-filter-by-column', {
+dataGridRegisterExtension('datagrid.reset-filter-by-column', {
 	success: function(payload) {
 		var grid, href, i, key, len, ref;
 		if (!payload._datagrid_name) {
