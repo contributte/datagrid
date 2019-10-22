@@ -1,4 +1,50 @@
-$.nette.ext('ublaboo-spinners', {
+var dataGridRegisterExtension;
+
+if (naja) {
+	dataGridRegisterExtension = function (name, extension) {
+		var init = extension.init;
+		var success = extension.success;
+		var before = extension.before;
+		var complete = extension.complete;
+
+
+		var NewExtension = function NewExtension(naja, name) {
+			this.name = name;
+
+			if(init) {
+				naja.addEventListener('init', function (params)  {
+					init(params.defaultOptions);
+				}).bind(this);
+			}
+
+			if(success) {
+				naja.addEventListener('success', function (params)  {
+					success(params.response, params.options);
+				}).bind(this);
+			}
+
+			if(before) {
+				naja.addEventListener('before', function (params) {
+					before(params.xhr, params.options);
+				}).bind(this);
+			}
+
+			if(complete) {
+				naja.addEventListener('complete', function (params) {
+					complete(params.xhr, params.options);
+				}).bind(this);
+			}
+		
+			return this;
+		}
+
+		naja.registerExtension(NewExtension, name);
+	};
+} else if ($.nette) {
+	dataGridRegisterExtension = $.nette.ext;
+}
+
+dataGridRegisterExtension('ublaboo-spinners', {
 	before: function(xhr, settings) {
 		var el, id, row_detail, spinner_template;
 		if (settings.nette) {
