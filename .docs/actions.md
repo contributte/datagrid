@@ -314,17 +314,19 @@ $grid->setItemsDetailForm(function(Nette\Forms\Container $container) use ($grid,
 DataGrid user template:
 
 ```php
-{extends $original_template}
+{extends $originalTemplate}
 
 {block detail}
 	<h2>{$item->name}</h2>
 
 	<p>Lorem ipsum ...</p>
 
-	{formContainer items_detail_form-$item->id}
-		{input id, value => $item->id}
-		{input name, value => $item->name}
-		{input save}
+	{formContainer items_detail_form}
+		{formContainer items_detail_form_$item->id}
+			{input id, value => $item->id}
+			{input name, value => $item->name}
+			{input save}	
+		{/formContainer}
 	{/formContainer}
 
 ```
