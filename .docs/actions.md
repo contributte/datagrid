@@ -303,7 +303,8 @@ $grid->setItemsDetailForm(function(Nette\Forms\Container $container) use ($grid,
 	$container->addText('name');
 
 	$container->addSubmit('save', 'Save')
-		->onClick[] = function($button) use ($grid, $presenter) {
+		->setValidationScope([$container])	
+		->onClick[] = function($button) use ($grid, $presenter) {		
 			$values = $button->getParent()->getValues();
 
 			$presenter['examplesGrid']->redrawItem($values->id);
