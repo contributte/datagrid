@@ -13,7 +13,7 @@
 				{$activeOption->getText()|translate} <i n:if="$status->hasCaret()" class="caret"></i>
 			</button>
 		{else}
-			{$active_option->getText()|translate}
+			{$activeOption->getText()|translate}
 		{/if}
 	{else}
 		{$row->getValue($status->getColumn())}
