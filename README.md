@@ -14,20 +14,15 @@ Supported features: filtering, sorting, pagination, tree view, table view, trans
 [![Build Status](https://img.shields.io/travis/contributte/datagrid.svg?style=flat-square)](https://travis-ci.org/contributte/datagrid)
 [![Code coverage](https://img.shields.io/coveralls/contributte/datagrid.svg?style=flat-square)](https://coveralls.io/r/contributte/datagrid)
 [![Licence](https://img.shields.io/packagist/l/ublaboo/datagrid.svg?style=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
+[![Gitter](https://img.shields.io/gitter/room/contributte/contributte?style=flat-square)](http://bit.ly/ctteg)
 
 [![Downloads this Month](https://img.shields.io/packagist/dm/ublaboo/datagrid.svg?style=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
 [![Downloads total](https://img.shields.io/packagist/dt/ublaboo/datagrid.svg?style=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
 [![Latest stable](https://poser.pugx.org/ublaboo/datagrid/v/stable?format=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
 
-## Discussion / Help
+![](.docs/assets/datagrid.gif)
 
-[![Join the chat](https://img.shields.io/gitter/room/contributte/contributte.svg?style=flat-square)](http://bit.ly/ctteg)
-
-## GitHub Issues
-
-Sometimes, when there is a new issue opened (either with a new feature request or a bug report), we assign a label with a dollar sign (**$**) and an amount of dollars to the issue. This is an opportunity for you to support datagrid vendor creators and resolve particular issue.
-
-Thank you for your support. ❤
+-----
 
 ## Versions
 
@@ -39,6 +34,12 @@ Thank you for your support. ❤
 | stable      | `^5.7.1`  | `v5.x`   | >=2.3 | `^5.6` |
 | stable      | `^4.4.22` | `v5.x`   | >=2.3 | `^5.6` |
 | stable      | `^3.3.1`  | `v5.x`   | >=2.3 | `^5.3` |
+
+## GitHub Issues
+
+Sometimes, when there is a new issue opened (either with a new feature request or a bug report), we assign a label with a dollar sign (**$**) and an amount of dollars to the issue. This is an opportunity for you to support datagrid vendor creators and resolve particular issue.
+
+Thank you for your support. ❤
 
 ## Maintainers
 
