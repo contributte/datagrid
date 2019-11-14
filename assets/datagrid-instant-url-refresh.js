@@ -1,6 +1,6 @@
 var dataGridRegisterAjaxCall;
 
-if (naja) {
+if (typeof naja !== "undefined") {
 	dataGridRegisterAjaxCall = function (params) {
         var method = params.type || 'GET';
         var data = params.data || null;

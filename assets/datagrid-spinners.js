@@ -1,6 +1,6 @@
 var dataGridRegisterExtension;
 
-if (naja) {
+if (typeof naja !== "undefined") {
 	dataGridRegisterExtension = function (name, extension) {
 		var init = extension.init;
 		var success = extension.success;
