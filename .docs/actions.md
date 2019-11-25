@@ -135,7 +135,7 @@ public function handleSetStatus($id, $status)
 
 	if ($this->isAjax()) {
 		$this->redrawControl('flashes');
-		<strong>$this['actionsGrid']->redrawItem($id);</strong>
+		$this['actionsGrid']->redrawItem($id);
 	} else {
 		$this->redirect('this');
 	}
