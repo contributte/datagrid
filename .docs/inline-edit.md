@@ -12,7 +12,7 @@ Table of contents
 
 ## Small inline editing
 
-![Small inline editing](assets/inline_edit.gif)
+![Small inline editing](https://github.com/contributte/datagrid/blob/master/.docs/assets/inline_edit.gif?raw=true)
 
 As you can see in the example above (or on the homepage), there is column name and it is editable. You can click on the column cell and a textarea will appear. Then on 'blur', ajax request is sent and your callback is fired.
 
@@ -58,7 +58,7 @@ $grid->addColumnText('name', 'Name')
 
 ### Render different content then is edited
 
-![different content](assets/inline_edit_2.gif)
+![different content](https://github.com/contributte/datagrid/blob/master/.docs/assets/inline_edit_2.gif?raw=true)
 
 As you can see in the demo above, you can edit the link column but actually, only the link text will be edited. That you can achieve by following code:
 
@@ -79,7 +79,7 @@ $grid->addColumnLink('link', 'Link', 'this#demo', 'name', ['id'])
 
 This one is much more powerful:
 
-![Big inline editing](assets/big_inline_edit.gif)
+![Big inline editing](https://github.com/contributte/datagrid/blob/master/.docs/assets/big_inline_edit.gif?raw=true)
 
 Example useage:
 
