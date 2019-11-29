@@ -1361,23 +1361,28 @@ class DataGrid extends Control
 	{
 		foreach ($defaultFilter as $key => $value) {
 			$filter = $this->getFilter($key);
+
 			if (!$filter) {
 				throw new DataGridException("Can not set default value to nonexisting filter [$key]");
 			}
+
 			if ($filter instanceof Filter\FilterMultiSelect && !is_array($value)) {
 				throw new DataGridException(
 					"Default value of filter [$key] - MultiSelect has to be an array"
 				);
 			}
+
 			if ($filter instanceof Filter\FilterRange || $filter instanceof Filter\FilterDateRange) {
 				if (!is_array($value)) {
 					throw new DataGridException(
 						"Default value of filter [$key] - Range/DateRange has to be an array [from/to => ...]"
 					);
 				}
+
 				$temp = $value;
 				unset($temp['from'], $temp['to']);
-				if (!empty($temp)) {
+
+				if (count($temp) > 0) {
 					throw new DataGridException(
 						"Default value of filter [$key] - Range/DateRange can contain only [from/to => ...] values"
 					);
@@ -3084,7 +3089,7 @@ class DataGrid extends Control
 
 		return $this->componentFullName;
 	}
-	
+
 
 	/**
 	 * Tell grid filters to by submitted automatically
