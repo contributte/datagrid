@@ -1360,22 +1360,25 @@ class DataGrid extends Control
 	public function setDefaultFilter(array $defaultFilter, bool $useOnReset = true): self
 	{
 		foreach ($defaultFilter as $key => $value) {
+			/** @var Filter|null $filter */
 			$filter = $this->getFilter($key);
 
-			if (!$filter) {
-				throw new DataGridException("Can not set default value to nonexisting filter [$key]");
-			}
-
-			if ($filter instanceof Filter\FilterMultiSelect && !is_array($value)) {
+			if ($filter === null) {
 				throw new DataGridException(
-					"Default value of filter [$key] - MultiSelect has to be an array"
+					sprintf('Can not set default value to nonexisting filter [%s]', $key)
 				);
 			}
 
-			if ($filter instanceof Filter\FilterRange || $filter instanceof Filter\FilterDateRange) {
+			if ($filter instanceof FilterMultiSelect && !is_array($value)) {
+				throw new DataGridException(
+					sprintf('Default value of filter [%s] - MultiSelect has to be an array', $key)
+				);
+			}
+
+			if ($filter instanceof FilterRange || $filter instanceof FilterDateRange) {
 				if (!is_array($value)) {
 					throw new DataGridException(
-						"Default value of filter [$key] - Range/DateRange has to be an array [from/to => ...]"
+						sprintf('Default value of filter [%s] - Range/DateRange has to be an array [from/to => ...]', $key)
 					);
 				}
 
