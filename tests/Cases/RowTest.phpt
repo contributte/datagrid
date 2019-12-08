@@ -81,16 +81,16 @@ final class RowTest extends TestCase
 		Assert::same(20, $row->getValue('partner.age'));
 	}
 
-    public function testLeanMapperEntity(): void
-    {
-        $entity = new Utils\LeanBookEntity();
-        $entity->id = '978-80-257-1309-9';
-        $entity->pageCount = 42;
+	public function testLeanMapperEntity(): void
+	{
+		$entity = new Utils\LeanBookEntity();
+		$entity->id = '978-80-257-1309-9';
+		$entity->pageCount = 42;
 
-        $row = new Row($this->grid, $entity, 'id');
+		$row = new Row($this->grid, $entity, 'id');
 
-        Assert::same('978-80-257-1309-9', $row->getValue('id'));
-        Assert::same(42, $row->getValue('pageCount'));
+		Assert::same('978-80-257-1309-9', $row->getValue('id'));
+		Assert::same(42, $row->getValue('pageCount'));
 	}
 
 }
