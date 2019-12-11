@@ -1393,7 +1393,10 @@ class DataGrid extends Control
 
 				if (count($temp) > 0) {
 					throw new DataGridException(
-						"Default value of filter [$key] - Range/DateRange can contain only [from/to => ...] values"
+						sprintf(
+							'Default value of filter [%s] - Range/DateRange can contain only [from/to => ...] values',
+							$key
+						)
 					);
 				}
 			}
