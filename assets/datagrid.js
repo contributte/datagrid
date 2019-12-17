@@ -51,11 +51,19 @@ if (typeof naja !== "undefined") {
 			.catch(params.error);
 	};
 
-	dataGridLoad = naja.load;
+	dataGridLoad = function () {
+		naja.load();
+	};
 } else if ($.nette) {
-	dataGridRegisterExtension = $.nette.ext;
-	dataGridRegisterAjaxCall = $.nette.ajax;
-	dataGridLoad = $.nette.load;
+	dataGridRegisterExtension = function (name, extension) {
+		$.nette.ext(name, extension);
+	};
+	dataGridRegisterAjaxCall = function (params) {
+		$.nette.ajax(params);
+	};
+	dataGridLoad = function () {
+		$.nette.load();
+	};
 } else {
 	throw new Error("Include Naja.js or nette.ajax for datagrids to work!")
 }
