@@ -24,11 +24,6 @@ final class ItemDetailForm extends Container
 	 */
 	private $httpPost;
 
-	/**
-	 * @var array<bool>
-	 */
-	private $containerSetByName = [];
-
 
 	public function __construct(callable $callableSetContainer)
 	{
@@ -66,27 +61,10 @@ final class ItemDetailForm extends Container
 	}
 
 
-	/**
-	 * @param mixed $name
-	 */
-	public function offsetGet($name): IComponent
-	{
-		return $this->getComponentAndSetContainer($name);
-	}
-
-
-	/**
-	 * @param mixed $name
-	 */
-	public function getComponentAndSetContainer($name): IComponent
+	protected function createComponent(string $name): ?IComponent
 	{
 		$container = $this->addContainer($name);
-
-		if (!isset($this->containerSetByName[$name])) {
-			call_user_func($this->callableSetContainer, $container);
-
-			$this->containerSetByName[$name] = true;
-		}
+		($this->callableSetContainer)($container);
 
 		return $container;
 	}
@@ -109,7 +87,7 @@ final class ItemDetailForm extends Container
 
 		foreach ((array) $this->getHttpData() as $name => $value) {
 			if ((is_array($value) || $value instanceof Traversable)) {
-				$this->getComponentAndSetContainer($name);
+				$this->getComponent((string) $name);
 			}
 		}
 	}
