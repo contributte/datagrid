@@ -88,7 +88,7 @@ class FunctionSum implements IAggregationFunction
 	/**
 	 * @return mixed
 	 */
-	public function renderResult()
+	public function renderResult(?string $key = null)
 	{
 		$result = $this->result;
 

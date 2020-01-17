@@ -354,6 +354,10 @@
 							{include columnSummary}
 						{/if}
 
+						{if $control->hasSomeAggregationFunction()}
+							{include columnSummary}
+						{/if}
+
 						{block noItems}
 							<tr n:if="!$rows">
 								<td colspan="{$control->getColumnsCount()}">

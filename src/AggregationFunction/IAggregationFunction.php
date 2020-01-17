@@ -26,7 +26,8 @@ interface IAggregationFunction
 
 
 	/**
+	 * @param string|null $key use key only for IMultipleAggregationFunction
 	 * @return mixed
 	 */
-	public function renderResult();
+	public function renderResult(?string $key = null);
 }
