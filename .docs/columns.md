@@ -25,6 +25,7 @@ Table of contents
 	- [Hideable columns](#hideable-columns)
 		- [Default hide](#default-hide)
 	- [Columns Summary](#columns-summary)
+	- [Aggregation Function](#aggregation-function)
 	- [Column \(th&gt;, td&gt;\) attributes](#column-th-td-attributes)
 	- [Column callback](#column-callback)
 
