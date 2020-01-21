@@ -406,6 +406,16 @@ $grid->setColumnsSummary(['price', 'amount'])
 	});
 ```
 
+## Aggregation Function
+
+Some column aggregation can be viewed either using columns summary or using Aggregation Function:
+
+```php
+$grid->addAggregationFunction('status', new FunctionSum('id'));
+```
+
+As mentioned above, there is one aggregation function prepared: `Ublaboo\DataGrid\AggregationFunction\FunctionSum`. You can implement whatever function you like, it just have to implement `Ublaboo\DataGrid\AggregationFunction\IAggregationFunction`.
+
 ## Column (th&gt;, td&gt;) attributes 
 
 Since table cell elements are rendered using `Nette\Utils\Html`, you can easily alter their html attributes (class, data-attributes etc):
