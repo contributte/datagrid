@@ -11,7 +11,9 @@ if (typeof naja !== "undefined") {
 	};
 
 } else {
-	dataGridRegisterAjaxCall = $.nette.ajax;
+		dataGridRegisterAjaxCall = function (params) {
+			$.nette.ajax(params);
+		};
 }
 
 document.addEventListener('DOMContentLoaded', function () {
