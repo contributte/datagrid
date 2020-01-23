@@ -41,7 +41,9 @@ if (typeof naja !== "undefined") {
 		naja.registerExtension(NewExtension, name);
 	};
 } else if ($.nette) {
-	dataGridRegisterExtension = $.nette.ext;
+		dataGridRegisterExtension = function (name, extension) {
+			$.nette.ext(name, extension);
+		};
 }
 
 dataGridRegisterExtension('ublaboo-spinners', {
