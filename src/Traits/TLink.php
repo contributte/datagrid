@@ -46,6 +46,11 @@ trait TLink
 		for ($iteration = 0; $iteration < 10; $iteration++) {
 			$targetComponent = $targetComponent->getParent();
 
+			// Ak je multiplier v ceste snazi sa vytvarat link pre signal aj v nom, ale multiplier je final class
+			if($targetComponent instanceof Nette\Application\UI\Multiplier){
+				continue;
+			}
+
 			if (!$targetComponent instanceof Component) {
 				throw $this->createHierarchyLookupException($grid, $href, $params);
 			}

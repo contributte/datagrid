@@ -17,7 +17,8 @@
 <div class="datagrid datagrid-{$control->getFullName()}" data-refresh-state="{link refreshState!}">
 	<div n:snippet="grid">
 	{snippetArea gridSnippets}
-		{form filter, class => 'ajax'}
+		{*form filter, class => 'ajax'*}
+		{capture $TABLE}
 			{if $control->hasOuterFilterRendering()}
 				{block outer-filters}
 					<div class="row text-right datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
@@ -401,7 +402,17 @@
 					</tfoot>
 				{/block}
 			</table>
-		{/form}
+		{/capture}
+		{*dump $control*}
+		{*dump $control*}
+		{if $control->hasFilters() || $control->hasInline() || $control->isPaginated()}
+			{form filter, class=>"ajax"}
+				{$TABLE}
+			{/form}
+		{else}
+			{$TABLE}
+		{/if}
+		{*/form*}
 	{/snippetArea}
 	</div>
 </div>

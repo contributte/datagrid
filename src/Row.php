@@ -126,7 +126,9 @@ class Row
 		if ($class === null) {
 			return '';
 		}
-
+		if(is_string($class)){
+			return $class;
+		}
 		return implode(' ', array_keys($class));
 	}
 

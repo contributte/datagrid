@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
+use Nette\Utils\Json;
+use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Column\Action\Confirmation\CallbackConfirmation;
 use Ublaboo\DataGrid\Column\Action\Confirmation\IConfirmation;
 use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
@@ -80,6 +82,9 @@ class Action extends Column
 	 */
 	private $title;
 
+	/** @var callable */
+	protected $onRender = [];
+
 
 	public function __construct(
 		DataGrid $grid,
@@ -122,7 +127,18 @@ class Action extends Column
 
 		if ($this->dataAttributes !== []) {
 			foreach ($this->dataAttributes as $key => $value) {
-				$a->data((string) $key, $value);
+				if(is_callable($value)){
+					$v = $value($row->getItem());
+					if(is_string($v)) {
+						$a->data( (string) $key, $v );
+					} elseif (is_array($v)){
+						$a->data($key, Json::encode($v));
+					} else {
+						throw new DataGridColumnRendererException("Callable of data attribute '$key' return '".gettype($v)."', but string or array expected.");
+					}
+				} else {
+					$a->data( (string) $key, $value );
+				}
 			}
 		}
 
@@ -151,10 +167,31 @@ class Action extends Column
 		if ($this->openInNewTab) {
 			$a->addAttributes(['target' => '_blank']);
 		}
+		if(isset($this->dataAttributes["toggle"]) && $this->dataAttributes["toggle"] === "modal") {
+			$actualClass = $this->getClass( $row );
+			if(!Strings::contains($actualClass,"modal-open")) {
+				$a->setAttribute("class", $this->getClass($row)." modal-open");
+			}
+		}
+
+		if(!empty($this->onRender)) {
+			foreach($this->onRender as $callable) {
+				$call = $callable( $row->getItem() , $a );
+				if($call instanceof Html) {
+					$a = $call;
+				}
+			}
+		}
 
 		return $a;
 	}
 
+	/**
+	 * @param callable $onRender
+	 */
+	public function setOnRender( callable $onRender ): void {
+		$this->onRender[] = $onRender;
+	}
 
 	public function addParameters(array $parameters): self
 	{
@@ -280,7 +317,8 @@ class Action extends Column
 
 
 	/**
-	 * @param mixed $value
+	 * @param string $key
+	 * @param string|callable $value
 	 */
 	public function setDataAttribute(string $key, $value): self
 	{

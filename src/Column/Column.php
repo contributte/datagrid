@@ -60,6 +60,10 @@ abstract class Column extends FilterableColumn
 	 * @var string
 	 */
 	protected $align;
+	/**
+	 * @var string
+	 */
+	protected $columnClass;
 
 	/**
 	 * @var array
@@ -366,6 +370,20 @@ abstract class Column extends FilterableColumn
 		return $this->sort === 'ASC';
 	}
 
+	/**
+	 * @param string $class
+	 */
+	public function setColumnClass( ?string $class ): self {
+		$this->columnClass = $class;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getColumnClass(): ?string {
+		return $this->columnClass;
+	}
 
 	/**
 	 * Set column alignment
@@ -556,6 +574,7 @@ abstract class Column extends FilterableColumn
 		}
 
 		$el->appendAttribute('class', sprintf('text-%s', $this->getAlign()));
+		$el->appendAttribute("class", $this->getColumnClass());
 		$el->appendAttribute('class', sprintf('col-%s', $key));
 
 		if ($row !== null && $tag === 'td' && $this->isEditable($row)) {

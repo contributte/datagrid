@@ -82,7 +82,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 */
 	public function getData(): array
 	{
-		return $this->data ?: $this->dataSource->fetchAll();
+		return $this->data ?: $this->dataSource->select($this->dataSource->getName().".*")->fetchAll();
 	}
 
 
@@ -99,7 +99,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 	public function limit(int $offset, int $limit): IDataSource
 	{
-		$this->data = $this->dataSource->limit($limit, $offset)->fetchAll();
+		$this->data = $this->dataSource->limit($limit, $offset)->select($this->dataSource->getName().".*")->fetchAll();
 
 		return $this;
 	}

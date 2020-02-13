@@ -1033,6 +1033,28 @@ s	 */
 		return $this->actions[$key] = new Action($this, $key, $href, $name, $params);
 	}
 
+	public function addModalAction(
+		string $key,
+		string $name,
+		string $target,
+		string $form = null,
+		?callable $data = null
+	) : Action
+	{
+		$this->addActionCheck($key);
+
+		if($form === null){
+			$form = substr($target,1)."Form";
+		}
+
+		$action = new Action($this, $key, $key, $name, [$this->primaryKey]);
+		$action->setDataAttribute("toggle","modal")
+		       ->setDataAttribute("target",$target)
+		       ->setDataAttribute("form", $form)
+		       ->setDataAttribute("pv", $data);
+		return $this->actions[$key] = $action;
+	}
+
 
 	public function addActionCallback(
 		string $key,
@@ -1317,6 +1339,11 @@ s	 */
 		$this->strictSessionFilterValues = $strictSessionFilterValues;
 
 		return $this;
+	}
+
+	public function hasFilters():bool
+	{
+		return count($this->filters) > 0;
 	}
 
 
@@ -2894,6 +2921,12 @@ s	 */
 	/********************************************************************************
 	 *                                 INLINE EDIT                                  *
 	 ********************************************************************************/
+
+	public function hasInline():bool
+	{
+		return $this->inlineAdd !== null || $this->inlineEdit !== null;
+	}
+
 	public function addInlineEdit(?string $primaryWhereColumn = null): InlineEdit
 	{
 		$this->inlineEdit = new InlineEdit($this, $primaryWhereColumn ?? $this->primaryKey);
