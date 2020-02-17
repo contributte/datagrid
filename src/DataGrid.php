@@ -1961,6 +1961,23 @@ s	 */
 		return $this->toolbarButtons[$href] = new ToolbarButton($this, $href, $text, $params);
 	}
 
+	public function addModalToolbarButton(string $href, string $text = "", string $target, string $form, ?callable $data = null) : ToolbarButton
+	{
+		if (isset($this->toolbarButtons[$href])) {
+			throw new DataGridException(
+				sprintf('There is already toolbar button at key [%s] defined.', $href)
+			);
+		}
+		$button = new ToolbarButton($this, $href, $text, []);
+		$button->addAttributes([
+			"data-toggle" => "modal",
+			"data-target" => $target,
+			"data-form" => $form,
+			"data-pv"=>$data
+		]);
+		return $this->toolbarButtons[$href] = $button;
+	}
+
 
 	/**
 	 * @throws DataGridException

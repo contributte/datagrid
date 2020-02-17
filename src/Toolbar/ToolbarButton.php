@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ublaboo\DataGrid\Toolbar;
 
 use Nette\Utils\Html;
+use Nette\Utils\Strings;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Traits\TButtonClass;
@@ -77,7 +78,13 @@ class ToolbarButton
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
 		if ($this->attributes !== []) {
-			$a->addAttributes($this->attributes);
+			foreach ($this->attributes as $key => $attr) {
+				if(!is_callable($attr)){
+					$a->setAttribute($key, $attr);
+				} else {
+					$a->setAttribute($key, $attr());
+				}
+			}
 		}
 
 		$a->addText($this->grid->getTranslator()->translate($this->text));
@@ -90,6 +97,13 @@ class ToolbarButton
 		}
 
 		$a->setAttribute('class', $this->getClass());
+
+		if(isset($this->attributes["data-toggle"]) && $this->attributes["data-toggle"] === "modal") {
+			$actualClass = $this->getClass();
+			if(!Strings::contains($actualClass,"modal-open")) {
+				$a->setAttribute("class", $this->getClass()." modal-open");
+			}
+		}
 
 		return $a;
 	}
