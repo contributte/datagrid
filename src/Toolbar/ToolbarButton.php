@@ -113,10 +113,16 @@ class ToolbarButton
 	 * @param array $attrs
 	 * @return static
 	 */
-	public function addAttributes(array $attrs)
+	public function addAttributes(array $attrs) : self
 	{
 		$this->attributes += $attrs;
 
+		return $this;
+	}
+
+	public function setAttribute(string $name, string $value) : self
+	{
+		$this->attributes[$name] = $value;
 		return $this;
 	}
 }
