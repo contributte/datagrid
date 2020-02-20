@@ -82,7 +82,7 @@ class GroupActionCollection
 					->endCondition();
 
 			} elseif ($action instanceof GroupTextareaAction) {
-				$control = $container->addTextArea($id, '');
+				$control = $container->addTextArea((string) $id, '');
 
 				$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
