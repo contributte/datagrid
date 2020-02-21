@@ -652,7 +652,7 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
 					data: {
 						value: value
 					},
-					method: 'POST',
+					type: 'POST',
 					success: function(payload) {
 						if (cell.data('datagrid-editable-type') === 'select') {
 							cell.html(input.find("option[value='" + value + "']").html());
