@@ -15,6 +15,7 @@ use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
 use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterSelect;
 use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
@@ -290,6 +291,8 @@ class ArrayDataSource implements IDataSource
 
 			return $row_value->format($format) === $date->format($format);
 		}
+
+		throw new \UnexpectedValueException('FilterDate::getCondition always return non-empty array. This should not happen.');
 	}
 
 

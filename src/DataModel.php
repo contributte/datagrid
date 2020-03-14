@@ -76,7 +76,7 @@ final class DataModel
 			if ($driver instanceof Dibi\Drivers\OdbcDriver) {
 				$source = new DibiFluentMssqlDataSource($source, $primaryKey);
 
-			} elseif ($driver instanceof Dibi\Drivers\MsSqlDriver) {
+			} elseif (class_exists('Dibi\Drivers\MsSqlDriver') && $driver instanceof Dibi\Drivers\MsSqlDriver) {
 				$source = new DibiFluentMssqlDataSource($source, $primaryKey);
 
 			} elseif ($driver instanceof Dibi\Drivers\PostgreDriver) {

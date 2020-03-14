@@ -63,7 +63,7 @@ class DataGridPaginator extends Control
 
 	public function getTemplateFile(): string
 	{
-		return $this->templateFile ?: __DIR__ . '/templates/data_grid_paginator.latte';
+		return $this->templateFile ?? __DIR__ . '/templates/data_grid_paginator.latte';
 	}
 
 

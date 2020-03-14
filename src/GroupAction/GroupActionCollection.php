@@ -89,19 +89,19 @@ class GroupActionCollection
 				if ($action->hasOptions()) {
 					if ($action instanceof GroupMultiSelectAction) {
 						$control = $container->addMultiSelect((string) $id, '', $action->getOptions());
-						$control->setAttribute('data-datagrid-multiselect-id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);
-						$control->setAttribute('data-style', 'hidden');
-						$control->setAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
+						$control->setHtmlAttribute('data-datagrid-multiselect-id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);
+						$control->setHtmlAttribute('data-style', 'hidden');
+						$control->setHtmlAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
 					} else {
 						$control = $container->addSelect((string) $id, '', $action->getOptions());
 					}
 
-					$control->setAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);
+					$control->setHtmlAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);
 				}
 			} elseif ($action instanceof GroupTextAction) {
 				$control = $container->addText((string) $id, '');
 
-				$control->setAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
+				$control->setHtmlAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
 					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
 					->endCondition();
@@ -109,7 +109,7 @@ class GroupActionCollection
 			} elseif ($action instanceof GroupTextareaAction) {
 				$control = $container->addTextArea((string) $id, '');
 
-				$control->setAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
+				$control->setHtmlAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
 					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
 			}
@@ -118,13 +118,13 @@ class GroupActionCollection
 				/**
 				 * User may set a class to the form control
 				 */
-				$control->setAttribute('class', $action->getClass());
+				$control->setHtmlAttribute('class', $action->getClass());
 
 				/**
 				 * User may set additional attribtues to the form control
 				 */
 				foreach ($action->getAttributes() as $name => $value) {
-					$control->setAttribute($name, $value);
+					$control->setHtmlAttribute($name, $value);
 				}
 			}
 		}
@@ -142,7 +142,7 @@ class GroupActionCollection
 
 			$container->addSubmit('submit', 'ublaboo_datagrid.execute')
 				->setValidationScope([$container])
-				->setAttribute(
+				->setHtmlAttribute(
 					'id',
 					strtolower($this->datagrid->getFullName()) . 'group_action_submit'
 				);

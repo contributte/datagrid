@@ -1,6 +1,51 @@
-includes:
-	- ./vendor/gamee/php-code-checker-rules/phpstan.neon
-
 parameters:
+	level: max
+	paths:
+		- src
+	checkGenericClassInNonGenericObjectType: false # todo fix
+	checkMissingIterableValueType: false # todo fix
 	ignoreErrors:
-		- '#^Access to an undefined property Nette\\Bridges\\ApplicationLatte\\Template::\$.+\.$#'
+		- # too complicated to fix
+			message: '#^Result of && is always false\.$#'
+			path: */src/DataGrid.php
+			count: 7
+		- # consistency check
+			message: '#^Result of \|\| is always true\.$#'
+			path: */src/DataGrid.php
+			count: 4
+		- # consistency check
+			message: '#^Unreachable statement - code above always terminates\.$#'
+			path: */src/Traits/TLink.php
+			count: 4
+		- # looks like bug in phpstan analysis
+			message: '#^Unreachable statement - code above always terminates\.$#'
+			path: */src/DataGrid.php
+			count: 2
+		- # looks like bug in phpstan analysis
+			message: '#^Unreachable statement - code above always terminates\.$#'
+			path: */src/GroupAction/GroupActionCollection.php
+			count: 1
+		- # too complicated to fix
+			message: "#^Cannot access offset 'submit' on Nette\\\\ComponentModel\\\\IComponent\\.$#"
+			path: */src/GroupAction/GroupActionCollection.php
+			count: 1
+		- # too complicated to fix
+			message: '#^Result of \|\| is always true\.$#'
+			path: */src/GroupAction/GroupActionCollection.php
+			count: 1
+		- # untyped property, remove in php 7.4
+			message: '#^Instanceof between Nette\\Http\\SessionSection and Nette\\Http\\SessionSection will always evaluate to true\.$#'
+			path: */src/DataGrid.php
+			count: 1
+		- # untyped property, removed in php 7.4
+			message: '#^Instanceof between Ublaboo\\DataGrid\\DataModel and Ublaboo\\DataGrid\\DataModel will always evaluate to true\.$#'
+			path: */src/DataGrid.php
+			count: 1
+		- # too complicated to fix
+			message: "#^Cannot access offset 'submit' on Nette\\\\ComponentModel\\\\IComponent\\.$#"
+			path: */src/DataGrid.php
+			count: 3
+		- # too complicated to fix
+			message: '#^Instanceof between \*NEVER\* and Nette\\Forms\\Container will always evaluate to false\.$#'
+			path: */src/DataGrid.php
+			count: 2

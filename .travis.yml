@@ -6,12 +6,11 @@ services:
 php:
   - 7.2
   - 7.3
-  - 7.4snapshot
+  - 7.4
   - nightly
 
 before_install:
-  # Turn off XDebug
-  - phpenv config-rm xdebug.ini || return 0
+  - phpenv config-rm xdebug.ini || return 0 # Turn off XDebug
   - mysql -e 'CREATE DATABASE datagridTest;'
 
 install:
@@ -21,28 +20,30 @@ before_script:
   - mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 
 script:
-  - composer tests
+  - make tests # Tests
+
+after_failure:
+  - for i in $(find tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done # Print *.actual content
 
 jobs:
   include:
-    - env: title="Lowest Dependencies 7.2"
-      php: 7.2
+    - env: title="Lowest Dependencies 7.3"
+      php: 7.3
       install:
-        - travis_retry composer update --no-progress --prefer-dist --prefer-lowest
+        - travis_retry composer update --no-progress --prefer-dist --prefer-lowest --prefer-stable
       script:
-        - composer tests
+        - make tests
 
     - stage: Quality Assurance
-      php: 7.3
+      php: 7.4
       script:
-        - composer phpstan
-        - composer phpcs
+        - make qa
 
     - stage: Test Coverage
       if: branch = master AND type = push
       php: 7.3
       script:
-        - composer coverage
+        - make coverage
       after_script:
         - composer global require php-coveralls/php-coveralls ^2.1.0
         - ~/.composer/vendor/bin/php-coveralls --verbose --config tests/.coveralls.yml
@@ -54,8 +55,7 @@ jobs:
         - composer outdated --direct --strict
 
   allow_failures:
-    - stage: Test Coverage
-    - php: 7.4snapshot
+    - php: 7.4  # todo: wait for tharos/leanmapper stable version
     - php: nightly
 
 sudo: false

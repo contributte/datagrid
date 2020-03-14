@@ -60,7 +60,9 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	 */
 	public function getData(): array
 	{
-		return $this->data ?: $this->dataSource->fetchAll();
+		return $this->data !== []
+			? $this->data
+			: $this->dataSource->fetchAll();
 	}
 
 

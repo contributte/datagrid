@@ -61,7 +61,7 @@ class FilterText extends Filter
 		$this->addAttributes($control);
 
 		if ($this->getPlaceholder() !== null) {
-			$control->setAttribute('placeholder', $this->getPlaceholder());
+			$control->setHtmlAttribute('placeholder', $this->getPlaceholder());
 		}
 	}
 

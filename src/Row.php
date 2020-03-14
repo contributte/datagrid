@@ -147,6 +147,10 @@ class Row
 				return null;
 			}
 
+			if ($relatedRow === null) {
+				return null;
+			}
+
 			return $relatedRow[$relatedColumn];
 		}
 

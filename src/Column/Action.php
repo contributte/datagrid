@@ -285,6 +285,8 @@ class Action extends Column
 				$question
 			);
 		}
+
+		return null;
 	}
 
 

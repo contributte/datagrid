@@ -17,6 +17,7 @@ class ActionCallback extends Action
 
 	/**
 	 * @var callable[]
+	 * @phpstan-var (callable(mixed): void)[]
 	 */
 	public $onClick;
 

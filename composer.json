@@ -36,14 +36,16 @@
 	"require-dev": {
 		"dibi/dibi": "^3.0.0 || ^4.0.0",
 		"doctrine/orm": "~2.6.3",
-		"gamee/php-code-checker-rules": "^1.0",
 		"mockery/mockery": "~1.2.2",
 		"nette/database": "~3.0.2",
 		"nette/tester": "^2.2",
 		"nextras/orm": "~3.1.0",
-		"ninjify/coding-standard": "^0.9.0",
-		"phpstan/phpstan": "^0.11.12",
-		"phpstan/phpstan-strict-rules": "^0.11.1",
+		"ninjify/qa": "^0.10.0",
+		"phpstan/phpstan": "^0.12.2",
+		"phpstan/extension-installer": "^1.0",
+		"phpstan/phpstan-deprecation-rules": "^0.12.0",
+		"phpstan/phpstan-nette": "^0.12.0",
+		"phpstan/phpstan-strict-rules": "^0.12.0",
 		"tharos/leanmapper": "~3.4.1",
 		"tracy/tracy": "~2.6.3"
 	},
@@ -56,12 +58,5 @@
 		"branch-alias": {
 			"dev-master": "6.3.x-dev"
 		}
-	},
-	"scripts": {
-		"tests": "vendor/bin/tester -s --colors 1 -C ./tests",
-		"coverage": "vendor/bin/tester -s -p phpdbg --colors 1 -C --coverage ./coverage.xml --coverage-src ./src ./tests",
-		"phpstan": "vendor/phpstan/phpstan/bin/phpstan analyse -c phpstan.neon src --level 7",
-		"phpcs": "vendor/bin/phpcs --standard=vendor/ninjify/coding-standard/ruleset-gamee.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests",
-		"phpcsfix": "vendor/bin/phpcbf --standard=vendor/ninjify/coding-standard/ruleset-gamee.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests"
 	}
 }

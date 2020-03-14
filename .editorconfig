@@ -14,3 +14,7 @@ tab_width = 4
 [{*.json,*.yml,*.md}]
 indent_style = space
 indent_size = 2
+
+[composer.json]
+indent_style = tab
+indent_size = 4

@@ -63,7 +63,9 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		/**
 		 * Paginator is better if the query uses ManyToMany associations
 		 */
-		return $this->data ?: $this->dataSource->fetchAll();
+		return $this->data !== []
+			? $this->data
+			: $this->dataSource->fetchAll();
 	}
 
 
