@@ -23,9 +23,16 @@ if (typeof naja !== "undefined") {
 				});
 			}
 
+			naja.addEventListener('interaction', function (params) {
+				params.options.nette = {
+					el: $(params.element)
+				}
+			});
+
 			if(before) {
 				naja.addEventListener('before', function (params) {
-					before(params.xhr, params.options);
+					if (!before(params.xhr, params.options))
+						params.preventDefault();
 				});
 			}
 
@@ -95,6 +102,7 @@ dataGridRegisterExtension('datagrid.confirm', {
 				return confirm(confirm_message);
 			}
 		}
+		return true;
 	}
 });
 
@@ -554,6 +562,7 @@ dataGridRegisterExtension('datargid.item_detail', {
 				return row_detail.addClass('loaded');
 			}
 		}
+		return true;
 	},
 	success: function(payload) {
 		var id, row_detail, grid_fullname;
