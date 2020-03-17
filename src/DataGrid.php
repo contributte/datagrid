@@ -1492,7 +1492,7 @@ class DataGrid extends Control
 			$select->setValue($this->getPerPage());
 		}
 
-		$form->addSubmit('perPage_submit', 'ublaboo_datagrid.perPage_submit')
+		$form->addSubmit('perPage_submit', 'ublaboo_datagrid.per_page_submit')
 			->setValidationScope([$select]);
 
 		$form->onSubmit[] = [$this, 'filterSucceeded'];

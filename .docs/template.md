@@ -61,12 +61,22 @@ Or you can define column header template:
 
 ```
 
-## Table class definition
 
-By default, table has this class: `table table-hover table-striped table-bordered`. You can change that in `{block #table-class}`:
+## Containing div class definition
+
+By default, the containing div has this class: `datagrid datagrid-{$control->getFullName()}`. You can change that in `{block #datagrid-class}`:
 
 ```
-{block table-class}table table-hovertable-condensed table-bordered
+{block datagrid-class}datagrid datagrid-{$control->getFullName()} custom-class{/block}
+```
+
+
+## Table class definition
+
+By default, table has this class: `table table-hover table-striped table-bordered table-sm`. You can change that in `{block #table-class}`:
+
+```
+{block table-class}table table-hovertable-condensed table-bordered{/block}
 ```
 
 ## Icons definition

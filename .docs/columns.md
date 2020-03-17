@@ -25,6 +25,9 @@ Table of contents
 	- [Hideable columns](#hideable-columns)
 		- [Default hide](#default-hide)
 	- [Columns Summary](#columns-summary)
+	- [Aggregation Function](#aggregation-function)
+		- [Single column](#single-column)
+		- [Multiple columns](#multiple-columns)
 	- [Column \(th&gt;, td&gt;\) attributes](#column-th-td-attributes)
 	- [Column callback](#column-callback)
 
@@ -405,6 +408,74 @@ $grid->setColumnsSummary(['price', 'amount'])
 		return $sum . ' items';
 	});
 ```
+
+## Aggregation Function
+
+### Single column
+
+Some column aggregation can be viewed either using columns summary or using Aggregation Function:
+
+```php
+$grid->addAggregationFunction('status', new FunctionSum('id'));
+```
+
+This will render a sum of ids under the `"status"` column.
+
+As mentioned above, there is one aggregation function prepared: `Ublaboo\DataGrid\AggregationFunction\FunctionSum`. You can implement whatever function you like, it just have to implement `Ublaboo\DataGrid\AggregationFunction\ISingleColumnAggregationFunction`.
+
+### Multiple columns
+
+In case you want to make the aggreagation directly using SQL by your domain, you will probably use interface `IMultipleAggregationFunction` (instead of `ISingleColumnAggregationFunction`):
+
+```php
+$grid->setMultipleAggregationFunction(
+	new class implements IMultipleAggregationFunction
+	{
+
+		/**
+		 * @var int
+		 */
+		private $idsSum = 0;
+
+		/**
+		 * @var float
+		 */
+		private $avgAge = 0.0;
+
+
+		public function getFilterDataType(): string
+		{
+			return IAggregationFunction::DATA_TYPE_PAGINATED;
+		}
+
+
+		public function processDataSource($dataSource): void
+		{
+			$this->idsSum = (int) $dataSource->getConnection()
+				->select('SUM([id])')
+				->from($dataSource, '_')
+				->fetchSingle();
+
+			$this->avgAge = round((float) $dataSource->getConnection()
+				->select('AVG(YEAR([birth_date]))')
+				->from($dataSource, '_')
+				->fetchSingle());
+		}
+
+
+		public function renderResult(string $key)
+		{
+			if ($key === 'id') {
+				return 'Ids sum: ' . $this->idsSum;
+			} elseif ($key === 'age') {
+				return 'Avg Age: ' . (int) (date('Y') - $this->avgAge);
+			}
+		}
+	}
+);
+```
+
+This aggregatin is used along with `Dibi` in the demo.
 
 ## Column (th&gt;, td&gt;) attributes 
 
