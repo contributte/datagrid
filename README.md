@@ -5,7 +5,7 @@ First class DataGrid for Nette Framework.
 Supported features: filtering, sorting, pagination, tree view, table view, translator, etc
 
 :mag: Take a look at the [full documentation](https://contributte.org/packages/contributte/datagrid/). 
-:eyes: You can also browse the online **[demo](https://examples.planette.io/contributte/datagrid/)**.
+:eyes: You can also browse the online **[demo](https://examples.contributte.org/packages/datagrid/)**.
 
 > Give us a star, it makes us so happy. Thanks ⭐.️
 
