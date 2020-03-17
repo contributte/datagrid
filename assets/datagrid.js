@@ -76,7 +76,7 @@ if (typeof naja !== "undefined") {
 		$.nette.load();
 	};
 	dataGridSubmitForm = function (form) {
-		form.submit();
+		return form.submit();
 	};
 } else {
 	throw new Error("Include Naja.js or nette.ajax for datagrids to work!")
