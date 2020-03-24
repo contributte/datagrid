@@ -832,7 +832,7 @@ class DataGrid extends Control
 			$sort[$column->getSortingColumn()] = $order;
 		}
 
-		if ($sortCallback !== null && isset($column)) {
+		if ($sortCallback === null && isset($column)) {
 			$sortCallback = $column->getSortableCallback();
 		}
 
