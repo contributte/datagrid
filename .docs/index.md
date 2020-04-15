@@ -4,9 +4,6 @@ Table of contents
 	- [Composer](#composer)
 	- [Features](#features)
 	- [Assets](#assets)
-		- [CSS:](#css)
-		- [JS:](#js)
-		- [Spinners](#spinners)
 
 # Installation
 
@@ -101,72 +98,48 @@ $grid->setItemsPerPageList([1, 100, 9090, 2]);
 
 ## Assets
 
-DataGrid needs for its precise functionality some third party scripts and styles. There is a `bower.json` file withing `ublaboo/datagrid` package that describes all js/css dependencies. You can install them with bower command:
+DataGrid needs for its precise functionality some third party scripts and styles. Install all required assets with NPM.
 
 ```
-bower install ublaboo-datagrid
+npm install --save ublaboo-datagrid
 ```
 
-Now you can include these assets into your site:
+**CSS (external)**
 
-### CSS:
+- bootstrap
+- bootstrap datepicker
+- bootstrap select
 
-```html
-<link rel="stylesheet" type="text/css" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+**CSS**
 
+- datagrid.css
+- datagrid-spinners.css
 
-<link rel="stylesheet" type="text/css" href="../bower_components/happy/dist/happy.css">
-<link rel="stylesheet" type="text/css" href="../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css">
-<link rel="stylesheet" type="text/css" href="../bower_components/ublaboo-datagrid/assets/datagrid.css">
+**JS (external)**
 
+- jquery
+- nette forms
+- nette ajax / naja
+- bootstrap
+- bootstrap datepicker
+- bootstrap select
 
-<link rel="stylesheet" type="text/css" href="../bower_components/ublaboo-datagrid/assets/datagrid-spinners.css">
+**JS**
 
+- datagrid.js
+- datagrid-instant-url-refresh.js
+- datagrid-spinners.js
 
-<link rel="stylesheet" type="text/css" href="../bower_components/bootstrap-select/dist/css/bootstrap-select.css">
-```
+**Icons**
 
-### JS:
+You will probably want to use some icon font, but that is in your command.
+On this project website we use font awesome (you can change the icon prefix by setting new value to static property `DataGrid::$iconPrefix = 'fa fa-';`).
 
-```html
-<script src="../bower_components/jquery/dist/jquery.js"></script>
-<script src="../bower_components/nette-forms/src/assets/netteForms.js"></script>
-<script src="../bower_components/nette.ajax.js/nette.ajax.js"></script>
-
-
-<script src="../bower_components/happy/dist/happy.js"></script>
-<script src="../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
-<script src="../bower_components/jquery-ui-sortable/jquery-ui-sortable.js"></script>
-<script src="../bower_components/ublaboo-datagrid/assets/datagrid.js"></script>
-
-
-<script src="../bower_components/ublaboo-datagrid/assets/datagrid-instant-url-refresh.js"></script>
-
-
-<script src="../bower_components/ublaboo-datagrid/assets/datagrid-spinners.js"></script>
-
-
-<script src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
-
-
-<script src="../bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
-```
-
-You will probably want to use some icon font, but that is in your command. On this project website we use font awesome (you can change the icon prefix by setting new value to static property `DataGrid::$iconPrefix = 'fa fa-';`).
-
-Also initializing nette.ajax.js is required:
-
-```html
-<script>
-	$.nette.init();
-</script>
-```
-
-### Spinners
+**Spinners**
 
 As you can see, there is also a `datagrid-spinners.js` script in a datagrid repository. If you include this file within you project layout, there are some actions, that will show spinner/some other animation when waiting for ajax response. Actions, that has somehow animated spinner:
 
-- Group actions (Try in example above and select delete option - I added `sleep(1)` call to that group action)
+- Group actions
 - Pagination
 - Changing items per page
 - Toggling item detail - loading the detail for the first time
