@@ -75,11 +75,11 @@
 									{='ublaboo_datagrid.group_actions'|translate}:
 									{foreach $filter['group_action']->getControls() as $form_control}
 										{if $form_control instanceof \Nette\Forms\Controls\SubmitButton}
-											{input $form_control, class => 'btn btn-primary btn-sm', hidden => TRUE}
+											{input $form_control, class => 'btn btn-primary btn-sm', style => 'display:none'}
 										{elseif $form_control->getName() == 'group_action'}
 											{input $form_control, class => 'form-control input-sm form-control-sm', disabled => TRUE}
 										{else}
-											{input $form_control, hidden => TRUE}
+											{input $form_control, style => 'display:none'}
 										{/if}
 									{/foreach}
 									{if $control->shouldShowSelectedRowsCount()}
