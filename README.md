@@ -39,10 +39,12 @@ Supported features: filtering, sorting, pagination, tree view, table view, trans
 | **Documentation** | [contributte.org/packages/contributte/datagrid/](https://contributte.org/packages/contributte/datagrid/) |
 | **Demo** | [examples.contributte.org/packages/datagrid/](https://examples.contributte.org/packages/datagrid/) |
 | **Example project** | [github.com/planette/playground/tree/master/contributte-datagrid](https://github.com/planette/playground/tree/master/contributte-datagrid) |
+| **Forum (EN)** | will be updated |
+| **Forum (CZ)** | [forum.nette.org/cs/25444](https://forum.nette.org/cs/25444-ublaboo-datagrid-mocny-rychly-rozsiritelny-hezky-anglicky-dokumentovany-datagrid) |
 
-## GitHub Issues
+## GitHub Issues & Sponsoring
 
-Sometimes, when there is a new issue opened (either with a new feature request or a bug report), we assign a label with a dollar sign (**$**) and an amount of dollars to the issue. This is an opportunity for you to support datagrid vendor creators and resolve particular issue.
+Sometimes, when there is a new issue opened (either with a new feature request or a bug report), we may assign a label with a dollar sign (**$**) and an amount of dollars to the issue. This is an opportunity for you to support datagrid vendor creators and resolve particular issue.
 
 Thank you for your support. ❤
 
