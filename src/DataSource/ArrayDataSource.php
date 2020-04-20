@@ -142,12 +142,12 @@ class ArrayDataSource implements IDataSource
 			foreach ($condition as $column => $value) {
 				$value = (string) $value;
 				$rowVal = (string) $row[$column];
-				if (($filter instanceof FilterText && $filter->isExactSearch())
-				    || $filter instanceof SelectBox) {
+
+				if ($filter instanceof FilterText && $filter->isExactSearch()) {
 					return $rowVal === $value;
 				}
 
-				$words = $filter instanceof FilterText && $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', (string) $value);
+				$words = $filter instanceof FilterText && $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 				$row_value = strtolower(Strings::toAscii((string) $row[$column]));
 
