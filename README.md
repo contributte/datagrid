@@ -4,8 +4,15 @@ First class DataGrid for Nette Framework.
 
 Supported features: filtering, sorting, pagination, tree view, table view, translator, etc
 
-:mag: Take a look at the [full documentation](https://contributte.org/packages/contributte/datagrid/). 
-:eyes: You can also browse the online **[demo](https://examples.contributte.org/packages/datagrid/)**.
+## Necessary links
+
+## Useful links
+
+| What | Where |
+|-|-|
+| **Documentation** | [contributte.org/packages/contributte/datagrid/](https://contributte.org/packages/contributte/datagrid/) |
+| **Demo** | [examples.contributte.org/packages/datagrid/](https://examples.contributte.org/packages/datagrid/) |
+| **Example project** | [github.com/planette/playground/tree/master/contributte-datagrid](https://github.com/planette/playground/tree/master/contributte-datagrid) |
 
 > Give us a star, it makes us so happy. Thanks ⭐.️
 
@@ -44,40 +51,40 @@ Thank you for your support. ❤
 ## Maintainers
 
 <table>
-  <tbody>
-    <tr>
-      <td align="center">
-        <a href="https://github.com/paveljanda">
-            <img width="150" height="150" src="https://avatars0.githubusercontent.com/u/1488874?s=400&v=4">
-        </a>
-        </br>
-        <a href="https://github.com/paveljanda">Pavel Janda</a>
-      </td>
-      <td align="center">
-        <a href="https://github.com/f3l1x">
-            <img width="150" height="150" src="https://avatars2.githubusercontent.com/u/538058?v=3&s=150">
-        </a>
-        </br>
-        <a href="https://github.com/f3l1x">Milan Felix Šulc</a>
-      </td>
-    </tr>
-  </tbody>
+	<tbody>
+		<tr>
+			<td align="center">
+				<a href="https://github.com/paveljanda">
+						<img width="150" height="150" src="https://avatars0.githubusercontent.com/u/1488874?s=400&v=4">
+				</a>
+				</br>
+				<a href="https://github.com/paveljanda">Pavel Janda</a>
+			</td>
+			<td align="center">
+				<a href="https://github.com/f3l1x">
+						<img width="150" height="150" src="https://avatars2.githubusercontent.com/u/538058?v=3&s=150">
+				</a>
+				</br>
+				<a href="https://github.com/f3l1x">Milan Felix Šulc</a>
+			</td>
+		</tr>
+	</tbody>
 </table>
 
 ### Former maintainers
 
 <table>
-  <tbody>
-    <tr>
-      <td align="center">
-        <a href="https://github.com/juniwalk">
-            <img width="150" height="150" src="https://avatars0.githubusercontent.com/u/451918?s=400&v=4">
-        </a>
-        </br>
-        <a href="https://github.com/juniwalk">Martin Procházka</a>
-      </td>
-    </tr>
-  </tbody>
+	<tbody>
+		<tr>
+			<td align="center">
+				<a href="https://github.com/juniwalk">
+						<img width="150" height="150" src="https://avatars0.githubusercontent.com/u/451918?s=400&v=4">
+				</a>
+				</br>
+				<a href="https://github.com/juniwalk">Martin Procházka</a>
+			</td>
+		</tr>
+	</tbody>
 </table>
 
 -----
