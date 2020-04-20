@@ -104,6 +104,72 @@ DataGrid needs for its precise functionality some third party scripts and styles
 npm install --save ublaboo-datagrid
 ```
 
+### NPM - dependencies.json
+```
+{
+	"dependencies": {
+		"bootstrap-datepicker": "^1.9",
+		"bootstrap-select": "^1.13",
+		"bootstrap": "^4.4.1",
+		"happy-inputs": "^2.0",
+		"jquery": "^3.4.1",
+		"jquery-ui-sortable": "^1.0",
+		"nette-forms": "^3.0",
+		"nette.ajax.js": "^2.3",
+		"popper.js": "^1.14.7",
+		"ublaboo-datagrid": "^6.2"
+	}
+}
+```
+
+#### Example html
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="{$basePath}/node_modules/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="{$basePath}/node_modules/happy-inputs/src/happy.css">
+	<link rel="stylesheet" type="text/css" href="{$basePath}/node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css">
+	<link rel="stylesheet" type="text/css" href="{$basePath}/node_modules/ublaboo-datagrid/assets/datagrid.css">
+
+	<!-- Use this css for ajax spinners -->
+	<link rel="stylesheet" type="text/css" href="{$basePath}/node_modules/ublaboo-datagrid/assets/datagrid-spinners.css">
+
+	<!-- Include this css when using FilterMultiSelect (silviomoreto.github.io/bootstrap-select) -->
+	<link rel="stylesheet" type="text/css" href="{$basePath}/node_modules/bootstrap-select/dist/css/bootstrap-select.css">
+
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+</head>
+
+<body>
+	<link rel="stylesheet" type="text/css" href="{$basePath}/node_modules/happy-inputs/src/happy.css">
+	<script type="module">
+		import happy from "{$basePath|noescape}/node_modules/happy-inputs/src/index.js";
+
+		happy.init();
+	</script>
+	<script src="{$basePath}/node_modules/jquery/dist/jquery.min.js"></script>
+		<script src="{$basePath}/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="{$basePath}/node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+		<script src="{$basePath}/node_modules/jquery-ui-sortable/jquery-ui.min.js"></script>
+		<script src="{$basePath}/node_modules/nette.ajax.js/nette.ajax.js" charset="UTF-8"></script>
+		<script src="{$basePath}/node_modules/ublaboo-datagrid/assets/datagrid.js"></script>
+		<script src="{$basePath}/node_modules/nette-forms/src/assets/netteForms.js"></script>
+
+		<!-- It is recommended to include this JS file with just a few bits. It refreshes URL on non ajax request -->
+		<script src="{$basePath}/node_modules/ublaboo-datagrid/assets/datagrid-instant-url-refresh.js"></script>
+
+		<!-- Use this little extension for ajax spinners -->
+		<script src="{$basePath}/node_modules/ublaboo-datagrid/assets/datagrid-spinners.js"></script>
+
+		<!-- Include bootstrap-select.js when using FilterMultiSelect (silviomoreto.github.io/bootstrap-select) -->
+		<script src="{$basePath}/node_modules/bootstrap-select/dist/js/bootstrap-select.js"></script>
+		<script src="{$basePath}/node_modules/bootstrap-datepicker/dist/locales/bootstrap-datepicker.cs.min.js" charset="UTF-8"></script>
+</body>
+</html>
+```
+
 **CSS (external)**
 
 - bootstrap
