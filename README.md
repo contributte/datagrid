@@ -4,16 +4,6 @@ First class DataGrid for Nette Framework.
 
 Supported features: filtering, sorting, pagination, tree view, table view, translator, etc
 
-## Necessary links
-
-## Useful links
-
-| What | Where |
-|-|-|
-| **Documentation** | [contributte.org/packages/contributte/datagrid/](https://contributte.org/packages/contributte/datagrid/) |
-| **Demo** | [examples.contributte.org/packages/datagrid/](https://examples.contributte.org/packages/datagrid/) |
-| **Example project** | [github.com/planette/playground/tree/master/contributte-datagrid](https://github.com/planette/playground/tree/master/contributte-datagrid) |
-
 > Give us a star, it makes us so happy. Thanks ⭐.️
 
 -----
@@ -41,6 +31,14 @@ Supported features: filtering, sorting, pagination, tree view, table view, trans
 | stable      | `^5.7.1`  | `v5.x`   | >=2.3 | `^5.6` |
 | stable      | `^4.4.22` | `v5.x`   | >=2.3 | `^5.6` |
 | stable      | `^3.3.1`  | `v5.x`   | >=2.3 | `^5.3` |
+
+## Useful links
+
+| What | Where |
+|-|-|
+| **Documentation** | [contributte.org/packages/contributte/datagrid/](https://contributte.org/packages/contributte/datagrid/) |
+| **Demo** | [examples.contributte.org/packages/datagrid/](https://examples.contributte.org/packages/datagrid/) |
+| **Example project** | [github.com/planette/playground/tree/master/contributte-datagrid](https://github.com/planette/playground/tree/master/contributte-datagrid) |
 
 ## GitHub Issues
 
