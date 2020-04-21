@@ -17,6 +17,7 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton as FormsSubmitButton;
+use Nette\Forms\IControl;
 use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
@@ -1509,7 +1510,7 @@ class DataGrid extends Control
 			}
 
 			if ($control instanceof Container) {
-				$this->setFilterContainerDefaults($control, (array) $values[$key], $key);
+				$this->setFilterContainerDefaults($control, (array) $values[$key], (string) $key);
 
 				continue;
 			}
@@ -1520,7 +1521,7 @@ class DataGrid extends Control
 				if ($parentKey !== null) {
 					$filter = $this->getFilter($parentKey);
 				} else {
-					$filter = $this->getFilter($key);
+					$filter = $this->getFilter((string) $key);
 				}
 
 				if ($filter instanceof IFilterDate) {
@@ -1529,6 +1530,10 @@ class DataGrid extends Control
 			}
 
 			try {
+				if (!$control instanceof IControl) {
+					throw new \UnexpectedValueException;
+				}
+
 				$control->setValue($value);
 
 			} catch (InvalidArgumentException $e) {
