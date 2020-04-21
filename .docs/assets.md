@@ -4,11 +4,6 @@ Table of contents
 	- [NPM](#npm)
 	- [Example html when not using NPM](#example-html-when-not-using-npm)
 
-- [Installation](#installation)
-	- [Composer](#composer)
-	- [Features](#features)
-	- [Assets](#assets)
-
 # Assets
 
 DataGrid needs for its precise functionality some third party scripts and styles. Install all required assets with NPM.
