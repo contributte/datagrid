@@ -105,7 +105,7 @@ npm install --save ublaboo-datagrid
 ```
 
 ### NPM - dependencies.json
-```
+```json
 {
 	"dependencies": {
 		"bootstrap-datepicker": "^1.9",
