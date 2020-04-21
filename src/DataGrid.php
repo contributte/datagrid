@@ -1501,7 +1501,7 @@ class DataGrid extends Control
 	}
 
 
-	public function setFilterContainerDefaults(Container $container, array $values): void
+	public function setFilterContainerDefaults(Container $container, array $values, ?string $parentKey = null): void
 	{
 		foreach ($container->getComponents() as $key => $control) {
 			if (!isset($values[$key])) {
@@ -1509,7 +1509,7 @@ class DataGrid extends Control
 			}
 
 			if ($control instanceof Container) {
-				$this->setFilterContainerDefaults($control, (array) $values[$key]);
+				$this->setFilterContainerDefaults($control, (array) $values[$key], $key);
 
 				continue;
 			}
@@ -1517,7 +1517,11 @@ class DataGrid extends Control
 			$value = $values[$key];
 
 			if ($value instanceof \DateTime) {
-				$filter = $this->getFilter($key);
+				if ($parentKey !== null) {
+					$filter = $this->getFilter($parentKey);
+				} else {
+					$filter = $this->getFilter($key);
+				}
 
 				if ($filter instanceof IFilterDate) {
 					$value = $value->format($filter->getPhpFormat());
