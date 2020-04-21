@@ -122,7 +122,7 @@ npm install --save ublaboo-datagrid
 }
 ```
 
-### Example html
+### Example html when not using NPM
 
 ```html
 <!DOCTYPE html>
