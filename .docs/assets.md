@@ -8,6 +8,46 @@ Table of contents
 
 DataGrid needs for its precise functionality some third party scripts and styles. Install all required assets with NPM.
 
+**CSS (external)**
+
+- bootstrap
+- bootstrap datepicker
+- bootstrap select
+
+**CSS**
+
+- datagrid.css
+- datagrid-spinners.css
+
+**JS (external)**
+
+- jquery
+- nette forms
+- nette ajax / naja
+- bootstrap
+- bootstrap datepicker
+- bootstrap select
+
+**JS**
+
+- datagrid.js
+- datagrid-instant-url-refresh.js
+- datagrid-spinners.js
+
+**Icons**
+
+You will probably want to use some icon font, but that is in your command.
+On this project website we use font awesome (you can change the icon prefix by setting new value to static property `DataGrid::$iconPrefix = 'fa fa-';`).
+
+**Spinners**
+
+As you can see, there is also a `datagrid-spinners.js` script in a datagrid repository. If you include this file within you project layout, there are some actions, that will show spinner/some other animation when waiting for ajax response. Actions, that has somehow animated spinner:
+
+- Group actions
+- Pagination
+- Changing items per page
+- Toggling item detail - loading the detail for the first time
+
 ## NPM
 
 ```
@@ -79,43 +119,3 @@ package.json:
 </body>
 </html>
 ```
-
-**CSS (external)**
-
-- bootstrap
-- bootstrap datepicker
-- bootstrap select
-
-**CSS**
-
-- datagrid.css
-- datagrid-spinners.css
-
-**JS (external)**
-
-- jquery
-- nette forms
-- nette ajax / naja
-- bootstrap
-- bootstrap datepicker
-- bootstrap select
-
-**JS**
-
-- datagrid.js
-- datagrid-instant-url-refresh.js
-- datagrid-spinners.js
-
-**Icons**
-
-You will probably want to use some icon font, but that is in your command.
-On this project website we use font awesome (you can change the icon prefix by setting new value to static property `DataGrid::$iconPrefix = 'fa fa-';`).
-
-**Spinners**
-
-As you can see, there is also a `datagrid-spinners.js` script in a datagrid repository. If you include this file within you project layout, there are some actions, that will show spinner/some other animation when waiting for ajax response. Actions, that has somehow animated spinner:
-
-- Group actions
-- Pagination
-- Changing items per page
-- Toggling item detail - loading the detail for the first time
