@@ -8,13 +8,13 @@ Table of contents
 
 DataGrid needs for its precise functionality some third party scripts and styles. Install all required assets with NPM.
 
+## NPM
+
 ```
 npm install --save ublaboo-datagrid
 ```
 
-## NPM
-
-dependencies.json:
+package.json:
 
 ```json
 {
