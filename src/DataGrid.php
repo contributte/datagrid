@@ -2311,6 +2311,12 @@ class DataGrid extends Control
 		$newValue = $column->getEditableCallback()($id, $value);
 
 		$this->getPresenterInstance()->payload->_datagrid_editable_new_value = $newValue;
+		$this->getPresenterInstance()->payload->postGet = true;
+		$this->getPresenterInstance()->payload->url = $this->link('this');
+
+		if (!$this->getPresenterInstance()->isControlInvalid(null)) {
+			$this->getPresenterInstance()->sendPayload();
+		}
 	}
 
 
