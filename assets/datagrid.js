@@ -702,11 +702,7 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
 			input.attr('rows', Math.round(cell_lines));
 		} else if (cell.data('datagrid-editable-type') === 'select') {
 			input = $(cell.data('datagrid-editable-element'));
-			input.find('option').each(function() {
-				if ($(this).val() === valueToEdit) {
-					return input.find("option[value='" + valueToEdit + "']").prop('selected', true);
-				}
-			});
+			input.find("option[value='" + valueToEdit + "']").prop('selected', true);
 		} else {
 			input = $('<input type="' + cell.data('datagrid-editable-type') + '">');
 			input.val(valueToEdit);
