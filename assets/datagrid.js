@@ -101,7 +101,7 @@ $(document).on('click', '[data-datagrid-confirm]:not(.ajax)', function(e) {
 
 if (typeof naja !== "undefined") {
 	dataGridRegisterExtension('datagrid.confirm', {
-		before: function(xhr, settings) {
+		interaction: function(settings) {
 			var confirm_message;
 			if (settings.nette) {
 				confirm_message = settings.nette.el.data('datagrid-confirm');
@@ -114,7 +114,7 @@ if (typeof naja !== "undefined") {
 	});
 } else {
 	dataGridRegisterExtension('datagrid.confirm', {
-		interaction: function(settings) {
+		before: function(xhr, settings) {
 			var confirm_message;
 			if (settings.nette) {
 				confirm_message = settings.nette.el.data('datagrid-confirm');
