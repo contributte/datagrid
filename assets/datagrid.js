@@ -6,6 +6,7 @@ if (typeof naja !== "undefined") {
 		var success = extension.success;
 		var before = extension.before;
 		var complete = extension.complete;
+		var interaction = extension.interaction;
 
 
 		var NewExtension = function NewExtension(naja, name) {
@@ -26,6 +27,11 @@ if (typeof naja !== "undefined") {
 			naja.addEventListener('interaction', function (params) {
 				params.options.nette = {
 					el: $(params.element)
+				}
+				if (interaction) {
+					if (!interaction(params.options)){
+						params.preventDefault();
+					}
 				}
 			});
 
@@ -93,18 +99,34 @@ $(document).on('click', '[data-datagrid-confirm]:not(.ajax)', function(e) {
 	}
 });
 
-dataGridRegisterExtension('datagrid.confirm', {
-	before: function(xhr, settings) {
-		var confirm_message;
-		if (settings.nette) {
-			confirm_message = settings.nette.el.data('datagrid-confirm');
-			if (confirm_message) {
-				return confirm(confirm_message);
+if (typeof naja !== "undefined") {
+	dataGridRegisterExtension('datagrid.confirm', {
+		before: function(xhr, settings) {
+			var confirm_message;
+			if (settings.nette) {
+				confirm_message = settings.nette.el.data('datagrid-confirm');
+				if (confirm_message) {
+					return confirm(confirm_message);
+				}
 			}
+			return true;
 		}
-		return true;
-	}
-});
+	});
+} else {
+	dataGridRegisterExtension('datagrid.confirm', {
+		interaction: function(settings) {
+			var confirm_message;
+			if (settings.nette) {
+				confirm_message = settings.nette.el.data('datagrid-confirm');
+				if (confirm_message) {
+					return confirm(confirm_message);
+				}
+			}
+			return true;
+		}
+	});
+}
+
 
 $(document).on('change', 'select[data-autosubmit-per-page]', function() {
 	var button;
