@@ -17,6 +17,7 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton as FormsSubmitButton;
+use Nette\Forms\Form as NetteForm;
 use Nette\Forms\IControl;
 use Nette\Http\SessionSection;
 use Nette\Localization\ITranslator;
@@ -1496,7 +1497,9 @@ class DataGrid extends Control
 		$form->addSubmit('perPage_submit', 'ublaboo_datagrid.per_page_submit')
 			->setValidationScope([$select]);
 
-		$form->onSubmit[] = [$this, 'filterSucceeded'];
+		$form->onSubmit[] = function (NetteForm $form): void {
+			$this->filterSucceeded($form);
+		};
 
 		return $form;
 	}
@@ -1548,7 +1551,7 @@ class DataGrid extends Control
 	/**
 	 * Set $this->filter values after filter form submitted
 	 */
-	public function filterSucceeded(Form $form): void
+	public function filterSucceeded(NetteForm $form): void
 	{
 		if ($this->snippetsSet) {
 			return;

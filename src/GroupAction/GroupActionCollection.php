@@ -7,6 +7,7 @@ namespace Ublaboo\DataGrid\GroupAction;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Forms\Form as NetteForm;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
 use UnexpectedValueException;
@@ -121,14 +122,16 @@ class GroupActionCollection
 				strtolower($this->datagrid->getFullName()) . 'group_action_submit'
 			);
 
-		$form->onSubmit[] = [$this, 'submitted'];
+		$form->onSubmit[] = function (NetteForm $form): void {
+			$this->submitted($form);
+		};
 	}
 
 
 	/**
 	 * Pass "sub"-form submission forward to custom submit function
 	 */
-	public function submitted(Form $form): void
+	public function submitted(NetteForm $form): void
 	{
 		if (!isset($form['group_action']['submit']) || !$form['group_action']['submit']->isSubmittedBy()) {
 			return;
