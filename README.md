@@ -44,7 +44,7 @@ Supported features: filtering, sorting, pagination, tree view, table view, trans
 
 ## GitHub Issues & Sponsoring
 
-1) At the moment, we have limited time to maintain contributte datagrid for free. But you can create some maintenance time by sponsoring us. Ask us in email for available tarifs (email visible on https://github.com/paveljanda). At the moment, we hame 1 little sponsor that gives us 1 hour of maintenance per month.
+1) At the moment, we have limited time to maintain contributte datagrid for free. But you can create some maintenance time by sponsoring us. Ask us in email for available tarifs (email visible on https://github.com/paveljanda). At the moment, we have 1 little sponsor that gives us 1 hour of maintenance per month.
 2) Sometimes, when there is a new issue opened (either with a new feature request or a bug report), we may assign a label with a dollar sign (**$**) and an amount of dollars to the issue. This is an opportunity for you to support datagrid vendor creators and resolve particular issue.
 
 Thank you for your support. ❤
