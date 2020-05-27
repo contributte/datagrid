@@ -522,7 +522,7 @@ dataGridRegisterExtension('datagrid.url', {
 	success: function(payload) {
 		var host, path, query, url;
 		if (payload._datagrid_url) {
-			if (window.history.pushState) {
+			if (window.history.replaceState) {
 				host = window.location.protocol + "//" + window.location.host;
 				path = window.location.pathname;
 				query = window.datagridSerializeUrl(payload.state).replace(/&+$/gm, '');
@@ -533,7 +533,7 @@ dataGridRegisterExtension('datagrid.url', {
 				}
 				url += window.location.hash;
 				if (window.location.href !== url) {
-					return window.history.pushState({
+					return window.history.replaceState({
 						path: url
 					}, '', url);
 				}
