@@ -5,7 +5,9 @@ if (typeof naja !== "undefined") {
 		var method = params.type || 'GET';
 		var data = params.data || null;
 
-		naja.makeRequest(method, params.url, data, {})
+		naja.makeRequest(method, params.url, data, {
+			history: 'replace'
+		})
 			.then(params.success)
 			.catch(params.error);
 	};
