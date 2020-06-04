@@ -45,7 +45,7 @@ Or you can define column template by defining special block(s):
 {/define}
 
 {define col-title}
-	{$item} {* displays the title value *}
+	{$item->title} {* displays the title value *}
 {/define}
 
 ```
