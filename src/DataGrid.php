@@ -1983,6 +1983,12 @@ class DataGrid extends Control
 	}
 
 
+	public function addGroupButtonAction(string $title, ?string $class = null): GroupAction
+	{
+		return $this->getGroupActionCollection()->addGroupButtonAction($title, $class);
+	}
+
+
 	public function addGroupSelectAction(string $title, array $options = []): GroupAction
 	{
 		return $this->getGroupActionCollection()->addGroupSelectAction($title, $options);
