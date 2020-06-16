@@ -7,6 +7,7 @@ namespace Ublaboo\DataGrid\GroupAction;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form as NetteForm;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
@@ -46,17 +47,43 @@ class GroupActionCollection
 		}
 
 		/**
-		 * First foreach for filling "main" select
+		 * First foreach for adding button actions
 		 */
 		foreach ($this->groupActions as $id => $action) {
-			$main_options[$id] = $action->getTitle();
+			if ($action instanceof GroupButtonAction) {
+				$control = $container->addSubmit((string)$id, $action->getTitle());
+
+				/**
+				 * User may set a class to the form control
+				 */
+				$control->setAttribute('class', $action->getClass());
+
+				/**
+				 * User may set additional attribtues to the form control
+				 */
+				foreach ($action->getAttributes() as $name => $value) {
+					$control->setAttribute($name, $value);
+				}
+			}
+
 		}
 
-		$groupActionSelect = $container->addSelect('group_action', '', $main_options)
-			->setPrompt('ublaboo_datagrid.choose');
+		/**
+		 * Second foreach for filling "main" select
+		 */
+		foreach ($this->groupActions as $id => $action) {
+			if (! $action instanceof GroupButtonAction) {
+				$main_options[$id] = $action->getTitle();
+			}
+		}
+
+		if ($main_options !== []) {
+			$groupActionSelect = $container->addSelect('group_action', '', $main_options)
+				->setPrompt('ublaboo_datagrid.choose');
+		}
 
 		/**
-		 * Second for creating select for each "sub"-action
+		 * Third for creating select for each "sub"-action
 		 */
 		foreach ($this->groupActions as $id => $action) {
 			$control = null;
@@ -105,22 +132,24 @@ class GroupActionCollection
 			}
 		}
 
-		foreach (array_keys($this->groupActions) as $id) {
-			$groupActionSelect->addCondition(Form::EQUAL, $id)
-				->toggle(self::ID_ATTRIBUTE_PREFIX . $id);
+		if ($main_options !== []) {
+			foreach (array_keys($this->groupActions) as $id) {
+				$groupActionSelect->addCondition(Form::EQUAL, $id)
+					->toggle(self::ID_ATTRIBUTE_PREFIX . $id);
+			}
+
+			$groupActionSelect->addCondition(Form::FILLED)
+				->toggle(
+					strtolower($this->datagrid->getFullName()) . 'group_action_submit'
+				);
+
+			$container->addSubmit('submit', 'ublaboo_datagrid.execute')
+				->setValidationScope([$container])
+				->setAttribute(
+					'id',
+					strtolower($this->datagrid->getFullName()) . 'group_action_submit'
+				);
 		}
-
-		$groupActionSelect->addCondition(Form::FILLED)
-			->toggle(
-				strtolower($this->datagrid->getFullName()) . 'group_action_submit'
-			);
-
-		$container->addSubmit('submit', 'ublaboo_datagrid.execute')
-			->setValidationScope([$container])
-			->setAttribute(
-				'id',
-				strtolower($this->datagrid->getFullName()) . 'group_action_submit'
-			);
 
 		$form->onSubmit[] = function (NetteForm $form): void {
 			$this->submitted($form);
@@ -133,14 +162,18 @@ class GroupActionCollection
 	 */
 	public function submitted(NetteForm $form): void
 	{
-		if (!isset($form['group_action']['submit']) || !$form['group_action']['submit']->isSubmittedBy()) {
+		$submitter = $this->getFormSubmitter($form);
+
+		if (! $submitter instanceof SubmitButton) {
 			return;
 		}
 
 		$values = (array) $form->getValues();
 		$values = $values['group_action'];
 
-		if ($values->group_action === 0 || $values->group_action === null) {
+		if (
+			($submitter->getName() === 'submit' && $submitter->isSubmittedBy())
+			 && ($values->group_action === 0 || $values->group_action === null)) {
 			return;
 		}
 
@@ -154,10 +187,51 @@ class GroupActionCollection
 
 		$ids = array_keys($http_ids);
 
-		$id = $values->group_action;
-		$this->groupActions[$id]->onSelect($ids, $values[$id] ?? null);
+		if ($submitter->getName() === 'submit') {
+			$id = $values->group_action;
+			$this->groupActions[$id]->onSelect($ids, $values[$id] ?? null);
+			$form['group_action']['group_action']->setValue(null);
+		} else {
+			$id = $submitter->getName();
+			$this->groupActions[$id]->onClick($ids);
+		}
+	}
 
-		$form['group_action']['group_action']->setValue(null);
+
+	private function getFormSubmitter(NetteForm $form): ?SubmitButton
+	{
+		if (
+			isset($form['group_action']['submit'])
+			&& $form['group_action']['submit']->isSubmittedBy()
+		) {
+			return $form['group_action']['submit'];
+		}
+
+		foreach ($form['group_action']->getComponents() as $component) {
+			if (
+				$component instanceof SubmitButton
+				&& $component->isSubmittedBy()
+			) {
+				return $component;
+			}
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * Add one group button action to collection of actions
+	 */
+	public function addGroupButtonAction(string $title, ?string $class = null): GroupAction
+	{
+		if (count($this->groupActions) > 0) {
+			$id = count($this->groupActions) + 1;
+		} else {
+			$id = 1;
+		}
+
+		return $this->groupActions[$id] = new GroupButtonAction($title, $class);
 	}
 
 
