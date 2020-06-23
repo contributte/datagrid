@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\GroupAction;
 
+/**
+ * @method void onClick(array $ids)
+ */
 class GroupButtonAction extends GroupAction
 {
 
@@ -22,7 +25,7 @@ class GroupButtonAction extends GroupAction
 	{
 		parent::__construct($title);
 
-		if (!is_null($class) && !empty($class)) {
+		if (!is_null($class) && $class !== '') {
 			$this->class = $class;
 		}
 	}

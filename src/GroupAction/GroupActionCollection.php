@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\GroupAction;
 
-use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form as NetteForm;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
-use UnexpectedValueException;
 
 class GroupActionCollection
 {
@@ -37,13 +36,13 @@ class GroupActionCollection
 
 	public function addToFormContainer(Container $container): void
 	{
-		/** @var Nette\Application\UI\Form $form */
-		$form = $container->lookup('Nette\Application\UI\Form');
+		/** @var Form $form */
+		$form = $container->lookup(Form::class);
 		$translator = $form->getTranslator();
 		$main_options = [];
 
 		if ($translator === null) {
-			throw new UnexpectedValueException();
+			throw new \UnexpectedValueException;
 		}
 
 		/**
@@ -51,7 +50,7 @@ class GroupActionCollection
 		 */
 		foreach ($this->groupActions as $id => $action) {
 			if ($action instanceof GroupButtonAction) {
-				$control = $container->addSubmit((string)$id, $action->getTitle());
+				$control = $container->addSubmit((string) $id, $action->getTitle());
 
 				/**
 				 * User may set a class to the form control
@@ -65,7 +64,6 @@ class GroupActionCollection
 					$control->setAttribute($name, $value);
 				}
 			}
-
 		}
 
 		/**
@@ -77,10 +75,8 @@ class GroupActionCollection
 			}
 		}
 
-		if ($main_options !== []) {
-			$groupActionSelect = $container->addSelect('group_action', '', $main_options)
-				->setPrompt('ublaboo_datagrid.choose');
-		}
+		$groupActionSelect = $container->addSelect('group_action', '', $main_options)
+			->setPrompt('ublaboo_datagrid.choose');
 
 		/**
 		 * Third for creating select for each "sub"-action
@@ -149,6 +145,8 @@ class GroupActionCollection
 					'id',
 					strtolower($this->datagrid->getFullName()) . 'group_action_submit'
 				);
+		} else {
+			unset($container['group_action']);
 		}
 
 		$form->onSubmit[] = function (NetteForm $form): void {
@@ -180,34 +178,61 @@ class GroupActionCollection
 		/**
 		 * @todo Define items IDs
 		 */
-		$http_ids = $form->getHttpData(
+		$httpIds = $form->getHttpData(
 			Form::DATA_LINE | Form::DATA_KEYS,
 			strtolower($this->datagrid->getFullName()) . '_group_action_item[]'
 		);
 
-		$ids = array_keys($http_ids);
+		$ids = array_keys($httpIds);
 
 		if ($submitter->getName() === 'submit') {
 			$id = $values->group_action;
 			$this->groupActions[$id]->onSelect($ids, $values[$id] ?? null);
-			$form['group_action']['group_action']->setValue(null);
+
+			if (!$form['group_action'] instanceof Container) {
+				throw new \UnexpectedValueException;
+			}
+
+			if (isset($form['group_action']['group_action'])) {
+				if (!$form['group_action']['group_action'] instanceof SelectBox) {
+					throw new \UnexpectedValueException;
+				}
+
+				$form['group_action']['group_action']->setValue(null);
+			}
 		} else {
-			$id = $submitter->getName();
-			$this->groupActions[$id]->onClick($ids);
+			$groupButtonAction = $this->groupActions[$submitter->getName()];
+
+			if (!$groupButtonAction instanceof GroupButtonAction) {
+				throw new \UnexpectedValueException(
+					'This action is supposed to be a GroupButtonAction'
+				);
+			}
+
+			$groupButtonAction->onClick($ids);
 		}
 	}
 
 
 	private function getFormSubmitter(NetteForm $form): ?SubmitButton
 	{
-		if (
-			isset($form['group_action']['submit'])
-			&& $form['group_action']['submit']->isSubmittedBy()
-		) {
-			return $form['group_action']['submit'];
+		$container = $form['group_action'];
+
+		if (!$container instanceof Container) {
+			throw new \UnexpectedValueException;
 		}
 
-		foreach ($form['group_action']->getComponents() as $component) {
+		if (isset($container['submit'])) {
+			if (!$container['submit'] instanceof SubmitButton) {
+				throw new \UnexpectedValueException;
+			}
+
+			if ($container['submit']->isSubmittedBy()) {
+				return $container['submit'];
+			}
+		}
+
+		foreach ($container->getComponents() as $component) {
 			if (
 				$component instanceof SubmitButton
 				&& $component->isSubmittedBy()
