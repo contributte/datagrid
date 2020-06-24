@@ -53,6 +53,7 @@ use Ublaboo\DataGrid\Filter\IFilterDate;
 use Ublaboo\DataGrid\Filter\SubmitButton;
 use Ublaboo\DataGrid\GroupAction\GroupAction;
 use Ublaboo\DataGrid\GroupAction\GroupActionCollection;
+use Ublaboo\DataGrid\GroupAction\GroupButtonAction;
 use Ublaboo\DataGrid\InlineEdit\InlineAdd;
 use Ublaboo\DataGrid\InlineEdit\InlineEdit;
 use Ublaboo\DataGrid\Localization\SimpleTranslator;
@@ -1982,7 +1983,7 @@ class DataGrid extends Control
 	}
 
 
-	public function addGroupButtonAction(string $title, ?string $class = null): GroupAction
+	public function addGroupButtonAction(string $title, ?string $class = null): GroupButtonAction
 	{
 		return $this->getGroupActionCollection()->addGroupButtonAction($title, $class);
 	}

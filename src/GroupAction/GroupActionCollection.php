@@ -248,7 +248,7 @@ class GroupActionCollection
 	/**
 	 * Add one group button action to collection of actions
 	 */
-	public function addGroupButtonAction(string $title, ?string $class = null): GroupAction
+	public function addGroupButtonAction(string $title, ?string $class = null): GroupButtonAction
 	{
 		if (count($this->groupActions) > 0) {
 			$id = count($this->groupActions) + 1;
