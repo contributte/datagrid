@@ -2375,7 +2375,7 @@ class DataGrid extends Control
 	}
 
 
-	public function handleChangeStatus(string $id, string $key, string $value): void
+	public function handleChangeStatus(string $id, string $key, ?string $value): void
 	{
 		if (!isset($this->columns[$key])) {
 			throw new DataGridException(sprintf('ColumnStatus[%s] does not exist', $key));

@@ -13,7 +13,7 @@ use Ublaboo\DataGrid\Traits\TButtonCaret;
 use Ublaboo\DataGrid\Traits\TRenderCondition;
 
 /**
- * @method onChange(string $id, string $value)
+ * @method onChange(string $id, string|null $value)
  */
 class ColumnStatus extends Column
 {
@@ -108,7 +108,7 @@ class ColumnStatus extends Column
 	 */
 	public function addOption($value, string $text): Option
 	{
-		if (!is_scalar($value)) {
+		if (!is_scalar($value) && !is_null($value)) {
 			throw new DataGridColumnStatusException('Option value has to be scalar');
 		}
 
