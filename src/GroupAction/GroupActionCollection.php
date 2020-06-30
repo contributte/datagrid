@@ -15,7 +15,7 @@ use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
 class GroupActionCollection
 {
 
-	private const ID_ATTRIBUTE_PREFIX = 'group_action_item_';
+	private const ID_ATTRIBUTE_PREFIX = '_item_';
 
 	/**
 	 * @var array<GroupAction>
@@ -38,6 +38,7 @@ class GroupActionCollection
 	{
 		/** @var Form $form */
 		$form = $container->lookup(Form::class);
+		$lookupPath = $container->lookupPath();
 		$translator = $form->getTranslator();
 		$main_options = [];
 
@@ -88,19 +89,19 @@ class GroupActionCollection
 				if ($action->hasOptions()) {
 					if ($action instanceof GroupMultiSelectAction) {
 						$control = $container->addMultiSelect((string) $id, '', $action->getOptions());
-						$control->setAttribute('data-datagrid-multiselect-id', self::ID_ATTRIBUTE_PREFIX . $id);
+						$control->setAttribute('data-datagrid-multiselect-id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);
 						$control->setAttribute('data-style', 'hidden');
 						$control->setAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
 					} else {
 						$control = $container->addSelect((string) $id, '', $action->getOptions());
 					}
 
-					$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id);
+					$control->setAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);
 				}
 			} elseif ($action instanceof GroupTextAction) {
 				$control = $container->addText((string) $id, '');
 
-				$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id)
+				$control->setAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
 					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
 					->endCondition();
@@ -108,7 +109,7 @@ class GroupActionCollection
 			} elseif ($action instanceof GroupTextareaAction) {
 				$control = $container->addTextArea((string) $id, '');
 
-				$control->setAttribute('id', self::ID_ATTRIBUTE_PREFIX . $id)
+				$control->setAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
 					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
 			}
@@ -131,7 +132,7 @@ class GroupActionCollection
 		if ($main_options !== []) {
 			foreach (array_keys($this->groupActions) as $id) {
 				$groupActionSelect->addCondition(Form::EQUAL, $id)
-					->toggle(self::ID_ATTRIBUTE_PREFIX . $id);
+					->toggle($lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);
 			}
 
 			$groupActionSelect->addCondition(Form::FILLED)
