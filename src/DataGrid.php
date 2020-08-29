@@ -852,6 +852,10 @@ class DataGrid extends Nette\Application\UI\Control
 		foreach ($sort as $key => $order) {
 			unset($sort[$key]);
 
+			if ($order !== 'ASC' && $order !== 'DESC') {
+				continue;
+			}
+
 			try {
 				$column = $this->getColumn($key);
 
