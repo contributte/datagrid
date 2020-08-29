@@ -824,6 +824,10 @@ class DataGrid extends Control
 		foreach ($sort as $key => $order) {
 			unset($sort[$key]);
 
+			if ($order !== 'ASC' && $order !== 'DESC') {
+				continue;
+			}
+
 			try {
 				$column = $this->getColumn($key);
 
