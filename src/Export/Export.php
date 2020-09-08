@@ -59,7 +59,7 @@ class Export
 
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $target = null;
 
