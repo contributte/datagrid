@@ -195,7 +195,7 @@ class Export
 	 * Adds target to html:a [_blank, _self, _parent, _top]
 	 * @param string|null $target
 	 */
-	public function setTarget($target = null) : void
+	public function setTarget($target = null): void
 	{
 		if (in_array($target, ['_blank', '_self', '_parent', '_top'], true)) {
 			$this->target = $target;
