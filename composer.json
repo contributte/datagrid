@@ -40,7 +40,7 @@
 		"mockery/mockery": "~1.2.2",
 		"nette/database": "~3.0.2",
 		"nette/tester": "^2.2",
-		"nextras/orm": "~3.1.0",
+		"nextras/orm": "~3.1.0 || ^4.0",
 		"ninjify/coding-standard": "^0.9.0",
 		"phpstan/phpstan": "^0.11.12",
 		"phpstan/phpstan-strict-rules": "^0.11.1",

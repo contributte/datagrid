@@ -4,3 +4,6 @@ includes:
 parameters:
 	ignoreErrors:
 		- '#^Access to an undefined property Nette\\Bridges\\ApplicationLatte\\Template::\$.+\.$#'
+		-
+			message: '#^Call to an undefined method Nextras\\Orm\\Collection\\ICollection::getQueryBuilder\(\)\.$#'
+			path: %currentWorkingDirectory%/src/DataSource/NextrasDataSource.php

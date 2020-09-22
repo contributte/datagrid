@@ -6,7 +6,6 @@ namespace Ublaboo\DataGrid\DataSource;
 
 use Nette\Utils\Strings;
 use Nextras\Orm\Collection\ICollection;
-use Nextras\Orm\Mapper\Dbal\DbalCollection;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
@@ -37,11 +36,19 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	protected $primaryKey;
 
+	/**
+	 * @var string
+	 */
+	private $dbalCollectionClass;
 
 	public function __construct(ICollection $dataSource, string $primaryKey)
 	{
 		$this->dataSource = $dataSource;
 		$this->primaryKey = $primaryKey;
+		// Support version 4.0 with 3.1 backward compatibility
+		$this->dbalCollectionClass = class_exists('Nextras\Orm\Collection\DbalCollection')
+			? 'Nextras\Orm\Collection\DbalCollection'
+			: 'Nextras\Orm\Mapper\Dbal\DbalCollection';
 	}
 
 
@@ -114,11 +121,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 				);
 			}
 		} else {
-			if (!$this->dataSource instanceof DbalCollection) {
+			if (!$this->dataSource instanceof $this->dbalCollectionClass) {
 				throw new UnexpectedValueException(
 					sprintf(
 						'Expeting %s, got %s',
-						DbalCollection::class,
+						$this->dbalCollectionClass,
 						get_class($this->dataSource)
 					)
 				);
@@ -248,11 +255,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 		array_unshift($params, $expr);
 
-		if (!$this->dataSource instanceof DbalCollection) {
+		if (!$this->dataSource instanceof $this->dbalCollectionClass) {
 			throw new UnexpectedValueException(
 				sprintf(
 					'Expeting %s, got %s',
-					DbalCollection::class,
+					$this->dbalCollectionClass,
 					get_class($this->dataSource)
 				)
 			);
