@@ -277,7 +277,7 @@ $grid->addColumnStatus('status', 'Status')
 	->onChange[] = function($id, $new_value) { dump($id, $new_value); die; };
 ```
 
-ColumnStatus has optional caret, icon and class. By default, there is a caret visible and the main button that toggles statuses dropdown has class "btn-success". You can change all these properties:
+ColumnStatus has optional caret, icon, class and confirmation. By default, there is a caret visible and the main button that toggles statuses dropdown has class "btn-success". You can change all these properties:
 
 ```php
 $grid->addColumnStatus('status', 'Status')
@@ -285,6 +285,7 @@ $grid->addColumnStatus('status', 'Status')
 	->addOption(1, 'Online')
 		->setIcon('check')
 		->setClass('btn-success')
+		->setConfirmation(new StringConfirmation('Do you really want set status as Online?'))
 		->endOption()
 	->addOption(2, 'Standby')
 		->setIcon('user')
