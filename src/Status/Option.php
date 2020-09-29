@@ -4,10 +4,17 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Status;
 
+use Ublaboo\DataGrid\Column\Action\Confirmation\CallbackConfirmation;
+use Ublaboo\DataGrid\Column\Action\Confirmation\IConfirmation;
+use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\Column\ColumnStatus;
+use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Row;
 
 class Option
 {
+
+	private DataGrid $grid;
 
 	/**
 	 * @var ColumnStatus
@@ -55,10 +62,16 @@ class Option
 	protected $iconSecondary;
 
 	/**
+	 * @var IConfirmation|null
+	 */
+	protected $confirmation;
+
+	/**
 	 * @param mixed $value
 	 */
-	public function __construct(ColumnStatus $columnStatus, $value, string $text)
+	public function __construct(DataGrid $grid, ColumnStatus $columnStatus, $value, string $text)
 	{
+		$this->grid = $grid;
 		$this->columnStatus = $columnStatus;
 		$this->value = $value;
 		$this->text = $text;
@@ -189,5 +202,45 @@ class Option
 	public function getText(): string
 	{
 		return $this->text;
+	}
+
+
+	/**
+	 * @return static
+	 */
+	public function setConfirmation(IConfirmation $confirmation): self
+	{
+		$this->confirmation = $confirmation;
+
+		return $this;
+	}
+
+
+	/**
+	 * @throws DataGridException
+	 */
+	public function getConfirmationDialog(Row $row): ?string
+	{
+		if ($this->confirmation === null) {
+			return null;
+		}
+
+		if ($this->confirmation instanceof CallbackConfirmation) {
+			return ($this->confirmation->getCallback())($row->getItem());
+		}
+
+		if ($this->confirmation instanceof StringConfirmation) {
+			$question = $this->grid->getTranslator()->translate($this->confirmation->getQuestion());
+
+			if ($this->confirmation->getPlaceholderName() === null) {
+				return $question;
+			}
+
+			return str_replace(
+				'%s',
+				$row->getValue($this->confirmation->getPlaceholderName()),
+				$question
+			);
+		}
 	}
 }
