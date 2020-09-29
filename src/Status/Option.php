@@ -14,7 +14,10 @@ use Ublaboo\DataGrid\Row;
 class Option
 {
 
-	private DataGrid $grid;
+	/**
+	 * @var DataGrid
+	 */
+	private $grid;
 
 	/**
 	 * @var ColumnStatus
