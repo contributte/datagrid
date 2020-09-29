@@ -216,9 +216,6 @@ class Option
 	}
 
 
-	/**
-	 * @throws DataGridException
-	 */
 	public function getConfirmationDialog(Row $row): ?string
 	{
 		if ($this->confirmation === null) {
