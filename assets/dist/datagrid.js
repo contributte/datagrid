@@ -148,8 +148,9 @@
   datagridShiftGroupSelection();
 
   document.addEventListener('change', function(e) {
-    var checked_inputs, counter, event, grid, i, ie, input, inputs, len, results, select, total;
+    var checked_inputs, counter, event, grid, i, ie, input, inputs, len, select, total;
     grid = e.target.getAttribute('data-check');
+    ie = window.navigator.userAgent.indexOf("MSIE ");
     if (grid) {
       checked_inputs = document.querySelectorAll('input[data-check-all-' + grid + ']:checked');
       select = document.querySelector('.datagrid-' + grid + ' select[name="group_action[group_action]"]');
@@ -168,28 +169,6 @@
             counter.innerHTML = "";
           }
         }
-      }
-      ie = window.navigator.userAgent.indexOf("MSIE ");
-      if (ie) {
-        event = document.createEvent('Event');
-        event.initEvent('change', true, true);
-      } else {
-        event = new Event('change', {
-          'bubbles': true
-        });
-      }
-      if (select) {
-        select.dispatchEvent(event);
-      }
-    }
-    grid = e.target.getAttribute('data-check-all');
-    if (grid) {
-      inputs = document.querySelectorAll('input[type=checkbox][data-check-all-' + grid + ']');
-      results = [];
-      for (i = 0, len = inputs.length; i < len; i++) {
-        input = inputs[i];
-        input.checked = e.target.checked;
-        ie = window.navigator.userAgent.indexOf("MSIE ");
         if (ie) {
           event = document.createEvent('Event');
           event.initEvent('change', true, true);
@@ -198,31 +177,47 @@
             'bubbles': true
           });
         }
-        results.push(input.dispatchEvent(event));
+        select.dispatchEvent(event);
       }
-      return results;
+    }
+    grid = e.target.getAttribute('data-check-all');
+    if (ie) {
+      event = document.createEvent('Event');
+      event.initEvent('change', true, true);
+    } else {
+      event = new Event('change', {
+        'bubbles': true
+      });
+    }
+    if (grid) {
+      inputs = document.querySelectorAll('input[type=checkbox][data-check-all-' + grid + ']');
+      for (i = 0, len = inputs.length; i < len; i++) {
+        input = inputs[i];
+        input.checked = e.target.checked;
+      }
+      input.dispatchEvent(event)
     }
   });
 
-  
-window.datagridSerializeUrl = function(obj, prefix) {
-	var str = [];
-	for(var p in obj) {
-		if (obj.hasOwnProperty(p)) {
-			var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-			if (v !== null && v !== "") {
-				if (typeof v == "object") {
-					var r = window.datagridSerializeUrl(v, k);
-						if (r) {
-							str.push(r);
-						}
-				} else {
-					str.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
-				}
-			}
-		}
-	}
-	return str.join("&");
+
+  window.datagridSerializeUrl = function (obj, prefix) {
+    var str = [];
+    for (var p in obj) {
+      if (obj.hasOwnProperty(p)) {
+        var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+        if (v !== null && v !== "") {
+          if (typeof v == "object") {
+            var r = window.datagridSerializeUrl(v, k);
+            if (r) {
+              str.push(r);
+            }
+          } else {
+            str.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+          }
+        }
+      }
+    }
+    return str.join("&");
 }
 ;
 
