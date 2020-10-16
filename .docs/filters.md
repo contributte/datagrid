@@ -290,7 +290,7 @@ $grid->setRefreshUrl(false); // Or enabled again: $grid->setRefreshUrl(true);
 
 ## Auto submit
 
-DataGrid filter is submitted automatically after keypress (there is of course a little delay). If you want to desable that feature and use customizable submit button insted, use this code:
+DataGrid filter is submitted automatically after keypress (there is of course a little delay). If you want to disable that feature and use customizable submit button instead, use this code:
 
 ```php
 $grid->setAutoSubmit(false);
