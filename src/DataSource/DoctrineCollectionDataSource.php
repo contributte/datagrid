@@ -178,18 +178,16 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	protected function applyFilterRange(FilterRange $filter): void
 	{
 		$conditions = $filter->getCondition();
-		$values = $conditions[$filter->getColumn()];
 
-		$valueFrom = $values['from'];
+		$valueFrom = $conditions[$filter->getColumn()]['from'];
+		$valueTo = $conditions[$filter->getColumn()]['to'];
 
-		if ((bool) $valueFrom) {
+		if (is_numeric($valueFrom)) {
 			$expr = Criteria::expr()->gte($filter->getColumn(), $valueFrom);
 			$this->criteria->andWhere($expr);
 		}
 
-		$valueTo = $values['to'];
-
-		if ((bool) $valueTo) {
+		if (is_numeric($valueTo)) {
 			$expr = Criteria::expr()->lte($filter->getColumn(), $valueTo);
 			$this->criteria->andWhere($expr);
 		}
