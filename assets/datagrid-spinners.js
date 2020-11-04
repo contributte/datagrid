@@ -2,6 +2,8 @@ var dataGridRegisterExtension;
 
 if (typeof naja !== "undefined") {
 	var isNaja2 = function () { return naja && naja.VERSION && naja.VERSION >= 2 };
+	var najaEventParams = function (params) { return isNaja2() ? params.detail : params };
+	var najaRequest = function (params) { return isNaja2() ? params.detail.request : params.xhr };
 	dataGridRegisterExtension = function (name, extension) {
 		var init = extension.init;
 		var success = extension.success;
@@ -15,26 +17,26 @@ if (typeof naja !== "undefined") {
 			this.initialize = function (naja) {
 				if(init) {
 					naja.addEventListener('init', function (params)  {
-						init(params.defaultOptions);
+						init(najaEventParams(params).defaultOptions);
 					});
 				}
 
 				if(success) {
 					naja.addEventListener('success', function (params)  {
-						var payload = isNaja2() ? params.payload : params.response;
-						success(payload, params.options);
+						var payload = isNaja2() ? params.detail.payload : params.response;
+						success(payload, najaEventParams(params).options);
 					});
 				}
 
 				if(before) {
 					naja.addEventListener('before', function (params) {
-						before(params.xhr || params.request, params.options);
+						before(najaRequest(params), najaEventParams(params).options);
 					});
 				}
 
 				if(complete) {
 					naja.addEventListener('complete', function (params) {
-						complete(params.xhr || params.request, params.options);
+						complete(najaRequest(params), najaEventParams(params).options);
 					});
 				}
 			}
