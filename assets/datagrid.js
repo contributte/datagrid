@@ -24,7 +24,7 @@ if (typeof naja !== "undefined") {
 
 				if(success) {
 					naja.addEventListener('success', function (params)  {
-						var payload = isNaja2() ? params.detail.payload : najaEventParams(params).response;
+						var payload = isNaja2() ? params.detail.payload : params.response;
 						success(payload, najaEventParams(params).options);
 					});
 				}
