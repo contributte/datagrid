@@ -10,21 +10,33 @@ if (typeof naja !== "undefined") {
 
 
 		var NewExtension = function NewExtension(naja, name) {
+			this.naja = naja;
 			this.name = name;
+			var extension = this;
+
+			extension.initialize = function (naja) {
+				extension.naja = naja;
+			}
 
 			if(init) {
-				naja.addEventListener('init', function (params)  {
+				extension.naja.addEventListener('init', function (params)  {
 					init(params.defaultOptions);
 				});
 			}
 
 			if(success) {
-				naja.addEventListener('success', function (params)  {
-					success(params.response, params.options);
+				extension.naja.addEventListener('success', function (params)  {
+					var payload = naja.version >=2 ? params.payload : params.response;
+					success(payload, params.options);
 				});
 			}
 
-			naja.addEventListener('interaction', function (params) {
+			var interactionTarget = extension.naja;
+			if (naja.VERSION >=2) {
+				interactionTarget = interactionTarget.uiHandler;
+			}
+
+			interactionTarget.addEventListener('interaction', function (params) {
 				params.options.nette = {
 					el: $(params.element)
 				}
@@ -36,22 +48,26 @@ if (typeof naja !== "undefined") {
 			});
 
 			if(before) {
-				naja.addEventListener('before', function (params) {
-					if (!before(params.xhr, params.options))
+				extension.naja.addEventListener('before', function (params) {
+					if (!before(params.xhr || params.request, params.options))
 						params.preventDefault();
 				});
 			}
 
 			if(complete) {
-				naja.addEventListener('complete', function (params) {
-					complete(params.xhr, params.options);
+				extension.naja.addEventListener('complete', function (params) {
+					complete(params.xhr || params.request, params.options);
 				});
 			}
 
-			return this;
+			return extension;
 		}
 
-		naja.registerExtension(NewExtension, name);
+		if (naja.VERSION >=2) {
+			naja.registerExtension(NewExtension(null, name));
+		} else {
+			naja.registerExtension(NewExtension, name);
+		}
 	};
 
 
