@@ -11,9 +11,8 @@ if (typeof naja !== "undefined") {
 
 		var NewExtension = function NewExtension(naja, name) {
 			this.name = name;
-			var extension = this;
 
-			extension.initialize = function (naja) {
+			this.initialize = function (naja) {
 				if(init) {
 					naja.addEventListener('init', function (params)  {
 						init(params.defaultOptions);
@@ -42,7 +41,7 @@ if (typeof naja !== "undefined") {
 			if (!naja.version || !isNaja2()) {
 				extension.initialize(naja);
 			}
-			return extension;
+			return this;
 		}
 
 		if (isNaja2()) {
