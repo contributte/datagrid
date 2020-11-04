@@ -39,7 +39,7 @@ if (typeof naja !== "undefined") {
 				}
 			}
 			if (!naja.version || !isNaja2()) {
-				extension.initialize(naja);
+				this.initialize(naja);
 			}
 			return this;
 		}
