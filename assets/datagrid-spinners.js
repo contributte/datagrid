@@ -1,6 +1,7 @@
 var dataGridRegisterExtension;
 
 if (typeof naja !== "undefined") {
+	var isNaja2 = function () { return naja.version >= 2 };
 	dataGridRegisterExtension = function (name, extension) {
 		var init = extension.init;
 		var success = extension.success;
@@ -9,44 +10,43 @@ if (typeof naja !== "undefined") {
 
 
 		var NewExtension = function NewExtension(naja, name) {
-			this.naja = naja;
 			this.name = name;
 			var extension = this;
 
 			extension.initialize = function (naja) {
-				extension.naja = naja;
-			}
+				if(init) {
+					naja.addEventListener('init', function (params)  {
+						init(params.defaultOptions);
+					});
+				}
 
-			if(init) {
-				extension.naja.addEventListener('init', function (params)  {
-					init(params.defaultOptions);
-				});
-			}
+				if(success) {
+					naja.addEventListener('success', function (params)  {
+						var payload = isNaja2() ? params.payload : params.response;
+						success(payload, params.options);
+					});
+				}
 
-			if(success) {
-				extension.naja.addEventListener('success', function (params)  {
-					var payload = naja.version >=2 ? params.payload : params.response;
-					success(payload, params.options);
-				});
-			}
+				if(before) {
+					naja.addEventListener('before', function (params) {
+						before(params.xhr || params.request, params.options);
+					});
+				}
 
-			if(before) {
-				extension.naja.addEventListener('before', function (params) {
-					before(params.xhr || params.request, params.options);
-				});
+				if(complete) {
+					naja.addEventListener('complete', function (params) {
+						complete(params.xhr || params.request, params.options);
+					});
+				}
 			}
-
-			if(complete) {
-				extension.naja.addEventListener('complete', function (params) {
-					complete(params.xhr || params.request, params.options);
-				});
+			if (!naja.version || !isNaja2()) {
+				extension.initialize(naja);
 			}
-
 			return extension;
 		}
 
-		if (naja.VERSION >=2) {
-			naja.registerExtension(NewExtension(null, name));
+		if (isNaja2()) {
+			naja.registerExtension(new NewExtension(null, name));
 		} else {
 			naja.registerExtension(NewExtension, name);
 		}
