@@ -1,7 +1,7 @@
 var dataGridRegisterExtension, dataGridRegisterAjaxCall, dataGridLoad, dataGridSubmitForm;
 
 if (typeof naja !== "undefined") {
-	var isNaja2 = function () { return naja.version >= 2 };
+	var isNaja2 = function () { return naja && naja.VERSION && naja.VERSION >= 2 };
 	dataGridRegisterExtension = function (name, extension) {
 		var init = extension.init;
 		var success = extension.success;
@@ -56,7 +56,7 @@ if (typeof naja !== "undefined") {
 					});
 				}
 			}
-			if (!naja.version || !isNaja2()) {
+			if (!isNaja2()) {
 				this.initialize(naja);
 			}
 			return this;
