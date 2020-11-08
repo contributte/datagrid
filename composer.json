@@ -45,7 +45,8 @@
 		"phpstan/phpstan": "^0.11.12",
 		"phpstan/phpstan-strict-rules": "^0.11.1",
 		"tharos/leanmapper": "~3.4.1",
-		"tracy/tracy": "~2.6.3"
+		"tracy/tracy": "~2.6.3",
+		"elasticsearch/elasticsearch": "^7.1"
 	},
 	"prefer-stable": true,
 	"minimum-stability": "dev",
