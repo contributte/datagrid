@@ -19,10 +19,6 @@ use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
-// Temporary cause:
-// E_USER_DEPRECATED: Replace deprecated Nette\Object with trait Nette\SmartObject in BaseMapper
-error_reporting(E_ERROR | E_PARSE);
-
 if (!extension_loaded('mysqli')) {
 	Environment::skip('Test requires MySQLi extension to be loaded.');
 }
