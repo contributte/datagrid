@@ -20,7 +20,7 @@ There are these supported datasources so far:
 - Nette\Database\Table (for MS-SQL)
 - Nette\Database\Table (for PostgreSQL)
 - Array
-- Elasticsearch (Please see the documentation [here](https://github.com/contributte/datagrid-elasticsearch-data-source))
+- Elasticsearch
 - Remote Api
 - Any other class that implements IDataSource
 
@@ -104,4 +104,16 @@ In case you want to specify the "through-column", use following syntax:
 ```php
 $grid->addColumnText('name', 'Name', ':related_table.name:through_column_id');
 $grid->addColumnText('name', 'Name', 'referenced_table.name:through_column_id');
+```
+
+## ElasticDataSource
+
+```php
+$grid->setDataSource(
+    new ElasticsearchDataSource(
+        $client, // Elasticsearch\Client
+        'users', // Index name
+        'user' // Index type
+    )
+);
 ```
