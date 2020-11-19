@@ -263,8 +263,8 @@ $grid->addColumnLink('name', 'Name', 'edit')
 
 ## Column Status
 
-![Status 1](https://github.com/contributte/datagrid/blob/master/.docs/assets/status1.gif)
-![Status 1](https://github.com/contributte/datagrid/blob/master/.docs/assets/status2.gif)
+![Status 1](https://github.com/contributte/datagrid/blob/master/.docs/assets/status1.gif?raw=true)
+![Status 1](https://github.com/contributte/datagrid/blob/master/.docs/assets/status2.gif?raw=true)
 
 Once your item keep some "status" flag, it is appropriate to show user the status in highlighted form. Also there could be a dropdown with available statuses:
 
@@ -345,7 +345,7 @@ $grid->getColumn('status')->getOption(2)
 
 ## Hideable columns
 
-![Columns Hiding](https://github.com/contributte/datagrid/blob/master/.docs/assets/hideable_columns.gif)
+![Columns Hiding](https://github.com/contributte/datagrid/blob/master/.docs/assets/hideable_columns.gif?raw=true)
 
 In example datargid above, you can hide columns and then reveal them again. This feature is disabled by default. You can enable it like this:
 
@@ -366,7 +366,7 @@ $grid->addColumnText('name', 'Name')
 
 If default hide is used, new button is shown in that settings (gear) dropdown - **Show default columns**:
 
-<img title="Columns Hiding" src="https://github.com/contributte/datagrid/blob/master/.docs/assets/hideable_columns_reset.png" width="267" height="256">
+<img title="Columns Hiding" src="https://github.com/contributte/datagrid/blob/master/.docs/assets/hideable_columns_reset.png?raw=true" width="267" height="256">
 
 ## Columns Summary
 
