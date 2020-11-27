@@ -38,3 +38,14 @@ As you can see, new item row is rendered at the bottom of the table. You may cha
 $grid->addInlineAdd()
 	->setPositionTop(); // Or take it down again: ::setPositionTop(false)
 ```
+
+## Limitation when using array datasource
+
+When you use array datasource, there is one limitation. Simply redrawing the grid won't do. You will also have to set the datasource again to refresh the data.
+
+```php
+$grid->getInlineAdd()->onSubmit[] = function(ArrayHash $values) use ($grid): void {
+    $grid->setDatasource($this->model->getDatasource());
+    $this->redrawControl();
+};
+```
