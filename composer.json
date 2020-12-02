@@ -25,7 +25,7 @@
 		}
 	},
 	"require": {
-		"php": "^7.2",
+		"php": "^7.2 || ^8.0",
 		"contributte/application": "^0.4.1",
 		"nette/application": "^3.0.1",
 		"nette/di": "^3.0.0",
