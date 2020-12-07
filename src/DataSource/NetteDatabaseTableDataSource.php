@@ -82,7 +82,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 */
 	public function getData(): array
 	{
-		return $this->data ?: $this->dataSource->fetchAll();
+		return $this->data ?? $this->dataSource->fetchAll();
 	}
 
 
@@ -263,7 +263,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			$length = sizeof($values);
 			$i = 1;
 
-			for ($iterator = 0; $iterator < count($values); $iterator++) { 
+			for ($iterator = 0; $iterator < count($values); $iterator++) {
 				if ($i === $length) {
 					$or .= $filter->getColumn() . ' = ?)';
 				} else {

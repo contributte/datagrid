@@ -76,7 +76,7 @@ class FunctionSum implements ISingleColumnAggregationFunction
 		}
 
 		if ($dataSource instanceof Collection) {
-			$dataSource->forAll(function ($key, $value) {
+			$dataSource->forAll(function ($key, $value): bool {
 				$this->result += PropertyAccessHelper::getValue($value, $this->column);
 
 				return true;

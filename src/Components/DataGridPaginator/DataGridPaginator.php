@@ -63,7 +63,7 @@ class DataGridPaginator extends Control
 
 	public function getTemplateFile(): string
 	{
-		return $this->templateFile ?: __DIR__ . '/templates/data_grid_paginator.latte';
+		return $this->templateFile ?? __DIR__ . '/templates/data_grid_paginator.latte';
 	}
 
 
@@ -92,7 +92,7 @@ class DataGridPaginator extends Control
 			$steps = [$page];
 
 		} else {
-			$arr = range(max($paginator->firstPage, $page - 2), min($paginator->lastPage, $page + 2));
+			$arr = range(max($paginator->firstPage, $page - 2), (int) min($paginator->lastPage, $page + 2));
 
 			/**
 			 * Something to do with steps in tempale...

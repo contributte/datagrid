@@ -9,6 +9,7 @@ use Ublaboo\DataGrid\Column\Action\Confirmation\IConfirmation;
 use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\Column\ColumnStatus;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Row;
 
 class Option
@@ -242,5 +243,7 @@ class Option
 				$question
 			);
 		}
+
+		throw new DataGridException('Unsupported confirmation');
 	}
 }

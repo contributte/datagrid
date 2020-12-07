@@ -290,6 +290,8 @@ class ArrayDataSource implements IDataSource
 
 			return $row_value->format($format) === $date->format($format);
 		}
+
+		return false;
 	}
 
 

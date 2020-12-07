@@ -102,7 +102,7 @@ class MultiAction extends Column
 			);
 		}
 
-		$href = $href ?: $key;
+		$href = $href ?? $key;
 
 		if ($params === null) {
 			$params = [$this->grid->getPrimaryKey()];
