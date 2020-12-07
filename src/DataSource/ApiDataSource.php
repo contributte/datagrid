@@ -63,28 +63,8 @@ class ApiDataSource implements IDataSource
 	}
 
 
-	/**
-	 * Get data of remote source
-	 *
-	 * @return mixed
-	 */
-	protected function getResponse(array $params = [])
-	{
-		$queryString = http_build_query($params + $this->queryParams);
-		$url = sprintf('%s?%s', $this->url, $queryString);
-
-		$content = file_get_contents($url);
-
-		if ($content === false) {
-			throw new UnexpectedValueException(sprintf('Could not open URL %s', $url));
-		}
-
-		return json_decode($content);
-	}
-
-
 	/********************************************************************************
-	 *                          IDataSource implementation                          *
+	 *                          IDataSource implementation *
 	 ********************************************************************************/
 
 	public function getCount(): int
@@ -174,5 +154,25 @@ class ApiDataSource implements IDataSource
 		}
 
 		return $this;
+	}
+
+
+	/**
+	 * Get data of remote source
+	 *
+	 * @return mixed
+	 */
+	protected function getResponse(array $params = [])
+	{
+		$queryString = http_build_query($params + $this->queryParams);
+		$url = sprintf('%s?%s', $this->url, $queryString);
+
+		$content = file_get_contents($url);
+
+		if ($content === false) {
+			throw new UnexpectedValueException(sprintf('Could not open URL %s', $url));
+		}
+
+		return json_decode($content);
 	}
 }

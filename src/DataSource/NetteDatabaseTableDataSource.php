@@ -45,7 +45,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 
 	/********************************************************************************
-	 *                          IDataSource implementation                          *
+	 *                          IDataSource implementation *
 	 ********************************************************************************/
 
 	public function getCount(): int
@@ -82,7 +82,9 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 */
 	public function getData(): array
 	{
-		return $this->data ?? $this->dataSource->fetchAll();
+		return $this->data !== []
+			? $this->data
+			: $this->dataSource->fetchAll();
 	}
 
 

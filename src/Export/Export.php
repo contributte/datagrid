@@ -57,7 +57,6 @@ class Export
 	 */
 	protected $confirmDialog = null;
 
-
 	/**
 	 * @var string|null
 	 */

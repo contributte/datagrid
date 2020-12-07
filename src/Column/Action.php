@@ -314,21 +314,7 @@ class Action extends Column
 
 
 	/**
-	 * @param  mixed $property
-	 * @throws DataGridException
-	 */
-	protected function checkPropertyStringOrCallable($property, string $name): void
-	{
-		if (!is_string($property) && !is_callable($property) && $property !== null) {
-			throw new DataGridException(
-				sprintf('Action %s has to be either string or a callback returning string', $name)
-			);
-		}
-	}
-
-
-	/**
-	 * @param  string|callable|null $property
+	 * @param string|callable|null $property
 	 * @throws DataGridException
 	 */
 	public function getPropertyStringOrCallableGetString(
@@ -355,12 +341,6 @@ class Action extends Column
 	}
 
 
-	protected function translate(string $message): string
-	{
-		return $this->grid->getTranslator()->translate($message);
-	}
-
-
 	public function isOpenInNewTab(): bool
 	{
 		return $this->openInNewTab;
@@ -375,5 +355,25 @@ class Action extends Column
 		$this->openInNewTab = $openInNewTab;
 
 		return $this;
+	}
+
+
+	/**
+	 * @param mixed $property
+	 * @throws DataGridException
+	 */
+	protected function checkPropertyStringOrCallable($property, string $name): void
+	{
+		if (!is_string($property) && !is_callable($property) && $property !== null) {
+			throw new DataGridException(
+				sprintf('Action %s has to be either string or a callback returning string', $name)
+			);
+		}
+	}
+
+
+	protected function translate(string $message): string
+	{
+		return $this->grid->getTranslator()->translate($message);
 	}
 }

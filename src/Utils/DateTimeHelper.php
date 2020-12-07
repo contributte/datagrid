@@ -13,7 +13,7 @@ final class DateTimeHelper
 	/**
 	 * Try to convert string into \DateTime object
 	 *
-	 * @param  mixed     $value
+	 * @param mixed $value
 	 * @param array|string[] $formats
 	 * @throws DataGridDateTimeHelperException
 	 */
@@ -26,7 +26,7 @@ final class DateTimeHelper
 	/**
 	 * Try to convert string into \DateTime object from more date formats
 	 *
-	 * @param  mixed     $value
+	 * @param mixed $value
 	 * @param array|string[] $formats
 	 * @throws DataGridDateTimeHelperException
 	 */
@@ -39,7 +39,7 @@ final class DateTimeHelper
 	/**
 	 * Convert string into \DateTime object from more date without time
 	 *
-	 * @param  mixed     $value
+	 * @param mixed $value
 	 * @param array|string[] $formats
 	 * @throws DataGridDateTimeHelperException
 	 */

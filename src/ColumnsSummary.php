@@ -68,21 +68,6 @@ class ColumnsSummary
 	}
 
 
-	/**
-	 * Get value from column using Row::getValue() or custom callback
-	 *
-	 * @return mixed
-	 */
-	private function getValue(Row $row, Column $column)
-	{
-		if ($this->rowCallback === null) {
-			return $row->getValue($column->getColumn());
-		}
-
-		return call_user_func_array($this->rowCallback, [$row->getItem(), $column->getColumn()]);
-	}
-
-
 	public function add(Row $row): void
 	{
 		foreach (array_keys($this->summary) as $key) {
@@ -105,12 +90,7 @@ class ColumnsSummary
 			return '';
 		}
 
-		return number_format(
-			$this->summary[$key],
-			$this->format[$key][0],
-			$this->format[$key][1],
-			$this->format[$key][2]
-		);
+		return number_format($this->summary[$key], $this->format[$key][0], $this->format[$key][1], $this->format[$key][2]);
 	}
 
 
@@ -192,5 +172,20 @@ class ColumnsSummary
 	public function getPositionTop(): bool
 	{
 		return $this->positionTop;
+	}
+
+
+	/**
+	 * Get value from column using Row::getValue() or custom callback
+	 *
+	 * @return mixed
+	 */
+	private function getValue(Row $row, Column $column)
+	{
+		if ($this->rowCallback === null) {
+			return $row->getValue($column->getColumn());
+		}
+
+		return call_user_func_array($this->rowCallback, [$row->getItem(), $column->getColumn()]);
 	}
 }

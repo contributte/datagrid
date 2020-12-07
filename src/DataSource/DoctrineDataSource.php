@@ -72,7 +72,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 
 	/********************************************************************************
-	 *                          IDataSource implementation                          *
+	 *                          IDataSource implementation *
 	 ********************************************************************************/
 
 	public function getCount(): int

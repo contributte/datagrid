@@ -16,11 +16,6 @@ class Option
 {
 
 	/**
-	 * @var DataGrid
-	 */
-	private $grid;
-
-	/**
 	 * @var ColumnStatus
 	 */
 	protected $columnStatus;
@@ -69,6 +64,11 @@ class Option
 	 * @var IConfirmation|null
 	 */
 	protected $confirmation;
+
+	/**
+	 * @var DataGrid
+	 */
+	private $grid;
 
 	/**
 	 * @param mixed $value
