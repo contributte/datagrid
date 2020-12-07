@@ -49,7 +49,11 @@ class SimpleTranslator implements ITranslator
 	}
 
 
-	function translate($message, ...$parameters): string
+	/**
+	 * @param mixed $message
+	 * @param mixed ...$parameters
+	 */
+	public function translate($message, ...$parameters): string
 	{
 		return $this->dictionary[$message] ?? $message;
 	}

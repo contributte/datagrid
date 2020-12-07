@@ -40,7 +40,8 @@
 		"nette/database": "~3.0.2",
 		"nette/tester": "^2.3.4",
 		"nextras/orm": "~3.2.0 || ^4.0",
-		"ninjify/coding-standard": "^0.11.0",
+		"ninjify/coding-standard": "^0.12.0",
+		"phpstan/phpstan": "^0.12.56",
 		"tharos/leanmapper": "~3.4.1",
 		"tracy/tracy": "~2.6.3",
 		"elasticsearch/elasticsearch": "^7.1"
