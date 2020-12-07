@@ -51,7 +51,7 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 	{
 		$searchResult = $this->client->search($this->searchParamsBuilder->buildParams());
 
-		if (!is_array($searchResult) || !isset($searchResult['hits'])) {
+		if (!isset($searchResult['hits'])) {
 			throw new \UnexpectedValueException;
 		}
 
@@ -68,14 +68,11 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 	{
 		$searchResult = $this->client->search($this->searchParamsBuilder->buildParams());
 
-		if (!is_array($searchResult) || !isset($searchResult['hits'])) {
+		if (!isset($searchResult['hits'])) {
 			throw new \UnexpectedValueException;
 		}
 
-		return array_map(
-			$this->rowFactory,
-			$searchResult['hits']['hits']
-		);
+		return array_map($this->rowFactory, $searchResult['hits']['hits']);
 	}
 
 

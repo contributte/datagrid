@@ -632,21 +632,6 @@ abstract class Column extends FilterableColumn
 	}
 
 
-	/**
-	 * Get row item params (E.g. action may be called id => $item->id, name => $item->name, ...)
-	 */
-	protected function getItemParams(Row $row, array $paramsList): array
-	{
-		$return = [];
-
-		foreach ($paramsList as $paramName => $param) {
-			$return[is_string($paramName) ? $paramName : $param] = $row->getValue($param);
-		}
-
-		return $return;
-	}
-
-
 	public function getColumn(): string
 	{
 		return $this->column;
@@ -660,5 +645,20 @@ abstract class Column extends FilterableColumn
 		$this->replacements = $replacements;
 
 		return $this;
+	}
+
+
+	/**
+	 * Get row item params (E.g. action may be called id => $item->id, name => $item->name, ...)
+	 */
+	protected function getItemParams(Row $row, array $paramsList): array
+	{
+		$return = [];
+
+		foreach ($paramsList as $paramName => $param) {
+			$return[is_string($paramName) ? $paramName : $param] = $row->getValue($param);
+		}
+
+		return $return;
 	}
 }

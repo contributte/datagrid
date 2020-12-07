@@ -107,15 +107,13 @@ class ItemDetail
 
 
 	/**
-	 * @param  mixed $item
+	 * @param mixed $item
 	 * @return mixed
 	 */
 	public function render($item)
 	{
 		if ($this->getType() === 'block') {
-			throw new DataGridItemDetailException(
-				'ItemDetail is set to render as block, but block #detail is not defined'
-			);
+			throw new DataGridItemDetailException('ItemDetail is set to render as block, but block #detail is not defined');
 		}
 
 		if ($this->getRenderer() === null) {

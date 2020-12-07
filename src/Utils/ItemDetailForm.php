@@ -44,29 +44,6 @@ final class ItemDetailForm extends Container
 
 
 	/**
-	 * @return mixed|null
-	 * @throws UnexpectedValueException
-	 */
-	private function getHttpData()
-	{
-		if ($this->httpPost === null) {
-			$lookupPath = $this->lookupPath('Nette\Forms\Form');
-			$form = $this->getForm();
-
-			if ($lookupPath === null || $form === null) {
-				throw new UnexpectedValueException;
-			}
-
-			$path = explode(self::NAME_SEPARATOR, $lookupPath);
-
-			$this->httpPost = Arrays::get($form->getHttpData(), $path, null);
-		}
-
-		return $this->httpPost;
-	}
-
-
-	/**
 	 * @param mixed $name
 	 */
 	public function offsetGet($name): IComponent
@@ -89,6 +66,29 @@ final class ItemDetailForm extends Container
 		}
 
 		return $container;
+	}
+
+
+	/**
+	 * @return mixed|null
+	 * @throws UnexpectedValueException
+	 */
+	private function getHttpData()
+	{
+		if ($this->httpPost === null) {
+			$lookupPath = $this->lookupPath('Nette\Forms\Form');
+			$form = $this->getForm();
+
+			if ($lookupPath === null || $form === null) {
+				throw new UnexpectedValueException;
+			}
+
+			$path = explode(self::NAME_SEPARATOR, $lookupPath);
+
+			$this->httpPost = Arrays::get($form->getHttpData(), $path, null);
+		}
+
+		return $this->httpPost;
 	}
 
 

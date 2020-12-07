@@ -30,7 +30,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 
 	/********************************************************************************
-	 *                          IDataSource implementation                          *
+	 *                          IDataSource implementation *
 	 ********************************************************************************/
 
 	public function getCount(): int

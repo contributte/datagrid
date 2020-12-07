@@ -72,7 +72,7 @@ class CsvDataModel
 	/**
 	 * Get item values saved into row
 	 *
-	 * @param  mixed $item
+	 * @param mixed $item
 	 */
 	public function getRow($item): array
 	{

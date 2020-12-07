@@ -1,21 +1,14 @@
 <?xml version="1.0"?>
 <ruleset>
 	<rule ref="./vendor/ninjify/coding-standard/ruleset-gamee.xml">
-		<!-- PHP 7.4 -->
-		<exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint" />
-		<exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint" />
-		<exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingTraversableTypeHintSpecification" />
-		<exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint" />
-		<exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint" />
-		<exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification" />
-		<exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint" />
-		<exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification" />
-		<exclude name="SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction" />
-		<exclude name="SlevomatCodingStandard.PHP.RequireExplicitAssertion.RequiredExplicitAssertion" />
-		<exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit.UselessElse" />
-		<exclude name="SlevomatCodingStandard.Numbers.RequireNumericLiteralSeparator.RequiredNumericLiteralSeparator" />
-		<exclude name="SlevomatCodingStandard.ControlStructures.BlockControlStructureSpacing.IncorrectLinesCountBeforeControlStructure" />
-		<exclude name="SlevomatCodingStandard.ControlStructures.BlockControlStructureSpacing.IncorrectLinesCountAfterControlStructure" />
+		<exclude name="SlevomatCodingStandard.Commenting.RequireOneLineDocComment.MultiLineDocComment" />
+		<exclude name="SlevomatCodingStandard.Classes.MethodSpacing.IncorrectLinesCountBetweenMethods" />
+		<exclude name="SlevomatCodingStandard.Classes.ClassMemberSpacing.IncorrectCountOfBlankLinesBetweenMembers" />
+		<exclude name="SlevomatCodingStandard.Commenting.DisallowCommentAfterCode.DisallowedCommentAfterCode" />
+		<exclude name="SlevomatCodingStandard.Classes.RequireSingleLineMethodSignature.RequiredSingleLineSignature" />
+		<exclude name="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator.RequiredNullCoalesceEqualOperator" />
+		<exclude name="SlevomatCodingStandard.Files.LineLength.LineTooLong" />
+		<exclude name="SlevomatCodingStandard.Functions.RequireMultiLineCall.RequiredMultiLineCall" />
 	</rule>
 
 	<!-- Specific rules -->
@@ -27,6 +20,18 @@
 				tests/Files=>Ublaboo\DataGrid\Tests\Files,
 			"/>
 			<property name="extensions" type="array" value="php,phpt"/>
+		</properties>
+	</rule>
+	<rule ref="SlevomatCodingStandard.Functions.RequireSingleLineCall">
+		<properties>
+			<property name="maxLineLength" type="int" value="120"/>
+			<property name="alwaysForSimpleConditions" type="boolean" value="false"/>
+		</properties>
+	</rule>
+	<rule ref="SlevomatCodingStandard.ControlStructures.RequireSingleLineCondition">
+		<properties>
+			<property name="maxLineLengtaash" type="int" value="120"/>
+			<property name="alwaysForSimpleConditions" type="boolean" value="false"/>
 		</properties>
 	</rule>
 

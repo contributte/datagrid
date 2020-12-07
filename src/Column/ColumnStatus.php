@@ -66,7 +66,7 @@ class ColumnStatus extends Column
 
 
 	/**
-	 * @param  mixed $value
+	 * @param mixed $value
 	 * @throws DataGridColumnStatusException
 	 */
 	public function getOption($value): Option
@@ -136,7 +136,7 @@ class ColumnStatus extends Column
 
 
 	/**
-	 * @param  mixed $value
+	 * @param mixed $value
 	 */
 	public function removeOption($value): void
 	{
@@ -164,8 +164,6 @@ class ColumnStatus extends Column
 
 	public function setReplacement(array $replacements): Column
 	{
-		throw new DataGridColumnStatusException(
-			'Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)'
-		);
+		throw new DataGridColumnStatusException('Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)');
 	}
 }

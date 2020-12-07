@@ -4,11 +4,6 @@ includes:
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method Dibi\\\\Fluent\\:\\:from\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: src/AggregationFunction/FunctionSum.php
-
-		-
 			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$steps\\.$#"
 			count: 1
 			path: src/Components/DataGridPaginator/DataGridPaginator.php
@@ -139,16 +134,6 @@ parameters:
 			path: src/DataModel.php
 
 		-
-			message: "#^Class Dibi\\\\Drivers\\\\MsSqlDriver not found\\.$#"
-			count: 1
-			path: src/DataModel.php
-
-		-
 			message: "#^Call to an undefined method Nextras\\\\Orm\\\\Collection\\\\ICollection\\:\\:getQueryBuilder\\(\\)\\.$#"
 			count: 2
 			path: src/DataSource/NextrasDataSource.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of method Nette\\\\Forms\\\\Controls\\\\ChoiceControl\\:\\:setValue\\(\\) expects int\\|string, null given\\.$#"
-			count: 1
-			path: src/GroupAction/GroupActionCollection.php

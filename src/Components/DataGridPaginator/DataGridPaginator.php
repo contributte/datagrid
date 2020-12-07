@@ -9,7 +9,7 @@ declare(strict_types=1);
  *
  * For more information please see http://addons.nette.org
  *
- * @link       http://addons.nette.org
+ * @link http://addons.nette.org
  */
 
 namespace Ublaboo\DataGrid\Components\DataGridPaginator;
