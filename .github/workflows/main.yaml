@@ -156,7 +156,7 @@ jobs:
             composer-args: "--prefer-lowest"
           - php-version: "8.0"
             operating-system: "ubuntu-latest"
-            composer-args: ""
+            composer-args: "--ignore-platform-reqs"
       fail-fast: false
 
     continue-on-error: "${{ matrix.php-version == '8.0' }}"
