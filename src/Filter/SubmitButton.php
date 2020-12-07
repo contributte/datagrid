@@ -43,7 +43,7 @@ class SubmitButton extends Button
 
 
 	/**
-	 * @param  string|object  $caption
+	 * @param string|object $caption
 	 */
 	public function getControl($caption = null): Html
 	{

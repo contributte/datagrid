@@ -205,44 +205,11 @@ class GroupActionCollection
 			$groupButtonAction = $this->groupActions[$submitter->getName()];
 
 			if (!$groupButtonAction instanceof GroupButtonAction) {
-				throw new \UnexpectedValueException(
-					'This action is supposed to be a GroupButtonAction'
-				);
+				throw new \UnexpectedValueException('This action is supposed to be a GroupButtonAction');
 			}
 
 			$groupButtonAction->onClick($ids);
 		}
-	}
-
-
-	private function getFormSubmitter(NetteForm $form): ?SubmitButton
-	{
-		$container = $form['group_action'];
-
-		if (!$container instanceof Container) {
-			throw new \UnexpectedValueException;
-		}
-
-		if (isset($container['submit'])) {
-			if (!$container['submit'] instanceof SubmitButton) {
-				throw new \UnexpectedValueException;
-			}
-
-			if ($container['submit']->isSubmittedBy()) {
-				return $container['submit'];
-			}
-		}
-
-		foreach ($container->getComponents() as $component) {
-			if (
-				$component instanceof SubmitButton
-				&& $component->isSubmittedBy()
-			) {
-				return $component;
-			}
-		}
-
-		return null;
 	}
 
 
@@ -330,5 +297,33 @@ class GroupActionCollection
 		}
 
 		throw new DataGridGroupActionException("Group action $title does not exist.");
+	}
+
+
+	private function getFormSubmitter(NetteForm $form): ?SubmitButton
+	{
+		$container = $form['group_action'];
+
+		if (!$container instanceof Container) {
+			throw new \UnexpectedValueException;
+		}
+
+		if (isset($container['submit'])) {
+			if (!$container['submit'] instanceof SubmitButton) {
+				throw new \UnexpectedValueException;
+			}
+
+			if ($container['submit']->isSubmittedBy()) {
+				return $container['submit'];
+			}
+		}
+
+		foreach ($container->getComponents() as $component) {
+			if ($component instanceof SubmitButton && $component->isSubmittedBy()) {
+				return $component;
+			}
+		}
+
+		return null;
 	}
 }

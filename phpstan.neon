@@ -3,7 +3,148 @@ includes:
 
 parameters:
 	ignoreErrors:
-		- '#^Access to an undefined property Nette\\Bridges\\ApplicationLatte\\Template::\$.+\.$#'
 		-
-			message: '#^Call to an undefined method Nextras\\Orm\\Collection\\ICollection::getQueryBuilder\(\)\.$#'
-			path: %currentWorkingDirectory%/src/DataSource/NextrasDataSource.php
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$steps\\.$#"
+			count: 1
+			path: src/Components/DataGridPaginator/DataGridPaginator.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$paginator\\.$#"
+			count: 1
+			path: src/Components/DataGridPaginator/DataGridPaginator.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$iconPrefix\\.$#"
+			count: 1
+			path: src/Components/DataGridPaginator/DataGridPaginator.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$originalTemplate\\.$#"
+			count: 1
+			path: src/Components/DataGridPaginator/DataGridPaginator.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$rows\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$columns\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$actions\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$exports\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$filters\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$toolbarButtons\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$aggregationFunctions\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$multipleAggregationFunction\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$filter_active\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$originalTemplate\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$iconPrefix\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$itemsDetail\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$columnsVisibility\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$columnsSummary\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$inlineEdit\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$inlineAdd\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$hasGroupActions\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$hasGroupActionOnRows\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Access to an undefined property Nette\\\\Bridges\\\\ApplicationLatte\\\\Template\\:\\:\\$filter\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Instanceof between Ublaboo\\\\DataGrid\\\\Filter\\\\Filter and Ublaboo\\\\DataGrid\\\\Filter\\\\FilterDateRange will always evaluate to false\\.$#"
+			count: 1
+			path: src/DataGrid.php
+
+		-
+			message: "#^Cannot access offset 'submit' on Nette\\\\ComponentModel\\\\IComponent\\.$#"
+			count: 3
+			path: src/DataGrid.php
+
+		-
+			message: "#^Class dibi referenced with incorrect case\\: Dibi\\.$#"
+			count: 1
+			path: src/DataModel.php
+
+		-
+			message: "#^Call to an undefined method Nextras\\\\Orm\\\\Collection\\\\ICollection\\:\\:getQueryBuilder\\(\\)\\.$#"
+			count: 2
+			path: src/DataSource/NextrasDataSource.php
+
+		-
+			message: "#^Class Dibi\\\\Drivers\\\\MsSqlDriver not found\\.$#"
+			count: 1
+			path: src/DataModel.php
+
+		-
+			message: "#^Instanceof between Dibi\\\\Result and Dibi\\\\Result will always evaluate to true\\.$#"
+			count: 1
+			path: src/DataSource/DibiFluentMssqlDataSource.php
+
