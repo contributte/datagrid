@@ -147,6 +147,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
+
 		try {
 			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 

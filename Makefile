@@ -6,10 +6,10 @@ install:
 qa: phpstan cs
 
 cs:
-	vendor/bin/phpcs --standard=vendor/ninjify/coding-standard/ruleset-gamee.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests
+	vendor/bin/phpcs --standard=ruleset.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests
 
 csf:
-	vendor/bin/phpcbf --standard=vendor/ninjify/coding-standard/ruleset-gamee.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests
+	vendor/bin/phpcbf --standard=ruleset.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests
 
 phpstan:
 	vendor/bin/phpstan analyse -l max -c phpstan.neon src
