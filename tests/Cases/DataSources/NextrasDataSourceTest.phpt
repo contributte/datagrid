@@ -75,7 +75,8 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 	{
 		$result = [];
 
-		foreach ($this->ds->getData() as $row) { /** @var User $row */
+		/** @var User $row */
+		foreach ($this->ds->getData() as $row) {
 			$result[] = $row->toArray();
 		}
 

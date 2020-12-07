@@ -147,7 +147,9 @@ class Row
 				return null;
 			}
 
-			return $relatedRow !== null ? $relatedRow[$relatedColumn]: null;
+			return $relatedRow !== null
+				? $relatedRow[$relatedColumn]
+				: null;
 		}
 
 		if (preg_match('/^([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/', $key, $matches) === 1) {

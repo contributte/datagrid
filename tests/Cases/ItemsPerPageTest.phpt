@@ -25,14 +25,14 @@ class ItemsPerPageTest extends Tester\TestCase
 	private $grid;
 
 
-	public function setUp()
+	public function setUp(): void
 	{
 		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
 		$this->grid = $factory->createTestingDataGrid();
 	}
 
 
-	public function testGetPerPage()
+	public function testGetPerPage(): void
 	{
 		$this->grid->setItemsPerPageList([10, 20, 50], false);
 
@@ -43,7 +43,7 @@ class ItemsPerPageTest extends Tester\TestCase
 		Tester\Assert::same(10, $this->grid->getPerPage());
 	}
 
-	public function testGetPerPageAll()
+	public function testGetPerPageAll(): void
 	{
 		$this->grid->setItemsPerPageList([10, 20, 50], true);
 
@@ -54,7 +54,7 @@ class ItemsPerPageTest extends Tester\TestCase
 		Tester\Assert::same('all', $this->grid->getPerPage());
 	}
 
-	public function testGetPerPageAllTranslated()
+	public function testGetPerPageAllTranslated(): void
 	{
 		$translator = new Ublaboo\DataGrid\Localization\SimpleTranslator([
 			'ublaboo_datagrid.all' => 'všechny',
