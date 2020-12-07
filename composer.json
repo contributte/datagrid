@@ -2,7 +2,7 @@
 	"name": "ublaboo/datagrid",
 	"type": "library",
 	"description": "DataGrid for Nette Framework: filtering, sorting, pagination, tree view, table view, translator, etc",
-	"keywords": ["datagrid", "grid", "nette"],
+	"keywords": ["datagrid", "grid", "nette", "contributte", "table", "data"],
 	"license": ["MIT"],
 	"authors": [
 		{
@@ -25,9 +25,8 @@
 		}
 	},
 	"require": {
-		"php": "^7.2 || ^8.0",
-		"contributte/application": "^0.4.1",
-		"nette/application": "^3.0.1",
+		"php": ">=7.2",
+		"contributte/application": "^0.5.0",
 		"nette/di": "^3.0.0",
 		"nette/forms": "^3.0.1",
 		"nette/utils": "^3.0.1",
@@ -55,14 +54,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "6.3.x-dev"
+			"dev-master": "6.6.x-dev"
 		}
-	},
-	"scripts": {
-		"tests": "vendor/bin/tester -s --colors 1 -C ./tests",
-		"coverage": "vendor/bin/tester -s -p phpdbg --colors 1 -C --coverage ./coverage.xml --coverage-src ./src ./tests",
-		"phpstan": "vendor/phpstan/phpstan/bin/phpstan analyse -c phpstan.neon src --level 7",
-		"phpcs": "vendor/bin/phpcs --standard=vendor/ninjify/coding-standard/ruleset-gamee.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests",
-		"phpcsfix": "vendor/bin/phpcbf --standard=vendor/ninjify/coding-standard/ruleset-gamee.xml --extensions=php,phpt --tab-width=4 --ignore=temp -sp src tests"
 	}
 }
