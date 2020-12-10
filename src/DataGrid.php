@@ -74,6 +74,11 @@ class DataGrid extends Control
 
 	use TDataGridAggregationFunction;
 
+	private const HIDEABLE_COLUMNS_SESSION_KEYS = [
+		'_grid_hidden_columns',
+		'_grid_hidden_columns_manipulated',
+	];
+
 	/**
 	 * @var array|callable[]
 	 */
@@ -334,20 +339,17 @@ class DataGrid extends Control
 	/**
 	 * @var bool
 	 */
+	protected $rememberHideableColumnsState = true;
+
+	/**
+	 * @var bool
+	 */
 	protected $refreshURL = true;
 
 	/**
 	 * @var SessionSection
 	 */
 	protected $gridSession;
-
-	/**
-	 * @var array
-	 */
-	private $hideColumnSessionKeys = [
-		'_grid_hidden_columns',
-		'_grid_hidden_columns_manipulated',
-	];
 
 	/**
 	 * @var ItemDetail|null
@@ -2745,9 +2747,10 @@ class DataGrid extends Control
 	/**
 	 * @return static
 	 */
-	public function setRememberState(bool $remember = true): self
+	public function setRememberState(bool $remember = true, bool $rememberHideableColumnsState = false): self
 	{
 		$this->rememberState = $remember;
+		$this->rememberHideableColumnsState = $rememberHideableColumnsState;
 
 		return $this;
 	}
@@ -2770,13 +2773,21 @@ class DataGrid extends Control
 	 */
 	public function getSessionData(?string $key = null, $defaultValue = null)
 	{
-		if (!$this->rememberState && !in_array($key, $this->hideColumnSessionKeys, true)) {
-			return $key === null
-				? []
-				: $defaultValue;
+		$getValue = function() use ($key, $defaultValue) {
+			return ($key !== null ? $this->gridSession[$key] : $this->gridSession) ?: $defaultValue;
+		};
+
+		if ($this->rememberState) {
+			return ($getValue)();
 		}
 
-		return ($key !== null ? $this->gridSession[$key] : $this->gridSession) ?: $defaultValue;
+		if ($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_SESSION_KEYS, true)) {
+			return ($getValue)();
+		}
+		
+		return $key === null
+			? []
+			: $defaultValue;
 	}
 
 
@@ -2785,7 +2796,9 @@ class DataGrid extends Control
 	 */
 	public function saveSessionData(string $key, $value): void
 	{
-		if ($this->rememberState || in_array($key, $this->hideColumnSessionKeys, true)) {
+		if ($this->rememberState) {
+			$this->gridSession[$key] = $value;
+		} elseif ($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_SESSION_KEYS, true)) {
 			$this->gridSession[$key] = $value;
 		}
 	}
