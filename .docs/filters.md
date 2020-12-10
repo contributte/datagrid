@@ -272,6 +272,12 @@ Grid refreshes its state on several levels. One could be session. It is by defau
 $grid->setRememberState(false); // Or turned on again: $grid->setRememberState(true);
 ```
 
+If you want to keep hideable columns in session even when rememebr state is turned off, use second argument:
+
+```php
+$grid->setRememberState(false, true);
+```
+
 ## Session - filters / filter values changed
 
 When you set some filters and user do some filtering, values are stored in session. After that, when filters are changed (maybe some select options are removed, etc), datagrid would throw an exception, because it can not find particular filters / filter values that are still stored in session. You can supress those exception:
