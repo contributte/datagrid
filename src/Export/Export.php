@@ -184,7 +184,7 @@ class Export
 	/**
 	 * Call export callback
 	 */
-	public function invoke(array $data): void
+	public function invoke(iterable $data): void
 	{
 		($this->callback)($data, $this->grid);
 	}
