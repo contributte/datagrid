@@ -298,7 +298,12 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	private function prepareColumn(string $column): string
 	{
 		if (Strings::contains($column, '.')) {
-			return 'this->' . str_replace('.', '->', $column);
+			// 'this->' is deprecated in v4
+			$prefix = $this->dbalCollectionClass === 'Nextras\Orm\Collection\DbalCollection'
+				? ''
+				: 'this->';
+
+			return $prefix . str_replace('.', '->', $column);
 		}
 
 		return $column;
