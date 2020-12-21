@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ublaboo\DataGrid\DataSource;
 
 use Nette\Utils\Strings;
+use Nextras\Orm\Collection\Expression\LikeExpression;
 use Nextras\Orm\Collection\ICollection;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter\FilterDate;
@@ -232,6 +233,35 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 	protected function applyFilterText(FilterText $filter): void
 	{
+		// native handling with LikeFunction in v4
+		if (class_exists(LikeExpression::class)) {
+			$conditions = [
+				ICollection::OR,
+			];
+
+			foreach ($filter->getCondition() as $column => $value) {
+				$preparedColumn = $this->prepareColumn($column);
+
+				if ($filter->isExactSearch()) {
+					$conditions[] = [
+						$preparedColumn => $value,
+					];
+				} else {
+					$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
+
+					foreach ($words as $word) {
+						$conditions[] = [
+							$preparedColumn . '~' => LikeExpression::contains($word),
+						];
+					}
+				}
+			}
+
+			$this->dataSource = $this->dataSource->findBy($conditions);
+
+			return;
+		}
+
 		$condition = $filter->getCondition();
 		$expr = '(';
 		$params = [];
