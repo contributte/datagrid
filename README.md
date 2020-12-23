@@ -3,11 +3,11 @@
 <p align=center>
   <a href="https://github.com/contributte/datagrid/actions"><img src="https://badgen.net/github/checks/contributte/datagrid/master?cache=300"></a>
   <a href="https://coveralls.io/r/contributte/datagrid"><img src="https://badgen.net/coveralls/c/github/contributte/datagrid?cache=300"></a>
-  <a href="https://packagist.org/packages/contributte/datagrid"><img src="https://badgen.net/packagist/dm/contributte/datagrid"></a>
-  <a href="https://packagist.org/packages/contributte/datagrid"><img src="https://badgen.net/packagist/v/contributte/datagrid"></a>
+  <a href="https://packagist.org/packages/contributte/datagrid"><img src="https://badgen.net/packagist/dm/ublaboo/datagrid"></a>
+  <a href="https://packagist.org/packages/contributte/datagrid"><img src="https://badgen.net/packagist/v/ublaboo/datagrid"></a>
 </p>
 <p align=center>
-  <a href="https://packagist.org/packages/contributte/datagrid"><img src="https://badgen.net/packagist/php/contributte/datagrid"></a>
+  <a href="https://packagist.org/packages/contributte/datagrid"><img src="https://badgen.net/packagist/php/ublaboo/datagrid"></a>
   <a href="https://github.com/contributte/datagrid"><img src="https://badgen.net/github/license/contributte/datagrid"></a>
   <a href="https://bit.ly/ctteg"><img src="https://badgen.net/badge/support/gitter/cyan"></a>
   <a href="https://bit.ly/cttfo"><img src="https://badgen.net/badge/support/forum/yellow"></a>
