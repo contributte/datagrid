@@ -1,38 +1,43 @@
-# Datagrid
+![](https://heatbadger.now.sh/github/readme/contributte/datagrid/)
 
-First class DataGrid for Nette Framework.
+<p align=center>
+  <a href="https://github.com/contributte/datagrid/actions"><img src="https://badgen.net/github/checks/contributte/datagrid/master?cache=300"></a>
+  <a href="https://coveralls.io/r/contributte/datagrid"><img src="https://badgen.net/coveralls/c/github/contributte/datagrid?cache=300"></a>
+  <a href="https://packagist.org/packages/contributte/datagrid"><img src="https://badgen.net/packagist/dm/ublaboo/datagrid"></a>
+  <a href="https://packagist.org/packages/contributte/datagrid"><img src="https://badgen.net/packagist/v/ublaboo/datagrid"></a>
+</p>
+<p align=center>
+  <a href="https://packagist.org/packages/contributte/datagrid"><img src="https://badgen.net/packagist/php/ublaboo/datagrid"></a>
+  <a href="https://github.com/contributte/datagrid"><img src="https://badgen.net/github/license/contributte/datagrid"></a>
+  <a href="https://bit.ly/ctteg"><img src="https://badgen.net/badge/support/gitter/cyan"></a>
+  <a href="https://bit.ly/cttfo"><img src="https://badgen.net/badge/support/forum/yellow"></a>
+  <a href="https://contributte.org/partners.html"><img src="https://badgen.net/badge/sponsor/donations/F96854"></a>
+</p>
 
-Supported features: filtering, sorting, pagination, tree view, table view, translator, etc
+<p align=center>
+Website 🚀 <a href="https://contributte.org">contributte.org</a> | Contact 👨🏻‍💻 <a href="https://paveljanda.com">paveljanda.com</a>, <a href="https://f3l1x.io">f3l1x.io</a> | Twitter 🐦 <a href="https://twitter.com/contributte">@contributte</a>
+</p>
 
-> Give us a star, it makes us so happy. Thanks ⭐.️
+<p align=center>
+  <img src="https://github.com/contributte/datagrid/blob/master/.docs/assets/datagrid.gif">
+</p>
 
------
+## Usage
 
-[![Build Status](https://img.shields.io/travis/contributte/datagrid.svg?style=flat-square)](https://travis-ci.org/contributte/datagrid)
-[![Code coverage](https://img.shields.io/coveralls/contributte/datagrid.svg?style=flat-square)](https://coveralls.io/r/contributte/datagrid)
-[![Licence](https://img.shields.io/packagist/l/ublaboo/datagrid.svg?style=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
-[![Gitter](https://img.shields.io/gitter/room/contributte/contributte?style=flat-square)](http://bit.ly/ctteg)
+To install latest version of `contributte/datagrid` use [Composer](https://getcomposer.com).
 
-[![Downloads this Month](https://img.shields.io/packagist/dm/ublaboo/datagrid.svg?style=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
-[![Downloads total](https://img.shields.io/packagist/dt/ublaboo/datagrid.svg?style=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
-[![Latest stable](https://poser.pugx.org/ublaboo/datagrid/v/stable?format=flat-square)](https://packagist.org/packages/ublaboo/datagrid)
+```
+composer require ublaboo/datagrid
+```
 
-![](.docs/assets/datagrid.gif)
+## Documentation
 
------
+For details on how to use this package, check out our [documentation](.docs).
 
-## Versions
+**Shortly**
 
-| State       | Version   | Branch   | Nette | PHP      |
-|-------------|-----------|----------|-------|----------|
-| dev         | `^6.3.0`  | `master` | >=3.0 | `^7.2` |
-| stable      | `^6.2.0`  | `master` | >=3.0 | `^7.2` |
-| stable      | `^6.1.0`  | `master` | >=3.0 | `^7.2` |
-| stable      | `^5.7.1`  | `v5.x`   | >=2.3 | `^5.6` |
-| stable      | `^4.4.22` | `v5.x`   | >=2.3 | `^5.6` |
-| stable      | `^3.3.1`  | `v5.x`   | >=2.3 | `^5.3` |
-
-## Useful links
+You are looking at first class DataGrid for Nette Framework. Supported features: filtering, sorting, pagination, tree view, table view, translator and many others.
+Give us a star, it makes us so happy. Thanks ⭐.️
 
 | What | Where |
 |-|-|
@@ -42,52 +47,38 @@ Supported features: filtering, sorting, pagination, tree view, table view, trans
 | **Forum (EN)** | will be updated |
 | **Forum (CZ)** | [forum.nette.org/cs/25444](https://forum.nette.org/cs/25444-ublaboo-datagrid-mocny-rychly-rozsiritelny-hezky-anglicky-dokumentovany-datagrid) |
 
-## GitHub Issues & Sponsoring
+## Versions
 
-1) At the moment, we have limited time to maintain contributte datagrid for free. But you can create some maintenance time by sponsoring us. Ask us in email for available tarifs (email visible on https://github.com/paveljanda). At the moment, we have 1 little sponsor that gives us 1 hour of maintenance per month.
-2) Sometimes, when there is a new issue opened (either with a new feature request or a bug report), we may assign a label with a dollar sign (**$**) and an amount of dollars to the issue. This is an opportunity for you to support datagrid vendor creators and resolve particular issue.
+| State       | Version   | Branch   | Nette | PHP     |
+|-------------|-----------|----------|-------|---------|
+| dev         | `^6.3.0`  | `master` | >=3.0 | `>=7.2` |
+| stable      | `^6.2.0`  | `master` | >=3.0 | `^7.2`  |
+| stable      | `^6.1.0`  | `master` | >=3.0 | `^7.2`  |
+| stable      | `^5.7.1`  | `v5.x`   | >=2.3 | `^5.6`  |
+| stable      | `^4.4.22` | `v5.x`   | >=2.3 | `^5.6`  |
+| stable      | `^3.3.1`  | `v5.x`   | >=2.3 | `^5.3`  |
 
-Thank you for your support. ❤
 
-## Maintainers
+## Development
 
-<table>
-	<tbody>
-		<tr>
-			<td align="center">
-				<a href="https://github.com/paveljanda">
-						<img width="150" height="150" src="https://avatars0.githubusercontent.com/u/1488874?s=400&v=4">
-				</a>
-				</br>
-				<a href="https://github.com/paveljanda">Pavel Janda</a>
-			</td>
-			<td align="center">
-				<a href="https://github.com/f3l1x">
-						<img width="150" height="150" src="https://avatars2.githubusercontent.com/u/538058?v=3&s=150">
-				</a>
-				</br>
-				<a href="https://github.com/f3l1x">Milan Felix Šulc</a>
-			</td>
-		</tr>
-	</tbody>
-</table>
+See [how to contribute](https://contributte.org) to this package. This package is currently maintained by these authors.
 
-### Former maintainers
+<a href="https://github.com/paveljanda">
+    <img width="80" height="80" src="https://avatars2.githubusercontent.com/u/1488874?v=3&s=80">
+</a>
 
-<table>
-	<tbody>
-		<tr>
-			<td align="center">
-				<a href="https://github.com/juniwalk">
-						<img width="150" height="150" src="https://avatars0.githubusercontent.com/u/451918?s=400&v=4">
-				</a>
-				</br>
-				<a href="https://github.com/juniwalk">Martin Procházka</a>
-			</td>
-		</tr>
-	</tbody>
-</table>
+<a href="https://github.com/f3l1x">
+    <img width="80" height="80" src="https://avatars0.githubusercontent.com/u/538058?v=3&s=80">
+</a>
+
+
+### Future development
+
+1. At the moment, we have limited time to maintain contributte datagrid for free. But you can create some maintenance time by sponsoring us. Ask us in email for available tarifs (email visible on https://github.com/paveljanda). At the moment, we have 1 little sponsor that gives us 1 hour of maintenance per month.
+
+2. Sometimes, when there is a new issue opened (either with a new feature request or a bug report), we may assign a label with a dollar sign (**$**) and an amount of dollars to the issue. This is an opportunity for you to support datagrid vendor creators and resolve particular issue.
 
 -----
 
-Thank you for testing, reporting and contributing.
+Consider to [support](https://contributte.com/partners) **contributte** development team.
+Also thank you for using this package.
