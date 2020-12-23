@@ -425,14 +425,6 @@ class DataGrid extends Control
 	protected $showSelectedRowsCount = true;
 
 	/**
-	 * @var array
-	 */
-	private $hideColumnSessionKeys = [
-		'_grid_hidden_columns',
-		'_grid_hidden_columns_manipulated',
-	];
-
-	/**
 	 * @var string|null
 	 */
 	private $customPaginatorTemplate = null;
@@ -2667,7 +2659,7 @@ class DataGrid extends Control
 		if ($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_SESSION_KEYS, true)) {
 			return ($getValue)();
 		}
-		
+
 		return $key === null
 			? []
 			: $defaultValue;
