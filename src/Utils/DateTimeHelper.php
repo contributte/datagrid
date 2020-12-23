@@ -60,7 +60,7 @@ final class DateTimeHelper
 		}
 
 		if ($value instanceof DateTimeImmutable) {
-			$date = new \DateTime('now', $value->getTimezone());
+			$date = new \DateTime('now', $value->getTimezone() ?? null);
 			$date->setTimestamp($value->getTimestamp());
 
 			return $date;
@@ -87,4 +87,5 @@ final class DateTimeHelper
 
 		throw new DataGridDateTimeHelperException();
 	}
+
 }
