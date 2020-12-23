@@ -164,6 +164,8 @@ class ColumnStatus extends Column
 
 	public function setReplacement(array $replacements): Column
 	{
-		throw new DataGridColumnStatusException('Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)');
+		throw new DataGridColumnStatusException(
+			'Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)'
+		);
 	}
 }
