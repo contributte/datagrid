@@ -2649,7 +2649,7 @@ class DataGrid extends Control
 	public function getSessionData(?string $key = null, $defaultValue = null)
 	{
 		$getValue = function() use ($key, $defaultValue) {
-			return ($key !== null ? $this->gridSession[$key] : $this->gridSession) ?: $defaultValue;
+			return ($key !== null ? $this->gridSession[$key] : $this->gridSession) ?? $defaultValue;
 		};
 
 		if ($this->rememberState) {
