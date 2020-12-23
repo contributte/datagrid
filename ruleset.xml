@@ -9,6 +9,7 @@
 		<exclude name="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator.RequiredNullCoalesceEqualOperator" />
 		<exclude name="SlevomatCodingStandard.Files.LineLength.LineTooLong" />
 		<exclude name="SlevomatCodingStandard.Functions.RequireMultiLineCall.RequiredMultiLineCall" />
+		<exclude name="SlevomatCodingStandard.ControlStructures.RequireMultiLineTernaryOperator.MultiLineTernaryOperatorNotUsed" />
 	</rule>
 
 	<!-- Specific rules -->

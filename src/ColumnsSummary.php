@@ -90,7 +90,12 @@ class ColumnsSummary
 			return '';
 		}
 
-		return number_format($this->summary[$key], $this->format[$key][0], $this->format[$key][1], $this->format[$key][2]);
+		return number_format(
+			$this->summary[$key],
+			$this->format[$key][0],
+			$this->format[$key][1],
+			$this->format[$key][2]
+		);
 	}
 
 
