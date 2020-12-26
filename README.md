@@ -27,7 +27,7 @@ Website 🚀 <a href="https://contributte.org">contributte.org</a> | Contact �
 To install latest version of `contributte/datagrid` use [Composer](https://getcomposer.com).
 
 ```
-composer require contributte/datagrid
+composer require ublaboo/datagrid
 ```
 
 ## Documentation
@@ -36,13 +36,8 @@ For details on how to use this package, check out our [documentation](.docs).
 
 **Shortly**
 
-You are looking at first class DataGrid for Nette Framework.
-
-Supported features: filtering, sorting, pagination, tree view, table view, translator and many others.
-
-> Give us a star, it makes us so happy. Thanks ⭐.️
-
-**Useful links**
+You are looking at first class DataGrid for Nette Framework. Supported features: filtering, sorting, pagination, tree view, table view, translator and many others.
+Give us a star, it makes us so happy. Thanks ⭐.️
 
 | What | Where |
 |-|-|
@@ -77,10 +72,11 @@ See [how to contribute](https://contributte.org) to this package. This package i
 </a>
 
 
-**Future development**
+### Future development
 
-1) At the moment, we have limited time to maintain contributte datagrid for free. But you can create some maintenance time by sponsoring us. Ask us in email for available tarifs (email visible on https://github.com/paveljanda). At the moment, we have 1 little sponsor that gives us 1 hour of maintenance per month.
-2) Sometimes, when there is a new issue opened (either with a new feature request or a bug report), we may assign a label with a dollar sign (**$**) and an amount of dollars to the issue. This is an opportunity for you to support datagrid vendor creators and resolve particular issue.
+1. At the moment, we have limited time to maintain contributte datagrid for free. But you can create some maintenance time by sponsoring us. Ask us in email for available tarifs (email visible on https://github.com/paveljanda). At the moment, we have 1 little sponsor that gives us 1 hour of maintenance per month.
+
+2. Sometimes, when there is a new issue opened (either with a new feature request or a bug report), we may assign a label with a dollar sign (**$**) and an amount of dollars to the issue. This is an opportunity for you to support datagrid vendor creators and resolve particular issue.
 
 -----
 
