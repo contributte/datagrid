@@ -46,7 +46,11 @@ class ExportCsv extends Export
 			array $data,
 			DataGrid $grid
 		) use ($name, $outputEncoding, $delimiter, $includeBom): void {
-			$columns = $this->getColumns() ?? $this->grid->getColumns();
+			$columns = $this->getColumns();
+			
+			if ($columns === []) {
+				$columns = $this->grid->getColumns();
+			}
 
 			$csvDataModel = new CsvDataModel($data, $columns, $this->grid->getTranslator());
 
