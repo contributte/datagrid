@@ -281,7 +281,7 @@ class Action extends Column
 
 			return str_replace(
 				'%s',
-				(string)$row->getValue($this->confirmation->getPlaceholderName()),
+				(string) $row->getValue($this->confirmation->getPlaceholderName()),
 				$question
 			);
 		}
