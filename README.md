@@ -2,7 +2,7 @@
 
 <p align=center>
   <a href="https://github.com/contributte/datagrid/actions"><img src="https://badgen.net/github/checks/contributte/datagrid/master"></a>
-  <a href="https://coveralls.io/r/contributte/datagrid"><img src="https://badgen.net/coveralls/c/github/ublaboo/datagrid"></a>
+  <a href="https://coveralls.io/r/contributte/datagrid"><img src="https://badgen.net/coveralls/c/github/contributte/datagrid"></a>
   <a href="https://packagist.org/packages/ublaboo/datagrid"><img src="https://badgen.net/packagist/dm/ublaboo/datagrid"></a>
   <a href="https://packagist.org/packages/ublaboo/datagrid"><img src="https://badgen.net/packagist/v/ublaboo/datagrid"></a>
 </p>
