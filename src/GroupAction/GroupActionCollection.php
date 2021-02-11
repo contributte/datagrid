@@ -167,7 +167,7 @@ class GroupActionCollection
 			return;
 		}
 
-		$values = (array) $form->getValues();
+		$values = $form->getUnsafeValues(\Nette\Utils\ArrayHash::class);
 		$values = $values['group_action'];
 
 		if (
