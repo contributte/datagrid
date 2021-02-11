@@ -11,6 +11,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form as NetteForm;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
+use Nette\Utils\ArrayHash;
 
 class GroupActionCollection
 {
@@ -167,7 +168,7 @@ class GroupActionCollection
 			return;
 		}
 
-		$values = $form->getUnsafeValues(\Nette\Utils\ArrayHash::class);
+		$values = $form->getUnsafeValues(ArrayHash::class);
 		$values = $values['group_action'];
 
 		if (
