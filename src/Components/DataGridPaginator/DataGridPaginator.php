@@ -102,7 +102,7 @@ class DataGridPaginator extends Control
 			 */
 			$count = 1;
 
-			$perPage = (int) $paginator->pageCount;
+			$perPage = $paginator->pageCount;
 
 			$quotient = ($perPage - 1) / $count;
 
