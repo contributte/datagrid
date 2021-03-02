@@ -100,6 +100,10 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
+	/**
+	 * @phpstan-param positive-int|0 $offset
+	 * @phpstan-param positive-int|0 $limit
+	 */
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->data = $this->dataSource->limit($limit, $offset)->fetchAll();
