@@ -1489,7 +1489,11 @@ class DataGrid extends Control
 			return;
 		}
 
-		$values = (array) $form->getValues();
+		if (method_exists($form, 'getUnsafeValues')) {
+			$values = (array) $form->getUnsafeValues(null);
+		} else {
+			$values = (array) $form->getValues();
+		}
 
 		if ($this->getPresenterInstance()->isAjax()) {
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {

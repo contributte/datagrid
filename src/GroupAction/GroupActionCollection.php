@@ -167,7 +167,12 @@ class GroupActionCollection
 			return;
 		}
 
-		$values = (array) $form->getValues();
+		if (method_exists($form, 'getUnsafeValues')) {
+			$values = (array) $form->getUnsafeValues(null);
+		} else {
+			$values = (array) $form->getValues();
+		}
+
 		$values = $values['group_action'];
 
 		if (
