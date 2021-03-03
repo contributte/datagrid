@@ -11,7 +11,7 @@ Table of contents
 Download this package using composer:
 
 ```
-composer require ublaboo/datagrid
+$ composer require ublaboo/datagrid
 ```
 
 ## Features
