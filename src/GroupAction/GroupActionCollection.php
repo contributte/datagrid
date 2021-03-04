@@ -79,8 +79,6 @@ class GroupActionCollection
 		$groupActionSelect = $container->addSelect('group_action', '', $main_options)
 			->setPrompt('ublaboo_datagrid.choose');
 
-		$validationScope = [$container, $groupActionSelect];
-
 		/**
 		 * Third for creating select for each "sub"-action
 		 */
@@ -128,8 +126,6 @@ class GroupActionCollection
 				foreach ($action->getAttributes() as $name => $value) {
 					$control->setAttribute($name, $value);
 				}
-
-				$validationScope[] = $control;
 			}
 		}
 
@@ -145,7 +141,7 @@ class GroupActionCollection
 				);
 
 			$container->addSubmit('submit', 'ublaboo_datagrid.execute')
-				->setValidationScope($validationScope)
+				->setValidationScope([$container])
 				->setAttribute(
 					'id',
 					strtolower($this->datagrid->getFullName()) . 'group_action_submit'
