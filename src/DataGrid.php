@@ -1500,8 +1500,10 @@ class DataGrid extends Control
 		/**
 		 * Per page
 		 */
-		$this->saveSessionData('_grid_perPage', $values['perPage']);
-		$this->perPage = $values['perPage'];
+		if (isset($values['perPage'])) {
+			$this->saveSessionData('_grid_perPage', $values['perPage']);
+			$this->perPage = $values['perPage'];
+		}
 
 		/**
 		 * Inline edit
