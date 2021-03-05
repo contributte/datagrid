@@ -1419,15 +1419,17 @@ class DataGrid extends Control
 		/**
 		 * Per page part
 		 */
-		$select = $form->addSelect('perPage', '', $this->getItemsPerPageList())
-			->setTranslator(null);
+		if ($this->isPaginated()) {
+			$select = $form->addSelect('perPage', '', $this->getItemsPerPageList())
+				->setTranslator(null);
 
-		if ($form->isSubmitted() === false) {
-			$select->setValue($this->getPerPage());
+			if ($form->isSubmitted() === false) {
+				$select->setValue($this->getPerPage());
+			}
+
+			$form->addSubmit('perPage_submit', 'ublaboo_datagrid.per_page_submit')
+				->setValidationScope([$select]);
 		}
-
-		$form->addSubmit('perPage_submit', 'ublaboo_datagrid.per_page_submit')
-			->setValidationScope([$select]);
 
 		$form->onSubmit[] = function (NetteForm $form): void {
 			$this->filterSucceeded($form);
