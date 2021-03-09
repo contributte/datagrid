@@ -10,8 +10,8 @@ Table of contents
 
 Download this package using composer:
 
-```
-$ composer require ublaboo/datagrid
+```bash
+composer require ublaboo/datagrid
 ```
 
 ## Features
