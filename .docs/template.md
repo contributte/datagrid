@@ -23,12 +23,11 @@ Template:
 {extends $originalTemplate}
 
 {block data}
-	{foreach $items as $item}
-		{foreach $columns as $key => $column}
-			{$column->render($item)}
-		{/foreach}
-	{/foreach}
-
+    {foreach $items as $item}
+        {foreach $columns as $key => $column}
+            {$column->render($item)}
+        {/foreach}
+    {/foreach}
 
 {* Another latte code... *}
 ```
@@ -41,13 +40,12 @@ Or you can define column template by defining special block(s):
 {extends $originalTemplate}
 
 {define col-id}
-	:)
+    :)
 {/define}
 
 {define col-title}
-	{$item->title} {* displays the title value *}
+    {$item->title} {* displays the title value *}
 {/define}
-
 ```
 
 This will overwrite native rendering of ID column (`$grid->addColumn('id', 'Id');`).
@@ -60,9 +58,8 @@ Or you can define column header template:
 {extends $originalTemplate}
 
 {define col-id-header}
-	This is <strong>ID</strong> column
+    This is <strong>ID</strong> column
 {/define}
-
 ```
 
 
