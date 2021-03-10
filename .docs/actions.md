@@ -161,76 +161,76 @@ This will show a handle in your datagrid. When you reorder items in datagrid, a 
  */
 public function handleSort($item_id, $prev_id, $next_id)
 {
-    $repository = $this->em->getRepository(Item::class);
-    $item = $repository->find($item_id);
+	$repository = $this->em->getRepository(Item::class);
+	$item = $repository->find($item_id);
 
-    /**
-     * 1, Find out order of item BEFORE current item
-     */
-    if (!$prev_id) {
-        $previousItem = NULL;
-    } else {
-        $previousItem = $repository->find($prev_id);
-    }
+	/**
+	 * 1, Find out order of item BEFORE current item
+	 */
+	if (!$prev_id) {
+		$previousItem = NULL;
+	} else {
+		$previousItem = $repository->find($prev_id);
+	}
 
-    /**
-     * 2, Find out order of item AFTER current item
-     */
-    if (!$next_id) {
-        $nextItem = NULL;
-    } else {
-        $nextItem = $repository->find($next_id);
-    }
+	/**
+	 * 2, Find out order of item AFTER current item
+	 */
+	if (!$next_id) {
+		$nextItem = NULL;
+	} else {
+		$nextItem = $repository->find($next_id);
+	}
 
-    /**
-     * 3, Find all items that have to be moved one position up
-     */
-    $itemsToMoveUp = $repository->createQueryBuilder('r')
-        ->where('r.order <= :order')
-        ->setParameter('order', $previousItem ? $previousItem->getOrder() : 0)
-        ->andWhere('r.order > :order2')
-        ->setParameter('order2', $item->getOrder())
-        ->getQuery()
-        ->getResult();
+	/**
+	 * 3, Find all items that have to be moved one position up
+	 */
+	$itemsToMoveUp = $repository->createQueryBuilder('r')
+		->where('r.order <= :order')
+		->setParameter('order', $previousItem ? $previousItem->getOrder() : 0)
+		->andWhere('r.order > :order2')
+		->setParameter('order2', $item->getOrder())
+		->getQuery()
+		->getResult();
 
-    foreach ($itemsToMoveUp as $t) {
-        $t->setOrder($t->getOrder() - 1);
-        $this->em->persist($t);
-    }
+	foreach ($itemsToMoveUp as $t) {
+		$t->setOrder($t->getOrder() - 1);
+		$this->em->persist($t);
+	}
 
-    /**
-     * 3, Find all items that have to be moved one position down
-     */
-    $itemsToMoveDown = $repository->createQueryBuilder('r')
-        ->where('r.order >= :order')
-        ->setParameter('order', $nextItem ? $nextItem->getOrder() : 0)
-        ->andWhere('r.order < :order2')
-        ->setParameter('order2', $item->getOrder())
-        ->getQuery()
-        ->getResult();
+	/**
+	 * 3, Find all items that have to be moved one position down
+	 */
+	$itemsToMoveDown = $repository->createQueryBuilder('r')
+		->where('r.order >= :order')
+		->setParameter('order', $nextItem ? $nextItem->getOrder() : 0)
+		->andWhere('r.order < :order2')
+		->setParameter('order2', $item->getOrder())
+		->getQuery()
+		->getResult();
 
-    foreach ($itemsToMoveDown as $t) {
-        $t->setOrder($t->getOrder() + 1);
-        $this->em->persist($t);
-    }
+	foreach ($itemsToMoveDown as $t) {
+		$t->setOrder($t->getOrder() + 1);
+		$this->em->persist($t);
+	}
 
-    /**
-     * Update current item order
-     */
-    if ($previousItem) {
-        $item->setOrder($previousItem->getOrder() + 1);
-    } else if ($nextItem) {
-        $item->setOrder($nextItem->getOrder() - 1);
-    } else {
-        $item->setOrder(1);
-    }
+	/**
+	 * Update current item order
+	 */
+	if ($previousItem) {
+		$item->setOrder($previousItem->getOrder() + 1);
+	} else if ($nextItem) {
+		$item->setOrder($nextItem->getOrder() - 1);
+	} else {
+		$item->setOrder(1);
+	}
 
-    $this->em->persist($item)->flush();
+	$this->em->persist($item)->flush();
 
-    $this->flashMessage("Id: $item_id, Previous id: $prev_id, Next id: $next_id", 'success');
-    $this->redrawControl('flashes');
+	$this->flashMessage("Id: $item_id, Previous id: $prev_id, Next id: $next_id", 'success');
+	$this->redrawControl('flashes');
 
-    $this['itemsGrid']->redrawControl();
+	$this['itemsGrid']->redrawControl();
 }
 ```
 
@@ -303,8 +303,8 @@ $grid->setItemsDetailForm(function(Nette\Forms\Container $container) use ($grid,
 	$container->addText('name');
 
 	$container->addSubmit('save', 'Save')
-		->setValidationScope([$container])	
-		->onClick[] = function($button) use ($grid, $presenter) {		
+		->setValidationScope([$container])
+		->onClick[] = function($button) use ($grid, $presenter) {
 			$values = $button->getParent()->getValues();
 
 			$presenter['examplesGrid']->redrawItem($values->id);
@@ -314,7 +314,7 @@ $grid->setItemsDetailForm(function(Nette\Forms\Container $container) use ($grid,
 
 DataGrid user template:
 
-```php
+```latte
 {extends $originalTemplate}
 
 {block detail}
@@ -326,7 +326,7 @@ DataGrid user template:
 		{formContainer items_detail_form_$item->id}
 			{input id, value => $item->id}
 			{input name, value => $item->name}
-			{input save}	
+			{input save}
 		{/formContainer}
 	{/formContainer}
 

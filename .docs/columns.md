@@ -463,7 +463,6 @@ $grid->setMultipleAggregationFunction(
 				->fetchSingle());
 		}
 
-
 		public function renderResult(string $key)
 		{
 			if ($key === 'id') {
@@ -478,7 +477,7 @@ $grid->setMultipleAggregationFunction(
 
 This aggregatin is used along with `Dibi` in the demo.
 
-## Column (th&gt;, td&gt;) attributes 
+## Column (th&gt;, td&gt;) attributes
 
 Since table cell elements are rendered using `Nette\Utils\Html`, you can easily alter their html attributes (class, data-attributes etc):
 
