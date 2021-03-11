@@ -463,6 +463,7 @@ $grid->setMultipleAggregationFunction(
 				->fetchSingle());
 		}
 
+
 		public function renderResult(string $key)
 		{
 			if ($key === 'id') {
