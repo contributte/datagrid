@@ -1,0 +1,287 @@
+name: "build"
+
+on:
+  pull_request:
+    paths-ignore:
+        - ".docs/**"
+  push:
+    branches:
+      - "master"
+  schedule:
+    - cron: "0 8 * * 1" # At 08:00 on Monday
+
+env:
+  extensions: "json, mysqli, pdo_sqlite"
+  cache-version: "1"
+  composer-version: "v2"
+  composer-install: "composer update --no-interaction --no-progress --no-suggest --prefer-dist --prefer-stable"
+
+jobs:
+  qa:
+    name: "Quality assurance"
+    runs-on: "${{ matrix.operating-system }}"
+
+    strategy:
+      matrix:
+        php-version: ["7.4"]
+        operating-system: ["ubuntu-latest"]
+      fail-fast: false
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Setup PHP cache environment"
+        id: "extcache"
+        uses: "shivammathur/cache-extensions@v1"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.extensions }}"
+          key: "${{ env.cache-version }}"
+
+      - name: "Cache PHP extensions"
+        uses: "actions/cache@v2"
+        with:
+          path: "${{ steps.extcache.outputs.dir }}"
+          key: "${{ steps.extcache.outputs.key }}"
+          restore-keys: "${{ steps.extcache.outputs.key }}"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.extensions }}"
+          tools: "composer:${{ env.composer-version }} "
+
+      - name: "Setup problem matchers for PHP"
+        run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
+
+      - name: "Get Composer cache directory"
+        id: "composercache"
+        run: 'echo "::set-output name=dir::$(composer config cache-files-dir)"'
+
+      - name: "Cache PHP dependencies"
+        uses: "actions/cache@v2"
+        with:
+          path: "${{ steps.composercache.outputs.dir }}"
+          key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}"
+          restore-keys: "${{ runner.os }}-composer-"
+
+      - name: "Validate Composer"
+        run: "composer validate"
+
+      - name: "Install dependencies"
+        run: "${{ env.composer-install }}"
+
+      - name: "Coding Standard"
+        run: "make cs"
+
+  static-analysis:
+    name: "Static analysis"
+    runs-on: "${{ matrix.operating-system }}"
+
+    strategy:
+      matrix:
+        php-version: ["7.4"]
+        operating-system: ["ubuntu-latest"]
+      fail-fast: false
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Setup PHP cache environment"
+        id: "extcache"
+        uses: "shivammathur/cache-extensions@v1"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.extensions }}"
+          key: "${{ env.cache-version }}"
+
+      - name: "Cache PHP extensions"
+        uses: "actions/cache@v2"
+        with:
+          path: "${{ steps.extcache.outputs.dir }}"
+          key: "${{ steps.extcache.outputs.key }}"
+          restore-keys: "${{ steps.extcache.outputs.key }}"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.extensions }}"
+          tools: "composer:${{ env.composer-version }} "
+
+      - name: "Setup problem matchers for PHP"
+        run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
+
+      - name: "Get Composer cache directory"
+        id: "composercache"
+        run: 'echo "::set-output name=dir::$(composer config cache-files-dir)"'
+
+      - name: "Cache PHP dependencies"
+        uses: "actions/cache@v2"
+        with:
+          path: "${{ steps.composercache.outputs.dir }}"
+          key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}"
+          restore-keys: "${{ runner.os }}-composer-"
+
+      - name: "Install dependencies"
+        run: "${{ env.composer-install }}"
+
+      - name: "PHPStan"
+        run: "make phpstan"
+
+  tests:
+    name: "Tests"
+    runs-on: "${{ matrix.operating-system }}"
+
+    services:
+        mysql:
+            image: mysql:5.7
+            env:
+                MYSQL_ALLOW_EMPTY_PASSWORD: yes
+                MYSQL_DATABASE: tests
+            ports:
+                - 3306:3306
+
+    strategy:
+      matrix:
+        php-version: ["7.4"]
+        operating-system: ["ubuntu-latest"]
+        composer-args: [ "" ]
+        include:
+          - php-version: "7.4"
+            operating-system: "ubuntu-latest"
+            composer-args: "--prefer-lowest"
+          - php-version: "8.0"
+            operating-system: "ubuntu-latest"
+            composer-args: "--ignore-platform-reqs"
+      fail-fast: false
+
+    continue-on-error: "${{ matrix.php-version == '8.0' }}"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Setup PHP cache environment"
+        id: "extcache"
+        uses: "shivammathur/cache-extensions@v1"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.extensions }}"
+          key: "${{ env.cache-version }}"
+
+      - name: "Cache PHP extensions"
+        uses: "actions/cache@v2"
+        with:
+          path: "${{ steps.extcache.outputs.dir }}"
+          key: "${{ steps.extcache.outputs.key }}"
+          restore-keys: "${{ steps.extcache.outputs.key }}"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.extensions }}"
+          tools: "composer:${{ env.composer-version }} "
+
+      - name: "Setup problem matchers for PHP"
+        run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
+
+      - name: "Get Composer cache directory"
+        id: "composercache"
+        run: 'echo "::set-output name=dir::$(composer config cache-files-dir)"'
+
+      - name: "Cache PHP dependencies"
+        uses: "actions/cache@v2"
+        with:
+          path: "${{ steps.composercache.outputs.dir }}"
+          key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}"
+          restore-keys: "${{ runner.os }}-composer-"
+
+      - name: "Install dependencies"
+        run: "${{ env.composer-install }} ${{ matrix.composer-args }}"
+
+      - name: "Setup problem matchers for PHPUnit"
+        run: 'echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"'
+
+      - name: "Tests"
+        run: "make tests"
+
+  tests-code-coverage:
+    name: "Tests with code coverage"
+    runs-on: "${{ matrix.operating-system }}"
+
+    services:
+        mysql:
+            image: mysql:5.7
+            env:
+                MYSQL_ALLOW_EMPTY_PASSWORD: yes
+                MYSQL_DATABASE: tests
+            ports:
+                - 3306:3306
+
+    strategy:
+      matrix:
+        php-version: ["7.4"]
+        operating-system: ["ubuntu-latest"]
+      fail-fast: false
+
+    if: "github.event_name == 'push'"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Setup PHP cache environment"
+        id: "extcache"
+        uses: "shivammathur/cache-extensions@v1"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.extensions }}"
+          key: "${{ env.cache-version }}"
+
+      - name: "Cache PHP extensions"
+        uses: "actions/cache@v2"
+        with:
+          path: "${{ steps.extcache.outputs.dir }}"
+          key: "${{ steps.extcache.outputs.key }}"
+          restore-keys: "${{ steps.extcache.outputs.key }}"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "${{ env.extensions }}"
+          tools: "composer:${{ env.composer-version }} "
+
+      - name: "Setup problem matchers for PHP"
+        run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
+
+      - name: "Get Composer cache directory"
+        id: "composercache"
+        run: 'echo "::set-output name=dir::$(composer config cache-files-dir)"'
+
+      - name: "Cache PHP dependencies"
+        uses: "actions/cache@v2"
+        with:
+          path: "${{ steps.composercache.outputs.dir }}"
+          key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}"
+          restore-keys: "${{ runner.os }}-composer-"
+
+      - name: "Install dependencies"
+        run: "${{ env.composer-install }}"
+
+      - name: "Tests"
+        run: "make coverage-clover"
+
+      - name: "Coveralls.io"
+        env:
+          CI_NAME: github
+          CI: true
+          COVERALLS_REPO_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        run: |
+          wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.1.0/php-coveralls.phar
+          php php-coveralls.phar --verbose --config tests/.coveralls.yml

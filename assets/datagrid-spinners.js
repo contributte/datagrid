@@ -1,6 +1,9 @@
 var dataGridRegisterExtension;
 
 if (typeof naja !== "undefined") {
+	var isNaja2 = function () { return naja && naja.VERSION && naja.VERSION >= 2 };
+	var najaEventParams = function (params) { return isNaja2() ? params.detail : params };
+	var najaRequest = function (params) { return isNaja2() ? params.detail.request : params.xhr };
 	dataGridRegisterExtension = function (name, extension) {
 		var init = extension.init;
 		var success = extension.success;
@@ -11,34 +14,43 @@ if (typeof naja !== "undefined") {
 		var NewExtension = function NewExtension(naja, name) {
 			this.name = name;
 
-			if(init) {
-				naja.addEventListener('init', function (params)  {
-					init(params.defaultOptions);
-				});
-			}
+			this.initialize = function (naja) {
+				if(init) {
+					naja.addEventListener('init', function (params)  {
+						init(najaEventParams(params).defaultOptions);
+					});
+				}
 
-			if(success) {
-				naja.addEventListener('success', function (params)  {
-					success(params.response, params.options);
-				});
-			}
+				if(success) {
+					naja.addEventListener('success', function (params)  {
+						var payload = isNaja2() ? params.detail.payload : params.response;
+						success(payload, najaEventParams(params).options);
+					});
+				}
 
-			if(before) {
-				naja.addEventListener('before', function (params) {
-					before(params.xhr, params.options);
-				});
-			}
+				if(before) {
+					naja.addEventListener('before', function (params) {
+						before(najaRequest(params), najaEventParams(params).options);
+					});
+				}
 
-			if(complete) {
-				naja.addEventListener('complete', function (params) {
-					complete(params.xhr, params.options);
-				});
+				if(complete) {
+					naja.addEventListener('complete', function (params) {
+						complete(najaRequest(params), najaEventParams(params).options);
+					});
+				}
 			}
-		
+			if (!isNaja2()) {
+				this.initialize(naja);
+			}
 			return this;
 		}
 
-		naja.registerExtension(NewExtension, name);
+		if (isNaja2()) {
+			naja.registerExtension(new NewExtension(null, name));
+		} else {
+			naja.registerExtension(NewExtension, name);
+		}
 	};
 } else if ($.nette) {
 		dataGridRegisterExtension = function (name, extension) {

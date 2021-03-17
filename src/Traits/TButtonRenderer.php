@@ -60,9 +60,7 @@ trait TButtonRenderer
 	): self
 	{
 		if ($this->hasReplacements()) {
-			throw new DataGridException(
-				'Use either Column::setReplacement() or Column::setRenderer, not both.'
-			);
+			throw new DataGridException('Use either Column::setReplacement() or Column::setRenderer, not both.');
 		}
 
 		$this->renderer = new Renderer($renderer, $conditionCallback);

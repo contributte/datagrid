@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Ublaboo\DataGrid\DataSource;
 
 use Nette\Utils\Strings;
+use Nextras\Orm\Collection\Expression\LikeExpression;
 use Nextras\Orm\Collection\ICollection;
-use Nextras\Orm\Mapper\Dbal\DbalCollection;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
@@ -37,17 +37,26 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	 */
 	protected $primaryKey;
 
+	/**
+	 * @var string
+	 */
+	private $dbalCollectionClass;
 
 	public function __construct(ICollection $dataSource, string $primaryKey)
 	{
 		$this->dataSource = $dataSource;
 		$this->primaryKey = $primaryKey;
+		// Support version 4.0 with 3.1 backward compatibility
+		$this->dbalCollectionClass = class_exists('Nextras\Orm\Collection\DbalCollection')
+			? 'Nextras\Orm\Collection\DbalCollection'
+			: 'Nextras\Orm\Mapper\Dbal\DbalCollection';
 	}
 
 
-	/********************************************************************************
-	 *                          IDataSource implementation                          *
-	 ********************************************************************************/
+	// *******************************************************************************
+	// *                          IDataSource implementation                         *
+	// *******************************************************************************
+
 
 	public function getCount(): int
 	{
@@ -63,7 +72,9 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 		/**
 		 * Paginator is better if the query uses ManyToMany associations
 		 */
-		return $this->data ?: $this->dataSource->fetchAll();
+		return $this->data !== []
+			? $this->data
+			: $this->dataSource->fetchAll();
 	}
 
 
@@ -114,11 +125,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 				);
 			}
 		} else {
-			if (!$this->dataSource instanceof DbalCollection) {
+			if (!$this->dataSource instanceof $this->dbalCollectionClass) {
 				throw new UnexpectedValueException(
 					sprintf(
 						'Expeting %s, got %s',
-						DbalCollection::class,
+						$this->dbalCollectionClass,
 						get_class($this->dataSource)
 					)
 				);
@@ -222,6 +233,35 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 	protected function applyFilterText(FilterText $filter): void
 	{
+		// native handling with LikeFunction in v4
+		if (class_exists(LikeExpression::class)) {
+			$conditions = [
+				ICollection::OR,
+			];
+
+			foreach ($filter->getCondition() as $column => $value) {
+				$preparedColumn = $this->prepareColumn($column);
+
+				if ($filter->isExactSearch()) {
+					$conditions[] = [
+						$preparedColumn => $value,
+					];
+				} else {
+					$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
+
+					foreach ($words as $word) {
+						$conditions[] = [
+							$preparedColumn . '~' => LikeExpression::contains($word),
+						];
+					}
+				}
+			}
+
+			$this->dataSource = $this->dataSource->findBy($conditions);
+
+			return;
+		}
+
 		$condition = $filter->getCondition();
 		$expr = '(';
 		$params = [];
@@ -248,11 +288,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 		array_unshift($params, $expr);
 
-		if (!$this->dataSource instanceof DbalCollection) {
+		if (!$this->dataSource instanceof $this->dbalCollectionClass) {
 			throw new UnexpectedValueException(
 				sprintf(
 					'Expeting %s, got %s',
-					DbalCollection::class,
+					$this->dbalCollectionClass,
 					get_class($this->dataSource)
 				)
 			);
@@ -291,7 +331,12 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 	private function prepareColumn(string $column): string
 	{
 		if (Strings::contains($column, '.')) {
-			return 'this->' . str_replace('.', '->', $column);
+			// 'this->' is deprecated in v4
+			$prefix = $this->dbalCollectionClass === 'Nextras\Orm\Collection\DbalCollection'
+				? ''
+				: 'this->';
+
+			return $prefix . str_replace('.', '->', $column);
 		}
 
 		return $column;

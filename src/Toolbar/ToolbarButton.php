@@ -47,7 +47,7 @@ class ToolbarButton
 	protected $attributes = [];
 
 	/**
-	 * @param array    $params
+	 * @param array $params
 	 */
 	public function __construct(DataGrid $grid, string $href, string $text, array $params = [])
 	{

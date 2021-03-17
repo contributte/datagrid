@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Dibi;
 use Dibi\Fluent;
+use Dibi\Helpers;
 use Dibi\Result;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter\FilterDate;
@@ -29,9 +29,10 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 	}
 
 
-	/********************************************************************************
-	 *                          IDataSource implementation                          *
-	 ********************************************************************************/
+	// *******************************************************************************
+	// *                          IDataSource implementation                         *
+	// *******************************************************************************
+
 
 	public function getCount(): int
 	{
@@ -123,7 +124,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			$column = Dibi\Helpers::escape($driver, $column, \dibi::IDENTIFIER);
+			$column = Helpers::escape($driver, $column, \dibi::IDENTIFIER);
 
 			if ($filter->isExactSearch()) {
 				$this->dataSource->where("$column = %s", $value);

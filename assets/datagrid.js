@@ -1,44 +1,80 @@
-var dataGridRegisterExtension, dataGridRegisterAjaxCall, dataGridLoad;
+var dataGridRegisterExtension, dataGridRegisterAjaxCall, dataGridLoad, dataGridSubmitForm;
 
 if (typeof naja !== "undefined") {
+	var isNaja2 = function () { return naja && naja.VERSION && naja.VERSION >= 2 };
+	var najaEventParams = function (params) { return isNaja2() ? params.detail : params };
+	var najaRequest = function (params) { return isNaja2() ? params.detail.request : params.xhr };
 	dataGridRegisterExtension = function (name, extension) {
 		var init = extension.init;
 		var success = extension.success;
 		var before = extension.before;
 		var complete = extension.complete;
+		var interaction = extension.interaction;
 
 
 		var NewExtension = function NewExtension(naja, name) {
 			this.name = name;
 
-			if(init) {
-				naja.addEventListener('init', function (params)  {
-					init(params.defaultOptions);
-				});
-			}
+			this.initialize = function (naja) {
+				if(init) {
+					naja.addEventListener('init', function (params)  {
+						init(najaEventParams(params).defaultOptions);
+					});
+				}
 
-			if(success) {
-				naja.addEventListener('success', function (params)  {
-					success(params.response, params.options);
-				});
-			}
+				if(success) {
+					naja.addEventListener('success', function (params)  {
+						var payload = isNaja2() ? params.detail.payload : params.response;
+						success(payload, najaEventParams(params).options);
+					});
+				}
 
-			if(before) {
-				naja.addEventListener('before', function (params) {
-					before(params.xhr, params.options);
-				});
-			}
+				var interactionTarget = naja;
+				if (isNaja2()) {
+					interactionTarget = interactionTarget.uiHandler;
+				}
 
-			if(complete) {
-				naja.addEventListener('complete', function (params) {
-					complete(params.xhr, params.options);
+				interactionTarget.addEventListener('interaction', function (params) {
+					if (isNaja2()) {
+						params.detail.options.nette = {
+							el: $(params.detail.element)
+						}
+					} else {
+						params.options.nette = {
+							el: $(params.element)
+						}
+					}
+					if (interaction) {
+						if (!interaction(najaEventParams(params).options)){
+							params.preventDefault();
+						}
+					}
 				});
-			}
 
+				if(before) {
+					naja.addEventListener('before', function (params) {
+						if (!before(najaRequest(params), najaEventParams(params).options))
+							params.preventDefault();
+					});
+				}
+
+				if(complete) {
+					naja.addEventListener('complete', function (params) {
+						complete(najaRequest(params), najaEventParams(params).options);
+					});
+				}
+			}
+			if (!isNaja2()) {
+				this.initialize(naja);
+			}
 			return this;
 		}
 
-		naja.registerExtension(NewExtension, name);
+		if (isNaja2()) {
+			naja.registerExtension(new NewExtension(null, name));
+		} else {
+			naja.registerExtension(NewExtension, name);
+		}
 	};
 
 
@@ -54,6 +90,10 @@ if (typeof naja !== "undefined") {
 	dataGridLoad = function () {
 		naja.load();
 	};
+
+	dataGridSubmitForm = function (form) {
+		return naja.uiHandler.submitForm(form.get(0));
+	};
 } else if ($.nette) {
 	dataGridRegisterExtension = function (name, extension) {
 		$.nette.ext(name, extension);
@@ -63,6 +103,9 @@ if (typeof naja !== "undefined") {
 	};
 	dataGridLoad = function () {
 		$.nette.load();
+	};
+	dataGridSubmitForm = function (form) {
+		return form.submit();
 	};
 } else {
 	throw new Error("Include Naja.js or nette.ajax for datagrids to work!")
@@ -79,17 +122,34 @@ $(document).on('click', '[data-datagrid-confirm]:not(.ajax)', function(e) {
 	}
 });
 
-dataGridRegisterExtension('datagrid.confirm', {
-	before: function(xhr, settings) {
-		var confirm_message;
-		if (settings.nette) {
-			confirm_message = settings.nette.el.data('datagrid-confirm');
-			if (confirm_message) {
-				return confirm(confirm_message);
+if (typeof naja !== "undefined") {
+	dataGridRegisterExtension('datagrid.confirm', {
+		interaction: function(settings) {
+			var confirm_message;
+			if (settings.nette) {
+				confirm_message = settings.nette.el.data('datagrid-confirm');
+				if (confirm_message) {
+					return confirm(confirm_message);
+				}
 			}
+			return true;
 		}
-	}
-});
+	});
+} else {
+	dataGridRegisterExtension('datagrid.confirm', {
+		before: function(xhr, settings) {
+			var confirm_message;
+			if (settings.nette) {
+				confirm_message = settings.nette.el.data('datagrid-confirm');
+				if (confirm_message) {
+					return confirm(confirm_message);
+				}
+			}
+			return true;
+		}
+	});
+}
+
 
 $(document).on('change', 'select[data-autosubmit-per-page]', function() {
 	var button;
@@ -99,7 +159,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', function() {
 	}
 	return button.click();
 }).on('change', 'select[data-autosubmit]', function() {
-	return $(this).closest('form').first().submit();
+	return dataGridSubmitForm($(this).closest('form').first());
 }).on('change', 'input[data-autosubmit][data-autosubmit-change]', function(e) {
 	var $this, code;
 	code = e.which || e.keyCode || 0;
@@ -107,7 +167,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', function() {
 	$this = $(this);
 	return window.datagrid_autosubmit_timer = setTimeout((function(_this) {
 		return function() {
-			return $this.closest('form').first().submit();
+			return dataGridSubmitForm($this.closest('form').first());
 		};
 	})(this), 200);
 }).on('keyup', 'input[data-autosubmit]', function(e) {
@@ -120,7 +180,7 @@ $(document).on('change', 'select[data-autosubmit-per-page]', function() {
 	$this = $(this);
 	return window.datagrid_autosubmit_timer = setTimeout((function(_this) {
 		return function() {
-			return $this.closest('form').first().submit();
+			return dataGridSubmitForm($this.closest('form').first());
 		};
 	})(this), 200);
 }).on('keydown', '.datagrid-inline-edit input', function(e) {
@@ -139,7 +199,7 @@ $(document).on('keydown', 'input[data-datagrid-manualsubmit]', function(e) {
 	if (code === 13) {
 		e.stopPropagation();
 		e.preventDefault();
-		return $(this).closest('form').first().submit();
+		return dataGridSubmitForm($(this).closest('form').first());
 	}
 });
 
@@ -217,25 +277,42 @@ datagridShiftGroupSelection = function() {
 datagridShiftGroupSelection();
 
 document.addEventListener('change', function(e) {
-	var checked_inputs, counter, event, grid, i, ie, input, inputs, len, results, select, total;
+	var buttons, checked_inputs, counter, event, grid, i, ie, input, inputs, len, results, select, total;
 	grid = e.target.getAttribute('data-check');
 	if (grid) {
 		checked_inputs = document.querySelectorAll('input[data-check-all-' + grid + ']:checked');
 		select = document.querySelector('.datagrid-' + grid + ' select[name="group_action[group_action]"]');
-		if (select) {
-			counter = document.querySelector('.datagrid-' + grid + ' .datagrid-selected-rows-count');
-			if (checked_inputs.length) {
+		buttons = document.querySelectorAll('.datagrid-' + grid + ' input[type="submit"]');
+		if (buttons.length === 0) {
+			buttons = document.querySelectorAll('.datagrid-' + grid + ' button[type="submit"]');
+		}
+		counter = document.querySelector('.datagrid-' + grid + ' .datagrid-selected-rows-count');
+
+		if (checked_inputs.length) {
+			if (buttons) {
+				buttons.forEach(function (button) {
+					button.disabled = false;
+				});
+			}
+			if (select) {
 				select.disabled = false;
-				total = document.querySelectorAll('input[data-check-all-' + grid + ']').length;
-				if (counter) {
-					counter.innerHTML = checked_inputs.length + '/' + total;
-				}
-			} else {
+			}
+			total = document.querySelectorAll('input[data-check-all-' + grid + ']').length;
+			if (counter) {
+				counter.innerHTML = checked_inputs.length + '/' + total;
+			}
+		} else {
+			if (buttons) {
+				buttons.forEach(function (button) {
+					button.disabled = true;
+				});
+			}
+			if (select) {
 				select.disabled = true;
 				select.value = "";
-				if (counter) {
-					counter.innerHTML = "";
-				}
+			}
+			if (counter) {
+				counter.innerHTML = "";
 			}
 		}
 		ie = window.navigator.userAgent.indexOf("MSIE ");
@@ -485,7 +562,7 @@ dataGridRegisterExtension('datagrid.url', {
 	success: function(payload) {
 		var host, path, query, url;
 		if (payload._datagrid_url) {
-			if (window.history.pushState) {
+			if (window.history.replaceState) {
 				host = window.location.protocol + "//" + window.location.host;
 				path = window.location.pathname;
 				query = window.datagridSerializeUrl(payload.state).replace(/&+$/gm, '');
@@ -496,7 +573,7 @@ dataGridRegisterExtension('datagrid.url', {
 				}
 				url += window.location.hash;
 				if (window.location.href !== url) {
-					return window.history.pushState({
+					return window.history.replaceState({
 						path: url
 					}, '', url);
 				}
@@ -547,6 +624,7 @@ dataGridRegisterExtension('datargid.item_detail', {
 				return row_detail.addClass('loaded');
 			}
 		}
+		return true;
 	},
 	success: function(payload) {
 		var id, row_detail, grid_fullname;
@@ -627,11 +705,7 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
 			input.attr('rows', Math.round(cell_lines));
 		} else if (cell.data('datagrid-editable-type') === 'select') {
 			input = $(cell.data('datagrid-editable-element'));
-			input.find('option').each(function() {
-				if ($(this).val() === valueToEdit) {
-					return input.find("option[value='" + valueToEdit + "']").prop('selected', true);
-				}
-			});
+			input.find("option[value='" + valueToEdit + "']").prop('selected', true);
 		} else {
 			input = $('<input type="' + cell.data('datagrid-editable-type') + '">');
 			input.val(valueToEdit);
@@ -652,7 +726,7 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
 					data: {
 						value: value
 					},
-					method: 'POST',
+					type: 'POST',
 					success: function(payload) {
 						if (cell.data('datagrid-editable-type') === 'select') {
 							cell.html(input.find("option[value='" + value + "']").html());

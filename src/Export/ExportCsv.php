@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ublaboo\DataGrid\Export;
 
 use Contributte\Application\Response\CSVResponse;
-use Nette\Application\UI\Presenter;
 use Ublaboo\DataGrid\CsvDataModel;
 use Ublaboo\DataGrid\DataGrid;
 
@@ -46,21 +45,21 @@ class ExportCsv extends Export
 			array $data,
 			DataGrid $grid
 		) use ($name, $outputEncoding, $delimiter, $includeBom): void {
-			$columns = $this->getColumns() ?: $this->grid->getColumns();
+			$columns = $this->getColumns();
+
+			if ($columns === []) {
+				$columns = $this->grid->getColumns();
+			}
 
 			$csvDataModel = new CsvDataModel($data, $columns, $this->grid->getTranslator());
 
-			if ($this->grid->getPresenter() instanceof Presenter) {
-				$this->grid->getPresenter()->sendResponse(new CSVResponse(
-					$csvDataModel->getSimpleData(),
-					$name,
-					$outputEncoding,
-					$delimiter,
-					$includeBom
-				));
-
-				exit(0);
-			}
+			$this->grid->getPresenter()->sendResponse(new CSVResponse(
+				$csvDataModel->getSimpleData(),
+				$name,
+				$outputEncoding,
+				$delimiter,
+				$includeBom
+			));
 		};
 	}
 }

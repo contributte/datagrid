@@ -71,9 +71,10 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	}
 
 
-	/********************************************************************************
-	 *                          IDataSource implementation                          *
-	 ********************************************************************************/
+	// *******************************************************************************
+	// *                          IDataSource implementation                         *
+	// *******************************************************************************
+
 
 	public function getCount(): int
 	{
@@ -254,12 +255,12 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		$valueFrom = $conditions[$filter->getColumn()]['from'];
 		$valueTo = $conditions[$filter->getColumn()]['to'];
 
-		if ($valueFrom) {
+		if (is_numeric($valueFrom)) {
 			$p = $this->getPlaceholder();
 			$this->dataSource->andWhere("$c >= :$p")->setParameter($p, $valueFrom);
 		}
 
-		if ($valueTo) {
+		if (is_numeric($valueTo)) {
 			$p = $this->getPlaceholder();
 			$this->dataSource->andWhere("$c <= :$p")->setParameter($p, $valueTo);
 		}

@@ -44,9 +44,10 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
-	/********************************************************************************
-	 *                          IDataSource implementation                          *
-	 ********************************************************************************/
+	// *******************************************************************************
+	// *                          IDataSource implementation                         *
+	// *******************************************************************************
+
 
 	public function getCount(): int
 	{
@@ -82,7 +83,9 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	 */
 	public function getData(): array
 	{
-		return $this->data ?: $this->dataSource->fetchAll();
+		return $this->data !== []
+			? $this->data
+			: $this->dataSource->fetchAll();
 	}
 
 
@@ -97,6 +100,10 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	}
 
 
+	/**
+	 * @phpstan-param positive-int|0 $offset
+	 * @phpstan-param positive-int|0 $limit
+	 */
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->data = $this->dataSource->limit($limit, $offset)->fetchAll();
@@ -147,6 +154,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
+
 		try {
 			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
@@ -263,7 +271,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			$length = sizeof($values);
 			$i = 1;
 
-			for ($iterator = 0; $iterator < count($values); $iterator++) { 
+			for ($iterator = 0; $iterator < count($values); $iterator++) {
 				if ($i === $length) {
 					$or .= $filter->getColumn() . ' = ?)';
 				} else {

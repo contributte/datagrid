@@ -52,9 +52,10 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/********************************************************************************
-	 *                          IDataSource implementation                          *
-	 ********************************************************************************/
+	// *******************************************************************************
+	// *                          IDataSource implementation                         *
+	// *******************************************************************************
+
 
 	public function getCount(): int
 	{
@@ -123,6 +124,15 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getDataSource()
+	{
+		return $this->dataSource;
+	}
+
+
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		foreach ($filter->getCondition() as $value) {
@@ -178,18 +188,16 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	protected function applyFilterRange(FilterRange $filter): void
 	{
 		$conditions = $filter->getCondition();
-		$values = $conditions[$filter->getColumn()];
 
-		$valueFrom = $values['from'];
+		$valueFrom = $conditions[$filter->getColumn()]['from'];
+		$valueTo = $conditions[$filter->getColumn()]['to'];
 
-		if ((bool) $valueFrom) {
+		if (is_numeric($valueFrom)) {
 			$expr = Criteria::expr()->gte($filter->getColumn(), $valueFrom);
 			$this->criteria->andWhere($expr);
 		}
 
-		$valueTo = $values['to'];
-
-		if ((bool) $valueTo) {
+		if (is_numeric($valueTo)) {
 			$expr = Criteria::expr()->lte($filter->getColumn(), $valueTo);
 			$this->criteria->andWhere($expr);
 		}
@@ -234,15 +242,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 			$expr = Criteria::expr()->eq($column, $value);
 			$this->criteria->andWhere($expr);
 		}
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getDataSource()
-	{
-		return $this->dataSource;
 	}
 
 

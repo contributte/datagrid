@@ -46,7 +46,7 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 								id      INTEGER      PRIMARY KEY AUTOINCREMENT,
 								name    VARCHAR (50),
 								age     INTEGER (3),
-								address VARCHAR (50) 
+								address VARCHAR (50)
 							);
 		');
 

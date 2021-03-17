@@ -263,8 +263,8 @@ $grid->addColumnLink('name', 'Name', 'edit')
 
 ## Column Status
 
-![Status 1](assets/status1.gif)
-![Status 1](assets/status2.gif)
+![Status 1](https://github.com/contributte/datagrid/blob/master/.docs/assets/status1.gif?raw=true)
+![Status 1](https://github.com/contributte/datagrid/blob/master/.docs/assets/status2.gif?raw=true)
 
 Once your item keep some "status" flag, it is appropriate to show user the status in highlighted form. Also there could be a dropdown with available statuses:
 
@@ -277,7 +277,7 @@ $grid->addColumnStatus('status', 'Status')
 	->onChange[] = function($id, $new_value) { dump($id, $new_value); die; };
 ```
 
-ColumnStatus has optional caret, icon and class. By default, there is a caret visible and the main button that toggles statuses dropdown has class "btn-success". You can change all these properties:
+ColumnStatus has optional caret, icon, class and confirmation. By default, there is a caret visible and the main button that toggles statuses dropdown has class "btn-success". You can change all these properties:
 
 ```php
 $grid->addColumnStatus('status', 'Status')
@@ -285,6 +285,7 @@ $grid->addColumnStatus('status', 'Status')
 	->addOption(1, 'Online')
 		->setIcon('check')
 		->setClass('btn-success')
+		->setConfirmation(new StringConfirmation('Do you really want set status as Online?'))
 		->endOption()
 	->addOption(2, 'Standby')
 		->setIcon('user')
@@ -344,7 +345,7 @@ $grid->getColumn('status')->getOption(2)
 
 ## Hideable columns
 
-![Columns Hiding](assets/hideable_columns.gif)
+![Columns Hiding](https://github.com/contributte/datagrid/blob/master/.docs/assets/hideable_columns.gif?raw=true)
 
 In example datargid above, you can hide columns and then reveal them again. This feature is disabled by default. You can enable it like this:
 
@@ -365,7 +366,7 @@ $grid->addColumnText('name', 'Name')
 
 If default hide is used, new button is shown in that settings (gear) dropdown - **Show default columns**:
 
-<img title="Columns Hiding" src="assets/hideable_columns_reset.png" width="267" height="256">
+<img title="Columns Hiding" src="https://github.com/contributte/datagrid/blob/master/.docs/assets/hideable_columns_reset.png?raw=true" width="267" height="256">
 
 ## Columns Summary
 
@@ -477,7 +478,7 @@ $grid->setMultipleAggregationFunction(
 
 This aggregatin is used along with `Dibi` in the demo.
 
-## Column (th&gt;, td&gt;) attributes 
+## Column (th&gt;, td&gt;) attributes
 
 Since table cell elements are rendered using `Nette\Utils\Html`, you can easily alter their html attributes (class, data-attributes etc):
 

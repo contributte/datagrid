@@ -16,7 +16,7 @@ trait TButtonTryAddIcon
 			$iconClass = '';
 
 			foreach (explode(' ', $iconString) as $icon) {
-				$iconClass .= ' ' .  DataGrid::$iconPrefix . $icon;
+				$iconClass .= ' ' . DataGrid::$iconPrefix . $icon;
 			}
 
 			$el->addHtml(Html::el('span')->setAttribute('class', trim($iconClass)));

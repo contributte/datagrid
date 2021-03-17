@@ -98,7 +98,7 @@ $grid->addFilterText('name', 'Name:')
 
 There is how the default FilterText template looks like:
 
-```html
+```latte
 {**
  * @param Filter                         $filter
  * @param Nette\Forms\Controls\TextInput $input
@@ -124,7 +124,7 @@ $grid->addFilterText('name', 'Name:');
 
 And the `my-grid-template.latte`:
 
-```html
+```latte
 {block filter-name}
 {input $input}
 
@@ -173,7 +173,7 @@ Again, you can use custom condition callback, the same in all other filters.
 
 Api of `FilterMultiSelect` is the same as of FilterSelect
 
-```
+```php
 $grid->addFilterMultiSelect('status', 'Status:', [1 => 'On', 2 => 'Off', 2 => 'Another option']);
 ```
 
@@ -272,11 +272,17 @@ Grid refreshes its state on several levels. One could be session. It is by defau
 $grid->setRememberState(false); // Or turned on again: $grid->setRememberState(true);
 ```
 
+If you want to keep hideable columns in session even when rememebr state is turned off, use second argument:
+
+```php
+$grid->setRememberState(false, true);
+```
+
 ## Session - filters / filter values changed
 
 When you set some filters and user do some filtering, values are stored in session. After that, when filters are changed (maybe some select options are removed, etc), datagrid would throw an exception, because it can not find particular filters / filter values that are still stored in session. You can supress those exception:
 
-```
+```php
 $grid->setStrictSessionFilterValues(false);
 ```
 
@@ -290,7 +296,7 @@ $grid->setRefreshUrl(false); // Or enabled again: $grid->setRefreshUrl(true);
 
 ## Auto submit
 
-DataGrid filter is submitted automatically after keypress (there is of course a little delay). If you want to desable that feature and use customizable submit button insted, use this code:
+DataGrid filter is submitted automatically after keypress (there is of course a little delay). If you want to disable that feature and use customizable submit button instead, use this code:
 
 ```php
 $grid->setAutoSubmit(false);

@@ -17,6 +17,24 @@ abstract class FilterableDataSource
 {
 
 	/**
+	 * @return mixed
+	 */
+	abstract protected function getDataSource();
+
+	abstract protected function applyFilterDate(FilterDate $filter): void;
+
+	abstract protected function applyFilterDateRange(FilterDateRange $filter): void;
+
+	abstract protected function applyFilterRange(FilterRange $filter): void;
+
+	abstract protected function applyFilterText(FilterText $filter): void;
+
+	abstract protected function applyFilterMultiSelect(FilterMultiSelect $filter): void;
+
+	abstract protected function applyFilterSelect(FilterSelect $filter): void;
+
+
+	/**
 	 * {@inheritDoc}
 	 *
 	 * @param array<Filter> $filters
@@ -51,22 +69,4 @@ abstract class FilterableDataSource
 			}
 		}
 	}
-
-
-	/**
-	 * @return mixed
-	 */
-	abstract protected function getDataSource();
-
-	abstract protected function applyFilterDate(FilterDate $filter): void;
-
-	abstract protected function applyFilterDateRange(FilterDateRange $filter): void;
-
-	abstract protected function applyFilterRange(FilterRange $filter): void;
-
-	abstract protected function applyFilterText(FilterText $filter): void;
-
-	abstract protected function applyFilterMultiSelect(FilterMultiSelect $filter): void;
-
-	abstract protected function applyFilterSelect(FilterSelect $filter): void;
 }

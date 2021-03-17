@@ -10,6 +10,9 @@ use Ublaboo;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
+// E_NOTICE: Trying to access array offset on value of type null
+error_reporting(E_ERROR | E_PARSE);
+
 final class DibiFluentDataSourceTest extends BaseDataSourceTest
 {
 
@@ -28,17 +31,17 @@ final class DibiFluentDataSourceTest extends BaseDataSourceTest
 
 	protected function setUpDatabase(): void
 	{
-			$this->db = dibi::connect([
-				'driver' => 'pdo',
-				'dsn' => 'sqlite::memory:',
-			]);
+		$this->db = dibi::connect([
+			'driver' => 'pdo',
+			'dsn' => 'sqlite::memory:',
+		]);
 
 		$this->db->query(
 			'CREATE TABLE users (
 				id      INTEGER      PRIMARY KEY AUTOINCREMENT,
 				name    VARCHAR (50),
 				age     INTEGER (3),
-				address VARCHAR (50) 
+				address VARCHAR (50)
 			);'
 		);
 

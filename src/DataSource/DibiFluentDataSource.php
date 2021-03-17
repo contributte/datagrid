@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Dibi;
 use Dibi\Fluent;
+use Dibi\Helpers;
 use ReflectionClass;
 use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
 use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
@@ -45,9 +45,10 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	}
 
 
-	/********************************************************************************
-	 *                          IDataSource implementation                          *
-	 ********************************************************************************/
+	// *******************************************************************************
+	// *                          IDataSource implementation                         *
+	// *******************************************************************************
+
 
 	public function getCount(): int
 	{
@@ -60,7 +61,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	 */
 	public function getData(): array
 	{
-		return $this->data ?: $this->dataSource->fetchAll();
+		return $this->data !== [] ? $this->data : $this->dataSource->fetchAll();
 	}
 
 
@@ -114,7 +115,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			$cursorProperty->setAccessible(true);
 			$cursor = $cursorProperty->getValue($this->dataSource);
 
-			if (! (bool) $cursor) {
+			if (!(bool) $cursor) {
 				$this->dataSource->orderBy($this->primaryKey);
 			}
 		}
@@ -198,7 +199,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			$column = Dibi\Helpers::escape($driver, $column, \dibi::IDENTIFIER);
+			$column = Helpers::escape($driver, $column, \dibi::IDENTIFIER);
 
 			if ($filter->isExactSearch()) {
 				$this->dataSource->where("$column = %s", $value);
