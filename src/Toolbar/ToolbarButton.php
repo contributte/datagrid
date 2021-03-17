@@ -47,7 +47,12 @@ class ToolbarButton
 	protected $attributes = [];
 
 	/**
-	 * @param array $params
+	 * @var null|string
+	 */
+	protected $confirmDialog = null;
+
+	/**
+	 * @param array    $params
 	 */
 	public function __construct(DataGrid $grid, string $href, string $text, array $params = [])
 	{
@@ -91,6 +96,10 @@ class ToolbarButton
 
 		$a->setAttribute('class', $this->getClass());
 
+		if ($this->confirmDialog !== null) {
+			$a->setAttribute('data-datagrid-confirm', $this->confirmDialog);
+		}
+
 		return $a;
 	}
 
@@ -102,6 +111,18 @@ class ToolbarButton
 	public function addAttributes(array $attrs)
 	{
 		$this->attributes += $attrs;
+
+		return $this;
+	}
+
+	/**
+	 * Add Confirm dialog
+	 * @param string $confirmDialog
+	 * @return self
+	 */
+	public function setConfirmDialog(string $confirmDialog): self
+	{
+		$this->confirmDialog = $confirmDialog;
 
 		return $this;
 	}
