@@ -47,12 +47,12 @@ class ToolbarButton
 	protected $attributes = [];
 
 	/**
-	 * @var null|string
+	 * @var string|null
 	 */
 	protected $confirmDialog = null;
 
 	/**
-	 * @param array    $params
+	 * Toolbar button constructor
 	 */
 	public function __construct(DataGrid $grid, string $href, string $text, array $params = [])
 	{
@@ -117,8 +117,6 @@ class ToolbarButton
 
 	/**
 	 * Add Confirm dialog
-	 * @param string $confirmDialog
-	 * @return self
 	 */
 	public function setConfirmDialog(string $confirmDialog): self
 	{
