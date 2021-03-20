@@ -152,6 +152,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 		return $this;
 	}
 
+	public function processAggregation(IAggregationFunction $function): void
+	{
+		$function->processDataSource( clone $this->dataSource );
+	}
+
 
 	protected function applyFilterDate(FilterDate $filter): void
 	{
@@ -343,13 +348,4 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 
 		return $column;
 	}
-
-	/**
-	 * @param  IAggregationFunction $function
-	 * @return void
-	 */
-     public function processAggregation(IAggregationFunction $function): void
-     {
-		 $function->processDataSource(clone $this->dataSource);
-     }
 }
