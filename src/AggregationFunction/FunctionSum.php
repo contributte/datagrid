@@ -9,6 +9,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Strings;
+use Nextras\Orm\Collection\DbalCollection;
+use Symfony\Component\ErrorHandler\Debug;
+use Tracy\Debugger;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
 class FunctionSum implements ISingleColumnAggregationFunction
@@ -51,7 +54,7 @@ class FunctionSum implements ISingleColumnAggregationFunction
 
 
 	/**
-	 * @param Fluent|QueryBuilder|Collection|Selection $dataSource
+	 * @param Fluent|QueryBuilder|Collection|Selection|DbalCollection $dataSource
 	 */
 	public function processDataSource($dataSource): void
 	{
@@ -81,6 +84,11 @@ class FunctionSum implements ISingleColumnAggregationFunction
 
 				return true;
 			});
+		}
+
+		if ( $dataSource instanceof DbalCollection) {
+			foreach( $dataSource->fetchAll() as $item )
+				$this->result += $item->getValue( $this->column );
 		}
 	}
 

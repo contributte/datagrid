@@ -7,6 +7,8 @@ namespace Ublaboo\DataGrid\DataSource;
 use Nette\Utils\Strings;
 use Nextras\Orm\Collection\Expression\LikeExpression;
 use Nextras\Orm\Collection\ICollection;
+use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
+use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
@@ -19,7 +21,7 @@ use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 use UnexpectedValueException;
 
-class NextrasDataSource extends FilterableDataSource implements IDataSource
+class NextrasDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
 
 	/**
@@ -341,4 +343,13 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource
 
 		return $column;
 	}
+
+	/**
+	 * @param  IAggregationFunction $function
+	 * @return void
+	 */
+     public function processAggregation(IAggregationFunction $function): void
+     {
+		 $function->processDataSource(clone $this->dataSource);
+     }
 }
