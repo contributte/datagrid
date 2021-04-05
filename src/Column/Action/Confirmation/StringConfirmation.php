@@ -13,15 +13,15 @@ final class StringConfirmation implements IConfirmation
 	private $question;
 
 	/**
-	 * @var string|null
+	 * @var string[]
 	 */
-	private $placeholderName;
+	private $placeholders;
 
 
-	public function __construct(string $question, ?string $placeholderName = null)
+	public function __construct(string $question, string ...$placeholders)
 	{
 		$this->question = $question;
-		$this->placeholderName = $placeholderName;
+		$this->placeholders = $placeholders;
 	}
 
 
@@ -31,8 +31,14 @@ final class StringConfirmation implements IConfirmation
 	}
 
 
-	public function getPlaceholderName(): ?string
+	public function havePlaceholders(): bool
 	{
-		return $this->placeholderName;
+		return (bool) $this->placeholders;
+	}
+
+
+	public function getPlaceholders(): array
+	{
+		return $this->placeholders;
 	}
 }

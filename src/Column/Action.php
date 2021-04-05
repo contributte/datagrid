@@ -275,15 +275,15 @@ class Action extends Column
 		if ($this->confirmation instanceof StringConfirmation) {
 			$question = $this->translate($this->confirmation->getQuestion());
 
-			if ($this->confirmation->getPlaceholderName() === null) {
+			if (!$this->confirmation->havePlaceholders()) {
 				return $question;
 			}
 
-			return str_replace(
-				'%s',
-				(string) $row->getValue($this->confirmation->getPlaceholderName()),
-				$question
-			);
+			$values = array_map(function (string $placeholder) use ($row): string {
+				return (string) $row->getValue($placeholder);
+			}, $this->confirmation->getPlaceholders());
+
+			return vsprintf($question, $values);
 		}
 
 		throw new DataGridException('Unsupported confirmation');
