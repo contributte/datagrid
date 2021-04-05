@@ -276,6 +276,7 @@ class Action extends Column
 	public function setStringConfirmation(string $question, string ...$placeholders): self
 	{
 		$this->confirmation = new StringConfirmation($question, ...$placeholders);
+		$this->confirmation->setTranslator($this->grid->getTranslator());
 
 		return $this;
 	}
@@ -295,7 +296,12 @@ class Action extends Column
 		}
 
 		if ($this->confirmation instanceof StringConfirmation) {
-			$question = $this->translate($this->confirmation->getQuestion());
+			if ($this->confirmation->getTranslator() === null) {
+				// Backward compatibility
+				$this->confirmation->setTranslator($this->grid->getTranslator());
+			}
+
+			$question = $this->confirmation->getQuestion();
 
 			if (!$this->confirmation->havePlaceholders()) {
 				return $question;

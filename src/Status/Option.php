@@ -237,6 +237,7 @@ class Option
 	public function setStringConfirmation(string $question, string ...$placeholders): self
 	{
 		$this->confirmation = new StringConfirmation($question, ...$placeholders);
+		$this->confirmation->setTranslator($this->grid->getTranslator());
 
 		return $this;
 	}
@@ -253,7 +254,12 @@ class Option
 		}
 
 		if ($this->confirmation instanceof StringConfirmation) {
-			$question = $this->grid->getTranslator()->translate($this->confirmation->getQuestion());
+			if ($this->confirmation->getTranslator() === null) {
+				// Backward compatibility
+				$this->confirmation->setTranslator($this->grid->getTranslator());
+			}
+
+			$question = $this->confirmation->getQuestion();
 
 			if (!$this->confirmation->havePlaceholders()) {
 				return $question;
