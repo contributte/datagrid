@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ublaboo\DataGrid\Column\Action\Confirmation;
 
 use Nette\Localization\ITranslator;
+use Ublaboo\DataGrid\Row;
 
 final class StringConfirmation implements IConfirmation
 {
@@ -32,21 +33,21 @@ final class StringConfirmation implements IConfirmation
 	}
 
 
-	public function getQuestion(): string
+	public function getMessage(Row $row): ?string
 	{
-		return $this->translator !== null ? $this->translator->translate($this->question) : $this->question;
-	}
+		$question = $this->translator !== null
+			? $this->translator->translate($this->question)
+			: $this->question;
 
+		if (!(bool) $this->placeholders) {
+			return $question;
+		}
 
-	public function havePlaceholders(): bool
-	{
-		return (bool) $this->placeholders;
-	}
+		$values = array_map(function (string $placeholder) use ($row): string {
+			return (string) $row->getValue($placeholder);
+		}, $this->placeholders);
 
-
-	public function getPlaceholders(): array
-	{
-		return $this->placeholders;
+		return vsprintf($question, $values);
 	}
 
 
@@ -54,7 +55,6 @@ final class StringConfirmation implements IConfirmation
 	{
 		return $this->translator;
 	}
-
 
 	public function setTranslator(?ITranslator $translator): void
 	{

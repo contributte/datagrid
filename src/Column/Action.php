@@ -282,17 +282,10 @@ class Action extends Column
 	}
 
 
-	/**
-	 * @throws DataGridException
-	 */
 	public function getConfirmationDialog(Row $row): ?string
 	{
 		if ($this->confirmation === null) {
 			return null;
-		}
-
-		if ($this->confirmation instanceof CallbackConfirmation) {
-			return ($this->confirmation->getCallback())($row->getItem());
 		}
 
 		if ($this->confirmation instanceof StringConfirmation) {
@@ -300,21 +293,9 @@ class Action extends Column
 				// Backward compatibility
 				$this->confirmation->setTranslator($this->grid->getTranslator());
 			}
-
-			$question = $this->confirmation->getQuestion();
-
-			if (!$this->confirmation->havePlaceholders()) {
-				return $question;
-			}
-
-			$values = array_map(function (string $placeholder) use ($row): string {
-				return (string) $row->getValue($placeholder);
-			}, $this->confirmation->getPlaceholders());
-
-			return vsprintf($question, $values);
 		}
 
-		throw new DataGridException('Unsupported confirmation');
+		return $this->confirmation->getMessage($row);
 	}
 
 

@@ -9,7 +9,6 @@ use Ublaboo\DataGrid\Column\Action\Confirmation\IConfirmation;
 use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\Column\ColumnStatus;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Row;
 
 class Option
@@ -249,29 +248,13 @@ class Option
 			return null;
 		}
 
-		if ($this->confirmation instanceof CallbackConfirmation) {
-			return ($this->confirmation->getCallback())($row->getItem());
-		}
-
 		if ($this->confirmation instanceof StringConfirmation) {
 			if ($this->confirmation->getTranslator() === null) {
 				// Backward compatibility
 				$this->confirmation->setTranslator($this->grid->getTranslator());
 			}
-
-			$question = $this->confirmation->getQuestion();
-
-			if (!$this->confirmation->havePlaceholders()) {
-				return $question;
-			}
-
-			$values = array_map(function (string $placeholder) use ($row): string {
-				return (string) $row->getValue($placeholder);
-			}, $this->confirmation->getPlaceholders());
-
-			return vsprintf($question, $values);
 		}
 
-		throw new DataGridException('Unsupported confirmation');
+		return $this->confirmation->getMessage($row);
 	}
 }
