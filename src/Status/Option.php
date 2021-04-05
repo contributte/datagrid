@@ -220,6 +220,28 @@ class Option
 	}
 
 
+	/**
+	 * @return static
+	 */
+	public function setCallbackConfirmation(callable $callback): self
+	{
+		$this->confirmation = new CallbackConfirmation($callback);
+
+		return $this;
+	}
+
+
+	/**
+	 * @return static
+	 */
+	public function setStringConfirmation(string $question, string ...$placeholders): self
+	{
+		$this->confirmation = new StringConfirmation($question, ...$placeholders);
+
+		return $this;
+	}
+
+
 	public function getConfirmationDialog(Row $row): ?string
 	{
 		if ($this->confirmation === null) {

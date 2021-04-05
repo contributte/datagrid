@@ -260,6 +260,28 @@ class Action extends Column
 
 
 	/**
+	 * @return static
+	 */
+	public function setCallbackConfirmation(callable $callback): self
+	{
+		$this->confirmation = new CallbackConfirmation($callback);
+
+		return $this;
+	}
+
+
+	/**
+	 * @return static
+	 */
+	public function setStringConfirmation(string $question, string ...$placeholders): self
+	{
+		$this->confirmation = new StringConfirmation($question, ...$placeholders);
+
+		return $this;
+	}
+
+
+	/**
 	 * @throws DataGridException
 	 */
 	public function getConfirmationDialog(Row $row): ?string
