@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<ruleset>
+	<rule ref="./vendor/ninjify/coding-standard/ruleset-gamee.xml">
+		<exclude name="SlevomatCodingStandard.Commenting.RequireOneLineDocComment.MultiLineDocComment" />
+		<exclude name="SlevomatCodingStandard.Classes.MethodSpacing.IncorrectLinesCountBetweenMethods" />
+		<exclude name="SlevomatCodingStandard.Classes.ClassMemberSpacing.IncorrectCountOfBlankLinesBetweenMembers" />
+		<exclude name="SlevomatCodingStandard.Commenting.DisallowCommentAfterCode.DisallowedCommentAfterCode" />
+		<exclude name="SlevomatCodingStandard.Classes.RequireSingleLineMethodSignature.RequiredSingleLineSignature" />
+		<exclude name="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator.RequiredNullCoalesceEqualOperator" />
+		<exclude name="SlevomatCodingStandard.Files.LineLength.LineTooLong" />
+		<exclude name="SlevomatCodingStandard.Functions.RequireMultiLineCall.RequiredMultiLineCall" />
+		<exclude name="SlevomatCodingStandard.ControlStructures.RequireMultiLineTernaryOperator.MultiLineTernaryOperatorNotUsed" />
+	</rule>
+
+	<!-- Specific rules -->
+	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+		<properties>
+			<property name="rootNamespaces" type="array" value="
+				src=>Ublaboo\DataGrid,
+				tests/Cases=>Ublaboo\DataGrid\Tests\Cases,
+				tests/Files=>Ublaboo\DataGrid\Tests\Files,
+			"/>
+			<property name="extensions" type="array" value="php,phpt"/>
+		</properties>
+	</rule>
+	<rule ref="SlevomatCodingStandard.Functions.RequireSingleLineCall">
+		<properties>
+			<property name="maxLineLength" type="int" value="120"/>
+			<property name="alwaysForSimpleConditions" type="boolean" value="false"/>
+		</properties>
+	</rule>
+	<rule ref="SlevomatCodingStandard.ControlStructures.RequireSingleLineCondition">
+		<properties>
+			<property name="maxLineLengtaash" type="int" value="120"/>
+			<property name="alwaysForSimpleConditions" type="boolean" value="false"/>
+		</properties>
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName.NoMatchBetweenTypeNameAndFileName">
+		<exclude-pattern>tests/Cases/DataSources/NextrasDataSourceTest.phpt</exclude-pattern>
+		<exclude-pattern>tests/Cases/DataSources/DoctrineDataSourceTest.phpt</exclude-pattern>
+	</rule>
+</ruleset>

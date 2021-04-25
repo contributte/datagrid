@@ -67,6 +67,9 @@ abstract class Filter
 	private $placeholder;
 
 
+	abstract public function getCondition(): array;
+
+
 	public function __construct(
 		DataGrid $grid,
 		string $key,
@@ -77,9 +80,6 @@ abstract class Filter
 		$this->key = $key;
 		$this->name = $name;
 	}
-
-
-	abstract public function getCondition(): array;
 
 
 	/**

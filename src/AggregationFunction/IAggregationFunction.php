@@ -8,6 +8,7 @@ use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Database\Table\Selection;
+use Nextras\Orm\Collection\ICollection;
 
 interface IAggregationFunction
 {
@@ -20,7 +21,7 @@ interface IAggregationFunction
 
 
 	/**
-	 * @param Fluent|QueryBuilder|Collection|Selection $dataSource
+	 * @param Fluent|QueryBuilder|Collection|Selection|ICollection $dataSource
 	 */
 	public function processDataSource($dataSource): void;
 }

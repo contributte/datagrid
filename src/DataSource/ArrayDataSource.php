@@ -41,9 +41,10 @@ class ArrayDataSource implements IDataSource
 	}
 
 
-	/********************************************************************************
-	 *                          IDataSource implementation                          *
-	 ********************************************************************************/
+	// *******************************************************************************
+	// *                          IDataSource implementation                         *
+	// *******************************************************************************
+
 
 	public function getCount(): int
 	{
@@ -114,8 +115,60 @@ class ArrayDataSource implements IDataSource
 	}
 
 
+	public function sort(Sorting $sorting): IDataSource
+	{
+		if (is_callable($sorting->getSortCallback())) {
+			$data = call_user_func(
+				$sorting->getSortCallback(),
+				$this->data,
+				$sorting->getSort()
+			);
+
+			if (!is_array($data)) {
+				throw new DataGridArrayDataSourceException('Sorting callback has to return array');
+			}
+
+			$this->setData($data);
+
+			return $this;
+		}
+
+		$sort = $sorting->getSort();
+
+		foreach ($sort as $column => $order) {
+			$data = [];
+
+			foreach ($this->data as $item) {
+				$sort_by = is_object($item[$column]) && $item[$column] instanceof DateTimeInterface
+					? $item[$column]->format('Y-m-d H:i:s')
+					: (string) $item[$column];
+
+				$data[$sort_by][] = $item;
+			}
+
+			if ($order === 'ASC') {
+				ksort($data);
+			} else {
+				krsort($data);
+			}
+
+			$dataSource = [];
+
+			foreach ($data as $i) {
+				foreach ($i as $item) {
+					$dataSource[] = $item;
+				}
+			}
+
+			$this->setData($dataSource);
+		}
+
+		return $this;
+	}
+
+
 	/**
-	 * @param  mixed $row
+	 * @param mixed $row
 	 * @return mixed
 	 */
 	protected function applyFilter($row, Filter $filter)
@@ -262,7 +315,7 @@ class ArrayDataSource implements IDataSource
 	/**
 	 * Apply fitler date and tell whether row value matches or not
 	 *
-	 * @param  mixed  $row
+	 * @param mixed $row
 	 */
 	protected function applyFilterDate($row, FilterDate $filter): bool
 	{
@@ -290,58 +343,8 @@ class ArrayDataSource implements IDataSource
 
 			return $row_value->format($format) === $date->format($format);
 		}
-	}
 
-
-	public function sort(Sorting $sorting): IDataSource
-	{
-		if (is_callable($sorting->getSortCallback())) {
-			$data = call_user_func(
-				$sorting->getSortCallback(),
-				$this->data,
-				$sorting->getSort()
-			);
-
-			if (!is_array($data)) {
-				throw new DataGridArrayDataSourceException('Sorting callback has to return array');
-			}
-
-			$this->setData($data);
-
-			return $this;
-		}
-
-		$sort = $sorting->getSort();
-
-		foreach ($sort as $column => $order) {
-			$data = [];
-
-			foreach ($this->data as $item) {
-				$sort_by = is_object($item[$column]) && $item[$column] instanceof DateTimeInterface
-					? $item[$column]->format('Y-m-d H:i:s')
-					: (string) $item[$column];
-
-				$data[$sort_by][] = $item;
-			}
-
-			if ($order === 'ASC') {
-				ksort($data);
-			} else {
-				krsort($data);
-			}
-
-			$dataSource = [];
-
-			foreach ($data as $i) {
-				foreach ($i as $item) {
-					$dataSource[] = $item;
-				}
-			}
-
-			$this->setData($dataSource);
-		}
-
-		return $this;
+		return false;
 	}
 
 

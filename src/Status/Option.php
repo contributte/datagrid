@@ -9,15 +9,11 @@ use Ublaboo\DataGrid\Column\Action\Confirmation\IConfirmation;
 use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\Column\ColumnStatus;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Row;
 
 class Option
 {
-
-	/**
-	 * @var DataGrid
-	 */
-	private $grid;
 
 	/**
 	 * @var ColumnStatus
@@ -68,6 +64,11 @@ class Option
 	 * @var IConfirmation|null
 	 */
 	protected $confirmation;
+
+	/**
+	 * @var DataGrid
+	 */
+	private $grid;
 
 	/**
 	 * @param mixed $value
@@ -242,5 +243,7 @@ class Option
 				$question
 			);
 		}
+
+		throw new DataGridException('Unsupported confirmation');
 	}
 }

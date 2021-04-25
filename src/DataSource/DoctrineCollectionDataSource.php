@@ -52,9 +52,10 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	}
 
 
-	/********************************************************************************
-	 *                          IDataSource implementation                          *
-	 ********************************************************************************/
+	// *******************************************************************************
+	// *                          IDataSource implementation                         *
+	// *******************************************************************************
+
 
 	public function getCount(): int
 	{
@@ -120,6 +121,15 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	public function processAggregation(IAggregationFunction $function): void
 	{
 		$function->processDataSource(clone $this->dataSource);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getDataSource()
+	{
+		return $this->dataSource;
 	}
 
 
@@ -232,15 +242,6 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 			$expr = Criteria::expr()->eq($column, $value);
 			$this->criteria->andWhere($expr);
 		}
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getDataSource()
-	{
-		return $this->dataSource;
 	}
 
 

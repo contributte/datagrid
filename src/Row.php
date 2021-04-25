@@ -74,7 +74,7 @@ class Row
 
 
 	/**
-	 * @param  mixed $key
+	 * @param mixed $key
 	 * @return mixed
 	 */
 	public function getValue($key)
@@ -147,7 +147,9 @@ class Row
 				return null;
 			}
 
-			return $relatedRow[$relatedColumn];
+			return $relatedRow !== null
+				? $relatedRow[$relatedColumn]
+				: null;
 		}
 
 		if (preg_match('/^([a-zA-Z0-9_$]+)\.([a-zA-Z0-9_$]+)(:([a-zA-Z0-9_$]+))?$/', $key, $matches) === 1) {
@@ -239,8 +241,8 @@ class Row
 	/**
 	 * Doctrine: Access object properties to get a item value
 	 *
-	 * @param  mixed $item
-	 * @param  mixed $key
+	 * @param mixed $item
+	 * @param mixed $key
 	 * @return mixed
 	 */
 	public function getDoctrineEntityProperty($item, $key)
@@ -302,7 +304,7 @@ class Row
 	/**
 	 * Has particular row a action allowed?
 	 *
-	 * @param  mixed  $key
+	 * @param mixed $key
 	 */
 	public function hasAction($key): bool
 	{

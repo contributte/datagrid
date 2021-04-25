@@ -66,7 +66,7 @@ class ColumnStatus extends Column
 
 
 	/**
-	 * @param  mixed $value
+	 * @param mixed $value
 	 * @throws DataGridColumnStatusException
 	 */
 	public function getOption($value): Option
@@ -136,7 +136,7 @@ class ColumnStatus extends Column
 
 
 	/**
-	 * @param  mixed $value
+	 * @param mixed $value
 	 */
 	public function removeOption($value): void
 	{

@@ -37,6 +37,8 @@ interface IDataSource
 	/**
 	 * Apply limit and offset on data
 	 *
+	 * @phpstan-param positive-int|0 $offset
+	 * @phpstan-param positive-int|0 $limit
 	 * @return static
 	 */
 	public function limit(int $offset, int $limit): self;

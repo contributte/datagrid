@@ -72,10 +72,7 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 			throw new \UnexpectedValueException;
 		}
 
-		return array_map(
-			$this->rowFactory,
-			$searchResult['hits']['hits']
-		);
+		return array_map($this->rowFactory, $searchResult['hits']['hits']);
 	}
 
 
@@ -154,7 +151,7 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 	public function applyFilterRange(FilterRange $filter): void
 	{
 		foreach ($filter->getCondition() as $column => $value) {
-			$this->searchParamsBuilder->addRangeQuery($column, $value['from'] ?: null, $value['to'] ?: null);
+			$this->searchParamsBuilder->addRangeQuery($column, $value['from'] ?? null, $value['to'] ?? null);
 		}
 	}
 

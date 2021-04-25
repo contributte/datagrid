@@ -33,12 +33,6 @@ trait TLink
 
 		$presenter = $grid->getPresenter();
 
-		if (!$presenter instanceof Presenter) {
-			throw new UnexpectedValueException(
-				sprintf('%s needs instanceof %s', self::class, Presenter::class)
-			);
-		}
-
 		if (strpos($href, ':') !== false) {
 			return $presenter->link($href, $params);
 		}
@@ -72,11 +66,6 @@ trait TLink
 			} else {
 				continue; // Did not find signal handler
 			}
-
-			if ($targetComponent instanceof Presenter) {
-				// Went the whole way up to the UI\Presenter and did not find any signal handler
-				throw $this->createHierarchyLookupException($grid, $href, $params);
-			}
 		}
 
 		// Went 10 steps up to the Presenter and did not find any signal handler
@@ -93,9 +82,9 @@ trait TLink
 		$parent = $grid->getParent();
 		$presenter = $grid->getPresenter();
 
-		if ($parent === null || $presenter === null) {
+		if ($parent === null) {
 			throw new UnexpectedValueException(
-				sprintf('%s can not live withnout a parent component or presenter', self::class)
+				sprintf('%s can not live withnout a parent component', self::class)
 			);
 		}
 

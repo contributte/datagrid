@@ -98,7 +98,7 @@ $grid->addFilterText('name', 'Name:')
 
 There is how the default FilterText template looks like:
 
-```html
+```latte
 {**
  * @param Filter                         $filter
  * @param Nette\Forms\Controls\TextInput $input
@@ -124,7 +124,7 @@ $grid->addFilterText('name', 'Name:');
 
 And the `my-grid-template.latte`:
 
-```html
+```latte
 {block filter-name}
 {input $input}
 
@@ -173,7 +173,7 @@ Again, you can use custom condition callback, the same in all other filters.
 
 Api of `FilterMultiSelect` is the same as of FilterSelect
 
-```
+```php
 $grid->addFilterMultiSelect('status', 'Status:', [1 => 'On', 2 => 'Off', 2 => 'Another option']);
 ```
 
@@ -282,7 +282,7 @@ $grid->setRememberState(false, true);
 
 When you set some filters and user do some filtering, values are stored in session. After that, when filters are changed (maybe some select options are removed, etc), datagrid would throw an exception, because it can not find particular filters / filter values that are still stored in session. You can supress those exception:
 
-```
+```php
 $grid->setStrictSessionFilterValues(false);
 ```
 

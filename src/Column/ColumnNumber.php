@@ -20,7 +20,7 @@ class ColumnNumber extends Column
 	protected $numberFormat = [
 		0, // Decimals
 		'.', // Decimal point
-		' ',  // Thousands separator
+		' ', // Thousands separator
 	];
 
 	/**
