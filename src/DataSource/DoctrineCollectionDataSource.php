@@ -78,6 +78,10 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	public function filterOne(array $condition): IDataSource
 	{
 		foreach ($condition as $column => $value) {
+			if ($column === $this->primaryKey && is_numeric($value)) {
+				$value = (int) $value;
+			}
+
 			$expr = Criteria::expr()->eq($column, $value);
 			$this->criteria->andWhere($expr);
 		}
