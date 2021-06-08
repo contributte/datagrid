@@ -1,69 +1,69 @@
 {
-  "name": "ublaboo/datagrid",
-  "type": "library",
-  "description": "DataGrid for Nette Framework: filtering, sorting, pagination, tree view, table view, translator, etc",
-  "keywords": [
-    "datagrid",
-    "grid",
-    "nette",
-    "contributte",
-    "table",
-    "data"
-  ],
-  "license": [
-    "MIT"
-  ],
-  "authors": [
-    {
-      "name": "Pavel Janda",
-      "homepage": "https://paveljanda.com"
-    },
-    {
-      "name": "Milan Felix Šulc",
-      "homepage": "https://f3l1x.io"
-    }
-  ],
-  "autoload": {
-    "psr-4": {
-      "Ublaboo\\DataGrid\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Ublaboo\\DataGrid\\Tests\\": "tests"
-    }
-  },
-  "require": {
-    "php": ">=7.2",
-    "contributte/application": "^0.5.0",
-    "nette/di": "^3.0.0",
-    "nette/forms": "^3.1.3",
-    "nette/utils": "^3.0.1",
-    "symfony/property-access": "^3.0.0 || ^4.0.0 || ^5.0.0"
-  },
-  "require-dev": {
-    "dibi/dibi": "^3.0.0 || ^4.0.0",
-    "doctrine/orm": "^2.6.12",
-    "elasticsearch/elasticsearch": "^7.1",
-    "gamee/php-code-checker-rules": "^2.0.21",
-    "mockery/mockery": "^1.3.3",
-    "nette/database": "^3.0.2",
-    "nette/tester": "^2.3.4",
-    "nextras/dbal": "^3.0.1 || ^4.0",
-    "nextras/orm": "^3.1.0 || ^4.0",
-    "ninjify/coding-standard": "^0.12.0",
-    "phpstan/phpstan-nette": "^0.12.14",
-    "tharos/leanmapper": "^3.4.2 || ^4.0.0",
-    "tracy/tracy": "^2.6.3"
-  },
-  "prefer-stable": true,
-  "minimum-stability": "dev",
-  "config": {
-    "sort-packages": true
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "6.7.x-dev"
-    }
-  }
+	"name": "ublaboo/datagrid",
+	"type": "library",
+	"description": "DataGrid for Nette Framework: filtering, sorting, pagination, tree view, table view, translator, etc",
+	"keywords": [
+		"datagrid",
+		"grid",
+		"nette",
+		"contributte",
+		"table",
+		"data"
+	],
+	"license": [
+		"MIT"
+	],
+	"authors": [
+		{
+			"name": "Pavel Janda",
+			"homepage": "https://paveljanda.com"
+		},
+		{
+			"name": "Milan Felix Šulc",
+			"homepage": "https://f3l1x.io"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Ublaboo\\DataGrid\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Ublaboo\\DataGrid\\Tests\\": "tests"
+		}
+	},
+	"require": {
+		"php": ">=7.2",
+		"contributte/application": "^0.5.0",
+		"nette/di": "^3.0.0",
+		"nette/forms": "^3.1.3",
+		"nette/utils": "^3.0.1",
+		"symfony/property-access": "^3.0.0 || ^4.0.0 || ^5.0.0"
+	},
+	"require-dev": {
+		"dibi/dibi": "^3.0.0 || ^4.0.0",
+		"doctrine/orm": "^2.6.12",
+		"elasticsearch/elasticsearch": "^7.1",
+		"gamee/php-code-checker-rules": "^2.0.21",
+		"mockery/mockery": "^1.3.3",
+		"nette/database": "^3.0.2",
+		"nette/tester": "^2.3.4",
+		"nextras/dbal": "^3.0.1 || ^4.0",
+		"nextras/orm": "^3.1.0 || ^4.0",
+		"ninjify/coding-standard": "^0.12.0",
+		"phpstan/phpstan-nette": "^0.12.14",
+		"tharos/leanmapper": "^3.4.2 || ^4.0.0",
+		"tracy/tracy": "^2.6.3"
+	},
+	"prefer-stable": true,
+	"minimum-stability": "dev",
+	"config": {
+		"sort-packages": true
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "6.7.x-dev"
+		}
+	}
 }
