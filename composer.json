@@ -43,6 +43,7 @@
 	},
 	"require-dev": {
 		"dibi/dibi": "^3.0.0 || ^4.0.0",
+		"doctrine/cache": "^1.11",
 		"doctrine/orm": "^2.6.12",
 		"elasticsearch/elasticsearch": "^7.1",
 		"gamee/php-code-checker-rules": "^2.0.21",
