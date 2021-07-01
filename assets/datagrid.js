@@ -280,11 +280,10 @@ document.addEventListener('change', function(e) {
 	var buttons, checked_inputs, counter, event, grid, i, ie, input, inputs, len, results, select, total;
 	grid = e.target.getAttribute('data-check');
 	if (grid) {
-		var selector = '.datagrid-' + grid + ' .row-group-actions';
 		checked_inputs = document.querySelectorAll('input[data-check-all-' + grid + ']:checked');
-		select = document.querySelector(selector + ' select[name="group_action[group_action]"]');
-		buttons = document.querySelectorAll(selector + ' input[type="submit"], ' + selector + ' button[type="submit"]');
-		counter = document.querySelector(selector + ' .datagrid-selected-rows-count');
+		select = document.querySelector('.datagrid-' + grid + ' select[name="group_action[group_action]"]');
+		buttons = document.querySelectorAll('.datagrid-' + grid + ' .row-group-actions *[type="submit"]');
+		counter = document.querySelector('.datagrid-' + grid + ' .datagrid-selected-rows-count');
 
 		if (checked_inputs.length) {
 			if (buttons) {
