@@ -145,7 +145,7 @@ $grid->setDefaultSort(['name' => 'DESC']);
 By default, once you reset the filter, default sort is applied. If you don't want to apply it after resetting the filter, pass FALSE as a second parameter to `DataGrid::setDefaultSort()`:
 
 ```php
-$grid->setDefaultSort('id' => 'DESC', FALSE);
+$grid->setDefaultSort(['id' => 'DESC'], FALSE);
 ```
 
 ### Multiple columns sort
