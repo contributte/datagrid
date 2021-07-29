@@ -3,13 +3,19 @@
  * @param Nette\Forms\Controls\SelectBox $input
  *}
 
-{if $outer}
-	<div class="row">
-		{label $input class => 'col-sm-3 control-label' /}
-		<div class="col-sm-9">
-			{input $input}
-		</div>
-	</div>
+ {if $outer}
+    <div class="row">
+        {label $input class => 'col-sm-3 control-label' /}
+        <div class="col-sm-9">
+            {input $input}
+            <span class="datagrid-filter-icon filter-select">
+                <i class="fal fa-ellipsis-v-alt"></i>
+            </span>
+        </div>
+    </div>
 {else}
-	{input $input}
+    {input $input}
+    <span class="datagrid-filter-icon filter-select">
+        <i class="fal fa-ellipsis-v-alt"></i>
+    </span>
 {/if}
