@@ -17,6 +17,71 @@
 <div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()} table-responsive{/block}" data-refresh-state="{link refreshState!}">
 	<div n:snippet="grid">
 	{snippetArea gridSnippets}
+		<div class="row mx-0">
+			<div class="col-12 px-0">
+				<div class="datagrid-toolbar px-0 my-2 d-inline-flex align-baseline" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
+			<span class="" n:if="$toolbarButtons">
+				{foreach $toolbarButtons as $toolbar_button}{$toolbar_button->renderButton()}{/foreach}
+			</span>
+
+					<span class="datagrid-exports" n:if="$exports" n:snippet="exports" n:block="exports">
+						{foreach $exports as $export}{$export->render()}{/foreach}
+					</span>
+					<div class="datagrid-settings d-flex ms-1" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
+						{if $inlineAdd}
+							{$inlineAdd->renderButtonAdd()}
+						{/if}
+
+						<button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+							<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
+						</button>
+
+						<!-- Modal -->
+						<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">Výběr sloupců</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<form class="row g-3">
+										<div class="form-check-{$control->name}" n:foreach="$columnsVisibility as $v_key => $visibility" class="list-group-item ">
+											{if $visibility['visible']}
+												<input class="form-check-input-{$control->name} ajax" type="checkbox" value="{$v_key}" id="checkbox_{$control->name}_{$v_key}" n:href="hideColumn!, column => $v_key" checked>
+												<label class="form-check-label" for="checkbox_{$control->name}_{$v_key}">
+													{include #column-header, column => $visibility['column']}
+												</label>
+											{else}
+												<input class="form-check-input-{$control->name} ajax" type="checkbox" value="{$v_key}" id="checkbox_{$control->name}_{$v_key}" n:href="showColumn!, column => $v_key">
+													{include #column-header, column => $visibility['column']}
+											{/if}
+										</div>
+<!--										-->
+<!--										<li class="list-group-item">-->
+<!--											<a n:href="showAllColumns!" class="ajax"><i n:block="icon-eye" class="{$iconPrefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>-->
+<!--										</li>-->
+<!--										<li n:if="$control->hasSomeColumnDefaultHide()" class="list-group-item">-->
+<!--											<a n:href="showDefaultColumns!" class="ajax"><i n:block="icon-repeat" class="{$iconPrefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>-->
+<!--										</li>-->
+										<div class="row mx-0 px-0 mt-3">
+											<div class="col-6 ps-0">
+												<button type="button" class="btn btn-secondary w-100 ajax" data-bs-dismiss="modal" onclick="getCheckValue('form-check-input-{$control->name|noescape}')">Uložit</button>
+
+<!--												<button type="button" class="btn btn-secondary w-100 ajax" data-bs-dismiss="modal" onclick="getCheckValue()" n:href="handleHideMultipleColumn!">Uložit</button>-->
+											</div>
+
+											<div class="col-6 pe-0">
+												<button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Zavřít</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		{form filter, class => 'ajax'}
 			{if $control->hasOuterFilterRendering()}
 				{block outer-filters}
@@ -549,3 +614,17 @@
 	{/if}
 {/define}
 
+<script type="text/javascript">
+	function getCheckValue(inputClassCheckBoxesName){
+		const checkedValue = [];
+		var inputElements = document.getElementsByClassName(inputClassCheckBoxesName);
+
+		for(var i=0; inputElements[i]; ++i){
+			  if(inputElements[i].checked){
+				   checkedValue[i] = inputElements[i].value;
+			  }
+		}
+		// alert(checkedValue);
+		return checkedValue;
+	};
+</script>

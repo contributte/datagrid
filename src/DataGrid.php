@@ -2373,6 +2373,30 @@ class DataGrid extends Control
 		$this->onRedraw();
 	}
 
+	public function handleHideMultipleColumn(array $multipleColumn): void
+	{
+		/**
+		 * Store info about hiding a column to session
+		 */
+		$columns = $this->getSessionData('_grid_hidden_columns');
+
+		if ($columns === [] || $columns === null) {
+			$columns = $multipleColumn;
+		} else {
+			foreach($multipleColumn as $column){
+				if(!in_array($column, $columns, true)){
+					array_push($columns, $column);
+				}
+			}
+		}
+
+		$this->saveSessionData('_grid_hidden_columns', $columns);
+		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
+
+		$this->redrawControl();
+
+		$this->onRedraw();
+	}
 
 	/**
 	 * @param mixed $__key
