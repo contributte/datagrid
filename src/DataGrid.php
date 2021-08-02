@@ -2373,24 +2373,34 @@ class DataGrid extends Control
 		$this->onRedraw();
 	}
 
-	public function handleHideMultipleColumn(array $multipleColumn): void
+	public function handleHideMultipleColumn(?string $columns = null): void
 	{
+		$columns = $this->getPresenter()->getParameter('columns');
+		$columns = json_decode($columns, true);
+
 		/**
 		 * Store info about hiding a column to session
 		 */
-		$columns = $this->getSessionData('_grid_hidden_columns');
+		$sessionHiddenColumns = $this->getSessionData('_grid_hidden_columns');
 
-		if ($columns === [] || $columns === null) {
-			$columns = $multipleColumn;
-		} else {
-			foreach($multipleColumn as $column){
-				if(!in_array($column, $columns, true)){
-					array_push($columns, $column);
+		foreach ($columns as $column => $params){
+			foreach ($params as $param){
+				if ($sessionHiddenColumns === [] || $sessionHiddenColumns === null) {
+					if($param == false){
+						$sessionHiddenColumns = array();
+						array_push($sessionHiddenColumns, $column);
+					}
+				} else {
+					if($param == false && !in_array($column, $sessionHiddenColumns, true)){
+						array_push($sessionHiddenColumns, $column);
+					}elseif($param == true && ($key = array_search($column, $sessionHiddenColumns)) !== false ){
+						unset($sessionHiddenColumns[$key]);
+					}
 				}
 			}
 		}
 
-		$this->saveSessionData('_grid_hidden_columns', $columns);
+		$this->saveSessionData('_grid_hidden_columns', $sessionHiddenColumns);
 		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 
 		$this->redrawControl();
