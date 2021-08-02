@@ -166,61 +166,64 @@
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementForRender('th', $key)}
 							{$th->startTag()|noescape}
+							<div class="row mx-0 py-0">
+								<div class="col-12 px-0 d-inline-flex align-center justify-content-between">
+									{var $col_header = 'col-' . $key . '-header'}
 
-								{var $col_header = 'col-' . $key . '-header'}
+									{**
+									 * Column header can be defined also with block {col-<key>-header}
+									 *}
 
-								{**
-								 * Column header can be defined also with block {col-<key>-header}
-								 *}
-
-								{ifset #$col_header}
-									{include #$col_header, column => $column}
-								{else}
-									{if $column->isSortable()}
-										<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" href="{link sort!, sort => $control->getSortNext($column)}" id="datagrid-sort-{$key}">
-                                            <div class="row mx-0">
-                                                <div class="col-12 px-0 d-inline-flex align-items-baseline">
-                                                    {if $column->isSortedBy()}
-                                                        {if $column->isSortAsc()}
-                                                            <i n:block="icon-sort-up" class="{$iconPrefix}caret-up"></i>
-                                                        {else}
-                                                            <i n:block="icon-sort-down" class="{$iconPrefix}caret-down"></i>
-                                                        {/if}
-                                                    {else}
-                                                        <i n:block="icon-sort" class="{$iconPrefix}sort"></i>
-                                                    {/if}
-                                                    <span class="ms-1">
-                                                        {include #column-header, column => $column}
-                                                    </span>
-                                                </div>
-                                            </div>
-										</a>
+									{ifset #$col_header}
+										{include #$col_header, column => $column}
 									{else}
-                                        <span class="">
-                                            {include #column-header, column => $column}
-                                        </span>
-		    						{/if}
-								{/ifset}
+										{if $column->isSortable()}
+											<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" href="{link sort!, sort => $control->getSortNext($column)}" id="datagrid-sort-{$key}">
+												<div class="row mx-0">
+													<div class="col-12 px-0 d-inline-flex align-items-baseline">
+														{if $column->isSortedBy()}
+															{if $column->isSortAsc()}
+																<i n:block="icon-sort-up" class="{$iconPrefix}caret-up"></i>
+															{else}
+																<i n:block="icon-sort-down" class="{$iconPrefix}caret-down"></i>
+															{/if}
+														{else}
+															<i n:block="icon-sort" class="{$iconPrefix}sort"></i>
+														{/if}
+														<span class="ms-1">
+															{include #column-header, column => $column}
+														</span>
+													</div>
+												</div>
+											</a>
+										{else}
+											<span class="">
+												{include #column-header, column => $column}
+											</span>
+										{/if}
+									{/ifset}
 
-								<div class="datagrid-column-header-additions">
-									<div class="btn-group column-settings-menu" n:if="$control->canHideColumns()">
-										<a class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">
-											<i n:block="icon-caret-down" class="{$iconPrefix}caret-down"></i>
-										</a>
-										<ul class="dropdown-menu dropdown-menu--grid">
-											<li>
-												<a n:href="hideColumn!, column => $key" class="ajax dropdown-item">
-													<i n:block="icon-eye-slash" class="{$iconPrefix}eye-slash"></i> {='ublaboo_datagrid.hide_column'|translate}</a>
-											</li>
-										</ul>
+									<div class="datagrid-column-header-additions">
+										<div class="btn-group column-settings-menu dropdown" n:if="$control->canHideColumns()">
+											<a class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	<!--											<i n:block="icon-caret-down" class="{$iconPrefix}caret-down"></i>-->
+											</a>
+											<ul class="dropdown-menu dropdown-menu-end dropdown-menu--grid">
+												<li>
+													<a n:href="hideColumn!, column => $key" class="ajax dropdown-item">
+														<i n:block="icon-eye-slash" class="{$iconPrefix}eye-slash"></i> {='ublaboo_datagrid.hide_column'|translate}</a>
+												</li>
+											</ul>
+										</div>
+
+										{if $control->hasColumnReset()}
+											<a data-datagrid-reset-filter-by-column="{$key}" n:href="resetColumnFilter!, key => $key" n:class="isset($filters[$key]) && $filters[$key]->isValueSet() ? '' : 'hidden', 'ajax'" title="{='ublaboo_datagrid.reset_filter'|translate}">
+												<i n:block="icon-remove" class="{$iconPrefix}remove"></i>
+											</a>
+										{/if}
 									</div>
-
-									{if $control->hasColumnReset()}
-										<a data-datagrid-reset-filter-by-column="{$key}" n:href="resetColumnFilter!, key => $key" n:class="isset($filters[$key]) && $filters[$key]->isValueSet() ? '' : 'hidden', 'ajax'" title="{='ublaboo_datagrid.reset_filter'|translate}">
-											<i n:block="icon-remove" class="{$iconPrefix}remove"></i>
-										</a>
-									{/if}
 								</div>
+							</div>
 							{$th->endTag()|noescape}
 						{/foreach}
 						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center">
