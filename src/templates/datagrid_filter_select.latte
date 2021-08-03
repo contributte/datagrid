@@ -14,8 +14,12 @@
         </div>
     </div>
 {else}
-    {input $input}
-    <span class="datagrid-filter-icon filter-select">
-        <i class="fal fa-ellipsis-v-alt"></i>
-    </span>
+	<div class="row mx-0">
+		<div class="col-12 d-inline-flex align-items-center px-0">
+			{input $input}
+			<span class="datagrid-filter-icon filter-select ms-1">
+				<i class="fal fa-ellipsis-v-alt"></i>
+			</span>
+		</div>
+	</div>
 {/if}
