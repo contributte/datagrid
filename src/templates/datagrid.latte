@@ -20,13 +20,22 @@
 		<div class="row mx-0">
 			<div class="col-12 px-0">
 				<div class="datagrid-toolbar px-0 my-2 d-inline-flex align-baseline" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
-					<span class="" n:if="$toolbarButtons">
-						{foreach $toolbarButtons as $toolbar_button}{$toolbar_button->renderButton()}{/foreach}
-					</span>
-
-					<span class="datagrid-exports" n:if="$exports" n:snippet="exports" n:block="exports">
-						{foreach $exports as $export}{$export->render()}{/foreach}
-					</span>
+					{if $toolbarButtons}
+                        {foreach $toolbarButtons as $toolbar_button}
+                            <span n:class="!$iterator->first? ms-1">
+                                {$toolbar_button->renderButton()}
+                            </span>
+                        {/foreach}
+                    {/if}
+                    {if $exports}
+                        <div class="datagrid-exports" n:snippet="exports" n:block="exports">
+                            {foreach $exports as $export}
+                                <span n:class="!$iterator->first? ms-1">
+                                    {$export->render()}
+                                </span>
+                            {/foreach}
+                        </div>
+                    {/if}
 					<div class="datagrid-settings d-flex ms-1" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
 						{if $inlineAdd}
 							{$inlineAdd->renderButtonAdd()}
