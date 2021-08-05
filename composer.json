@@ -62,6 +62,9 @@
 	"config": {
 		"sort-packages": true
 	},
+	"replace": {
+		"ublaboo/datagrid":"*"
+	},
 	"extra": {
 		"branch-alias": {
 			"dev-master": "6.10.x-dev"
