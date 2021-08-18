@@ -444,7 +444,7 @@
                                         <div class="col-per-page d-inline-flex">
                                             <a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{='ublaboo_datagrid.reset_filter'|translate}</a>
                                             {if $control->isPaginated()}
-                                                {input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'form-control input-sm form-control-sm form-select'}
+                                                {input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'input-sm form-select'}
                                                 {input $filter['perPage_submit'], class => 'datagrid-per-page-submit btn btn-md btn-light ms-1'}
                                             {/if}
                                         </div>
