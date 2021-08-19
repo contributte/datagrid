@@ -7,22 +7,22 @@
 {if $outer}
     <div class="row">
         {label $input class => 'col-sm-3 control-label' /}
-        <div class="col-sm-9 form-inline">
+        <div class="col-sm-9 form-inline d-inline-flex align-items-center">
             <div class="input-group input-group-sm datagrid-input-group-full-width">
                 {input $input}
-                <span class="datagrid-filter-icon filter-date">
-                        <i class="fal fa-calendar-alt"></i>
-                    </span>
+				<span class="datagrid-filter-icon filter-date ms-1">
+					<i class="fal fa-calendar-alt"></i>
+				</span>
             </div>
         </div>
     </div>
 {else}
     <div class="form-inline">
-        <div class="input-group input-group-sm">
+        <div class="input-group input-group-sm d-flex align-items-center">
             {input $input}
-            <span class="datagrid-filter-icon filter-date">
-                    <i class="fal fa-calendar-alt"></i>
-                </span>
+            <span class="datagrid-filter-icon filter-date ms-1">
+				<i class="fal fa-calendar-alt"></i>
+			</span>
         </div>
     </div>
 {/if}
