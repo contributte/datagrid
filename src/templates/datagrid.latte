@@ -335,7 +335,7 @@
 											{$td->endTag()|noescape}
 										{/foreach}
 										<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action">
-											 <div class="row mx-0 gx-2">
+											 <div class="row mx-0 gx-2 justify-content-center">
                                                 {foreach $actions as $key => $action}
                                                     {if $row->hasAction($key)}
                                                         {if $action->hasTemplate()}
