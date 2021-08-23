@@ -449,26 +449,26 @@
 							<tr n:block="pagination">
 								<td colspan="{$control->getColumnsCount()}" n:if="!$control->isTreeView()" class="row-grid-bottom">
 									<div class="row mx-0">
-									<div class="col-4 d-flex justify-content-start align-items-center ps-0">
-                                        <div class="col-items">
-                                            <small class="text-muted" n:if="$control->isPaginated()">
-                                                ({var $paginator = $control['paginator']->getPaginator()}
+										<div class="col-4 d-flex justify-content-start align-items-center ps-0">
+											<div class="col-items">
+												<small class="text-muted" n:if="$control->isPaginated()">
+													({var $paginator = $control['paginator']->getPaginator()}
 
-                                                {if $control->getPerPage() === 'all'}
-                                                    {='ublaboo_datagrid.items'|translate}: {='ublaboo_datagrid.all'|translate}
-                                                {else}
-                                                    {='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : ($paginator->getItemCount() > 0 ? 1 : 0)} - {sizeof($rows) + $paginator->getOffset()}
-                                                    {='ublaboo_datagrid.from'|translate} {$paginator->getItemCount()}
-                                                {/if})
-                                            </small>
-                                        </div>
-									</div>
-									<div class="col-4 d-flex justify-content-center align-items-center">
-                                        <div class="col-pagination text-center">
-                                            {control paginator}
-                                        </div>
-									</div>
-									<div class="col-4 d-flex justify-content-end pe-0">
+													{if $control->getPerPage() === 'all'}
+														{='ublaboo_datagrid.items'|translate}: {='ublaboo_datagrid.all'|translate}
+													{else}
+														{='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : ($paginator->getItemCount() > 0 ? 1 : 0)} - {sizeof($rows) + $paginator->getOffset()}
+														{='ublaboo_datagrid.from'|translate} {$paginator->getItemCount()}
+													{/if})
+												</small>
+											</div>
+										</div>
+										<div class="col-4 d-flex justify-content-center align-items-center">
+											<div class="col-pagination text-center">
+												{control paginator}
+											</div>
+										</div>
+										<div class="col-4 d-flex justify-content-end pe-0">
                                         <div class="row mx-0">
 											<div class="col-12 d-flex align-items-center mb-1 px-0">
 												<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter w-100">{='ublaboo_datagrid.reset_filter'|translate}</a>
@@ -482,6 +482,7 @@
 												</div>
                                         	</div>
 										</div>
+									</div>
 									</div>
 								</td>
 							</tr>
