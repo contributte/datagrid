@@ -67,20 +67,20 @@
 												</label>
 											{/if}
 										</div>
-										<div class="row my-2{if $control->hasSomeColumnDefaultHide()} {else} mx-0 px-0{/if}">
-											<div class="px-0{if $control->hasSomeColumnDefaultHide()} col-6 {else} col-12 {/if}">
-												<a n:href="showAllColumns!" class="btn btn-sm btn-primary w-100 ajax" data-bs-dismiss="modal"><i n:block="icon-eye" class="{$iconPrefix}eye" ></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
+										<div class="row mt-2 mx-0 px-0">
+											<div class="{if $control->hasSomeColumnDefaultHide()}col-6 ps-0 pe-1 {else}col-12 px-0 {/if}">
+												<a n:href="showAllColumns!" class="btn btn-sm btn-primary w-100 ajax" data-bs-dismiss="modal"><i n:block="icon-eye" class="{$iconPrefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
 											</div>
-											<div class="col-6" n:if="$control->hasSomeColumnDefaultHide()">
-												<a n:href="showDefaultColumns!" class="ajax"><i n:block="icon-repeat" class="{$iconPrefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
+											<div class="col-6 ps-1 pe-0" n:if="$control->hasSomeColumnDefaultHide()">
+												<a n:href="showDefaultColumns!" class="btn btn-sm btn-primary w-100 btn ajax" data-bs-dismiss="modal"><i n:block="icon-repeat" class="{$iconPrefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
 											</div>
 										</div>
 										<div class="row mx-0 px-0 mt-2">
-											<div class="col-6 ps-0 pe-2">
+											<div class="col-6 ps-0 pe-1">
 												<button type="button" class="btn btn-secondary w-100 ajax" data-bs-dismiss="modal" onclick="getCheckValue('form-check-input-{$control->name|noescape}')">Uložit</button>
 											</div>
 
-											<div class="col-6 pe-0 ps-2">
+											<div class="col-6 pe-0 ps-1">
 												<button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Zavřít</button>
 											</div>
 										</div>
