@@ -147,23 +147,34 @@
 						<th colspan="{$control->getColumnsCount()}" class="ublaboo-datagrid-th-form-inline">
 							{if $hasGroupActions}
 								{block group_actions}
-									<span class="datagrid-group-action-title">
-										{='ublaboo_datagrid.group_actions'|translate}:
-									</span>
-									{foreach $filter['group_action']->getControls() as $form_control}
-										{if $form_control instanceof \Nette\Forms\Controls\SubmitButton && $form_control->getName() === 'submit'}
-											{input $form_control, class => 'btn btn-primary btn-sm', disabled => TRUE}
-										{elseif $form_control instanceof \Nette\Forms\Controls\SubmitButton}
-											{input $form_control, disabled => TRUE}
-										{elseif $form_control->getName() == 'group_action'}
-											{input $form_control, class => 'form-control input-sm form-control-sm', disabled => TRUE}
-										{else}
-											{input $form_control}
-										{/if}
-									{/foreach}
-									{if $control->shouldShowSelectedRowsCount()}
-										<span class="datagrid-selected-rows-count"></span>
-									{/if}
+                                    <div class="row mx-0">
+                                        <div class="col-12 px-0">
+                                            <div class="row mx-0">
+                                                <div class="col-auto px-0 d-flex align-items-center">
+                                                    <span class="datagrid-group-action-title">
+                                                        {='ublaboo_datagrid.group_actions'|translate}
+                                                    </span>
+
+                                                    {if $control->shouldShowSelectedRowsCount()}
+                                                        <span class="datagrid-selected-rows-count text-muted ms-1"></span>:
+                                                    {/if}
+                                                </div>
+                                                <div class="col-auto d-inline-flex">
+                                                    {foreach $filter['group_action']->getControls() as $form_control}
+                                                        {if $form_control instanceof \Nette\Forms\Controls\SubmitButton && $form_control->getName() === 'submit'}
+                                                            {input $form_control, class => 'btn btn-primary btn-sm ms-1', disabled => TRUE}
+                                                        {elseif $form_control instanceof \Nette\Forms\Controls\SubmitButton}
+                                                            {input $form_control, disabled => TRUE}
+                                                        {elseif $form_control->getName() == 'group_action'}
+                                                            {input $form_control, class => 'form-select form-select-sm', disabled => TRUE}
+                                                        {else}
+                                                            {input $form_control}
+                                                        {/if}
+                                                    {/foreach}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 								{/block}
 							{/if}
 						</th>
