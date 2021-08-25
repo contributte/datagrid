@@ -633,6 +633,7 @@ dataGridRegisterExtension('datargid.item_detail', {
 			grid_fullname = payload._datagrid_name;
 			row_detail = $('.item-detail-' + grid_fullname + '-id-' + id);
 			row_detail.toggleClass('toggled');
+			row_detail.find('.item-detail-content').css('display', 'none');
 			return row_detail.find('.item-detail-content').slideToggle('fast');
 		}
 	}
