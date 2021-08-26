@@ -47,7 +47,7 @@ class DataGridPaginator extends Control
 
 	public function __construct(
 		ITranslator $translator,
-		string $iconPrefix = 'fa fa-'
+		string $iconPrefix = 'fa fa-fw fa-'
 	)
 	{
 		$this->translator = $translator;
