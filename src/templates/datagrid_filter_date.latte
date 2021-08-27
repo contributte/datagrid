@@ -10,19 +10,19 @@
         <div class="col-sm-9 form-inline d-inline-flex align-items-center">
             <div class="input-group input-group-sm datagrid-input-group-full-width">
                 {input $input}
-				<span class="datagrid-filter-icon filter-date ms-1">
-					<i class="fal fa-calendar-alt"></i>
-				</span>
             </div>
+			<span class="datagrid-filter-icon filter-date ms-1">
+				<i class="fal fa-calendar-alt"></i>
+			</span>
         </div>
     </div>
 {else}
     <div class="form-inline">
         <div class="input-group input-group-sm d-flex align-items-center">
-            {input $input}
-            <span class="datagrid-filter-icon filter-date ms-1">
-				<i class="fal fa-calendar-alt"></i>
-			</span>
+            {input $input, class => 'form-control form-control-sm rounded-end' }
         </div>
+		 <span class="datagrid-filter-icon filter-date ms-1">
+			<i class="fal fa-calendar-alt"></i>
+		</span>
     </div>
 {/if}

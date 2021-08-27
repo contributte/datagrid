@@ -346,7 +346,7 @@
 											{$td->endTag()|noescape}
 										{/foreach}
 										<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action">
-											 <div class="row g-1 justify-content-center">
+											 <div class="row g-1 mx-0 justify-content-center">
                                                 {foreach $actions as $key => $action}
                                                     {if $row->hasAction($key)}
                                                         {if $action->hasTemplate()}
@@ -476,7 +476,7 @@
 											<div class="col-12 px-0">
 												<div class="col-per-page d-inline-flex w-100">
 													{if $control->isPaginated()}
-														{input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'input-sm form-select'}
+														{input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'form-select'}
 														{input $filter['perPage_submit'], class => 'datagrid-per-page-submit btn btn-md btn-light ms-1'}
 													{/if}
 												</div>

@@ -27,7 +27,7 @@ abstract class GroupAction
 	/**
 	 * @var string
 	 */
-	protected $class = 'form-control input-sm form-control-sm';
+	protected $class = 'form-control form-control-sm';
 
 	/**
 	 * @var array

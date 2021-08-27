@@ -29,13 +29,13 @@
     </div>
 {else}
     <div class="datagrid-col-filter-date-range form-inline">
-        <div class="input-group input-group-sm align-items-center">
+		<div class="input-group input-group-sm align-items-center">
             {input $container['from']}
-            <div class="input-group-text datagrid-col-filter-datte-range-delimiter">-</div>
+            <div class="input-group-text datagrid-col-filter-datte-range-delimiter rounded-end">-</div>
             {input $container['to']}
-            <span class="datagrid-filter-icon filter-date-range ms-1">
-                <i class="fal fa-calendar-alt"></i>
-            </span>
         </div>
+         <span class="datagrid-filter-icon filter-date-range ms-1">
+            <i class="fal fa-calendar-alt"></i>
+        </span>
     </div>
 {/if}
