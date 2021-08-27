@@ -28,11 +28,11 @@
         </div>
     </div>
 {else}
-    <div class="datagrid-col-filter-date-range form-inline">
+    <div class="datagrid-col-filter-date-range d-inline-flex align-items-center w-100">
 		<div class="input-group input-group-sm align-items-center">
             {input $container['from']}
-            <div class="input-group-text datagrid-col-filter-datte-range-delimiter rounded-end">-</div>
-            {input $container['to']}
+            <div class="input-group-text datagrid-col-filter-datte-range-delimiter">-</div>
+            {input $container['to'], class => 'form-control form-control-sm rounded-end'}
         </div>
          <span class="datagrid-filter-icon filter-date-range ms-1">
             <i class="fal fa-calendar-alt"></i>
