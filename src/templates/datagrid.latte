@@ -14,6 +14,8 @@
  * @param InlineEdit|null $inlineAdd   Inline add data
  *}
 
+{varType Ublaboo\DataGrid\DataGrid $control}
+
 <div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()} table-responsive{/block}" data-refresh-state="{link refreshState!}">
 	<div n:snippet="grid">
 	{snippetArea gridSnippets}
@@ -476,9 +478,11 @@
 											<div class="col-12 px-0">
 												<div class="col-per-page d-inline-flex w-100">
 													{if $control->isPaginated()}
-														{input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'form-select'}
-														{input $filter['perPage_submit'], class => 'datagrid-per-page-submit btn btn-md btn-light ms-1'}
-													{/if}
+														{input $filter['perPage'], data-autosubmit-per-page => $control->hasAutoSubmit(), class => 'input-sm form-select'}
+                                                        {if !$control->hasAutoSubmit()}
+                                                            {input $filter['perPage_submit'], class => 'datagrid-per-page-submit btn btn-md btn-light ms-1'}
+													    {/if}
+                                                    {/if}
 												</div>
                                         	</div>
 										</div>
