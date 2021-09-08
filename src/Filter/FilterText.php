@@ -35,6 +35,11 @@ class FilterText extends Filter
 	 */
 	protected $columns;
 
+	/**
+	 * @var bool
+	 */
+	protected $idFilter = false;
+
 
 	/**
 	 * @param array|string[] $columns
@@ -103,5 +108,19 @@ class FilterText extends Filter
 	public function hasSplitWordsSearch(): bool
 	{
 		return $this->splitWordsSearch;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isIdFilter(): bool {
+		return $this->idFilter;
+	}
+
+	/**
+	 * @param bool $idFilter
+	 */
+	public function setIdFilter( bool $idFilter = true ): void {
+		$this->idFilter = $idFilter;
 	}
 }

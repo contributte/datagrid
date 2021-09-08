@@ -22,7 +22,7 @@ class FilterSearchSelect extends FilterSelect
 	 * @var array
 	 */
 	protected $attributes = [
-		'class' => ['form-control', 'input-sm', 'form-control-sm', "select2-show-search"],
+		'class' => ['form-control', 'input-sm', 'form-control-sm', "select2-show-search","select2"],
 		'data-selected-text-format' => ['count'],
 	];
 

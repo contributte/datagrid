@@ -30,6 +30,8 @@ class FilterDateSelect extends FilterRange implements IFilterDate
 
 	protected $options = [];
 
+	protected $modifyClone = "last day of this month";
+
 
 	public function __construct($grid, $key, $name, $column, $options)
 	{
@@ -41,7 +43,7 @@ class FilterDateSelect extends FilterRange implements IFilterDate
 	public function getCondition():array {
 		$date = $this->getValue();
 		$start = new Nette\Utils\DateTime($date["date"]);
-		$end = $start->modifyClone("last day of this month");
+		$end = $start->modifyClone($this->modifyClone);
 
 		return [
 			$this->column => [
@@ -59,10 +61,12 @@ class FilterDateSelect extends FilterRange implements IFilterDate
 	{
 		$container = $container->addContainer($this->key);
 		$container->addSelect("date",$this->name,$this->options)->setPrompt("-- vyberte --");
-		$this->addAttributes($container["date"]);
+
 		if ($this->grid->hasAutoSubmit()) {
-			$container['date']->setAttribute('data-autosubmit-change', true);
+			$container['date']->setHtmlAttribute('data-autosubmit-change', true);
 		}
+		//bdump($container["date"]);
+		$this->addAttributes($container["date"]);
 	}
 
 
@@ -98,4 +102,15 @@ class FilterDateSelect extends FilterRange implements IFilterDate
 	{
 		return $this->format[1];
 	}
+
+	/**
+	 * @param string $modifyClone
+	 *
+	 * @return FilterDateSelect
+	 */
+	public function setModifyClone( string $modifyClone ): FilterDateSelect {
+		$this->modifyClone = $modifyClone;
+
+		return $this;
+}
 }

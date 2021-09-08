@@ -98,6 +98,14 @@ class Action extends Column
 
 		$this->href = $href;
 		$this->params = $params;
+		//dumpe(method_exists( $this->grid->getPresenterIfExists(), "isAllowed"));
+		/*if(($presenter = $this->grid->getPresenterIfExists()) !== null){
+			if(method_exists($presenter, "isAllowed")) {
+				$this->aclConditionCallback = function ( $key ) use ( $presenter ) {
+					return $presenter->isAllowed( $key );
+				};
+			}
+		}*/
 	}
 
 

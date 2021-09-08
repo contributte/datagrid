@@ -67,6 +67,15 @@ class ColumnsSummary
 		}
 	}
 
+	public function removeSummary(array $keys): self {
+		foreach($keys as $key){
+			if(isset($this->summary[$key])){
+				unset($this->summary[$key]);
+				unset($this->format[$key]);
+			}
+		}
+		return $this;
+	}
 
 	/**
 	 * Get value from column using Row::getValue() or custom callback

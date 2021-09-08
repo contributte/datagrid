@@ -26,6 +26,8 @@ class SimpleTranslator implements ITranslator
 		'ublaboo_datagrid.edit' => 'Edit',
 		'ublaboo_datagrid.show_all_columns' => 'Show all columns',
 		'ublaboo_datagrid.show_default_columns' => 'Show default columns',
+		'ublaboo_datagrid.show_user_columns' => 'Show user columns',
+		'ublaboo_datagrid.save_user_columns' => 'Save user columns',
 		'ublaboo_datagrid.hide_column' => 'Hide column',
 		'ublaboo_datagrid.action' => 'Action',
 		'ublaboo_datagrid.previous' => 'Previous',

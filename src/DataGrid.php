@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ublaboo\DataGrid;
 
 use InvalidArgumentException;
+use IPub\FlashMessages\Entities\Message;
 use Nette;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
@@ -41,6 +42,7 @@ use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentExcept
 use Ublaboo\DataGrid\Export\Export;
 use Ublaboo\DataGrid\Export\ExportCsv;
 use Ublaboo\DataGrid\Filter\Filter;
+use Ublaboo\DataGrid\Filter\FilterAjaxSearchSelect;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterDateSelect;
@@ -57,6 +59,7 @@ use Ublaboo\DataGrid\InlineEdit\InlineAdd;
 use Ublaboo\DataGrid\InlineEdit\InlineEdit;
 use Ublaboo\DataGrid\Localization\SimpleTranslator;
 use Ublaboo\DataGrid\Toolbar\ToolbarButton;
+use Ublaboo\DataGrid\Traits\TRenderCondition;
 use Ublaboo\DataGrid\Utils\ArraysHelper;
 use Ublaboo\DataGrid\Utils\ItemDetailForm;
 use Ublaboo\DataGrid\Utils\Sorting;
@@ -67,7 +70,7 @@ use UnexpectedValueException;
  * @method onRender(DataGrid $dataGrid)
  * @method onColumnAdd(string $key, Column $column)
  * @method onExport(DataGrid $dataGrid)
- * @method onFiltersAssembled(array<Filter> $filters)
+ * @method onFiltersAssembled(Filter[] $filters)
  */
 class DataGrid extends Control
 {
@@ -223,6 +226,7 @@ class DataGrid extends Control
 	 */
 	protected $filters = [];
 
+	protected $filtersAjax = [];
 	/**
 	 * @var array<Export>
 	 */
@@ -426,6 +430,25 @@ class DataGrid extends Control
 	 */
 	private $componentFullName;
 
+	/**
+	 * @var UIStorage|null
+	 */
+	protected $uiStorage;
+
+	/** @var callable|null */
+	protected $aclConditionCallback;
+
+	/**
+	 * @param callable|null $aclConditionCallback
+	 *
+	 * @return DataGrid
+	 */
+	public function setAclConditionCallback( ?callable $aclConditionCallback ): self {
+		$this->aclConditionCallback = $aclConditionCallback;
+
+		return $this;
+	}
+
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
@@ -511,6 +534,7 @@ class DataGrid extends Control
 		/**
 		 * Invoke possible events
 		 */
+		//bdump($this->onRender);
 		$this->onRender($this);
 
 		/**
@@ -555,7 +579,8 @@ class DataGrid extends Control
 		}
 
 		$template->rows = $rows;
-
+		//bdump($this->filters,"render Filters");
+		//bdump($this->filter,"render filter values");
 		$template->columns = $this->getColumns();
 		$template->actions = $this->actions;
 		$template->exports = $this->exports;
@@ -1007,6 +1032,10 @@ s	 */
 	public function removeColumn(string $key): self
 	{
 		unset($this->columnsVisibility[$key], $this->columns[$key]);
+        if (($columnsSummary = $this->getColumnsSummary()) !== null){
+        	$columnsSummary->removeSummary([$key]);
+        }
+		//$this->getColumnsSummary()->removeSummary([$key]);
 
 		return $this;
 	}
@@ -1175,6 +1204,14 @@ s	 */
 		return $this->filters[$key] = new FilterMultiSelect($this, $key, $name, $options, $column);
 	}
 
+	public function addFilterAjaxSearchSelect(string $key, string $name,string $column, array $metadata, ?callable $selectedCallback = null){
+		$column = $column ?? $key;
+
+		$this->addFilterCheck($key);
+		$this->filtersAjax[]=$key;
+		return $this->filters[$key] = new FilterAjaxSearchSelect($this, $key, $name, $column, $metadata, $selectedCallback);
+	}
+
 	public function addFilterSearchSelect(
 		string $key,
 		string $name,
@@ -1278,6 +1315,7 @@ s	 */
 	}
 
 
+
 	/**
 	 * Fill array of Filter\Filter[] with values from $this->filter persistent parameter
 	 * Fill array of Column\Column[] with values from $this->sort   persistent parameter
@@ -1291,6 +1329,15 @@ s	 */
 				$this->deleteSessionData($key);
 
 				continue;
+			}
+
+			if($this->filters[$key] instanceof FilterAjaxSearchSelect /*&& !$this->getPresenterInstance()->isAjax()*/){
+
+				$selectedCallback = $this->filters[$key]->getSelectedCallback();
+				$items = $selectedCallback($this->filter[$key]);
+				if(!empty($items)) {
+					$this->filters[ $key ]->setItems( $items )->setValue( $this->filter[ $key ] );
+				}
 			}
 
 			if (is_array($value) || $value instanceof Traversable) {
@@ -1331,6 +1378,10 @@ s	 */
 		}
 
 		return $this->filters[$key];
+	}
+
+	public function getFilters() : array {
+		return  $this->filter;
 	}
 
 
@@ -1574,8 +1625,19 @@ s	 */
 		if ($this->snippetsSet) {
 			return;
 		}
+		// Nette Forms 3.1 BC BREAK
+		//$values = (array) $form->getValues();
+		$values = (array) $form->getUnsafeValues(null);
 
-		$values = (array) $form->getValues();
+		foreach($this->filtersAjax as $key){
+			if(isset($form->getHttpData()["filter"][$key])) {
+				$values["filter"][$key] = $form->getHttpData()["filter"][$key];
+			} else {
+				$values["filter"][$key] = "";
+				unset($this->filter[$key]);
+				$this->deleteSessionData($key);
+			}
+		}
 
 		if ($this->getPresenterInstance()->isAjax()) {
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
@@ -1780,9 +1842,12 @@ s	 */
 	 */
 	public function findSessionValues(): void
 	{
+		//($this->filter, "find session values");
+		//bdump($this->getSessionData(),"find sessiion");
 		if (!ArraysHelper::testEmpty($this->filter) || ($this->page !== 1) || $this->sort !== []) {
 			return;
 		}
+
 
 		if (!$this->rememberState) {
 			return;
@@ -1961,7 +2026,7 @@ s	 */
 		return $this->toolbarButtons[$href] = new ToolbarButton($this, $href, $text, $params);
 	}
 
-	public function addModalToolbarButton(string $href, string $text = "", string $target, string $form, ?callable $data = null) : ToolbarButton
+	public function addModalToolbarButton(string $href, string $text, string $target, string $form, ?callable $data = null) : ToolbarButton
 	{
 		if (isset($this->toolbarButtons[$href])) {
 			throw new DataGridException(
@@ -2166,7 +2231,9 @@ s	 */
 	{
 		$this->deleteSessionData($key);
 		unset($this->filter[$key]);
-
+		//bdump($key);
+		//bdump($this->filter);
+		//$this->assembleFilters();
 		$this->reloadTheWholeGrid();
 	}
 
@@ -2205,6 +2272,39 @@ s	 */
 		$this->getPresenterInstance()->payload->non_empty_filters = $non_empty_filters;
 	}
 
+	/**
+	 * @param bool $filtered
+	 * @param array $sort
+	 *
+	 * @return Row[]
+	 * @throws DataGridException
+	 */
+	public function prepareDataForExport($filtered = false, $sort = []) : array {
+		$this->onExport($this);
+		if ($filtered) {
+			$sort = $this->sort;
+			$filter = $this->assembleFilters();
+		} else {
+			$sort = empty($sort) ? [$this->primaryKey => 'ASC'] : $sort;
+			$filter = [];
+		}
+		if ($this->dataModel === null) {
+			throw new DataGridException('You have to set a data source first.');
+		}
+
+		$rows = [];
+
+		$items = $this->dataModel->filterData(
+			null,
+			$this->createSorting($sort, $this->sortCallback),
+			$filter
+		);
+
+		foreach ($items as $item) {
+			$rows[] = new Row($this, $item, $this->getPrimaryKey());
+		}
+		return $rows;
+	}
 
 	/**
 	 * @param mixed $id
@@ -2450,6 +2550,36 @@ s	 */
 		$this->onRedraw();
 	}
 
+	public function handleSaveUserColumns(): void {
+		if($this->uiStorage !== null){
+			$this->uiStorage->saveState($this->getName(), "user_columns", $this->getSessionData('_grid_hidden_columns'));
+			if($this->presenter instanceof Presenter){
+				$this->presenter->flashMessage("Zoznam stĺpcov bol uložený.", Message::LEVEL_INFO);
+			}
+			$this->redrawControl();
+
+			$this->onRedraw();
+		}
+	}
+
+	public function handleShowUserColumns() : void {
+		if($this->uiStorage !== null) {
+			$user_columns = $this->uiStorage->getState($this->getName(), "user_columns");
+
+			if(empty($user_columns)){
+				$this->deleteSessionData('_grid_hidden_columns');
+				$this->saveSessionData('_grid_hidden_columns_manipulated', false);
+			} else {
+				$this->saveSessionData("_grid_hidden_columns", $user_columns);
+				$this->saveSessionData('_grid_hidden_columns_manipulated', true);
+			}
+
+			$this->redrawControl();
+
+			$this->onRedraw();
+		}
+	}
+
 
 	public function handleShowColumn(string $column): void
 	{
@@ -2466,6 +2596,7 @@ s	 */
 		$this->saveSessionData('_grid_hidden_columns', $columns);
 		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 
+		$this->template->showColumnsSelect = true;
 		$this->redrawControl();
 
 		$this->onRedraw();
@@ -2488,6 +2619,7 @@ s	 */
 		$this->saveSessionData('_grid_hidden_columns', $columns);
 		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 
+		$this->template->showColumnsSelect = true;
 		$this->redrawControl();
 
 		$this->onRedraw();
@@ -2752,6 +2884,15 @@ s	 */
 				? []
 				: $defaultValue;
 		}
+		if($this->uiStorage !== null){
+			if($key !== null){
+				return $this->uiStorage->getState($this->getName(), $key, $defaultValue);
+			}
+			foreach($this->uiStorage->getState($this->getName()) as $k => $v){
+				$this->gridSession[$k] = $v;
+			}
+			return $this->gridSession;
+		}
 
 		return ($key !== null ? $this->gridSession[$key] : $this->gridSession) ?: $defaultValue;
 	}
@@ -2764,6 +2905,9 @@ s	 */
 	{
 		if ($this->rememberState) {
 			$this->gridSession[$key] = $value;
+			if($this->uiStorage !== null){
+				$this->uiStorage->saveState($this->getName(), $key, $this->gridSession[$key]);
+			}
 		}
 	}
 
@@ -2771,6 +2915,9 @@ s	 */
 	public function deleteSessionData(string $key): void
 	{
 		unset($this->gridSession[$key]);
+		if($this->uiStorage !== null){
+			$this->uiStorage->flushState($this->getName(), $key);
+		}
 	}
 
 
@@ -3185,13 +3332,17 @@ s	 */
 
 
 	/**
+	 * @param bool $visible
+	 *
 	 * @return array<Column>
 	 * @internal
 	 */
-	public function getColumns(): array
+	public function getColumns($visible = true): array
 	{
 		$return = $this->columns;
-
+		if(!$visible){
+			return  $return;
+		}
 		try {
 			$this->getParentComponent();
 
@@ -3345,6 +3496,27 @@ s	 */
 		}
 
 		return $presenter;
+	}
+
+	/**
+	 * @return UIStorage|null
+	 */
+	public function getUiStorage(): ?UIStorage {
+		return $this->uiStorage;
+	}
+
+	/**
+	 * @param UIStorage|null $uiStorage
+	 */
+	public function setUiStorage( ?UIStorage $uiStorage ): void {
+		$this->uiStorage = $uiStorage;
+	}
+
+	/**
+	 * @return callable|null
+	 */
+	public function getAclConditionCallback(): ?callable {
+		return $this->aclConditionCallback;
 	}
 
 }

@@ -3,7 +3,7 @@
  * @param Nette\Forms\Container $input
  * @param string                $icon_prefix       Icon prefix (fa fa-)
  *}
-
+{*php dump($input["date"])*}
 {var $container = $input}
 {if $outer}
 	<div>
@@ -11,6 +11,6 @@
 	</div>
 {else}
 	<div>
-		{input $container['date']}
+		{input $container['date']} {* , class=>"select2 form-control form-control-sm"*}
 	</div>
 {/if}

@@ -216,27 +216,35 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$bigOrArgs = [];
 		$condition = $filter->getCondition();
 
+		//bdump($condition);
+
 		foreach ($condition as $column => $value) {
-			$like = '(';
-			$args = [];
-
-			if ($filter->isExactSearch()) {
-				$like .= "$column = ? OR ";
-				$args[] = "$value";
+			if($filter->isIdFilter()){
+				$or[] = $column." IN ?";
+				$args[] = array_map("trim", explode(",", $value));
 			} else {
-				$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
+				$like = '(';
+				$args = [];
 
-				foreach ($words as $word) {
-					$like .= "$column LIKE ? OR ";
-					$args[] = "%$word%";
+				if ( $filter->isExactSearch() ) {
+					$like   .= "$column = ? OR ";
+					$args[] = "$value";
+				} else {
+					$words = $filter->hasSplitWordsSearch() === false ? [ $value ] : explode( ' ', $value );
+
+					foreach ( $words as $word ) {
+						$like   .= "$column LIKE ? OR ";
+						$args[] = "%$word%";
+					}
 				}
+
+
+				$like = substr( $like, 0, strlen( $like ) - 4 ) . ')';
+
+				$or[]      = $like;
+				$bigOr     .= "$like OR ";
+				$bigOrArgs = array_merge( $bigOrArgs, $args );
 			}
-
-			$like = substr($like, 0, strlen($like) - 4) . ')';
-
-			$or[] = $like;
-			$bigOr .= "$like OR ";
-			$bigOrArgs = array_merge($bigOrArgs, $args);
 		}
 
 		if (sizeof($or) > 1) {
@@ -247,7 +255,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			call_user_func_array([$this->dataSource, 'where'], $query);
 		} else {
 			$query = array_merge($or, $args);
-
+			//bdump($query);
 			call_user_func_array([$this->dataSource, 'where'], $query);
 		}
 	}

@@ -70,7 +70,7 @@
 			<table class="{block table-class}table table-hover table-striped table-bordered table-sm{/block}" n:snippet="table" n:block="data">
 				<thead n:block="header">
 					<tr class="row-group-actions" n:if="$hasGroupActions || $exports || $toolbarButtons || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
-						<th colspan="{$control->getColumnsCount()}" class="ublaboo-datagrid-th-form-inline">
+						<th colspan="{$control->isSortable() ? $control->getColumnsCount() + 1 : $control->getColumnsCount()}" class="ublaboo-datagrid-th-form-inline">
 							{if $hasGroupActions}
 								{block group_actions}
 									{='ublaboo_datagrid.group_actions'|translate}:
@@ -103,19 +103,19 @@
 										{$inlineAdd->renderButtonAdd()}
 									{/if}
 
-									<div class="btn-group">
+									<div class="btn-group {ifset $showColumnsSelect}show{/ifset}">
 										<button type="button" class="btn btn-xs btn-default btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
 											<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
 										</button>
-										<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
+										<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid {ifset $showColumnsSelect}show{/ifset}">
 											<li n:foreach="$columnsVisibility as $v_key => $visibility">
 												{if $visibility['visible']}
-													<a n:href="hideColumn!, column => $v_key" class="ajax dropdown-item">
+													<a n:href="hideColumn!, column => $v_key" data-spinner="spinner" class="ajax dropdown-item">
 														<i n:block="icon-checked" class="{$iconPrefix}check-square"></i>
 														{include #column-header, column => $visibility['column']}
 													</a>
 												{else}
-													<a n:href="showColumn!, column => $v_key" class="ajax dropdown-item">
+													<a n:href="showColumn!, column => $v_key" data-spinner="spinner" class="ajax dropdown-item">
 														<i n:block="icon-unchecked" class="{$iconPrefix}square"></i>
 														{include #column-header, column => $visibility['column']}
 													</a>
@@ -123,11 +123,20 @@
 											</li>
 											<li role="separator" class="divider dropdown-divider"></li>
 											<li>
-												<a n:href="showAllColumns!" class="ajax dropdown-item"><i n:block="icon-eye" class="{$iconPrefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
+												<a n:href="showAllColumns!" class="ajax dropdown-item" data-spinner="spinner"><i n:block="icon-eye" class="{$iconPrefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
 											</li>
+                                            <li n:if="$control->getUiStorage() !== null">
+                                                <a n:href="showUserColumns!" class="ajax dropdown-item" data-spinner="spinner"><i class="{$iconPrefix}user-tie"></i> {='ublaboo_datagrid.show_user_columns'|translate}</a>
+                                            </li>
 											<li n:if="$control->hasSomeColumnDefaultHide()">
-												<a n:href="showDefaultColumns!" class="ajax dropdown-item"><i n:block="icon-repeat" class="{$iconPrefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
+												<a n:href="showDefaultColumns!" class="ajax dropdown-item" data-spinner="spinner"><i n:block="icon-repeat" class="{$iconPrefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
 											</li>
+                                            {if $control->getUiStorage() !== null}
+                                                <li role="separator" class="divider dropdown-divider"></li>
+                                                <li>
+                                                    <a n:href="saveUserColumns!" class="ajax dropdown-item tx-danger" data-spinner="spinner"><i class="{$iconPrefix}users-cog"></i> {='ublaboo_datagrid.save_user_columns'|translate}</a>
+                                                </li>
+                                            {/if}
 										</ul>
 									</div>
 								</div>
@@ -138,6 +147,9 @@
 						<th n:snippet="thead-group-action" n:if="$hasGroupActions" n:attr="'rowspan=2' => !empty($filters) && !$control->hasOuterFilterRendering()" class="col-checkbox">
 							<input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
 						</th>
+                        <th n:if="$control->isSortable()" class="text-center">
+                            #
+                        </th>
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementForRender('th', $key)}
 							{$th->startTag()|noescape}
@@ -189,7 +201,7 @@
 								</div>
 							{$th->endTag()|noescape}
 						{/foreach}
-						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center">
+						<th n:if="$actions || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center">
 							{='ublaboo_datagrid.action'|translate}
 						</th>
 					</tr>
@@ -235,7 +247,6 @@
 						{if $columnsSummary && $columnsSummary->getPositionTop()}
 							{include columnSummary}
 						{/if}
-
 						{foreach $rows as $row}
 							{var $item = $row->getItem()}
 
@@ -245,7 +256,6 @@
 
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:attr="$row->getControl()->attrs">
 										<td n:if="$hasGroupActions" class="col-checkbox"></td>
-
 										{foreach $columns as $key => $column}
 											{var $col = 'col-' . $key}
 
@@ -275,6 +285,11 @@
 									</tr>
 								{else}
 									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:attr="$row->getControl()->attrs">
+                                        <td n:if="$control->isSortable()" class="col-action text-center">
+                                            <span class="handle-sort px-3 py-1 tx-primary" style="cursor: s-resize" n:if="$control->isSortable()">
+												<i n:block="icon-arrows-v" class="{$iconPrefix}arrows-v {$iconPrefix}arrows-alt-v"></i>
+											</span>
+                                        </td>
 										<td n:if="$hasGroupActions" class="col-checkbox">
 											{if $row->hasGroupAction()}
 												<input n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getFullName()}" data-check-all-{$control->getFullName()|noescape} name="{$control->getFullName()|lower}_group_action_item[{$row->getId()}]">
@@ -288,7 +303,7 @@
 												{include column-value, column => $column, row => $row, key => $key}
 											{$td->endTag()|noescape}
 										{/foreach}
-										<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action">
+										<td n:if="$actions || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action">
 											{foreach $actions as $key => $action}
 												{if $row->hasAction($key)}
 													{if $action->hasTemplate()}
@@ -298,9 +313,7 @@
 													{/if}
 												{/if}
 											{/foreach}
-											<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
-												<i n:block="icon-arrows-v" class="{$iconPrefix}arrows-v {$iconPrefix}arrows-alt-v"></i>
-											</span>
+
 											{if $inlineEdit && $row->hasInlineEdit()}
 												{$inlineEdit->renderButton($row)|noescape}
 											{/if}
@@ -373,7 +386,7 @@
 					<tfoot n:snippet="pagination">
 						{if $control->isPaginated() || $filter_active}
 							<tr n:block="pagination">
-								<td colspan="{$control->getColumnsCount()}" n:if="!$control->isTreeView()" class="row-grid-bottom">
+								<td colspan="{$control->isSortable() ? $control->getColumnsCount() + 1 : $control->getColumnsCount()}" n:if="!$control->isTreeView()" class="row-grid-bottom">
 									<div class="col-items">
 										<small class="text-muted" n:if="$control->isPaginated()">
 											({var $paginator = $control['paginator']->getPaginator()}
