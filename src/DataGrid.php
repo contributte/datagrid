@@ -1396,7 +1396,7 @@ class DataGrid extends Control
 		$filterContainer = $form->addContainer('filter');
 
 		foreach ($this->filters as $name => $filter) {
-			if (!in_array($name, $this->getSessionData('_grid_hidden_columns'), true))
+			if (!in_array($name, (array) $this->getSessionData('_grid_hidden_columns'), true))
 				$filter->addToFormContainer($filterContainer);
 		}
 
