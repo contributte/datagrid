@@ -40,7 +40,7 @@ class FilterAjaxSearchSelect extends FilterSelect {
 		string $key,
 		string $name,
 		string $column,
-		array $metadata,
+		string $metadataKey,
 		?callable $selectedCallback = null
 	) {
 		parent::__construct( $grid, $key, $name, [], $column );
@@ -50,7 +50,7 @@ class FilterAjaxSearchSelect extends FilterSelect {
 		} : $selectedCallback;
 
 		$this->addAttribute( 'data-selected-icon-check', DataGrid::$iconPrefix . 'check' );
-		$this->addAttribute("data-metadata",Json::encode($metadata));
+		$this->addAttribute("data-metadata-key",$metadataKey);
 	}
 	protected function addControl(
 		Container $container,

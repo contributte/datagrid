@@ -1204,12 +1204,23 @@ s	 */
 		return $this->filters[$key] = new FilterMultiSelect($this, $key, $name, $options, $column);
 	}
 
-	public function addFilterAjaxSearchSelect(string $key, string $name,string $column, array $metadata, ?callable $selectedCallback = null){
+	public function addFilterAjaxSearchSelect(string $key, string $name,string $column, array $metadata, ?callable $selectedCallback = null): FilterAjaxSearchSelect
+	{
 		$column = $column ?? $key;
 
 		$this->addFilterCheck($key);
-		$this->filtersAjax[]=$key;
-		return $this->filters[$key] = new FilterAjaxSearchSelect($this, $key, $name, $column, $metadata, $selectedCallback);
+		$this->filtersAjax[] = $key;
+
+		$metadataKey = md5($this->getName().serialize($metadata));
+		if(!($presenter = $this->getPresenterIfExists())) {
+			throw new Nette\InvalidStateException("To use filter ajax search, datagrid must be connected to presenter!");
+		}
+
+		$ses = $presenter->getSession(\Webtec\UI\Forms\Form::SESSION_KEY);
+		$ses[$metadataKey] = $metadata;
+
+
+		return $this->filters[$key] = new FilterAjaxSearchSelect($this, $key, $name, $column, $metadataKey, $selectedCallback);
 	}
 
 	public function addFilterSearchSelect(
