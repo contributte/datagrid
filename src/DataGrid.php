@@ -481,7 +481,7 @@ class DataGrid extends Control
 					$this->gridSession = $presenter->getSession($this->getSessionSectionName());
 				}
 
-				$this->componentFullName = $this->lookupPath();
+				$this->componentFullName = $this->lookupPath(\Nette\Application\UI\Presenter::class);
 			});
 	}
 
