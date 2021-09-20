@@ -204,7 +204,7 @@
     }
   });
 
-  
+
 window.datagridSerializeUrl = function(obj, prefix) {
 	var str = [];
 	for(var p in obj) {
@@ -444,7 +444,7 @@ window.datagridSerializeUrl = function(obj, prefix) {
         results = [];
         for (key in ref) {
           href = ref[key];
-          results.push($('#datagrid-sort-' + key).attr('href', href));
+          results.push($('#datagrid-sort-' + payload._datagrid_name + '-' + key).attr('href', href));
         }
         return results;
       }
