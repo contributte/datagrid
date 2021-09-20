@@ -1,26 +1,26 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Export;
 
-use Nette\Application\UI\Link;
+use Nette\Utils\Callback;
 use Nette\Utils\Html;
+use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
+use Ublaboo\DataGrid\Traits;
 
 class Export
 {
-
-	use TButtonTryAddIcon;
-	use TButtonIcon;
-	use TButtonClass;
-	use TButtonTitle;
-	use TButtonText;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonIcon;
+	use Traits\TButtonClass;
+	use Traits\TButtonTitle;
+	use Traits\TButtonText;
 
 	/**
 	 * @var callable
@@ -30,7 +30,7 @@ class Export
 	/**
 	 * @var bool
 	 */
-	protected $ajax = false;
+	protected $ajax;
 
 	/**
 	 * @var bool
@@ -38,7 +38,7 @@ class Export
 	protected $filtered;
 
 	/**
-	 * @var Link|null
+	 * @var string
 	 */
 	protected $link;
 
@@ -51,40 +51,38 @@ class Export
 	 * @var DataGrid
 	 */
 	protected $grid;
-
+	
 	/**
-	 * @var string|null
+	 * @var null|string
 	 */
 	protected $confirmDialog = null;
-
+	
 	/**
-	 * @var string|null
+	 * @param DataGrid   $grid
+	 * @param string     $text
+	 * @param callable   $callback
+	 * @param boolean    $filtered
 	 */
-	protected $target = null;
-
-
-	public function __construct(
-		DataGrid $grid,
-		string $text,
-		callable $callback,
-		bool $filtered
-	)
+	public function __construct($grid, $text, $callback, $filtered)
 	{
 		$this->grid = $grid;
 		$this->text = $text;
 		$this->callback = $callback;
-		$this->filtered = $filtered;
+		$this->filtered = (bool) $filtered;
 		$this->title = $text;
 	}
 
 
-	public function render(): Html
+	/**
+	 * Render export button
+	 * @return Html
+	 */
+	public function render()
 	{
 		$a = Html::el('a', [
 			'class' => [$this->class],
 			'title' => $this->grid->getTranslator()->translate($this->getTitle()),
 			'href' => $this->link,
-			'target' => $this->target,
 		]);
 
 		$this->tryAddIcon(
@@ -96,34 +94,36 @@ class Export
 		$a->addText($this->grid->getTranslator()->translate($this->text));
 
 		if ($this->isAjax()) {
-			$a->appendAttribute('class', 'ajax');
+			$a->class[] = 'ajax';
 		}
-
+		
 		if ($this->confirmDialog !== null) {
 			$a->setAttribute('data-datagrid-confirm', $this->confirmDialog);
 		}
-
+		
+		
 		return $a;
 	}
-
-
+	
 	/**
-	 * @return static
+	 * Add Confirm dialog
+	 * @param string $confirmDialog
+	 * @return self
 	 */
-	public function setConfirmDialog(string $confirmDialog): self
+	public function setConfirmDialog($confirmDialog)
 	{
 		$this->confirmDialog = $confirmDialog;
-
+		
 		return $this;
 	}
-
-
+	
+	
 	/**
 	 * Tell export which columns to use when exporting data
-	 *
-	 * @return static
+	 * @param array $columns
+	 * @return self
 	 */
-	public function setColumns(array $columns): self
+	public function setColumns($columns)
 	{
 		$this->columns = $columns;
 
@@ -133,8 +133,9 @@ class Export
 
 	/**
 	 * Get columns for export
+	 * @return array
 	 */
-	public function getColumns(): array
+	public function getColumns()
 	{
 		return $this->columns;
 	}
@@ -142,10 +143,10 @@ class Export
 
 	/**
 	 * Export signal url
-	 *
-	 * @return static
+	 * @param string $link
+	 * @return self
 	 */
-	public function setLink(Link $link): self
+	public function setLink($link)
 	{
 		$this->link = $link;
 
@@ -155,18 +156,21 @@ class Export
 
 	/**
 	 * Tell export whether to be called via ajax or not
-	 *
-	 * @return static
+	 * @param bool $ajax
 	 */
-	public function setAjax(bool $ajax = true): self
+	public function setAjax($ajax = true)
 	{
-		$this->ajax = $ajax;
+		$this->ajax = (bool) $ajax;
 
 		return $this;
 	}
 
 
-	public function isAjax(): bool
+	/**
+	 * Is export called via ajax?
+	 * @return bool
+	 */
+	public function isAjax()
 	{
 		return $this->ajax;
 	}
@@ -174,8 +178,9 @@ class Export
 
 	/**
 	 * Is export filtered?
+	 * @return bool
 	 */
-	public function isFiltered(): bool
+	public function isFiltered()
 	{
 		return $this->filtered;
 	}
@@ -183,21 +188,11 @@ class Export
 
 	/**
 	 * Call export callback
+	 * @param  array    $data
+	 * @return void
 	 */
-	public function invoke(iterable $data): void
+	public function invoke(array $data)
 	{
-		($this->callback)($data, $this->grid);
-	}
-
-
-	/**
-	 * Adds target to html:a [_blank, _self, _parent, _top]
-	 * @param string|null $target
-	 */
-	public function setTarget($target = null): void
-	{
-		if (in_array($target, ['_blank', '_self', '_parent', '_top'], true)) {
-			$this->target = $target;
-		}
+		Callback::invokeArgs($this->callback, [$data, $this->grid]);
 	}
 }

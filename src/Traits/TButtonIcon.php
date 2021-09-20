@@ -1,6 +1,10 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Traits;
 
@@ -8,14 +12,16 @@ trait TButtonIcon
 {
 
 	/**
-	 * @var string|null
+	 * @var string|callable
 	 */
 	protected $icon;
 
+
 	/**
-	 * @return static
+	 * Set icon
+	 * @param string $icon
 	 */
-	public function setIcon(?string $icon): self
+	public function setIcon($icon)
 	{
 		$this->icon = $icon;
 
@@ -23,9 +29,12 @@ trait TButtonIcon
 	}
 
 
-	public function getIcon(): ?string
+	/**
+	 * Get icon
+	 * @return string
+	 */
+	public function getIcon()
 	{
 		return $this->icon;
 	}
-
 }

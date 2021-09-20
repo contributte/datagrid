@@ -1,18 +1,28 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Ublaboo\DataGrid\Filter\FilterText;
+use Dibi;
+use DibiFluent;
+use Ublaboo\DataGrid\Filter;
 
 class DibiFluentPostgreDataSource extends DibiFluentDataSource
 {
-
-	protected function applyFilterText(FilterText $filter): void
+	/**
+	 * Filter by keyword
+	 * @param  Filter\FilterText $filter
+	 * @return void
+	 */
+	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$condition = $filter->getCondition();
-		$driver = $this->dataSource->getConnection()->getDriver();
+		$driver = $this->data_source->getConnection()->getDriver();
 		$or = [];
 
 		foreach ($condition as $column => $value) {
@@ -20,22 +30,26 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 			$column = '[' . $column . ']';
 
 			if ($filter->isExactSearch()) {
-				$this->dataSource->where("$column = %s", $value);
-
+				$this->data_source->where("$column = %s", $value);
 				continue;
 			}
 
-			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
+			if ($filter->hasSplitWordsSearch() === false) {
+				$words = [$value];
+			} else {
+				$words = explode(' ', $value);
+			}
 
 			foreach ($words as $word) {
-				$or[] = "$column ILIKE " . $driver->escapeText('%' . $word . '%');
+				$escaped = $driver->escapeLike($word, 0);
+				$or[] = "$column ILIKE $escaped";
 			}
 		}
 
 		if (sizeof($or) > 1) {
-			$this->dataSource->where('(%or)', $or);
+			$this->data_source->where('(%or)', $or);
 		} else {
-			$this->dataSource->where($or);
+			$this->data_source->where($or);
 		}
 	}
 }

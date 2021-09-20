@@ -1,34 +1,36 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\Column\Action\Confirmation\CallbackConfirmation;
-use Ublaboo\DataGrid\Column\Action\Confirmation\IConfirmation;
-use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
-use Ublaboo\DataGrid\Traits\TLink;
-use Ublaboo\DataGrid\Traits\TRenderCondition;
+use Ublaboo\DataGrid\Traits;
 
 class Action extends Column
 {
-
-	use TButtonTryAddIcon;
-	use TButtonText;
-	use TLink;
-	use TRenderCondition;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonText;
+	use Traits\TLink;
+	use Traits\TRenderCondition;
 
 	/**
 	 * @var string
 	 */
-	public static $dataConfirmAttributeName = 'datagrid-confirm';
+	public static $data_confirm_attribute_name = 'datagrid-confirm';
+
+	/**
+	 * @var DataGrid
+	 */
+	protected $grid;
 
 	/**
 	 * @var string
@@ -36,19 +38,24 @@ class Action extends Column
 	protected $href;
 
 	/**
+	 * @var string
+	 */
+	protected $name;
+
+	/**
 	 * @var array
 	 */
 	protected $params;
 
 	/**
-	 * @var IConfirmation|null
+	 * @var array|callable
 	 */
-	protected $confirmation;
+	protected $confirm;
 
 	/**
 	 * @var array
 	 */
-	protected $dataAttributes = [];
+	protected $data_attributes = [];
 
 	/**
 	 * @var array
@@ -61,7 +68,7 @@ class Action extends Column
 	protected $parameters = [];
 
 	/**
-	 * @var string|callable|null
+	 * @var string|callable
 	 */
 	protected $icon;
 
@@ -73,7 +80,7 @@ class Action extends Column
 	/**
 	 * @var bool
 	 */
-	protected $openInNewTab = false;
+	protected $open_in_new_tab = false;
 
 	/**
 	 * @var string|callable
@@ -81,22 +88,24 @@ class Action extends Column
 	private $title;
 
 
-	public function __construct(
-		DataGrid $grid,
-		string $key,
-		string $href,
-		string $name,
-		array $params
-	)
+	/**
+	 * @param DataGrid $grid
+	 * @param string   $href
+	 * @param string   $name
+	 * @param array    $params
+	 */
+	public function __construct(DataGrid $grid, $href, $name, $params)
 	{
-		parent::__construct($grid, $key, '', $name);
-
+		$this->grid = $grid;
 		$this->href = $href;
+		$this->name = $name;
 		$this->params = $params;
 	}
 
 
 	/**
+	 * Render row item into template
+	 * @param  Row   $row
 	 * @return mixed
 	 */
 	public function render(Row $row)
@@ -106,8 +115,10 @@ class Action extends Column
 		}
 
 		try {
+			// Renderer function may be used
 			return $this->useRenderer($row);
 		} catch (DataGridColumnRendererException $e) {
+			// Do not use renderer
 		}
 
 		$link = $this->createLink(
@@ -120,35 +131,31 @@ class Action extends Column
 
 		$this->tryAddIcon($a, $this->getIcon($row), $this->getName());
 
-		if ($this->dataAttributes !== []) {
-			foreach ($this->dataAttributes as $key => $value) {
-				$a->data((string) $key, $value);
+		if (!empty($this->data_attributes)) {
+			foreach ($this->data_attributes as $key => $value) {
+				$a->data($key, $value);
 			}
 		}
 
-		if ($this->attributes !== []) {
+		if (!empty($this->attributes)) {
 			$a->addAttributes($this->attributes);
 		}
 
 		$a->addText($this->translate($this->getName()));
 
-		$title = $this->getTitle($row);
-
-		if ($title !== null) {
-			$a->setAttribute('title', $this->translate($title));
+		if ($this->title) {
+			$a->title($this->translate($this->getTitle($row)));
 		}
 
-		if ($this->class !== null) {
-			$a->setAttribute('class', $this->getClass($row));
+		if ($this->class) {
+			$a->class($this->getClass($row));
 		}
 
-		$confirmationDialog = $this->getConfirmationDialog($row);
-
-		if ($confirmationDialog !== null) {
-			$a->data(static::$dataConfirmAttributeName, $confirmationDialog);
+		if ($confirm = $this->getConfirm($row)) {
+			$a->data(static::$data_confirm_attribute_name, $confirm);
 		}
 
-		if ($this->openInNewTab) {
+		if ($this->open_in_new_tab) {
 			$a->addAttributes(['target' => '_blank']);
 		}
 
@@ -157,9 +164,11 @@ class Action extends Column
 
 
 	/**
+	 * Add parameters to link
+	 * @param array $parameters
 	 * @return static
 	 */
-	public function addParameters(array $parameters): self
+	public function addParameters(array $parameters)
 	{
 		$this->parameters = $parameters;
 
@@ -168,11 +177,12 @@ class Action extends Column
 
 
 	/**
+	 * Set attribute title
 	 * @param string|callable $title
 	 * @return static
 	 * @throws DataGridException
 	 */
-	public function setTitle($title): self
+	public function setTitle($title)
 	{
 		$this->checkPropertyStringOrCallable($title, 'title');
 
@@ -183,9 +193,12 @@ class Action extends Column
 
 
 	/**
+	 * Get attribute title
+	 * @param Row $row
+	 * @return string
 	 * @throws DataGridException
 	 */
-	public function getTitle(Row $row): ?string
+	public function getTitle(Row $row)
 	{
 		/**
 		 * If user callback was used for setting action title, it has to return string
@@ -195,11 +208,12 @@ class Action extends Column
 
 
 	/**
+	 * Set attribute class
 	 * @param string|callable $class
 	 * @return static
 	 * @throws DataGridException
 	 */
-	public function setClass($class): self
+	public function setClass($class)
 	{
 		$this->checkPropertyStringOrCallable($class, 'class');
 
@@ -210,9 +224,12 @@ class Action extends Column
 
 
 	/**
+	 * Get attribute class
+	 * @param Row $row
+	 * @return string
 	 * @throws DataGridException
 	 */
-	public function getClass(Row $row): ?string
+	public function getClass(Row $row)
 	{
 		/**
 		 * If user callback was used for setting action class, it has to return string
@@ -222,11 +239,12 @@ class Action extends Column
 
 
 	/**
+	 * Set icon
 	 * @param string|callable $icon
 	 * @return static
 	 * @throws DataGridException
 	 */
-	public function setIcon($icon): self
+	public function setIcon($icon)
 	{
 		$this->checkPropertyStringOrCallable($icon, 'icon');
 
@@ -237,9 +255,12 @@ class Action extends Column
 
 
 	/**
+	 * Get icon
+	 * @param Row $row
+	 * @return string
 	 * @throws DataGridException
 	 */
-	public function getIcon(Row $row): ?string
+	public function getIcon(Row $row)
 	{
 		/**
 		 * If user callback was used for setting action icon, it has to return string
@@ -249,84 +270,117 @@ class Action extends Column
 
 
 	/**
+	 * Set confirm dialog
+	 * @param string|callable $message
+	 * @param string $column
 	 * @return static
+	 * @throws DataGridException
 	 */
-	public function setConfirmation(IConfirmation $confirmation): self
+	public function setConfirm($message, $column = null)
 	{
-		$this->confirmation = $confirmation;
+		$this->checkPropertyStringOrCallable($message, 'confirmation message');
+
+		$this->confirm = [$message, $column];
 
 		return $this;
 	}
 
 
 	/**
+	 * Get confirm dialog for particular row item
+	 * @param Row $row
+	 * @return string
 	 * @throws DataGridException
 	 */
-	public function getConfirmationDialog(Row $row): ?string
+	public function getConfirm(Row $row)
 	{
-		if ($this->confirmation === null) {
+		if (!$this->confirm) {
 			return null;
 		}
 
-		if ($this->confirmation instanceof CallbackConfirmation) {
-			return ($this->confirmation->getCallback())($row->getItem());
+		$question = $this->confirm[0];
+
+		if (is_string($question)) {
+			$question = $this->translate($question);
+		} else {
+			/**
+			 * If user callback was used for setting action confirmation dialog, it has to return string
+			 */
+			$question = $this->getPropertyStringOrCallableGetString($row, $question, 'confirmation dialog');
 		}
 
-		if ($this->confirmation instanceof StringConfirmation) {
-			$question = $this->translate($this->confirmation->getQuestion());
-
-			if ($this->confirmation->getPlaceholderName() === null) {
-				return $question;
-			}
-
-			return str_replace(
-				'%s',
-				(string) $row->getValue($this->confirmation->getPlaceholderName()),
-				$question
-			);
+		if (!$this->confirm[1]) {
+			return $question;
 		}
 
-		throw new DataGridException('Unsupported confirmation');
+		return str_replace('%s', $row->getValue($this->confirm[1]), $question);
 	}
 
 
 	/**
+	 * Setting data attributes
+	 * @param string $key
 	 * @param mixed $value
 	 * @return static
 	 */
-	public function setDataAttribute(string $key, $value): self
+	public function setDataAttribute($key, $value)
 	{
-		$this->dataAttributes[$key] = $value;
+		$this->data_attributes[$key] = $value;
 
 		return $this;
 	}
 
 
 	/**
+	 * Set attributes for a element
+	 * @param array $attrs
 	 * @return static
 	 */
-	public function addAttributes(array $attrs): self
+	public function addAttributes(array $attrs)
 	{
-		$this->attributes += $attrs;
+		$this->attributes = $this->attributes + $attrs;
 
 		return $this;
 	}
 
 
 	/**
-	 * @param string|callable|null $property
+	 * Check whether given property is string or callable
+	 * @param  mixed $property
+	 * @return void
 	 * @throws DataGridException
 	 */
-	public function getPropertyStringOrCallableGetString(
-		Row $row,
-		$property,
-		string $name
-	): ?string
+	protected function checkPropertyStringOrCallable($property, $name)
 	{
+		if (!is_string($property) && !is_callable($property) && $property !== null) {
+			throw new DataGridException(
+				"Action {$name} has to be either string or a callback returning string"
+			);
+		}
+	}
+
+
+	/**
+	 * Check whether given property is string or callable
+	 * 	in that case call callback and check property and return it
+	 * @param  Row                  $row
+	 * @param  string|callable|null $property
+	 * @param  string               $name
+	 * @return string
+	 * @throws DataGridException
+	 */
+	public function getPropertyStringOrCallableGetString(Row $row, $property, $name)
+	{
+		/**
+		 * String
+		 */
 		if (is_string($property)) {
 			return $property;
 		}
 
+		/**
+		 * Callable
+		 */
 		if (is_callable($property)) {
 			$value = call_user_func($property, $row->getItem());
 
@@ -341,39 +395,35 @@ class Action extends Column
 	}
 
 
-	public function isOpenInNewTab(): bool
-	{
-		return $this->openInNewTab;
-	}
-
-
 	/**
-	 * @return static
+	 * Translator helper
+	 * @param  string $message
+	 * @return string
 	 */
-	public function setOpenInNewTab(bool $openInNewTab = true): self
-	{
-		$this->openInNewTab = $openInNewTab;
-
-		return $this;
-	}
-
-
-	/**
-	 * @param mixed $property
-	 * @throws DataGridException
-	 */
-	protected function checkPropertyStringOrCallable($property, string $name): void
-	{
-		if (!is_string($property) && !is_callable($property) && $property !== null) {
-			throw new DataGridException(
-				sprintf('Action %s has to be either string or a callback returning string', $name)
-			);
-		}
-	}
-
-
-	protected function translate(string $message): string
+	protected function translate($message)
 	{
 		return $this->grid->getTranslator()->translate($message);
+	}
+
+
+	/**
+	 * Open link in new window/tab?
+	 * @return boolean
+	 */
+	public function isOpenInNewTab()
+	{
+		return $this->open_in_new_tab;
+	}
+
+
+	/**
+	 * Set link to open in new tab/window or not
+	 * @param bool $open_in_new_tab
+	 * @return $this
+	 */
+	public function setOpenInNewTab($open_in_new_tab = true)
+	{
+		$this->open_in_new_tab = $open_in_new_tab;
+		return $this;
 	}
 }

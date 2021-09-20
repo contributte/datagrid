@@ -1,19 +1,21 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Column;
 
+use Nette\SmartObject;
+use Ublaboo;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
 
 abstract class FilterableColumn
 {
+
+	use SmartObject;
 
 	/**
 	 * @var string
@@ -36,12 +38,13 @@ abstract class FilterableColumn
 	protected $column;
 
 
-	public function __construct(
-		DataGrid $grid,
-		string $key,
-		string $column,
-		string $name
-	)
+	/**
+	 * @param DataGrid $grid
+	 * @param string   $key
+	 * @param string   $column
+	 * @param string   $name
+	 */
+	public function __construct(DataGrid $grid, $key, $column, $name)
 	{
 		$this->grid = $grid;
 		$this->key = $key;
@@ -52,69 +55,80 @@ abstract class FilterableColumn
 
 	/**
 	 * @param string|array|null $columns
+	 * @return Ublaboo\DataGrid\Filter\FilterText
 	 */
-	public function setFilterText($columns = null): FilterText
+	public function setFilterText($columns = null)
 	{
 		if ($columns === null) {
 			$columns = [$this->column];
 		} else {
-			$columns = is_string($columns)
-				? [$columns]
-				: $columns;
+			$columns = is_string($columns) ? [$columns] : $columns;
 		}
 
 		return $this->grid->addFilterText($this->key, $this->name, $columns);
 	}
 
 
-	public function setFilterSelect(
-		array $options,
-		?string $column = null
-	): FilterSelect
+	/**
+	 * @param array       $options
+	 * @param string|null $column
+	 * @return Ublaboo\DataGrid\Filter\FilterSelect
+	 */
+	public function setFilterSelect(array $options, $column = null)
 	{
-		$column = $column ?? $this->column;
+		$column = $column === null ? $this->column : $column;
 
 		return $this->grid->addFilterSelect($this->key, $this->name, $options, $column);
 	}
 
 
-	public function setFilterMultiSelect(
-		array $options,
-		?string $column = null
-	): FilterMultiSelect
+	/**
+	 * @param array       $options
+	 * @param string|null $column
+	 * @return Ublaboo\DataGrid\Filter\FilterMultiSelect
+	 */
+	public function setFilterMultiSelect(array $options, $column = null)
 	{
-		$column = $column ?? $this->column;
+		$column = $column === null ? $this->column : $column;
 
 		return $this->grid->addFilterMultiSelect($this->key, $this->name, $options, $column);
 	}
 
 
-	public function setFilterDate(?string $column = null): FilterDate
+	/**
+	 * @param string|null $column
+	 * @return Ublaboo\DataGrid\Filter\FilterDate
+	 */
+	public function setFilterDate($column = null)
 	{
-		$column = $column ?? $this->column;
+		$column = $column === null ? $this->column : $column;
 
 		return $this->grid->addFilterDate($this->key, $this->name, $column);
 	}
 
 
-	public function setFilterRange(
-		?string $column = null,
-		string $nameSecond = '-'
-	): FilterRange
+	/**
+	 * @param string|null $column
+	 * @param string|null $name_second
+	 * @return Ublaboo\DataGrid\Filter\FilterRange
+	 */
+	public function setFilterRange($column = null, $name_second = '-')
 	{
-		$column = $column ?? $this->column;
+		$column = $column === null ? $this->column : $column;
 
-		return $this->grid->addFilterRange($this->key, $this->name, $column, $nameSecond);
+		return $this->grid->addFilterRange($this->key, $this->name, $column, $name_second);
 	}
 
 
-	public function setFilterDateRange(
-		?string $column = null,
-		string $nameSecond = '-'
-	): FilterDateRange
+	/**
+	 * @param string|null $column
+	 * @param string|null $name_second
+	 * @return Ublaboo\DataGrid\Filter\FilterDateRange
+	 */
+	public function setFilterDateRange($column = null, $name_second = '-')
 	{
-		$column = $column ?? $this->column;
+		$column = $column === null ? $this->column : $column;
 
-		return $this->grid->addFilterDateRange($this->key, $this->name, $column, $nameSecond);
+		return $this->grid->addFilterDateRange($this->key, $this->name, $column, $name_second);
 	}
 }

@@ -1,20 +1,28 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Utils;
 
-use Traversable;
+use Nette\SmartObject;
 
 final class ArraysHelper
 {
 
+	use SmartObject;
+
 	/**
 	 * Test recursively whether given array is empty
+	 * @param  array $array
+	 * @return bool
 	 */
-	public static function testEmpty(iterable $array): bool
+	public static function testEmpty($array)
 	{
-		foreach ($array as $value) {
+		foreach ($array as $key => $value) {
 			if (is_array($value)) {
 				if (!self::testEmpty($value)) {
 					return false;
@@ -36,11 +44,13 @@ final class ArraysHelper
 
 	/**
 	 * Is array and its values truthy?
+	 * @param  array|\Traversable $a
+	 * @return boolean
 	 */
-	public static function testTruthy(iterable $iterable): bool
+	public static function testTruthy($a)
 	{
-		foreach ($iterable as $value) {
-			if (is_array($value) || $value instanceof Traversable) {
+		foreach ($a as $value) {
+			if (is_array($value) || $value instanceof \Traversable) {
 				if (self::testTruthy($value)) {
 					return true;
 				}

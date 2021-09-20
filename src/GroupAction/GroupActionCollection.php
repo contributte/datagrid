@@ -1,26 +1,30 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\GroupAction;
 
+use Nette;
+use Nette\SmartObject;
 use Nette\Application\UI\Form;
-use Nette\Forms\Container;
-use Nette\Forms\Controls\SelectBox;
-use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\Form as NetteForm;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
 
 class GroupActionCollection
 {
 
-	private const ID_ATTRIBUTE_PREFIX = '_item_';
+	use SmartObject;
+
+	const ID_ATTRIBUTE_PREFIX = '_item_';
 
 	/**
-	 * @var array<GroupAction>
+	 * @var GroupAction[]
 	 */
-	protected $groupActions = [];
+	protected $group_actions = [];
 
 	/**
 	 * @var DataGrid
@@ -34,91 +38,72 @@ class GroupActionCollection
 	}
 
 
-	public function addToFormContainer(Container $container): void
+	/**
+	 * Get assambled form
+	 * @param Nette\Forms\Container $container
+	 * @return void
+	 */
+	public function addToFormContainer($container)
 	{
-		/** @var Form $form */
-		$form = $container->lookup(Form::class);
+		/** @var Nette\Application\UI\Form $form */
+		$form = $container->lookup('Nette\Application\UI\Form');
 		$lookupPath = $container->lookupPath();
 		$translator = $form->getTranslator();
 		$main_options = [];
 
-		if ($translator === null) {
-			throw new \UnexpectedValueException;
-		}
-
 		/**
-		 * First foreach for adding button actions
+		 * First foreach for filling "main" select
 		 */
-		foreach ($this->groupActions as $id => $action) {
-			if ($action instanceof GroupButtonAction) {
-				$control = $container->addSubmit((string) $id, $action->getTitle());
-
-				/**
-				 * User may set a class to the form control
-				 */
-				$control->setAttribute('class', $action->getClass());
-
-				/**
-				 * User may set additional attribtues to the form control
-				 */
-				foreach ($action->getAttributes() as $name => $value) {
-					$control->setAttribute($name, $value);
-				}
-			}
+		foreach ($this->group_actions as $id => $action) {
+			$main_options[$id] = $action->getTitle();
 		}
 
-		/**
-		 * Second foreach for filling "main" select
-		 */
-		foreach ($this->groupActions as $id => $action) {
-			if (! $action instanceof GroupButtonAction) {
-				$main_options[$id] = $action->getTitle();
-			}
-		}
-
-		$groupActionSelect = $container->addSelect('group_action', '', $main_options)
+		$container->addSelect('group_action', '', $main_options)
 			->setPrompt('ublaboo_datagrid.choose');
 
 		/**
-		 * Third for creating select for each "sub"-action
+		 * Second for creating select for each "sub"-action
 		 */
-		foreach ($this->groupActions as $id => $action) {
+		foreach ($this->group_actions as $id => $action) {
 			$control = null;
 
 			if ($action instanceof GroupSelectAction) {
 				if ($action->hasOptions()) {
 					if ($action instanceof GroupMultiSelectAction) {
-						$control = $container->addMultiSelect((string) $id, '', $action->getOptions());
-						$control->setAttribute('data-datagrid-multiselect-id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);
+						$control = $container->addMultiSelect($id, '', $action->getOptions());
+						$control->setAttribute('data-datagrid-multiselect-id', $lookupPath . static::ID_ATTRIBUTE_PREFIX . $id);
 						$control->setAttribute('data-style', 'hidden');
-						$control->setAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
+						$control->setAttribute('data-selected-icon-check', DataGrid::$icon_prefix . 'check');
 					} else {
-						$control = $container->addSelect((string) $id, '', $action->getOptions());
+						$control = $container->addSelect($id, '', $action->getOptions());
 					}
 
-					$control->setAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);
+					$control->setAttribute('id', $lookupPath . static::ID_ATTRIBUTE_PREFIX . $id);
 				}
-			} elseif ($action instanceof GroupTextAction) {
-				$control = $container->addText((string) $id, '');
 
-				$control->setAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
-					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
-					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
+			} elseif ($action instanceof GroupTextAction) {
+				$control = $container->addText($id, '');
+
+				$control->setAttribute('id', $lookupPath . static::ID_ATTRIBUTE_PREFIX . $id)
+					->addConditionOn($container['group_action'], Form::EQUAL, $id)
+						->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
 					->endCondition();
 
 			} elseif ($action instanceof GroupTextareaAction) {
-				$control = $container->addTextArea((string) $id, '');
+				$control = $container->addTextarea($id, '');
 
-				$control->setAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
-					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
-					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
+				$control->setAttribute('id', $lookupPath . static::ID_ATTRIBUTE_PREFIX . $id)
+					->addConditionOn($container['group_action'], Form::EQUAL, $id)
+						->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
 			}
 
-			if (isset($control)) {
+			if ($control) {
 				/**
 				 * User may set a class to the form control
 				 */
-				$control->setAttribute('class', $action->getClass());
+				if ($class = $action->getClass()) {
+					$control->setAttribute('class', $class);
+				}
 
 				/**
 				 * User may set additional attribtues to the form control
@@ -129,201 +114,129 @@ class GroupActionCollection
 			}
 		}
 
-		if ($main_options !== []) {
-			foreach (array_keys($this->groupActions) as $id) {
-				$groupActionSelect->addCondition(Form::EQUAL, $id)
-					->toggle($lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);
-			}
-
-			$groupActionSelect->addCondition(Form::FILLED)
-				->toggle(
-					strtolower($this->datagrid->getFullName()) . 'group_action_submit'
-				);
-
-			$container->addSubmit('submit', 'ublaboo_datagrid.execute')
-				->setValidationScope([$container])
-				->setAttribute(
-					'id',
-					strtolower($this->datagrid->getFullName()) . 'group_action_submit'
-				);
-		} else {
-			unset($container['group_action']);
+		foreach ($this->group_actions as $id => $action) {
+			$container['group_action']->addCondition(Form::EQUAL, $id)
+				->toggle($lookupPath . static::ID_ATTRIBUTE_PREFIX . $id);
 		}
 
-		$form->onSubmit[] = function (NetteForm $form): void {
-			$this->submitted($form);
-		};
+		$container['group_action']->addCondition(Form::FILLED)
+			->toggle(strtolower($this->datagrid->getName()) . 'group_action_submit');
+
+		$container->addSubmit('submit', 'ublaboo_datagrid.execute')
+			->setValidationScope([$container])
+			->setAttribute('id', strtolower($this->datagrid->getName()) . 'group_action_submit');
+
+		if ($form instanceof Nette\ComponentModel\IComponent) {
+			$form->onSubmit[] = [$this, 'submitted'];
+		}
 	}
 
 
 	/**
 	 * Pass "sub"-form submission forward to custom submit function
+	 * @param  Form   $form
+	 * @return void
 	 */
-	public function submitted(NetteForm $form): void
+	public function submitted(Form $form)
 	{
-		$submitter = $this->getFormSubmitter($form);
-
-		if (! $submitter instanceof SubmitButton) {
+		if (!isset($form['group_action']['submit']) || !$form['group_action']['submit']->isSubmittedBy()) {
 			return;
 		}
 
-		$values = (array) $form->getValues();
+		$values = $form->getValues();
 		$values = $values['group_action'];
 
-		if (
-			($submitter->getName() === 'submit' && $submitter->isSubmittedBy())
-			 && ($values->group_action === 0 || $values->group_action === null)) {
+		if ($values->group_action === 0 || $values->group_action === null) {
 			return;
 		}
 
 		/**
 		 * @todo Define items IDs
 		 */
-		$httpIds = $form->getHttpData(
-			Form::DATA_LINE | Form::DATA_KEYS,
-			strtolower($this->datagrid->getFullName()) . '_group_action_item[]'
-		);
+		$http_ids = $form->getHttpData(Form::DATA_LINE | Form::DATA_KEYS, strtolower($this->datagrid->getName()) . '_group_action_item[]');
+		$ids = array_keys($http_ids);
 
-		$ids = array_keys($httpIds);
+		$id = $values->group_action;
+		$this->group_actions[$id]->onSelect($ids, isset($values->{$id}) ? $values->{$id} : null);
 
-		if ($submitter->getName() === 'submit') {
-			$id = $values->group_action;
-			$this->groupActions[$id]->onSelect($ids, $values[$id] ?? null);
-
-			if (!$form['group_action'] instanceof Container) {
-				throw new \UnexpectedValueException;
-			}
-
-			if (isset($form['group_action']['group_action'])) {
-				if (!$form['group_action']['group_action'] instanceof SelectBox) {
-					throw new \UnexpectedValueException;
-				}
-
-				$form['group_action']['group_action']->setValue(null);
-			}
-		} else {
-			$groupButtonAction = $this->groupActions[$submitter->getName()];
-
-			if (!$groupButtonAction instanceof GroupButtonAction) {
-				throw new \UnexpectedValueException('This action is supposed to be a GroupButtonAction');
-			}
-
-			$groupButtonAction->onClick($ids);
-		}
-	}
-
-
-	/**
-	 * Add one group button action to collection of actions
-	 */
-	public function addGroupButtonAction(string $title, ?string $class = null): GroupButtonAction
-	{
-		if (count($this->groupActions) > 0) {
-			$id = count($this->groupActions) + 1;
-		} else {
-			$id = 1;
-		}
-
-		return $this->groupActions[$id] = new GroupButtonAction($title, $class);
+		$form['group_action']['group_action']->setValue(null);
 	}
 
 
 	/**
 	 * Add one group action (select box) to collection of actions
+	 *
+	 * @param string $title
+	 * @param array  $options
+	 *
+	 * @return GroupAction
 	 */
-	public function addGroupSelectAction(string $title, array $options): GroupAction
+	public function addGroupSelectAction($title, $options)
 	{
-		if (count($this->groupActions) > 0) {
-			$id = count($this->groupActions) + 1;
-		} else {
-			$id = 1;
-		}
+		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
 
-		return $this->groupActions[$id] = new GroupSelectAction($title, $options);
+		return $this->group_actions[$id] = new GroupSelectAction($title, $options);
 	}
 
 
 	/**
 	 * Add one group action (multiselect box) to collection of actions
+	 *
+	 * @param string $title
+	 * @param array  $options
+	 *
+	 * @return GroupAction
 	 */
-	public function addGroupMultiSelectAction(string $title, array $options): GroupAction
+	public function addGroupMultiSelectAction($title, $options)
 	{
-		if (count($this->groupActions) > 0) {
-			$id = count($this->groupActions) + 1;
-		} else {
-			$id = 1;
-		}
+		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
 
-		return $this->groupActions[$id] = new GroupMultiSelectAction($title, $options);
+		return $this->group_actions[$id] = new GroupMultiSelectAction($title, $options);
 	}
 
 
 	/**
 	 * Add one group action (text input) to collection of actions
+	 *
+	 * @param string $title
+	 *
+	 * @return GroupAction
 	 */
-	public function addGroupTextAction(string $title): GroupAction
+	public function addGroupTextAction($title)
 	{
-		if (count($this->groupActions) > 0) {
-			$id = count($this->groupActions) + 1;
-		} else {
-			$id = 1;
-		}
+		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
 
-		return $this->groupActions[$id] = new GroupTextAction($title);
+		return $this->group_actions[$id] = new GroupTextAction($title);
 	}
 
 
 	/**
 	 * Add one group action (textarea) to collection of actions
+	 *
+	 * @param string $title
+	 *
+	 * @return GroupAction
 	 */
-	public function addGroupTextareaAction(string $title): GroupAction
+	public function addGroupTextareaAction($title)
 	{
-		if (count($this->groupActions) > 0) {
-			$id = count($this->groupActions) + 1;
-		} else {
-			$id = 1;
-		}
+		$id = ($s = sizeof($this->group_actions)) ? ($s + 1) : 1;
 
-		return $this->groupActions[$id] = new GroupTextareaAction($title);
+		return $this->group_actions[$id] = new GroupTextareaAction($title);
 	}
 
 
-	public function getGroupAction(string $title): GroupAction
+	/**
+	 * @param  string $title
+	 * @return GroupAction
+	 */
+	public function getGroupAction($title)
 	{
-		foreach ($this->groupActions as $action) {
+		foreach ($this->group_actions as $action) {
 			if ($action->getTitle() === $title) {
 				return $action;
 			}
 		}
 
 		throw new DataGridGroupActionException("Group action $title does not exist.");
-	}
-
-
-	private function getFormSubmitter(NetteForm $form): ?SubmitButton
-	{
-		$container = $form['group_action'];
-
-		if (!$container instanceof Container) {
-			throw new \UnexpectedValueException;
-		}
-
-		if (isset($container['submit'])) {
-			if (!$container['submit'] instanceof SubmitButton) {
-				throw new \UnexpectedValueException;
-			}
-
-			if ($container['submit']->isSubmittedBy()) {
-				return $container['submit'];
-			}
-		}
-
-		foreach ($container->getComponents() as $component) {
-			if ($component instanceof SubmitButton && $component->isSubmittedBy()) {
-				return $component;
-			}
-		}
-
-		return null;
 	}
 }

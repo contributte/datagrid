@@ -1,16 +1,17 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette\Application\UI\Form;
-use Nette\Forms\Container;
-use Nette\Forms\Controls\BaseControl;
+use Nette;
 use Ublaboo\DataGrid\DataGrid;
-use UnexpectedValueException;
 
-class FilterSelect extends OneColumnFilter
+class FilterSelect extends Filter
 {
 
 	/**
@@ -34,18 +35,19 @@ class FilterSelect extends OneColumnFilter
 	protected $type = 'select';
 
 	/**
-	 * @var string|null
+	 * @var string|NULL
 	 */
 	protected $prompt = null;
 
 
-	public function __construct(
-		DataGrid $grid,
-		string $key,
-		string $name,
-		array $options,
-		string $column
-	)
+	/**
+	 * @param DataGrid $grid
+	 * @param string   $key
+	 * @param string   $name
+	 * @param array    $options
+	 * @param string   $column
+	 */
+	public function __construct($grid, $key, $name, array $options, $column)
 	{
 		parent::__construct($grid, $key, $name, $column);
 
@@ -53,19 +55,14 @@ class FilterSelect extends OneColumnFilter
 	}
 
 
-	public function addToFormContainer(Container $container): void
+	/**
+	 * Adds select box to filter form
+	 * @param Nette\Forms\Container $container
+	 */
+	public function addToFormContainer(Nette\Forms\Container $container)
 	{
-		$form = $container->lookup(Form::class);
-
-		if (!$form instanceof Form) {
-			throw new UnexpectedValueException();
-		}
-
+		$form = $container->lookup('Nette\Application\UI\Form');
 		$translator = $form->getTranslator();
-
-		if ($translator === null) {
-			throw new UnexpectedValueException();
-		}
 
 		if (!$this->translateOptions) {
 			$select = $this->addControl(
@@ -77,72 +74,97 @@ class FilterSelect extends OneColumnFilter
 
 			$select->setTranslator(null);
 		} else {
-			$this->addControl($container, $this->key, $this->name, $this->options);
+			$select = $this->addControl($container, $this->key, $this->name, $this->options);
 		}
 	}
 
 
 	/**
+	 * @param  bool  $translateOptions
 	 * @return static
 	 */
-	public function setTranslateOptions(bool $translateOptions = true): self
+	public function setTranslateOptions($translateOptions = true)
 	{
-		$this->translateOptions = $translateOptions;
-
+		$this->translateOptions = (bool) $translateOptions;
 		return $this;
 	}
 
 
-	public function getOptions(): array
+	/**
+	 * @return array
+	 */
+	public function getOptions()
 	{
 		return $this->options;
 	}
 
 
-	public function getTranslateOptions(): bool
+	/**
+	 * @return bool
+	 */
+	public function getTranslateOptions()
 	{
 		return $this->translateOptions;
 	}
 
 
-	public function getCondition(): array
+	/**
+	 * Get filter condition
+	 * @return array
+	 */
+	public function getCondition()
 	{
 		return [$this->column => $this->getValue()];
 	}
 
 
-	public function getPrompt(): ?string
+	/**
+	 * Get filter prompt
+	 * @return string|NULL
+	 */
+	public function getPrompt()
 	{
 		return $this->prompt;
 	}
 
 
 	/**
+	 * Set filter prompt value
+	 * @param string|NULL $prompt
 	 * @return static
 	 */
-	public function setPrompt(?string $prompt): self
+	public function setPrompt($prompt)
 	{
 		$this->prompt = $prompt;
-
 		return $this;
 	}
 
 
-	protected function addControl(
-		Container $container,
-		string $key,
-		string $name,
-		array $options
-	): BaseControl
+	/**
+	 * Tell if prompt has been set in this fitler
+	 * @return bool
+	 */
+	public function isPromptEnabled()
+	{
+		return isset($this->prompt);
+	}
+
+
+	/**
+	 * @param Nette\Forms\Container $container
+	 * @param string                $key
+	 * @param string                $name
+	 * @param array                $options
+	 * @return Nette\Forms\Controls\SelectBox
+	 */
+	protected function addControl(Nette\Forms\Container $container, $key, $name, $options)
 	{
 		$input = $container->addSelect($key, $name, $options);
 
-		if ($this->getPrompt() !== null) {
-			$input->setPrompt($this->getPrompt());
+		if ($this->isPromptEnabled()) {
+			$input->setPrompt($this->prompt);
 		}
 
-		$this->addAttributes($input);
-
-		return $input;
+		return $this->addAttributes($input);
 	}
 }

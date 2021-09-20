@@ -1,10 +1,13 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette\SmartObject;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
@@ -13,23 +16,25 @@ use Ublaboo\DataGrid\DataGrid;
 class ActionCallback extends Action
 {
 
-	use SmartObject;
-
 	/**
-	 * @var callable[]
+	 * @var callable
 	 */
-	public $onClick;
+	public $onClick = [];
 
 
 	/**
 	 * Create link to datagrid::handleActionCallback() to fire custom callback
+	 * @param  DataGrid $grid
+	 * @param  string   $href
+	 * @param  array    $params
+	 * @return string
 	 */
-	protected function createLink(DataGrid $grid, string $href, array $params): string
+	protected function createLink(DataGrid $grid, $href, $params)
 	{
 		/**
 		 * Int case of ActionCallback, $this->href is a identifier of user callback
 		 */
-		$params += ['__key' => $this->href];
+		$params = $params + ['__key' => $this->href];
 
 		return $this->grid->link('actionCallback!', $params);
 	}

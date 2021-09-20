@@ -1,42 +1,61 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Dibi\Fluent;
-use Dibi\Helpers;
-use Dibi\Result;
+use Dibi;
+use DibiFluent;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterText;
+use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
-use UnexpectedValueException;
 
 class DibiFluentMssqlDataSource extends DibiFluentDataSource
 {
+
+	/**
+	 * @var DibiFluent
+	 */
+	protected $data_source;
 
 	/**
 	 * @var array
 	 */
 	protected $data = [];
 
+	/**
+	 * @var string
+	 */
+	protected $primary_key;
 
-	public function __construct(Fluent $dataSource, string $primaryKey)
+
+	/**
+	 * @param DibiFluent $data_source
+	 * @param string $primary_key
+	 */
+	public function __construct(DibiFluent $data_source, $primary_key)
 	{
-		parent::__construct($dataSource, $primaryKey);
+		$this->data_source = $data_source;
+		$this->primary_key = $primary_key;
 	}
 
 
-	// *******************************************************************************
-	// *                          IDataSource implementation                         *
-	// *******************************************************************************
+	/********************************************************************************
+	 *                          IDataSource implementation                          *
+	 ********************************************************************************/
 
 
-	public function getCount(): int
+	/**
+	 * Get count of data
+	 * @return int
+	 */
+	public function getCount()
 	{
-		$clone = clone $this->dataSource;
+		$clone = clone $this->data_source;
 		$clone->removeClause('ORDER BY');
 
 		return $clone->count();
@@ -44,91 +63,86 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 
 	/**
-	 * {@inheritDoc}
+	 * Get the data
+	 * @param array $condition
+	 * @return static
 	 */
-	public function filterOne(array $condition): IDataSource
+	public function filterOne(array $condition)
 	{
-		$this->dataSource->where($condition);
+		$this->data_source->where($condition);
 
 		return $this;
 	}
 
 
-	public function limit(int $offset, int $limit): IDataSource
-	{
-		$sql = (string) $this->dataSource;
-
-		$result = $this->dataSource->getConnection()
-			->query('%sql OFFSET ? ROWS FETCH NEXT ? ROWS ONLY', $sql, $offset, $limit);
-
-		if (!$result instanceof Result) {
-			throw new UnexpectedValueException();
-		}
-
-		$this->data = $result->fetchAll();
-
-		return $this;
-	}
-
-
-	protected function applyFilterDate(FilterDate $filter): void
+	/**
+	 * Filter by date
+	 * @param  Filter\FilterDate $filter
+	 * @return void
+	 */
+	public function applyFilterDate(Filter\FilterDate $filter)
 	{
 		$conditions = $filter->getCondition();
 
 		try {
-			$date = DateTimeHelper::tryConvertToDateTime(
-				$conditions[$filter->getColumn()],
-				[$filter->getPhpFormat()]
-			);
+			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
-			$this->dataSource->where(
-				'CONVERT(varchar(10), %n, 112) = ?',
-				$filter->getColumn(),
-				$date->format('Ymd')
-			);
+			$this->data_source->where('CONVERT(varchar(10), %n, 112) = ?', $filter->getColumn(), $date->format('Ymd'));
 		} catch (DataGridDateTimeHelperException $ex) {
 			// ignore the invalid filter value
 		}
 	}
 
 
-	protected function applyFilterDateRange(FilterDateRange $filter): void
+	/**
+	 * Filter by date range
+	 * @param  Filter\FilterDateRange $filter
+	 * @return void
+	 */
+	public function applyFilterDateRange(Filter\FilterDateRange $filter)
 	{
 		$conditions = $filter->getCondition();
 
-		$valueFrom = $conditions[$filter->getColumn()]['from'];
-		$valueTo = $conditions[$filter->getColumn()]['to'];
+		$value_from = $conditions[$filter->getColumn()]['from'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
-		if ($valueFrom) {
-			$this->dataSource->where(
-				'CONVERT(varchar(10), %n, 112) >= ?',
-				$filter->getColumn(),
-				$valueFrom
-			);
+		if ($value_from) {
+			$this->data_source->where('CONVERT(varchar(10), %n, 112) >= ?', $filter->getColumn(), $value_from);
 		}
 
-		if ($valueTo) {
-			$this->dataSource->where(
-				'CONVERT(varchar(10), %n, 112) <= ?',
-				$filter->getColumn(),
-				$valueTo
-			);
+		if ($value_to) {
+			$this->data_source->where('CONVERT(varchar(10), %n, 112) <= ?', $filter->getColumn(), $value_to);
 		}
 	}
 
 
-	protected function applyFilterText(FilterText $filter): void
+	/**
+	 * Filter by date
+	 * @param  Filter\FilterText $filter
+	 * @return void
+	 */
+	public function applyFilterText(Filter\FilterText $filter)
 	{
 		$condition = $filter->getCondition();
-		$driver = $this->dataSource->getConnection()->getDriver();
+		$driver = $this->data_source->getConnection()->getDriver();
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			$column = Helpers::escape($driver, $column, \dibi::IDENTIFIER);
+			if (class_exists(Dibi\Helpers::class) === true) {
+				$column = Dibi\Helpers::escape(
+					$driver,
+					$column,
+					\dibi::IDENTIFIER
+				);
+			} else {
+				$column = $driver->escape(
+					$column,
+					\dibi::IDENTIFIER
+				);
+			}
 
 			if ($filter->isExactSearch()) {
-				$this->dataSource->where("$column = %s", $value);
-
+				$this->data_source->where("$column = %s", $value);
 				continue;
 			}
 
@@ -136,9 +150,28 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		}
 
 		if (sizeof($or) > 1) {
-			$this->dataSource->where('(%or)', $or);
+			$this->data_source->where('(%or)', $or);
 		} else {
-			$this->dataSource->where($or);
+			$this->data_source->where($or);
 		}
+	}
+
+
+	/**
+	 * Apply limit and offset on data
+	 * @param int $offset
+	 * @param int $limit
+	 * @return static
+	 */
+	public function limit($offset, $limit)
+	{
+		$sql = (string) $this->data_source;
+
+		$result = $this->data_source->getConnection()
+			->query('%sql OFFSET ? ROWS FETCH NEXT ? ROWS ONLY', $sql, $offset, $limit);
+
+		$this->data = $result->fetchAll();
+
+		return $this;
 	}
 }

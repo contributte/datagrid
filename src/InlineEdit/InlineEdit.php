@@ -1,67 +1,66 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\InlineEdit;
 
 use Nette;
-use Nette\Forms\Container;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
+use Ublaboo\DataGrid\Traits;
 
 /**
  * @method onSubmit($id, Nette\Utils\ArrayHash $values)
+ * @method onSubmit(Nette\Utils\ArrayHash $values)
  * @method onControlAdd(Nette\Forms\Container $container)
  * @method onControlAfterAdd(Nette\Forms\Container $container)
  * @method onSetDefaults(Nette\Forms\Container $container, $item)
- * @method onCustomRedraw(string $buttonName)
  */
 class InlineEdit
 {
 
 	use SmartObject;
-	use TButtonTryAddIcon;
-	use TButtonIcon;
-	use TButtonClass;
-	use TButtonTitle;
-	use TButtonText;
+
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonIcon;
+	use Traits\TButtonClass;
+	use Traits\TButtonTitle;
+	use Traits\TButtonText;
 
 	/**
-	 * @var array|callable[]
+	 * @var callable[]
 	 */
-	public $onSubmit = [];
+	public $onSubmit;
 
 	/**
-	 * @var array|callable[]
+	 * @var callable[]
 	 */
-	public $onControlAdd = [];
+	public $onControlAdd;
 
 	/**
-	 * @var array|callable[]
+	 * @var callable[]
 	 */
-	public $onControlAfterAdd = [];
+	public $onControlAfterAdd;
 
 	/**
-	 * @var array|callable[]
+	 * @var callable[]
 	 */
-	public $onSetDefaults = [];
+	public $onSetDefaults;
 
 	/**
-	 * @var array|callable[]
+	 * @var callable[]
 	 */
-	public $onCustomRedraw = [];
+	public $onCustomRedraw;
 
 	/**
 	 * @var mixed
 	 */
-	protected $itemID;
+	protected $item_id;
 
 	/**
 	 * @var DataGrid
@@ -69,33 +68,35 @@ class InlineEdit
 	protected $grid;
 
 	/**
-	 * @var string|null
+	 * @var string|NULL
 	 */
-	protected $primaryWhereColumn = null;
+	protected $primary_where_column;
 
 	/**
 	 * Inline adding - render on the top or in the bottom?
-	 *
 	 * @var bool
 	 */
-	protected $positionTop = false;
+	protected $position_top = false;
 
 	/**
 	 * Columns that are not edited can displey normal value instaad of nothing..
-	 *
 	 * @var bool
 	 */
 	protected $showNonEditingColumns = true;
 
 
-	public function __construct(DataGrid $grid, ?string $primaryWhereColumn = null)
+	/**
+	 * @param DataGrid $grid
+	 * @param string|NULL   $primary_where_column
+	 */
+	public function __construct(DataGrid $grid, $primary_where_column = null)
 	{
 		$this->grid = $grid;
-		$this->primaryWhereColumn = $primaryWhereColumn;
+		$this->primary_where_column = $primary_where_column;
 
 		$this->title = 'ublaboo_datagrid.edit';
 		$this->class = 'btn btn-xs btn-default btn-secondary ajax';
-		$this->icon = 'pencil pencil-alt';
+		$this->icon = 'pencil';
 
 		$this->onControlAfterAdd[] = [$this, 'addControlsClasses'];
 	}
@@ -105,9 +106,9 @@ class InlineEdit
 	 * @param mixed $id
 	 * @return static
 	 */
-	public function setItemId($id): self
+	public function setItemId($id)
 	{
-		$this->itemID = $id;
+		$this->item_id = $id;
 
 		return $this;
 	}
@@ -118,17 +119,25 @@ class InlineEdit
 	 */
 	public function getItemId()
 	{
-		return $this->itemID;
+		return $this->item_id;
 	}
 
 
-	public function getPrimaryWhereColumn(): ?string
+	/**
+	 * @return string
+	 */
+	public function getPrimaryWhereColumn()
 	{
-		return $this->primaryWhereColumn;
+		return $this->primary_where_column;
 	}
 
 
-	public function renderButton(Row $row): Html
+	/**
+	 * Render row item detail button
+	 * @param  Row $row
+	 * @return Html
+	 */
+	public function renderButton($row)
 	{
 		$a = Html::el('a')
 			->href($this->grid->link('inlineEdit!', ['id' => $row->getId()]));
@@ -137,18 +146,14 @@ class InlineEdit
 
 		$a->addText($this->text);
 
-		if ($this->title !== null) {
-			$a->setAttribute(
-				'title',
-				$this->grid->getTranslator()->translate($this->title)
-			);
+		if ($this->title) {
+			$a->title($this->grid->getTranslator()->translate($this->title));
+		}
+		if ($this->class) {
+			$a->class[] = $this->class;
 		}
 
-		if ($this->class !== null) {
-			$a->appendAttribute('class', $this->class);
-		}
-
-		$a->appendAttribute('class', 'datagrid-inline-edit-trigger');
+		$a->class[] = 'datagrid-inline-edit-trigger';
 
 		return $a;
 	}
@@ -156,25 +161,21 @@ class InlineEdit
 
 	/**
 	 * Render row item detail button
+	 * @return Html
 	 */
-	public function renderButtonAdd(): Html
+	public function renderButtonAdd()
 	{
-		$a = Html::el('a')
-			->href($this->grid->link('showInlineAdd!'));
+		$a = Html::el('a')->href('')->data('datagrid-toggle-inline-add', true);
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
 		$a->addText($this->text);
 
-		if ($this->title !== null) {
-			$a->setAttribute(
-				'title',
-				$this->grid->getTranslator()->translate($this->title)
-			);
+		if ($this->title) {
+			$a->title($this->grid->getTranslator()->translate($this->title));
 		}
-
-		if ($this->class !== null) {
-			$a->appendAttribute('class', $this->class);
+		if ($this->class) {
+			$a->class($this->class);
 		}
 
 		return $a;
@@ -182,29 +183,41 @@ class InlineEdit
 
 
 	/**
+	 * Setter for inline adding position
+	 * @param bool $position_top
 	 * @return static
 	 */
-	public function setPositionTop(bool $positionTop = true): self
+	public function setPositionTop($position_top = true)
 	{
-		$this->positionTop = $positionTop;
+		$this->position_top = (bool) $position_top;
 
 		return $this;
 	}
 
 
-	public function isPositionTop(): bool
+	/**
+	 * Getter for inline adding
+	 * @return bool
+	 */
+	public function isPositionTop()
 	{
-		return $this->positionTop;
+		return $this->position_top;
 	}
 
 
-	public function isPositionBottom(): bool
+	/**
+	 * @return bool
+	 */
+	public function isPositionBottom()
 	{
-		return !$this->positionTop;
+		return !$this->position_top;
 	}
 
 
-	public function addControlsClasses(Container $container): void
+	/**
+	 * @param Nette\Forms\Container $container
+	 */
+	public function addControlsClasses(Nette\Forms\Container $container)
 	{
 		foreach ($container->getControls() as $key => $control) {
 			switch ($key) {
@@ -213,13 +226,14 @@ class InlineEdit
 					$control->setAttribute('class', 'btn btn-xs btn-primary');
 
 					break;
+
 				case 'cancel':
-					$control->setValidationScope([]);
 					$control->setAttribute('class', 'btn btn-xs btn-danger');
 
 					break;
+
 				default:
-					if ($control->getControl()->getAttribute('class') === null) {
+					if (empty($control->getControl()->getClass())) {
 						$control->setAttribute('class', 'form-control input-sm form-control-sm');
 					}
 
@@ -230,17 +244,21 @@ class InlineEdit
 
 
 	/**
+	 * @param bool $show
 	 * @return static
 	 */
-	public function setShowNonEditingColumns(bool $show = true): self
+	public function setShowNonEditingColumns($show = true)
 	{
-		$this->showNonEditingColumns = $show;
+		$this->showNonEditingColumns = (bool) $show;
 
 		return $this;
 	}
 
 
-	public function showNonEditingColumns(): bool
+	/**
+	 * @return bool
+	 */
+	public function showNonEditingColumns()
 	{
 		return $this->showNonEditingColumns;
 	}

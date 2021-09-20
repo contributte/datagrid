@@ -1,25 +1,33 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\DataSource;
 
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 
 class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource implements IDataSource
 {
 
-	protected function applyFilterDate(FilterDate $filter): void
+	/**
+	 * Filter by date
+	 * @param  Filter\FilterDate $filter
+	 * @return void
+	 */
+	public function applyFilterDate(Filter\FilterDate $filter)
 	{
 		$conditions = $filter->getCondition();
 
 		try {
 			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
-			$this->dataSource->where(
+			$this->data_source->where(
 				"CONVERT(varchar(10), {$filter->getColumn()}, 112) = ?",
 				$date->format('Ymd')
 			);
@@ -29,35 +37,40 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 	}
 
 
-	protected function applyFilterDateRange(FilterDateRange $filter): void
+	/**
+	 * Filter by date range
+	 * @param  Filter\FilterDateRange $filter
+	 * @return void
+	 */
+	public function applyFilterDateRange(Filter\FilterDateRange $filter)
 	{
 		$conditions = $filter->getCondition();
 
-		$valueFrom = $conditions[$filter->getColumn()]['from'];
-		$valueTo = $conditions[$filter->getColumn()]['to'];
+		$value_from = $conditions[$filter->getColumn()]['from'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
-		if ($valueFrom) {
+		if ($value_from) {
 			try {
-				$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
-				$dateFrom->setTime(0, 0, 0);
+				$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
+				$date_from->setTime(0, 0, 0);
 
-				$this->dataSource->where(
+				$this->data_source->where(
 					"CONVERT(varchar(10), {$filter->getColumn()}, 112) >= ?",
-					$dateFrom->format('Ymd')
+					$date_from->format('Ymd')
 				);
 			} catch (DataGridDateTimeHelperException $ex) {
 				// ignore the invalid filter value
 			}
 		}
 
-		if ($valueTo) {
+		if ($value_to) {
 			try {
-				$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
-				$dateTo->setTime(23, 59, 59);
+				$date_to = DateTimeHelper::tryConvertToDateTime($value_to, [$filter->getPhpFormat()]);
+				$date_to->setTime(23, 59, 59);
 
-				$this->dataSource->where(
+				$this->data_source->where(
 					"CONVERT(varchar(10), {$filter->getColumn()}, 112) <= ?",
-					$dateTo->format('Ymd')
+					$date_to->format('Ymd')
 				);
 			} catch (DataGridDateTimeHelperException $ex) {
 				// ignore the invalid filter value

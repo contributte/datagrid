@@ -1,30 +1,27 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Toolbar;
 
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonRenderer;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
-use Ublaboo\DataGrid\Traits\TLink;
+use Ublaboo\DataGrid\Traits;
 
 class ToolbarButton
 {
-
-	use TButtonTryAddIcon;
-	use TButtonClass;
-	use TButtonIcon;
-	use TButtonRenderer;
-	use TButtonText;
-	use TButtonTitle;
-	use TLink;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonClass;
+	use Traits\TButtonIcon;
+	use Traits\TButtonRenderer;
+	use Traits\TButtonText;
+	use Traits\TButtonTitle;
+	use Traits\TLink;
 
 	/**
 	 * @var DataGrid
@@ -46,15 +43,14 @@ class ToolbarButton
 	 */
 	protected $attributes = [];
 
-	/**
-	 * @var string|null
-	 */
-	protected $confirmDialog = null;
 
 	/**
-	 * Toolbar button constructor
+	 * @param DataGrid $grid
+	 * @param string   $href
+	 * @param string   $text
+	 * @param array    $params
 	 */
-	public function __construct(DataGrid $grid, string $href, string $text, array $params = [])
+	public function __construct(DataGrid $grid, $href, $text, $params = [])
 	{
 		$this->grid = $grid;
 		$this->href = $href;
@@ -65,8 +61,9 @@ class ToolbarButton
 
 	/**
 	 * Render toolbar button
+	 * @return Html
 	 */
-	public function renderButton(): Html
+	public function renderButton()
 	{
 		try {
 			// Renderer function may be used
@@ -81,23 +78,18 @@ class ToolbarButton
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
-		if ($this->attributes !== []) {
+		if (!empty($this->attributes)) {
 			$a->addAttributes($this->attributes);
 		}
 
 		$a->addText($this->grid->getTranslator()->translate($this->text));
 
-		if ($this->getTitle() !== null) {
-			$a->setAttribute(
-				'title',
-				$this->grid->getTranslator()->translate($this->getTitle())
-			);
+		if ($this->getTitle()) {
+			$a->title($this->grid->getTranslator()->translate($this->getTitle()));
 		}
 
-		$a->setAttribute('class', $this->getClass());
-
-		if ($this->confirmDialog !== null) {
-			$a->setAttribute('data-datagrid-confirm', $this->confirmDialog);
+		if ($this->getClass()) {
+			$a->class($this->getClass());
 		}
 
 		return $a;
@@ -110,17 +102,7 @@ class ToolbarButton
 	 */
 	public function addAttributes(array $attrs)
 	{
-		$this->attributes += $attrs;
-
-		return $this;
-	}
-
-	/**
-	 * Add Confirm dialog
-	 */
-	public function setConfirmDialog(string $confirmDialog): self
-	{
-		$this->confirmDialog = $confirmDialog;
+		$this->attributes = $this->attributes + $attrs;
 
 		return $this;
 	}

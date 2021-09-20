@@ -1,42 +1,52 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Utils;
+
+use Nette\SmartObject;
 
 final class Sorting
 {
 
+	use SmartObject;
+
 	/**
-	 * @var array|string[]
+	 * @var array
 	 */
 	private $sort = [];
 
 	/**
 	 * @var callable|null
 	 */
-	private $sortCallback = null;
+	private $sort_callback = null;
 
 
-	public function __construct(array $sort, ?callable $sortCallback = null)
+	public function __construct(array $sort, callable $sort_callback = null)
 	{
 		$this->sort = $sort;
-		$this->sortCallback = $sortCallback;
+		$this->sort_callback = $sort_callback;
 	}
 
 
 	/**
-	 * @return array|string[]
+	 * @return array
 	 */
-	public function getSort(): array
+	public function getSort()
 	{
 		return $this->sort;
 	}
 
 
-	public function getSortCallback(): ?callable
+	/**
+	 * @return callable|null
+	 */
+	public function getSortCallback()
 	{
-		return $this->sortCallback;
+		return $this->sort_callback;
 	}
-
 }

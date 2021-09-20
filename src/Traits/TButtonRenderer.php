@@ -1,6 +1,10 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Traits;
 
@@ -22,22 +26,29 @@ trait TButtonRenderer
 	 */
 	protected $replacements = [];
 
+
 	/**
+	 * Try to render item with custom renderer
+	 * @param  Row|null $row
 	 * @return mixed
 	 * @throws DataGridColumnRendererException
 	 */
-	public function useRenderer(?Row $row = null)
+	public function useRenderer($row = null)
 	{
 		$renderer = $this->getRenderer();
 
-		$args = $row instanceof Row ? [$row->getItem()] : [];
+		if ($row instanceof Row) {
+			$args = [$row->getItem()];
+		} else {
+			$args = [];
+		}
 
-		if ($renderer === null) {
+		if (!$renderer) {
 			throw new DataGridColumnRendererException;
 		}
 
-		if ($renderer->getConditionCallback() !== null) {
-			if (call_user_func_array($renderer->getConditionCallback(), $args) === false) {
+		if ($renderer->getConditionCallback()) {
+			if (!call_user_func_array($renderer->getConditionCallback(), $args)) {
 				throw new DataGridColumnRendererException;
 			}
 
@@ -50,52 +61,86 @@ trait TButtonRenderer
 
 	/**
 	 * Set renderer callback and (it may be optional - the condition callback will decide)
-	 *
-	 * @return static
+	 * @param callable $renderer
 	 * @throws DataGridException
 	 */
-	public function setRenderer(
-		callable $renderer,
-		?callable $conditionCallback = null
-	): self
+	public function setRenderer($renderer, $condition_callback = null)
 	{
 		if ($this->hasReplacements()) {
-			throw new DataGridException('Use either Column::setReplacement() or Column::setRenderer, not both.');
+			throw new DataGridException(
+				'Use either Column::setReplacement() or Column::setRenderer, not both.'
+			);
 		}
 
-		$this->renderer = new Renderer($renderer, $conditionCallback);
+		if (!is_callable($renderer)) {
+			throw new DataGridException(
+				'Renderer (method Column::setRenderer()) must be callable.'
+			);
+		}
+
+		if ($condition_callback != null && !is_callable($condition_callback)) {
+			throw new DataGridException(
+				'Renderer (method Column::setRenderer()) must be callable.'
+			);
+		}
+
+		$this->renderer = new Renderer($renderer, $condition_callback);
 
 		return $this;
 	}
 
 
 	/**
-	 * @return static
+	 * Set renderer callback just if condition is truthy
+	 * @param callable $renderer
 	 */
-	public function setRendererOnCondition(
-		callable $renderer,
-		callable $conditionCallback
-	): self
+	public function setRendererOnCondition($renderer, $condition_callback)
 	{
-		return $this->setRenderer($renderer, $conditionCallback);
+		return $this->setRenderer($renderer, $condition_callback);
 	}
 
 
-	public function getRenderer(): ?Renderer
+	/**
+	 * Return custom renderer callback
+	 * @return Renderer|null
+	 */
+	public function getRenderer()
 	{
 		return $this->renderer;
 	}
 
 
-	public function hasReplacements(): bool
+	/**
+	 * Set column replacements
+	 * @param  array $replacements
+	 * @return Column
+	 */
+	public function setReplacement(array $replacements)
 	{
-		return $this->replacements !== [];
+		$this->replacements = $replacements;
+
+		return $this;
 	}
 
 
-	public function applyReplacements(Row $row, string $column): array
+	/**
+	 * Tell whether columns has replacements
+	 * @return bool
+	 */
+	public function hasReplacements()
 	{
-		$value = $row->getValue($column);
+		return (bool) $this->replacements;
+	}
+
+
+	/**
+	 * Apply replacements
+	 * @param  Row   $row
+	 * @return array
+	 */
+	public function applyReplacements(Row $row)
+	{
+		$value = $row->getValue($this->column);
 
 		if ((is_scalar($value) || $value === null) && isset($this->replacements[$value])) {
 			return [true, $this->replacements[$value]];
@@ -103,5 +148,4 @@ trait TButtonRenderer
 
 		return [false, null];
 	}
-
 }

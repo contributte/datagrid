@@ -1,27 +1,33 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
-use Dibi\Fluent;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\QueryBuilder;
-use Nette\Database\Table\Selection;
-use Nextras\Orm\Collection\ICollection;
-
 interface IAggregationFunction
 {
-
-	public const DATA_TYPE_ALL = 'data_type_all';
-	public const DATA_TYPE_FILTERED = 'data_type_filtered';
-	public const DATA_TYPE_PAGINATED = 'data_type_paginated';
-
-	public function getFilterDataType(): string;
+	const DATA_TYPE_ALL = 'data_type_all';
+	const DATA_TYPE_FILTERED = 'data_type_filtered';
+	const DATA_TYPE_PAGINATED = 'data_type_paginated';
 
 
 	/**
-	 * @param Fluent|QueryBuilder|Collection|Selection|ICollection $dataSource
+	 * @return string
 	 */
-	public function processDataSource($dataSource): void;
+	public function getFilterDataType();
+
+	/**
+	 * @param  mixed  $dataSource
+	 * @return void
+	 */
+	public function processDataSource($dataSource);
+
+	/**
+	 * @return mixed
+	 */
+	public function renderResult();
 }

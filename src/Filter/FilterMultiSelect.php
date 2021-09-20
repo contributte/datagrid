@@ -1,14 +1,15 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette\Application\UI\Form;
-use Nette\Forms\Container;
-use Nette\Forms\Controls\BaseControl;
+use Nette;
 use Ublaboo\DataGrid\DataGrid;
-use UnexpectedValueException;
 
 class FilterMultiSelect extends FilterSelect
 {
@@ -27,24 +28,26 @@ class FilterMultiSelect extends FilterSelect
 	];
 
 
-	public function __construct(
-		DataGrid $grid,
-		string $key,
-		string $name,
-		array $options,
-		string $column
-	)
+	/**
+	 * @param DataGrid $grid
+	 * @param string   $key
+	 * @param string   $name
+	 * @param string   $options
+	 * @param string   $column
+	 */
+	public function __construct($grid, $key, $name, array $options, $column)
 	{
 		parent::__construct($grid, $key, $name, $options, $column);
 
-		$this->addAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
+		$this->addAttribute('data-selected-icon-check', DataGrid::$icon_prefix . 'check');
 	}
 
 
 	/**
 	 * Get filter condition
+	 * @return array
 	 */
-	public function getCondition(): array
+	public function getCondition()
 	{
 		$return = [$this->column => []];
 
@@ -56,44 +59,29 @@ class FilterMultiSelect extends FilterSelect
 	}
 
 
-	protected function addControl(
-		Container $container,
-		string $key,
-		string $name,
-		array $options
-	): BaseControl
+	/**
+	 * @param Nette\Forms\Container $container
+	 * @param string                $key
+	 * @param string                $name
+	 * @param array                $options
+	 * @return Nette\Forms\Controls\SelectBox
+	 */
+	protected function addControl(Nette\Forms\Container $container, $key, $name, $options)
 	{
 		/**
 		 * Set some translated texts
 		 */
 		$form = $container->lookup('Nette\Application\UI\Form');
+		$t = [$form->getTranslator(), 'translate'];
 
-		if (!$form instanceof Form) {
-			throw new UnexpectedValueException();
-		}
-
-		$translator = $form->getTranslator();
-
-		if ($translator === null) {
-			throw new UnexpectedValueException();
-		}
-
-		$this->addAttribute(
-			'title',
-			$translator->translate('ublaboo_datagrid.multiselect_choose')
-		);
-		$this->addAttribute(
-			'data-i18n-selected',
-			$translator->translate('ublaboo_datagrid.multiselect_selected')
-		);
+		$this->addAttribute('title', $t('ublaboo_datagrid.multiselect_choose'));
+		$this->addAttribute('data-i18n-selected', $t('ublaboo_datagrid.multiselect_selected'));
 
 		/**
 		 * Add input to container
 		 */
 		$input = $container->addMultiSelect($key, $name, $options);
 
-		$this->addAttributes($input);
-
-		return $input;
+		return $this->addAttributes($input);
 	}
 }

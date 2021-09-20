@@ -1,72 +1,54 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Nette\Utils\ArrayHash;
-use Ublaboo\DataGrid\Filter\Filter;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
+use Nette\SmartObject;
+use Nette\Utils\Callback;
+use Ublaboo\DataGrid\Filter;
 
 abstract class FilterableDataSource
 {
 
-	/**
-	 * @return mixed
-	 */
-	abstract protected function getDataSource();
-
-	abstract protected function applyFilterDate(FilterDate $filter): void;
-
-	abstract protected function applyFilterDateRange(FilterDateRange $filter): void;
-
-	abstract protected function applyFilterRange(FilterRange $filter): void;
-
-	abstract protected function applyFilterText(FilterText $filter): void;
-
-	abstract protected function applyFilterMultiSelect(FilterMultiSelect $filter): void;
-
-	abstract protected function applyFilterSelect(FilterSelect $filter): void;
-
+	use SmartObject;
 
 	/**
-	 * {@inheritDoc}
-	 *
-	 * @param array<Filter> $filters
+	 * Filter data
+	 * @param array $filters
+	 * @return static
 	 */
-	public function filter(array $filters): void
+	public function filter(array $filters)
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
-				if ($filter->getConditionCallback() !== null) {
-					$value = $filter->getValue();
-
-					if (is_array($value)) {
-						$value = ArrayHash::from($filter->getValue());
-					}
-
-					($filter->getConditionCallback())($this->getDataSource(), $value);
+				if ($filter->hasConditionCallback()) {
+					Callback::invokeArgs(
+						$filter->getConditionCallback(),
+						[$this->data_source, $filter->getValue()]
+					);
 				} else {
-					if ($filter instanceof FilterText) {
+					if ($filter instanceof Filter\FilterText) {
 						$this->applyFilterText($filter);
-					} elseif ($filter instanceof FilterMultiSelect) {
+					} elseif ($filter instanceof Filter\FilterMultiSelect) {
 						$this->applyFilterMultiSelect($filter);
-					} elseif ($filter instanceof FilterSelect) {
+					} elseif ($filter instanceof Filter\FilterSelect) {
 						$this->applyFilterSelect($filter);
-					} elseif ($filter instanceof FilterDate) {
+					} elseif ($filter instanceof Filter\FilterDate) {
 						$this->applyFilterDate($filter);
-					} elseif ($filter instanceof FilterDateRange) {
+					} elseif ($filter instanceof Filter\FilterDateRange) {
 						$this->applyFilterDateRange($filter);
-					} elseif ($filter instanceof FilterRange) {
+					} elseif ($filter instanceof Filter\FilterRange) {
 						$this->applyFilterRange($filter);
 					}
 				}
 			}
 		}
+
+		return $this;
 	}
 }

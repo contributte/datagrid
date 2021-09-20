@@ -1,6 +1,10 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Traits;
 
@@ -12,25 +16,30 @@ trait TRenderCondition
 	/**
 	 * @var callable|null
 	 */
-	protected $renderConditionCallback;
+	protected $render_condition_callback;
+
 
 	/**
+	 * @param callable $condition
 	 * @return static
 	 */
-	public function setRenderCondition(callable $condition): self
+	public function setRenderCondition(callable $condition)
 	{
-		$this->renderConditionCallback = $condition;
+		$this->render_condition_callback = $condition;
 
 		return $this;
 	}
 
 
-	public function shouldBeRendered(Row $row): bool
+	/**
+	 * @param Row $row
+	 * @return bool
+	 */
+	public function shouldBeRendered(Row $row)
 	{
-		$condition = $this->renderConditionCallback;
+		$condition = $this->render_condition_callback;
 
-		return is_callable($condition)
-			? ($condition)($row->getItem())
-			: true;
+		return $condition ? $condition($row->getItem()) : true;
 	}
+
 }

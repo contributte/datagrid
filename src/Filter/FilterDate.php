@@ -1,12 +1,16 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette\Forms\Container;
+use Nette;
 
-class FilterDate extends OneColumnFilter implements IFilterDate
+class FilterDate extends Filter implements IFilterDate
 {
 
 	/**
@@ -24,34 +28,41 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 	 */
 	protected $type = 'date';
 
-	public function addToFormContainer(Container $container): void
-	{
-		$control = $container->addText($this->key, $this->name);
 
-		$control->setAttribute('data-provide', 'datepicker')
+	/**
+	 * Adds select box to filter form
+	 * @param Nette\Forms\Container $container
+	 */
+	public function addToFormContainer(Nette\Forms\Container $container)
+	{
+		$container->addText($this->key, $this->name)
+			->setAttribute('data-provide', 'datepicker')
 			->setAttribute('data-date-orientation', 'bottom')
 			->setAttribute('data-date-format', $this->getJsFormat())
 			->setAttribute('data-date-today-highlight', 'true')
 			->setAttribute('data-date-autoclose', 'true');
 
-		$this->addAttributes($control);
+		$this->addAttributes($container[$this->key]);
 
 		if ($this->grid->hasAutoSubmit()) {
-			$control->setAttribute('data-autosubmit-change', true);
+			$container[$this->key]->setAttribute('data-autosubmit-change', true);
 		}
 
-		if ($this->getPlaceholder() !== null) {
-			$control->setAttribute('placeholder', $this->getPlaceholder());
+		if ($this->getPlaceholder()) {
+			$container[$this->key]->setAttribute('placeholder', $this->getPlaceholder());
 		}
 	}
 
 
 	/**
 	 * Set format for datepicker etc
+	 * @param  string $php_format
+	 * @param  string $js_format
+	 * @return static
 	 */
-	public function setFormat(string $phpFormat, string $jsFormat): IFilterDate
+	public function setFormat($php_format, $js_format)
 	{
-		$this->format = [$phpFormat, $jsFormat];
+		$this->format = [$php_format, $js_format];
 
 		return $this;
 	}
@@ -59,8 +70,9 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 
 	/**
 	 * Get php format for datapicker
+	 * @return string
 	 */
-	public function getPhpFormat(): string
+	public function getPhpFormat()
 	{
 		return $this->format[0];
 	}
@@ -68,10 +80,10 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 
 	/**
 	 * Get js format for datepicker
+	 * @return string
 	 */
-	public function getJsFormat(): string
+	public function getJsFormat()
 	{
 		return $this->format[1];
 	}
-
 }

@@ -1,26 +1,25 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette\Forms\Controls\Button;
+use Nette;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
+use Ublaboo\DataGrid\Traits;
 
-class SubmitButton extends Button
+class SubmitButton extends Nette\Forms\Controls\Button
 {
-
-	use TButtonTryAddIcon;
-	use TButtonIcon;
-	use TButtonClass;
-	use TButtonTitle;
-	use TButtonText;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonIcon;
+	use Traits\TButtonClass;
+	use Traits\TButtonTitle;
+	use Traits\TButtonText;
 
 	/**
 	 * @var DataGrid
@@ -28,7 +27,10 @@ class SubmitButton extends Button
 	protected $grid;
 
 
-	public function __construct(DataGrid $grid)
+	/**
+	 * @param DataGrid     $grid
+	 */
+	public function __construct($grid)
 	{
 		parent::__construct($this->text);
 
@@ -43,24 +45,21 @@ class SubmitButton extends Button
 
 
 	/**
-	 * @param string|object $caption
+	 * Generates control's HTML element.
+	 * @param  string
+	 * @return Nette\Utils\Html
 	 */
-	public function getControl($caption = null): Html
+	public function getControl($caption = null)
 	{
-		$el = parent::getControl($caption);
+		$el = parent::getControl('');
 
-		$el->setAttribute('type', 'submit');
-		$el->setAttribute('class', $this->getClass());
+		$el->type = 'submit';
+		$el->class = $this->getClass();
 
-		if ($this->getIcon() !== null) {
-			$el->addHtml(
-				Html::el('span')->appendAttribute(
-					'class',
-					DataGrid::$iconPrefix . $this->getIcon()
-				)
-			);
+		if ($this->getIcon()) {
+			$el->addHtml(Html::el('span')->class(DataGrid::$icon_prefix . $this->getIcon()));
 
-			if ($this->getText() !== '') {
+			if (strlen($this->getText())) {
 				$el->addHtml('&nbsp;');
 			}
 		}

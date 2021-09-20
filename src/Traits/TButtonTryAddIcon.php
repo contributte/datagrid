@@ -1,6 +1,10 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Traits;
 
@@ -10,18 +14,19 @@ use Ublaboo\DataGrid\DataGrid;
 trait TButtonTryAddIcon
 {
 
-	public function tryAddIcon(Html $el, ?string $iconString, string $name): void
+	/**
+	 * Should the element has an icon?
+	 * @param  Html            $el
+	 * @param  string|null     $icon
+	 * @param  string          $name
+	 * @return void
+	 */
+	public function tryAddIcon(Html $el, $icon, $name)
 	{
-		if ($iconString !== null) {
-			$iconClass = '';
+		if ($icon) {
+			$el->addHtml(Html::el('span')->class(DataGrid::$icon_prefix . $icon));
 
-			foreach (explode(' ', $iconString) as $icon) {
-				$iconClass .= ' ' . DataGrid::$iconPrefix . $icon;
-			}
-
-			$el->addHtml(Html::el('span')->setAttribute('class', trim($iconClass)));
-
-			if (mb_strlen($name) > 1) {
+			if (strlen($name)) {
 				$el->addHtml('&nbsp;');
 			}
 		}

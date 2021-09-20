@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use ArrayAccess;
-use DateTime;
-use DateTimeInterface;
 use Nette\Utils\Strings;
 use Ublaboo\DataGrid\Exception\DataGridArrayDataSourceException;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
@@ -32,43 +33,64 @@ class ArrayDataSource implements IDataSource
 	 */
 	protected $count = 0;
 
+
 	/**
-	 * @param array $dataSource
+	 * @param array $data_source
 	 */
-	public function __construct(array $dataSource)
+	public function __construct(array $data_source)
 	{
-		$this->setData($dataSource);
+		$this->setData($data_source);
 	}
 
 
-	// *******************************************************************************
-	// *                          IDataSource implementation                         *
-	// *******************************************************************************
+	/********************************************************************************
+	 *                          IDataSource implementation                          *
+	 ********************************************************************************/
 
 
-	public function getCount(): int
+	/**
+	 * Get count of data
+	 * @return int
+	 */
+	public function getCount()
 	{
 		return sizeof($this->data);
 	}
 
 
 	/**
-	 * {@inheritDoc}
+	 * Get the data
+	 * @return array
 	 */
-	public function getData(): array
+	public function getData()
 	{
 		return $this->data;
 	}
 
 
 	/**
-	 * {@inheritDoc}
+	 * Set the data
+	 * @param array $data_source
+	 * @return static
 	 */
-	public function filter(array $filters): void
+	private function setData(array $data_source)
+	{
+		$this->data = $data_source;
+
+		return $this;
+	}
+
+
+	/**
+	 * Filter data
+	 * @param Filter[] $filters
+	 * @return static
+	 */
+	public function filter(array $filters)
 	{
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
-				if ($filter->getConditionCallback() !== null) {
+				if ($filter->hasConditionCallback()) {
 					$data = (array) call_user_func_array(
 						$filter->getConditionCallback(),
 						[$this->data, $filter->getValue()]
@@ -82,17 +104,21 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 		}
+
+		return $this;
 	}
 
 
 	/**
-	 * {@inheritDoc}
+	 * Filter data - get one row
+	 * @param array $condition
+	 * @return ArrayDataSource
 	 */
-	public function filterOne(array $condition): IDataSource
+	public function filterOne(array $condition)
 	{
 		foreach ($this->data as $item) {
 			foreach ($condition as $key => $value) {
-				if ($item[$key] === $value) {
+				if ($item[$key] == $value) {
 					$this->setData([$item]);
 
 					return $this;
@@ -106,7 +132,13 @@ class ArrayDataSource implements IDataSource
 	}
 
 
-	public function limit(int $offset, int $limit): IDataSource
+	/**
+	 * Apply limit and offset on data
+	 * @param int $offset
+	 * @param int $limit
+	 * @return static
+	 */
+	public function limit($offset, $limit)
 	{
 		$data = array_slice($this->data, $offset, $limit);
 		$this->setData($data);
@@ -115,7 +147,196 @@ class ArrayDataSource implements IDataSource
 	}
 
 
-	public function sort(Sorting $sorting): IDataSource
+	/**
+	 * Apply fitler and tell whether row passes conditions or not
+	 * @param  mixed  $row
+	 * @param  Filter $filter
+	 * @return mixed
+	 */
+	protected function applyFilter($row, Filter $filter)
+	{
+		if (is_array($row) || $row instanceof \Traversable) {
+			if ($filter instanceof FilterDate) {
+				return $this->applyFilterDate($row, $filter);
+			} elseif ($filter instanceof FilterMultiSelect) {
+				return $this->applyFilterMultiSelect($row, $filter);
+			} elseif ($filter instanceof FilterDateRange) {
+				return $this->applyFilterDateRange($row, $filter);
+			} elseif ($filter instanceof FilterRange) {
+				return $this->applyFilterRange($row, $filter);
+			}
+
+			$condition = $filter->getCondition();
+
+			foreach ($condition as $column => $value) {
+				if ($filter instanceof FilterText && $filter->isExactSearch()) {
+					return $row[$column] == $value;
+				}
+
+				if ($filter instanceof FilterText && $filter->hasSplitWordsSearch() === false) {
+					$words = [$value];
+				} else {
+					$words = explode(' ', $value);
+				}
+
+				$row_value = strtolower(Strings::toAscii($row[$column]));
+
+				foreach ($words as $word) {
+					if (strpos($row_value, strtolower(Strings::toAscii($word))) !== false) {
+						return $row;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * Filter by multi select value
+	 * @param  mixed  $row
+	 * @param  FilterMultiSelect $filter
+	 * @return void
+	 */
+	public function applyFilterMultiSelect($row, FilterMultiSelect $filter)
+	{
+		$condition = $filter->getCondition();
+		$values = $condition[$filter->getColumn()];
+
+		return in_array($row[$filter->getColumn()], $values, true);
+	}
+
+
+	/**
+	 * @param  mixed  $row
+	 * @param  FilterRange $filter
+	 * @return void
+	 */
+	public function applyFilterRange($row, FilterRange $filter)
+	{
+		$condition = $filter->getCondition();
+		$values = $condition[$filter->getColumn()];
+
+		if ($values['from'] !== null && $values['from'] !== '') {
+			if ($values['from'] > $row[$filter->getColumn()]) {
+				return false;
+			}
+		}
+
+		if ($values['to'] !== null && $values['to'] !== '') {
+			if ($values['to'] < $row[$filter->getColumn()]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * @param  mixed  $row
+	 * @param  FilterDateRange $filter
+	 * @return void
+	 */
+	public function applyFilterDateRange($row, FilterDateRange $filter)
+	{
+		$format = $filter->getPhpFormat();
+		$condition = $filter->getCondition();
+		$values = $condition[$filter->getColumn()];
+		$row_value = $row[$filter->getColumn()];
+
+		if ($values['from'] !== null && $values['from'] !== '') {
+			$date_from = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
+			$date_from->setTime(0, 0, 0);
+
+			if (!($row_value instanceof \DateTime)) {
+				/**
+				 * Try to convert string to DateTime object
+				 */
+				try {
+					$row_value = DateTimeHelper::tryConvertToDate($row_value);
+				} catch (DataGridDateTimeHelperException $e) {
+					/**
+					 * Otherwise just return raw string
+					 */
+					return false;
+				}
+			}
+
+			if ($row_value->getTimeStamp() < $date_from->getTimeStamp()) {
+				return false;
+			}
+		}
+
+		if ($values['to'] !== null && $values['to'] !== '') {
+			$date_to = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
+			$date_to->setTime(23, 59, 59);
+
+			if (!($row_value instanceof \DateTime)) {
+				/**
+				 * Try to convert string to DateTime object
+				 */
+				try {
+					$row_value = DateTimeHelper::tryConvertToDate($row_value);
+				} catch (DataGridDateTimeHelperException $e) {
+					/**
+					 * Otherwise just return raw string
+					 */
+					return false;
+				}
+			}
+
+			if ($row_value->getTimeStamp() > $date_to->getTimeStamp()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Apply fitler date and tell whether row value matches or not
+	 * @param  mixed  $row
+	 * @param  Filter $filter
+	 * @return mixed
+	 */
+	protected function applyFilterDate($row, FilterDate $filter)
+	{
+		$format = $filter->getPhpFormat();
+		$condition = $filter->getCondition();
+
+		foreach ($condition as $column => $value) {
+			$row_value = $row[$column];
+
+			$date = DateTimeHelper::tryConvertToDateTime($value, [$format]);
+
+			if (!($row_value instanceof \DateTime)) {
+				/**
+				 * Try to convert string to DateTime object
+				 */
+				try {
+					$row_value = DateTimeHelper::tryConvertToDateTime($row_value);
+				} catch (DataGridDateTimeHelperException $e) {
+					/**
+					 * Otherwise just return raw string
+					 */
+					return false;
+				}
+			}
+
+			return $row_value->format($format) == $date->format($format);
+		}
+	}
+
+
+	/**
+	 * Sort data
+	 * @param  Sorting $sorting
+	 * @return static
+	 */
+	public function sort(Sorting $sorting)
 	{
 		if (is_callable($sorting->getSortCallback())) {
 			$data = call_user_func(
@@ -139,10 +360,11 @@ class ArrayDataSource implements IDataSource
 			$data = [];
 
 			foreach ($this->data as $item) {
-				$sort_by = is_object($item[$column]) && $item[$column] instanceof DateTimeInterface
-					? $item[$column]->format('Y-m-d H:i:s')
-					: (string) $item[$column];
-
+				if (is_object($item[$column]) && $item[$column] instanceof \DateTimeInterface) {
+					$sort_by = $item[$column]->format('Y-m-d H:i:s');
+				} else {
+					$sort_by = (string) $item[$column];
+				}
 				$data[$sort_by][] = $item;
 			}
 
@@ -152,208 +374,16 @@ class ArrayDataSource implements IDataSource
 				krsort($data);
 			}
 
-			$dataSource = [];
+			$data_source = [];
 
 			foreach ($data as $i) {
 				foreach ($i as $item) {
-					$dataSource[] = $item;
+					$data_source[] = $item;
 				}
 			}
 
-			$this->setData($dataSource);
+			$this->setData($data_source);
 		}
-
-		return $this;
-	}
-
-
-	/**
-	 * @param mixed $row
-	 * @return mixed
-	 */
-	protected function applyFilter($row, Filter $filter)
-	{
-		if (is_array($row) || $row instanceof ArrayAccess) {
-			if ($filter instanceof FilterDate) {
-				return $this->applyFilterDate($row, $filter);
-			}
-
-			if ($filter instanceof FilterMultiSelect) {
-				return $this->applyFilterMultiSelect($row, $filter);
-			}
-
-			if ($filter instanceof FilterDateRange) {
-				return $this->applyFilterDateRange($row, $filter);
-			}
-
-			if ($filter instanceof FilterRange) {
-				return $this->applyFilterRange($row, $filter);
-			}
-
-			$condition = $filter->getCondition();
-
-			foreach ($condition as $column => $value) {
-				$value = (string) $value;
-				$rowVal = (string) $row[$column];
-
-				if ($filter instanceof FilterText && $filter->isExactSearch()) {
-					return $rowVal === $value;
-				}
-
-				$words = $filter instanceof FilterText && $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
-
-				$row_value = strtolower(Strings::toAscii((string) $row[$column]));
-
-				foreach ($words as $word) {
-					if (strpos($row_value, strtolower(Strings::toAscii($word))) !== false) {
-						return $row;
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-
-
-	/**
-	 * @param mixed $row
-	 */
-	protected function applyFilterMultiSelect($row, FilterMultiSelect $filter): bool
-	{
-		$condition = $filter->getCondition();
-		$values = $condition[$filter->getColumn()];
-
-		return in_array($row[$filter->getColumn()], $values, true);
-	}
-
-
-	/**
-	 * @param mixed $row
-	 */
-	protected function applyFilterRange($row, FilterRange $filter): bool
-	{
-		$condition = $filter->getCondition();
-		$values = $condition[$filter->getColumn()];
-
-		if ($values['from'] !== null && $values['from'] !== '') {
-			if ($values['from'] > $row[$filter->getColumn()]) {
-				return false;
-			}
-		}
-
-		if ($values['to'] !== null && $values['to'] !== '') {
-			if ($values['to'] < $row[$filter->getColumn()]) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-
-	/**
-	 * @param mixed $row
-	 */
-	protected function applyFilterDateRange($row, FilterDateRange $filter): bool
-	{
-		$format = $filter->getPhpFormat();
-		$condition = $filter->getCondition();
-		$values = $condition[$filter->getColumn()];
-		$row_value = $row[$filter->getColumn()];
-
-		if ($values['from'] !== null && $values['from'] !== '') {
-			$date_from = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
-			$date_from->setTime(0, 0, 0);
-
-			if (!($row_value instanceof DateTime)) {
-				/**
-				 * Try to convert string to DateTime object
-				 */
-				try {
-					$row_value = DateTimeHelper::tryConvertToDate($row_value);
-				} catch (DataGridDateTimeHelperException $e) {
-					/**
-					 * Otherwise just return raw string
-					 */
-					return false;
-				}
-			}
-
-			if ($row_value->getTimestamp() < $date_from->getTimestamp()) {
-				return false;
-			}
-		}
-
-		if ($values['to'] !== null && $values['to'] !== '') {
-			$date_to = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
-			$date_to->setTime(23, 59, 59);
-
-			if (!($row_value instanceof DateTime)) {
-				/**
-				 * Try to convert string to DateTime object
-				 */
-				try {
-					$row_value = DateTimeHelper::tryConvertToDate($row_value);
-				} catch (DataGridDateTimeHelperException $e) {
-					/**
-					 * Otherwise just return raw string
-					 */
-					return false;
-				}
-			}
-
-			if ($row_value->getTimestamp() > $date_to->getTimestamp()) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-
-	/**
-	 * Apply fitler date and tell whether row value matches or not
-	 *
-	 * @param mixed $row
-	 */
-	protected function applyFilterDate($row, FilterDate $filter): bool
-	{
-		$format = $filter->getPhpFormat();
-		$condition = $filter->getCondition();
-
-		foreach ($condition as $column => $value) {
-			$row_value = $row[$column];
-
-			$date = DateTimeHelper::tryConvertToDateTime($value, [$format]);
-
-			if (!($row_value instanceof DateTime)) {
-				/**
-				 * Try to convert string to DateTime object
-				 */
-				try {
-					$row_value = DateTimeHelper::tryConvertToDateTime($row_value);
-				} catch (DataGridDateTimeHelperException $e) {
-					/**
-					 * Otherwise just return raw string
-					 */
-					return false;
-				}
-			}
-
-			return $row_value->format($format) === $date->format($format);
-		}
-
-		return false;
-	}
-
-
-	/**
-	 * Set the data
-	 */
-	private function setData(array $dataSource): IDataSource
-	{
-		$this->data = $dataSource;
 
 		return $this;
 	}

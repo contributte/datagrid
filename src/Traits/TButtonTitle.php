@@ -1,6 +1,10 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Traits;
 
@@ -8,15 +12,16 @@ trait TButtonTitle
 {
 
 	/**
-	 * @var string|null
+	 * @var string|callable
 	 */
-	protected $title;
+	protected $title = '';
 
 
 	/**
-	 * @return static
+	 * Set attribute title
+	 * @param string $title
 	 */
-	public function setTitle(string $title): self
+	public function setTitle($title)
 	{
 		$this->title = $title;
 
@@ -24,7 +29,11 @@ trait TButtonTitle
 	}
 
 
-	public function getTitle(): ?string
+	/**
+	 * Get attribute title
+	 * @return string
+	 */
+	public function getTitle()
 	{
 		return $this->title;
 	}

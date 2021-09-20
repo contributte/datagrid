@@ -1,6 +1,10 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -8,24 +12,17 @@ use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits\TButtonCaret;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
-use Ublaboo\DataGrid\Traits\TLink;
+use Ublaboo\DataGrid\Traits;
 
 class MultiAction extends Column
 {
-
-	use TButtonTryAddIcon;
-	use TButtonIcon;
-	use TButtonClass;
-	use TButtonTitle;
-	use TButtonText;
-	use TButtonCaret;
-	use TLink;
+	use Traits\TButtonTryAddIcon;
+	use Traits\TButtonIcon;
+	use Traits\TButtonClass;
+	use Traits\TButtonTitle;
+	use Traits\TButtonText;
+	use Traits\TButtonCaret;
+	use Traits\TLink;
 
 	/**
 	 * @var DataGrid
@@ -43,26 +40,37 @@ class MultiAction extends Column
 	protected $actions = [];
 
 	/**
-	 * @var array|callable[]
+	 * @var callable[]
 	 */
 	private $rowConditions = [];
 
 
-	public function __construct(DataGrid $grid, string $key, string $name)
+	/**
+	 * @param DataGrid $grid
+	 */
+	public function __construct(DataGrid $grid, $name)
 	{
-		parent::__construct($grid, $key, '', $name);
+		$this->grid = $grid;
+		$this->name = $name;
 
 		$this->setTemplate(__DIR__ . '/../templates/column_multi_action.latte');
 	}
 
 
-	public function renderButton(): Html
+	/**
+	 * @return Html
+	 */
+	public function renderButton()
 	{
 		$button = Html::el('button')
-			->setAttribute('type', 'button')
+			->type('button')
 			->data('toggle', 'dropdown');
 
 		$this->tryAddIcon($button, $this->getIcon(), $this->getName());
+
+		if (!empty($this->attributes)) {
+			$button->addAttributes($this->attributes);
+		}
 
 		$button->addText($this->grid->getTranslator()->translate($this->name));
 
@@ -71,15 +79,12 @@ class MultiAction extends Column
 			$button->addHtml('<i class="caret"></i>');
 		}
 
-		if ($this->getTitle() !== null) {
-			$button->setAttribute(
-				'title',
-				$this->grid->getTranslator()->translate($this->getTitle())
-			);
+		if ($this->getTitle()) {
+			$button->title($this->grid->getTranslator()->translate($this->getTitle()));
 		}
 
-		if ($this->getClass() !== '') {
-			$button->setAttribute('class', $this->getClass() . ' dropdown-toggle');
+		if ($this->getClass()) {
+			$button->class($this->getClass() . ' dropdown-toggle');
 		}
 
 		return $button;
@@ -87,30 +92,29 @@ class MultiAction extends Column
 
 
 	/**
+	 * @param string     $key
+	 * @param string     $name
+	 * @param string     $href
+	 * @param array|null $params
 	 * @return static
 	 */
-	public function addAction(
-		string $key,
-		string $name,
-		?string $href = null,
-		?array $params = null
-	): self
+	public function addAction($key, $name, $href = null, array $params = null)
 	{
 		if (isset($this->actions[$key])) {
 			throw new DataGridException(
-				sprintf('There is already action at key [%s] defined for MultiAction.', $key)
+				"There is already action at key [$key] defined for MultiAction."
 			);
 		}
 
-		$href = $href ?? $key;
+		$href = $href ?: $key;
 
 		if ($params === null) {
 			$params = [$this->grid->getPrimaryKey()];
 		}
 
-		$action = new Action($this->grid, $key, $href, $name, $params);
+		$action = new Action($this->grid, $href, $name, $params);
 
-		$action->setClass('dropdown-item datagrid-multiaction-dropdown-item');
+		$action->setClass('');
 
 		$this->actions[$key] = $action;
 
@@ -119,19 +123,23 @@ class MultiAction extends Column
 
 
 	/**
-	 * @return array<Action>
+	 * @return Action[]
 	 */
-	public function getActions(): array
+	public function getActions()
 	{
 		return $this->actions;
 	}
 
 
-	public function getAction(string $key): Action
+	/**
+	 * @param  string $key
+	 * @return Action
+	 */
+	public function getAction($key)
 	{
 		if (!isset($this->actions[$key])) {
 			throw new DataGridException(
-				sprintf('There is no action at key [%s] defined for MultiAction.', $key)
+				"There is no action at key [$key] defined for MultiAction."
 			);
 		}
 
@@ -141,25 +149,33 @@ class MultiAction extends Column
 
 	/**
 	 * Column can have variables that will be passed to custom template scope
+	 * @return array
 	 */
-	public function getTemplateVariables(): array
+	public function getTemplateVariables()
 	{
-		return array_merge($this->templateVariables, [
-			'multiAction' => $this,
+		return array_merge($this->template_variables, [
+			'multi_action' => $this,
 		]);
 	}
 
 
-	public function setRowCondition(
-		string $actionKey,
-		callable $rowCondition
-	): void
+	/**
+	 * @param string $actionKey
+	 * @param callable $rowCondition
+	 * @return void
+	 */
+	public function setRowCondition($actionKey, callable $rowCondition)
 	{
 		$this->rowConditions[$actionKey] = $rowCondition;
 	}
 
 
-	public function testRowCondition(string $actionKey, Row $row): bool
+	/**
+	 * @param  string $actionKey
+	 * @param  Row    $row
+	 * @return bool
+	 */
+	public function testRowCondition($actionKey, Row $row)
 	{
 		if (!isset($this->rowConditions[$actionKey])) {
 			return true;

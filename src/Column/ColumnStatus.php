@@ -1,29 +1,25 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Column;
 
-use Nette\SmartObject;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
 use Ublaboo\DataGrid\Row;
 use Ublaboo\DataGrid\Status\Option;
-use Ublaboo\DataGrid\Traits\TButtonCaret;
-use Ublaboo\DataGrid\Traits\TRenderCondition;
+use Ublaboo\DataGrid\Traits;
 
-/**
- * @method onChange(string $id, string $value)
- */
 class ColumnStatus extends Column
 {
-
-	use TButtonCaret;
-	use SmartObject;
-	use TRenderCondition;
+	use Traits\TButtonCaret;
 
 	/**
-	 * @var array|callable[]
+	 * @var callable[]
 	 */
 	public $onChange = [];
 
@@ -38,12 +34,13 @@ class ColumnStatus extends Column
 	protected $options = [];
 
 
-	public function __construct(
-		DataGrid $grid,
-		string $key,
-		string $column,
-		string $name
-	)
+	/**
+	 * @param DataGrid $grid
+	 * @param string   $key
+	 * @param string   $column
+	 * @param string   $name
+	 */
+	public function __construct(DataGrid $grid, $key, $column, $name)
 	{
 		parent::__construct($grid, $key, $column, $name);
 
@@ -53,23 +50,31 @@ class ColumnStatus extends Column
 	}
 
 
-	public function getKey(): string
+	/**
+	 * @return string
+	 */
+	public function getKey()
 	{
 		return $this->key;
 	}
 
 
-	public function getOptions(): array
+	/**
+	 * @return array
+	 */
+	public function getOptions()
 	{
 		return $this->options;
 	}
 
 
 	/**
-	 * @param mixed $value
+	 * Get particular option
+	 * @param  mixed $value
+	 * @return Option
 	 * @throws DataGridColumnStatusException
 	 */
-	public function getOption($value): Option
+	public function getOption($value)
 	{
 		foreach ($this->options as $option) {
 			if ($option->getValue() === $value) {
@@ -81,7 +86,10 @@ class ColumnStatus extends Column
 	}
 
 
-	public function getColumn(): string
+	/**
+	 * @return string
+	 */
+	public function getColumn()
 	{
 		return $this->column;
 	}
@@ -89,11 +97,13 @@ class ColumnStatus extends Column
 
 	/**
 	 * Find selected option for current item/row
+	 * @param  Row    $row
+	 * @return Option|NULL
 	 */
-	public function getCurrentOption(Row $row): ?Option
+	public function getCurrentOption(Row $row)
 	{
 		foreach ($this->getOptions() as $option) {
-			if ($option->getValue() === $row->getValue($this->getColumn())) {
+			if ($option->getValue() == $row->getValue($this->getColumn())) {
 				return $option;
 			}
 		}
@@ -103,16 +113,19 @@ class ColumnStatus extends Column
 
 
 	/**
+	 * Add option to status select
 	 * @param mixed $value
+	 * @param string $text
+	 * @return Option
 	 * @throws DataGridColumnStatusException
 	 */
-	public function addOption($value, string $text): Option
+	public function addOption($value, $text)
 	{
 		if (!is_scalar($value)) {
 			throw new DataGridColumnStatusException('Option value has to be scalar');
 		}
 
-		$option = new Option($this->grid, $this, $value, $text);
+		$option = new Option($this, $value, $text);
 
 		$this->options[] = $option;
 
@@ -122,10 +135,10 @@ class ColumnStatus extends Column
 
 	/**
 	 * Set all options at once
-	 *
+	 * @param array $options
 	 * @return static
 	 */
-	public function setOptions(array $options): self
+	public function setOptions(array $options)
 	{
 		foreach ($options as $value => $text) {
 			$this->addOption($value, $text);
@@ -136,12 +149,13 @@ class ColumnStatus extends Column
 
 
 	/**
-	 * @param mixed $value
+	 * @param  mixed $value
+	 * @return void
 	 */
-	public function removeOption($value): void
+	public function removeOption($value)
 	{
 		foreach ($this->options as $key => $option) {
-			if ($option->getValue() === $value) {
+			if ($option->getValue() == $value) {
 				unset($this->options[$key]);
 			}
 		}
@@ -150,22 +164,20 @@ class ColumnStatus extends Column
 
 	/**
 	 * Column can have variables that will be passed to custom template scope
+	 * @return array
 	 */
-	public function getTemplateVariables(): array
+	public function getTemplateVariables()
 	{
-		return array_merge($this->templateVariables, [
+		return array_merge($this->template_variables, [
 			'options' => $this->getOptions(),
 			'column' => $this->getColumn(),
 			'key' => $this->getKey(),
 			'status' => $this,
 		]);
 	}
-
-
-	public function setReplacement(array $replacements): Column
+	
+	public function setReplacement(array $replacements)	
 	{
-		throw new DataGridColumnStatusException(
-			'Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)'
-		);
+		throw new DataGridColumnStatusException('Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)');
 	}
 }

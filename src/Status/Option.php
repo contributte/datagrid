@@ -1,19 +1,20 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Status;
 
-use Ublaboo\DataGrid\Column\Action\Confirmation\CallbackConfirmation;
-use Ublaboo\DataGrid\Column\Action\Confirmation\IConfirmation;
-use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
+use Nette\SmartObject;
 use Ublaboo\DataGrid\Column\ColumnStatus;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridException;
-use Ublaboo\DataGrid\Row;
 
 class Option
 {
+
+	use SmartObject;
 
 	/**
 	 * @var ColumnStatus
@@ -31,54 +32,47 @@ class Option
 	protected $text;
 
 	/**
-	 * @var string|null
+	 * @var string|callable
 	 */
 	protected $title;
 
 	/**
-	 * @var string
+	 * @var string|callable
 	 */
 	protected $class = 'btn-success';
 
 	/**
 	 * @var string
 	 */
-	protected $classSecondary = 'btn btn-xs';
+	protected $class_secondary = 'btn btn-xs';
 
 	/**
 	 * @var string
 	 */
-	protected $classInDropdown = 'ajax dropdown-item';
+	protected $class_in_dropdown = 'ajax dropdown-item';
 
 	/**
-	 * @var string|null
+	 * @var string
 	 */
 	protected $icon;
 
 	/**
-	 * @var string|null
+	 * @var string
 	 */
-	protected $iconSecondary;
+	protected $icon_secondary;
+
 
 	/**
-	 * @var IConfirmation|null
+	 * [__construct description]
+	 * @param ColumnStatus $columnStatus
+	 * @param mixed       $value
+	 * @param string       $text
 	 */
-	protected $confirmation;
-
-	/**
-	 * @var DataGrid
-	 */
-	private $grid;
-
-	/**
-	 * @param mixed $value
-	 */
-	public function __construct(DataGrid $grid, ColumnStatus $columnStatus, $value, string $text)
+	public function __construct(ColumnStatus $columnStatus, $value, $text)
 	{
-		$this->grid = $grid;
 		$this->columnStatus = $columnStatus;
 		$this->value = $value;
-		$this->text = $text;
+		$this->text = (string) $text;
 	}
 
 
@@ -91,159 +85,151 @@ class Option
 	}
 
 
-	public function endOption(): ColumnStatus
+	/**
+	 * End option fluent interface and return parent
+	 * @return ColumnStatus
+	 */
+	public function endOption()
 	{
 		return $this->columnStatus;
 	}
 
 
 	/**
+	 * @param string $title
 	 * @return static
 	 */
-	public function setTitle(string $title): self
+	public function setTitle($title)
 	{
-		$this->title = $title;
+		$this->title = (string) $title;
 
 		return $this;
 	}
 
 
-	public function getTitle(): ?string
+	/**
+	 * @return string
+	 */
+	public function getTitle()
 	{
 		return $this->title;
 	}
 
 
 	/**
+	 * @param string $class
+	 * @param string $class_secondary
 	 * @return static
 	 */
-	public function setClass(string $class, ?string $classSecondary = null): self
+	public function setClass($class, $class_secondary = null)
 	{
-		$this->class = $class;
+		$this->class = (string) $class;
 
-		if ($classSecondary !== null) {
-			$this->classSecondary = $classSecondary;
+		if ($class_secondary !== null) {
+			$this->class_secondary = (string) $class_secondary;
 		}
 
 		return $this;
 	}
 
 
-	public function getClass(): ?string
+	/**
+	 * @return string
+	 */
+	public function getClass()
 	{
 		return $this->class;
 	}
 
 
 	/**
+	 * @param string $class_secondary
 	 * @return static
 	 */
-	public function setClassSecondary(string $classSecondary): self
+	public function setClassSecondary($class_secondary)
 	{
-		$this->classSecondary = $classSecondary;
+		$this->class_secondary = (string) $class_secondary;
 
 		return $this;
-	}
-
-
-	public function getClassSecondary(): string
-	{
-		return $this->classSecondary;
 	}
 
 
 	/**
-	 * @return static
+	 * @return string
 	 */
-	public function setClassInDropdown(string $classInDropdown): self
+	public function getClassSecondary()
 	{
-		$this->classInDropdown = $classInDropdown;
-
-		return $this;
-	}
-
-
-	public function getClassInDropdown(): string
-	{
-		return $this->classInDropdown;
+		return $this->class_secondary;
 	}
 
 
 	/**
+	 * @param string $class_in_dropdown
 	 * @return static
 	 */
-	public function setIcon(string $icon): self
+	public function setClassInDropdown($class_in_dropdown)
 	{
-		$this->icon = $icon;
+		$this->class_in_dropdown = (string) $class_in_dropdown;
 
 		return $this;
 	}
 
 
-	public function getIcon(): ?string
+	/**
+	 * @return string
+	 */
+	public function getClassInDropdown()
+	{
+		return $this->class_in_dropdown;
+	}
+
+
+	/**
+	 * @param string $icon
+	 * @return static
+	 */
+	public function setIcon($icon)
+	{
+		$this->icon = (string) $icon;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return string|NULL
+	 */
+	public function getIcon()
 	{
 		return $this->icon;
 	}
 
 
 	/**
-	 * @return static
+	 * @param string $icon_secondary
 	 */
-	public function setIconSecondary(string $iconSecondary): self
+	public function setIconSecondary($icon_secondary)
 	{
-		$this->iconSecondary = $iconSecondary;
+		$this->icon_secondary = (string) $icon_secondary;
 
 		return $this;
-	}
-
-
-	public function getIconSecondary(): ?string
-	{
-		return $this->iconSecondary;
-	}
-
-
-	public function getText(): string
-	{
-		return $this->text;
 	}
 
 
 	/**
-	 * @return static
+	 * @return string|NULL
 	 */
-	public function setConfirmation(IConfirmation $confirmation): self
+	public function getIconSecondary()
 	{
-		$this->confirmation = $confirmation;
-
-		return $this;
+		return $this->icon_secondary;
 	}
 
 
-	public function getConfirmationDialog(Row $row): ?string
+	/**
+	 * @return string
+	 */
+	public function getText()
 	{
-		if ($this->confirmation === null) {
-			return null;
-		}
-
-		if ($this->confirmation instanceof CallbackConfirmation) {
-			return ($this->confirmation->getCallback())($row->getItem());
-		}
-
-		if ($this->confirmation instanceof StringConfirmation) {
-			$question = $this->grid->getTranslator()->translate($this->confirmation->getQuestion());
-
-			if ($this->confirmation->getPlaceholderName() === null) {
-				return $question;
-			}
-
-			return str_replace(
-				'%s',
-				$row->getValue($this->confirmation->getPlaceholderName()),
-				$question
-			);
-		}
-
-		throw new DataGridException('Unsupported confirmation');
+		return $this->text;
 	}
 }

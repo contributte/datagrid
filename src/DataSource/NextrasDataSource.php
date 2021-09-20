@@ -1,33 +1,29 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\DataSource;
 
 use Nette\Utils\Strings;
-use Nextras\Orm\Collection\Expression\LikeExpression;
 use Nextras\Orm\Collection\ICollection;
-use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
-use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
+use Nextras\Orm\Mapper\Dbal\DbalCollection;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
+use Ublaboo\DataGrid\Filter;
 use Ublaboo\DataGrid\Utils\ArraysHelper;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
-use UnexpectedValueException;
 
-class NextrasDataSource extends FilterableDataSource implements IDataSource, IAggregatable
+class NextrasDataSource extends FilterableDataSource implements IDataSource
 {
 
 	/**
-	 * @var ICollection
+	 * @var DbalCollection
 	 */
-	protected $dataSource;
+	protected $data_source;
 
 	/**
 	 * @var array
@@ -37,135 +33,78 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 	/**
 	 * @var string
 	 */
-	protected $primaryKey;
-
-	/**
-	 * @var string
-	 */
-	private $dbalCollectionClass;
-
-	public function __construct(ICollection $dataSource, string $primaryKey)
-	{
-		$this->dataSource = $dataSource;
-		$this->primaryKey = $primaryKey;
-		// Support version 4.0 with 3.1 backward compatibility
-		$this->dbalCollectionClass = class_exists('Nextras\Orm\Collection\DbalCollection')
-			? 'Nextras\Orm\Collection\DbalCollection'
-			: 'Nextras\Orm\Mapper\Dbal\DbalCollection';
-	}
-
-
-	// *******************************************************************************
-	// *                          IDataSource implementation                         *
-	// *******************************************************************************
-
-
-	public function getCount(): int
-	{
-		return $this->dataSource->countStored();
-	}
+	protected $primary_key;
 
 
 	/**
-	 * {@inheritDoc}
+	 * @param ICollection  $data_source
+	 * @param string       $primary_key
 	 */
-	public function getData(): array
+	public function __construct(ICollection $data_source, $primary_key)
+	{
+		$this->data_source = $data_source;
+		$this->primary_key = $primary_key;
+	}
+
+
+	/********************************************************************************
+	 *                          IDataSource implementation                          *
+	 ********************************************************************************/
+
+
+	/**
+	 * Get count of data
+	 * @return int
+	 */
+	public function getCount()
+	{
+		return $this->data_source->countStored();
+	}
+
+
+	/**
+	 * Get the data
+	 * @return array
+	 */
+	public function getData()
 	{
 		/**
 		 * Paginator is better if the query uses ManyToMany associations
 		 */
-		return $this->data !== []
-			? $this->data
-			: $this->dataSource->fetchAll();
+		return $this->data ?: $this->data_source->fetchAll();
 	}
 
 
 	/**
-	 * {@inheritDoc}
+	 * Filter data - get one row
+	 * @param array $condition
+	 * @return static
 	 */
-	public function filterOne(array $condition): IDataSource
+	public function filterOne(array $condition)
 	{
 		$cond = [];
-
 		foreach ($condition as $key => $value) {
 			$cond[$this->prepareColumn($key)] = $value;
 		}
-
-		$this->dataSource = $this->dataSource->findBy($cond);
-
-		return $this;
-	}
-
-
-	public function limit(int $offset, int $limit): IDataSource
-	{
-		$this->dataSource = $this->dataSource->limitBy($limit, $offset);
+		$this->data_source = $this->data_source->findBy($cond);
 
 		return $this;
 	}
 
 
-	public function sort(Sorting $sorting): IDataSource
-	{
-		if (is_callable($sorting->getSortCallback())) {
-			call_user_func(
-				$sorting->getSortCallback(),
-				$this->dataSource,
-				$sorting->getSort()
-			);
-
-			return $this;
-		}
-
-		$sort = $sorting->getSort();
-
-		if ($sort !== []) {
-			foreach ($sort as $column => $order) {
-				$this->dataSource = $this->dataSource->orderBy(
-					$this->prepareColumn((string) $column),
-					$order
-				);
-			}
-		} else {
-			if (!$this->dataSource instanceof $this->dbalCollectionClass) {
-				throw new UnexpectedValueException(
-					sprintf(
-						'Expeting %s, got %s',
-						$this->dbalCollectionClass,
-						get_class($this->dataSource)
-					)
-				);
-			}
-
-			/**
-			 * Has the statement already a order by clause?
-			 */
-			$order = $this->dataSource->getQueryBuilder()->getClause('order');
-
-			if (ArraysHelper::testEmpty($order)) {
-				$this->dataSource = $this->dataSource->orderBy(
-					$this->prepareColumn($this->primaryKey)
-				);
-			}
-		}
-
-		return $this;
-	}
-
-	public function processAggregation(IAggregationFunction $function): void
-	{
-		$function->processDataSource( clone $this->dataSource );
-	}
-
-
-	protected function applyFilterDate(FilterDate $filter): void
+	/**
+	 * Filter by date
+	 * @param  Filter\FilterDate $filter
+	 * @return static
+	 */
+	public function applyFilterDate(Filter\FilterDate $filter)
 	{
 		foreach ($filter->getCondition() as $column => $value) {
 			try {
 				$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
 				$date_end = clone $date;
 
-				$this->dataSource = $this->dataSource->findBy([
+				$this->data_source = $this->data_source->findBy([
 					$this->prepareColumn($column) . '>=' => $date->setTime(0, 0, 0),
 					$this->prepareColumn($column) . '<=' => $date_end->setTime(23, 59, 59),
 				]);
@@ -173,102 +112,83 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 				// ignore the invalid filter value
 			}
 		}
+
+		return $this;
 	}
 
 
-	protected function applyFilterDateRange(FilterDateRange $filter): void
+	/**
+	 * Filter by date range
+	 * @param  Filter\FilterDateRange $filter
+	 * @return void
+	 */
+	public function applyFilterDateRange(Filter\FilterDateRange $filter)
 	{
 		$conditions = $filter->getCondition();
 
-		$valueFrom = $conditions[$filter->getColumn()]['from'];
-		$valueTo = $conditions[$filter->getColumn()]['to'];
+		$value_from = $conditions[$filter->getColumn()]['from'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		$dataCondition = [];
-
-		if ($valueFrom) {
+		if ($value_from) {
 			try {
-				$dateFrom = DateTimeHelper::tryConvertToDateTime(
-					$valueFrom,
-					[$filter->getPhpFormat()]
-				);
-				$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $dateFrom->setTime(0, 0, 0);
+				$date_from = DateTimeHelper::tryConvertToDateTime($value_from, [$filter->getPhpFormat()]);
+				$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $date_from->setTime(0, 0, 0);
 			} catch (DataGridDateTimeHelperException $ex) {
 				// ignore the invalid filter value
 			}
 		}
 
-		if ($valueTo) {
+		if ($value_to) {
 			try {
-				$dateTo = DateTimeHelper::tryConvertToDateTime(
-					$valueTo,
-					[$filter->getPhpFormat()]
-				);
-				$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $dateTo->setTime(23, 59, 59);
+				$date_to = DateTimeHelper::tryConvertToDateTime($value_to, [$filter->getPhpFormat()]);
+				$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $date_to->setTime(23, 59, 59);
 			} catch (DataGridDateTimeHelperException $ex) {
 				// ignore the invalid filter value
 			}
 		}
 
-		if ($dataCondition !== []) {
-			$this->dataSource = $this->dataSource->findBy($dataCondition);
+		if (!empty($dataCondition)) {
+			$this->data_source = $this->data_source->findBy($dataCondition);
 		}
 	}
 
 
-	protected function applyFilterRange(FilterRange $filter): void
+	/**
+	 * Filter by range
+	 * @param  Filter\FilterRange $filter
+	 * @return void
+	 */
+	public function applyFilterRange(Filter\FilterRange $filter)
 	{
 		$conditions = $filter->getCondition();
 
-		$valueFrom = $conditions[$filter->getColumn()]['from'];
-		$valueTo = $conditions[$filter->getColumn()]['to'];
+		$value_from = $conditions[$filter->getColumn()]['from'];
+		$value_to = $conditions[$filter->getColumn()]['to'];
 
 		$dataCondition = [];
 
-		if ($valueFrom) {
-			$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $valueFrom;
+		if ($value_from) {
+			$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $value_from;
 		}
 
-		if ($valueTo) {
-			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $valueTo;
+		if ($value_to) {
+			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $value_to;
 		}
 
-		if ($dataCondition !== []) {
-			$this->dataSource = $this->dataSource->findBy($dataCondition);
+		if (!empty($dataCondition)) {
+			$this->data_source = $this->data_source->findBy($dataCondition);
 		}
 	}
 
 
-	protected function applyFilterText(FilterText $filter): void
+	/**
+	 * Filter by keyword
+	 * @param  Filter\FilterText $filter
+	 * @return void
+	 */
+	public function applyFilterText(Filter\FilterText $filter)
 	{
-		// native handling with LikeFunction in v4
-		if (class_exists(LikeExpression::class)) {
-			$conditions = [
-				ICollection::OR,
-			];
-
-			foreach ($filter->getCondition() as $column => $value) {
-				$preparedColumn = $this->prepareColumn($column);
-
-				if ($filter->isExactSearch()) {
-					$conditions[] = [
-						$preparedColumn => $value,
-					];
-				} else {
-					$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
-
-					foreach ($words as $word) {
-						$conditions[] = [
-							$preparedColumn . '~' => LikeExpression::contains($word),
-						];
-					}
-				}
-			}
-
-			$this->dataSource = $this->dataSource->findBy($conditions);
-
-			return;
-		}
-
 		$condition = $filter->getCondition();
 		$expr = '(';
 		$params = [];
@@ -278,11 +198,14 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 				$expr .= '%column = %s OR ';
 				$params[] = $column;
 				$params[] = "$value";
-
 				continue;
 			}
 
-			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
+			if ($filter->hasSplitWordsSearch() === false) {
+				$words = [$value];
+			} else {
+				$words = explode(' ', $value);
+			}
 
 			foreach ($words as $word) {
 				$expr .= '%column LIKE %s OR ';
@@ -295,57 +218,94 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 
 		array_unshift($params, $expr);
 
-		if (!$this->dataSource instanceof $this->dbalCollectionClass) {
-			throw new UnexpectedValueException(
-				sprintf(
-					'Expeting %s, got %s',
-					$this->dbalCollectionClass,
-					get_class($this->dataSource)
-				)
+		call_user_func_array([$this->data_source->getQueryBuilder(), 'andWhere'], $params);
+	}
+
+
+	/**
+	 * Filter by multi select value
+	 * @param  Filter\FilterMultiSelect $filter
+	 * @return void
+	 */
+	public function applyFilterMultiSelect(Filter\FilterMultiSelect $filter)
+	{
+		$this->data_source = $this->data_source->findBy([$this->prepareColumn($filter->getColumn()) => $filter->getValue()]);
+	}
+
+
+	/**
+	 * Filter by select value
+	 * @param  Filter\FilterSelect $filter
+	 * @return void
+	 */
+	public function applyFilterSelect(Filter\FilterSelect $filter)
+	{
+		$this->data_source = $this->data_source->findBy([$this->prepareColumn($filter->getColumn()) => $filter->getValue()]);
+	}
+
+
+	/**
+	 * Apply limit and offset on data
+	 * @param int $offset
+	 * @param int $limit
+	 * @return static
+	 */
+	public function limit($offset, $limit)
+	{
+		$this->data_source = $this->data_source->limitBy($limit, $offset);
+
+		return $this;
+	}
+
+
+	/**
+	 * Sort data
+	 * @param  Sorting $sorting
+	 * @return static
+	 */
+	public function sort(Sorting $sorting)
+	{
+		if (is_callable($sorting->getSortCallback())) {
+			call_user_func(
+				$sorting->getSortCallback(),
+				$this->data_source,
+				$sorting->getSort()
 			);
+
+			return $this;
 		}
 
-		$this->dataSource->getQueryBuilder()->andWhere(...$params);
-	}
+		$sort = $sorting->getSort();
 
+		if (!empty($sort)) {
+			foreach ($sort as $column => $order) {
+				$this->data_source = $this->data_source->orderBy($this->prepareColumn($column), $order);
+			}
+		} else {
+			/**
+			 * Has the statement already a order by clause?
+			 */
+			$order = $this->data_source->getQueryBuilder()->getClause('order');
 
-	protected function applyFilterMultiSelect(FilterMultiSelect $filter): void
-	{
-		$this->applyFilterSelect($filter);
-	}
-
-
-	protected function applyFilterSelect(FilterSelect $filter): void
-	{
-		$this->dataSource = $this->dataSource->findBy(
-			[$this->prepareColumn($filter->getColumn()) => $filter->getValue()]
-		);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function getDataSource()
-	{
-		return $this->dataSource;
-	}
-
-
-	/**
-	 * Adjust column from DataGrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
-	 */
-	private function prepareColumn(string $column): string
-	{
-		if (Strings::contains($column, '.')) {
-			// 'this->' is deprecated in v4
-			$prefix = $this->dbalCollectionClass === 'Nextras\Orm\Collection\DbalCollection'
-				? ''
-				: 'this->';
-
-			return $prefix . str_replace('.', '->', $column);
+			if (ArraysHelper::testEmpty($order)) {
+				$this->data_source = $this->data_source->orderBy($this->prepareColumn($this->primary_key));
+			}
 		}
 
-		return $column;
+		return $this;
 	}
+
+
+		/**
+		 * Adjust column from DataGrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
+		 * @param string $column
+		 * @return string
+		 */
+		private function prepareColumn($column)
+		{
+			if (Strings::contains($column, '.')) {
+				return 'this->' . str_replace('.', '->', $column);
+			}
+			return $column;
+		}
 }

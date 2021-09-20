@@ -1,13 +1,20 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Localization;
 
-use Nette\Localization\ITranslator;
+use Nette;
+use Nette\SmartObject;
 
-class SimpleTranslator implements ITranslator
+class SimpleTranslator implements Nette\Localization\ITranslator
 {
+
+	use SmartObject;
 
 	/**
 	 * @var array
@@ -43,23 +50,35 @@ class SimpleTranslator implements ITranslator
 	];
 
 
-	public function __construct(array $dictionary = [])
+	/**
+	 * @param array $dictionary
+	 */
+	public function __construct($dictionary = null)
 	{
-		$this->dictionary = array_merge($this->dictionary, $dictionary);
+		if (is_array($dictionary)) {
+			$this->dictionary = $dictionary;
+		}
 	}
 
 
 	/**
-	 * @param mixed $message
-	 * @param mixed ...$parameters
+	 * Translates the given string
+	 * 
+	 * @param  string
+	 * @param  int
+	 * @return string
 	 */
-	public function translate($message, ...$parameters): string
+	public function translate($message, $count = null)
 	{
-		return $this->dictionary[$message] ?? $message;
+		return isset($this->dictionary[$message]) ? $this->dictionary[$message] : $message;
 	}
 
 
-	public function setDictionary(array $dictionary): void
+	/**
+	 * Set translator dictionary
+	 * @param array $dictionary
+	 */
+	public function setDictionary(array $dictionary)
 	{
 		$this->dictionary = $dictionary;
 	}

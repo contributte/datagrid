@@ -4,18 +4,18 @@
  * @param array    $exports           Available exports
  * @param Row[]    $rows              List of rows (each contain a item from data source)
  * @param DataGrid $control           Parent (DataGrid)
- * @param string   $originalTemplate Original template file path
- * @param string   $iconPrefix       Icon prefix (fa fa-)
+ * @param string   $original_template Original template file path
+ * @param string   $icon_prefix       Icon prefix (fa fa-)
  *}
 
-{extends $originalTemplate}
+{extends $original_template}
 
 <div class="datagrid-tree-item-children datagrid-tree" n:snippet="table" n:block="data" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/if}>
 	{snippetArea items}
 		<div class="datagrid-tree-item datagrid-tree-header" n:snippet="item-header">
-			<div class="text-right" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
-				<span n:if="$toolbarButtons">
-					{foreach $toolbarButtons as $toolbarButton}{$toolbarButton->renderButton()}{/foreach}
+			<div class="text-right" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbar_buttons">
+				<span n:if="$toolbar_buttons">
+					{foreach $toolbar_buttons as $toolbar_button}{$toolbar_button->renderButton()}{/foreach}
 				</span>
 			</div>
 			<div class="datagrid-tree-item-content" data-has-children="">
@@ -37,20 +37,20 @@
 					</div>
 					<div class="datagrid-tree-item-right-actions" n:if="($actions || $control->isSortable()) && $rows">
 						<div class="datagrid-tree-item-right-actions-action">
-							{var $tmpRow = reset($rows)}
+							{var $tmp_row = reset($rows)}
 
 							{foreach $actions as $key => $action}
-								{if $tmpRow->hasAction($key)}
+								{if $tmp_row->hasAction($key)}
 									{if $action->hasTemplate()}
-										{include $action->getTemplate(), item => $tmpRow->getItem(), (expand) $action->getTemplateVariables(), row => $tmpRow}
+										{include $action->getTemplate(), item => $tmp_row->getItem(), (expand) $action->getTemplateVariables(), row => $tmp_row}
 									{else}
-										{$action->render($tmpRow)|noescape}
+										{$action->render($tmp_row)|noescape}
 									{/if}
 								{/if}
 							{/foreach}
 
 							<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
-								<i class="{$iconPrefix}arrows"></i>
+								<i class="{$icon_prefix}arrows"></i>
 							</span>
 						</div>
 					</div>
@@ -59,14 +59,14 @@
 		</div>
 
 		{foreach $rows as $row}
-			{var $hasChildren = $control->hasTreeViewChildrenCallback() ? $control->treeViewChildrenCallback($row->getItem()) : $row->getValue($treeViewHasChildrenColumn)}
+			{var $has_children = $control->hasTreeViewChildrenCallback() ? $control->treeViewChildrenCallback($row->getItem()) : $row->getValue($tree_view_has_children_column)}
 			{var $item = $row->getItem()}
 
-			<div n:class="$hasChildren ? has-children, 'datagrid-tree-item'" data-id="{$row->getId()}" n:snippet="item-{$row->getId()}">
-				<div n:class="datagrid-tree-item-content, $row->getControlClass()" data-id="{$row->getId()}" data-has-children="{$hasChildren ? true : false}">
+			<div n:class="$has_children ? has-children, 'datagrid-tree-item'" data-id="{$row->getId()}" n:snippet="item-{$row->getId()}">
+				<div n:class="datagrid-tree-item-content, $row->getControlClass()" data-id="{$row->getId()}" data-has-children="{$has_children ? true : false}">
 					<div class="datagrid-tree-item-left">
-						<a n:href="getChildren! parent => $row->getId()" data-toggle-tree="true" n:class="!$hasChildren ? hidden, 'chevron ajax'">
-							<i n:block="icon-chevron" class="{$iconPrefix}chevron-right"></i>
+						<a n:href="getChildren! parent => $row->getId()" data-toggle-tree="true" n:class="!$has_children ? hidden, 'chevron ajax'">
+							<i n:block="icon-chevron" class="{$icon_prefix}chevron-right"></i>
 						</a>
 						{foreach $columns as $key => $column}
 							{var $col = 'col-' . $key}
@@ -127,7 +127,7 @@
 								{/foreach}
 
 								<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
-									<i n:block = "icon-arrows" class="{$iconPrefix}arrows {$iconPrefix}arrows-alt"></i>
+									<i n:block = "icon-arrows" class="{$icon_prefix}arrows"></i>
 								</span>
 							</div>
 						</div>

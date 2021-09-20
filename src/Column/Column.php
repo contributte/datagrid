@@ -1,23 +1,28 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\Column;
 
 use Nette\Utils\Html;
+use Ublaboo;
+use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
+use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits\TButtonRenderer;
-use Ublaboo\DataGrid\Traits\TLink;
+use Ublaboo\DataGrid\Traits;
 
 abstract class Column extends FilterableColumn
 {
-
-	use TButtonRenderer;
-	use TLink;
+	use Traits\TButtonRenderer;
+	use Traits\TLink;
 
 	/**
-	 * @var string|null
+	 * @var string
 	 */
 	protected $template;
 
@@ -29,78 +34,86 @@ abstract class Column extends FilterableColumn
 	/**
 	 * @var bool
 	 */
-	protected $translatableHeader = true;
+	protected $translatable_header = true;
 
 	/**
 	 * @var bool
 	 */
-	protected $sortableResetPagination = false;
+	protected $sortable_reset_pagination = false;
 
 	/**
-	 * @var callable|null
+	 * @var null|callable
 	 */
-	protected $sortableCallback = null;
+	protected $sortable_callback = null;
 
 	/**
-	 * @var string
+	 * @var array
 	 */
 	protected $sort;
 
 	/**
 	 * @var bool
 	 */
-	protected $templateEscaping = true;
+	protected $template_escaping = true;
 
 	/**
 	 * @var bool
 	 */
-	protected $headerEscaping = false;
+	protected $header_escaping = false;
+
 
 	/**
 	 * @var string
 	 */
 	protected $align;
 
-	/**
-	 * @var array
-	 */
-	protected $templateVariables = [];
-
-	/**
-	 * @var callable|null
-	 */
-	protected $editableCallback;
-
-	/**
-	 * @var callable|null
-	 */
-	protected $editableConditionCallback = null;
 
 	/**
 	 * @var array
 	 */
-	protected $editableElement = ['textarea', ['class' => 'form-control']];
+	protected $template_variables = [];
+
+	/**
+	 * @var callable
+	 */
+	protected $editable_callback;
+
+	/**
+	 * @var callable|null
+	 */
+	protected $editable_condition_callback = null;
+
+	/**
+	 * @var array
+	 */
+	protected $editable_element = ['textarea', ['class' => 'form-control']];
 
 	/**
 	 * @var bool
 	 */
-	protected $defaultHide = false;
+	protected $default_hide = false;
 
 	/**
-	 * @var array|Html[]|null[]
+	 * @var array
 	 */
 	protected $elementCache = ['td' => null, 'th' => null];
 
 	/**
-	 * @var callable|null
+	 * @var callable|NULL
 	 */
-	protected $editableValueCallback = null;
+	protected $editable_value_callback = null;
+
 
 	/**
+	 * Render row item into template
+	 * @param  Row   $row
 	 * @return mixed
 	 */
 	public function render(Row $row)
 	{
+		/**
+		 * Renderer function may be used
+		 */
 		try {
 			return $this->useRenderer($row);
 		} catch (DataGridColumnRendererException $e) {
@@ -112,9 +125,9 @@ abstract class Column extends FilterableColumn
 		/**
 		 * Or replacements may be applied
 		 */
-		[$replace, $replaced] = $this->applyReplacements($row, $this->column);
+		list($do_replace, $replaced) = $this->applyReplacements($row);
 
-		if ($replace) {
+		if ($do_replace) {
 			return $replaced;
 		}
 
@@ -124,53 +137,47 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Should be column values escaped in latte?
-	 *
-	 * @return static
+	 * @param bool $template_escaping
 	 */
-	public function setTemplateEscaping(bool $templateEscaping = true): self
+	public function setTemplateEscaping($template_escaping = true)
 	{
-		$this->templateEscaping = $templateEscaping;
+		$this->template_escaping = (bool) $template_escaping;
 
 		return $this;
 	}
 
 
-	public function isTemplateEscaped(): bool
+	public function isTemplateEscaped()
 	{
-		return $this->templateEscaping;
+		return $this->template_escaping;
 	}
 
 
 	/**
 	 * Should be column header escaped in latte?
-	 *
-	 * @return static
+	 * @param bool $header_escaping
 	 */
-	public function setHeaderEscaping(bool $headerEscaping = false): self
+	public function setHeaderEscaping($header_escaping = false)
 	{
-		$this->headerEscaping = $headerEscaping;
+		$this->header_escaping = (bool) $header_escaping;
 
 		return $this;
 	}
 
 
-	public function isHeaderEscaped(): bool
+	public function isHeaderEscaped()
 	{
-		return $this->headerEscaping;
+		return $this->header_escaping;
 	}
 
 
 	/**
 	 * Set column sortable or not
-	 *
 	 * @param bool|string $sortable
-	 * @return static
 	 */
-	public function setSortable($sortable = true): self
+	public function setSortable($sortable = true)
 	{
-		$this->sortable = is_string($sortable)
-			? $sortable
-			: $sortable;
+		$this->sortable = is_string($sortable) ? $sortable : (bool) $sortable;
 
 		return $this;
 	}
@@ -178,25 +185,20 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Tell whether column is sortable
+	 * @return bool
 	 */
-	public function isSortable(): bool
+	public function isSortable()
 	{
-		if (is_bool($this->sortable)) {
-			return $this->sortable;
-		}
-
-		return $this->sortable !== '';
+		return (bool) $this->sortable;
 	}
 
 
 	/**
 	 * Set column translatable or not
-	 *
-	 * @return static
 	 */
-	public function setTranslatableHeader(bool $translatableHeader = true): self
+	public function setTranslatableHeader($translatable_header = true)
 	{
-		$this->translatableHeader = $translatableHeader;
+		$this->translatable_header = (bool) $translatable_header;
 
 		return $this;
 	}
@@ -205,20 +207,20 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Tell wheter column is translatable
 	 */
-	public function isTranslatableHeader(): bool
+	public function isTranslatableHeader()
 	{
-		return $this->translatableHeader;
+		return (bool) $this->translatable_header;
 	}
 
 
 	/**
 	 * Shoud be the pagination reseted after sorting?
-	 *
+	 * @param bool $sortable_reset_pagination
 	 * @return static
 	 */
-	public function setSortableResetPagination(bool $sortableResetPagination = true): self
+	public function setSortableResetPagination($sortable_reset_pagination = true)
 	{
-		$this->sortableResetPagination = $sortableResetPagination;
+		$this->sortable_reset_pagination = (bool) $sortable_reset_pagination;
 
 		return $this;
 	}
@@ -226,21 +228,22 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Do reset pagination after sorting?
+	 * @return bool
 	 */
-	public function sortableResetPagination(): bool
+	public function sortableResetPagination()
 	{
-		return $this->sortableResetPagination;
+		return $this->sortable_reset_pagination;
 	}
 
 
 	/**
 	 * Set custom ORDER BY clause
-	 *
+	 * @param callable $sortable_callback
 	 * @return static
 	 */
-	public function setSortableCallback(callable $sortableCallback): self
+	public function setSortableCallback(callable $sortable_callback)
 	{
-		$this->sortableCallback = $sortableCallback;
+		$this->sortable_callback = $sortable_callback;
 
 		return $this;
 	}
@@ -248,28 +251,37 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Get custom ORDER BY clause
+	 * @return callable|null
 	 */
-	public function getSortableCallback(): ?callable
+	public function getSortableCallback()
 	{
-		return $this->sortableCallback;
+		return $this->sortable_callback;
 	}
 
 
-	public function getSortingColumn(): string
+	/**
+	 * Get column to sort by
+	 * @return string
+	 */
+	public function getSortingColumn()
 	{
-		return is_string($this->sortable)
-			? $this->sortable
-			: $this->column;
+		return is_string($this->sortable) ? $this->sortable : $this->column;
 	}
 
 
-	public function getColumnName(): string
+	/**
+	 * Get column name
+	 * @return string
+	 */
+	public function getColumnName()
 	{
 		return $this->column;
 	}
 
 
 	/**
+	 * Get column value of row item
+	 * @param  Row   $row
 	 * @return mixed
 	 */
 	public function getColumnValue(Row $row)
@@ -278,7 +290,10 @@ abstract class Column extends FilterableColumn
 	}
 
 
-	public function getName(): string
+	/**
+	 * @return string
+	 */
+	public function getName()
 	{
 		return $this->name;
 	}
@@ -286,13 +301,12 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Column may have its own template
-	 *
-	 * @return static
+	 * @param string $template
 	 */
-	public function setTemplate(?string $template, array $templateVariables = []): self
+	public function setTemplate($template, array $template_variables = [])
 	{
 		$this->template = $template;
-		$this->templateVariables = $templateVariables;
+		$this->template_variables = $template_variables;
 
 		return $this;
 	}
@@ -300,35 +314,39 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Column can have variables that will be passed to custom template scope
+	 * @return array
 	 */
-	public function getTemplateVariables(): array
+	public function getTemplateVariables()
 	{
-		return $this->templateVariables;
+		return $this->template_variables;
 	}
 
 
 	/**
 	 * Tell whether column has its owntemplate
+	 * @return bool
 	 */
-	public function hasTemplate(): bool
+	public function hasTemplate()
 	{
-		return $this->template !== null;
+		return (bool) $this->template;
 	}
 
 
 	/**
 	 * Get column template path
+	 * @return string
 	 */
-	public function getTemplate(): ?string
+	public function getTemplate()
 	{
 		return $this->template;
 	}
 
 
 	/**
-	 * Tell whether data source is sorted by this column
+	 * Tell whether data source is sorted by this collumn
+	 * @return bool
 	 */
-	public function isSortedBy(): bool
+	public function isSortedBy()
 	{
 		return (bool) $this->sort;
 	}
@@ -336,12 +354,11 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Tell column his sorting options
-	 *
-	 * @return static
+	 * @param array $sort
 	 */
-	public function setSort(string $sort): self
+	public function setSort(array $sort)
 	{
-		$this->sort = $sort;
+		$this->sort = $sort[$this->key];
 
 		return $this;
 	}
@@ -349,47 +366,50 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * What sorting will be applied after next click?
+	 * @return array
 	 */
-	public function getSortNext(): array
+	public function getSortNext()
 	{
 		$defaultSort = $this->grid->getColumnDefaultSort($this->key);
 
-		if ($this->sort === 'ASC') {
-			return [$this->key => $defaultSort === 'DESC' ? false : 'DESC'];
-		}
-
-		if ($this->sort === 'DESC') {
-			return [$this->key => $defaultSort === 'DESC' ? 'ASC' : false];
+		if ($this->sort == 'ASC') {
+			return [$this->key => $defaultSort === 'DESC' ? FALSE : 'DESC'];
+		} else if ($this->sort == 'DESC') {
+			return [$this->key => $defaultSort === 'DESC' ? 'ASC' : FALSE];
 		}
 
 		return [$this->key => 'ASC'];
 	}
 
 
-	public function hasSortNext(): bool
+	/**
+	 * @return bool
+	 */
+	public function hasSortNext()
 	{
-		foreach ($this->getSortNext() as $order) {
+		foreach ($this->getSortNext() as $key => $order) {
 			return $order !== false;
 		}
-
-		return false;
 	}
 
 
-	public function isSortAsc(): bool
+	/**
+	 * Is sorting ascending?
+	 * @return bool
+	 */
+	public function isSortAsc()
 	{
-		return $this->sort === 'ASC';
+		return $this->sort == 'ASC';
 	}
 
 
 	/**
 	 * Set column alignment
-	 *
-	 * @return static
+	 * @param string $align
 	 */
-	public function setAlign(string $align): self
+	public function setAlign($align)
 	{
-		$this->align = $align;
+		$this->align = (string) $align;
 
 		return $this;
 	}
@@ -397,8 +417,9 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Has column some alignment?
+	 * @return bool [description]
 	 */
-	public function hasAlign(): bool
+	public function hasAlign()
 	{
 		return (bool) $this->align;
 	}
@@ -406,21 +427,22 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Get column alignment
+	 * @return string
 	 */
-	public function getAlign(): string
+	public function getAlign()
 	{
-		return $this->align ?? 'left';
+		return $this->align ?: 'left';
 	}
 
 
 	/**
-	 * @return static
+	 * Set column content fit
+	 * @param bool $fit_content
+	 * @return $this
 	 */
-	public function setFitContent(bool $fitContent = true): self
+	public function setFitContent($fit_content = true)
 	{
-		$fitContent
-			? $this->addCellAttributes(['class' => 'datagrid-fit-content'])
-			: null;
+		($fit_content) ? $this->addAttributes(['class' => 'datagrid-fit-content']) : null;
 
 		return $this;
 	}
@@ -428,12 +450,11 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Set callback that will be called after inline editing
-	 *
-	 * @return static
+	 * @param callable $editable_callback
 	 */
-	public function setEditableCallback(callable $editableCallback): self
+	public function setEditableCallback(callable $editable_callback)
 	{
-		$this->editableCallback = $editableCallback;
+		$this->editable_callback = $editable_callback;
 
 		return $this;
 	}
@@ -441,58 +462,57 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Return callback that is used after inline editing
+	 * @return callable
 	 */
-	public function getEditableCallback(): ?callable
+	public function getEditableCallback()
 	{
-		return $this->editableCallback;
+		return $this->editable_callback;
 	}
 
 
 	/**
 	 * Set inline editing just if condition is truthy
-	 *
+	 * @param callable $editable_condition_callback
 	 * @return static
 	 */
-	public function setEditableOnConditionCallback(callable $editableConditionCallback): self
+	public function setEditableOnConditionCallback(callable $editable_condition_callback)
 	{
-		$this->editableConditionCallback = $editableConditionCallback;
+		$this->editable_condition_callback = $editable_condition_callback;
 
 		return $this;
 	}
 
 
-	public function getEditableOnConditionCallback(): ?callable
+	/**
+	 * @return callable|null
+	 */
+	public function getEditableOnConditionCallback()
 	{
-		return $this->editableConditionCallback;
+		return $this->editable_condition_callback;
 	}
 
 
-	public function isEditable(?Row $row = null): bool
+	/**
+	 * Is column editable?
+	 * @param Row|null $row
+	 * @return bool
+	 */
+	public function isEditable(Row $row = null)
 	{
-		if ($this->getEditableCallback() !== null) {
-			if ($row === null) {
-				return true;
-			}
-
-			if ($this->getEditableOnConditionCallback() === null) {
-				return true;
-			}
-
-			return $this->getEditableOnConditionCallback()($row->getItem());
-		}
-
-		return false;
+		return ((bool) $this->getEditableCallback())
+			&& ($row === null || $this->getEditableOnConditionCallback() === null || call_user_func_array($this->getEditableOnConditionCallback(), [$row->getItem()]));
 	}
 
 
 	/**
 	 * Element is by default textarea, user can change that
-	 *
+	 * @param string $el_type
+	 * @param array  $attrs
 	 * @return static
 	 */
-	public function setEditableInputType(string $elType, array $attrs = []): self
+	public function setEditableInputType($el_type, array $attrs = [])
 	{
-		$this->editableElement = [$elType, $attrs];
+		$this->editable_element = [$el_type, $attrs];
 
 		return $this;
 	}
@@ -500,54 +520,62 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Change small inline edit input type to select
-	 *
+	 * @param array  $options
+	 * @param array  $attrs
 	 * @return static
 	 */
-	public function setEditableInputTypeSelect(array $options = [], array $attrs = []): self
+	public function setEditableInputTypeSelect(array $options = [], array $attrs = [])
 	{
 		$select = Html::el('select');
 
 		foreach ($options as $value => $text) {
 			$select->create('option')
-				->setAttribute('value', $value)
+				->value($value)
 				->setText($text);
 		}
 
-		$this->addCellAttributes(['data-datagrid-editable-element' => (string) $select]);
+		$this->addAttributes(['data-datagrid-editable-element' => (string) $select]);
 
 		return $this->setEditableInputType('select', $attrs);
 	}
 
 
 	/**
+	 * @param callable $editable_value_callback
 	 * @return static
 	 */
-	public function setEditableValueCallback(callable $editableValueCallback): self
+	public function setEditableValueCallback(callable $editable_value_callback)
 	{
-		$this->editableValueCallback = $editableValueCallback;
+		$this->editable_value_callback = $editable_value_callback;
 
 		return $this;
 	}
 
 
-	public function getEditableValueCallback(): ?callable
+	/**
+	 * @return callable|NULL
+	 */
+	public function getEditableValueCallback()
 	{
-		return $this->editableValueCallback;
+		return $this->editable_value_callback;
 	}
 
 
-	public function getEditableInputType(): array
+	/**
+	 * @return array
+	 */
+	public function getEditableInputType()
 	{
-		return $this->editableElement;
+		return $this->editable_element;
 	}
 
 
 	/**
 	 * Set attributes for both th and td element
-	 *
+	 * @param array $attrs
 	 * @return static
 	 */
-	public function addCellAttributes(array $attrs): self
+	public function addAttributes(array $attrs)
 	{
 		$this->getElementPrototype('td')->addAttributes($attrs);
 		$this->getElementPrototype('th')->addAttributes($attrs);
@@ -558,10 +586,12 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Get th/td column element
+	 * @param  string $tag th|td
+	 * @return Html
 	 */
-	public function getElementPrototype(string $tag): Html
+	public function getElementPrototype($tag)
 	{
-		if (isset($this->elementCache[$tag])) {
+		if ($this->elementCache[$tag]) {
 			return $this->elementCache[$tag];
 		}
 
@@ -571,38 +601,44 @@ abstract class Column extends FilterableColumn
 
 	/**
 	 * Method called from datagrid template, set appropriate classes and another attributes
+	 * @param  string   $tag
+	 * @param  string   $key
+	 * @param  Row|NULL $row
+	 * @return Html
 	 */
-	public function getElementForRender(string $tag, string $key, ?Row $row = null): Html
+	public function getElementForRender($tag, $key, Row $row = null)
 	{
-		$el = isset($this->elementCache[$tag])
-			? clone $this->elementCache[$tag]
-			: Html::el($tag);
+		if ($this->elementCache[$tag]) {
+			$el = clone $this->elementCache[$tag];
+		} else {
+			$el = Html::el($tag);
+		}
 
 		/**
 		 * If class was set by user via $el->class = '', fix it
 		 */
-		if (is_string($el->getAttribute('class'))) {
-			$class = $el->getAttribute('class');
-			$el->__unset('class');
+		if (!empty($el->class) && is_string($el->class)) {
+			$class = $el->class;
+			unset($el->class);
 
-			$el->appendAttribute('class', $class);
+			$el->class[] = $class;
 		}
 
-		$el->appendAttribute('class', sprintf('text-%s', $this->getAlign()));
-		$el->appendAttribute('class', sprintf('col-%s', $key));
+		$el->class[] = "text-{$this->getAlign()}";
+		$el->class[] = "col-{$key}";
 
-		if ($row !== null && $tag === 'td' && $this->isEditable($row)) {
+		if ($row && $tag == 'td' && $this->isEditable($row)) {
 			$link = $this->grid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
 
 			$el->data('datagrid-editable-url', $link);
 
-			$el->data('datagrid-editable-type', $this->editableElement[0]);
-			$el->data('datagrid-editable-attrs', json_encode($this->editableElement[1]));
+			$el->data('datagrid-editable-type', $this->editable_element[0]);
+			$el->data('datagrid-editable-attrs', json_encode($this->editable_element[1]));
 
-			if ($this->getEditableValueCallback() !== null) {
+			if ($this->getEditableValueCallback()) {
 				$el->data(
 					'datagrid-editable-value',
-					$this->getEditableValueCallback()($row->getItem())
+					call_user_func_array($this->getEditableValueCallback(), [$row->getItem()])
 				);
 			}
 		}
@@ -612,53 +648,50 @@ abstract class Column extends FilterableColumn
 
 
 	/**
+	 * @param bool $default_hide
 	 * @return static
 	 */
-	public function setDefaultHide(bool $defaultHide = true): self
+	public function setDefaultHide($default_hide = true)
 	{
-		$this->defaultHide = $defaultHide;
+		$this->default_hide = (bool) $default_hide;
 
-		if ($defaultHide) {
-			$this->grid->setSomeColumnDefaultHide($defaultHide);
+		if ($default_hide) {
+			$this->grid->setSomeColumnDefaultHide($default_hide);
 		}
 
 		return $this;
 	}
 
 
-	public function getDefaultHide(): bool
+	public function getDefaultHide()
 	{
-		return $this->defaultHide;
-	}
-
-
-	public function getColumn(): string
-	{
-		return $this->column;
-	}
-
-	/**
-	 * @return static
-	 */
-	public function setReplacement(array $replacements): self
-	{
-		$this->replacements = $replacements;
-
-		return $this;
+		return $this->default_hide;
 	}
 
 
 	/**
 	 * Get row item params (E.g. action may be called id => $item->id, name => $item->name, ...)
+	 * @param  Row   $row
+	 * @param  array $params_list
+	 * @return array
 	 */
-	protected function getItemParams(Row $row, array $paramsList): array
+	protected function getItemParams(Row $row, array $params_list)
 	{
 		$return = [];
 
-		foreach ($paramsList as $paramName => $param) {
-			$return[is_string($paramName) ? $paramName : $param] = $row->getValue($param);
+		foreach ($params_list as $param_name => $param) {
+			$return[is_string($param_name) ? $param_name : $param] = $row->getValue($param);
 		}
 
 		return $return;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getColumn()
+	{
+		return $this->column;
 	}
 }

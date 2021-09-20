@@ -1,21 +1,21 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @copyright   Copyright (c) 2015 ublaboo <ublaboo@paveljanda.com>
+ * @author      Pavel Janda <me@paveljanda.com>
+ * @package     Ublaboo
+ */
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
-use Dibi\Fluent;
+use DibiFluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
-use Nette\Database\Table\Selection;
 use Nette\Utils\Strings;
-use Nextras\Orm\Collection\DbalCollection;
-use Nextras\Orm\Collection\ICollection;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
-class FunctionSum implements ISingleColumnAggregationFunction
+class FunctionSum implements IAggregationFunction
 {
-
 	/**
 	 * @var string
 	 */
@@ -27,41 +27,48 @@ class FunctionSum implements ISingleColumnAggregationFunction
 	protected $result = 0;
 
 	/**
-	 * @var string
+	 * @var int
 	 */
 	protected $dataType;
 
 	/**
-	 * @var callable|null
+	 * @var callable
 	 */
-	protected $renderer = null;
+	protected $renderer;
 
 
-	public function __construct(
-		string $column,
-		string $dataType = IAggregationFunction::DATA_TYPE_PAGINATED
-	) {
+	/**
+	 * @param string $column
+	 * @param int $dataType
+	 */
+	public function __construct($column, $dataType = IAggregationFunction::DATA_TYPE_PAGINATED)
+	{
 		$this->column = $column;
 		$this->dataType = $dataType;
 	}
 
 
-	public function getFilterDataType(): string
+	/**
+	 * @return bool
+	 */
+	public function getFilterDataType()
 	{
 		return $this->dataType;
 	}
 
 
 	/**
-	 * @param Fluent|QueryBuilder|Collection|Selection|ICollection $dataSource
+	 * @param  mixed  $dataSource
+	 * @return void
 	 */
-	public function processDataSource($dataSource): void
+	public function processDataSource($dataSource)
 	{
-		if ($dataSource instanceof Fluent) {
+		if ($dataSource instanceof DibiFluent) {
 			$connection = $dataSource->getConnection();
-			$this->result = (int) $connection->select('SUM(%n)', $this->column)
+			$this->result = $connection->select('SUM(%n) AS sum', $this->column)
 				->from($dataSource, 's')
-				->fetchSingle();
+				->fetch()
+				->sum;
 		}
 
 		if ($dataSource instanceof QueryBuilder) {
@@ -78,16 +85,10 @@ class FunctionSum implements ISingleColumnAggregationFunction
 		}
 
 		if ($dataSource instanceof Collection) {
-			$dataSource->forAll(function ($key, $value): bool {
+			$dataSource->forAll(function ($key, $value) {
 				$this->result += PropertyAccessHelper::getValue($value, $this->column);
-
 				return true;
 			});
-		}
-
-		if ( $dataSource instanceof DbalCollection) {
-			foreach( $dataSource->fetchAll() as $item )
-				$this->result += $item->getValue( $this->column );
 		}
 	}
 
@@ -108,12 +109,12 @@ class FunctionSum implements ISingleColumnAggregationFunction
 
 
 	/**
+	 * @param  callable|NULL  $callback
 	 * @return static
 	 */
-	public function setRenderer(?callable $callback = null): self
+	public function setRenderer(callable $callback = null)
 	{
 		$this->renderer = $callback;
-
 		return $this;
 	}
 }
