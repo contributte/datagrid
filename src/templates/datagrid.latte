@@ -182,9 +182,13 @@
 						</th>
 					</tr>
 					<tr n:block="header-column-row" class="align-top">
-						<th n:snippet="thead-group-action" n:if="$hasGroupActions" n:attr="'rowspan=2' => !empty($filters) && !$control->hasOuterFilterRendering()" class="col-checkbox">
-							<input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
-						</th>
+                        {if empty($filters)}
+                            <th n:snippet="thead-group-action" n:if="$hasGroupActions" class="col-checkbox">
+                                <input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
+                            </th>
+                        {else}
+                            <th></th>
+                        {/if}
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementForRender('th', $key)}
 							{$th->startTag()|noescape}
@@ -253,6 +257,9 @@
 						</th>
 					</tr>
 					<tr n:block="header-filters" n:if="!empty($filters) && !$control->hasOuterFilterRendering()" class="align-top">
+                        <th n:if="$hasGroupActions" class="col-checkbox align-middle">
+                            <input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
+                        </th>
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementForRender('th', $key)}
 							{$th->startTag()|noescape}
