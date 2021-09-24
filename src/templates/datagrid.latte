@@ -204,7 +204,7 @@
 										{include #$col_header, column => $column}
 									{else}
 										{if $column->isSortable()}
-											<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" href="{link sort!, sort => $control->getSortNext($column)}" id="datagrid-sort-{$key}">
+											<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" href="{link sort!, sort => $control->getSortNext($column)}" id="datagrid-sort-{$control->getFullName()}-{$key}">
 												<div class="row mx-0">
 													<div class="col-12 px-0 d-inline-flex align-items-baseline">
 														{if $column->isSortedBy()}
