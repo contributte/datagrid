@@ -151,9 +151,6 @@ jobs:
         operating-system: [ "ubuntu-latest" ]
         composer-args: [ "" ]
         include:
-          - php-version: "7.4"
-            operating-system: "ubuntu-latest"
-            composer-args: "--prefer-lowest"
           - php-version: "8.0"
             operating-system: "ubuntu-latest"
             composer-args: "--ignore-platform-reqs"
