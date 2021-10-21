@@ -434,6 +434,12 @@ class DataGrid extends Control
 	 */
 	private $componentFullName;
 
+    protected bool $isB4;
+    protected array $columnLabels = [];
+    protected array $rowLabels = [];
+    protected ?string $columnForRowLabels = null;
+    protected ?int $maxColLabelForRows = null;
+
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
@@ -485,6 +491,87 @@ class DataGrid extends Control
 			});
 	}
 
+    /**
+     * @return bool
+     */
+    public function isB4(): bool
+    {
+        return $this->isB4;
+    }
+
+    /**
+     * @return array
+     */
+    public function getColumnLabels(): array
+    {
+        return $this->columnLabels;
+    }
+
+    /**
+     * @param array $columnLabels
+     * @return $this
+     */
+    public function setColumnLabels(array $columnLabels): DataGrid
+    {
+        $this->columnLabels = $columnLabels;
+        return $this;
+    }
+
+    /**
+     * @param bool $isB4
+     * @return $this
+     */
+    public function setB4(bool $isB4): DataGrid
+    {
+        $this->isB4 = $isB4;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRowLabels(): array
+    {
+        return $this->rowLabels;
+    }
+
+    /**
+     * @param array $rowLabels
+     * @return $this
+     */
+    public function setRowLabels(array $rowLabels): DataGrid
+    {
+        $this->maxColLabelForRows = 0;
+        foreach ($rowLabels as $column) {
+            $max_in_col = 0;
+            foreach ($column as $labels) {
+                $colspan = $labels['colspan'] !== 0 ? (int) $labels['colspan'] : 1;
+                $max_in_col += $colspan;
+            }
+            $this->maxColLabelForRows = $this->maxColLabelForRows < $max_in_col ? $max_in_col : $this->maxColLabelForRows;
+        }
+
+        $this->rowLabels = $rowLabels;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getColumnForRowLabels(): ?string
+    {
+        return $this->columnForRowLabels;
+    }
+
+    /**
+     * @param string|null $columnForRowLabels
+     * @return $this
+     */
+    public function setColumnForRowLabels(?string $columnForRowLabels): DataGrid
+    {
+        $this->columnForRowLabels = $columnForRowLabels;
+        return $this;
+    }
 
 	/********************************************************************************
 	 *                                  RENDERING *
@@ -579,6 +666,10 @@ class DataGrid extends Control
 
 		$template->hasGroupActions = $this->hasGroupActions();
 		$template->hasGroupActionOnRows = $hasGroupActionOnRows;
+		$template->columnLabels = $this->columnLabels;
+		$template->rowLabels = $this->rowLabels;
+		$template->columnForRowLabels = $this->columnForRowLabels;
+		$template->maxColLabelForRows = $this->maxColLabelForRows;
 
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
@@ -680,6 +771,10 @@ class DataGrid extends Control
 
 	public function getOriginalTemplateFile(): string
 	{
+        if ($this->isB4()) {
+            return __DIR__ . '/templates/b4/datagrid.latte';
+        }
+
 		return __DIR__ . '/templates/datagrid.latte';
 	}
 
