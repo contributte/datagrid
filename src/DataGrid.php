@@ -434,7 +434,7 @@ class DataGrid extends Control
 	 */
 	private $componentFullName;
 
-    protected bool $isB4;
+    protected bool $isB4 = false;
     protected array $columnLabels = [];
     protected array $rowLabels = [];
     protected ?string $columnForRowLabels = null;
