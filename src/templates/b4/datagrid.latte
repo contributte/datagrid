@@ -280,6 +280,11 @@
 						</th>
 					</tr>
 					<tr n:block="header-filters" n:if="!empty($filters) && !$control->hasOuterFilterRendering()" class="align-top">
+
+                        {for $i = 1; $i <= $maxColLabelForRows; $i++}
+                            <th></th>
+                        {/for}
+
                         <th n:if="$hasGroupActions" class="col-checkbox align-middle">
                             <input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
                         </th>
