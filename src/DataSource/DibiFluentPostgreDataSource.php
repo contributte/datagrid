@@ -42,7 +42,7 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 
 			foreach ($words as $word) {
 				$escaped = $driver->escapeLike($word, 0);
-				$or[] = "$column ILIKE $escaped";
+				$or[] = "$column ILIKE %" . $escaped . "%";
 			}
 		}
 
