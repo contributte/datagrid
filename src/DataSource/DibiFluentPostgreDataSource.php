@@ -47,7 +47,7 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 		}
 
 		if (sizeof($or) > 1) {
-			$this->data_source->where('(%or)', $or);
+			$this->data_source->where('(%and)', $or);
 		} else {
 			$this->data_source->where($or);
 		}
