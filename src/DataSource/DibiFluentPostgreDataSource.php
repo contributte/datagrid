@@ -27,7 +27,7 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 
 		foreach ($condition as $column => $value) {
 
-			$column = '[' . $column . ']';
+			$column = '[' . $column . ']::varchar';
 
 			if ($filter->isExactSearch()) {
 				$this->data_source->where("$column = %s", $value);
