@@ -29,7 +29,7 @@ abstract class Column extends FilterableColumn
 	/**
 	 * @var bool|string
 	 */
-	protected $sortable = false;
+	protected $sortable = true;
 
 	/**
 	 * @var bool
