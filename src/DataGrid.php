@@ -227,7 +227,7 @@ class DataGrid extends Nette\Application\UI\Control
 	/**
 	 * @var bool
 	 */
-	protected $sortable = true;
+	protected $sortable = false;
 
 	/**
 	 * @var bool
