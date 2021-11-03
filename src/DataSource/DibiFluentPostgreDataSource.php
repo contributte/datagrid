@@ -39,15 +39,16 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 			} else {
 				$words = explode(' ', $value);
 			}
-
+			$x = [];
 			foreach ($words as $word) {
 				$escaped = $driver->escapeLike((string) $word, 0);
-				$or[] = "$column ILIKE '%" . substr( $escaped, 1, -1) . "%'";
+				$x[] = "$column ILIKE '%" . substr( $escaped, 1, -1) . "%'";
 			}
+			$or[] = "((" . implode(") AND (", $x) . "))";
 		}
 
 		if (sizeof($or) > 1) {
-			$this->data_source->where('(%and)', $or);
+			$this->data_source->where('(%or)', $or);
 		} else {
 			$this->data_source->where($or);
 		}
