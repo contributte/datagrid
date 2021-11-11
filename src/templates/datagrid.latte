@@ -19,74 +19,76 @@
 <div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()} table-responsive{/block}" data-refresh-state="{link refreshState!}">
 	<div n:snippet="grid">
 	{snippetArea gridSnippets}
-		<div class="row mx-0">
+		<div class="row mx-0 fixed-header">
 			<div class="col-12 px-0 d-flex justify-content-end">
-				<div class="datagrid-toolbar pe-1 my-2 d-inline-flex align-baseline justify-content-end" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
-					{if $toolbarButtons}
-                        {foreach $toolbarButtons as $toolbar_button}
-                            <span n:class="!$iterator->first? ms-1">
-                                {$toolbar_button->renderButton()}
-                            </span>
-                        {/foreach}
-                    {/if}
-                    {if $exports}
-                        <div class="datagrid-exports" n:snippet="exports" n:block="exports">
-                            {foreach $exports as $export}
-                                <span n:class="!$iterator->first? ms-1">
-                                    {$export->render()}
-                                </span>
-                            {/foreach}
-                        </div>
-                    {/if}
-					<div class="datagrid-settings d-flex ms-1" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
-						{if $inlineAdd}
-							{$inlineAdd->renderButtonAdd()}
+				<div class="{block datagrid-fixed-header}{/block}">
+					<div class="datagrid-toolbar pe-1 my-2 d-inline-flex align-baseline justify-content-end" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
+						{if $toolbarButtons}
+							{foreach $toolbarButtons as $toolbar_button}
+								<span n:class="!$iterator->first? ms-1">
+									{$toolbar_button->renderButton()}
+								</span>
+							{/foreach}
 						{/if}
+						{if $exports}
+							<div class="datagrid-exports" n:snippet="exports" n:block="exports">
+								{foreach $exports as $export}
+									<span n:class="!$iterator->first? ms-1">
+										{$export->render()}
+									</span>
+								{/foreach}
+							</div>
+						{/if}
+						<div class="datagrid-settings d-flex ms-1" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
+							{if $inlineAdd}
+								{$inlineAdd->renderButtonAdd()}
+							{/if}
 
-						<button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#multipleColumnselect_{$control->name}">
-							<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
-						</button>
+							<button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#multipleColumnselect_{$control->name}">
+								<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
+							</button>
 
-						<!-- Modal -->
-						<div class="modal fade" id="multipleColumnselect_{$control->name}" tabindex="-1" aria-labelledby="exampleModalLabel">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title" id="exampleModalLabel">Výběr sloupců</h5>
-										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							<!-- Modal -->
+							<div class="modal fade" id="multipleColumnselect_{$control->name}" tabindex="-1" aria-labelledby="exampleModalLabel">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">Výběr sloupců</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<form class="row m-3">
+											<div class="form-check-{$control->name} px-0" n:foreach="$columnsVisibility as $v_key => $visibility" class="list-group-item ">
+												{if $visibility['visible']}
+													<input class="form-check-input-{$control->name} ajax" type="checkbox" value="{$v_key}" id="checkbox_{$control->name}_{$v_key}" n:href="hideColumn!, column => $v_key" checked>
+													<label class="form-check-label" for="checkbox_{$control->name}_{$v_key}">
+														{include #column-header, column => $visibility['column']}
+													</label>
+												{else}
+													<input class="form-check-input-{$control->name} ajax" type="checkbox" value="{$v_key}" id="checkbox_{$control->name}_{$v_key}" n:href="showColumn!, column => $v_key">
+													<label class="form-check-label" for="checkbox_{$control->name}_{$v_key}">
+														{include #column-header, column => $visibility['column']}
+													</label>
+												{/if}
+											</div>
+											<div class="row mt-2 mx-0 px-0">
+												<div class="{if $control->hasSomeColumnDefaultHide()}col-6 ps-0 pe-1 {else}col-12 px-0 {/if}">
+													<a n:href="showAllColumns!" class="btn btn-sm btn-primary w-100 ajax" data-bs-dismiss="modal"><i n:block="icon-eye" class="{$iconPrefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
+												</div>
+												<div class="col-6 ps-1 pe-0" n:if="$control->hasSomeColumnDefaultHide()">
+													<a n:href="showDefaultColumns!" class="btn btn-sm btn-primary w-100 btn ajax" data-bs-dismiss="modal"><i n:block="icon-repeat" class="{$iconPrefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
+												</div>
+											</div>
+											<div class="row mx-0 px-0 mt-2">
+												<div class="col-6 ps-0 pe-1">
+													<button type="button" class="btn btn-secondary w-100 ajax" data-bs-dismiss="modal" onclick="getCheckValue('form-check-input-{$control->name|noescape}')">Uložit</button>
+												</div>
+
+												<div class="col-6 pe-0 ps-1">
+													<button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Zavřít</button>
+												</div>
+											</div>
+										</form>
 									</div>
-									<form class="row m-3">
-										<div class="form-check-{$control->name} px-0" n:foreach="$columnsVisibility as $v_key => $visibility" class="list-group-item ">
-											{if $visibility['visible']}
-												<input class="form-check-input-{$control->name} ajax" type="checkbox" value="{$v_key}" id="checkbox_{$control->name}_{$v_key}" n:href="hideColumn!, column => $v_key" checked>
-												<label class="form-check-label" for="checkbox_{$control->name}_{$v_key}">
-													{include #column-header, column => $visibility['column']}
-												</label>
-											{else}
-												<input class="form-check-input-{$control->name} ajax" type="checkbox" value="{$v_key}" id="checkbox_{$control->name}_{$v_key}" n:href="showColumn!, column => $v_key">
-												<label class="form-check-label" for="checkbox_{$control->name}_{$v_key}">
-													{include #column-header, column => $visibility['column']}
-												</label>
-											{/if}
-										</div>
-										<div class="row mt-2 mx-0 px-0">
-											<div class="{if $control->hasSomeColumnDefaultHide()}col-6 ps-0 pe-1 {else}col-12 px-0 {/if}">
-												<a n:href="showAllColumns!" class="btn btn-sm btn-primary w-100 ajax" data-bs-dismiss="modal"><i n:block="icon-eye" class="{$iconPrefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
-											</div>
-											<div class="col-6 ps-1 pe-0" n:if="$control->hasSomeColumnDefaultHide()">
-												<a n:href="showDefaultColumns!" class="btn btn-sm btn-primary w-100 btn ajax" data-bs-dismiss="modal"><i n:block="icon-repeat" class="{$iconPrefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
-											</div>
-										</div>
-										<div class="row mx-0 px-0 mt-2">
-											<div class="col-6 ps-0 pe-1">
-												<button type="button" class="btn btn-secondary w-100 ajax" data-bs-dismiss="modal" onclick="getCheckValue('form-check-input-{$control->name|noescape}')">Uložit</button>
-											</div>
-
-											<div class="col-6 pe-0 ps-1">
-												<button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Zavřít</button>
-											</div>
-										</div>
-									</form>
 								</div>
 							</div>
 						</div>
@@ -457,44 +459,46 @@
 						{if $control->isPaginated() || $filter_active}
 							<tr n:block="pagination">
 								<td colspan="{$control->getColumnsCount()}" n:if="!$control->isTreeView()" class="row-grid-bottom">
-									<div class="row mx-0">
-										<div class="col-4 d-flex justify-content-start align-items-center ps-0">
-											<div class="col-items">
-												<small class="text-muted" n:if="$control->isPaginated()">
-													({var $paginator = $control['paginator']->getPaginator()}
+									<div class="row mx-0 fixed-footer">
+										<div class="{block datagrid-fixed-footer}{/block}">
+											<div class="col-4 d-flex justify-content-start align-items-center ps-0">
+												<div class="col-items">
+													<small class="text-muted" n:if="$control->isPaginated()">
+														({var $paginator = $control['paginator']->getPaginator()}
 
-													{if $control->getPerPage() === 'all'}
-														{='ublaboo_datagrid.items'|translate}: {='ublaboo_datagrid.all'|translate}
-													{else}
-														{='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : ($paginator->getItemCount() > 0 ? 1 : 0)} - {sizeof($rows) + $paginator->getOffset()}
-														{='ublaboo_datagrid.from'|translate} {$paginator->getItemCount()}
-													{/if})
-												</small>
+														{if $control->getPerPage() === 'all'}
+															{='ublaboo_datagrid.items'|translate}: {='ublaboo_datagrid.all'|translate}
+														{else}
+															{='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : ($paginator->getItemCount() > 0 ? 1 : 0)} - {sizeof($rows) + $paginator->getOffset()}
+															{='ublaboo_datagrid.from'|translate} {$paginator->getItemCount()}
+														{/if})
+													</small>
+												</div>
 											</div>
-										</div>
-										<div class="col-4 d-flex justify-content-center align-items-center">
-											<div class="col-pagination text-center">
-												{control paginator}
+											<div class="col-4 d-flex justify-content-center align-items-center">
+												<div class="col-pagination text-center">
+													{control paginator}
+												</div>
 											</div>
-										</div>
-										<div class="col-4 d-flex justify-content-end pe-0">
-											<div class="row mx-0">
-												<div class="col-12 px-0">
-													<div class="col-per-page d-inline-flex">
-														<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter d-flex align-items-center me-2">
-		<!--                                                    {='ublaboo_datagrid.reset_filter'|translate}-->
-															<i class="{$iconPrefix}redo fa-fw"></i>
-														</a>
-														{if $control->isPaginated()}
-															{input $filter['perPage'], data-autosubmit-per-page => $control->hasAutoSubmit(), class => 'input-sm form-select'}
-															{if !$control->hasAutoSubmit()}
-																{input $filter['perPage_submit'], class => 'datagrid-per-page-submit btn btn-sm btn-light ms-2'}
+											<div class="col-4 d-flex justify-content-end pe-0">
+												<div class="row mx-0">
+													<div class="col-12 px-0">
+														<div class="col-per-page d-inline-flex">
+															<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter d-flex align-items-center me-2">
+			<!--                                                    {='ublaboo_datagrid.reset_filter'|translate}-->
+																<i class="{$iconPrefix}redo fa-fw"></i>
+															</a>
+															{if $control->isPaginated()}
+																{input $filter['perPage'], data-autosubmit-per-page => $control->hasAutoSubmit(), class => 'input-sm form-select'}
+																{if !$control->hasAutoSubmit()}
+																	{input $filter['perPage_submit'], class => 'datagrid-per-page-submit btn btn-sm btn-light ms-2'}
+																{/if}
 															{/if}
-														{/if}
+														</div>
 													</div>
 												</div>
 											</div>
-									</div>
+										</div>
 									</div>
 								</td>
 							</tr>
