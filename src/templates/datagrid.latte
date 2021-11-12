@@ -17,7 +17,7 @@
 {varType Ublaboo\DataGrid\DataGrid $control}
 
 <div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()} table-responsive{/block}" data-refresh-state="{link refreshState!}">
-	<div n:snippet="grid">
+	<div n:snippet="grid" class="datagrid-main-snippet">
 	{snippetArea gridSnippets}
 		<!-- Modal -->
 		<div class="modal fade" id="multipleColumnselect_{$control->name}" tabindex="-1" aria-labelledby="exampleModalLabel">
