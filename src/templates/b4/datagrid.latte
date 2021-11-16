@@ -198,7 +198,12 @@
                             {/for}
 
                             {foreach $rowOfColumns as $label}
-                                <th {!empty($label['colspan']) ? 'colspan="' . $label['colspan'] . '"' : ''} {!empty($label['rowspan']) ? 'rowspan="' . $label['rowspan'] . '"' : ''}>{$label['description']}</th>
+                                <th {!empty($label['colspan']) ? 'colspan="' . $label['colspan'] . '"' : ''} {!empty($label['rowspan']) ? 'rowspan="' . $label['rowspan'] . '"' : ''}>
+                                    {for $i = 0; $i < ($label['indented'] ?? 0); $i++}
+                                        <span class="pl-3"></span>
+                                    {/for}
+                                    {$label['description']}
+                                </th>
                             {/foreach}
                         </tr>
                     {/foreach}
@@ -385,6 +390,9 @@
                                             {if !empty($rowLabels[$item[$columnForRowLabels]])}
                                                 {foreach $rowLabels[$item[$columnForRowLabels]] as $label}
                                                     <td {!empty($label['colspan']) ? 'colspan="' . $label['colspan'] . '"' : ''} {!empty($label['rowspan']) ? 'rowspan="' . $label['rowspan'] . '"' : ''}>
+                                                        {for $i = 0; $i < ($label['indented'] ?? 0); $i++}
+                                                            <span class="pl-3"></span>
+                                                        {/for}
                                                         {$label['description']}
                                                     </td>
                                                 {/foreach}
