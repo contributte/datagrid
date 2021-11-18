@@ -163,34 +163,21 @@
 						<th colspan="{$control->getColumnsCount()}" class="ublaboo-datagrid-th-form-inline">
 							{if $hasGroupActions}
 								{block group_actions}
-                                    <div class="row mx-0">
-                                        <div class="col-12 px-0 px-0">
-                                            <div class="row mx-0">
-                                                <div class="col-auto px-0 d-flex align-items-center">
-                                                    <span class="datagrid-group-action-title">
-                                                        {='ublaboo_datagrid.group_actions'|translate}
-                                                    </span>
+									{foreach $filter['group_action']->getControls() as $form_control}
+										{if $form_control instanceof \Nette\Forms\Controls\SubmitButton && $form_control->getName() === 'submit'}
+											{input $form_control, class => 'btn btn-primary btn-sm ms-1', disabled => TRUE}
+										{elseif $form_control instanceof \Nette\Forms\Controls\SubmitButton}
+											{input $form_control, disabled => TRUE}
+										{elseif $form_control->getName() == 'group_action'}
+											{input $form_control, class => 'form-select form-select-sm', disabled => TRUE}
+										{else}
+											{input $form_control}
+										{/if}
+									{/foreach}
 
-                                                    {if $control->shouldShowSelectedRowsCount()}
-                                                        <span class="datagrid-selected-rows-count text-muted ms-1"></span>:
-                                                    {/if}
-                                                </div>
-                                                <div class="col-auto d-inline-flex">
-                                                    {foreach $filter['group_action']->getControls() as $form_control}
-                                                        {if $form_control instanceof \Nette\Forms\Controls\SubmitButton && $form_control->getName() === 'submit'}
-                                                            {input $form_control, class => 'btn btn-primary btn-sm ms-1', disabled => TRUE}
-                                                        {elseif $form_control instanceof \Nette\Forms\Controls\SubmitButton}
-                                                            {input $form_control, disabled => TRUE}
-                                                        {elseif $form_control->getName() == 'group_action'}
-                                                            {input $form_control, class => 'form-select form-select-sm', disabled => TRUE}
-                                                        {else}
-                                                            {input $form_control}
-                                                        {/if}
-                                                    {/foreach}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+									{if $control->shouldShowSelectedRowsCount()}
+										<span class="datagrid-selected-rows-count text-muted ms-1"></span>
+									{/if}
 								{/block}
 							{/if}
 						</th>
@@ -245,6 +232,9 @@
 											<a n:class="$column->isSortedBy() ? 'sort' : '', 'ajax'" href="{link sort!, sort => $control->getSortNext($column)}" id="datagrid-sort-{$control->getFullName()}-{$key}">
 												<div class="row mx-0">
 													<div class="col-12 px-0 d-inline-flex align-items-baseline">
+														<span class="mr-1 ">
+															{include #column-header, column => $column}
+														</span>
 														{if $column->isSortedBy()}
 															{if $column->isSortAsc()}
 																<i n:block="icon-sort-up" class="{$iconPrefix}caret-up"></i>
@@ -254,9 +244,6 @@
 														{else}
 															<i n:block="icon-sort" class="{$iconPrefix}sort"></i>
 														{/if}
-														<span class="ms-1">
-															{include #column-header, column => $column}
-														</span>
 													</div>
 												</div>
 											</a>
