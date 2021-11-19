@@ -497,56 +497,61 @@
 					{/snippetArea}
 				</tbody>
 				{/block}
-				{block tfoot}
-					<tfoot n:snippet="pagination">
-						{if $control->isPaginated() || $filter_active}
-							<tr n:block="pagination">
-								<td colspan="{$control->getColumnsCount()}" n:if="!$control->isTreeView()" class="row-grid-bottom">
-									<div class="row mx-0">
-										<div class="col-4 d-flex justify-content-start align-items-center pl-0">
-											<div class="col-items">
-												<small class="text-muted" n:if="$control->isPaginated()">
-													({var $paginator = $control['paginator']->getPaginator()}
-
-													{if $control->getPerPage() === 'all'}
-														{='ublaboo_datagrid.items'|translate}: {='ublaboo_datagrid.all'|translate}
-													{else}
-														{='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : ($paginator->getItemCount() > 0 ? 1 : 0)} - {sizeof($rows) + $paginator->getOffset()}
-														{='ublaboo_datagrid.from'|translate} {$paginator->getItemCount()}
-													{/if})
-												</small>
-											</div>
-										</div>
-										<div class="col-4 d-flex justify-content-center align-items-center">
-											<div class="col-pagination text-center">
-												{control paginator}
-											</div>
-										</div>
-										<div class="col-4 d-flex justify-content-end pr-0">
-											<div class="row mx-0">
-												<div class="col-12 px-0">
-													<div class="col-per-page d-inline-flex">
-														<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-xs reset-filter d-flex align-items-center me-2">
-		<!--                                                    {='ublaboo_datagrid.reset_filter'|translate}-->
-															<i class="{$iconPrefix}undo fa-fw"></i>
-														</a>
-														{if $control->isPaginated()}
-															{input $filter['perPage'], data-autosubmit-per-page => $control->hasAutoSubmit(), class => 'input-sm form-select pl-2'}
-															{if !$control->hasAutoSubmit()}
-																{input $filter['perPage_submit'], class => 'datagrid-per-page-submit btn btn-sm btn-light ms-2'}
-															{/if}
-														{/if}
-													</div>
-												</div>
-											</div>
-									</div>
-									</div>
-								</td>
-							</tr>
-						{/if}
+				{block tfoot-dummy}
+					<tfoot>
+						<tr colspan="{$control->getColumnsCount()}" n:if="!$control->isTreeView()">
+							{if $control->isPaginated() || $filter_active}
+							<td class="dummy-tfoot"></td>
+							{/if}
+						</tr>
 					</tfoot>
 				{/block}
 			</table>
+			{block tfoot}
+				<div n:snippet="pagination" class="tfoot-main position-absolute w-100">
+					{if $control->isPaginated() || $filter_active}
+						<div class="row mx-0" n:if="!$control->isTreeView()">
+							<div class="col-3 d-flex justify-content-start align-items-center pl-0">
+								<div class="col-items w-auto">
+									<small class="text-muted" n:if="$control->isPaginated()">
+										({var $paginator = $control['paginator']->getPaginator()}
+
+										{if $control->getPerPage() === 'all'}
+											{='ublaboo_datagrid.items'|translate}: {='ublaboo_datagrid.all'|translate}
+										{else}
+											{='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : ($paginator->getItemCount() > 0 ? 1 : 0)} - {sizeof($rows) + $paginator->getOffset()}
+											{='ublaboo_datagrid.from'|translate} {$paginator->getItemCount()}
+										{/if})
+									</small>
+								</div>
+							</div>
+							<div class="col-6 d-flex justify-content-center align-items-center">
+								<div class="col-pagination text-center w-auto">
+									{control paginator}
+								</div>
+							</div>
+							<div class="col-3 d-flex justify-content-end align-items-center">
+								<div class="row mx-0 w-auto">
+									<div class="col-12 px-0">
+										<div class="col-per-page d-inline-flex">
+											<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-xs reset-filter d-flex align-items-center me-2">
+													{* {='ublaboo_datagrid.reset_filter'|translate} *}
+												<i class="{$iconPrefix}undo fa-fw"></i>
+											</a>
+											{if $control->isPaginated()}
+												{input $filter['perPage'], data-autosubmit-per-page => $control->hasAutoSubmit(), class => 'input-sm form-select pl-2'}
+												{if !$control->hasAutoSubmit()}
+													{input $filter['perPage_submit'], class => 'datagrid-per-page-submit btn btn-sm btn-light ms-2'}
+												{/if}
+											{/if}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					{/if}
+				</div>
+			{/block}
 		{/form}
 	{/snippetArea}
 	</div>
