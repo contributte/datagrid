@@ -8,6 +8,8 @@
 
 namespace Ublaboo\DataGrid\Traits;
 
+use Ublaboo\DataGrid\Utils\IconData;
+
 trait TButtonIcon
 {
 
@@ -24,10 +26,7 @@ trait TButtonIcon
 	 */
 	public function setIcon($icon, $content = '')
 	{
-		$this->icon = (object)[
-			'class' => $class,
-			'content' => $content,
-		];
+		$this->icon = new IconData($icon, $content);
 
 		return $this;
 	}
