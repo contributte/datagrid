@@ -10,21 +10,26 @@ namespace Ublaboo\DataGrid\Traits;
 
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Utils\IconData;
 
 trait TButtonTryAddIcon
 {
 
 	/**
 	 * Should the element has an icon?
-	 * @param  Html            $el
-	 * @param  string|null     $icon
-	 * @param  string          $name
+	 * @param  Html                  $el
+	 * @param  string|IconData|null  $icon
+	 * @param  string                $name
 	 * @return void
 	 */
 	public function tryAddIcon(Html $el, $icon, $name)
 	{
 		if ($icon) {
-			$el->addHtml(Html::el('span')->class(DataGrid::$icon_prefix . $icon));
+			if (is_object($icon)) {
+				$el->addHtml(Html::el('span')->class(DataGrid::$icon_prefix . $icon->iconClass)->setText($icon->content));
+			} else {
+				$el->addHtml(Html::el('span')->class(DataGrid::$icon_prefix . $icon));
+			}
 
 			if (strlen($name)) {
 				$el->addHtml('&nbsp;');
