@@ -184,13 +184,17 @@
 					</tr>
 
 					{foreach $columnLabels as $rowOfColumns}
-					    <tr class="align-top">
+					    <tr class="align-top column-label">
                             {for $i = 1; $i <= $maxColLabelForRows; $i++}
-                            	<th></th>
+                            	<th class="dummy-cell"></th>
                             {/for}
 
                             {foreach $rowOfColumns as $label}
-                                <th {!empty($label['colspan']) ? 'colspan="' . $label['colspan'] . '"' : ''|noescape} {!empty($label['rowspan']) ? 'rowspan="' . $label['rowspan'] . '"' : ''|noescape}>
+                                <th
+                                    {!empty($label['colspan']) ? 'colspan="' . $label['colspan'] . '"' : ''|noescape}
+                                    {!empty($label['rowspan']) ? 'rowspan="' . $label['rowspan'] . '"' : ''|noescape}
+                                    {($label['colspan'] ?? 0) > 1 ? 'class="text-center"': ''|noescape}
+                                >
                                     {for $i = 0; $i < ($label['indented'] ?? 0); $i++}
                                         <span class="pl-3"></span>
                                     {/for}
@@ -200,7 +204,7 @@
                         </tr>
                     {/foreach}
 
-					<tr n:block="header-column-row" class="align-top">
+					<tr n:block="header-column-row" class="align-top column-main-label">
                         {if empty($filters)}
                             <th n:snippet="thead-group-action" n:if="$hasGroupActions" class="col-checkbox">
                                 <input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
@@ -211,7 +215,7 @@
                         {/if}
 
                         {for $i = 1; $i <= $maxColLabelForRows; $i++}
-                            <th></th>
+                            <th class="dummy-cell"></th>
                         {/for}
 
 						{foreach $columns as $key => $column}
@@ -281,7 +285,7 @@
 							{='ublaboo_datagrid.action'|translate}
 						</th>
 					</tr>
-					<tr n:block="header-filters" n:if="!empty($filters) && !$control->hasOuterFilterRendering()" class="align-top">
+					<tr n:block="header-filters" n:if="!empty($filters) && !$control->hasOuterFilterRendering()" class="align-top column-filter">
 
                         {for $i = 1; $i <= $maxColLabelForRows; $i++}
                             <th></th>
@@ -381,7 +385,11 @@
                                         {if !empty($columnForRowLabels) && !empty($item[$columnForRowLabels])}
                                             {if !empty($rowLabels[$item[$columnForRowLabels]])}
                                                 {foreach $rowLabels[$item[$columnForRowLabels]] as $label}
-                                                    <td {!empty($label['colspan']) ? 'colspan="' . $label['colspan'] . '"' : ''|noescape} {!empty($label['rowspan']) ? 'rowspan="' . $label['rowspan'] . '"' : ''|noescape}>
+                                                    <td
+                                                        {!empty($label['colspan']) ? 'colspan="' . $label['colspan'] . '"' : ''|noescape}
+                                                        {!empty($label['rowspan']) ? 'rowspan="' . $label['rowspan'] . '"' : ''|noescape}
+                                                        class="row-label"
+                                                    >
                                                         {for $i = 0; $i < ($label['indented'] ?? 0); $i++}
                                                             <span class="pl-3"></span>
                                                         {/for}
