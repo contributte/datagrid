@@ -516,7 +516,7 @@
 				{/block}
 			</table>
 			{block tfoot}
-				<div n:snippet="pagination" class="tfoot-main position-absolute w-100">
+				<div n:snippet="pagination" class="tfoot-main position-absolute">
 					{if $control->isPaginated() || $filter_active}
 						<div class="row mx-0" n:if="!$control->isTreeView()">
 							<div class="col-3 d-flex justify-content-start align-items-center pl-0">
