@@ -549,7 +549,7 @@
 											{if $control->isPaginated()}
 												{input $filter['perPage'], data-autosubmit-per-page => $control->hasAutoSubmit(), class => 'input-sm form-select pl-2'}
 												{if !$control->hasAutoSubmit()}
-													{input $filter['perPage_submit'], class => 'datagrid-per-page-submit btn btn-sm btn-light ms-2'}
+													{input $filter['perPage_submit'], class => 'datagrid-per-page-submit btn btn-sm btn-secondary ml-2'}
 												{/if}
 											{/if}
 										</div>
