@@ -158,13 +158,14 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			) {
 			$this->data_source->where('1 = 0');
 		}
+		else {
+			if ($value_from || $value_from != '') {
+				$this->data_source->where('%n >= ?', $filter->getColumn(), $value_from);
+			}
 
-		if ($value_from || $value_from != '') {
-			$this->data_source->where('%n >= ?', $filter->getColumn(), $value_from);
-		}
-
-		if ($value_to || $value_to != '') {
-			$this->data_source->where('%n <= ?', $filter->getColumn(), $value_to);
+			if ($value_to || $value_to != '') {
+				$this->data_source->where('%n <= ?', $filter->getColumn(), $value_to);
+			}
 		}
 	}
 
