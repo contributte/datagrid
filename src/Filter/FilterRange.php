@@ -35,6 +35,11 @@ class FilterRange extends Filter
 	 */
 	protected $type = 'range';
 
+	/**
+	 * @var int
+	 */
+	protected $max_value = 2147483647;
+
 
 	/**
 	 * @param DataGrid $grid
@@ -124,4 +129,21 @@ class FilterRange extends Filter
 			'to' => isset($value['to']) ? $value['to'] : '',
 		]];
 	}
+
+	/**
+	 * @param int $max
+	 */
+	public function setMaxValue($max)
+	{
+		$this->max_value = $max;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getMaxValue()
+	{
+		return $this->max_value;
+	}
+
 }
