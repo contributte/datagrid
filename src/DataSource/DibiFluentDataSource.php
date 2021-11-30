@@ -158,7 +158,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			$this->data_source->where('%n >= ?', $filter->getColumn(), $value_from);
 		}
 
-		if($value_to > $filter->getMaxValue() || !is_numeric($value_from)) {
+		if($value_to > $filter->getMaxValue() || !is_numeric($value_to)) {
 			$this->data_source->where('1 = 0');
 		}
 		else if ($value_to || $value_to != '') {
