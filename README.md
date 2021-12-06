@@ -42,7 +42,7 @@ Give us a star, it makes us so happy. Thanks ⭐.️
 | What | Where |
 |-|-|
 | **Documentation** | [contributte.org/packages/contributte/datagrid/](https://contributte.org/packages/contributte/datagrid/) |
-| **Demo** | [examples.contributte.org/packages/datagrid/](https://examples.contributte.org/packages/datagrid/) |
+| **Demo** | [https://examples.contributte.org/datagrid-skeleton/](https://examples.contributte.org/datagrid-skeleton/) |
 | **Example project** | [github.com/contributte/playground/tree/master/contributte-datagrid](https://github.com/contributte/playground/tree/master/contributte-datagrid) |
 | **Forum (EN)** | will be updated |
 | **Forum (CZ)** | [forum.nette.org/cs/25444](https://forum.nette.org/cs/25444-ublaboo-datagrid-mocny-rychly-rozsiritelny-hezky-anglicky-dokumentovany-datagrid) |
