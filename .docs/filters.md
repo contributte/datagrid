@@ -82,6 +82,10 @@ $grid->addFilterText('custom', 'Custom search:', 'name')
 		 * The data source is here DibiFluent
 		 * No matter what data source you are using,
 		 * prepared data source will be passed as the first parameter of your callback function
+		 *
+		 * If you are using `NextrasDataSource` (DbalCollection),
+		 * functions as `findBy` don't work. You need to use `$collection->getQueryBuilder->...` syntax.
+		 * See https://github.com/contributte/datagrid/pull/298 for detailed information.
 		 */
 		$fluent->where('id > ?', strlen($value));
 	});
