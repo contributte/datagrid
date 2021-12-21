@@ -1400,7 +1400,7 @@ class DataGrid extends Control
 		}
 
 		if (!$this->hasAutoSubmit()) {
-			$filterContainer['submit'] = $this->getFilterSubmitButton();
+			$filterContainer['submit'] = $this->getFilterSubmitButton()->setValidationScope([$filterContainer]);
 		}
 
 		/**

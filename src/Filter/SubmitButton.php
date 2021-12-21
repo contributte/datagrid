@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette\Forms\Controls\Button;
+use Nette\Forms\Controls\SubmitButton as NetteSubmitButton;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Traits\TButtonClass;
@@ -13,7 +13,7 @@ use Ublaboo\DataGrid\Traits\TButtonText;
 use Ublaboo\DataGrid\Traits\TButtonTitle;
 use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
 
-class SubmitButton extends Button
+class SubmitButton extends NetteSubmitButton
 {
 
 	use TButtonTryAddIcon;
