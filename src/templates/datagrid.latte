@@ -93,9 +93,11 @@
 							{/if}
 
 							<div class="datagrid-toolbar" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
+								{snippet toolbarButtons}
 								<span n:if="$toolbarButtons" n:snippet="toolbar">
 									{foreach $toolbarButtons as $toolbar_button}{$toolbar_button->renderButton()}{/foreach}
 								</span>
+								{/snippet}
 
 								<span class="datagrid-exports" n:if="$exports" n:snippet="exports" n:block="exports">
 									{foreach $exports as $export}{$export->render()}{/foreach}
