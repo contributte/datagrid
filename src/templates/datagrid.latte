@@ -356,7 +356,17 @@
 												{include column-value, column => $column, row => $row, key => $key}
 											{$td->endTag()|noescape}
 										{/foreach}
-										<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action">
+
+                                        {php $cnt = 0}
+
+                                        {foreach $actions as $key => $action}
+                                            {if $key !== "dummy"}
+                                                {php $cnt += 1}
+                                            {/if}
+                                        {/foreach}
+
+
+										<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action" width="{if $cnt <= 1}5%{elseif $cnt = 2 }10%{else}20%{/if}">
 											 <div class="row g-1 mx-0 justify-content-center">
                                                 {foreach $actions as $key => $action}
                                                     {if $row->hasAction($key)}
