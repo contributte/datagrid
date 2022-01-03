@@ -147,6 +147,15 @@
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered table-sm text-break{/block}" n:snippet="table" n:block="data">
 				<thead n:block="header">
+
+                    {php $cnt_thead = 0}
+
+                    {foreach $actions as $key => $action}
+                        {if $key !== "dummy"}
+                            {php $cnt_thead += 1}
+                        {/if}
+                    {/foreach}
+
 					<tr class="row-group-actions" n:if="$hasGroupActions || $exports || $inlineAdd" n:block="group-actions">
 						<th colspan="{$control->getColumnsCount()}" class="ublaboo-datagrid-th-form-inline">
 							{if $hasGroupActions}
@@ -191,6 +200,7 @@
                         {else}
                             <th n:if="$hasGroupActions"></th>
                         {/if}
+
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementForRender('th', $key)}
 							{$th->startTag()|noescape}
@@ -254,7 +264,8 @@
 							</div>
 							{$th->endTag()|noescape}
 						{/foreach}
-						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center">
+
+						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center" width="{if $cnt_thead <= 1}5%{elseif $cnt_thead = 2 }10%{else}20%{/if}">
 							{='ublaboo_datagrid.action'|translate}
 						</th>
 					</tr>
@@ -285,7 +296,7 @@
 							{/if}
 							{$th->endTag()|noescape}
 						{/foreach}
-						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center">
+						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center" width="{if $cnt_thead <= 1}5%{elseif $cnt_thead = 2 }10%{else}20%{/if}">
 							{if !$control->hasAutoSubmit() && !$control->hasOuterFilterRendering()}
 								{input $filter['filter']['submit']}
 							{/if}
