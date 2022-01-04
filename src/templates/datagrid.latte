@@ -28,14 +28,14 @@
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<form class="row m-3">
-						<div class="form-check-{$control->name} px-0" n:foreach="$columnsVisibility as $v_key => $visibility" class="list-group-item ">
+						<div class="form-check-{$control->name} px-0 d-flex justify-content-start align-items-center mb-1" n:foreach="$columnsVisibility as $v_key => $visibility" class="list-group-item ">
 							{if $visibility['visible']}
-								<input class="form-check-input-{$control->name} ajax" type="checkbox" value="{$v_key}" id="checkbox_{$control->name}_{$v_key}" n:href="hideColumn!, column => $v_key" checked>
+								<input class="form-check-input-{$control->name} ajax me-2" type="checkbox" value="{$v_key}" id="checkbox_{$control->name}_{$v_key}" n:href="hideColumn!, column => $v_key" checked>
 								<label class="form-check-label" for="checkbox_{$control->name}_{$v_key}">
 									{include #column-header, column => $visibility['column']}
 								</label>
 							{else}
-								<input class="form-check-input-{$control->name} ajax" type="checkbox" value="{$v_key}" id="checkbox_{$control->name}_{$v_key}" n:href="showColumn!, column => $v_key">
+								<input class="form-check-input-{$control->name} ajax me-2" type="checkbox" value="{$v_key}" id="checkbox_{$control->name}_{$v_key}" n:href="showColumn!, column => $v_key">
 								<label class="form-check-label" for="checkbox_{$control->name}_{$v_key}">
 									{include #column-header, column => $visibility['column']}
 								</label>
