@@ -156,6 +156,10 @@
                         {/if}
                     {/foreach}
 
+                    {if $control->isSortable()}
+                        {php $cnt_thead += 1}
+                    {/if}
+
 					<tr class="row-group-actions" n:if="$hasGroupActions || $exports || $inlineAdd" n:block="group-actions">
 						<th colspan="{$control->getColumnsCount()}" class="ublaboo-datagrid-th-form-inline">
 							{if $hasGroupActions}
@@ -265,7 +269,7 @@
 							{$th->endTag()|noescape}
 						{/foreach}
 
-						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center" width="{if $cnt_thead <= 1}5%{elseif $cnt_thead = 2 }10%{else}20%{/if}">
+						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center" width="{if $cnt_thead <= 1}5%{elseif $cnt_thead === 2 }10%{else}15%{/if}">
 							{='ublaboo_datagrid.action'|translate}
 						</th>
 					</tr>
@@ -296,7 +300,7 @@
 							{/if}
 							{$th->endTag()|noescape}
 						{/foreach}
-						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center" width="{if $cnt_thead <= 1}5%{elseif $cnt_thead = 2 }10%{else}20%{/if}">
+						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center" width="{if $cnt_thead <= 1}5%{elseif $cnt_thead === 2}10%{else}15%{/if}">
 							{if !$control->hasAutoSubmit() && !$control->hasOuterFilterRendering()}
 								{input $filter['filter']['submit']}
 							{/if}
@@ -376,8 +380,11 @@
                                             {/if}
                                         {/foreach}
 
+                                        {if $control->isSortable()}
+                                            {php $cnt += 1}
+                                        {/if}
 
-										<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action" width="{if $cnt <= 1}5%{elseif $cnt = 2 }10%{else}20%{/if}">
+										<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action" width="{if $cnt <= 1}5%{elseif $cnt === 2}10%{else}15%{/if}">
 											 <div class="row g-1 mx-0 justify-content-center">
                                                 {foreach $actions as $key => $action}
                                                     {if $row->hasAction($key)}
