@@ -133,7 +133,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="datagrid-tree-item-children" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink $control->getSortableHandler()}"{/}></div>
+				<div class="datagrid-tree-item-children" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink $control->getSortableHandler()}"{/if}></div>
 			</div>
 		{/foreach}
 		{if !$rows}
