@@ -51,7 +51,9 @@ class ColumnStatus extends Column
 
         if ($grid->isB4()) {
             $this->setTemplate(__DIR__ . '/../templates/b4/column_status.latte');
-        } else {
+        } elseif ($grid->isB3()){
+			$this->setTemplate(__DIR__ . '/../templates/b3/column_status.latte');
+		}  else {
             $this->setTemplate(__DIR__ . '/../templates/column_status.latte');
         }
 	}

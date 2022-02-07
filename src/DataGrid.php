@@ -435,6 +435,7 @@ class DataGrid extends Control
 	private $componentFullName;
 
     protected bool $isB4 = false;
+    protected bool $isB3 = false;
     protected array $columnLabels = [];
     protected array $rowLabels = [];
     protected ?string $columnForRowLabels = null;
@@ -499,6 +500,14 @@ class DataGrid extends Control
         return $this->isB4;
     }
 
+	/**
+     * @return bool
+     */
+    public function isB3(): bool
+    {
+        return $this->isB3;
+    }
+
     /**
      * @return array
      */
@@ -524,6 +533,16 @@ class DataGrid extends Control
     public function setB4(bool $isB4): DataGrid
     {
         $this->isB4 = $isB4;
+        return $this;
+    }
+
+	/**
+	 * @param bool $isB3
+	 * @return $this
+	 */
+    public function setB3(bool $isB3): DataGrid
+    {
+        $this->isB3 = $isB3;
         return $this;
     }
 
@@ -773,7 +792,9 @@ class DataGrid extends Control
 	{
         if ($this->isB4()) {
             return __DIR__ . '/templates/b4/datagrid.latte';
-        }
+        }elseif ($this->isB3()){
+			return __DIR__ . '/templates/b3/datagrid.latte';
+		}
 
 		return __DIR__ . '/templates/datagrid.latte';
 	}
