@@ -229,7 +229,7 @@
 				</thead>
 
 				{block tbody}
-				<tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/}>
+				<tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/if}>
 					{snippetArea items}
 						{if $inlineAdd && $inlineAdd->isPositionTop()}
 							{include inlineAddRow, columns => $columns}
