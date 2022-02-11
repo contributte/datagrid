@@ -40,7 +40,7 @@ class DataGridPaginator extends Control
 	private $paginator;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	private $templateFile;
 

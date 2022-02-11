@@ -57,7 +57,7 @@ abstract class Column extends FilterableColumn
 	protected $headerEscaping = false;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	protected $align;
 

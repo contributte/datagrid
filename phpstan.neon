@@ -1,14 +1,18 @@
 includes:
-	- ./vendor/gamee/php-code-checker-rules/phpstan.neon
+	- ./vendor/contributte/code-rules/paveljanda/phpstan.neon
 	- ./vendor/phpstan/phpstan-nette/extension.neon
 	- ./vendor/phpstan/phpstan-nette/rules.neon
 
 parameters:
+	level: 8
+	phpVersion: 70200
+
+	paths:
+		- src
+
+	reportMaybesInPropertyPhpDocTypes: false
+
 	ignoreErrors:
-		-
-			message: '/^Cannot call method filter(Data|Row)\(\) on Ublaboo\\DataGrid\\DataModel\|null\.$/'
-			count: 2
-			path: src/DataGrid.php
 		-
 			message: '/^Call to an undefined method Nette\\Bridges\\ApplicationLatte\\Template::add\(\)\.$/'
 			count: 2
@@ -37,3 +41,11 @@ parameters:
 			message: '/^Instanceof between Dibi\\Result and Dibi\\Result will always evaluate to true\.$/'
 			count: 1
 			path: src/DataSource/DibiFluentMssqlDataSource.php
+		-
+			message: "#^Cannot call method filterData\\(\\) on Ublaboo\\\\DataGrid\\\\DataModel\\|null\\.$#"
+			count: 1
+			path: src/DataGrid.php
+		-
+			message: "#^Cannot call method filterRow\\(\\) on Ublaboo\\\\DataGrid\\\\DataModel\\|null\\.$#"
+			count: 1
+			path: src/DataGrid.php

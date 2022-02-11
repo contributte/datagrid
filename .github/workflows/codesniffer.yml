@@ -13,3 +13,5 @@ jobs:
   codesniffer:
     name: "Codesniffer"
     uses: contributte/.github/.github/workflows/codesniffer.yml@v1
+    with:
+      php: "8.0"

@@ -520,11 +520,15 @@ class DataGrid extends Control
 		 */
 		$rows = [];
 
-		$items = $this->redrawItem !== [] ? $this->dataModel->filterRow($this->redrawItem) : $this->dataModel->filterData(
-			$this->getPaginator(),
-			$this->createSorting($this->sort, $this->sortCallback),
-			$this->assembleFilters()
-		);
+		if ($this->redrawItem !== []) {
+			$items = $this->dataModel->filterRow($this->redrawItem);
+		} else {
+			$items = $this->dataModel->filterData(
+				$this->getPaginator(),
+				$this->createSorting($this->sort, $this->sortCallback),
+				$this->assembleFilters()
+			);
+		}
 
 		$hasGroupActionOnRows = false;
 
