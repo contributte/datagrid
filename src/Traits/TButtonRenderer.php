@@ -97,8 +97,9 @@ trait TButtonRenderer
 	{
 		$value = $row->getValue($column);
 
-		if ((is_scalar($value) || $value === null) && isset($this->replacements[gettype($value) == 'double' ? (int)$value : $value])) {
-			return [true, $this->replacements[gettype($value) == 'double' ? (int)$value : $value]];
+		if ((is_scalar($value) || $value === null) &&
+			isset($this->replacements[gettype($value) === 'double' ? (int) $value : $value])) {
+			return [true, $this->replacements[gettype($value) === 'double' ? (int) $value : $value]];
 		}
 
 		return [false, null];
