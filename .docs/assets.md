@@ -10,7 +10,7 @@ DataGrid needs for its precise functionality some third party scripts and styles
 
 **CSS (external)**
 
-- bootstrap
+- bootstrap 5
 - bootstrap datepicker
 - bootstrap select
 
@@ -61,14 +61,14 @@ package.json:
 	"dependencies": {
 		"bootstrap-datepicker": "^1.9",
 		"bootstrap-select": "^1.13",
-		"bootstrap": "^4.4.1",
+		"bootstrap": "^5.0.0",
 		"happy-inputs": "^2.0",
 		"jquery": "^3.4.1",
 		"jquery-ui-sortable": "^1.0",
 		"nette-forms": "^3.0",
 		"nette.ajax.js": "^2.3",
 		"popper.js": "^1.14.7",
-		"ublaboo-datagrid": "^6.2"
+		"ublaboo-datagrid": "^6.9"
 	}
 }
 ```
@@ -79,7 +79,7 @@ package.json:
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0/dist/css/bootstrap.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/happy-inputs@2.0.4/src/happy.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9.1/assets/datagrid.css">
@@ -101,18 +101,18 @@ package.json:
 		happy.init();
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0/dist/js/bootstrap.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/jquery-ui-sortable@1.0.0/jquery-ui.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/nette.ajax.js@2.3.0/nette.ajax.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9.1/assets/datagrid.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/nette-forms@3.0.4/src/assets/netteForms.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9/assets/datagrid.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/nette-forms@3.0/src/assets/netteForms.min.js"></script>
 
 	<!-- It is recommended to include this JS file with just a few bits. It refreshes URL on non ajax request -->
-	<script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9.1/assets/datagrid-instant-url-refresh.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9/assets/datagrid-instant-url-refresh.js"></script>
 
 	<!-- Use this little extension for ajax spinners -->
-	<script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9.1/assets/datagrid-spinners.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9/assets/datagrid-spinners.js"></script>
 
 	<!-- Include bootstrap-select.js when using FilterMultiSelect (silviomoreto.github.io/bootstrap-select) -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.15/dist/js/bootstrap-select.js"></script>
