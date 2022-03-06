@@ -7,7 +7,7 @@ use Ublaboo\DataGrid\Row;
 class ColumnNumber extends Column
 {
 
-	protected ?string $align = 'right';
+	protected ?string $align = 'end';
 
 	/** @var array */
 	protected array $numberFormat = [

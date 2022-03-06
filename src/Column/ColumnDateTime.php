@@ -10,7 +10,7 @@ use Ublaboo\DataGrid\Utils\DateTimeHelper;
 class ColumnDateTime extends Column
 {
 
-	protected ?string $align = 'right';
+	protected ?string $align = 'end';
 
 	protected string $format = 'j. n. Y';
 
