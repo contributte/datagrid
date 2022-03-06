@@ -20,7 +20,7 @@
 		{form filter, class => 'ajax'}
 			{if $control->hasOuterFilterRendering()}
 				{block outer-filters}
-					<div class="row text-right datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
+					<div class="row text-end datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
 						<div class="col-sm-12">
 							<button class="btn btn-xs btn-primary" type="button" data-toggle="collapse" data-target="#datagrid-{$control->getFullName()}-row-filters">
 								<i n:block="icon-filter" class="{$iconPrefix}filter"></i> {='ublaboo_datagrid.show_filter'|translate}
@@ -58,7 +58,7 @@
 								{var $i = $i+1}
 							</div>
 							<div class="col-sm-12" n:if="!$control->hasAutoSubmit()">
-								<div class="text-right datagrid-manual-submit">
+								<div class="text-end datagrid-manual-submit">
 									{input $filter['filter']['submit']}
 								</div>
 							</div>
@@ -392,10 +392,10 @@
 									<div class="col-pagination text-center">
 										{control paginator}
 									</div>
-									<div class="col-per-page text-right">
+									<div class="col-per-page text-end">
 										<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{='ublaboo_datagrid.reset_filter'|translate}</a>
 										{if $control->isPaginated()}
-											{input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'form-control input-sm form-control-sm'}
+											{input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'form-select input-sm form-select-sm'}
 											{input $filter['perPage_submit'], class => 'datagrid-per-page-submit'}
 										{/if}
 									</div>

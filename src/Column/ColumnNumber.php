@@ -12,7 +12,7 @@ class ColumnNumber extends Column
 	/**
 	 * @var string
 	 */
-	protected $align = 'right';
+	protected $align = 'end';
 
 	/**
 	 * @var array

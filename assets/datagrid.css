@@ -26,6 +26,18 @@
 	box-sizing: border-box
 }
 
+.datagrid a {
+	text-decoration: none;
+}
+
+.datagrid a:hover {
+	text-decoration: underline;
+}
+
+.datagrid a.btn:hover {
+	text-decoration: none;
+}
+
 .datagrid .datagrid-input-group-full-width {
 	width: 100%
 }
@@ -215,6 +227,10 @@
 
 .datagrid table thead tr th:hover .column-settings-menu {
 	opacity: 1
+}
+
+.datagrid .table > :not(:first-child) {
+	border-top: 0;
 }
 
 .datagrid table tbody td {
@@ -481,8 +497,7 @@
 }
 
 .datagrid select {
-	padding: 0;
-	text-transform: none
+	text-transform: none;
 }
 
 .datagrid .row-grid-bottom {
@@ -515,7 +530,8 @@
 	display: inline-block
 }
 
-.datagrid .row-grid-bottom .col-per-page .form-control {
+.datagrid .row-grid-bottom .col-per-page .form-control,
+.datagrid .row-grid-bottom .col-per-page .form-select {
 	width: auto;
 	display: inline-block
 }
@@ -562,7 +578,7 @@
 	float: right
 }
 
-@media (min-width:768px) {
+@media (min-width: 768px) {
 	.datagrid .ublaboo-datagrid-th-form-inline .form-group {
 		display: inline-block;
 		margin-bottom: 0;
@@ -576,7 +592,7 @@
 	}
 
 	.datagrid .ublaboo-datagrid-th-form-inline .form-control[hidden] {
-		display:none;
+		display: none;
 	}
 
 	.ublaboo-datagrid-th-form-inline .form-control[hidden] {

@@ -15,7 +15,7 @@ class ColumnDateTime extends Column
 	/**
 	 * @var string
 	 */
-	protected $align = 'right';
+	protected $align = 'end';
 
 	/**
 	 * @var string
