@@ -22,7 +22,7 @@
 				{block outer-filters}
 					<div class="row text-end datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
 						<div class="col-sm-12">
-							<button class="btn btn-xs btn-primary" type="button" data-toggle="collapse" data-target="#datagrid-{$control->getFullName()}-row-filters">
+							<button class="btn btn-xs btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#datagrid-{$control->getFullName()}-row-filters">
 								<i n:block="icon-filter" class="{$iconPrefix}filter"></i> {='ublaboo_datagrid.show_filter'|translate}
 							</button>
 						</div>
@@ -107,7 +107,7 @@
 									{/if}
 
 									<div class="btn-group">
-										<button type="button" class="btn btn-xs btn-default btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
+										<button type="button" class="btn btn-xs btn-default btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
 											<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
 										</button>
 										<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
@@ -173,7 +173,7 @@
 
 								<div class="datagrid-column-header-additions">
 									<div class="btn-group column-settings-menu" n:if="$control->canHideColumns()">
-										<a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">
+										<a class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">
 											<i n:block="icon-caret-down" class="{$iconPrefix}caret-down"></i>
 										</a>
 										<ul class="dropdown-menu dropdown-menu--grid">

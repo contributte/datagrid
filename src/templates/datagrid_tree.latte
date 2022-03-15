@@ -65,7 +65,7 @@
 			<div n:class="$hasChildren ? has-children, 'datagrid-tree-item'" data-id="{$row->getId()}" n:snippet="item-{$row->getId()}">
 				<div n:class="datagrid-tree-item-content, $row->getControlClass()" data-id="{$row->getId()}" data-has-children="{$hasChildren ? true : false}">
 					<div class="datagrid-tree-item-left">
-						<a n:href="getChildren! parent => $row->getId()" data-toggle-tree="true" n:class="!$hasChildren ? hidden, 'chevron ajax'">
+						<a n:href="getChildren! parent => $row->getId()" data-bs-toggle-tree="true" n:class="!$hasChildren ? hidden, 'chevron ajax'">
 							<i n:block="icon-chevron" class="{$iconPrefix}chevron-right"></i>
 						</a>
 						{foreach $columns as $key => $column}
