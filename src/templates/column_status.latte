@@ -8,7 +8,7 @@
 <div class="dropdown">
 	{if $activeOption}
 		{if $status->shouldBeRendered($row)}
-			<button class="dropdown-toggle {$activeOption->getClass()} {$activeOption->getClassSecondary()}" type="button" data-toggle="dropdown">
+			<button class="dropdown-toggle {$activeOption->getClass()} {$activeOption->getClassSecondary()}" type="button" data-bs-toggle="dropdown">
 				{if $activeOption->getIcon()}<i class="{$iconPrefix}{$activeOption->getIcon()}"></i> {/if}
 				{$activeOption->getText()|translate} <i n:if="$status->hasCaret()" class="caret"></i>
 			</button>
