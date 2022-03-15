@@ -8,6 +8,6 @@ namespace Ublaboo\DataGrid\GroupAction;
 class GroupMultiSelectAction extends GroupSelectAction
 {
 
-	protected string $class = 'form-control input-sm form-control-sm selectpicker';
+	protected string $class = 'form-select input-sm form-select-sm selectpicker';
 
 }
