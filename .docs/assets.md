@@ -60,7 +60,7 @@ package.json:
 {
 	"dependencies": {
 		"bootstrap-datepicker": "^1.9",
-		"bootstrap-select": "^1.13",
+		"bootstrap-select": "^1.14-beta2",
 		"bootstrap": "^5.0.0",
 		"happy-inputs": "^2.0",
 		"jquery": "^3.4.1",
@@ -87,8 +87,8 @@ package.json:
 	<!-- Use this css for ajax spinners -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9.1/assets/datagrid-spinners.css">
 
-	<!-- Include this css when using FilterMultiSelect (silviomoreto.github.io/bootstrap-select) -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.15/dist/css/bootstrap-select.css">
+	<!-- Include this css when using FilterMultiSelect (https://developer.snapappointments.com/bootstrap-select/) -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.css">
 
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 </head>
@@ -114,8 +114,8 @@ package.json:
 	<!-- Use this little extension for ajax spinners -->
 	<script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9/assets/datagrid-spinners.js"></script>
 
-	<!-- Include bootstrap-select.js when using FilterMultiSelect (silviomoreto.github.io/bootstrap-select) -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.15/dist/js/bootstrap-select.js"></script>
+	<!-- Include bootstrap-select.js when using FilterMultiSelect (https://developer.snapappointments.com/bootstrap-select/) -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.js"></script>
 </body>
 </html>
 ```
