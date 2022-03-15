@@ -19,6 +19,13 @@ class FilterSelect extends OneColumnFilter
 	protected $options;
 
 	/**
+	 * @var array
+	 */
+	protected $attributes = [
+		'class' => ['form-select', 'input-sm', 'form-select-sm'],
+	];
+
+	/**
 	 * @var bool
 	 */
 	protected $translateOptions = false;
