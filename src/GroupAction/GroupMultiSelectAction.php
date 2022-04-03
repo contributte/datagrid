@@ -13,6 +13,6 @@ class GroupMultiSelectAction extends GroupSelectAction
 	/**
 	 * @var string
 	 */
-	protected $class = 'form-select input-sm form-select-sm selectpicker';
+	protected $class = 'form-select form-select-sm selectpicker';
 
 }

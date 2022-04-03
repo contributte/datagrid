@@ -22,7 +22,7 @@ class FilterSelect extends OneColumnFilter
 	 * @var array
 	 */
 	protected $attributes = [
-		'class' => ['form-select', 'input-sm', 'form-select-sm'],
+		'class' => ['form-select', 'form-select-sm'],
 	];
 
 	/**
