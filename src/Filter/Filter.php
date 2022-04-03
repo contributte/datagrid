@@ -23,9 +23,8 @@ abstract class Filter
 
 	protected ?string $type = null;
 
-	/** @var array */
 	protected array $attributes = [
-		'class' => ['form-control', 'input-sm', 'form-control-sm'],
+		'class' => ['form-control', 'form-control-sm'],
 	];
 
 	private ?string $placeholder = null;
