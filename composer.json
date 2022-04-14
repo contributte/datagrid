@@ -55,7 +55,8 @@
 		"ninjify/coding-standard": "^0.12.0",
 		"phpstan/phpstan-nette": "^0.12.14",
 		"tharos/leanmapper": "^3.4.2 || ^4.0.0",
-		"tracy/tracy": "^2.6.3"
+		"tracy/tracy": "^2.6.3",
+		"latte/latte": "^v2.11.1"
 	},
 	"prefer-stable": true,
 	"minimum-stability": "dev",

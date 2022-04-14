@@ -344,7 +344,7 @@
 								{if $inlineEdit && $inlineEdit->getItemId() == $row->getId()}
 									{php $inlineEdit->onSetDefaults($filter['inline_edit'], $item); }
 
-									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:attr="$row->getControl()->attrs">
+									<tr data-id="{$row->getId()}" n:snippet='"item-{$row->getId()}"' n:attr="$row->getControl()->attrs">
 										<td n:if="$hasGroupActions" class="col-checkbox"></td>
 
 										{foreach $columns as $key => $column}
@@ -375,7 +375,7 @@
 										</td>
 									</tr>
 								{else}
-									<tr data-id="{$row->getId()}" n:snippet="item-{$row->getId()}" n:attr="$row->getControl()->attrs">
+									<tr data-id="{$row->getId()}" n:snippet='"item-{$row->getId()}"' n:attr="$row->getControl()->attrs">
 										<td n:if="$hasGroupActions" class="col-checkbox">
 											{if $row->hasGroupAction()}
 												<input n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getFullName()}" data-check-all-{$control->getFullName()|noescape} name="{$control->getFullName()|lower}_group_action_item[{$row->getId()}]">
@@ -452,7 +452,7 @@
 							 * Item detail
 							 *}
 							{if $itemsDetail && $itemsDetail->shouldBeRendered($row)}
-								<tr class="row-item-detail item-detail-{$control->getFullname()}-id-{$row->getId()}" n:snippet="item-{$row->getId()}-detail">
+								<tr class="row-item-detail item-detail-{$control->getFullname()}-id-{$row->getId()}" n:snippet='"item-{$row->getId()}-detail"'>
 									{if isset($toggle_detail) && $toggle_detail == $row->getId()}
 										{var $item_detail_params = ['item' => $item, '_form' => $filter] + $itemsDetail->getTemplateVariables()}
 
