@@ -30,12 +30,8 @@
 	text-decoration: none;
 }
 
-.datagrid a:hover {
+.datagrid a:not(.btn):not(.dropdown-item):hover {
 	text-decoration: underline;
-}
-
-.datagrid a.btn:hover {
-	text-decoration: none;
 }
 
 .datagrid .datagrid-input-group-full-width {
