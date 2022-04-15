@@ -857,9 +857,12 @@ dataGridRegisterExtension('datagrid.fitlerMultiSelect', {
 	success: function() {
 		datagridFitlerMultiSelect();
 		if ($.fn.selectpicker) {
-			return $('.selectpicker').selectpicker({
-				iconBase: 'fa'
-			});
+			return $('.selectpicker')
+				.removeClass('form-select form-select-sm')
+				.addClass('form-control form-control-sm')
+				.selectpicker({
+					iconBase: 'fa'
+				}).selectpicker('refresh');
 		}
 	}
 });
