@@ -94,7 +94,7 @@ class InlineEdit
 		$this->primaryWhereColumn = $primaryWhereColumn;
 
 		$this->title = 'ublaboo_datagrid.edit';
-		$this->class = 'btn btn-xs btn-default btn-secondary ajax';
+		$this->class = 'btn btn-sm btn-secondary ajax';
 		$this->icon = 'pencil pencil-alt';
 
 		$this->onControlAfterAdd[] = [$this, 'addControlsClasses'];
@@ -210,17 +210,17 @@ class InlineEdit
 			switch ($key) {
 				case 'submit':
 					$control->setValidationScope([$container]);
-					$control->setAttribute('class', 'btn btn-xs btn-primary');
+					$control->setAttribute('class', 'btn btn-sm btn-primary');
 
 					break;
 				case 'cancel':
 					$control->setValidationScope([]);
-					$control->setAttribute('class', 'btn btn-xs btn-danger');
+					$control->setAttribute('class', 'btn btn-sm btn-danger');
 
 					break;
 				default:
 					if ($control->getControl()->getAttribute('class') === null) {
-						$control->setAttribute('class', 'form-control input-sm form-control-sm');
+						$control->setAttribute('class', 'form-control form-control-sm');
 					}
 
 					break;

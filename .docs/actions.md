@@ -50,7 +50,7 @@ $grid->addAction('send', '')
 ```php
 $grid->addAction('dosth', '', 'doSomething!')
 	->setIcon('pencil')
-	->setClass('btn btn-xs btn-danger ajax');
+	->setClass('btn btn-sm btn-danger ajax');
 ```
 
 Action class can be also defined by your callback. Row `$item` is passed to your callback as the only argument.
@@ -58,7 +58,7 @@ Action class can be also defined by your callback. Row `$item` is passed to your
 ```php
 $grid->addAction('send', '')
 	->setIcon('envelope')
-	->setClass(function($item) { return $item->sent_already ? 'btn btn-xs btn-success' : 'btn btn-xs btn-default' });
+	->setClass(function($item) { return $item->sent_already ? 'btn btn-sm btn-success' : 'btn btn-sm btn-default' });
 ```
 
 ### Title
@@ -77,7 +77,7 @@ Action title can be defined by custom callback same as title or class.
 $grid->addAction('delete', '', 'delete!')
 	->setIcon('trash')
 	->setTitle('Smazat')
-	->setClass('btn btn-xs btn-danger <strong class="text-danger">ajax</strong>')
+	->setClass('btn btn-sm btn-danger <strong class="text-danger">ajax</strong>')
 	->setConfirmation(
 		new StringConfirmation('Do you really want to delete row %s?', 'name') // Second parameter is optional
 	);
@@ -354,7 +354,7 @@ You don't have to fire event only using `PresenterComponent` signals. There is a
 $grid->addActionCallback('custom_callback', '')
 	->setIcon('sun-o')
 	->setTitle('Hello, sun')
-	->setClass('btn btn-xs btn-default ajax')
+	->setClass('btn btn-sm btn-default ajax')
 	->onClick[] = function($item_id) use ($presenter) {
 		$presenter->flashMessage('Custom callback triggered, id: ' . $item_id);
 		$presenter->redrawControl('flashes');
