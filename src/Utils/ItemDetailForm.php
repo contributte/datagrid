@@ -20,7 +20,7 @@ final class ItemDetailForm extends Container
 	private $callableSetContainer;
 
 	/**
-	 * @var array
+	 * @var ?array
 	 */
 	private $httpPost;
 

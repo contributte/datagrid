@@ -58,7 +58,7 @@ abstract class Filter
 	 * @var array
 	 */
 	protected $attributes = [
-		'class' => ['form-control', 'input-sm', 'form-control-sm'],
+		'class' => ['form-control', 'form-control-sm'],
 	];
 
 	/**

@@ -8,7 +8,7 @@
 <div class="dropdown">
 	{if $activeOption}
 		{if $status->shouldBeRendered($row)}
-			<button class="dropdown-toggle {$activeOption->getClass()} {$activeOption->getClassSecondary()}" type="button" data-bs-toggle="dropdown">
+			<button class="dropdown-toggle {$activeOption->getClass()} {$activeOption->getClassSecondary()}" type="button" data-toggle="dropdown">
 				{if $activeOption->getIcon()}<i class="{$iconPrefix}{$activeOption->getIcon()}"></i> {/if}
 				{$activeOption->getText()|translate} <i n:if="$status->hasCaret()" class="caret"></i>
 			</button>
@@ -23,11 +23,11 @@
 			{var $confirmationDialog = $option->getConfirmationDialog($row)}
 
 			<a
-				class="{$option->getClassInDropdown()}"
-				n:href="changeStatus!, id => $row->getId(), key => $status->getKey(), value => $option->getValue()"
+					class="{$option->getClassInDropdown()}"
+					n:href="changeStatus!, id => $row->getId(), key => $status->getKey(), value => $option->getValue()"
 				{if $confirmationDialog}
 					data-{Ublaboo\DataGrid\Column\Action::$dataConfirmAttributeName}={$confirmationDialog}
-				{/if}
+					{/if}
 			>
 				{if $option->getIconSecondary()}<i class="datagrid-column-status-option-icon {$iconPrefix}{$option->getIconSecondary()}"></i> {/if}
 				{$option->getText()|translate}
