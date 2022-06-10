@@ -103,7 +103,7 @@ class GroupActionCollection
 
 				$control->setAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
-					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'))
+					->setRequired('ublaboo_datagrid.choose_input_required')
 					->endCondition();
 
 			} elseif ($action instanceof GroupTextareaAction) {
@@ -111,7 +111,7 @@ class GroupActionCollection
 
 				$control->setAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
-					->setRequired($translator->translate('ublaboo_datagrid.choose_input_required'));
+					->setRequired('ublaboo_datagrid.choose_input_required');
 			}
 
 			if (isset($control)) {
