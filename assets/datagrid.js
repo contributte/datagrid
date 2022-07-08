@@ -89,7 +89,7 @@ if (typeof naja !== "undefined") {
 
 	dataGridLoad = function () {
 		if (isNaja2()) {
-			document.querySelectorAll('.ajax').forEach((element) => {
+			document.querySelectorAll('.datagrid .ajax').forEach((element) => {
 				naja.uiHandler.bindUI(element);
 			});
 		} else {
