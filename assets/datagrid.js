@@ -88,7 +88,13 @@ if (typeof naja !== "undefined") {
 	};
 
 	dataGridLoad = function () {
-		naja.load();
+		if (isNaja2()) {
+			document.querySelectorAll('.ajax').forEach((element) => {
+				naja.uiHandler.bindUI(element);
+			});
+		} else {
+			naja.load();
+		}
 	};
 
 	dataGridSubmitForm = function (form) {
