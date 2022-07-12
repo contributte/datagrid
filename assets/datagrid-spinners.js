@@ -1,89 +1,68 @@
-var dataGridRegisterExtension;
+var DataGridSpinnersExtension = function() {
+	this.name = "datagrid-spinners";
 
-if (typeof naja !== "undefined") {
-	var isNaja2 = function () { return naja && naja.VERSION && naja.VERSION >= 2 };
-	var najaEventParams = function (params) { return isNaja2() ? params.detail : params };
-	var najaRequest = function (params) { return isNaja2() ? params.detail.request : params.xhr };
-	dataGridRegisterExtension = function (name, extension) {
-		var init = extension.init;
-		var success = extension.success;
-		var before = extension.before;
-		var complete = extension.complete;
+	this.initialize = function (naja) {
+		naja.uiHandler.addEventListener("interaction", function (event) {
+			this.element = event.detail.element;
+		}.bind(this));
 
+		naja.addEventListener("before", function (event) {
+			if (event.detail.options.nette) {
+				let el = this.element;
+				let template = document.createElement("div");
 
-		var NewExtension = function NewExtension(naja, name) {
-			this.name = name;
+				template.classList.add("ublaboo-spinner");
+				template.classList.add("ublaboo-spinner-small");
+				template.append(
+					document.createElement("i"),
+					document.createElement("i"),
+					document.createElement("i"),
+					document.createElement("i")
+				);
 
-			this.initialize = function (naja) {
-				if(init) {
-					naja.addEventListener('init', function (params)  {
-						init(najaEventParams(params).defaultOptions);
-					});
-				}
+				let bottomSpin = function(el) {
+					let perPage = el.closest(".row-grid-bottom").querySelector(".col-per-page");
+					if (perPage) {
+						perPage.prepend(template);
+					}
+				};
 
-				if(success) {
-					naja.addEventListener('success', function (params)  {
-						var payload = isNaja2() ? params.detail.payload : params.response;
-						success(payload, najaEventParams(params).options);
-					});
-				}
+				console.log(el.dataset);
 
-				if(before) {
-					naja.addEventListener('before', function (params) {
-						before(najaRequest(params), najaEventParams(params).options);
-					});
-				}
+				if (el.isEqualNode(document.querySelector('.datagrid [name="group_action[submit]"]'))) {
+					el.after(template);
+				} else if ("toggleDetail" in el.dataset) {
+					let id = event.detail.options.nette.el.attr("data-toggle-detail");
+					let grid_fullname = event.detail.options.nette.el.attr("data-toggle-detail-grid-fullname");
+					let row_detail = $(".item-detail-" + grid_fullname + "-id-" + id);
 
-				if(complete) {
-					naja.addEventListener('complete', function (params) {
-						complete(najaRequest(params), najaEventParams(params).options);
-					});
+					if (!row_detail.hasClass("loaded")) {
+						el.classList.add("ublaboo-spinner-icon");
+					}
+				} else if (el.classList.contains("datagrid-paginator-button")) {
+					bottomSpin(el);
+				} else if (el.isEqualNode(document.querySelector(".datagrid .datagrid-per-page-submit"))) {
+					bottomSpin(el);
+				} else if (el.isEqualNode(document.querySelector(".datagrid .reset-filter"))) {
+					bottomSpin(el);
 				}
 			}
-			if (!isNaja2()) {
-				this.initialize(naja);
-			}
-			return this;
-		}
+		}.bind(this));
 
-		if (isNaja2()) {
-			naja.registerExtension(new NewExtension(null, name));
-		} else {
-			naja.registerExtension(NewExtension, name);
-		}
-	};
-} else if ($.nette) {
-		dataGridRegisterExtension = function (name, extension) {
-			$.nette.ext(name, extension);
-		};
+		naja.addEventListener("complete", function (event) {
+			if (typeof event.detail.response != "undefined") {
+				const spinners = document.getElementsByClassName("ublaboo-spinner");
+				while(spinners.length > 0){
+					spinners[0].remove();
+				}
+
+				const spinnerIcon = document.getElementsByClassName("ublaboo-spinner-icon");
+				for (let i = 0; i < spinnerIcon.length; i++) {
+					spinnerIcon[i].classList.remove("ublaboo-spinner-icon");
+				}
+			}
+		});
+	}
 }
 
-dataGridRegisterExtension('ublaboo-spinners', {
-	before: function(xhr, settings) {
-		var el, id, row_detail, spinner_template, grid_fullname;
-		if (settings.nette) {
-			el = settings.nette.el;
-			spinner_template = $('<div class="ublaboo-spinner ublaboo-spinner-small"><i></i><i></i><i></i><i></i></div>');
-			if (el.is('.datagrid [name="group_action[submit]"]')) {
-				return el.after(spinner_template);
-			} else if (el.is('.datagrid a') && el.data('toggle-detail')) {
-				id = settings.nette.el.attr('data-toggle-detail');
-				grid_fullname = settings.nette.el.attr('data-toggle-detail-grid-fullname');
-				row_detail = $('.item-detail-' + grid_fullname + '-id-' + id);
-				if (!row_detail.hasClass('loaded')) {
-					return el.addClass('ublaboo-spinner-icon');
-				}
-			} else if (el.is('.datagrid .col-pagination a')) {
-				return el.closest('.row-grid-bottom').find('.col-per-page').prepend(spinner_template);
-			} else if (el.is('.datagrid .datagrid-per-page-submit')) {
-				return el.closest('.row-grid-bottom').find('.col-per-page').prepend(spinner_template);
-			} else if (el.is('.datagrid .reset-filter')) {
-				return el.closest('.row-grid-bottom').find('.col-per-page').prepend(spinner_template);
-			}
-		}
-	},
-	complete: function() {
-		$('.ublaboo-spinner').remove();
-		return $('.ublaboo-spinner-icon').removeClass('ublaboo-spinner-icon');
-	}
-});
+naja.registerExtension(new DataGridSpinnersExtension());
