@@ -503,10 +503,21 @@ class DataGrid extends Control
     {
         if ($this->url_params === false) {
             $this->url_params = [];
+            $k_name = $this->getFullName();
             foreach ($this->params['filter'] as $k => $v) {
-                $k_name = $this->getFullName();
-                $k_name .= '-filter';
-                $this->url_params[$k_name][$k] = $v;
+                $this->url_params[$k_name . '-filter'][$k] = $v;
+            }
+
+            $this->url_params[$k_name . '-perPage'] = $this->perPage;
+
+            if (!empty($this->sort)) {
+                foreach ($this->sort as $k => $v) {
+                    $this->url_params[$k_name . '-sort'][$k] = $v;
+                }
+            } elseif (!empty($this->defaultSort)) {
+                foreach ($this->sort as $k => $v) {
+                    $this->url_params[$k_name . '-sort'][$k] = $v;
+                }
             }
         }
         return $this->url_params;
@@ -617,13 +628,15 @@ class DataGrid extends Control
 	 ********************************************************************************/
 	public function render(): void
 	{
-        $url_params = $this->getUrlParams();
-        $url_params += $this->getPresenter()->getRequest()->getParameters();
-        $url_params['action'] = $this->getPresenter()->getAction();
-        unset($url_params['bl'], $url_params['do']);
-        $req = new \Nette\Application\Request($this->getPresenter()->getName(), 'GET', $url_params);
-        $this->backlink = $this->getPresenter()->storeRequestCustom($req);
-        unset($req, $url_params);
+        if (method_exists($this->getPresenter(), 'storeRequestCustom')) {
+            $url_params = $this->getUrlParams();
+            $url_params += $this->getPresenter()->getRequest()->getParameters();
+            $url_params['action'] = $this->getPresenter()->getAction();
+            unset($url_params['bl'], $url_params['do']);
+            $req = new \Nette\Application\Request($this->getPresenter()->getName(), 'GET', $url_params);
+            $this->backlink = $this->getPresenter()->storeRequestCustom($req);
+            unset($req, $url_params);
+        }
 
 		/**
 		 * Check whether datagrid has set some columns, initiated data source, etc
@@ -1631,7 +1644,6 @@ class DataGrid extends Control
 	 */
 	public function filterSucceeded(NetteForm $form): void
 	{
-        bdump('filterSucceeded');
 		if ($this->snippetsSet) {
 			return;
 		}
