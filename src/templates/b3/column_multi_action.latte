@@ -1,0 +1,18 @@
+{**
+ * @param $multiAction Ublaboo\DataGrid\Column\MultiAction
+ *}
+
+<div class="dropdown">
+	{$multiAction->renderButton()|noescape}
+	<ul class="dropdown-menu">
+		<li n:foreach="$multiAction->getActions() as $actionKey => $action">
+			{continueIf !$multiAction->testRowCondition($actionKey, $row)}
+
+			{if $action->hasTemplate()}
+				{include $action->getTemplate(), item => $row->getItem(), (expand) $action->getTemplateVariables(), row => $row}
+			{else}
+				{$action->render($row)|noescape}
+			{/if}
+		</li>
+	</ul>
+</div>

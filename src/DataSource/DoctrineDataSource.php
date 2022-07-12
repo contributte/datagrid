@@ -341,8 +341,11 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		}
 
 		if (!isset($this->rootAlias)) {
-			$rootAlias = $this->dataSource->getRootAliases();
-			$this->rootAlias = current($rootAlias);
+			$rootAlias = current($this->dataSource->getRootAliases());
+
+			if ($rootAlias !== false) {
+				$this->rootAlias = $rootAlias;
+			}
 		}
 
 		return $this->rootAlias . '.' . $column;

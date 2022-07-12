@@ -164,6 +164,9 @@ class DataGrid extends Control
 	 */
 	public $filter = [];
 
+	protected bool|array $url_params = false;
+	public ?string $backlink = null;
+
 	/**
 	 * @var string
 	 */
@@ -434,6 +437,13 @@ class DataGrid extends Control
 	 */
 	private $componentFullName;
 
+    protected bool $isB4 = false;
+    protected bool $isB3 = false;
+    protected array $columnLabels = [];
+    protected array $rowLabels = [];
+    protected ?string $columnForRowLabels = null;
+    protected ?int $maxColLabelForRows = null;
+
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
@@ -485,12 +495,149 @@ class DataGrid extends Control
 			});
 	}
 
+    /**
+     * @return array
+     * @throws DataGridHasToBeAttachedToPresenterComponentException
+     */
+    protected function getUrlParams(): array
+    {
+        if ($this->url_params === false) {
+            $this->url_params = [];
+            $k_name = $this->getFullName();
+            foreach ($this->params['filter'] as $k => $v) {
+                $this->url_params[$k_name . '-filter'][$k] = $v;
+            }
+
+            $this->url_params[$k_name . '-perPage'] = $this->perPage;
+
+            if (!empty($this->sort)) {
+                foreach ($this->sort as $k => $v) {
+                    $this->url_params[$k_name . '-sort'][$k] = $v;
+                }
+            } elseif (!empty($this->defaultSort)) {
+                foreach ($this->sort as $k => $v) {
+                    $this->url_params[$k_name . '-sort'][$k] = $v;
+                }
+            }
+        }
+        return $this->url_params;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isB4(): bool
+    {
+        return $this->isB4;
+    }
+
+	/**
+     * @return bool
+     */
+    public function isB3(): bool
+    {
+        return $this->isB3;
+    }
+
+    /**
+     * @return array
+     */
+    public function getColumnLabels(): array
+    {
+        return $this->columnLabels;
+    }
+
+    /**
+     * @param array $columnLabels
+     * @return $this
+     */
+    public function setColumnLabels(array $columnLabels): DataGrid
+    {
+        $this->columnLabels = $columnLabels;
+        return $this;
+    }
+
+    /**
+     * @param bool $isB4
+     * @return $this
+     */
+    public function setB4(bool $isB4): DataGrid
+    {
+        $this->isB4 = $isB4;
+        return $this;
+    }
+
+	/**
+	 * @param bool $isB3
+	 * @return $this
+	 */
+    public function setB3(bool $isB3): DataGrid
+    {
+        $this->isB3 = $isB3;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRowLabels(): array
+    {
+        return $this->rowLabels;
+    }
+
+    /**
+     * @param array $rowLabels
+     * @return $this
+     */
+    public function setRowLabels(array $rowLabels): DataGrid
+    {
+        $this->maxColLabelForRows = 0;
+        foreach ($rowLabels as $column) {
+            $max_in_col = 0;
+            foreach ($column as $labels) {
+                $colspan = $labels['colspan'] !== 0 ? (int) $labels['colspan'] : 1;
+                $max_in_col += $colspan;
+            }
+            $this->maxColLabelForRows = $this->maxColLabelForRows < $max_in_col ? $max_in_col : $this->maxColLabelForRows;
+        }
+
+        $this->rowLabels = $rowLabels;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getColumnForRowLabels(): ?string
+    {
+        return $this->columnForRowLabels;
+    }
+
+    /**
+     * @param string|null $columnForRowLabels
+     * @return $this
+     */
+    public function setColumnForRowLabels(?string $columnForRowLabels): DataGrid
+    {
+        $this->columnForRowLabels = $columnForRowLabels;
+        return $this;
+    }
 
 	/********************************************************************************
 	 *                                  RENDERING *
 	 ********************************************************************************/
 	public function render(): void
 	{
+        if (method_exists($this->getPresenter(), 'storeRequestCustom')) {
+            $url_params = $this->getUrlParams();
+            $url_params += $this->getPresenter()->getRequest()->getParameters();
+            $url_params['action'] = $this->getPresenter()->getAction();
+            unset($url_params['bl'], $url_params['do']);
+            $req = new \Nette\Application\Request($this->getPresenter()->getName(), 'GET', $url_params);
+            $this->backlink = $this->getPresenter()->storeRequestCustom($req);
+            unset($req, $url_params);
+        }
+
 		/**
 		 * Check whether datagrid has set some columns, initiated data source, etc
 		 */
@@ -579,6 +726,10 @@ class DataGrid extends Control
 
 		$template->hasGroupActions = $this->hasGroupActions();
 		$template->hasGroupActionOnRows = $hasGroupActionOnRows;
+		$template->columnLabels = $this->columnLabels;
+		$template->rowLabels = $this->rowLabels;
+		$template->columnForRowLabels = $this->columnForRowLabels;
+		$template->maxColLabelForRows = $this->maxColLabelForRows;
 
 		/**
 		 * Walkaround for Latte (does not know $form in snippet in {form} etc)
@@ -680,6 +831,12 @@ class DataGrid extends Control
 
 	public function getOriginalTemplateFile(): string
 	{
+        if ($this->isB4()) {
+            return __DIR__ . '/templates/b4/datagrid.latte';
+        }elseif ($this->isB3()){
+			return __DIR__ . '/templates/b3/datagrid.latte';
+		}
+
 		return __DIR__ . '/templates/datagrid.latte';
 	}
 
@@ -1615,7 +1772,24 @@ class DataGrid extends Control
 
 		if ($values->count() > 0) {
 			$this->saveSessionData('_grid_has_filtered', 1);
-		}
+            foreach ($this->filter as $k => $item) {
+                if (is_iterable($item)) {
+                    $empty = 0;
+                    foreach ($item as $_k => $_item) {
+                        if ($_item === '' || $_item === null) {
+                            $empty++;
+                        }
+                    }
+
+                    if ($empty === count($item)) {
+                        continue;
+                    }
+                } elseif ($item === '' || $item === null) {
+                    continue;
+                }
+                $this->params['filter'][$k] = $item;
+            }
+        }
 
 		if ($this->getPresenterInstance()->isAjax()) {
 			$this->getPresenterInstance()->payload->_datagrid_sort = [];
@@ -2373,6 +2547,40 @@ class DataGrid extends Control
 		$this->onRedraw();
 	}
 
+	public function handleHideMultipleColumn(?string $columns = null): void
+	{
+		$columns = $this->getPresenter()->getParameter('columns');
+		$columns = json_decode($columns, true);
+
+		/**
+		 * Store info about hiding a column to session
+		 */
+		$sessionHiddenColumns = $this->getSessionData('_grid_hidden_columns');
+
+		foreach ($columns as $column => $params){
+			foreach ($params as $param){
+				if ($sessionHiddenColumns === [] || $sessionHiddenColumns === null) {
+					if($param == false){
+						$sessionHiddenColumns = array();
+						array_push($sessionHiddenColumns, $column);
+					}
+				} else {
+					if($param == false && !in_array($column, $sessionHiddenColumns, true)){
+						array_push($sessionHiddenColumns, $column);
+					}elseif($param == true && ($key = array_search($column, $sessionHiddenColumns)) !== false ){
+						unset($sessionHiddenColumns[$key]);
+					}
+				}
+			}
+		}
+
+		$this->saveSessionData('_grid_hidden_columns', $sessionHiddenColumns);
+		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
+
+		$this->redrawControl();
+
+		$this->onRedraw();
+	}
 
 	/**
 	 * @param mixed $__key
