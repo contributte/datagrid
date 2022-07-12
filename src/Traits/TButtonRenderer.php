@@ -30,7 +30,7 @@ trait TButtonRenderer
 	{
 		$renderer = $this->getRenderer();
 
-		$args = $row instanceof Row ? [$row->getItem()] : [];
+		$args = $row instanceof Row ? [$row->getItem(), $this->grid->backlink] : [];
 
 		if ($renderer === null) {
 			throw new DataGridColumnRendererException;
