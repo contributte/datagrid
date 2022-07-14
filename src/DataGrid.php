@@ -520,6 +520,7 @@ class DataGrid extends Control
                 }
             }
         }
+
         return $this->url_params;
     }
 
@@ -1648,7 +1649,7 @@ class DataGrid extends Control
 			return;
 		}
 
-		$values = (array) $form->getValues();
+        $values = (array) $form->getUnsafeValues(null);
 
 		if ($this->getPresenterInstance()->isAjax()) {
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
