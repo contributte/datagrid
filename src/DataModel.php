@@ -139,7 +139,6 @@ final class DataModel
 		 */
 		if ($paginatorComponent !== null) {
 			$paginator = $paginatorComponent->getPaginator();
-			$paginator->setItemCount($this->dataSource->getCount());
 
 			$this->dataSource->sort($sorting)->limit(
 				$paginator->getOffset(),
@@ -148,7 +147,10 @@ final class DataModel
 
 			$this->onAfterPaginated($this->dataSource);
 
-			return $this->dataSource->getData();
+			$data = $this->dataSource->getData();
+			$paginator->setItemCount($this->dataSource->getCount());
+
+			return $data;
 		}
 
 		return $this->dataSource->sort($sorting)->getData();
