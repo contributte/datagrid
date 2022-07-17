@@ -31,7 +31,7 @@ use Ublaboo\DataGrid\Utils\Sorting;
  * @method onAfterFilter(IDataSource $dataSource)
  * @method onAfterPaginated(IDataSource $dataSource)
  */
-final class DataModel
+final class DataModel implements DataModelInterface
 {
 
 	use SmartObject;
