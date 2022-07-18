@@ -1,119 +1,22 @@
-var dataGridRegisterExtension, dataGridRegisterAjaxCall, dataGridLoad, dataGridSubmitForm;
+/* DataGrid confirmation - both ajax and not ajax */
 
-if (typeof naja !== "undefined") {
-	var isNaja2 = function () { return naja && naja.VERSION && naja.VERSION >= 2 };
-	var najaEventParams = function (params) { return isNaja2() ? params.detail : params };
-	var najaRequest = function (params) { return isNaja2() ? params.detail.request : params.xhr };
-	dataGridRegisterExtension = function (name, extension) {
-		var init = extension.init;
-		var success = extension.success;
-		var before = extension.before;
-		var complete = extension.complete;
-		var interaction = extension.interaction;
+var DataGridConfirmExtension = function() {
+	this.name = "datagrid-confirm";
 
+	this.initialize = function (naja) {
+		naja.uiHandler.addEventListener("interaction", function (event) {
+			var confirmMessage = event.detail.element.dataset["datagridConfirm"];
 
-		var NewExtension = function NewExtension(naja, name) {
-			this.name = name;
-
-			this.initialize = function (naja) {
-				if(init) {
-					naja.addEventListener('init', function (params)  {
-						init(najaEventParams(params).defaultOptions);
-					});
-				}
-
-				if(success) {
-					naja.addEventListener('success', function (params)  {
-						var payload = isNaja2() ? params.detail.payload : params.response;
-						success(payload, najaEventParams(params).options);
-					});
-				}
-
-				var interactionTarget = naja;
-				if (isNaja2()) {
-					interactionTarget = interactionTarget.uiHandler;
-				}
-
-				interactionTarget.addEventListener('interaction', function (params) {
-					if (isNaja2()) {
-						params.detail.options.nette = {
-							el: $(params.detail.element)
-						}
-					} else {
-						params.options.nette = {
-							el: $(params.element)
-						}
-					}
-					if (interaction) {
-						if (!interaction(najaEventParams(params).options)){
-							params.preventDefault();
-						}
-					}
-				});
-
-				if(before) {
-					naja.addEventListener('before', function (params) {
-						if (!before(najaRequest(params), najaEventParams(params).options))
-							params.preventDefault();
-					});
-				}
-
-				if(complete) {
-					naja.addEventListener('complete', function (params) {
-						complete(najaRequest(params), najaEventParams(params).options);
-					});
+			if (typeof confirmMessage != "undefined") {
+				if (!confirm(confirmMessage)) {
+					event.preventDefault();
 				}
 			}
-			if (!isNaja2()) {
-				this.initialize(naja);
-			}
-			return this;
-		}
-
-		if (isNaja2()) {
-			naja.registerExtension(new NewExtension(null, name));
-		} else {
-			naja.registerExtension(NewExtension, name);
-		}
-	};
-
-
-	dataGridRegisterAjaxCall = function (params) {
-        var method = params.type || 'GET';
-        var data = params.data || null;
-
-		naja.makeRequest(method, params.url, data, {})
-			.then(params.success)
-			.catch(params.error);
-	};
-
-	dataGridLoad = function () {
-		naja.load();
-	};
-
-	dataGridSubmitForm = function (form) {
-		return naja.uiHandler.submitForm(form.get(0));
-	};
-} else if ($.nette) {
-	dataGridRegisterExtension = function (name, extension) {
-		$.nette.ext(name, extension);
-	};
-	dataGridRegisterAjaxCall = function (params) {
-		$.nette.ajax(params);
-	};
-	dataGridLoad = function () {
-		$.nette.load();
-	};
-	dataGridSubmitForm = function (form) {
-		return form.submit();
-	};
-} else {
-	throw new Error("Include Naja.js or nette.ajax for datagrids to work!")
+		}.bind(this));
+	}
 }
 
-
-var datagridFitlerMultiSelect, datagridGroupActionMultiSelect, datagridShiftGroupSelection, datagridSortable, datagridSortableTree, getEventDomPath,
-	indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+naja.registerExtension(new DataGridConfirmExtension());
 
 $(document).on('click', '[data-datagrid-confirm]:not(.ajax)', function(e) {
 	if (!confirm($(e.target).closest('a').attr('data-datagrid-confirm'))) {
@@ -122,34 +25,80 @@ $(document).on('click', '[data-datagrid-confirm]:not(.ajax)', function(e) {
 	}
 });
 
-if (typeof naja !== "undefined") {
-	dataGridRegisterExtension('datagrid.confirm', {
-		interaction: function(settings) {
-			var confirm_message;
-			if (settings.nette) {
-				confirm_message = settings.nette.el.data('datagrid-confirm');
-				if (confirm_message) {
-					return confirm(confirm_message);
-				}
-			}
-			return true;
-		}
-	});
-} else {
-	dataGridRegisterExtension('datagrid.confirm', {
-		before: function(xhr, settings) {
-			var confirm_message;
-			if (settings.nette) {
-				confirm_message = settings.nette.el.data('datagrid-confirm');
-				if (confirm_message) {
-					return confirm(confirm_message);
-				}
-			}
-			return true;
-		}
-	});
-}
+/*  */
 
+var dataGridRegisterExtension = function (name, extension) {
+	var init = extension.init;
+	var success = extension.success;
+	var before = extension.before;
+	var complete = extension.complete;
+	var interaction = extension.interaction;
+
+
+	var NewExtension = function NewExtension(naja, name) {
+		this.name = name;
+
+		this.initialize = function (naja) {
+			if(init) {
+				naja.addEventListener('init', function (params)  {
+					init(params.detail.defaultOptions);
+				});
+			}
+
+			if(success) {
+				naja.addEventListener('success', function (params)  {
+					success(params.detail.payload, params.detail.options);
+				});
+			}
+
+			naja.uiHandler.addEventListener('interaction', function (params) {
+				params.detail.options.nette = {
+					el: $(params.detail.element)
+				}
+				if (interaction) {
+					if (!interaction(params.detail.options)){
+						params.preventDefault();
+					}
+				}
+			});
+
+			if(before) {
+				naja.addEventListener('before', function (params) {
+					if (!before(params.detail.request, params.detail.options)) {
+						params.preventDefault();
+					}
+				});
+			}
+
+			if(complete) {
+				naja.addEventListener('complete', function (params) {
+					complete(params.detail.request, params.detail.options);
+				});
+			}
+		}
+		return this;
+	}
+
+	naja.registerExtension(new NewExtension(null, name));
+};
+
+
+var dataGridRegisterAjaxCall = function (params) {
+    var method = params.type || 'GET';
+    var data = params.data || null;
+
+	naja.makeRequest(method, params.url, data, {})
+		.then(params.success)
+		.catch(params.error);
+};
+
+var dataGridSubmitForm = function (form) {
+	return naja.uiHandler.submitForm(form.get(0));
+};
+
+
+var datagridFitlerMultiSelect, datagridGroupActionMultiSelect, datagridShiftGroupSelection, datagridSortable, datagridSortableTree, getEventDomPath,
+	indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 $(document).on('change', 'select[data-autosubmit-per-page]', function() {
 	var button;
@@ -595,7 +544,7 @@ dataGridRegisterExtension('datagrid.sort', {
 });
 
 dataGridRegisterExtension('datargid.item_detail', {
-	before: function(xhr, settings) {
+	start: function(xhr, settings) {
 		var id, row_detail, grid_fullname;
 		if (settings.nette && settings.nette.el.attr('data-toggle-detail')) {
 			id = settings.nette.el.attr('data-toggle-detail');
@@ -618,7 +567,7 @@ dataGridRegisterExtension('datargid.item_detail', {
 				}
 				return false;
 			} else {
-				return row_detail.addClass('loaded');
+				row_detail.addClass('loaded');
 			}
 		}
 		return true;
@@ -668,7 +617,7 @@ dataGridRegisterExtension('datagrid.tree', {
 			}
 			children_block.addClass('loaded');
 			children_block.slideToggle('fast');
-			dataGridLoad();
+			naja.load();
 		}
 		return datagridSortableTree();
 	}

@@ -27,8 +27,6 @@ var DataGridSpinnersExtension = function() {
 					}
 				};
 
-				console.log(el.dataset);
-
 				if (el.isEqualNode(document.querySelector('.datagrid [name="group_action[submit]"]'))) {
 					el.after(template);
 				} else if ("toggleDetail" in el.dataset) {
