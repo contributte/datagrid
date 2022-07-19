@@ -25,12 +25,12 @@
 	],
 	"autoload": {
 		"psr-4": {
-			"Ublaboo\\DataGrid\\": "src/"
+			"nakoukal\\DataGrid\\": "src/"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Ublaboo\\DataGrid\\Tests\\": "tests"
+			"nakoukal\\DataGrid\\Tests\\": "tests"
 		}
 	},
 	"require": {
