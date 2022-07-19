@@ -44,12 +44,14 @@ use Ublaboo\DataGrid\Export\Export;
 use Ublaboo\DataGrid\Export\ExportCsv;
 use Ublaboo\DataGrid\Filter\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
+use Ublaboo\DataGrid\Filter\FilterDateTime;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
 use Ublaboo\DataGrid\Filter\FilterRange;
 use Ublaboo\DataGrid\Filter\FilterSelect;
 use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Filter\IFilterDate;
+use Ublaboo\DataGrid\Filter\IFilterDateTime;
 use Ublaboo\DataGrid\Filter\SubmitButton;
 use Ublaboo\DataGrid\GroupAction\GroupAction;
 use Ublaboo\DataGrid\GroupAction\GroupActionCollection;
@@ -1129,6 +1131,15 @@ class DataGrid extends Control
 
 		return $this->filters[$key] = new FilterDate($this, $key, $name, $column);
 	}
+	
+	public function addFilterDateTime(string $key, string $name, ?string $column = null): FilterDateTime
+	{
+		$column = $column ?? $key;
+
+		$this->addFilterCheck($key);
+
+		return $this->filters[$key] = new FilterDateTime($this, $key, $name, $column);
+	}
 
 
 	public function addFilterRange(
@@ -1468,7 +1479,11 @@ class DataGrid extends Control
 				if ($filter instanceof IFilterDate) {
 					$value = $value->format($filter->getPhpFormat());
 				}
-			}
+
+				if ($filter instanceof IFilterDateTime) {
+					$value = $value->format($filter->getPhpFormat());
+				}
+			}			
 
 			try {
 				if (!$control instanceof IControl) {
