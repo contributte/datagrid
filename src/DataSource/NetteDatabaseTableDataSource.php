@@ -10,7 +10,9 @@ use Nette\Utils\Strings;
 use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
 use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 use Ublaboo\DataGrid\Filter\FilterDate;
+use Ublaboo\DataGrid\Filter\FilterDateTime;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter\FilterDateTimeRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
 use Ublaboo\DataGrid\Filter\FilterRange;
 use Ublaboo\DataGrid\Filter\FilterSelect;
@@ -164,6 +166,19 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		}
 	}
 
+	protected function applyFilterDateTime(FilterDateTime $filter): void
+	{
+		$conditions = $filter->getCondition();
+
+		try {
+			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
+
+			$this->dataSource->where("{$filter->getColumn()} = ?", $date->format('Y-m-d H:i'));
+		} catch (DataGridDateTimeHelperException $ex) {
+			// ignore the invalid filter value
+		}
+	}
+
 
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
@@ -192,6 +207,39 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 				$dateTo->setTime(23, 59, 59);
 
 				$this->dataSource->where("DATE({$filter->getColumn()}) <= ?", $dateTo->format('Y-m-d'));
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
+		}
+	}
+
+	protected function applyFilterDateTimeRange(FilterDateTimeRange $filter): void
+	{
+		$conditions = $filter->getCondition();
+
+		$valueFrom = $conditions[$filter->getColumn()]['from'];
+		$valueTo = $conditions[$filter->getColumn()]['to'];
+
+		if ($valueFrom) {
+			try {
+				$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
+				//$dateFrom->setTime(0, 0, 0);
+
+				$this->dataSource->where(
+					"{$filter->getColumn()} >= ?",
+					$dateFrom->format('Y-m-d H:i')
+				);
+			} catch (DataGridDateTimeHelperException $ex) {
+				// ignore the invalid filter value
+			}
+		}
+
+		if ($valueTo) {
+			try {
+				$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
+				//$dateTo->setTime(23, 59, 59);
+
+				$this->dataSource->where("{$filter->getColumn()} <= ?", $dateTo->format('Y-m-d H:i'));
 			} catch (DataGridDateTimeHelperException $ex) {
 				// ignore the invalid filter value
 			}

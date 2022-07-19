@@ -6,7 +6,9 @@ namespace Ublaboo\DataGrid\Column;
 
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Filter\FilterDate;
+use Ublaboo\DataGrid\Filter\FilterDateTime;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter\FilterDateTimeRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
 use Ublaboo\DataGrid\Filter\FilterRange;
 use Ublaboo\DataGrid\Filter\FilterSelect;
@@ -96,6 +98,13 @@ abstract class FilterableColumn
 		return $this->grid->addFilterDate($this->key, $this->name, $column);
 	}
 
+	public function setFilterDateTime(?string $column = null): FilterDateTime
+	{
+		$column = $column ?? $this->column;
+
+		return $this->grid->addFilterDateTime($this->key, $this->name, $column);
+	}
+
 
 	public function setFilterRange(
 		?string $column = null,
@@ -116,5 +125,15 @@ abstract class FilterableColumn
 		$column = $column ?? $this->column;
 
 		return $this->grid->addFilterDateRange($this->key, $this->name, $column, $nameSecond);
+	}
+
+	public function setFilterDateTimeRange(
+		?string $column = null,
+		string $nameSecond = '-'
+	): FilterDateTimeRange
+	{
+		$column = $column ?? $this->column;
+
+		return $this->grid->addFilterDateTimeRange($this->key, $this->name, $column, $nameSecond);
 	}
 }

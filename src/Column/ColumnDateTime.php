@@ -20,7 +20,7 @@ class ColumnDateTime extends Column
 	/**
 	 * @var string
 	 */
-	protected $format = 'j. n. Y';
+	protected $format = 'j. n. Y G:i';
 
 	public function getColumnValue(Row $row): string
 	{

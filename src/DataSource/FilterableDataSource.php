@@ -7,7 +7,9 @@ namespace Ublaboo\DataGrid\DataSource;
 use Nette\Utils\ArrayHash;
 use Ublaboo\DataGrid\Filter\Filter;
 use Ublaboo\DataGrid\Filter\FilterDate;
+use Ublaboo\DataGrid\Filter\FilterDateTime;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
+use Ublaboo\DataGrid\Filter\FilterDateTimeRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
 use Ublaboo\DataGrid\Filter\FilterRange;
 use Ublaboo\DataGrid\Filter\FilterSelect;
@@ -23,7 +25,11 @@ abstract class FilterableDataSource
 
 	abstract protected function applyFilterDate(FilterDate $filter): void;
 
+	abstract protected function applyFilterDateTime(FilterDateTime $filter): void;
+
 	abstract protected function applyFilterDateRange(FilterDateRange $filter): void;
+
+	abstract protected function applyFilterDateTimeRange(FilterDateTimeRange $filter): void;
 
 	abstract protected function applyFilterRange(FilterRange $filter): void;
 
@@ -60,8 +66,12 @@ abstract class FilterableDataSource
 						$this->applyFilterSelect($filter);
 					} elseif ($filter instanceof FilterDate) {
 						$this->applyFilterDate($filter);
+					} elseif ($filter instanceof FilterDateTime) {
+						$this->applyFilterDateTime($filter);
 					} elseif ($filter instanceof FilterDateRange) {
 						$this->applyFilterDateRange($filter);
+					} elseif ($filter instanceof FilterDateTimeRange) {
+						$this->applyFilterDateTimeRange($filter);
 					} elseif ($filter instanceof FilterRange) {
 						$this->applyFilterRange($filter);
 					}
