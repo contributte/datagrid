@@ -1,9 +1,9 @@
 {
-  "name": "ublaboo-datagrid",
+  "name": "nakoukal-datagrid",
   "version": "6.9.1",
-  "description": "Assets for php composer package ublaboo/datagrid",
+  "description": "Assets for php composer package nakoukal/datagrid",
   "keywords": [
-    "ublaboo",
+    "nakoukal",
     "contributte",
     "datagrid"
   ],
