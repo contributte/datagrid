@@ -1,6 +1,6 @@
 {
   "name": "ublaboo-datagrid",
-  "version": "6.9.1",
+  "version": "7.0.0",
   "description": "Assets for php composer package ublaboo/datagrid",
   "keywords": [
     "ublaboo",
@@ -9,12 +9,30 @@
   ],
   "author": "Pavel Janda <me@paveljanda.com>",
   "license": "MIT",
-  "main": "assets/datagrid.js",
+  "engines": {
+    "npm": ">=8.13.2",
+    "node": ">=v18.6.0"
+  },
+  "main": "./dist/js/main.mjs",
   "files": [
     "assets/*"
   ],
+  "sideEffects": [
+    "./dist/css/*.css",
+    "./dist/js/main.mjs",
+    "**/*.side-effects.mjs"
+  ],
   "scripts": {
     "release-dry": "npm publish --dry-run",
-    "release": "npm publish"
+    "release": "npm publish",
+    "build": "vite build --mode=production",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^3.0.3",
+    "vite-plugin-no-bundle": "^1.0.6"
+  },
+  "dependencies": {
+    "vanillajs-datepicker": "^1.2.0"
   }
 }

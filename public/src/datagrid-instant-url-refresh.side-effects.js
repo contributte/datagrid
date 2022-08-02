@@ -1,4 +1,4 @@
-var dataGridInstantUrlRefresh = function() {
+var dataGridInstantUrlRefresh = function () {
 	var element = document.querySelector('.datagrid');
 
 	if (element !== null) {
@@ -12,4 +12,8 @@ if (document.readyState === 'loading') {
 	document.addEventListener('DOMContentLoaded', dataGridInstantUrlRefresh);
 } else {
 	dataGridInstantUrlRefresh();
+}
+
+export function foo() {
+	return "magic"
 }

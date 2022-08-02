@@ -864,3 +864,7 @@ dataGridRegisterExtension('datagrid.reset-filter-by-column', {
 		}
 	}
 });
+
+export function bar() {
+	return "magic2"
+}
