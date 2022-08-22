@@ -437,6 +437,11 @@ class DataGrid extends Control
 	 */
 	private $componentFullName;
 
+	/**
+	 * @var string|null
+	 */
+	private $datagridName = null;
+
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{

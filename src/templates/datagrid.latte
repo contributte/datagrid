@@ -68,8 +68,9 @@
 			{/if}
 			<table class="{block table-class}table table-hover table-striped table-bordered table-sm{/block}" n:snippet="table" n:block="data">
 				<thead n:block="header">
+					{var $name = 'messages.grid.'.trim(mb_substr($control->getName(),0,-4))}
 					<tr class="row-group-actions" n:if="$hasGroupActions || $exports || $toolbarButtons || $control->canHideColumns() || $inlineAdd" n:block="group-actions">
-						<th colspan="{$control->getColumnsCount()}" class="ublaboo-datagrid-th-form-inline">
+						<th colspan="{$control->getColumnsCount()}" class="ublaboo-datagrid-th-form-inline"><span class="datagrid-name" n:if="$control->getName()">{=$name|translate|upper}</span>					
 							{if $hasGroupActions}
 								{block group_actions}
 									<span class="datagrid-group-action-title">
