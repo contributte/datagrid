@@ -13,14 +13,14 @@
     "npm": ">=8.13.2",
     "node": ">=v18.6.0"
   },
-  "main": "./dist/js/main.mjs",
+  "main": "./dist/public/src/datagrid.mjs",
   "files": [
-    "assets/*"
+    "dist/*"
   ],
   "sideEffects": [
     "./dist/css/*.css",
-    "./dist/js/main.mjs",
-    "**/*.side-effects.mjs"
+    "./public/dist/.mjs",
+    "**/*.mjs"
   ],
   "scripts": {
     "release-dry": "npm publish --dry-run",
@@ -29,10 +29,9 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "sass": "^1.54.5",
+    "vanillajs-datepicker": "^1.2.0",
     "vite": "^3.0.3",
     "vite-plugin-no-bundle": "^1.0.6"
-  },
-  "dependencies": {
-    "vanillajs-datepicker": "^1.2.0"
   }
 }

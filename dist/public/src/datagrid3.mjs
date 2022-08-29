@@ -1,3 +1,4 @@
+import "./datagrid6.mjs";
 var q = function() {
   this.name = "datagrid-confirm", this.initialize = function(t) {
     t.uiHandler.addEventListener("interaction", function(e) {
@@ -398,9 +399,9 @@ h("datagrid.reset-filter-by-column", {
     }
   }
 });
-function D() {
+function G() {
   return "magic2";
 }
 export {
-  D as bar
+  G as bar
 };

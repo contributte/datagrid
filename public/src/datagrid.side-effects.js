@@ -1,3 +1,4 @@
+import './datagrid.css'
 /* DataGrid confirmation - both ajax and not ajax */
 
 var DataGridConfirmExtension = function() {

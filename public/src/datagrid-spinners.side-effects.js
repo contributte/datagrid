@@ -1,3 +1,5 @@
+import './datagrid-spinners.css'
+
 var DataGridSpinnersExtension = function() {
 	this.name = "datagrid-spinners";
 

@@ -1,3 +1,4 @@
+import "./datagrid7.mjs";
 var s = function() {
   this.name = "datagrid-spinners", this.initialize = function(l) {
     l.uiHandler.addEventListener("interaction", function(i) {
