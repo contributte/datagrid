@@ -21,7 +21,7 @@ use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
 
-class DibiFluentDataSource extends FilterableDataSource implements IDataSource, IAggregatable
+class DibiFluentOracleDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
 
 	/**
@@ -139,7 +139,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		try {
 			$date = DateTimeHelper::tryConvertToDate($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);			
 			$date->setTime(0, 0, 0);			
-			$this->dataSource->where('DATE(%n) = ?', $filter->getColumn(), $date);
+			$this->dataSource->where('TRUNC(%n) = ?', $filter->getColumn(), $date);
 		} catch (DataGridDateTimeHelperException $ex) {
 			// ignore the invalid filter value
 		}

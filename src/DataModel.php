@@ -14,6 +14,7 @@ use Nextras\Orm\Collection\ICollection;
 use Ublaboo\DataGrid\Components\DataGridPaginator\DataGridPaginator;
 use Ublaboo\DataGrid\DataSource\ArrayDataSource;
 use Ublaboo\DataGrid\DataSource\DibiFluentDataSource;
+use Ublaboo\DataGrid\DataSource\DibiFluentOracleDataSource;
 use Ublaboo\DataGrid\DataSource\DibiFluentMssqlDataSource;
 use Ublaboo\DataGrid\DataSource\DibiFluentPostgreDataSource;
 use Ublaboo\DataGrid\DataSource\DoctrineCollectionDataSource;
@@ -84,6 +85,9 @@ final class DataModel
 
 			} elseif ($driver instanceof Dibi\Drivers\SqlsrvDriver) {
 				$source = new DibiFluentMssqlDataSource($source, $primaryKey);
+			
+			} elseif ($driver instanceof Dibi\Drivers\OracleDriver) {
+				$source = new DibiFluentOracleDataSource($source, $primaryKey);
 
 			} else {
 				$source = new DibiFluentDataSource($source, $primaryKey);
