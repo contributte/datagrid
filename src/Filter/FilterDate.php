@@ -24,13 +24,21 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 	 */
 	protected $type = 'date';
 
+	/**
+	 * @var string
+	 */
+	protected $locale = 'en';
+
+
 	public function addToFormContainer(Container $container): void
 	{
+
 		$control = $container->addText($this->key, $this->name);
 
 		$control->setAttribute('data-provide', 'datepicker')
 			->setAttribute('data-date-orientation', 'bottom')
 			->setAttribute('data-date-format', $this->getJsFormat())
+			->setAttribute('data-date-language', $this->getLocale())
 			->setAttribute('data-date-today-highlight', 'true')
 			->setAttribute('data-date-autoclose', 'true');
 
@@ -72,6 +80,22 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 	public function getJsFormat(): string
 	{
 		return $this->format[1];
+	}
+
+	/**
+	 * Get locale for picker
+	 */
+	public function getLocale(): string
+	{
+		return $this->locale;
+	}
+
+	/**
+	 * Set locale for picker
+	 */
+	public function setLocale(string $locale)
+	{
+		return $this->locale = $locale;
 	}
 
 }

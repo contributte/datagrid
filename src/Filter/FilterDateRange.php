@@ -25,6 +25,11 @@ class FilterDateRange extends FilterRange implements IFilterDate
 	protected $type = 'date-range';
 
 	/**
+	 * @var string
+	 */
+	protected $locale = 'en';
+
+	/**
 	 * Adds select box to filter form
 	 */
 	public function addToFormContainer(Container $container): void
@@ -36,6 +41,7 @@ class FilterDateRange extends FilterRange implements IFilterDate
 		$from->setAttribute('data-provide', 'datepicker')
 			->setAttribute('data-date-orientation', 'bottom')
 			->setAttribute('data-date-format', $this->getJsFormat())
+			->setAttribute('data-date-language', $this->getLocale())
 			->setAttribute('data-date-today-highlight', 'true')
 			->setAttribute('data-date-autoclose', 'true');
 
@@ -44,6 +50,7 @@ class FilterDateRange extends FilterRange implements IFilterDate
 		$to->setAttribute('data-provide', 'datepicker')
 			->setAttribute('data-date-orientation', 'bottom')
 			->setAttribute('data-date-format', $this->getJsFormat())
+			->setAttribute('data-date-language', $this->getLocale())
 			->setAttribute('data-date-today-highlight', 'true')
 			->setAttribute('data-date-autoclose', 'true');
 
@@ -99,6 +106,22 @@ class FilterDateRange extends FilterRange implements IFilterDate
 	public function getJsFormat(): string
 	{
 		return $this->format[1];
+	}
+
+	/**
+	 * Get locale for picker
+	 */
+	public function getLocale(): string
+	{
+		return $this->locale;
+	}
+
+	/**
+	 * Set locale for picker
+	 */
+	public function setLocale(string $locale)
+	{
+		return $this->locale = $locale;
 	}
 
 }

@@ -1135,7 +1135,11 @@ class DataGrid extends Control
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new FilterDate($this, $key, $name, $column);
+		$filterDate = new FilterDate($this, $key, $name, $column);		
+		
+		$filterDate->setlocale($this->getTranslator()->getLocale());
+
+		return $this->filters[$key] = $filterDate;
 	}
 	
 	public function addFilterDateTime(string $key, string $name, ?string $column = null): FilterDateTime
@@ -1144,7 +1148,11 @@ class DataGrid extends Control
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new FilterDateTime($this, $key, $name, $column);
+		$filterDateTime = new FilterDateTime($this, $key, $name, $column);
+
+		$filterDateTime->setlocale($this->getTranslator()->getLocale());
+
+		return $this->filters[$key] = $filterDateTime;
 	}
 
 
@@ -1177,7 +1185,11 @@ class DataGrid extends Control
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new FilterDateRange($this, $key, $name, $column, $nameSecond);
+		$filterDateRange = new FilterDateRange($this, $key, $name, $column, $nameSecond);
+
+		$filterDateRange->setlocale($this->getTranslator()->getLocale());
+
+		return $this->filters[$key] = $filterDateRange;
 	}
 
 	/**
@@ -1194,7 +1206,11 @@ class DataGrid extends Control
 
 		$this->addFilterCheck($key);
 
-		return $this->filters[$key] = new FilterDateTimeRange($this, $key, $name, $column, $nameSecond);
+		$filterDateTimeRange = new FilterDateTimeRange($this, $key, $name, $column, $nameSecond);
+
+		$filterDateTimeRange->setlocale($this->getTranslator()->getLocale());
+
+		return $this->filters[$key] = $filterDateTimeRange;
 	}
 
 
