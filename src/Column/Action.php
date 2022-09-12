@@ -68,7 +68,7 @@ class Action extends Column
 	/**
 	 * @var string|callable
 	 */
-	protected $class = 'btn btn-xs btn-default btn-secondary';
+	protected $class = '';
 
 	/**
 	 * @var bool
@@ -93,6 +93,7 @@ class Action extends Column
 
 		$this->href = $href;
 		$this->params = $params;
+		$this->class = sprintf('btn btn-xs %s', $grid::$btnSecondaryClass)
 	}
 
 

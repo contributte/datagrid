@@ -71,7 +71,7 @@ class ItemDetail
 		$this->primaryWhereColumn = $primaryWhereColumn;
 
 		$this->title = 'ublaboo_datagrid.show';
-		$this->class = 'btn btn-xs btn-default btn-secondary ajax';
+		$this->class = sprintf('btn btn-xs %s ajax', $grid::$btnSecondaryClass);
 		$this->icon = 'eye';
 	}
 
