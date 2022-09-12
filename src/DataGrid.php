@@ -170,6 +170,11 @@ class DataGrid extends Control
 	public static $iconPrefix = 'fa fa-';
 
 	/**
+	 * @var string
+	 */
+	public static $btnSecondaryClass = 'btn-default btn-secondary';
+
+	/**
 	 * Default form method
 	 *
 	 * @var string
@@ -573,7 +578,7 @@ class DataGrid extends Control
 		$template->filter_active = $this->isFilterActive();
 		$template->originalTemplate = $this->getOriginalTemplateFile();
 		$template->iconPrefix = static::$iconPrefix;
-		$template->iconPrefix = static::$iconPrefix;
+		$template->btnSecondaryClass = static::$btnSecondaryClass;
 		$template->itemsDetail = $this->itemsDetail;
 		$template->columnsVisibility = $this->getColumnsVisibility();
 		$template->columnsSummary = $this->columnsSummary;
@@ -2451,7 +2456,8 @@ class DataGrid extends Control
 	{
 		$component = new DataGridPaginator(
 			$this->getTranslator(),
-			static::$iconPrefix
+			static::$iconPrefix,
+			static::$btnSecondaryClass
 		);
 		$paginator = $component->getPaginator();
 
