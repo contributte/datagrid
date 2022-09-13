@@ -71,6 +71,10 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 		$cache = new Cache($storage);
 		$connection = new Connection($args);
 
+		if (!$connection->ping()) {
+			Environment::skip('MySQL is not running');
+		}
+
 		$connection->query('DROP TABLE IF EXISTS `books`');
 		$connection->query('DROP TABLE IF EXISTS `users`');
 		$connection->query('CREATE TABLE `users` (
