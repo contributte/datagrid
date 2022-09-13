@@ -49,3 +49,7 @@ parameters:
 			message: "#^Cannot call method filterRow\\(\\) on Ublaboo\\\\DataGrid\\\\DataModel\\|null\\.$#"
 			count: 1
 			path: src/DataGrid.php
+		-
+			message: "#^Parameter \\#1 \\$x of method Doctrine\\\\ORM\\\\Query\\\\Expr\\:\\:like\\(\\) expects string, Doctrine\\\\ORM\\\\Query\\\\Expr\\\\Func given\\.$#"
+			count: 1
+			path: src/DataSource/DoctrineDataSource.php
