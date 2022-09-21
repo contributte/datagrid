@@ -57,6 +57,11 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	 */
 	protected $placeholder;
 
+	/**
+	 * @var array<string, mixed>
+	 */
+	protected $hints = [];
+
 
 	public function __construct(QueryBuilder $dataSource, string $primaryKey)
 	{
@@ -66,9 +71,26 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	}
 
 
+	/**
+	 * @param mixed $value
+	 */
+	public function setQueryHint(string $name, $value): IDataSource
+	{
+		$this->hints[$name] = $value;
+
+		return $this;
+	}
+
+
 	public function getQuery(): Query
 	{
-		return $this->dataSource->getQuery();
+		$query = $this->dataSource->getQuery();
+
+		foreach ($this->hints as $name => $value) {
+			$query->setHint($name, $value);
+		}
+
+		return $query;
 	}
 
 
