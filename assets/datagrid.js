@@ -775,7 +775,7 @@ dataGridRegisterExtension('datagrid.after_inline_edit', {
 		var grid = $('.datagrid-' + payload._datagrid_name);
 
 		if (payload._datagrid_inline_edited) {
-			grid.find('tr[data-id=' + payload._datagrid_inline_edited + '] > td').addClass('edited');
+			grid.find('tr[data-id="' + payload._datagrid_inline_edited + '"] > td').addClass('edited');
 			return grid.find('.datagrid-inline-edit-trigger').removeClass('hidden');
 		} else if (payload._datagrid_inline_edit_cancel) {
 			return grid.find('.datagrid-inline-edit-trigger').removeClass('hidden');
@@ -884,7 +884,7 @@ dataGridRegisterExtension('datagrid.redraw-item', {
 	success: function(payload) {
 		var row;
 		if (payload._datagrid_redraw_item_class) {
-			row = $('tr[data-id=' + payload._datagrid_redraw_item_id + ']');
+			row = $('tr[data-id="' + payload._datagrid_redraw_item_id + '"]');
 			return row.attr('class', payload._datagrid_redraw_item_class);
 		}
 	}
@@ -902,7 +902,7 @@ dataGridRegisterExtension('datagrid.reset-filter-by-column', {
 			ref = payload.non_empty_filters;
 			for (i = 0, len = ref.length; i < len; i++) {
 				key = ref[i];
-				grid.find('[data-datagrid-reset-filter-by-column=' + key + ']').removeClass('hidden');
+				grid.find('[data-datagrid-reset-filter-by-column="' + key + '"]').removeClass('hidden');
 			}
 			href = grid.find('.reset-filter').attr('href');
 			return grid.find('[data-datagrid-reset-filter-by-column]').each(function() {

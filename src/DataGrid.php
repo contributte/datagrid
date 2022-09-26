@@ -36,10 +36,12 @@ use Ublaboo\DataGrid\Column\ItemDetail;
 use Ublaboo\DataGrid\Column\MultiAction;
 use Ublaboo\DataGrid\Components\DataGridPaginator\DataGridPaginator;
 use Ublaboo\DataGrid\DataSource\IDataSource;
+use Ublaboo\DataGrid\Exception\CannotChangeDataModelException;
 use Ublaboo\DataGrid\Exception\DataGridColumnNotFoundException;
 use Ublaboo\DataGrid\Exception\DataGridException;
 use Ublaboo\DataGrid\Exception\DataGridFilterNotFoundException;
 use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
+use Ublaboo\DataGrid\Exception\InitializingDataModelCallbacksException;
 use Ublaboo\DataGrid\Export\Export;
 use Ublaboo\DataGrid\Export\ExportCsv;
 use Ublaboo\DataGrid\Filter\Filter;
@@ -242,7 +244,7 @@ class DataGrid extends Control
 	protected $toolbarButtons = [];
 
 	/**
-	 * @var DataModel|null
+	 * @var DataModelInterface|null
 	 */
 	protected $dataModel;
 
@@ -499,7 +501,7 @@ class DataGrid extends Control
 		/**
 		 * Check whether datagrid has set some columns, initiated data source, etc
 		 */
-		if (!($this->dataModel instanceof DataModel)) {
+		if (!($this->dataModel instanceof DataModelInterface)) {
 			throw new DataGridException('You have to set a data source first.');
 		}
 
@@ -628,7 +630,7 @@ class DataGrid extends Control
 	 */
 	public function setPrimaryKey(string $primaryKey): self
 	{
-		if ($this->dataModel instanceof DataModel) {
+		if ($this->dataModel instanceof DataModelInterface) {
 			throw new DataGridException('Please set datagrid primary key before setting datasource.');
 		}
 
@@ -642,14 +644,26 @@ class DataGrid extends Control
 	 * @param mixed $source
 	 * @return static
 	 * @throws InvalidArgumentException
+	 * @throws InitializingDataModelCallbacksException
 	 */
 	public function setDataSource($source): self
 	{
 		$this->dataModel = new DataModel($source, $this->primaryKey);
 
-		$this->dataModel->onBeforeFilter[] = [$this, 'beforeDataModelFilter'];
-		$this->dataModel->onAfterFilter[] = [$this, 'afterDataModelFilter'];
-		$this->dataModel->onAfterPaginated[] = [$this, 'afterDataModelPaginated'];
+		$this->initializeCallbacks();
+
+		return $this;
+	}
+
+
+	/**
+	 * @throws InitializingDataModelCallbacksException
+	 */
+	public function setDataModel(DataModelInterface $dataModel): self
+	{
+		$this->dataModel = $dataModel;
+
+		$this->initializeCallbacks();
 
 		return $this;
 	}
@@ -3328,6 +3342,18 @@ class DataGrid extends Control
 	private function getPresenterInstance(): Presenter
 	{
 		return $this->getPresenter();
+	}
+
+
+	private function initializeCallbacks(): void
+	{
+		if ($this->dataModel === null) {
+			throw new InitializingDataModelCallbacksException();
+		}
+
+		$this->dataModel->onBeforeFilter[] = [$this, 'beforeDataModelFilter'];
+		$this->dataModel->onAfterFilter[] = [$this, 'afterDataModelFilter'];
+		$this->dataModel->onAfterPaginated[] = [$this, 'afterDataModelPaginated'];
 	}
 
 }
