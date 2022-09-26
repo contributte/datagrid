@@ -164,6 +164,9 @@ class DataGrid extends Control
 	 */
 	public $filter = [];
 
+	protected bool|array $url_params = false;
+	public ?string $backlink = null;
+
 	/**
 	 * @var string
 	 */
@@ -493,6 +496,35 @@ class DataGrid extends Control
 	}
 
     /**
+     * @return array
+     * @throws DataGridHasToBeAttachedToPresenterComponentException
+     */
+    protected function getUrlParams(): array
+    {
+        if ($this->url_params === false) {
+            $this->url_params = [];
+            $k_name = $this->getFullName();
+            foreach ($this->params['filter'] as $k => $v) {
+                $this->url_params[$k_name . '-filter'][$k] = $v;
+            }
+
+            $this->url_params[$k_name . '-perPage'] = $this->perPage;
+
+            if (!empty($this->sort)) {
+                foreach ($this->sort as $k => $v) {
+                    $this->url_params[$k_name . '-sort'][$k] = $v;
+                }
+            } elseif (!empty($this->defaultSort)) {
+                foreach ($this->sort as $k => $v) {
+                    $this->url_params[$k_name . '-sort'][$k] = $v;
+                }
+            }
+        }
+
+        return $this->url_params;
+    }
+
+    /**
      * @return bool
      */
     public function isB4(): bool
@@ -597,6 +629,16 @@ class DataGrid extends Control
 	 ********************************************************************************/
 	public function render(): void
 	{
+        if (method_exists($this->getPresenter(), 'storeRequestCustom')) {
+            $url_params = $this->getUrlParams();
+            $url_params += $this->getPresenter()->getRequest()->getParameters();
+            $url_params['action'] = $this->getPresenter()->getAction();
+            unset($url_params['bl'], $url_params['do']);
+            $req = new \Nette\Application\Request($this->getPresenter()->getName(), 'GET', $url_params);
+            $this->backlink = $this->getPresenter()->storeRequestCustom($req);
+            unset($req, $url_params);
+        }
+
 		/**
 		 * Check whether datagrid has set some columns, initiated data source, etc
 		 */
@@ -1607,7 +1649,7 @@ class DataGrid extends Control
 			return;
 		}
 
-		$values = (array) $form->getValues();
+        $values = (array) $form->getUnsafeValues(null);
 
 		if ($this->getPresenterInstance()->isAjax()) {
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
@@ -1731,7 +1773,24 @@ class DataGrid extends Control
 
 		if ($values->count() > 0) {
 			$this->saveSessionData('_grid_has_filtered', 1);
-		}
+            foreach ($this->filter as $k => $item) {
+                if (is_iterable($item)) {
+                    $empty = 0;
+                    foreach ($item as $_k => $_item) {
+                        if ($_item === '' || $_item === null) {
+                            $empty++;
+                        }
+                    }
+
+                    if ($empty === count($item)) {
+                        continue;
+                    }
+                } elseif ($item === '' || $item === null) {
+                    continue;
+                }
+                $this->params['filter'][$k] = $item;
+            }
+        }
 
 		if ($this->getPresenterInstance()->isAjax()) {
 			$this->getPresenterInstance()->payload->_datagrid_sort = [];
