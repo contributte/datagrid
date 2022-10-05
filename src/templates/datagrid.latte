@@ -270,8 +270,10 @@
 										{/foreach}
 
 										<td class="col-action col-action-inline-edit">
-											{input $filter['inline_edit']['cancel'], class => 'btn btn-xs btn-danger'}
-											{input $filter['inline_edit']['submit'], class => 'btn btn-xs btn-primary'}
+											{block inline-edit-buttons}
+												{input $filter['inline_edit']['cancel'], class => 'btn btn-xs btn-danger'}
+												{input $filter['inline_edit']['submit'], class => 'btn btn-xs btn-primary'}
+											{/block}
 											{input $filter['inline_edit']['_id']}
 											{input $filter['inline_edit']['_primary_where_column']}
 										</td>
@@ -292,24 +294,26 @@
 											{$td->endTag()|noescape}
 										{/foreach}
 										<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action">
-											{foreach $actions as $key => $action}
-												{if $row->hasAction($key)}
-													{if $action->hasTemplate()}
-														{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables(), row => $row}
-													{else}
-														{$action->render($row)|noescape}
+											{block col-actions}
+												{foreach $actions as $key => $action}
+													{if $row->hasAction($key)}
+														{if $action->hasTemplate()}
+															{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables(), row => $row}
+														{else}
+															{$action->render($row)|noescape}
+														{/if}
 													{/if}
+												{/foreach}
+												<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
+													<i n:block="icon-arrows-v" class="{$iconPrefix}arrows-v {$iconPrefix}arrows-alt-v"></i>
+												</span>
+												{if $inlineEdit && $row->hasInlineEdit()}
+													{$inlineEdit->renderButton($row)|noescape}
 												{/if}
-											{/foreach}
-											<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
-												<i n:block="icon-arrows-v" class="{$iconPrefix}arrows-v {$iconPrefix}arrows-alt-v"></i>
-											</span>
-											{if $inlineEdit && $row->hasInlineEdit()}
-												{$inlineEdit->renderButton($row)|noescape}
-											{/if}
-											{if $itemsDetail && $itemsDetail->shouldBeRendered($row)}
-												{$itemsDetail->renderButton($row)|noescape}
-											{/if}
+												{if $itemsDetail && $itemsDetail->shouldBeRendered($row)}
+													{$itemsDetail->renderButton($row)|noescape}
+												{/if}
+											{/block}
 										</td>
 									</tr>
 								{/if}
@@ -437,8 +441,10 @@
 			{/foreach}
 
 			<td class="col-action col-action-inline-edit">
-				{input $filter['inline_add']['cancel']}
-				{input $filter['inline_add']['submit']}
+				{block inline-add-buttons}
+					{input $filter['inline_add']['cancel']}
+					{input $filter['inline_add']['submit']}
+				{/block}
 			</td>
 		</tr>
 	{/if}
