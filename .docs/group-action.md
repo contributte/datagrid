@@ -80,7 +80,7 @@ And some example handler:
 public function groupChangeStatus(array $ids, $status): void
 {
 	$this->flashMessage(
-		sprintf("Status of items with id: [%s] was changed to: [$status]", implode($ids, ',')),
+		sprintf("Status of items with id: [%s] was changed to: [$status]", implode(',', $ids)),
 		'success'
 	);
 
@@ -110,7 +110,7 @@ And the `::addNote()` method:
 public function addNote(array $ids, $value): void
 {
 	$this->flashMessage(
-		sprintf('Note [%s] was added to items with ID: [%s]', $value, implode($ids, ',')),
+		sprintf('Note [%s] was added to items with ID: [%s]', $value, implode(',', $ids),
 		'success'
 	);
 
