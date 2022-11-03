@@ -208,7 +208,7 @@ class DataGrid extends Control
 	/**
 	 * @var GroupActionCollection|null
 	 */
-	protected ?GroupActionCollection $groupActionCollection;
+	protected ?GroupActionCollection $groupActionCollection = null;
 
 	/**
 	 * @var array<Filter>
@@ -228,7 +228,7 @@ class DataGrid extends Control
 	/**
 	 * @var DataModel|null
 	 */
-	protected ?DataModel $dataModel;
+	protected ?DataModel $dataModel = null;
 
 	/**
 	 * @var string
@@ -343,7 +343,7 @@ class DataGrid extends Control
 	/**
 	 * @var ItemDetail|null
 	 */
-	protected ?ItemDetail $itemsDetail;
+	protected ?ItemDetail $itemsDetail = null;
 
 	/**
 	 * @var array
@@ -391,7 +391,7 @@ class DataGrid extends Control
 	/**
 	 * @var ColumnsSummary|null
 	 */
-	protected ?ColumnsSummary $columnsSummary;
+	protected ?ColumnsSummary $columnsSummary = null;
 
 	/**
 	 * @var bool
