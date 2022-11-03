@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid;
 
+use Contributte\Translation\Translator;
 use InvalidArgumentException;
 use Nette;
 use Nette\Application\IPresenter;
@@ -290,7 +291,7 @@ class DataGrid extends Control
 	protected $redrawItem = [];
 
 	/**
-	 * @var ITranslator|null
+	 * @var Translator|null
 	 */
 	protected $translator = null;
 
