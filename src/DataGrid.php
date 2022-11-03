@@ -83,27 +83,27 @@ class DataGrid extends Control
 	/**
 	 * @var array|callable[]
 	 */
-	public $onRedraw = [];
+	public array $onRedraw = [];
 
 	/**
 	 * @var array|callable[]
 	 */
-	public $onRender = [];
+	public array $onRender = [];
 
 	/**
 	 * @var array|callable[]
 	 */
-	public $onExport = [];
+	public array $onExport = [];
 
 	/**
 	 * @var array|callable[]
 	 */
-	public $onColumnAdd = [];
+	public array $onColumnAdd = [];
 
 	/**
 	 * @var array|callable[]
 	 */
-	public $onFiltersAssembled = [];
+	public array $onFiltersAssembled = [];
 
 	/**
 	 * When set to TRUE, datagrid throws an exception
@@ -111,7 +111,7 @@ class DataGrid extends Control
 	 *
 	 * @var bool
 	 */
-	public $strictEntityProperty = false;
+	public bool $strictEntityProperty = false;
 
 	/**
 	 * When set to TRUE, datagrid throws an exception
@@ -119,13 +119,13 @@ class DataGrid extends Control
 	 *
 	 * @var bool
 	 */
-	public $strictSessionFilterValues = true;
+	public bool $strictSessionFilterValues = true;
 
 	/**
 	 * @var int
 	 * @persistent
 	 */
-	public $page = 1;
+	public int $page = 1;
 
 	/**
 	 * @var int|string|null
@@ -137,48 +137,33 @@ class DataGrid extends Control
 	 * @var array
 	 * @persistent
 	 */
-	public $sort = [];
+	public array $sort = [];
 
-	/**
-	 * @var array
-	 */
-	public $defaultSort = [];
-
-	/**
-	 * @var array
-	 */
-	public $defaultFilter = [];
-
-	/**
-	 * @var bool
-	 */
-	public $defaultFilterUseOnReset = true;
-
-	/**
-	 * @var bool
-	 */
-	public $defaultSortUseOnReset = true;
+	public array $defaultSort = [];
+	public array $defaultFilter = [];
+	public bool $defaultFilterUseOnReset = true;
+	public bool $defaultSortUseOnReset = true;
 
 	/**
 	 * @var array
 	 * @persistent
 	 */
-	public $filter = [];
+	public array $filter = [];
 
-	protected bool|array $url_params = false;
+	protected array|false $url_params = false;
 	public ?string $backlink = null;
 
 	/**
 	 * @var string
 	 */
-	public static $iconPrefix = 'fa fa-';
+	public static string $iconPrefix = 'fa fa-';
 
 	/**
 	 * Default form method
 	 *
 	 * @var string
 	 */
-	public static $formMethod = 'post';
+	public static string $formMethod = 'post';
 
 	/**
 	 * @var callable|null
@@ -188,7 +173,7 @@ class DataGrid extends Control
 	/**
 	 * @var bool
 	 */
-	protected $useHappyComponents = true;
+	protected bool $useHappyComponents = true;
 
 	/**
 	 * @var callable
@@ -198,107 +183,107 @@ class DataGrid extends Control
 	/**
 	 * @var array
 	 */
-	protected $itemsPerPageList = [10, 20, 50, 'all'];
+	protected array $itemsPerPageList = [10, 20, 50, 'all'];
 
 	/**
 	 * @var int|null
 	 */
-	protected $defaultPerPage = null;
+	protected ?int $defaultPerPage = null;
 
 	/**
 	 * @var string|null
 	 */
-	protected $templateFile = null;
+	protected ?string $templateFile = null;
 
 	/**
 	 * @var array<Column>
 	 */
-	protected $columns = [];
+	protected array $columns = [];
 
 	/**
 	 * @var array<Action>|array<MultiAction>
 	 */
-	protected $actions = [];
+	protected array $actions = [];
 
 	/**
 	 * @var GroupActionCollection|null
 	 */
-	protected $groupActionCollection;
+	protected ?GroupActionCollection $groupActionCollection;
 
 	/**
 	 * @var array<Filter>
 	 */
-	protected $filters = [];
+	protected array $filters = [];
 
 	/**
 	 * @var array<Export>
 	 */
-	protected $exports = [];
+	protected array $exports = [];
 
 	/**
 	 * @var array<ToolbarButton>
 	 */
-	protected $toolbarButtons = [];
+	protected array $toolbarButtons = [];
 
 	/**
 	 * @var DataModel|null
 	 */
-	protected $dataModel;
+	protected ?DataModel $dataModel;
 
 	/**
 	 * @var string
 	 */
-	protected $primaryKey = 'id';
+	protected string $primaryKey = 'id';
 
 	/**
 	 * @var bool
 	 */
-	protected $doPaginate = true;
+	protected bool $doPaginate = true;
 
 	/**
 	 * @var bool
 	 */
-	protected $csvExport = true;
+	protected bool $csvExport = true;
 
 	/**
 	 * @var bool
 	 */
-	protected $csvExportFiltered = true;
+	protected bool $csvExportFiltered = true;
 
 	/**
 	 * @var bool
 	 */
-	protected $sortable = false;
+	protected bool $sortable = false;
 
 	/**
 	 * @var bool
 	 */
-	protected $multiSort = false;
+	protected bool $multiSort = false;
 
 	/**
 	 * @var string
 	 */
-	protected $sortableHandler = 'sort!';
+	protected string $sortableHandler = 'sort!';
 
 	/**
 	 * @var string|null
 	 */
-	protected $originalTemplate = null;
+	protected ?string $originalTemplate = null;
 
 	/**
 	 * @var array
 	 */
-	protected $redrawItem = [];
+	protected array $redrawItem = [];
 
 	/**
-	 * @var Translator|null
+	 * @var ITranslator|null
 	 */
-	protected $translator = null;
+	protected ?ITranslator $translator = null;
 
 	/**
 	 * @var bool
 	 */
-	protected $forceFilterActive = false;
+	protected bool $forceFilterActive = false;
 
 	/**
 	 * @var callable|null
@@ -313,57 +298,57 @@ class DataGrid extends Control
 	/**
 	 * @var string|null
 	 */
-	protected $treeViewHasChildrenColumn = null;
+	protected ?string $treeViewHasChildrenColumn = null;
 
 	/**
 	 * @var bool
 	 */
-	protected $outerFilterRendering = false;
+	protected bool $outerFilterRendering = false;
 
 	/**
 	 * @var int
 	 */
-	protected $outerFilterColumnsCount = 2;
+	protected int $outerFilterColumnsCount = 2;
 
 	/**
 	 * @var bool
 	 */
-	protected $collapsibleOuterFilters = true;
+	protected bool $collapsibleOuterFilters = true;
 
 	/**
 	 * @var array|string[]
 	 */
-	protected $columnsExportOrder = [];
+	protected array $columnsExportOrder = [];
 
 	/**
 	 * @var bool
 	 */
-	protected $rememberState = true;
+	protected bool $rememberState = true;
 
 	/**
 	 * @var bool
 	 */
-	protected $rememberHideableColumnsState = true;
+	protected bool $rememberHideableColumnsState = true;
 
 	/**
 	 * @var bool
 	 */
-	protected $refreshURL = true;
+	protected bool $refreshURL = true;
 
 	/**
 	 * @var SessionSection
 	 */
-	protected $gridSession;
+	protected SessionSection $gridSession;
 
 	/**
 	 * @var ItemDetail|null
 	 */
-	protected $itemsDetail;
+	protected ?ItemDetail $itemsDetail;
 
 	/**
 	 * @var array
 	 */
-	protected $rowConditions = [
+	protected array $rowConditions = [
 		'group_action' => false,
 		'action' => [],
 	];
@@ -371,72 +356,72 @@ class DataGrid extends Control
 	/**
 	 * @var array
 	 */
-	protected $columnCallbacks = [];
+	protected array $columnCallbacks = [];
 
 	/**
 	 * @var bool
 	 */
-	protected $canHideColumns = false;
+	protected bool $canHideColumns = false;
 
 	/**
 	 * @var array
 	 */
-	protected $columnsVisibility = [];
+	protected array $columnsVisibility = [];
 
 	/**
 	 * @var InlineEdit|null
 	 */
-	protected $inlineEdit = null;
+	protected ?InlineEdit $inlineEdit = null;
 
 	/**
 	 * @var InlineAdd|null
 	 */
-	protected $inlineAdd = null;
+	protected ?InlineAdd $inlineAdd = null;
 
 	/**
 	 * @var bool
 	 */
-	protected $snippetsSet = false;
+	protected bool $snippetsSet = false;
 
 	/**
 	 * @var bool
 	 */
-	protected $someColumnDefaultHide = false;
+	protected bool $someColumnDefaultHide = false;
 
 	/**
 	 * @var ColumnsSummary|null
 	 */
-	protected $columnsSummary;
+	protected ?ColumnsSummary $columnsSummary;
 
 	/**
 	 * @var bool
 	 */
-	protected $autoSubmit = true;
+	protected bool $autoSubmit = true;
 
 	/**
 	 * @var SubmitButton|null
 	 */
-	protected $filterSubmitButton = null;
+	protected ?SubmitButton $filterSubmitButton = null;
 
 	/**
 	 * @var bool
 	 */
-	protected $hasColumnReset = true;
+	protected bool $hasColumnReset = true;
 
 	/**
 	 * @var bool
 	 */
-	protected $showSelectedRowsCount = true;
+	protected bool $showSelectedRowsCount = true;
 
 	/**
 	 * @var string|null
 	 */
-	private $customPaginatorTemplate = null;
+	private ?string $customPaginatorTemplate = null;
 
 	/**
 	 * @var string|null
 	 */
-	private $componentFullName;
+	private ?string $componentFullName;
 
     protected bool $isB4 = false;
     protected bool $isB3 = false;
@@ -3511,8 +3496,8 @@ class DataGrid extends Control
 
 	protected function addToExports(Export $export): Export
 	{
-		if (sizeof($this->exports) > 0) {
-			$id = sizeof($this->exports) + 1;
+		if (count($this->exports) > 0) {
+			$id = count($this->exports) + 1;
 		} else {
 			$id = 1;
 		}
