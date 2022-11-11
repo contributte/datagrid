@@ -2364,6 +2364,14 @@ class DataGrid extends Nette\Application\UI\Control
 		$this->reloadTheWholeGrid();
 	}
 
+	/**
+	 * @return void
+	 */
+	public function handleRedrawGrid()
+	{
+		$this->findSessionValues();
+		$this->reloadTheWholeGrid();
+	}
 
 	/**
 	 * @param bool $reset

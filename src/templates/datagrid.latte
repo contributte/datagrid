@@ -425,6 +425,17 @@
 </div>
 
 
+<script>
+    $(document).ready(function() {
+        console.log("draw");
+        $.nette.ajax({
+            type: 'GET',
+            url: {link RedrawGrid!}
+        });
+    });
+</script>
+
+
 {define inlineAddRow}
 	{php $inlineAdd->onSetDefaults($filter['inline_add']); }
 
