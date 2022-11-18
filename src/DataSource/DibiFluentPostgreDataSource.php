@@ -42,7 +42,7 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 			$x = [];
 			foreach ($words as $word) {
 				$escaped = $driver->escapeLike((string) $word, 0);
-				$x[] = "$column ILIKE '%" . substr( $escaped, 1, -1) . "%'";
+				$x[] = "public.unaccent($column) ILIKE public.unaccent('%" . substr( $escaped, 1, -1) . "%')";
 			}
 			$or[] = "((" . implode(") AND (", $x) . "))";
 		}

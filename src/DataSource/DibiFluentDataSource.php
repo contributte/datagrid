@@ -207,7 +207,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			}
 
 			foreach ($words as $word) {
-				$or[] = ["$column LIKE %~like~", $word];
+				$or[] = ["public.unaccent($column) LIKE public.unaccent(%~like~)", $word];
 			}
 		}
 
