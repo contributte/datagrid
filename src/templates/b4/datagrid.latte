@@ -543,7 +543,11 @@
 								<div class="row mx-0 w-auto">
 									<div class="col-12 px-0">
 										<div class="col-per-page d-inline-flex">
-											<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-xs reset-filter d-flex align-items-center me-2">
+											<a n:if="$show_default_sort_button" n:href="defaultSort!" class="ajax btn btn-primary btn-xs default-sort d-flex align-items-center mr-2">
+												{*='ublaboo_datagrid.default_sort'|translate*}
+												<i class="{$iconPrefix}sort fa-fw"></i>
+											</a>
+											<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-xs reset-filter d-flex align-items-center mr-2">
 													{* {='ublaboo_datagrid.reset_filter'|translate} *}
 												<i class="{$iconPrefix}undo fa-fw"></i>
 											</a>
