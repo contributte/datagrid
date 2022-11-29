@@ -393,8 +393,12 @@
 										{control paginator}
 									</div>
 									<div class="col-per-page text-right">
-										<a n:if="$show_default_sort_button" n:href="defaultSort!" class="ajax btn btn-primary btn-sm default-sort">{='ublaboo_datagrid.default_sort'|translate}</a>
-										<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{='ublaboo_datagrid.reset_filter'|translate}</a>
+										<a n:if="$show_default_sort_button" n:href="defaultSort!" class="ajax btn btn-primary btn-sm default-sort" title="{='ublaboo_datagrid.default_sort'|translate}">
+										    <i class="fas fa-fw fa-sort"></i>
+                                        </a>
+										<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter" title="{='ublaboo_datagrid.reset_filter'|translate}">
+										    <i class="fad fa-fw fa-undo"></i>
+										</a>
 										{if $control->isPaginated()}
 											{input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'form-control input-sm form-control-sm'}
 											{input $filter['perPage_submit'], class => 'datagrid-per-page-submit'}
