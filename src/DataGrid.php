@@ -143,6 +143,7 @@ class DataGrid extends Control
 	public array $defaultFilter = [];
 	public bool $defaultFilterUseOnReset = true;
 	public bool $defaultSortUseOnReset = true;
+    public bool $useDefaultSortAfterSortingEmpty = true;
 
 	/**
 	 * @var array
@@ -701,6 +702,7 @@ class DataGrid extends Control
 		$template->multipleAggregationFunction = $this->getMultipleAggregationFunction();
 
 		$template->filter_active = $this->isFilterActive();
+		$template->show_default_sort_button = $this->isSortButtonActive();
 		$template->originalTemplate = $this->getOriginalTemplateFile();
 		$template->iconPrefix = static::$iconPrefix;
 		$template->iconPrefix = static::$iconPrefix;
@@ -1385,6 +1387,20 @@ class DataGrid extends Control
 		return $is_filter || $this->forceFilterActive;
 	}
 
+	
+    /**
+     * @return bool
+     */
+	public function isSortButtonActive(): bool
+	{
+		$is_sort = ArraysHelper::testTruthy($this->sort);
+
+        if ($this->sort !== $this->defaultSort) {
+            return true;
+        }
+
+		return false;
+	}
 
 	/**
 	 * Tell that filter is active from whatever reasons
@@ -2119,13 +2135,45 @@ class DataGrid extends Control
 		$this->reload(['table']);
 	}
 
+    /**
+     * @return void
+     */
+    public function handleDefaultSort(): void
+    {
+        $sort = $this->defaultSort;
+
+		foreach (array_keys($sort) as $key) {
+			try {
+				$column = $this->getColumn($key);
+
+			} catch (DataGridColumnNotFoundException $e) {
+				unset($sort[$key]);
+
+				continue;
+			}
+
+			if ($column->sortableResetPagination()) {
+				$this->saveSessionData('_grid_page', $this->page = 1);
+			}
+
+			if ($column->getSortableCallback() !== null) {
+				$this->sortCallback = $column->getSortableCallback();
+			}
+		}
+
+		$this->saveSessionData('_grid_has_sorted', 1);
+		$this->saveSessionData('_grid_sort', $this->sort = $sort);
+
+		$this->reloadTheWholeGrid();
+    }
+
 
 	/**
 	 * @throws DataGridColumnNotFoundException
 	 */
 	public function handleSort(array $sort): void
 	{
-		if (count($sort) === 0) {
+        if ($this->useDefaultSortAfterSortingEmpty && count($sort) === 0) {
 			$sort = $this->defaultSort;
 		}
 
@@ -3515,4 +3563,12 @@ class DataGrid extends Control
 		return $this->getPresenter();
 	}
 
+	
+    /**
+     * @param  bool  $useDefaultSortAfterSortingEmpty
+     */
+    public function setUseDefaultSortAfterSortingEmpty(bool $useDefaultSortAfterSortingEmpty): void
+    {
+        $this->useDefaultSortAfterSortingEmpty = $useDefaultSortAfterSortingEmpty;
+    }
 }

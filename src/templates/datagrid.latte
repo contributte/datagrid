@@ -516,8 +516,10 @@
 												<div class="row mx-0">
 													<div class="col-12 px-0">
 														<div class="col-per-page d-inline-flex">
-															<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter d-flex align-items-center me-2">
-			<!--                                                    {='ublaboo_datagrid.reset_filter'|translate}-->
+															<a n:if="$show_default_sort_button" n:href="defaultSort!" class="ajax btn btn-primary btn-sm default-sort d-flex align-items-center me-2" title="{='ublaboo_datagrid.default_sort'|translate}">
+																<i class="{$iconPrefix}sort fa-fw"></i>
+															</a>
+															<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter d-flex align-items-center me-2" title="{='ublaboo_datagrid.reset_filter'|translate}">
 																<i class="{$iconPrefix}redo fa-fw"></i>
 															</a>
 															{if $control->isPaginated()}
