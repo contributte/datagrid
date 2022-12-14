@@ -687,7 +687,7 @@ $(document).on('click', '[data-datagrid-editable-url]', function(event) {
 		cell.addClass('editing');
 		cellValue = cell.html().trim().replace('<br>', '\n');
 		if (cell.attr('data-datagrid-editable-value')) {
-			valueToEdit = cell.data('datagrid-editable-value');
+			valueToEdit = String(cell.data('datagrid-editable-value'));
 		} else {
 			valueToEdit = cellValue;
 		}
