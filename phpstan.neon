@@ -5,7 +5,6 @@ includes:
 
 parameters:
 	level: 8
-	phpVersion: 70200
 
 	paths:
 		- src
@@ -20,10 +19,6 @@ parameters:
 		-
 			message: '/^Instanceof between Ublaboo\\DataGrid\\Filter\\Filter and Ublaboo\\DataGrid\\Filter\\FilterDateRange will always evaluate to false\.$/'
 			count: 1
-			path: src/DataGrid.php
-		-
-			message: "/^Cannot access offset 'submit' on Nette\\\\ComponentModel\\\\IComponent\\.$/"
-			count: 3
 			path: src/DataGrid.php
 		-
 			message: '/^Class dibi referenced with incorrect case\: Dibi\.$/'
