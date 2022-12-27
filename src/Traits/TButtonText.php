@@ -1,16 +1,11 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Traits;
 
 trait TButtonText
 {
 
-	/**
-	 * @var string
-	 */
-	protected $text = '';
+	protected string $text = '';
 
 	/**
 	 * @return static
@@ -21,7 +16,6 @@ trait TButtonText
 
 		return $this;
 	}
-
 
 	public function getText(): string
 	{

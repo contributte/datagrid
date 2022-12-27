@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Traits;
 
@@ -12,33 +10,27 @@ use Ublaboo\DataGrid\Row;
 trait TButtonRenderer
 {
 
-	/**
-	 * @var Renderer|null
-	 */
-	protected $renderer;
+	protected ?Renderer $renderer = null;
+
+	/** @var array */
+	protected array $replacements = [];
 
 	/**
-	 * @var array
-	 */
-	protected $replacements = [];
-
-	/**
-	 * @return mixed
 	 * @throws DataGridColumnRendererException
 	 */
-	public function useRenderer(?Row $row = null)
+	public function useRenderer(?Row $row = null): mixed
 	{
 		$renderer = $this->getRenderer();
 
 		$args = $row instanceof Row ? [$row->getItem()] : [];
 
 		if ($renderer === null) {
-			throw new DataGridColumnRendererException;
+			throw new DataGridColumnRendererException();
 		}
 
 		if ($renderer->getConditionCallback() !== null) {
 			if (call_user_func_array($renderer->getConditionCallback(), $args) === false) {
-				throw new DataGridColumnRendererException;
+				throw new DataGridColumnRendererException();
 			}
 
 			return call_user_func_array($renderer->getCallback(), $args);
@@ -46,7 +38,6 @@ trait TButtonRenderer
 
 		return call_user_func_array($renderer->getCallback(), $args);
 	}
-
 
 	/**
 	 * Set renderer callback and (it may be optional - the condition callback will decide)
@@ -68,7 +59,6 @@ trait TButtonRenderer
 		return $this;
 	}
 
-
 	/**
 	 * @return static
 	 */
@@ -80,18 +70,15 @@ trait TButtonRenderer
 		return $this->setRenderer($renderer, $conditionCallback);
 	}
 
-
 	public function getRenderer(): ?Renderer
 	{
 		return $this->renderer;
 	}
 
-
 	public function hasReplacements(): bool
 	{
 		return $this->replacements !== [];
 	}
-
 
 	public function applyReplacements(Row $row, string $column): array
 	{

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Files;
 
@@ -23,4 +21,5 @@ final class TestPresenter extends Presenter
 			->andReturn(__DIR__ . '/template.latte')
 			->getMock();
 	}
+
 }

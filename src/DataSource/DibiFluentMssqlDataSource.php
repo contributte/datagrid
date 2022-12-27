@@ -1,9 +1,8 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
+use dibi;
 use Dibi\Fluent;
 use Dibi\Helpers;
 use Dibi\Result;
@@ -17,22 +16,13 @@ use UnexpectedValueException;
 class DibiFluentMssqlDataSource extends DibiFluentDataSource
 {
 
-	/**
-	 * @var array
-	 */
-	protected $data = [];
-
+	/** @var array */
+	protected array $data = [];
 
 	public function __construct(Fluent $dataSource, string $primaryKey)
 	{
 		parent::__construct($dataSource, $primaryKey);
 	}
-
-
-	// *******************************************************************************
-	// *                          IDataSource implementation                         *
-	// *******************************************************************************
-
 
 	public function getCount(): int
 	{
@@ -41,7 +31,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 		return $clone->count();
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -52,7 +41,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 
 		return $this;
 	}
-
 
 	public function limit(int $offset, int $limit): IDataSource
 	{
@@ -70,7 +58,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		return $this;
 	}
 
-
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -86,11 +73,10 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 				$filter->getColumn(),
 				$date->format('Ymd')
 			);
-		} catch (DataGridDateTimeHelperException $ex) {
+		} catch (DataGridDateTimeHelperException) {
 			// ignore the invalid filter value
 		}
 	}
-
 
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
@@ -116,7 +102,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		}
 	}
 
-
 	protected function applyFilterText(FilterText $filter): void
 	{
 		$condition = $filter->getCondition();
@@ -124,21 +109,22 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			$column = Helpers::escape($driver, $column, \dibi::IDENTIFIER);
+			$column = Helpers::escape($driver, $column, dibi::IDENTIFIER);
 
 			if ($filter->isExactSearch()) {
-				$this->dataSource->where("$column = %s", $value);
+				$this->dataSource->where(sprintf('%s = %%s', $column), $value);
 
 				continue;
 			}
 
-			$or[] = "$column LIKE \"%$value%\"";
+			$or[] = sprintf('%s LIKE "%%%s%%"', $column, $value);
 		}
 
-		if (sizeof($or) > 1) {
+		if (count($or) > 1) {
 			$this->dataSource->where('(%or)', $or);
 		} else {
 			$this->dataSource->where($or);
 		}
 	}
+
 }

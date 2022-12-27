@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Utils;
 
@@ -18,11 +16,7 @@ final class NetteDatabaseSelectionHelper
 		return $connection->getSupplementalDriver();
 	}
 
-
-	/**
-	 * @return mixed
-	 */
-	public static function getContext(Selection $selection)
+	public static function getContext(Selection $selection): mixed
 	{
 		$reflection = new ReflectionClass($selection);
 

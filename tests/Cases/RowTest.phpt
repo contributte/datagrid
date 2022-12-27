@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
@@ -10,25 +8,22 @@ require __DIR__ . '/../Files/TestingDataGridFactory.php';
 use Nette\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo;
+use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\Tests\Cases\Utils\LeanBookEntity;
 use Ublaboo\DataGrid\Tests\Cases\Utils\TestingDDataGridEntity;
 use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 final class RowTest extends TestCase
 {
 
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
-	private $grid;
+	private DataGrid $grid;
 
 	public function setUp(): void
 	{
 		$factory = new TestingDataGridFactory();
 		$this->grid = $factory->createTestingDataGrid();
 	}
-
 
 	public function testControl(): void
 	{
@@ -44,7 +39,6 @@ final class RowTest extends TestCase
 		Assert::same('bg-warning', $row->getControlClass());
 	}
 
-
 	public function testArray(): void
 	{
 		$item = ['id' => 20, 'name' => 'John Doe'];
@@ -55,7 +49,6 @@ final class RowTest extends TestCase
 		Assert::same('John Doe', $row->getValue('name'));
 	}
 
-
 	public function testObject(): void
 	{
 		$item = (object) ['id' => 20, 'name' => 'John Doe'];
@@ -64,7 +57,6 @@ final class RowTest extends TestCase
 
 		Assert::same(20, $row->getId());
 	}
-
 
 	public function testDoctrineEntity(): void
 	{
@@ -83,7 +75,7 @@ final class RowTest extends TestCase
 
 	public function testLeanMapperEntity(): void
 	{
-		$entity = new Utils\LeanBookEntity();
+		$entity = new LeanBookEntity();
 		$entity->id = '978-80-257-1309-9';
 		$entity->pageCount = 42;
 

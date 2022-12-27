@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\GroupAction;
 
@@ -10,9 +8,6 @@ namespace Ublaboo\DataGrid\GroupAction;
 class GroupMultiSelectAction extends GroupSelectAction
 {
 
-	/**
-	 * @var string
-	 */
-	protected $class = 'form-control input-sm form-control-sm selectpicker';
+	protected string $class = 'form-control input-sm form-control-sm selectpicker';
 
 }

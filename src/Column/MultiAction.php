@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -27,26 +25,15 @@ class MultiAction extends Column
 	use TButtonCaret;
 	use TLink;
 
-	/**
-	 * @var DataGrid
-	 */
-	protected $grid;
+	protected DataGrid $grid;
 
-	/**
-	 * @var string
-	 */
-	protected $name;
+	protected string $name;
 
-	/**
-	 * @var array
-	 */
-	protected $actions = [];
+	/** @var array */
+	protected array $actions = [];
 
-	/**
-	 * @var array|callable[]
-	 */
-	private $rowConditions = [];
-
+	/** @var array|callable[] */
+	private array $rowConditions = [];
 
 	public function __construct(DataGrid $grid, string $key, string $name)
 	{
@@ -54,7 +41,6 @@ class MultiAction extends Column
 
 		$this->setTemplate(__DIR__ . '/../templates/column_multi_action.latte');
 	}
-
 
 	public function renderButton(): Html
 	{
@@ -85,7 +71,6 @@ class MultiAction extends Column
 		return $button;
 	}
 
-
 	/**
 	 * @return static
 	 */
@@ -102,7 +87,7 @@ class MultiAction extends Column
 			);
 		}
 
-		$href = $href ?? $key;
+		$href ??= $key;
 
 		if ($params === null) {
 			$params = [$this->grid->getPrimaryKey()];
@@ -117,7 +102,6 @@ class MultiAction extends Column
 		return $this;
 	}
 
-
 	/**
 	 * @return array<Action>
 	 */
@@ -125,7 +109,6 @@ class MultiAction extends Column
 	{
 		return $this->actions;
 	}
-
 
 	public function getAction(string $key): Action
 	{
@@ -138,7 +121,6 @@ class MultiAction extends Column
 		return $this->actions[$key];
 	}
 
-
 	/**
 	 * Column can have variables that will be passed to custom template scope
 	 */
@@ -149,7 +131,6 @@ class MultiAction extends Column
 		]);
 	}
 
-
 	public function setRowCondition(
 		string $actionKey,
 		callable $rowCondition
@@ -157,7 +138,6 @@ class MultiAction extends Column
 	{
 		$this->rowConditions[$actionKey] = $rowCondition;
 	}
-
 
 	public function testRowCondition(string $actionKey, Row $row): bool
 	{
@@ -167,4 +147,5 @@ class MultiAction extends Column
 
 		return (bool) call_user_func($this->rowConditions[$actionKey], $row->getItem());
 	}
+
 }

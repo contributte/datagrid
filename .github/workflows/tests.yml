@@ -10,6 +10,13 @@ on:
     - cron: "0 8 * * 1"
 
 jobs:
+  test82:
+    name: "Nette Tester"
+    uses: contributte/.github/.github/workflows/nette-tester-mysql.yml@v1
+    with:
+      php: "8.2"
+      database: tests
+
   test81:
     name: "Nette Tester"
     uses: contributte/.github/.github/workflows/nette-tester-mysql.yml@v1
@@ -22,19 +29,4 @@ jobs:
     uses: contributte/.github/.github/workflows/nette-tester-mysql.yml@v1
     with:
         php: "8.0"
-        database: tests
-
-  test74:
-    name: "Nette Tester"
-    uses: contributte/.github/.github/workflows/nette-tester-mysql.yml@v1
-    with:
-        php: "7.4"
-        database: tests
-
-  test74-lower:
-    name: "Nette Tester"
-    uses: contributte/.github/.github/workflows/nette-tester-mysql.yml@v1
-    with:
-        php: "7.4"
-        composer: "composer update --no-interaction --no-progress --prefer-dist --prefer-stable --prefer-lowest"
         database: tests

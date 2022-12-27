@@ -1,13 +1,12 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
 use Tester\Assert;
 use Tester\TestCase;
 use Tracy\Debugger;
-use Ublaboo;
+use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/TestingDataGridFactory.php';
@@ -15,15 +14,9 @@ require __DIR__ . '/../Files/TestingDataGridFactory.php';
 final class ExportTest extends TestCase
 {
 
-	/**
-	 * @var DataGrid
-	 */
-	private $grid;
+	private DataGrid $grid;
 
-	/**
-	 * @var array
-	 */
-	private $data = [
+	private array $data = [
 		[
 			'id' => 1,
 			'name' => 'John Doe',
@@ -48,10 +41,9 @@ final class ExportTest extends TestCase
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
+		$factory = new TestingDataGridFactory();
 		$this->grid = $factory->createTestingDataGrid();
 	}
-
 
 	public function testExportNotFiltered(): void
 	{
@@ -62,7 +54,6 @@ final class ExportTest extends TestCase
 
 		$this->grid->addExportCallback('Export', $callback);
 
-		$this->grid;
 		$trigger = function (): void {
 			$this->grid->handleExport(1);
 		};
@@ -73,8 +64,6 @@ final class ExportTest extends TestCase
 
 		$this->grid->handleExport(1);
 	}
-
-
 
 	public function testExportFiltered(): void
 	{
