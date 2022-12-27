@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
@@ -22,11 +20,11 @@ final class FilterTest extends TestCase
 		$grid = $factory->createTestingDataGrid()->getComponent('grid');
 		$filterForm = $grid->createComponentFilter();
 
-		Assert::exception(function() use ($grid, $filterForm): void {
+		Assert::exception(function () use ($grid, $filterForm): void {
 			$grid->filterSucceeded($filterForm);
 		}, AbortException::class);
 	}
 
 }
 
-(new FilterTest)->run();
+(new FilterTest())->run();

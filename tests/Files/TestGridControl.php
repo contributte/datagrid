@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Files;
 
@@ -14,4 +12,5 @@ class TestGridControl extends Control
 	{
 		return new DataGrid();
 	}
+
 }

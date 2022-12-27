@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
@@ -33,10 +31,7 @@ if (!extension_loaded('mysqli')) {
 final class NextrasDataSourceTest extends BaseDataSourceTest
 {
 
-	/**
-	 * @var Model
-	 */
-	private $model;
+	private Model $model;
 
 	public function testFilterOnJoinedTable(): void
 	{
@@ -104,12 +99,10 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 		$this->model = $simpleModelFactory->create();
 
 		$connection->query('INSERT INTO [users] %values[]', $this->data);
-		$connection->query('INSERT INTO [books] %values[]', Arrays::map($this->data, function (array $data): array {
-			return ['id' => $data['id'], 'author_id' => $data['id']];
-		}));
+		$connection->query('INSERT INTO [books] %values[]', Arrays::map($this->data, fn (array $data): array => ['id' => $data['id'], 'author_id' => $data['id']]));
 	}
 
-	protected function getActualResultAsArray()
+	protected function getActualResultAsArray(): array
 	{
 		$result = [];
 

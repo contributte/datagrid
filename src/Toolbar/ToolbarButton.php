@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Toolbar;
 
@@ -26,42 +24,18 @@ class ToolbarButton
 	use TButtonTitle;
 	use TLink;
 
-	/**
-	 * @var DataGrid
-	 */
-	protected $grid;
+	/** @var array */
+	protected array $attributes = [];
 
-	/**
-	 * @var string
-	 */
-	protected $href;
-
-	/**
-	 * @var array
-	 */
-	protected $params;
-
-	/**
-	 * @var array
-	 */
-	protected $attributes = [];
-
-	/**
-	 * @var string|null
-	 */
-	protected $confirmDialog = null;
+	protected ?string $confirmDialog = null;
 
 	/**
 	 * Toolbar button constructor
 	 */
-	public function __construct(DataGrid $grid, string $href, string $text, array $params = [])
+	public function __construct(protected DataGrid $grid, protected string $href, string $text, protected array $params = [])
 	{
-		$this->grid = $grid;
-		$this->href = $href;
 		$this->text = $text;
-		$this->params = $params;
 	}
-
 
 	/**
 	 * Render toolbar button
@@ -71,7 +45,7 @@ class ToolbarButton
 		try {
 			// Renderer function may be used
 			return $this->useRenderer();
-		} catch (DataGridColumnRendererException $e) {
+		} catch (DataGridColumnRendererException) {
 			// Do not use renderer
 		}
 
@@ -103,12 +77,10 @@ class ToolbarButton
 		return $a;
 	}
 
-
 	/**
-	 * @param array $attrs
 	 * @return static
 	 */
-	public function addAttributes(array $attrs)
+	public function addAttributes(array $attrs): static
 	{
 		$this->attributes += $attrs;
 
@@ -124,4 +96,5 @@ class ToolbarButton
 
 		return $this;
 	}
+
 }

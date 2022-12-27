@@ -386,7 +386,7 @@
 											{if $control->getPerPage() === 'all'}
 												{='ublaboo_datagrid.items'|translate}: {='ublaboo_datagrid.all'|translate}
 											{else}
-												{='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : ($paginator->getItemCount() > 0 ? 1 : 0)} - {sizeof($rows) + $paginator->getOffset()}
+												{='ublaboo_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : ($paginator->getItemCount() > 0 ? 1 : 0)} - {count($rows) + $paginator->getOffset()}
 												{='ublaboo_datagrid.from'|translate} {$paginator->getItemCount()}
 											{/if})
 										</small>

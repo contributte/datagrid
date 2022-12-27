@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
@@ -18,10 +16,9 @@ final class DoctrineCollectionDataSourceTest extends BaseDataSourceTest
 	public function setUp(): void
 	{
 		$this->ds = new DoctrineCollectionDataSource(new ArrayCollection($this->data), 'id');
-		$factory = new TestingDataGridFactory;
+		$factory = new TestingDataGridFactory();
 		$this->grid = $factory->createTestingDataGrid();
 	}
-
 
 	public function testFilterMultipleColumns(): void
 	{
@@ -34,6 +31,7 @@ final class DoctrineCollectionDataSourceTest extends BaseDataSourceTest
 			$this->data[4],
 		], $this->getActualResultAsArray());
 	}
+
 }
 
-(new DoctrineCollectionDataSourceTest)->run();
+(new DoctrineCollectionDataSourceTest())->run();

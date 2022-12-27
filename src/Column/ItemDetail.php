@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -29,52 +27,24 @@ class ItemDetail
 
 	/**
 	 * (renderer | template | block)
-	 *
-	 * @var string|null
 	 */
-	protected $type;
+	protected ?string $type = null;
 
-	/**
-	 * @var string|null
-	 */
-	protected $template;
+	protected ?string $template = null;
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $renderer;
 
-	/**
-	 * @var DataGrid
-	 */
-	protected $grid;
+	protected ?ItemDetailForm $form = null;
 
-	/**
-	 * @var string
-	 */
-	protected $primaryWhereColumn;
+	protected array $templateParameters = [];
 
-	/**
-	 * @var ItemDetailForm|null
-	 */
-	protected $form;
-
-	/**
-	 * @var array
-	 */
-	protected $templateParameters = [];
-
-
-	public function __construct(DataGrid $grid, string $primaryWhereColumn)
+	public function __construct(protected DataGrid $grid, protected string $primaryWhereColumn)
 	{
-		$this->grid = $grid;
-		$this->primaryWhereColumn = $primaryWhereColumn;
-
 		$this->title = 'ublaboo_datagrid.show';
 		$this->class = sprintf('btn btn-xs %s ajax', $grid::$btnSecondaryClass);
 		$this->icon = 'eye';
 	}
-
 
 	/**
 	 * Render row item detail button
@@ -98,19 +68,14 @@ class ItemDetail
 			);
 		}
 
-		if ($this->class !== null) {
+		if ($this->class !== '') {
 			$a->setAttribute('class', $this->class);
 		}
 
 		return $a;
 	}
 
-
-	/**
-	 * @param mixed $item
-	 * @return mixed
-	 */
-	public function render($item)
+	public function render(mixed $item): mixed
 	{
 		if ($this->getType() === 'block') {
 			throw new DataGridItemDetailException('ItemDetail is set to render as block, but block #detail is not defined');
@@ -123,12 +88,10 @@ class ItemDetail
 		return call_user_func($this->getRenderer(), $item);
 	}
 
-
 	public function getPrimaryWhereColumn(): string
 	{
 		return $this->primaryWhereColumn;
 	}
-
 
 	/**
 	 * Set item detail type
@@ -142,7 +105,6 @@ class ItemDetail
 		return $this;
 	}
 
-
 	/**
 	 * Get item detail type
 	 */
@@ -150,7 +112,6 @@ class ItemDetail
 	{
 		return $this->type;
 	}
-
 
 	/**
 	 * Set item detail template
@@ -164,7 +125,6 @@ class ItemDetail
 		return $this;
 	}
 
-
 	/**
 	 * Get item detail template
 	 */
@@ -172,7 +132,6 @@ class ItemDetail
 	{
 		return $this->template;
 	}
-
 
 	/**
 	 * @return static
@@ -184,12 +143,10 @@ class ItemDetail
 		return $this;
 	}
 
-
 	public function getRenderer(): ?callable
 	{
 		return $this->renderer;
 	}
-
 
 	/**
 	 * @return static
@@ -201,12 +158,10 @@ class ItemDetail
 		return $this;
 	}
 
-
 	public function getForm(): ?ItemDetailForm
 	{
 		return $this->form;
 	}
-
 
 	/**
 	 * @return static
@@ -217,7 +172,6 @@ class ItemDetail
 
 		return $this;
 	}
-
 
 	public function getTemplateVariables(): array
 	{

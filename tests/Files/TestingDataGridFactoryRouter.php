@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Files;
 
@@ -30,10 +28,11 @@ class TestingDataGridFactoryRouter
 
 		$presenter->autoCanonicalize = false;
 
-		$presenter->injectPrimary(null, $presenterFactory, new SimpleRouter, $request, $response, $session);
+		$presenter->injectPrimary(null, $presenterFactory, new SimpleRouter(), $request, $response, $session);
 
 		$presenter->run(new Request('Test', 'GET', []));
 
 		return $presenter->getComponent('grid');
 	}
+
 }

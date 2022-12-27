@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Filter;
 
@@ -10,40 +8,23 @@ use Ublaboo\DataGrid\DataGrid;
 class FilterRange extends OneColumnFilter
 {
 
-	/**
-	 * @var array
-	 */
-	protected $placeholders = [];
+	/** @var array */
+	protected array $placeholders = [];
 
-	/**
-	 * @var string
-	 */
-	protected $nameSecond;
+	protected ?string $template = 'datagrid_filter_range.latte';
 
-	/**
-	 * @var string
-	 */
-	protected $template = 'datagrid_filter_range.latte';
-
-	/**
-	 * @var string
-	 */
-	protected $type = 'range';
-
+	protected ?string $type = 'range';
 
 	public function __construct(
 		DataGrid $grid,
 		string $key,
 		string $name,
 		string $column,
-		string $nameSecond
+		protected string $nameSecond
 	)
 	{
 		parent::__construct($grid, $key, $name, $column);
-
-		$this->nameSecond = $nameSecond;
 	}
-
 
 	public function addToFormContainer(Container $container): void
 	{
@@ -72,7 +53,6 @@ class FilterRange extends OneColumnFilter
 		}
 	}
 
-
 	/**
 	 * Set html attr placeholder of both inputs
 	 *
@@ -85,7 +65,6 @@ class FilterRange extends OneColumnFilter
 		return $this;
 	}
 
-
 	/**
 	 * Get html attr placeholders
 	 */
@@ -93,7 +72,6 @@ class FilterRange extends OneColumnFilter
 	{
 		return $this->placeholders;
 	}
-
 
 	/**
 	 * Get filter condition
@@ -109,4 +87,5 @@ class FilterRange extends OneColumnFilter
 			],
 		];
 	}
+
 }

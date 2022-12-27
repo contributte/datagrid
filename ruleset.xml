@@ -1,17 +1,14 @@
 <?xml version="1.0"?>
 <ruleset>
 	<!-- Contributte Coding Standard -->
-	<rule ref="./vendor/ninjify/coding-standard/ruleset-gamee.xml">
-		<exclude name="SlevomatCodingStandard.Commenting.RequireOneLineDocComment.MultiLineDocComment"/>
-		<exclude name="SlevomatCodingStandard.Classes.MethodSpacing.IncorrectLinesCountBetweenMethods"/>
-		<exclude name="SlevomatCodingStandard.Classes.ClassMemberSpacing.IncorrectCountOfBlankLinesBetweenMembers"/>
-		<exclude name="SlevomatCodingStandard.Commenting.DisallowCommentAfterCode.DisallowedCommentAfterCode"/>
-		<exclude name="SlevomatCodingStandard.Classes.RequireSingleLineMethodSignature.RequiredSingleLineSignature"/>
-		<exclude name="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator.RequiredNullCoalesceEqualOperator"/>
-		<exclude name="SlevomatCodingStandard.Files.LineLength.LineTooLong"/>
-		<exclude name="SlevomatCodingStandard.Functions.RequireMultiLineCall.RequiredMultiLineCall"/>
-		<exclude name="SlevomatCodingStandard.ControlStructures.RequireMultiLineTernaryOperator.MultiLineTernaryOperatorNotUsed"/>
-		<exclude name="SlevomatCodingStandard.Classes.RequireAbstractOrFinal.ClassNeitherAbstractNorFinal"/>
+	<rule ref="./vendor/contributte/qa/ruleset-8.0.xml">
+		<exclude name="Squiz.PHP.Heredoc.NotAllowed"/>
+		<exclude name="Squiz.Commenting.FunctionComment.InvalidTypeHint"/>
+		<exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed"/>
+		<exclude name="SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException"/>
+		<exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingTraversableTypeHintSpecification"/>
+		<exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification"/>
+		<exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification"/>
 	</rule>
 
 	<!-- Specific rules -->
@@ -25,21 +22,25 @@
 			<property name="extensions" type="array" value="php,phpt"/>
 		</properties>
 	</rule>
-	<rule ref="SlevomatCodingStandard.Functions.RequireSingleLineCall">
-		<properties>
-			<property name="maxLineLength" type="int" value="120"/>
-			<property name="alwaysForSimpleConditions" type="boolean" value="false"/>
-		</properties>
-	</rule>
-	<rule ref="SlevomatCodingStandard.ControlStructures.RequireSingleLineCondition">
-		<properties>
-			<property name="maxLineLengtaash" type="int" value="120"/>
-			<property name="alwaysForSimpleConditions" type="boolean" value="false"/>
-		</properties>
-	</rule>
 
 	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName.NoMatchBetweenTypeNameAndFileName">
 		<exclude-pattern>tests/Cases/DataSources/NextrasDataSourceTest.phpt</exclude-pattern>
 		<exclude-pattern>tests/Cases/DataSources/DoctrineDataSourceTest.phpt</exclude-pattern>
+	</rule>
+
+	<rule ref="PSR1.Classes.ClassDeclaration">
+		<exclude-pattern>*tests/Cases/*</exclude-pattern>
+	</rule>
+
+	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+		<exclude-pattern>*tests/Cases/*</exclude-pattern>
+	</rule>
+
+	<rule ref="Squiz.Classes.ClassFileName.NoMatch">
+		<exclude-pattern>*tests/Cases/*</exclude-pattern>
+	</rule>
+
+	<rule ref="Generic.Classes.DuplicateClassName.Found">
+		<exclude-pattern>*tests/Cases/*</exclude-pattern>
 	</rule>
 </ruleset>

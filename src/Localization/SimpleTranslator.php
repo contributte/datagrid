@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Localization;
 
@@ -9,10 +7,7 @@ use Nette\Localization\ITranslator;
 class SimpleTranslator implements ITranslator
 {
 
-	/**
-	 * @var array
-	 */
-	private $dictionary = [
+	private array $dictionary = [
 		'ublaboo_datagrid.no_item_found_reset' => 'No items found. You can reset the filter',
 		'ublaboo_datagrid.no_item_found' => 'No items found.',
 		'ublaboo_datagrid.here' => 'here',
@@ -42,25 +37,19 @@ class SimpleTranslator implements ITranslator
 		'ublaboo_datagrid.per_page_submit' => 'Change',
 	];
 
-
 	public function __construct(array $dictionary = [])
 	{
 		$this->dictionary = array_merge($this->dictionary, $dictionary);
 	}
 
-
-	/**
-	 * @param mixed $message
-	 * @param mixed ...$parameters
-	 */
-	public function translate($message, ...$parameters): string
+	public function translate(mixed $message, mixed ...$parameters): string
 	{
 		return $this->dictionary[$message] ?? $message;
 	}
-
 
 	public function setDictionary(array $dictionary): void
 	{
 		$this->dictionary = $dictionary;
 	}
+
 }

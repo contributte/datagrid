@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -15,11 +13,8 @@ class ActionCallback extends Action
 
 	use SmartObject;
 
-	/**
-	 * @var callable[]
-	 */
-	public $onClick;
-
+	/** @var callable[] */
+	public array $onClick;
 
 	/**
 	 * Create link to datagrid::handleActionCallback() to fire custom callback
@@ -33,4 +28,5 @@ class ActionCallback extends Action
 
 		return $this->grid->link('actionCallback!', $params);
 	}
+
 }
