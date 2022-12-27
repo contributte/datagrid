@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid;
 
@@ -11,32 +9,11 @@ class CsvDataModel
 {
 
 	/**
-	 * @var array
+	 * @param Column[] $columns
 	 */
-	protected $data;
-
-	/**
-	 * @var array<Column>
-	 */
-	protected $columns;
-
-	/**
-	 * @var ITranslator
-	 */
-	protected $translator;
-
-
-	public function __construct(
-		array $data,
-		array $columns,
-		ITranslator $translator
-	)
+	public function __construct(protected array $data, protected array $columns, protected ITranslator $translator)
 	{
-		$this->data = $data;
-		$this->columns = $columns;
-		$this->translator = $translator;
 	}
-
 
 	/**
 	 * Get data with header and "body"
@@ -56,7 +33,6 @@ class CsvDataModel
 		return $return;
 	}
 
-
 	public function getHeader(): array
 	{
 		$header = [];
@@ -68,13 +44,10 @@ class CsvDataModel
 		return $header;
 	}
 
-
 	/**
 	 * Get item values saved into row
-	 *
-	 * @param mixed $item
 	 */
-	public function getRow($item): array
+	public function getRow(mixed $item): array
 	{
 		$row = [];
 

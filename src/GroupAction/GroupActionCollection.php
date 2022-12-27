@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\GroupAction;
 
@@ -11,28 +9,19 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form as NetteForm;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
+use UnexpectedValueException;
 
 class GroupActionCollection
 {
 
 	private const ID_ATTRIBUTE_PREFIX = '_item_';
 
-	/**
-	 * @var array<GroupAction>
-	 */
-	protected $groupActions = [];
+	/** @var array<GroupAction> */
+	protected array $groupActions = [];
 
-	/**
-	 * @var DataGrid
-	 */
-	protected $datagrid;
-
-
-	public function __construct(DataGrid $datagrid)
+	public function __construct(protected DataGrid $datagrid)
 	{
-		$this->datagrid = $datagrid;
 	}
-
 
 	public function addToFormContainer(Container $container): void
 	{
@@ -43,7 +32,7 @@ class GroupActionCollection
 		$main_options = [];
 
 		if ($translator === null) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		/**
@@ -155,7 +144,6 @@ class GroupActionCollection
 		};
 	}
 
-
 	/**
 	 * Pass "sub"-form submission forward to custom submit function
 	 */
@@ -176,9 +164,6 @@ class GroupActionCollection
 			return;
 		}
 
-		/**
-		 * @todo Define items IDs
-		 */
 		$httpIds = $form->getHttpData(
 			Form::DATA_LINE | Form::DATA_KEYS,
 			strtolower($this->datagrid->getFullName()) . '_group_action_item[]'
@@ -191,12 +176,12 @@ class GroupActionCollection
 			$this->groupActions[$id]->onSelect($ids, $values[$id] ?? null);
 
 			if (!$form['group_action'] instanceof Container) {
-				throw new \UnexpectedValueException;
+				throw new UnexpectedValueException();
 			}
 
 			if (isset($form['group_action']['group_action'])) {
 				if (!$form['group_action']['group_action'] instanceof SelectBox) {
-					throw new \UnexpectedValueException;
+					throw new UnexpectedValueException();
 				}
 
 				$form['group_action']['group_action']->setValue(null);
@@ -205,88 +190,62 @@ class GroupActionCollection
 			$groupButtonAction = $this->groupActions[$submitter->getName()];
 
 			if (!$groupButtonAction instanceof GroupButtonAction) {
-				throw new \UnexpectedValueException('This action is supposed to be a GroupButtonAction');
+				throw new UnexpectedValueException('This action is supposed to be a GroupButtonAction');
 			}
 
 			$groupButtonAction->onClick($ids);
 		}
 	}
 
-
 	/**
 	 * Add one group button action to collection of actions
 	 */
 	public function addGroupButtonAction(string $title, ?string $class = null): GroupButtonAction
 	{
-		if (count($this->groupActions) > 0) {
-			$id = count($this->groupActions) + 1;
-		} else {
-			$id = 1;
-		}
+		$id = count($this->groupActions) > 0 ? count($this->groupActions) + 1 : 1;
 
 		return $this->groupActions[$id] = new GroupButtonAction($title, $class);
 	}
-
 
 	/**
 	 * Add one group action (select box) to collection of actions
 	 */
 	public function addGroupSelectAction(string $title, array $options): GroupAction
 	{
-		if (count($this->groupActions) > 0) {
-			$id = count($this->groupActions) + 1;
-		} else {
-			$id = 1;
-		}
+		$id = count($this->groupActions) > 0 ? count($this->groupActions) + 1 : 1;
 
 		return $this->groupActions[$id] = new GroupSelectAction($title, $options);
 	}
-
 
 	/**
 	 * Add one group action (multiselect box) to collection of actions
 	 */
 	public function addGroupMultiSelectAction(string $title, array $options): GroupAction
 	{
-		if (count($this->groupActions) > 0) {
-			$id = count($this->groupActions) + 1;
-		} else {
-			$id = 1;
-		}
+		$id = count($this->groupActions) > 0 ? count($this->groupActions) + 1 : 1;
 
 		return $this->groupActions[$id] = new GroupMultiSelectAction($title, $options);
 	}
-
 
 	/**
 	 * Add one group action (text input) to collection of actions
 	 */
 	public function addGroupTextAction(string $title): GroupAction
 	{
-		if (count($this->groupActions) > 0) {
-			$id = count($this->groupActions) + 1;
-		} else {
-			$id = 1;
-		}
+		$id = count($this->groupActions) > 0 ? count($this->groupActions) + 1 : 1;
 
 		return $this->groupActions[$id] = new GroupTextAction($title);
 	}
-
 
 	/**
 	 * Add one group action (textarea) to collection of actions
 	 */
 	public function addGroupTextareaAction(string $title): GroupAction
 	{
-		if (count($this->groupActions) > 0) {
-			$id = count($this->groupActions) + 1;
-		} else {
-			$id = 1;
-		}
+		$id = count($this->groupActions) > 0 ? count($this->groupActions) + 1 : 1;
 
 		return $this->groupActions[$id] = new GroupTextareaAction($title);
 	}
-
 
 	public function getGroupAction(string $title): GroupAction
 	{
@@ -296,21 +255,20 @@ class GroupActionCollection
 			}
 		}
 
-		throw new DataGridGroupActionException("Group action $title does not exist.");
+		throw new DataGridGroupActionException(sprintf('Group action %s does not exist.', $title));
 	}
-
 
 	private function getFormSubmitter(NetteForm $form): ?SubmitButton
 	{
 		$container = $form['group_action'];
 
 		if (!$container instanceof Container) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		if (isset($container['submit'])) {
 			if (!$container['submit'] instanceof SubmitButton) {
-				throw new \UnexpectedValueException;
+				throw new UnexpectedValueException();
 			}
 
 			if ($container['submit']->isSubmittedBy()) {
@@ -326,4 +284,5 @@ class GroupActionCollection
 
 		return null;
 	}
+
 }

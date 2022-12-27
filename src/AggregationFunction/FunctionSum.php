@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
@@ -8,7 +6,6 @@ use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Database\Table\Selection;
-use Nette\Utils\Strings;
 use Nextras\Orm\Collection\DbalCollection;
 use Nextras\Orm\Collection\ICollection;
 use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
@@ -16,46 +13,21 @@ use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 class FunctionSum implements ISingleColumnAggregationFunction
 {
 
-	/**
-	 * @var string
-	 */
-	protected $column;
+	protected int $result = 0;
 
-	/**
-	 * @var int
-	 */
-	protected $result = 0;
-
-	/**
-	 * @var string
-	 */
-	protected $dataType;
-
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $renderer = null;
 
-
-	public function __construct(
-		string $column,
-		string $dataType = IAggregationFunction::DATA_TYPE_PAGINATED
-	) {
-		$this->column = $column;
-		$this->dataType = $dataType;
+	public function __construct(protected string $column, protected string $dataType = IAggregationFunction::DATA_TYPE_PAGINATED)
+	{
 	}
-
 
 	public function getFilterDataType(): string
 	{
 		return $this->dataType;
 	}
 
-
-	/**
-	 * @param Fluent|QueryBuilder|Collection|Selection|ICollection $dataSource
-	 */
-	public function processDataSource($dataSource): void
+	public function processDataSource(Fluent|QueryBuilder|Collection|Selection|ICollection $dataSource): void
 	{
 		if ($dataSource instanceof Fluent) {
 			$connection = $dataSource->getConnection();
@@ -65,7 +37,7 @@ class FunctionSum implements ISingleColumnAggregationFunction
 		}
 
 		if ($dataSource instanceof QueryBuilder) {
-			$column = Strings::contains($this->column, '.')
+			$column = str_contains($this->column, '.')
 				? $this->column
 				: current($dataSource->getRootAliases()) . '.' . $this->column;
 
@@ -85,17 +57,13 @@ class FunctionSum implements ISingleColumnAggregationFunction
 			});
 		}
 
-		if ( $dataSource instanceof DbalCollection) {
-			foreach( $dataSource->fetchAll() as $item )
-				$this->result += $item->getValue( $this->column );
+		if ($dataSource instanceof DbalCollection) {
+			foreach ($dataSource->fetchAll() as $item)
+				$this->result += $item->getValue($this->column);
 		}
 	}
 
-
-	/**
-	 * @return mixed
-	 */
-	public function renderResult()
+	public function renderResult(): mixed
 	{
 		$result = $this->result;
 
@@ -106,7 +74,6 @@ class FunctionSum implements ISingleColumnAggregationFunction
 		return $result;
 	}
 
-
 	/**
 	 * @return static
 	 */
@@ -116,4 +83,5 @@ class FunctionSum implements ISingleColumnAggregationFunction
 
 		return $this;
 	}
+
 }

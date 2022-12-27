@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
@@ -16,17 +14,13 @@ require __DIR__ . '/../Files/TestingDataGridFactory.php';
 final class ColumnStatusTest extends TestCase
 {
 
-	/**
-	 * @var DataGrid
-	 */
-	private $grid;
+	private DataGrid $grid;
 
 	public function setUp(): void
 	{
 		$factory = new TestingDataGridFactory();
 		$this->grid = $factory->createTestingDataGrid();
 	}
-
 
 	public function testStatus(): void
 	{
@@ -59,7 +53,6 @@ final class ColumnStatusTest extends TestCase
 
 		Assert::same(2, $current_option->getValue());
 	}
-
 
 	public function testRemoveColumn(): void
 	{

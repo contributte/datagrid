@@ -1,12 +1,13 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo;
+use Ublaboo\DataGrid\Column\ColumnLink;
+use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/TestingDataGridFactory.php';
@@ -14,25 +15,20 @@ require __DIR__ . '/../Files/TestingDataGridFactory.php';
 final class ColumnLinkTest extends TestCase
 {
 
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
-	private $grid;
+	private DataGrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
+		$factory = new TestingDataGridFactory();
 		$this->grid = $factory->createTestingDataGrid();
 	}
 
-
-	public function render($column)
+	public function render(ColumnLink $column): string
 	{
-		$item = new Ublaboo\DataGrid\Row($this->grid, ['id' => 1, 'name' => 'John'], 'id');
+		$item = new Row($this->grid, ['id' => 1, 'name' => 'John'], 'id');
 
 		return (string) $column->render($item);
 	}
-
 
 	public function testLink(): void
 	{
@@ -58,7 +54,6 @@ final class ColumnLinkTest extends TestCase
 		Assert::same('<a href="edit?name=1&amp;id=John">1</a>', $this->render($link));
 	}
 
-
 	public function testLinkClass(): void
 	{
 		$link = $this->grid->addColumnLink('name', 'Href')->setClass('btn');
@@ -67,7 +62,6 @@ final class ColumnLinkTest extends TestCase
 		$link->setClass(null);
 		Assert::same('<a href="name?id=1">John</a>', $this->render($link));
 	}
-
 
 	public function testLinkTitle(): void
 	{

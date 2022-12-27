@@ -1,86 +1,40 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Filter;
 
-use Nette;
+use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
- * @method void addToFormContainer(Nette\Forms\Container $container)
+ * @method void addToFormContainer(Container $container)
  */
 abstract class Filter
 {
 
-	/**
-	 * @var mixed
-	 */
-	protected $value;
+	protected mixed $value;
 
-	/**
-	 * @var bool
-	 */
-	protected $valueSet = false;
+	protected bool $valueSet = false;
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $conditionCallback;
 
-	/**
-	 * @var string
-	 */
-	protected $key;
+	protected ?string $template = null;
 
-	/**
-	 * @var string
-	 */
-	protected $name;
+	protected ?string $type = null;
 
-	/**
-	 * @var string|null
-	 */
-	protected $template;
-
-	/**
-	 * @var string|null
-	 */
-	protected $type;
-
-	/**
-	 * @var DataGrid
-	 */
-	protected $grid;
-
-	/**
-	 * @var array
-	 */
-	protected $attributes = [
+	/** @var array */
+	protected array $attributes = [
 		'class' => ['form-control', 'input-sm', 'form-control-sm'],
 	];
 
-	/**
-	 * @var string|null
-	 */
-	private $placeholder;
-
+	private ?string $placeholder = null;
 
 	abstract public function getCondition(): array;
 
-
-	public function __construct(
-		DataGrid $grid,
-		string $key,
-		string $name
-	)
+	public function __construct(protected DataGrid $grid, protected string $key, protected string $name)
 	{
-		$this->grid = $grid;
-		$this->key = $key;
-		$this->name = $name;
 	}
-
 
 	/**
 	 * Get filter key
@@ -90,7 +44,6 @@ abstract class Filter
 		return $this->key;
 	}
 
-
 	/**
 	 * Get filter name
 	 */
@@ -98,7 +51,6 @@ abstract class Filter
 	{
 		return $this->name;
 	}
-
 
 	/**
 	 * Tell whether value has been set in this fitler
@@ -108,12 +60,10 @@ abstract class Filter
 		return $this->valueSet;
 	}
 
-
 	/**
-	 * @param mixed $value
 	 * @return static
 	 */
-	public function setValue($value): self
+	public function setValue(mixed $value): self
 	{
 		$this->value = $value;
 		$this->valueSet = true;
@@ -121,15 +71,10 @@ abstract class Filter
 		return $this;
 	}
 
-
-	/**
-	 * @return mixed
-	 */
-	public function getValue()
+	public function getValue(): mixed
 	{
 		return $this->value;
 	}
-
 
 	/**
 	 * Set HTML attribute "placeholder"
@@ -143,12 +88,10 @@ abstract class Filter
 		return $this;
 	}
 
-
 	public function getPlaceholder(): ?string
 	{
 		return $this->placeholder;
 	}
-
 
 	/**
 	 * Set custom condition on filter
@@ -162,12 +105,10 @@ abstract class Filter
 		return $this;
 	}
 
-
 	public function getConditionCallback(): ?callable
 	{
 		return $this->conditionCallback;
 	}
-
 
 	/**
 	 * @return static
@@ -179,48 +120,40 @@ abstract class Filter
 		return $this;
 	}
 
-
 	public function getTemplate(): ?string
 	{
 		return $this->template;
 	}
-
 
 	public function getType(): ?string
 	{
 		return $this->type;
 	}
 
-
 	/**
-	 * @param mixed $value
 	 * @return static
 	 */
-	public function addAttribute(string $name, $value): self
+	public function addAttribute(string $name, mixed $value): self
 	{
 		$this->attributes[$name][] = $value;
 
 		return $this;
 	}
 
-
 	/**
-	 * @param mixed $value
 	 * @return static
 	 */
-	public function setAttribute(string $name, $value): self
+	public function setAttribute(string $name, mixed $value): self
 	{
 		$this->attributes[$name] = (array) $value;
 
 		return $this;
 	}
 
-
 	public function getAttributes(): array
 	{
 		return $this->attributes;
 	}
-
 
 	protected function addAttributes(BaseControl $input): BaseControl
 	{

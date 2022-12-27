@@ -1,12 +1,13 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo;
+use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\DataSource\IDataSource;
+use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterSelect;
 use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Utils\Sorting;
 
@@ -16,7 +17,7 @@ require __DIR__ . '/../../Files/TestingDataGridFactory.php';
 abstract class BaseDataSourceTest extends TestCase
 {
 
-	protected $data = [
+	protected array $data = [
 		['id' => 1, 'name' => 'John Doe', 'age' => 30, 'address' => 'Blue Village 1'],
 		['id' => 2, 'name' => 'Frank Frank', 'age' => 60, 'address' => 'Yellow Garded 126'],
 		['id' => 3, 'name' => 'Santa Claus', 'age' => 12, 'address' => 'New York'],
@@ -25,15 +26,9 @@ abstract class BaseDataSourceTest extends TestCase
 		['id' => 40, 'name' => 'John Red', 'age' => 40, 'address' => 'Porto 53'],
 	];
 
-	/**
-	 * @var Ublaboo\DataGrid\DataSource\IDataSource
-	 */
-	protected $ds;
+	protected IDataSource $ds;
 
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
-	protected $grid;
+	protected DataGrid $grid;
 
 	public function testGetCount(): void
 	{
@@ -53,7 +48,6 @@ abstract class BaseDataSourceTest extends TestCase
 	{
 		Assert::equal($this->data, $this->getActualResultAsArray());
 	}
-
 
 	public function testFilterSingleColumn(): void
 	{
@@ -96,7 +90,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testFilterRangeMin(): void
 	{
-		$filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
+		$filter = new FilterRange($this->grid, 'a', 'b', 'age', '-');
 		$filter->setValue(['from' => 40]);
 		$this->ds->filter([$filter]);
 
@@ -109,7 +103,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testFilterRangeMax(): void
 	{
-		$filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
+		$filter = new FilterRange($this->grid, 'a', 'b', 'age', '-');
 		$filter->setValue(['to' => 30]);
 		$this->ds->filter([$filter]);
 
@@ -122,7 +116,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testFilterRangeMinMax(): void
 	{
-		$filter = new Ublaboo\DataGrid\Filter\FilterRange($this->grid, 'a', 'b', 'age', '-');
+		$filter = new FilterRange($this->grid, 'a', 'b', 'age', '-');
 		$filter->setValue(['from' => 12, 'to' => 30]);
 		$this->ds->filter([$filter]);
 
@@ -171,7 +165,6 @@ abstract class BaseDataSourceTest extends TestCase
 		], $result);
 	}
 
-
 	public function testSort(): void
 	{
 		$this->ds->sort(new Sorting(['name' => 'DESC']));
@@ -190,7 +183,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testFilterSelect(): void
 	{
-		$filter = new Ublaboo\DataGrid\Filter\FilterSelect($this->grid, 'a', 'b', ['John Red' => 'John Red'], 'name');
+		$filter = new FilterSelect($this->grid, 'a', 'b', ['John Red' => 'John Red'], 'name');
 		$filter->setValue('John Red');
 
 		$this->ds->filter([$filter]);
@@ -198,8 +191,7 @@ abstract class BaseDataSourceTest extends TestCase
 		Assert::equal([$this->data[5]], $this->getActualResultAsArray());
 	}
 
-
-	protected function getActualResultAsArray()
+	protected function getActualResultAsArray(): array
 	{
 		return array_values(
 			json_decode(

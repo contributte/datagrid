@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
@@ -11,15 +9,10 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 trait TDataGridAggregationFunction
 {
 
-	/**
-	 * @var array|ISingleColumnAggregationFunction[]
-	 */
-	private $aggregationFunctions = [];
+	/** @var array|ISingleColumnAggregationFunction[] */
+	private array $aggregationFunctions = [];
 
-	/**
-	 * @var IMultipleAggregationFunction|null
-	 */
-	private $multipleAggregationFunction = null;
+	private ?IMultipleAggregationFunction $multipleAggregationFunction = null;
 
 	/**
 	 * @return static
@@ -51,7 +44,6 @@ trait TDataGridAggregationFunction
 		return $this;
 	}
 
-
 	/**
 	 * @return static
 	 * @throws DataGridException
@@ -72,7 +64,6 @@ trait TDataGridAggregationFunction
 
 		return $this;
 	}
-
 
 	/**
 	 * @throws DataGridException
@@ -104,7 +95,6 @@ trait TDataGridAggregationFunction
 		}
 	}
 
-
 	/**
 	 * @throws DataGridException
 	 */
@@ -132,7 +122,6 @@ trait TDataGridAggregationFunction
 			}
 		}
 	}
-
 
 	/**
 	 * @throws DataGridException
@@ -162,12 +151,10 @@ trait TDataGridAggregationFunction
 		}
 	}
 
-
 	public function hasSomeAggregationFunction(): bool
 	{
 		return $this->aggregationFunctions !== [] || $this->multipleAggregationFunction !== null;
 	}
-
 
 	/**
 	 * @return array<ISingleColumnAggregationFunction>
@@ -177,9 +164,9 @@ trait TDataGridAggregationFunction
 		return $this->aggregationFunctions;
 	}
 
-
 	public function getMultipleAggregationFunction(): ?IMultipleAggregationFunction
 	{
 		return $this->multipleAggregationFunction;
 	}
+
 }

@@ -1,14 +1,14 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo;
+use Ublaboo\DataGrid\Column\Action;
 use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/TestingDataGridFactory.php';
@@ -16,27 +16,22 @@ require __DIR__ . '/../Files/TestingDataGridFactory.php';
 final class ColumnActionTest extends TestCase
 {
 
-	/**
-	 * @var DataGrid
-	 */
-	private $grid;
+	private DataGrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
+		$factory = new TestingDataGridFactory();
 		$this->grid = $factory->createTestingDataGrid();
 	}
 
-
-	public function render($column)
+	public function render(Action $column): string
 	{
-		$item = new Ublaboo\DataGrid\Row($this->grid, ['id' => 1, 'name' => 'John'], 'id');
+		$item = new Row($this->grid, ['id' => 1, 'name' => 'John'], 'id');
 
 		return (string) $column->render($item);
 	}
 
-
-	public function testActionDuplcitColumn(): void
+	public function testActionDuplicityColumn(): void
 	{
 		$this->grid->addAction('action', 'Do', 'doStuff!');
 
@@ -47,7 +42,6 @@ final class ColumnActionTest extends TestCase
 
 		Assert::exception($add_action, 'Ublaboo\DataGrid\Exception\DataGridException', 'There is already action at key [action] defined.');
 	}
-
 
 	public function testActionLink(): void
 	{
@@ -81,7 +75,6 @@ final class ColumnActionTest extends TestCase
 		);
 	}
 
-
 	public function testActionIcon(): void
 	{
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!');
@@ -95,7 +88,6 @@ final class ColumnActionTest extends TestCase
 		);
 	}
 
-
 	public function testActionClass(): void
 	{
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->setClass('btn');
@@ -107,7 +99,6 @@ final class ColumnActionTest extends TestCase
 		Assert::same('<a href="doStuff!?id=1">Do</a>', $this->render($action));
 	}
 
-
 	public function testActionTitle(): void
 	{
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!')->setTitle('hello');
@@ -117,7 +108,6 @@ final class ColumnActionTest extends TestCase
 			$this->render($action)
 		);
 	}
-
 
 	public function testActionConfirm(): void
 	{
@@ -130,18 +120,13 @@ final class ColumnActionTest extends TestCase
 		);
 	}
 
-
 	public function testActionRenderCondition(): void
 	{
-		$action = $this->grid->addAction('action1', 'Do', 'doStuff!')->setRenderCondition(function () {
-			return true;
-		});
+		$action = $this->grid->addAction('action1', 'Do', 'doStuff!')->setRenderCondition(fn () => true);
 
 		Assert::same('<a href="doStuff!?id=1" class="btn btn-xs btn-default btn-secondary">Do</a>', $this->render($action));
 
-		$action = $this->grid->addAction('action2', 'Do', 'doStuff!')->setRenderCondition(function () {
-			return false;
-		});
+		$action = $this->grid->addAction('action2', 'Do', 'doStuff!')->setRenderCondition(fn () => false);
 
 		Assert::same('', $this->render($action));
 	}

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -10,69 +8,30 @@ use UnexpectedValueException;
 class ApiDataSource implements IDataSource
 {
 
-	/**
-	 * @var array
-	 */
-	protected $data = [];
+	/** @var array */
+	protected array $data = [];
 
-	/**
-	 * @var string
-	 */
-	protected $url;
+	protected ?string $sortColumn = null;
 
-	/**
-	 * @var array
-	 */
-	protected $queryParams;
+	protected ?string $orderColumn = null;
 
-	/**
-	 * @var string|null
-	 */
-	protected $sortColumn;
+	protected ?int $limit = null;
 
-	/**
-	 * @var string|null
-	 */
-	protected $orderColumn;
+	protected ?int $offset = null;
 
-	/**
-	 * @var int|null
-	 */
-	protected $limit;
+	protected int $filterOne = 0;
 
-	/**
-	 * @var int|null
-	 */
-	protected $offset;
+	/** @var array */
+	protected array $filter = [];
 
-	/**
-	 * @var int
-	 */
-	protected $filterOne = 0;
-
-	/**
-	 * @var array
-	 */
-	protected $filter = [];
-
-
-	public function __construct(string $url, array $queryParams = [])
+	public function __construct(protected string $url, protected array $queryParams = [])
 	{
-		$this->url = $url;
-		$this->queryParams = $queryParams;
 	}
-
-
-	// *******************************************************************************
-	// *                          IDataSource implementation                         *
-	// *******************************************************************************
-
 
 	public function getCount(): int
 	{
 		return $this->getResponse(['count' => '']);
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -88,7 +47,6 @@ class ApiDataSource implements IDataSource
 			'one' => $this->filterOne,
 		]);
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -122,7 +80,6 @@ class ApiDataSource implements IDataSource
 		}
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -134,7 +91,6 @@ class ApiDataSource implements IDataSource
 		return $this;
 	}
 
-
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->offset = $offset;
@@ -142,7 +98,6 @@ class ApiDataSource implements IDataSource
 
 		return $this;
 	}
-
 
 	public function sort(Sorting $sorting): IDataSource
 	{
@@ -157,13 +112,10 @@ class ApiDataSource implements IDataSource
 		return $this;
 	}
 
-
 	/**
 	 * Get data of remote source
-	 *
-	 * @return mixed
 	 */
-	protected function getResponse(array $params = [])
+	protected function getResponse(array $params = []): mixed
 	{
 		$queryString = http_build_query($params + $this->queryParams);
 		$url = sprintf('%s?%s', $this->url, $queryString);
@@ -174,6 +126,7 @@ class ApiDataSource implements IDataSource
 			throw new UnexpectedValueException(sprintf('Could not open URL %s', $url));
 		}
 
-		return json_decode($content);
+		return json_decode($content, null, 512, JSON_THROW_ON_ERROR);
 	}
+
 }

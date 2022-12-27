@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Filter;
 
@@ -13,19 +11,13 @@ use UnexpectedValueException;
 class FilterMultiSelect extends FilterSelect
 {
 
-	/**
-	 * @var string
-	 */
-	protected $type = 'multi-select';
+	protected ?string $type = 'multi-select';
 
-	/**
-	 * @var array
-	 */
-	protected $attributes = [
+	/** @var array */
+	protected array $attributes = [
 		'class' => ['form-control', 'input-sm', 'selectpicker', 'form-control-sm'],
 		'data-selected-text-format' => ['count'],
 	];
-
 
 	public function __construct(
 		DataGrid $grid,
@@ -39,7 +31,6 @@ class FilterMultiSelect extends FilterSelect
 
 		$this->addAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
 	}
-
 
 	/**
 	 * Get filter condition
@@ -55,7 +46,6 @@ class FilterMultiSelect extends FilterSelect
 		return $return;
 	}
 
-
 	protected function addControl(
 		Container $container,
 		string $key,
@@ -66,7 +56,7 @@ class FilterMultiSelect extends FilterSelect
 		/**
 		 * Set some translated texts
 		 */
-		$form = $container->lookup('Nette\Application\UI\Form');
+		$form = $container->lookup(Form::class);
 
 		if (!$form instanceof Form) {
 			throw new UnexpectedValueException();
@@ -96,4 +86,5 @@ class FilterMultiSelect extends FilterSelect
 
 		return $input;
 	}
+
 }

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
@@ -22,7 +20,7 @@ final class DataGridTest extends TestCase
 		$grid = $factory->createTestingDataGrid()->getComponent('grid');
 		$grid->setRememberState(true);
 
-		Assert::exception(function() use ($grid): void {
+		Assert::exception(function () use ($grid): void {
 			$grid->handleResetFilter();
 		}, AbortException::class);
 	}
@@ -34,11 +32,11 @@ final class DataGridTest extends TestCase
 		$grid = $factory->createTestingDataGrid()->getComponent('grid');
 		$grid->setRememberState(false);
 
-		Assert::exception(function() use ($grid): void {
+		Assert::exception(function () use ($grid): void {
 			$grid->handleResetFilter();
 		}, AbortException::class);
 	}
 
 }
 
-(new DataGridTest)->run();
+(new DataGridTest())->run();
