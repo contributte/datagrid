@@ -2882,16 +2882,6 @@ class Datagrid extends Control
 	}
 
 
-	public function setGroupActionsConfirmDialog(string $confirmDialog): void
-	{
-		$this->groupActionsConfirmDialog = $confirmDialog;
-	}
-
-	public function getGroupActionsConfirmDialog(): ?string
-	{
-		return $this->groupActionsConfirmDialog;
-	}
-
 	protected function createSorting(array $sort, ?callable $sortCallback = null): Sorting
 	{
 		foreach ($sort as $key => $order) {
