@@ -331,7 +331,7 @@ abstract class Column extends FilterableColumn
 	 */
 	public function getAlign(): string
 	{
-		return $this->align ?? 'left';
+		return $this->align ?? 'start';
 	}
 
 	/**

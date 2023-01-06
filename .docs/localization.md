@@ -15,7 +15,7 @@ public function createComponentLocalizationGrid($name): Ublaboo\DataGrid\DataGri
 	$grid->setDataSource($this->ndb->table('ublaboo_example'));
 
 	$grid->addColumnNumber('id', 'Id')
-		->setAlign('left')
+		->setAlign('start')
 		->setSortable();
 
 	$grid->addColumnText('name', 'Name')
