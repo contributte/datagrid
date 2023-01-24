@@ -64,7 +64,7 @@ final class ItemDetailForm extends Container
 				throw new UnexpectedValueException();
 			}
 
-			$path = explode(self::NAME_SEPARATOR, $lookupPath);
+			$path = explode(self::NameSeparator, $lookupPath);
 
 			$this->httpPost = Arrays::get($form->getHttpData(), $path, null);
 		}

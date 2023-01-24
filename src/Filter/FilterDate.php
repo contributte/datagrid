@@ -18,20 +18,20 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 	{
 		$control = $container->addText($this->key, $this->name);
 
-		$control->setAttribute('data-provide', 'datepicker')
-			->setAttribute('data-date-orientation', 'bottom')
-			->setAttribute('data-date-format', $this->getJsFormat())
-			->setAttribute('data-date-today-highlight', 'true')
-			->setAttribute('data-date-autoclose', 'true');
+		$control->setHtmlAttribute('data-provide', 'datepicker')
+			->setHtmlAttribute('data-date-orientation', 'bottom')
+			->setHtmlAttribute('data-date-format', $this->getJsFormat())
+			->setHtmlAttribute('data-date-today-highlight', 'true')
+			->setHtmlAttribute('data-date-autoclose', 'true');
 
 		$this->addAttributes($control);
 
 		if ($this->grid->hasAutoSubmit()) {
-			$control->setAttribute('data-autosubmit-change', true);
+			$control->setHtmlAttribute('data-autosubmit-change', true);
 		}
 
 		if ($this->getPlaceholder() !== null) {
-			$control->setAttribute('placeholder', $this->getPlaceholder());
+			$control->setHtmlAttribute('placeholder', $this->getPlaceholder());
 		}
 	}
 

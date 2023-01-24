@@ -23,26 +23,26 @@ class FilterDateRange extends FilterRange implements IFilterDate
 
 		$from = $container->addText('from', $this->name);
 
-		$from->setAttribute('data-provide', 'datepicker')
-			->setAttribute('data-date-orientation', 'bottom')
-			->setAttribute('data-date-format', $this->getJsFormat())
-			->setAttribute('data-date-today-highlight', 'true')
-			->setAttribute('data-date-autoclose', 'true');
+		$from->setHtmlAttribute('data-provide', 'datepicker')
+			->setHtmlAttribute('data-date-orientation', 'bottom')
+			->setHtmlAttribute('data-date-format', $this->getJsFormat())
+			->setHtmlAttribute('data-date-today-highlight', 'true')
+			->setHtmlAttribute('data-date-autoclose', 'true');
 
 		$to = $container->addText('to', $this->nameSecond);
 
-		$to->setAttribute('data-provide', 'datepicker')
-			->setAttribute('data-date-orientation', 'bottom')
-			->setAttribute('data-date-format', $this->getJsFormat())
-			->setAttribute('data-date-today-highlight', 'true')
-			->setAttribute('data-date-autoclose', 'true');
+		$to->setHtmlAttribute('data-provide', 'datepicker')
+			->setHtmlAttribute('data-date-orientation', 'bottom')
+			->setHtmlAttribute('data-date-format', $this->getJsFormat())
+			->setHtmlAttribute('data-date-today-highlight', 'true')
+			->setHtmlAttribute('data-date-autoclose', 'true');
 
 		$this->addAttributes($from);
 		$this->addAttributes($to);
 
 		if ($this->grid->hasAutoSubmit()) {
-			$from->setAttribute('data-autosubmit-change', true);
-			$to->setAttribute('data-autosubmit-change', true);
+			$from->setHtmlAttribute('data-autosubmit-change', true);
+			$to->setHtmlAttribute('data-autosubmit-change', true);
 		}
 
 		$placeholders = $this->getPlaceholders();
@@ -51,13 +51,13 @@ class FilterDateRange extends FilterRange implements IFilterDate
 			$textFrom = reset($placeholders);
 
 			if ($textFrom) {
-				$from->setAttribute('placeholder', $textFrom);
+				$from->setHtmlAttribute('placeholder', $textFrom);
 			}
 
 			$textTo = end($placeholders);
 
 			if ($textTo && ($textTo !== $textFrom)) {
-				$to->setAttribute('placeholder', $textTo);
+				$to->setHtmlAttribute('placeholder', $textTo);
 			}
 		}
 	}
