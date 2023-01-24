@@ -19,7 +19,7 @@ use Nette\Forms\Controls\SubmitButton as FormsSubmitButton;
 use Nette\Forms\Form as NetteForm;
 use Nette\Forms\IControl;
 use Nette\Http\SessionSection;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
 use Ublaboo\DataGrid\AggregationFunction\TDataGridAggregationFunction;
 use Ublaboo\DataGrid\Column\Action;
@@ -195,7 +195,7 @@ class DataGrid extends Control
 	/** @var array */
 	protected array $redrawItem = [];
 
-	protected ?ITranslator $translator = null;
+	protected ?Translator $translator = null;
 
 	protected bool $forceFilterActive = false;
 
@@ -2225,14 +2225,14 @@ class DataGrid extends Control
 	/**
 	 * @return static
 	 */
-	public function setTranslator(ITranslator $translator): self
+	public function setTranslator(Translator $translator): self
 	{
 		$this->translator = $translator;
 
 		return $this;
 	}
 
-	public function getTranslator(): ITranslator
+	public function getTranslator(): Translator
 	{
 		if ($this->translator === null) {
 			$this->translator = new SimpleTranslator();
