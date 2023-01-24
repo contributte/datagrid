@@ -2,14 +2,14 @@
 
 namespace Ublaboo\DataGrid\Utils;
 
-use Nette\Database\ISupplementalDriver;
+use Nette\Database\Driver;
 use Nette\Database\Table\Selection;
 use ReflectionClass;
 
 final class NetteDatabaseSelectionHelper
 {
 
-	public static function getDriver(Selection $selection): ISupplementalDriver
+	public static function getDriver(Selection $selection): Driver
 	{
 		$connection = self::getContext($selection)->getConnection();
 
