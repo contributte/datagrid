@@ -112,7 +112,7 @@ if (typeof naja !== "undefined") {
 }
 
 
-var datagridFitlerMultiSelect, datagridGroupActionMultiSelect, datagridShiftGroupSelection, datagridSortable, datagridSortableTree, getEventDomPath,
+var datagridFilterMultiSelect, datagridGroupActionMultiSelect, datagridShiftGroupSelection, datagridSortable, datagridSortableTree, getEventDomPath,
 	indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 $(document).on('click', '[data-datagrid-confirm]:not(.ajax)', function(e) {
@@ -808,20 +808,30 @@ dataGridRegisterExtension('datagrid-toggle-inline-add', {
 	}
 });
 
-datagridFitlerMultiSelect = function() {
+datagridFilterMultiSelect = function() {
 	var select = $('.selectpicker').first();
 
 	if ($.fn.selectpicker) {
-		return $.fn.selectpicker.defaults = {
+		let defaults = $.fn.selectpicker.defaults = {
 			countSelectedText: select.data('i18n-selected'),
 			iconBase: '',
 			tickIcon: select.data('selected-icon-check')
 		};
+
+		$('.selectpicker')
+			.removeClass('form-select form-select-sm')
+			.addClass('form-control form-control-sm')
+			.selectpicker('destroy')
+			.selectpicker({
+				iconBase: 'fa'
+			});
+
+		return defaults;
 	}
 };
 
 $(function() {
-	return datagridFitlerMultiSelect();
+	return datagridFilterMultiSelect();
 });
 
 datagridGroupActionMultiSelect = function() {
@@ -855,12 +865,7 @@ $(function() {
 
 dataGridRegisterExtension('datagrid.fitlerMultiSelect', {
 	success: function() {
-		datagridFitlerMultiSelect();
-		if ($.fn.selectpicker) {
-			return $('.selectpicker').selectpicker({
-				iconBase: 'fa'
-			});
-		}
+		datagridFilterMultiSelect();
 	}
 });
 

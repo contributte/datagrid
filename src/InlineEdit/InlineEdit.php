@@ -176,7 +176,7 @@ class InlineEdit
 
 				default:
 					if ($control->getControl()->getAttribute('class') === null) {
-						$control->setAttribute('class', 'form-control input-sm form-control-sm');
+						$control->setAttribute('class', 'form-control form-control-sm');
 					}
 
 					break;
