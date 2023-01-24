@@ -25,7 +25,7 @@ abstract class Column extends FilterableColumn
 	/** @var callable|null */
 	protected $sortableCallback = null;
 
-	protected string $sort;
+	protected string $sort = '';
 
 	protected bool $templateEscaping = true;
 
@@ -259,7 +259,7 @@ abstract class Column extends FilterableColumn
 	 */
 	public function isSortedBy(): bool
 	{
-		return (bool) $this->sort;
+		return $this->sort !== '';
 	}
 
 	/**
