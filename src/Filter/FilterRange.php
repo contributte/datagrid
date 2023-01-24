@@ -42,13 +42,13 @@ class FilterRange extends OneColumnFilter
 			$text_from = reset($placeholders);
 
 			if ($text_from) {
-				$from->setAttribute('placeholder', $text_from);
+				$from->setHtmlAttribute('placeholder', $text_from);
 			}
 
 			$text_to = end($placeholders);
 
 			if ($text_to && ($text_to !== $text_from)) {
-				$to->setAttribute('placeholder', $text_to);
+				$to->setHtmlAttribute('placeholder', $text_to);
 			}
 		}
 	}

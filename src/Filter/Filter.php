@@ -157,9 +157,9 @@ abstract class Filter
 	protected function addAttributes(BaseControl $input): BaseControl
 	{
 		if ($this->grid->hasAutoSubmit()) {
-			$input->setAttribute('data-autosubmit', true);
+			$input->setHtmlAttribute('data-autosubmit', true);
 		} else {
-			$input->setAttribute('data-datagrid-manualsubmit', true);
+			$input->setHtmlAttribute('data-datagrid-manualsubmit', true);
 		}
 
 		foreach ($this->attributes as $key => $value) {
@@ -168,7 +168,7 @@ abstract class Filter
 				$value = implode(' ', $value);
 			}
 
-			$input->setAttribute($key, $value);
+			$input->setHtmlAttribute($key, $value);
 		}
 
 		return $input;

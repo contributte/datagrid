@@ -15,9 +15,9 @@ use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
+use Nette\Forms\Control as FormControl;
 use Nette\Forms\Controls\SubmitButton as FormsSubmitButton;
 use Nette\Forms\Form as NetteForm;
-use Nette\Forms\IControl;
 use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
@@ -1146,7 +1146,7 @@ class DataGrid extends Control
 				->setValidationScope([$inlineAddContainer]);
 			$inlineAddContainer->addSubmit('cancel', 'ublaboo_datagrid.cancel')
 				->setValidationScope(null)
-				->setAttribute('data-datagrid-cancel-inline-add', true);
+				->setHtmlAttribute('data-datagrid-cancel-inline-add', true);
 
 			$this->inlineAdd->onControlAdd($inlineAddContainer);
 			$this->inlineAdd->onControlAfterAdd($inlineAddContainer);
@@ -1233,7 +1233,7 @@ class DataGrid extends Control
 			}
 
 			try {
-				if (!$control instanceof IControl) {
+				if (!$control instanceof FormControl) {
 					throw new UnexpectedValueException();
 				}
 
