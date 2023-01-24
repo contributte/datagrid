@@ -17,7 +17,6 @@ abstract class GroupAction
 
 	protected string $class = 'form-control input-sm form-control-sm';
 
-	/** @var array */
 	protected array $attributes = [];
 
 	public function __construct(protected string $title)

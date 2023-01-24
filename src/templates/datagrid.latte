@@ -20,9 +20,9 @@
 		{form filter, class => 'ajax'}
 			{if $control->hasOuterFilterRendering()}
 				{block outer-filters}
-					<div class="row text-right datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
+					<div class="row text-end datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
 						<div class="col-sm-12">
-							<button class="btn btn-xs btn-primary" type="button" data-toggle="collapse" data-target="#datagrid-{$control->getFullName()}-row-filters">
+							<button class="btn btn-xs btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#datagrid-{$control->getFullName()}-row-filters">
 								<i n:block="icon-filter" class="{$iconPrefix}filter"></i> {='ublaboo_datagrid.show_filter'|translate}
 							</button>
 						</div>
@@ -58,7 +58,7 @@
 								{var $i = $i+1}
 							</div>
 							<div class="col-sm-12" n:if="!$control->hasAutoSubmit()">
-								<div class="text-right datagrid-manual-submit">
+								<div class="text-end datagrid-manual-submit">
 									{input $filter['filter']['submit']}
 								</div>
 							</div>
@@ -81,7 +81,7 @@
 										{elseif $form_control instanceof \Nette\Forms\Controls\SubmitButton}
 											{input $form_control, disabled => TRUE}
 										{elseif $form_control->getName() == 'group_action'}
-											{input $form_control, class => 'form-control input-sm form-control-sm', disabled => TRUE}
+											{input $form_control, class => 'form-control form-control-sm', disabled => TRUE}
 										{else}
 											{input $form_control}
 										{/if}
@@ -109,7 +109,7 @@
 									{/if}
 
 									<div class="btn-group">
-										<button type="button" class="btn btn-xs {$btnSecondaryClass} dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
+										<button type="button" class="btn btn-xs {$btnSecondaryClass} dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
 											<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
 										</button>
 										<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
@@ -175,7 +175,7 @@
 
 								<div class="datagrid-column-header-additions">
 									<div class="btn-group column-settings-menu" n:if="$control->canHideColumns()">
-										<a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">
+										<a class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">
 											<i n:block="icon-caret-down" class="{$iconPrefix}caret-down"></i>
 										</a>
 										<ul class="dropdown-menu dropdown-menu--grid">
@@ -394,10 +394,10 @@
 									<div class="col-pagination text-center">
 										{control paginator}
 									</div>
-									<div class="col-per-page text-right">
+									<div class="col-per-page text-end">
 										<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{='ublaboo_datagrid.reset_filter'|translate}</a>
 										{if $control->isPaginated()}
-											{input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'form-control input-sm form-control-sm'}
+											{input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'form-select form-select-sm'}
 											{input $filter['perPage_submit'], class => 'datagrid-per-page-submit'}
 										{/if}
 									</div>

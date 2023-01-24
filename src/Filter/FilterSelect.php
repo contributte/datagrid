@@ -13,6 +13,10 @@ class FilterSelect extends OneColumnFilter
 
 	protected bool $translateOptions = false;
 
+	protected array $attributes = [
+		'class' => ['form-select', 'form-select-sm'],
+	];
+
 	protected ?string $template = 'datagrid_filter_select.latte';
 
 	protected ?string $type = 'select';
