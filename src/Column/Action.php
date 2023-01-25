@@ -76,15 +76,11 @@ class Action extends Column
 			// No need to worry.
 		}
 
-		if (!empty($this->customHref)) {
-			$link = $this->getCustomHref($row);
-		} else {
-			$link = $this->createLink(
-				$this->grid,
-				$this->href,
-				$this->getItemParams($row, $this->params) + $this->parameters
-			);
-		}
+		$link = $this->getCustomHref($row) ?? $this->createLink(
+			$this->grid,
+			$this->href,
+			$this->getItemParams($row, $this->params) + $this->parameters
+		);
 
 		$a = Html::el('a')->href($link);
 
@@ -165,7 +161,7 @@ class Action extends Column
 	 * @return static
 	 * @throws DataGridException
 	 */
-	public function setCustomHref(null|string|callable $customHref): self
+	public function setCustomHref(string|callable $customHref): self
 	{
 		$this->checkPropertyStringOrCallable($customHref, 'customHref');
 
@@ -178,11 +174,15 @@ class Action extends Column
 	/**
 	 * Get customHref
 	 * @param Row $row
-	 * @return string
+	 * @return string|null
 	 * @throws DataGridException
 	 */
 	public function getCustomHref(Row $row): ?string
 	{
+		if (!isset($this->customHref)) {
+			return null;
+		}
+
 		/**
 		 * If user callback was used for setting action customHref, it has to return string
 		 */
