@@ -118,18 +118,14 @@ final class ColumnActionTest extends TestCase
 			$this->render($action)
 		);
 
-		$action = $this->grid->addAction('action2', 'Do')->setCustomHref(function($rowItem) {
-			return 'https://www.example.com/?name=' . $rowItem['name'];
-		});
+		$action = $this->grid->addAction('action2', 'Do')->setCustomHref(fn ($rowItem) => 'https://www.example.com/?name=' . $rowItem['name']);
 
 		Assert::same(
 			'<a href="https://www.example.com/?name=John" class="btn btn-xs btn-default btn-secondary">Do</a>',
 			$this->render($action)
 		);
 
-		$action = $this->grid->addAction('action3', 'Do')->setCustomHref(function($rowItem) {
-			return '/preview/user/?id=' . $rowItem['id'];
-		});
+		$action = $this->grid->addAction('action3', 'Do')->setCustomHref(fn ($rowItem) => '/preview/user/?id=' . $rowItem['id']);
 
 		Assert::same(
 			'<a href="/preview/user/?id=1" class="btn btn-xs btn-default btn-secondary">Do</a>',

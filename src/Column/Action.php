@@ -50,7 +50,6 @@ class Action extends Column
 	/** @var string|callable|null */
 	private $customHref;
 
-
 	public function __construct(
 		DataGrid $grid,
 		string $key,
@@ -156,8 +155,6 @@ class Action extends Column
 	}
 
 	/**
-	 * Set customHref
-	 * @param string|callable $customHref
 	 * @return static
 	 * @throws DataGridException
 	 */
@@ -170,11 +167,7 @@ class Action extends Column
 		return $this;
 	}
 
-
 	/**
-	 * Get customHref
-	 * @param Row $row
-	 * @return string|null
 	 * @throws DataGridException
 	 */
 	public function getCustomHref(Row $row): ?string
@@ -189,9 +182,9 @@ class Action extends Column
 		return $this->getPropertyStringOrCallableGetString($row, $this->customHref, 'customHref');
 	}
 
-
 	/**
 	 * Set attribute class
+	 *
 	 * @param string|callable $class
 	 * @return static
 	 * @throws DataGridException
