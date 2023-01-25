@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -16,10 +14,7 @@ use Ublaboo\DataGrid\Filter\FilterText;
 abstract class FilterableDataSource
 {
 
-	/**
-	 * @return mixed
-	 */
-	abstract protected function getDataSource();
+	abstract protected function getDataSource(): mixed;
 
 	abstract protected function applyFilterDate(FilterDate $filter): void;
 
@@ -32,7 +27,6 @@ abstract class FilterableDataSource
 	abstract protected function applyFilterMultiSelect(FilterMultiSelect $filter): void;
 
 	abstract protected function applyFilterSelect(FilterSelect $filter): void;
-
 
 	/**
 	 * {@inheritDoc}
@@ -69,4 +63,5 @@ abstract class FilterableDataSource
 			}
 		}
 	}
+
 }

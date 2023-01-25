@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Column;
 
@@ -25,87 +23,48 @@ class Action extends Column
 	use TLink;
 	use TRenderCondition;
 
-	/**
-	 * @var string
-	 */
-	public static $dataConfirmAttributeName = 'datagrid-confirm';
+	public static string $dataConfirmAttributeName = 'datagrid-confirm';
 
-	/**
-	 * @var string
-	 */
-	protected $href;
+	protected ?IConfirmation $confirmation = null;
 
-	/**
-	 * @var array
-	 */
-	protected $params;
+	/** @var array */
+	protected array $dataAttributes = [];
 
-	/**
-	 * @var IConfirmation|null
-	 */
-	protected $confirmation;
+	/** @var array */
+	protected array $attributes = [];
 
-	/**
-	 * @var array
-	 */
-	protected $dataAttributes = [];
+	/** @var array */
+	protected array $parameters = [];
 
-	/**
-	 * @var array
-	 */
-	protected $attributes = [];
-
-	/**
-	 * @var array
-	 */
-	protected $parameters = [];
-
-	/**
-	 * @var string|callable|null
-	 */
+	/** @var string|callable|null */
 	protected $icon;
 
-	/**
-	 * @var string|callable
-	 */
+	/** @var string|callable|null */
 	protected $class = '';
 
-	/**
-	 * @var bool
-	 */
-	protected $openInNewTab = false;
+	protected bool $openInNewTab = false;
 
-	/**
-	 * @var string|callable
-	 */
+	/** @var string|callable */
 	private $title;
 
-	/**
-	 * @var string|callable
-	 */
+	/** @var string|callable|null */
 	private $customHref;
 
 
 	public function __construct(
 		DataGrid $grid,
 		string $key,
-		string $href,
+		protected string $href,
 		string $name,
-		array $params
+		protected array $params
 	)
 	{
 		parent::__construct($grid, $key, '', $name);
 
-		$this->href = $href;
-		$this->params = $params;
 		$this->class = sprintf('btn btn-xs %s', $grid::$btnSecondaryClass);
 	}
 
-
-	/**
-	 * @return mixed
-	 */
-	public function render(Row $row)
+	public function render(Row $row): mixed
 	{
 		if (!$this->shouldBeRendered($row)) {
 			return null;
@@ -113,7 +72,8 @@ class Action extends Column
 
 		try {
 			return $this->useRenderer($row);
-		} catch (DataGridColumnRendererException $e) {
+		} catch (DataGridColumnRendererException) {
+			// No need to worry.
 		}
 
 		if (!empty($this->customHref)) {
@@ -165,7 +125,6 @@ class Action extends Column
 		return $a;
 	}
 
-
 	/**
 	 * @return static
 	 */
@@ -176,13 +135,11 @@ class Action extends Column
 		return $this;
 	}
 
-
 	/**
-	 * @param string|callable $title
 	 * @return static
 	 * @throws DataGridException
 	 */
-	public function setTitle($title): self
+	public function setTitle(string|callable $title): self
 	{
 		$this->checkPropertyStringOrCallable($title, 'title');
 
@@ -190,7 +147,6 @@ class Action extends Column
 
 		return $this;
 	}
-
 
 	/**
 	 * @throws DataGridException
@@ -203,14 +159,13 @@ class Action extends Column
 		return $this->getPropertyStringOrCallableGetString($row, $this->title, 'title');
 	}
 
-
 	/**
 	 * Set customHref
 	 * @param string|callable $customHref
 	 * @return static
 	 * @throws DataGridException
 	 */
-	public function setCustomHref($customHref): self
+	public function setCustomHref(null|string|callable $customHref): self
 	{
 		$this->checkPropertyStringOrCallable($customHref, 'customHref');
 
@@ -226,7 +181,7 @@ class Action extends Column
 	 * @return string
 	 * @throws DataGridException
 	 */
-	public function getCustomHref(Row $row)
+	public function getCustomHref(Row $row): ?string
 	{
 		/**
 		 * If user callback was used for setting action customHref, it has to return string
@@ -241,7 +196,7 @@ class Action extends Column
 	 * @return static
 	 * @throws DataGridException
 	 */
-	public function setClass($class): self
+	public function setClass(null|string|callable $class): self
 	{
 		$this->checkPropertyStringOrCallable($class, 'class');
 
@@ -249,7 +204,6 @@ class Action extends Column
 
 		return $this;
 	}
-
 
 	/**
 	 * @throws DataGridException
@@ -262,13 +216,11 @@ class Action extends Column
 		return $this->getPropertyStringOrCallableGetString($row, $this->class, 'class');
 	}
 
-
 	/**
-	 * @param string|callable $icon
 	 * @return static
 	 * @throws DataGridException
 	 */
-	public function setIcon($icon): self
+	public function setIcon(string|callable $icon): self
 	{
 		$this->checkPropertyStringOrCallable($icon, 'icon');
 
@@ -276,7 +228,6 @@ class Action extends Column
 
 		return $this;
 	}
-
 
 	/**
 	 * @throws DataGridException
@@ -289,7 +240,6 @@ class Action extends Column
 		return $this->getPropertyStringOrCallableGetString($row, $this->icon, 'icon');
 	}
 
-
 	/**
 	 * @return static
 	 */
@@ -299,7 +249,6 @@ class Action extends Column
 
 		return $this;
 	}
-
 
 	/**
 	 * @throws DataGridException
@@ -331,18 +280,15 @@ class Action extends Column
 		throw new DataGridException('Unsupported confirmation');
 	}
 
-
 	/**
-	 * @param mixed $value
 	 * @return static
 	 */
-	public function setDataAttribute(string $key, $value): self
+	public function setDataAttribute(string $key, mixed $value): self
 	{
 		$this->dataAttributes[$key] = $value;
 
 		return $this;
 	}
-
 
 	/**
 	 * @return static
@@ -354,14 +300,12 @@ class Action extends Column
 		return $this;
 	}
 
-
 	/**
-	 * @param string|callable|null $property
 	 * @throws DataGridException
 	 */
 	public function getPropertyStringOrCallableGetString(
 		Row $row,
-		$property,
+		string|callable|null $property,
 		string $name
 	): ?string
 	{
@@ -373,7 +317,7 @@ class Action extends Column
 			$value = call_user_func($property, $row->getItem());
 
 			if (!is_string($value)) {
-				throw new DataGridException("Action {$name} callback has to return a string");
+				throw new DataGridException(sprintf('Action %s callback has to return a string', $name));
 			}
 
 			return $value;
@@ -382,12 +326,10 @@ class Action extends Column
 		return $property;
 	}
 
-
 	public function isOpenInNewTab(): bool
 	{
 		return $this->openInNewTab;
 	}
-
 
 	/**
 	 * @return static
@@ -399,12 +341,10 @@ class Action extends Column
 		return $this;
 	}
 
-
 	/**
-	 * @param mixed $property
 	 * @throws DataGridException
 	 */
-	protected function checkPropertyStringOrCallable($property, string $name): void
+	protected function checkPropertyStringOrCallable(mixed $property, string $name): void
 	{
 		if (!is_string($property) && !is_callable($property) && $property !== null) {
 			throw new DataGridException(
@@ -413,9 +353,9 @@ class Action extends Column
 		}
 	}
 
-
 	protected function translate(string $message): string
 	{
 		return $this->grid->getTranslator()->translate($message);
 	}
+
 }

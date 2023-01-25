@@ -1,28 +1,22 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Utils;
 
-use Nette\Database\ISupplementalDriver;
+use Nette\Database\Driver;
 use Nette\Database\Table\Selection;
 use ReflectionClass;
 
 final class NetteDatabaseSelectionHelper
 {
 
-	public static function getDriver(Selection $selection): ISupplementalDriver
+	public static function getDriver(Selection $selection): Driver
 	{
 		$connection = self::getContext($selection)->getConnection();
 
 		return $connection->getSupplementalDriver();
 	}
 
-
-	/**
-	 * @return mixed
-	 */
-	public static function getContext(Selection $selection)
+	public static function getContext(Selection $selection): mixed
 	{
 		$reflection = new ReflectionClass($selection);
 

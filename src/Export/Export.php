@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Export;
 
@@ -22,61 +20,31 @@ class Export
 	use TButtonTitle;
 	use TButtonText;
 
-	/**
-	 * @var callable
-	 */
+	/** @var callable */
 	protected $callback;
 
-	/**
-	 * @var bool
-	 */
-	protected $ajax = false;
+	protected bool $ajax = false;
 
-	/**
-	 * @var bool
-	 */
-	protected $filtered;
+	protected ?Link $link = null;
 
-	/**
-	 * @var Link|null
-	 */
-	protected $link;
+	/** @var array */
+	protected array $columns = [];
 
-	/**
-	 * @var array
-	 */
-	protected $columns = [];
+	protected ?string $confirmDialog = null;
 
-	/**
-	 * @var DataGrid
-	 */
-	protected $grid;
-
-	/**
-	 * @var string|null
-	 */
-	protected $confirmDialog = null;
-
-	/**
-	 * @var string|null
-	 */
-	protected $target = null;
-
+	protected ?string $target = null;
 
 	public function __construct(
-		DataGrid $grid,
+		protected DataGrid $grid,
 		string $text,
 		callable $callback,
-		bool $filtered
+		protected bool $filtered
 	)
 	{
-		$this->grid = $grid;
 		$this->text = $text;
 		$this->callback = $callback;
-		$this->filtered = $filtered;
 		$this->title = $text;
 	}
-
 
 	public function render(): Html
 	{
@@ -106,7 +74,6 @@ class Export
 		return $a;
 	}
 
-
 	/**
 	 * @return static
 	 */
@@ -116,7 +83,6 @@ class Export
 
 		return $this;
 	}
-
 
 	/**
 	 * Tell export which columns to use when exporting data
@@ -130,7 +96,6 @@ class Export
 		return $this;
 	}
 
-
 	/**
 	 * Get columns for export
 	 */
@@ -138,7 +103,6 @@ class Export
 	{
 		return $this->columns;
 	}
-
 
 	/**
 	 * Export signal url
@@ -152,7 +116,6 @@ class Export
 		return $this;
 	}
 
-
 	/**
 	 * Tell export whether to be called via ajax or not
 	 *
@@ -165,12 +128,10 @@ class Export
 		return $this;
 	}
 
-
 	public function isAjax(): bool
 	{
 		return $this->ajax;
 	}
-
 
 	/**
 	 * Is export filtered?
@@ -180,7 +141,6 @@ class Export
 		return $this->filtered;
 	}
 
-
 	/**
 	 * Call export callback
 	 */
@@ -189,15 +149,14 @@ class Export
 		($this->callback)($data, $this->grid);
 	}
 
-
 	/**
 	 * Adds target to html:a [_blank, _self, _parent, _top]
-	 * @param string|null $target
 	 */
-	public function setTarget($target = null): void
+	public function setTarget(?string $target = null): void
 	{
 		if (in_array($target, ['_blank', '_self', '_parent', '_top'], true)) {
 			$this->target = $target;
 		}
 	}
+
 }

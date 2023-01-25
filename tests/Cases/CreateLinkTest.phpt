@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
@@ -18,17 +16,13 @@ final class CreateLinkTest extends TestCase
 
 	use TLink;
 
-	/**
-	 * @var DataGrid
-	 */
-	private $grid;
+	private DataGrid $grid;
 
 	public function setUp(): void
 	{
 		$factory = new TestingDataGridFactoryRouter();
 		$this->grid = $factory->createTestingDataGrid()->getComponent('grid');
 	}
-
 
 	public function testActionLink(): void
 	{
@@ -49,7 +43,7 @@ final class CreateLinkTest extends TestCase
 		Assert::same('/index.php?id=1&action=edit&presenter=Test', $link);
 	}
 
-	}
+}
 
 
 (new CreateLinkTest())->run();

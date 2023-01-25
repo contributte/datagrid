@@ -111,7 +111,7 @@ There is how the default FilterText template looks like:
 <div class="row">
 	{label $input class =>; 'col-sm-3 control-label' /}
 	<div class="col-sm-9">
-		{input $input, class => 'form-control input-sm', data-autosubmit => true}
+		{input $input, class => 'form-control form-control-sm', data-autosubmit => true}
 	</div>
 </div>
 

@@ -13,7 +13,7 @@
 <div class="datagrid-tree-item-children datagrid-tree" n:snippet="table" n:block="data" {if $control->isSortable()}data-sortable-tree data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/if}>
 	{snippetArea items}
 		<div class="datagrid-tree-item datagrid-tree-header" n:snippet="item-header">
-			<div class="text-right" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
+			<div class="text-end" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
 				<span n:if="$toolbarButtons">
 					{foreach $toolbarButtons as $toolbarButton}{$toolbarButton->renderButton()}{/foreach}
 				</span>
@@ -30,7 +30,7 @@
 					<div class="datagrid-tree-item-right-columns">
 						{foreach $columns as $key => $column}
 							{continueIf $iterator->isFirst()}
-							<div class="datagrid-tree-item-right-columns-column col-{$column->getColumnName()} text-{$column->hasAlign() ? $column->getAlign() : 'left'}">
+							<div class="datagrid-tree-item-right-columns-column col-{$column->getColumnName()} text-{$column->hasAlign() ? $column->getAlign() : 'start'}">
 								<strong>{$column->getName()|translate}</strong>
 							</div>
 						{/foreach}
@@ -65,7 +65,7 @@
 			<div n:class="$hasChildren ? has-children, 'datagrid-tree-item'" data-id="{$row->getId()}" n:snippet="item-{$row->getId()}">
 				<div n:class="datagrid-tree-item-content, $row->getControlClass()" data-id="{$row->getId()}" data-has-children="{$hasChildren ? true : false}">
 					<div class="datagrid-tree-item-left">
-						<a n:href="getChildren! parent => $row->getId()" data-toggle-tree="true" n:class="!$hasChildren ? hidden, 'chevron ajax'">
+						<a n:href="getChildren! parent => $row->getId()" data-bs-toggle-tree="true" n:class="!$hasChildren ? hidden, 'chevron ajax'">
 							<i n:block="icon-chevron" class="{$iconPrefix}chevron-right"></i>
 						</a>
 						{foreach $columns as $key => $column}
@@ -94,7 +94,7 @@
 							{foreach $columns as $key => $column}
 								{continueIf $iterator->isFirst()}
 
-								<div class="datagrid-tree-item-right-columns-column text-{$column->hasAlign() ? $column->getAlign() : 'left'}">
+								<div class="datagrid-tree-item-right-columns-column text-{$column->hasAlign() ? $column->getAlign() : 'start'}">
 									{var $col = 'col-' . $key}
 									{php $column = $row->applyColumnCallback($key, clone $column)}
 

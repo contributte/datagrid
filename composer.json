@@ -34,7 +34,7 @@
 		}
 	},
 	"require": {
-		"php": ">=7.2",
+		"php": ">=8.0",
 		"contributte/application": "^0.5.0",
 		"nette/di": "^3.0.0",
 		"nette/forms": "^3.1.3",
@@ -42,19 +42,20 @@
 		"symfony/property-access": "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0"
 	},
 	"require-dev": {
+		"contributte/qa": "^0.3.0",
 		"dibi/dibi": "^3.0.0 || ^4.0.0",
+		"doctrine/annotations": "^1.12.1",
 		"doctrine/cache": "^1.11.0",
 		"doctrine/orm": "^2.11.1",
-		"doctrine/annotations": "^1.12.1",
 		"elasticsearch/elasticsearch": "^7.1",
-		"contributte/code-rules": "^1.1.0",
 		"mockery/mockery": "^1.3.3",
 		"nette/database": "^3.0.2",
 		"nette/tester": "^2.3.4",
 		"nextras/dbal": "^3.0.1 || ^4.0",
 		"nextras/orm": "^3.1.0 || ^4.0",
-		"ninjify/coding-standard": "^0.12.1",
+		"phpstan/phpstan-deprecation-rules": "^1.1",
 		"phpstan/phpstan-nette": "^1.0.0",
+		"phpstan/phpstan-strict-rules": "^1.4",
 		"tharos/leanmapper": "^3.4.2 || ^4.0.0",
 		"tracy/tracy": "^2.6.3"
 	},
@@ -69,7 +70,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "6.10.x-dev"
+			"dev-master": "7.x-dev"
 		}
 	}
 }

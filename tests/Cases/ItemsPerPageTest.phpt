@@ -1,46 +1,43 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 /**
  * TEST: ItemsPerPageTest
+ *
  * @testCase Ublaboo\DataGrid\Tests\Cases\ItemsPerPageTest
  */
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use Tester;
-use Ublaboo;
+use Tester\Assert;
+use Tester\TestCase;
+use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Localization\SimpleTranslator;
+use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/TestingDataGridFactory.php';
 
 
-class ItemsPerPageTest extends Tester\TestCase
+class ItemsPerPageTest extends TestCase
 {
 
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
-	private $grid;
-
+	private DataGrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
+		$factory = new TestingDataGridFactory();
 		$this->grid = $factory->createTestingDataGrid();
 	}
-
 
 	public function testGetPerPage(): void
 	{
 		$this->grid->setItemsPerPageList([10, 20, 50], false);
 
 		$this->grid->perPage = 20;
-		Tester\Assert::same(20, $this->grid->getPerPage());
+		Assert::same(20, $this->grid->getPerPage());
 
 		$this->grid->perPage = 'all';
-		Tester\Assert::same(10, $this->grid->getPerPage());
+		Assert::same(10, $this->grid->getPerPage());
 	}
 
 	public function testGetPerPageAll(): void
@@ -48,15 +45,15 @@ class ItemsPerPageTest extends Tester\TestCase
 		$this->grid->setItemsPerPageList([10, 20, 50], true);
 
 		$this->grid->perPage = 20;
-		Tester\Assert::same(20, $this->grid->getPerPage());
+		Assert::same(20, $this->grid->getPerPage());
 
 		$this->grid->perPage = 'all';
-		Tester\Assert::same('all', $this->grid->getPerPage());
+		Assert::same('all', $this->grid->getPerPage());
 	}
 
 	public function testGetPerPageAllTranslated(): void
 	{
-		$translator = new Ublaboo\DataGrid\Localization\SimpleTranslator([
+		$translator = new SimpleTranslator([
 			'ublaboo_datagrid.all' => 'všechny',
 		]);
 		$this->grid->setTranslator($translator);
@@ -64,11 +61,12 @@ class ItemsPerPageTest extends Tester\TestCase
 		$this->grid->setItemsPerPageList([10, 20, 50], true);
 
 		$this->grid->perPage = 20;
-		Tester\Assert::same(20, $this->grid->getPerPage());
+		Assert::same(20, $this->grid->getPerPage());
 
 		$this->grid->perPage = 'all';
-		Tester\Assert::same('all', $this->grid->getPerPage());
+		Assert::same('all', $this->grid->getPerPage());
 	}
+
 }
 
 $test = new ItemsPerPageTest();
