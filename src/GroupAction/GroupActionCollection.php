@@ -22,7 +22,6 @@ class GroupActionCollection
 
 	protected ?string $groupActionsConfirmDialog = null;
 
-
 	public function __construct(protected Datagrid $datagrid)
 	{
 	}

@@ -274,8 +274,6 @@ class Datagrid extends Control
 
 	protected bool $showSelectedRowsCount = true;
 
-	protected ?string $groupActionsConfirmDialog;
-
 	private ?string $customPaginatorTemplate = null;
 
 	private ?string $componentFullName = null;
@@ -2880,7 +2878,6 @@ class Datagrid extends Control
 	{
 		$this->customPaginatorTemplate = $templateFile;
 	}
-
 
 	protected function createSorting(array $sort, ?callable $sortCallback = null): Sorting
 	{
