@@ -2,7 +2,7 @@
 
 namespace Ublaboo\DataGrid\DataSource;
 
-use Elasticsearch\Client;
+use Elastic\Elasticsearch\Client;
 use RuntimeException;
 use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
@@ -180,9 +180,9 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 		return $this;
 	}
 
-	protected function getDataSource(): Client
+	protected function getDataSource(): SearchParamsBuilder
 	{
-		return $this->client;
+		return $this->searchParamsBuilder;
 	}
 
 }
