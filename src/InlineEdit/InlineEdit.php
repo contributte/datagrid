@@ -46,7 +46,7 @@ class InlineEdit
 	/** @var array|callable[] */
 	public array $onCustomRedraw = [];
 
-	protected mixed $itemID;
+	protected mixed $itemID = null;
 
 	/**
 	 * Inline adding - render on the top or in the bottom?
