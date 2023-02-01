@@ -8,6 +8,9 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\AST\PathExpression;
+use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Tools\Setup;
 use Ublaboo;
 use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
@@ -32,6 +35,11 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 		$queryBuilder = $entityManager->getRepository('Ublaboo\\DataGrid\\Tests\\Cases\\DataSources\\User')->createQueryBuilder('e');
 
 		$this->ds = new DoctrineDataSource($queryBuilder, 'id');
+		$this->ds->setQueryHint(Query::HINT_CUSTOM_OUTPUT_WALKER, SortableNullsWalker::class);
+		$this->ds->setQueryHint('sortableNulls.fields', [
+			'e.name' => SortableNullsWalker::NULLS_LAST,
+		]);
+
 		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
 		$this->grid = $factory->createTestingDataGrid();
 	}
@@ -120,5 +128,47 @@ class User
 	}
 
 }
+
+/**
+ * @see https://gist.github.com/doctrinebot/ccd63ae93fb80415323d
+ */
+class SortableNullsWalker extends SqlWalker
+{
+
+	public const NULLS_FIRST = 'NULLS FIRST';
+	public const NULLS_LAST = 'NULLS LAST';
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function walkOrderByItem($orderByItem)
+	{
+		$sql = parent::walkOrderByItem($orderByItem);
+		$hint = $this->getQuery()->getHint('sortableNulls.fields');
+		$expr = $orderByItem->expression;
+		$type = strtoupper($orderByItem->type);
+
+		if (!is_array($hint) || !count($hint)) {
+			return $sql;
+		}
+
+		if (!$expr instanceof PathExpression || $expr->type !== PathExpression::TYPE_STATE_FIELD) {
+			return $sql;
+		}
+
+		$index = $expr->identificationVariable.'.'.$expr->field;
+
+		if (!isset($hint[$index])) {
+			return $sql;
+		}
+
+		$search = $this->walkPathExpression($expr).' '.$type;
+		$sql = str_replace($search, $search.' '.$hint[$index], $sql);
+
+		return $sql;
+	}
+}
+
 $test_case = new DoctrineDataSourceTest();
 $test_case->run();

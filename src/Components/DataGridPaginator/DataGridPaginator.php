@@ -35,6 +35,11 @@ class DataGridPaginator extends Control
 	private $iconPrefix;
 
 	/**
+	 * @var string
+	 */
+	private $btnSecondaryClass;
+
+	/**
 	 * @var Paginator
 	 */
 	private $paginator;
@@ -47,11 +52,12 @@ class DataGridPaginator extends Control
 
 	public function __construct(
 		ITranslator $translator,
-		string $iconPrefix = 'fa fa-'
-	)
-	{
+		string $iconPrefix = 'fa fa-',
+		string $btnSecondaryClass = 'btn-default btn-secondary'
+	) {
 		$this->translator = $translator;
 		$this->iconPrefix = $iconPrefix;
+		$this->btnSecondaryClass = $btnSecondaryClass;
 	}
 
 
@@ -129,6 +135,7 @@ class DataGridPaginator extends Control
 		}
 
 		$this->getTemplate()->iconPrefix = $this->iconPrefix;
+		$this->getTemplate()->btnSecondaryClass = $this->btnSecondaryClass;
 		$this->getTemplate()->originalTemplate = $this->getOriginalTemplateFile();
 		$this->getTemplate()->setFile($this->getTemplateFile());
 		$this->getTemplate()->render();

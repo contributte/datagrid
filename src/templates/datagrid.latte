@@ -93,9 +93,11 @@
 							{/if}
 
 							<div class="datagrid-toolbar" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
+								{snippet toolbarButtons}
 								<span n:if="$toolbarButtons" n:snippet="toolbar">
 									{foreach $toolbarButtons as $toolbar_button}{$toolbar_button->renderButton()}{/foreach}
 								</span>
+								{/snippet}
 
 								<span class="datagrid-exports" n:if="$exports" n:snippet="exports" n:block="exports">
 									{foreach $exports as $export}{$export->render()}{/foreach}
@@ -107,7 +109,7 @@
 									{/if}
 
 									<div class="btn-group">
-										<button type="button" class="btn btn-xs btn-default btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
+										<button type="button" class="btn btn-xs {$btnSecondaryClass} dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
 											<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
 										</button>
 										<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
@@ -301,7 +303,7 @@
 													{/if}
 												{/if}
 											{/foreach}
-											<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
+											<span class="handle-sort btn btn-xs {$btnSecondaryClass}" n:if="$control->isSortable()">
 												<i n:block="icon-arrows-v" class="{$iconPrefix}arrows-v {$iconPrefix}arrows-alt-v"></i>
 											</span>
 											{if $inlineEdit && $row->hasInlineEdit()}

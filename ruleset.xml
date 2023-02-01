@@ -11,6 +11,7 @@
 		<exclude name="SlevomatCodingStandard.Files.LineLength.LineTooLong"/>
 		<exclude name="SlevomatCodingStandard.Functions.RequireMultiLineCall.RequiredMultiLineCall"/>
 		<exclude name="SlevomatCodingStandard.ControlStructures.RequireMultiLineTernaryOperator.MultiLineTernaryOperatorNotUsed"/>
+		<exclude name="SlevomatCodingStandard.Classes.RequireAbstractOrFinal.ClassNeitherAbstractNorFinal"/>
 	</rule>
 
 	<!-- Specific rules -->
