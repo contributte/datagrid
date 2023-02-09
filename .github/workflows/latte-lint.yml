@@ -1,0 +1,17 @@
+name: "Latte Lint"
+
+on:
+  pull_request:
+
+  push:
+    branches: ["*"]
+
+  schedule:
+    - cron: "0 8 * * 1"
+
+jobs:
+  latte-lint:
+    name: "Latte Lint"
+    uses: contributte/.github/.github/workflows/latte-lint.yml@v1
+    with:
+      php: "8.2"
