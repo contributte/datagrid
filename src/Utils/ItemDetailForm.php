@@ -16,7 +16,7 @@ final class ItemDetailForm extends Container
 	private $callableSetContainer;
 
 	/** @var ?array */
-	private ?array $httpPost;
+	private ?array $httpPost = null;
 
 	/** @var array<bool> */
 	private array $containerSetByName = [];
