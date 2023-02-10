@@ -705,7 +705,6 @@ class DataGrid extends Control
 		$template->show_default_sort_button = $this->isSortButtonActive();
 		$template->originalTemplate = $this->getOriginalTemplateFile();
 		$template->iconPrefix = static::$iconPrefix;
-		$template->iconPrefix = static::$iconPrefix;
 		$template->itemsDetail = $this->itemsDetail;
 		$template->columnsVisibility = $this->getColumnsVisibility();
 		$template->columnsSummary = $this->columnsSummary;
@@ -1387,7 +1386,7 @@ class DataGrid extends Control
 		return $is_filter || $this->forceFilterActive;
 	}
 
-	
+
     /**
      * @return bool
      */
@@ -3563,7 +3562,7 @@ class DataGrid extends Control
 		return $this->getPresenter();
 	}
 
-	
+
     /**
      * @param  bool  $useDefaultSortAfterSortingEmpty
      */
