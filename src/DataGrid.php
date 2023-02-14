@@ -105,7 +105,7 @@ class DataGrid extends Control
 	/**
 	 * @var string
 	 */
-	public static $iconPrefix = 'fa fa-';
+	public static $iconPrefix = 'fas fa-';
 
 	/**
 	 * Default form method
@@ -1067,7 +1067,8 @@ s	 */
 		string $name,
 		string $target,
 		string $form = null,
-		?callable $data = null
+		?callable $data = null,
+		?callable $modalTitle = null
 	) : Action
 	{
 		$this->addActionCheck($key);
@@ -1080,7 +1081,7 @@ s	 */
 		$action->setDataAttribute("toggle","modal")
 		       ->setDataAttribute("target",$target)
 		       ->setDataAttribute("form", $form)
-		       ->setDataAttribute("pv", $data);
+		       ->setDataAttribute("pv", $data)->setDataAttribute("title",$modalTitle);
 		return $this->actions[$key] = $action;
 	}
 
@@ -1134,6 +1135,14 @@ s	 */
 	public function removeAction(string $key): self
 	{
 		unset($this->actions[$key]);
+
+		return $this;
+	}
+
+	public function removeActions() : self {
+		foreach ($this->actions as $key => $action){
+			unset($this->actions[$key]);
+		}
 
 		return $this;
 	}
@@ -1298,7 +1307,7 @@ s	 */
 		);
 	}
 
-	public function addFilterDateSelect($key, $name, $column = null, array $options = [])
+	public function addFilterDateSelect($key, $name, $column = null, array $options = []): FilterDateSelect
 	{
 		$column = $column ?: $key;
 
@@ -1309,6 +1318,24 @@ s	 */
 		$this->addFilterCheck($key);
 
 		return $this->filters[$key] = new FilterDateSelect($this, $key, $name, $column, $options);
+	}
+
+	public function setFilterCompany(int $company_id) : self
+	{
+		if(!($presenter = $this->getPresenterIfExists())) {
+			throw new Nette\InvalidStateException("To use filter ajax search, datagrid must be connected to presenter!");
+		}
+		$ses = $presenter->getSession(\Webtec\UI\Forms\Form::SESSION_KEY);
+
+		foreach ($this->filters as $filter){
+			if(property_exists($filter, "metadataKey")){
+				$newData = $ses[$filter->metadataKey] + ["company_id" =>$company_id];
+				$newKey = $filter->metadataKey."_".$company_id;
+				$ses[$newKey] = $newData;
+				$filter->setAttribute("data-metadata-key",$newKey);
+			}
+		}
+		return $this;
 	}
 
 	/**
@@ -1377,6 +1404,15 @@ s	 */
 	public function removeFilter(string $key): self
 	{
 		unset($this->filters[$key]);
+
+		return $this;
+	}
+
+	public function removeFilters(): self
+	{
+		foreach($this->filters as $key => $filter) {
+			unset($this->filters[$key]);
+		}
 
 		return $this;
 	}
@@ -2037,7 +2073,7 @@ s	 */
 		return $this->toolbarButtons[$href] = new ToolbarButton($this, $href, $text, $params);
 	}
 
-	public function addModalToolbarButton(string $href, string $text, string $target, string $form, ?callable $data = null) : ToolbarButton
+	public function addModalToolbarButton(string $href, string $text, string $target, string $form, ?callable $data = null, ?string $modalTitle = null) : ToolbarButton
 	{
 		if (isset($this->toolbarButtons[$href])) {
 			throw new DataGridException(
@@ -2049,7 +2085,8 @@ s	 */
 			"data-toggle" => "modal",
 			"data-target" => $target,
 			"data-form" => $form,
-			"data-pv"=>$data
+			"data-pv"=>$data,
+			"data-title" => $modalTitle,
 		]);
 		return $this->toolbarButtons[$href] = $button;
 	}
@@ -2187,12 +2224,7 @@ s	 */
 		$this->reloadTheWholeGrid();
 	}
 
-
-	public function handleResetFilter(): void
-	{
-		/**
-		 * Session stuff
-		 */
+	public function resetFilter() : void {
 		$this->deleteSessionData('_grid_page');
 
 		if ($this->defaultFilterUseOnReset) {
@@ -2202,21 +2234,6 @@ s	 */
 		if ($this->defaultSortUseOnReset) {
 			$this->deleteSessionData('_grid_has_sorted');
 		}
-
-		/*foreach (array_keys($this->getSessionData()) as $key) {
-			if (!in_array($key, [
-				'_grid_perPage',
-				'_grid_sort',
-				'_grid_page',
-				'_grid_has_filtered',
-				'_grid_has_sorted',
-				'_grid_hidden_columns',
-				'_grid_hidden_columns_manipulated',
-			], true)) {
-				$this->deleteSessionData((string) $key);
-			}
-		}*/
-		//bugfix
 
 		foreach($this->getSessionData() as $key => $value){
 			if (!in_array($key, [
@@ -2233,7 +2250,12 @@ s	 */
 		}
 
 		$this->filter = [];
+	}
 
+
+	public function handleResetFilter(): void
+	{
+		$this->resetFilter();
 		$this->reloadTheWholeGrid();
 	}
 
@@ -3344,14 +3366,23 @@ s	 */
 
 	/**
 	 * @param bool $visible
+	 * @param array|null $columnKeys
 	 *
 	 * @return array<Column>
 	 * @internal
 	 */
-	public function getColumns($visible = true): array
+	public function getColumns(bool $visible = true, ?array $columnKeys = null): array
 	{
 		$return = $this->columns;
 		if(!$visible){
+			if($columnKeys !== null){
+				foreach ($this->columns as $key => $column){
+					if(!in_array($key, $columnKeys)){
+						unset($return[$key]);
+					}
+				}
+			}
+
 			return  $return;
 		}
 		try {

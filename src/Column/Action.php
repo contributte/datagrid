@@ -151,6 +151,13 @@ class Action extends Column
 		}
 
 		if ($this->attributes !== []) {
+			foreach ($this->attributes as $k => $v){
+				if(!is_callable($v)){
+					continue;
+				}
+				$this->attributes[$k] = $v($row->getItem());
+			}
+			
 			$a->addAttributes($this->attributes);
 		}
 

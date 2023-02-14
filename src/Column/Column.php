@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Column;
 
+use Kubomikita\Utils\Strings;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
 use Ublaboo\DataGrid\Row;
@@ -564,7 +565,7 @@ abstract class Column extends FilterableColumn
 	/**
 	 * Method called from datagrid template, set appropriate classes and another attributes
 	 */
-	public function getElementForRender(string $tag, string $key, ?Row $row = null): Html
+	public function getElementForRender(string $tag, string $key, ?Row $row = null/*, bool $allowDataAttrs = false*/): Html
 	{
 		$el = isset($this->elementCache[$tag])
 			? clone $this->elementCache[$tag]
@@ -579,6 +580,14 @@ abstract class Column extends FilterableColumn
 
 			$el->appendAttribute('class', $class);
 		}
+
+		/*if(!$allowDataAttrs){
+			foreach ($el->attrs as $k => $v) {
+				if(str_starts_with($k, "data-")){
+					$el->removeAttribute($k);
+				}
+			}
+		}*/
 
 		$el->appendAttribute('class', sprintf('text-%s', $this->getAlign()));
 		$el->appendAttribute("class", $this->getColumnClass());

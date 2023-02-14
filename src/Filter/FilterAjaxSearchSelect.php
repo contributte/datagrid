@@ -40,7 +40,7 @@ class FilterAjaxSearchSelect extends FilterSelect {
 		string $key,
 		string $name,
 		string $column,
-		string $metadataKey,
+		public string $metadataKey,
 		?callable $selectedCallback = null
 	) {
 		parent::__construct( $grid, $key, $name, [], $column );
