@@ -46,7 +46,7 @@ class MultiAction extends Column
 	{
 		$button = Html::el('button')
 			->setAttribute('type', 'button')
-			->data('toggle', 'dropdown');
+			->data('bs-toggle', 'dropdown');
 
 		$this->tryAddIcon($button, $this->getIcon(), $this->getName());
 
