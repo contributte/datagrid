@@ -51,7 +51,8 @@ Give us a star, it makes us so happy. Thanks ⭐.️
 
 | State       | Version   | Branch   | Nette  | PHP     |
 |-------------|-----------|----------|--------|---------|
-| dev         | `^6.7.0`  | `master` | `3.0+` | `>=7.2` |
+| dev         | `^7.0.0`  | `master` | `3.0+` | `>=8.0` |
+| stable      | `^6.7.0`  | `master` | `3.0+` | `>=7.2` |
 | stable      | `^6.6.0`  | `master` | `3.0+` | `>=7.2` |
 | stable      | `^5.7.1`  | `v5.x`   | `2.3`  | `^5.6`  |
 | stable      | `^4.4.22` | `v5.x`   | `2.3`  | `^5.6`  |
