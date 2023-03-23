@@ -3325,7 +3325,7 @@ class DataGrid extends Control
 	}
 
 
-	private function getPresenterInstance(): Presenter
+	protected function getPresenterInstance(): Presenter
 	{
 		return $this->getPresenter();
 	}
