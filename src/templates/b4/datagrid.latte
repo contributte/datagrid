@@ -19,7 +19,7 @@
 <!-- Modal -->
 <div class="modal fade" id="multipleColumnselect_{$control->name}" tabindex="-1" aria-labelledby="multipleColumnselect_{$control->name}">
 	<div class="modal-dialog modal-dialog-sm">
-		<div class="modal-content">
+		<div class="modal-content" n:snippet="multipleColumnSelect">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel">Výběr sloupců</h5>
 				 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -35,14 +35,15 @@
 							<div class="col-7 mx-0">
 								<div class="row mx-0 px-0 justify-content-end">
 									<div class="col-6 px-0">
-										<a n:href="showAllColumns!" class="btn btn-xs btn-primary w-100 ajax" data-dismiss="modal"><i n:block="icon-eye" class="{$iconPrefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
+										<a n:href="showAllColumns!" class="btn btn-xs btn-primary w-100 ajax" dismiss="modal" onclick="$('#multipleColumnselect_{$control->name|noescape}').modal('hide')"><i n:block="icon-eye" class="{$iconPrefix}eye"></i> {='ublaboo_datagrid.show_all_columns'|translate}</a>
 									</div>
 									<div class="col-6 pl-2 pr-0" n:if="$control->hasSomeColumnDefaultHide()">
-										<a n:href="showDefaultColumns!" class="btn btn-xs btn-primary w-100 btn ajax" data-dismiss="modal"><i n:block="icon-repeat" class="{$iconPrefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
+										<a n:href="showDefaultColumns!" class="btn btn-xs btn-primary w-100 btn ajax modal-close" data-dismiss="modal" onclick="$('#multipleColumnselect_{$control->name|noescape}').modal('hide')"><i n:block="icon-repeat" class="{$iconPrefix}repeat"></i> {='ublaboo_datagrid.show_default_columns'|translate}</a>
 									</div>
 								</div>
 							</div>
 						</div>
+
 						<div class="row">
 							<div class="form-check col-12 d-flex align-items-baseline" n:foreach="$columnsVisibility as $v_key => $visibility" class="list-group-item ">
 								{if $visibility['visible']}
@@ -542,8 +543,10 @@
 								<div class="row mx-0 w-auto">
 									<div class="col-12 px-0">
 										<div class="col-per-page d-inline-flex">
-											<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-xs reset-filter d-flex align-items-center me-2">
-													{* {='ublaboo_datagrid.reset_filter'|translate} *}
+											<a n:if="$show_default_sort_button" n:href="defaultSort!" class="ajax btn btn-primary btn-xs default-sort d-flex align-items-center mr-2" title="{='ublaboo_datagrid.default_sort'|translate}">
+												<i class="{$iconPrefix}sort fa-fw"></i>
+											</a>
+											<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-xs reset-filter d-flex align-items-center mr-2" title="{='ublaboo_datagrid.reset_filter'|translate}">
 												<i class="{$iconPrefix}undo fa-fw"></i>
 											</a>
 											{if $control->isPaginated()}

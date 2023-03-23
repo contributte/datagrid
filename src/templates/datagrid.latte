@@ -196,6 +196,28 @@
 							{/if}
 						</th>
 					</tr>
+
+                    {foreach $columnLabels as $rowOfColumns}
+					    <tr class="align-top column-label">
+                        {for $i = 1; $i <= $maxColLabelForRows; $i++}
+                            	<th class="dummy-cell"></th>
+                            {/for}
+
+                            {foreach $rowOfColumns as $label}
+                                <th
+                                {!empty($label['colspan']) ? 'colspan="' . $label['colspan'] . '"' : ''|noescape}
+                                    {!empty($label['rowspan']) ? 'rowspan="' . $label['rowspan'] . '"' : ''|noescape}
+                                    {($label['colspan'] ?? 0) > 1 ? 'class="text-center"': ''|noescape}
+                        >
+                            {for $i = 0; $i < ($label['indented'] ?? 0); $i++}
+                                        <span class="pl-3"></span>
+                                    {/for}
+                                    {$label['description']}
+                        </th>
+                            {/foreach}
+                    </tr>
+                    {/foreach}
+
 					<tr n:block="header-column-row" class="align-top">
                         {if empty($filters)}
                             <th n:snippet="thead-group-action" n:if="$hasGroupActions" class="col-checkbox">
@@ -204,6 +226,10 @@
                         {else}
                             <th n:if="$hasGroupActions"></th>
                         {/if}
+
+                        {for $i = 1; $i <= $maxColLabelForRows; $i++}
+                            <th class="dummy-cell"></th>
+                        {/for}
 
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementForRender('th', $key)}
@@ -363,6 +389,24 @@
 												<input n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getFullName()}" data-check-all-{$control->getFullName()|noescape} name="{$control->getFullName()|lower}_group_action_item[{$row->getId()}]">
 											{/if}
 										</td>
+
+                                        {if !empty($columnForRowLabels) && !empty($item[$columnForRowLabels])}
+                                            {if !empty($rowLabels[$item[$columnForRowLabels]])}
+                                                {foreach $rowLabels[$item[$columnForRowLabels]] as $label}
+                                                    <td
+                                                        {!empty($label['colspan']) ? 'colspan="' . $label['colspan'] . '"' : ''|noescape}
+                                                        {!empty($label['rowspan']) ? 'rowspan="' . $label['rowspan'] . '"' : ''|noescape}
+                                                        class="row-label"
+                                                    >
+                                                        {for $i = 0; $i < ($label['indented'] ?? 0); $i++}
+                                                           <span class="pl-3"></span>
+                                                        {/for}
+                                                        {$label['description']}
+                                                    </td>
+                                                {/foreach}
+                                            {/if}
+                                        {/if}
+
 										{foreach $columns as $key => $column}
 											{php $column = $row->applyColumnCallback($key, clone $column)}
 
@@ -516,8 +560,10 @@
 												<div class="row mx-0">
 													<div class="col-12 px-0">
 														<div class="col-per-page d-inline-flex">
-															<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter d-flex align-items-center me-2">
-			<!--                                                    {='ublaboo_datagrid.reset_filter'|translate}-->
+															<a n:if="$show_default_sort_button" n:href="defaultSort!" class="ajax btn btn-primary btn-sm default-sort d-flex align-items-center me-2" title="{='ublaboo_datagrid.default_sort'|translate}">
+																<i class="{$iconPrefix}sort fa-fw"></i>
+															</a>
+															<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter d-flex align-items-center me-2" title="{='ublaboo_datagrid.reset_filter'|translate}">
 																<i class="{$iconPrefix}redo fa-fw"></i>
 															</a>
 															{if $control->isPaginated()}
