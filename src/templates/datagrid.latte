@@ -350,7 +350,7 @@
 
 							{if !isset($toggle_detail)}
 								{if $inlineEdit && $inlineEdit->getItemId() == $row->getId()}
-									{php $inlineEdit->onSetDefaults($filter['inline_edit'], $item) }
+									{php $inlineEdit->onSetDefaults($filter['inline_edit'], $item)}
 
 									<tr data-id="{$row->getId()}" n:snippet='"item-{$row->getId()}"' n:attr="$row->getControl()->attrs">
 										<td n:if="$hasGroupActions" class="col-checkbox"></td>
@@ -592,7 +592,7 @@
 
 {define inlineAddRow}
 	{if $inlineAdd->shouldBeRendered()}
-		{php $inlineAdd->onSetDefaults($filter['inline_add']) }
+		{php $inlineAdd->onSetDefaults($filter['inline_add'])}
 
 		<tr class="datagrid-row-inline-add datagrid-row-inline-add-hidden">
 			<td n:if="$hasGroupActions" class="col-checkbox"></td>
