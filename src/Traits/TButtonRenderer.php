@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Traits;
+namespace Contributte\Datagrid\Traits;
 
-use Ublaboo\DataGrid\Column\Renderer;
-use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Exception\DataGridException;
-use Ublaboo\DataGrid\Row;
+use Contributte\Datagrid\Column\Renderer;
+use Contributte\Datagrid\Exception\DatagridColumnRendererException;
+use Contributte\Datagrid\Exception\DatagridException;
+use Contributte\Datagrid\Row;
 
 trait TButtonRenderer
 {
@@ -16,7 +16,7 @@ trait TButtonRenderer
 	protected array $replacements = [];
 
 	/**
-	 * @throws DataGridColumnRendererException
+	 * @throws DatagridColumnRendererException
 	 */
 	public function useRenderer(?Row $row = null): mixed
 	{
@@ -25,12 +25,12 @@ trait TButtonRenderer
 		$args = $row instanceof Row ? [$row->getItem()] : [];
 
 		if ($renderer === null) {
-			throw new DataGridColumnRendererException();
+			throw new DatagridColumnRendererException();
 		}
 
 		if ($renderer->getConditionCallback() !== null) {
 			if (call_user_func_array($renderer->getConditionCallback(), $args) === false) {
-				throw new DataGridColumnRendererException();
+				throw new DatagridColumnRendererException();
 			}
 
 			return call_user_func_array($renderer->getCallback(), $args);
@@ -43,7 +43,7 @@ trait TButtonRenderer
 	 * Set renderer callback and (it may be optional - the condition callback will decide)
 	 *
 	 * @return static
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function setRenderer(
 		callable $renderer,
@@ -51,7 +51,7 @@ trait TButtonRenderer
 	): self
 	{
 		if ($this->hasReplacements()) {
-			throw new DataGridException('Use either Column::setReplacement() or Column::setRenderer, not both.');
+			throw new DatagridException('Use either Column::setReplacement() or Column::setRenderer, not both.');
 		}
 
 		$this->renderer = new Renderer($renderer, $conditionCallback);

@@ -1,9 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid;
+namespace Contributte\Datagrid;
 
 use Nette\Localization\Translator;
-use Ublaboo\DataGrid\Column\Column;
+use Contributte\Datagrid\Column\Column;
 
 class CsvDataModel
 {

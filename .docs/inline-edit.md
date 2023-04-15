@@ -85,9 +85,9 @@ Example useage:
 
 ```php
 /**
- * @var Ublaboo\DataGrid\DataGrid
+ * @var Contributte\Datagrid\Datagrid
  */
-$grid = new DataGrid($this, $name);
+$grid = new Datagrid($this, $name);
 
 /**
  * Big inline editing

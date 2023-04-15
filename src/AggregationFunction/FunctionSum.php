@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\AggregationFunction;
+namespace Contributte\Datagrid\AggregationFunction;
 
 use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;
@@ -8,7 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use Nette\Database\Table\Selection;
 use Nextras\Orm\Collection\DbalCollection;
 use Nextras\Orm\Collection\ICollection;
-use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
+use Contributte\Datagrid\Utils\PropertyAccessHelper;
 
 class FunctionSum implements ISingleColumnAggregationFunction
 {

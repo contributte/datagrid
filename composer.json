@@ -25,12 +25,13 @@
 	],
 	"autoload": {
 		"psr-4": {
-			"Ublaboo\\DataGrid\\": "src/"
-		}
+			"Contributte\\Datagrid\\": "src/"
+		},
+		"files": ["./compatibility.php"]
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Ublaboo\\DataGrid\\Tests\\": "tests"
+			"Contributte\\Datagrid\\Tests\\": "tests"
 		}
 	},
 	"require": {

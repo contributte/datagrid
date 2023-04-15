@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid;
+namespace Contributte\Datagrid;
 
 use DateTime;
 use InvalidArgumentException;
@@ -21,61 +21,61 @@ use Nette\Forms\Form as NetteForm;
 use Nette\Http\SessionSection;
 use Nette\Localization\Translator;
 use Nette\Utils\ArrayHash;
-use Ublaboo\DataGrid\AggregationFunction\TDataGridAggregationFunction;
-use Ublaboo\DataGrid\Column\Action;
-use Ublaboo\DataGrid\Column\ActionCallback;
-use Ublaboo\DataGrid\Column\Column;
-use Ublaboo\DataGrid\Column\ColumnDateTime;
-use Ublaboo\DataGrid\Column\ColumnLink;
-use Ublaboo\DataGrid\Column\ColumnNumber;
-use Ublaboo\DataGrid\Column\ColumnStatus;
-use Ublaboo\DataGrid\Column\ColumnText;
-use Ublaboo\DataGrid\Column\ItemDetail;
-use Ublaboo\DataGrid\Column\MultiAction;
-use Ublaboo\DataGrid\Components\DataGridPaginator\DataGridPaginator;
-use Ublaboo\DataGrid\DataSource\IDataSource;
-use Ublaboo\DataGrid\Exception\DataGridColumnNotFoundException;
-use Ublaboo\DataGrid\Exception\DataGridException;
-use Ublaboo\DataGrid\Exception\DataGridFilterNotFoundException;
-use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
-use Ublaboo\DataGrid\Export\Export;
-use Ublaboo\DataGrid\Export\ExportCsv;
-use Ublaboo\DataGrid\Filter\Filter;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Ublaboo\DataGrid\Filter\IFilterDate;
-use Ublaboo\DataGrid\Filter\SubmitButton;
-use Ublaboo\DataGrid\GroupAction\GroupAction;
-use Ublaboo\DataGrid\GroupAction\GroupActionCollection;
-use Ublaboo\DataGrid\GroupAction\GroupButtonAction;
-use Ublaboo\DataGrid\InlineEdit\InlineAdd;
-use Ublaboo\DataGrid\InlineEdit\InlineEdit;
-use Ublaboo\DataGrid\Localization\SimpleTranslator;
-use Ublaboo\DataGrid\Toolbar\ToolbarButton;
-use Ublaboo\DataGrid\Utils\ArraysHelper;
-use Ublaboo\DataGrid\Utils\ItemDetailForm;
-use Ublaboo\DataGrid\Utils\Sorting;
+use Contributte\Datagrid\AggregationFunction\TDatagridAggregationFunction;
+use Contributte\Datagrid\Column\Action;
+use Contributte\Datagrid\Column\ActionCallback;
+use Contributte\Datagrid\Column\Column;
+use Contributte\Datagrid\Column\ColumnDateTime;
+use Contributte\Datagrid\Column\ColumnLink;
+use Contributte\Datagrid\Column\ColumnNumber;
+use Contributte\Datagrid\Column\ColumnStatus;
+use Contributte\Datagrid\Column\ColumnText;
+use Contributte\Datagrid\Column\ItemDetail;
+use Contributte\Datagrid\Column\MultiAction;
+use Contributte\Datagrid\Components\DatagridPaginator\DatagridPaginator;
+use Contributte\Datagrid\DataSource\IDataSource;
+use Contributte\Datagrid\Exception\DatagridColumnNotFoundException;
+use Contributte\Datagrid\Exception\DatagridException;
+use Contributte\Datagrid\Exception\DatagridFilterNotFoundException;
+use Contributte\Datagrid\Exception\DatagridHasToBeAttachedToPresenterComponentException;
+use Contributte\Datagrid\Export\Export;
+use Contributte\Datagrid\Export\ExportCsv;
+use Contributte\Datagrid\Filter\Filter;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterMultiSelect;
+use Contributte\Datagrid\Filter\FilterRange;
+use Contributte\Datagrid\Filter\FilterSelect;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Filter\IFilterDate;
+use Contributte\Datagrid\Filter\SubmitButton;
+use Contributte\Datagrid\GroupAction\GroupAction;
+use Contributte\Datagrid\GroupAction\GroupActionCollection;
+use Contributte\Datagrid\GroupAction\GroupButtonAction;
+use Contributte\Datagrid\InlineEdit\InlineAdd;
+use Contributte\Datagrid\InlineEdit\InlineEdit;
+use Contributte\Datagrid\Localization\SimpleTranslator;
+use Contributte\Datagrid\Toolbar\ToolbarButton;
+use Contributte\Datagrid\Utils\ArraysHelper;
+use Contributte\Datagrid\Utils\ItemDetailForm;
+use Contributte\Datagrid\Utils\Sorting;
 use UnexpectedValueException;
 
 /**
  * @method onRedraw()
- * @method onRender(DataGrid $dataGrid)
+ * @method onRender(Datagrid $dataGrid)
  * @method onColumnAdd(string $key, Column $column)
  * @method onColumnShow(string $key)
  * @method onColumnHide(string $key)
  * @method onShowDefaultColumns()
  * @method onShowAllColumns()
- * @method onExport(DataGrid $dataGrid)
+ * @method onExport(Datagrid $dataGrid)
  * @method onFiltersAssembled(Filter[] $filters)
  */
-class DataGrid extends Control
+class Datagrid extends Control
 {
 
-	use TDataGridAggregationFunction;
+	use TDatagridAggregationFunction;
 
 	private const HIDEABLE_COLUMNS_SESSION_KEYS = [
 		'_grid_hidden_columns',
@@ -338,11 +338,11 @@ class DataGrid extends Control
 		 * Check whether datagrid has set some columns, initiated data source, etc
 		 */
 		if (!($this->dataModel instanceof DataModel)) {
-			throw new DataGridException('You have to set a data source first.');
+			throw new DatagridException('You have to set a data source first.');
 		}
 
 		if ($this->columns === []) {
-			throw new DataGridException('You have to add at least one column.');
+			throw new DatagridException('You have to add at least one column.');
 		}
 
 		$template = $this->getTemplate();
@@ -463,7 +463,7 @@ class DataGrid extends Control
 	public function setPrimaryKey(string $primaryKey): self
 	{
 		if ($this->dataModel instanceof DataModel) {
-			throw new DataGridException('Please set datagrid primary key before setting datasource.');
+			throw new DatagridException('Please set datagrid primary key before setting datasource.');
 		}
 
 		$this->primaryKey = $primaryKey;
@@ -587,12 +587,12 @@ class DataGrid extends Control
 
 	/**
 	 * @return static
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function setSortable(bool $sortable = true): self
 	{
 		if ($this->getItemsDetail() !== null) {
-			throw new DataGridException('You can not use both sortable datagrid and items detail.');
+			throw new DatagridException('You can not use both sortable datagrid and items detail.');
 		}
 
 		$this->sortable = $sortable;
@@ -780,12 +780,12 @@ class DataGrid extends Control
 	}
 
 	/**
-	 * @throws DataGridColumnNotFoundException
+	 * @throws DatagridColumnNotFoundException
 	 */
 	public function getColumn(string $key): Column
 	{
 		if (!isset($this->columns[$key])) {
-			throw new DataGridColumnNotFoundException(
+			throw new DatagridColumnNotFoundException(
 				sprintf('There is no column at key [%s] defined.', $key)
 			);
 		}
@@ -855,12 +855,12 @@ class DataGrid extends Control
 	}
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function getAction(string $key): Action|MultiAction
 	{
 		if (!isset($this->actions[$key])) {
-			throw new DataGridException(sprintf('There is no action at key [%s] defined.', $key));
+			throw new DatagridException(sprintf('There is no action at key [%s] defined.', $key));
 		}
 
 		return $this->actions[$key];
@@ -941,7 +941,7 @@ class DataGrid extends Control
 	}
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function addFilterDateRange(
 		string $key,
@@ -1007,7 +1007,7 @@ class DataGrid extends Control
 	public function getFilter(string $key): Filter
 	{
 		if (!isset($this->filters[$key])) {
-			throw new DataGridException(sprintf('Filter [%s] is not defined', $key));
+			throw new DatagridException(sprintf('Filter [%s] is not defined', $key));
 		}
 
 		return $this->filters[$key];
@@ -1068,7 +1068,7 @@ class DataGrid extends Control
 	 * If we want to sent some initial filter
 	 *
 	 * @return static
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function setDefaultFilter(array $defaultFilter, bool $useOnReset = true): self
 	{
@@ -1077,20 +1077,20 @@ class DataGrid extends Control
 			$filter = $this->getFilter($key);
 
 			if ($filter === null) {
-				throw new DataGridException(
+				throw new DatagridException(
 					sprintf('Can not set default value to nonexisting filter [%s]', $key)
 				);
 			}
 
 			if ($filter instanceof FilterMultiSelect && !is_array($value)) {
-				throw new DataGridException(
+				throw new DatagridException(
 					sprintf('Default value of filter [%s] - MultiSelect has to be an array', $key)
 				);
 			}
 
 			if ($filter instanceof FilterRange || $filter instanceof FilterDateRange) {
 				if (!is_array($value)) {
-					throw new DataGridException(
+					throw new DatagridException(
 						sprintf('Default value of filter [%s] - Range/DateRange has to be an array [from/to => ...]', $key)
 					);
 				}
@@ -1099,7 +1099,7 @@ class DataGrid extends Control
 				unset($temp['from'], $temp['to']);
 
 				if (count($temp) > 0) {
-					throw new DataGridException(
+					throw new DatagridException(
 						sprintf(
 							'Default value of filter [%s] - Range/DateRange can contain only [from/to => ...] values',
 							$key
@@ -1148,9 +1148,9 @@ class DataGrid extends Control
 		$inline_edit_container = $form->addContainer('inline_edit');
 
 		if ($this->inlineEdit instanceof InlineEdit) {
-			$inline_edit_container->addSubmit('submit', 'ublaboo_datagrid.save')
+			$inline_edit_container->addSubmit('submit', 'contributte_datagrid.save')
 				->setValidationScope([$inline_edit_container]);
-			$inline_edit_container->addSubmit('cancel', 'ublaboo_datagrid.cancel')
+			$inline_edit_container->addSubmit('cancel', 'contributte_datagrid.cancel')
 				->setValidationScope(null);
 
 			$this->inlineEdit->onControlAdd($inline_edit_container);
@@ -1163,9 +1163,9 @@ class DataGrid extends Control
 		$inlineAddContainer = $form->addContainer('inline_add');
 
 		if ($this->inlineAdd instanceof InlineAdd) {
-			$inlineAddContainer->addSubmit('submit', 'ublaboo_datagrid.save')
+			$inlineAddContainer->addSubmit('submit', 'contributte_datagrid.save')
 				->setValidationScope([$inlineAddContainer]);
-			$inlineAddContainer->addSubmit('cancel', 'ublaboo_datagrid.cancel')
+			$inlineAddContainer->addSubmit('cancel', 'contributte_datagrid.cancel')
 				->setValidationScope(null)
 				->setHtmlAttribute('data-datagrid-cancel-inline-add', true);
 
@@ -1219,7 +1219,7 @@ class DataGrid extends Control
 				$select->setValue($this->getPerPage());
 			}
 
-			$form->addSubmit('perPage_submit', 'ublaboo_datagrid.per_page_submit')
+			$form->addSubmit('perPage_submit', 'contributte_datagrid.per_page_submit')
 				->setValidationScope([$select]);
 		}
 
@@ -1477,7 +1477,7 @@ class DataGrid extends Control
 	/**
 	 * Try to restore session stuff
 	 *
-	 * @throws DataGridFilterNotFoundException
+	 * @throws DatagridFilterNotFoundException
 	 */
 	public function findSessionValues(): void
 	{
@@ -1524,9 +1524,9 @@ class DataGrid extends Control
 
 					$this->filter[$key] = $value;
 
-				} catch (DataGridException) {
+				} catch (DatagridException) {
 					if ($this->strictSessionFilterValues) {
-						throw new DataGridFilterNotFoundException(
+						throw new DatagridFilterNotFoundException(
 							sprintf('Session filter: Filter [%s] not found', $key)
 						);
 					}
@@ -1542,7 +1542,7 @@ class DataGrid extends Control
 				try {
 					$column = $this->getColumn((string) $key);
 
-				} catch (DataGridColumnNotFoundException) {
+				} catch (DatagridColumnNotFoundException) {
 					$this->deleteSessionData('_grid_sort');
 					$this->sort = [];
 
@@ -1610,7 +1610,7 @@ class DataGrid extends Control
 	 ********************************************************************************/
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function addToolbarButton(
 		string $href,
@@ -1619,7 +1619,7 @@ class DataGrid extends Control
 	): ToolbarButton
 	{
 		if (isset($this->toolbarButtons[$href])) {
-			throw new DataGridException(
+			throw new DatagridException(
 				sprintf('There is already toolbar button at key [%s] defined.', $href)
 			);
 		}
@@ -1628,12 +1628,12 @@ class DataGrid extends Control
 	}
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function getToolbarButton(string $key): ToolbarButton
 	{
 		if (!isset($this->toolbarButtons[$key])) {
-			throw new DataGridException(
+			throw new DatagridException(
 				sprintf('There is no toolbar button at key [%s] defined.', $key)
 			);
 		}
@@ -1725,7 +1725,7 @@ class DataGrid extends Control
 	}
 
 	/**
-	 * @throws DataGridColumnNotFoundException
+	 * @throws DatagridColumnNotFoundException
 	 */
 	public function handleSort(array $sort): void
 	{
@@ -1737,7 +1737,7 @@ class DataGrid extends Control
 			try {
 				$column = $this->getColumn($key);
 
-			} catch (DataGridColumnNotFoundException) {
+			} catch (DatagridColumnNotFoundException) {
 				unset($sort[$key]);
 
 				continue;
@@ -1857,7 +1857,7 @@ class DataGrid extends Control
 		}
 
 		if ($this->dataModel === null) {
-			throw new DataGridException('You have to set a data source first.');
+			throw new DatagridException('You have to set a data source first.');
 		}
 
 		$rows = [];
@@ -2011,7 +2011,7 @@ class DataGrid extends Control
 	public function handleChangeStatus(string $id, string $key, string $value): void
 	{
 		if (!isset($this->columns[$key])) {
-			throw new DataGridException(sprintf('ColumnStatus[%s] does not exist', $key));
+			throw new DatagridException(sprintf('ColumnStatus[%s] does not exist', $key));
 		}
 
 		if (!$this->columns[$key] instanceof ColumnStatus) {
@@ -2104,7 +2104,7 @@ class DataGrid extends Control
 		$action = $this->getAction($__key);
 
 		if (!($action instanceof ActionCallback)) {
-			throw new DataGridException(
+			throw new DatagridException(
 				sprintf('Action [%s] does not exist or is not an callback aciton.', $__key)
 			);
 		}
@@ -2162,9 +2162,9 @@ class DataGrid extends Control
 		$this->saveSessionData('_grid_perPage', $this->perPage);
 	}
 
-	public function createComponentPaginator(): DataGridPaginator
+	public function createComponentPaginator(): DatagridPaginator
 	{
-		$component = new DataGridPaginator(
+		$component = new DatagridPaginator(
 			$this->getTranslator(),
 			static::$iconPrefix,
 			static::$btnSecondaryClass
@@ -2212,7 +2212,7 @@ class DataGrid extends Control
 		}
 
 		if (array_key_exists('all', $list)) {
-			$list['all'] = $this->getTranslator()->translate('ublaboo_datagrid.all');
+			$list['all'] = $this->getTranslator()->translate('contributte_datagrid.all');
 		}
 
 		return $list;
@@ -2233,7 +2233,7 @@ class DataGrid extends Control
 		return $this->doPaginate;
 	}
 
-	public function getPaginator(): ?DataGridPaginator
+	public function getPaginator(): ?DatagridPaginator
 	{
 		if ($this->isPaginated() && $this->perPage !== 'all') {
 			return $this['paginator'];
@@ -2290,7 +2290,7 @@ class DataGrid extends Control
 		if (count($new_order) === count($this->columns)) {
 			$this->columns = $new_order;
 		} else {
-			throw new DataGridException('When changing columns order, you have to specify all columns');
+			throw new DatagridException('When changing columns order, you have to specify all columns');
 		}
 
 		return $this;
@@ -2390,7 +2390,7 @@ class DataGrid extends Control
 	public function setItemsDetail(mixed $detail = true, ?string $primaryWhereColumn = null): ItemDetail
 	{
 		if ($this->isSortable()) {
-			throw new DataGridException('You can not use both sortable datagrid and items detail.');
+			throw new DatagridException('You can not use both sortable datagrid and items detail.');
 		}
 
 		$this->itemsDetail = new ItemDetail($this, $primaryWhereColumn ?? $this->primaryKey);
@@ -2416,7 +2416,7 @@ class DataGrid extends Control
 			$this->itemsDetail->setType('block');
 
 		} else {
-			throw new DataGridException('::setItemsDetail() can be called either with no parameters or with parameter = template path or callable renderer.');
+			throw new DatagridException('::setItemsDetail() can be called either with no parameters or with parameter = template path or callable renderer.');
 		}
 
 		return $this->itemsDetail;
@@ -2435,7 +2435,7 @@ class DataGrid extends Control
 			return $this;
 		}
 
-		throw new DataGridException('Please set the ItemDetail first.');
+		throw new DatagridException('Please set the ItemDetail first.');
 	}
 
 	public function getItemDetailForm(): ?Container
@@ -2466,7 +2466,7 @@ class DataGrid extends Control
 	}
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function allowRowsMultiAction(
 		string $multiActionKey,
@@ -2475,13 +2475,13 @@ class DataGrid extends Control
 	): void
 	{
 		if (!isset($this->actions[$multiActionKey])) {
-			throw new DataGridException(
+			throw new DatagridException(
 				sprintf('There is no action at key [%s] defined.', $multiActionKey)
 			);
 		}
 
 		if (!$this->actions[$multiActionKey] instanceof MultiAction) {
-			throw new DataGridException(
+			throw new DatagridException(
 				sprintf('Action at key [%s] is not a MultiAction.', $multiActionKey)
 			);
 		}
@@ -2586,7 +2586,7 @@ class DataGrid extends Control
 		$this->inlineAdd = new InlineAdd($this);
 
 		$this->inlineAdd
-			->setTitle('ublaboo_datagrid.add')
+			->setTitle('contributte_datagrid.add')
 			->setIcon('plus');
 
 		return $this->inlineAdd;
@@ -2636,7 +2636,7 @@ class DataGrid extends Control
 	public function setColumnsSummary(array $columns, ?callable $rowCallback = null): ColumnsSummary
 	{
 		if ($this->hasSomeAggregationFunction()) {
-			throw new DataGridException('You can use either ColumnsSummary or AggregationFunctions');
+			throw new DatagridException('You can use either ColumnsSummary or AggregationFunctions');
 		}
 
 		$this->columnsSummary = new ColumnsSummary($this, $columns, $rowCallback);
@@ -2657,12 +2657,12 @@ class DataGrid extends Control
 	/**
 	 * Gets component's full name in component tree
 	 *
-	 * @throws DataGridHasToBeAttachedToPresenterComponentException
+	 * @throws DatagridHasToBeAttachedToPresenterComponentException
 	 */
 	public function getFullName(): string
 	{
 		if ($this->componentFullName === null) {
-			throw new DataGridHasToBeAttachedToPresenterComponentException('Datagrid needs to be attached to presenter in order to get its full name.');
+			throw new DatagridHasToBeAttachedToPresenterComponentException('Datagrid needs to be attached to presenter in order to get its full name.');
 		}
 
 		return $this->componentFullName;
@@ -2688,7 +2688,7 @@ class DataGrid extends Control
 	public function getFilterSubmitButton(): SubmitButton
 	{
 		if ($this->hasAutoSubmit()) {
-			throw new DataGridException('DataGrid has auto-submit. Turn it off before setting filter submit button.');
+			throw new DatagridException('Datagrid has auto-submit. Turn it off before setting filter submit button.');
 		}
 
 		if ($this->filterSubmitButton === null) {
@@ -2770,7 +2770,7 @@ class DataGrid extends Control
 					unset($return[$column]);
 				}
 			}
-		} catch (DataGridHasToBeAttachedToPresenterComponentException) {
+		} catch (DatagridHasToBeAttachedToPresenterComponentException) {
 			// No need to worry
 		}
 
@@ -2799,9 +2799,9 @@ class DataGrid extends Control
 		$parent = parent::getParent();
 
 		if (!$parent instanceof Component) {
-			throw new DataGridHasToBeAttachedToPresenterComponentException(
+			throw new DatagridHasToBeAttachedToPresenterComponentException(
 				sprintf(
-					'DataGrid is attached to: "%s", but instance of %s is needed.',
+					'Datagrid is attached to: "%s", but instance of %s is needed.',
 					($parent !== null ? $parent::class : 'null'),
 					Component::class
 				)
@@ -2891,7 +2891,7 @@ class DataGrid extends Control
 			try {
 				$column = $this->getColumn($key);
 
-			} catch (DataGridColumnNotFoundException) {
+			} catch (DatagridColumnNotFoundException) {
 				continue;
 			}
 
@@ -2906,12 +2906,12 @@ class DataGrid extends Control
 	}
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	protected function addColumn(string $key, Column $column): Column
 	{
 		if (isset($this->columns[$key])) {
-			throw new DataGridException(
+			throw new DatagridException(
 				sprintf('There is already column at key [%s] defined.', $key)
 			);
 		}
@@ -2926,12 +2926,12 @@ class DataGrid extends Control
 	/**
 	 * Check whether given key already exists in $this->filters
 	 *
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	protected function addActionCheck(string $key): void
 	{
 		if (isset($this->actions[$key])) {
-			throw new DataGridException(
+			throw new DatagridException(
 				sprintf('There is already action at key [%s] defined.', $key)
 			);
 		}
@@ -2942,12 +2942,12 @@ class DataGrid extends Control
 	/**
 	 * Check whether given key already exists in $this->filters
 	 *
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	protected function addFilterCheck(string $key): void
 	{
 		if (isset($this->filters[$key])) {
-			throw new DataGridException(
+			throw new DatagridException(
 				sprintf('There is already action at key [%s] defined.', $key)
 			);
 		}

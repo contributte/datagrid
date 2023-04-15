@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\DataSource;
+namespace Contributte\Datagrid\DataSource;
 
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Utils\DateTimeHelper;
 
 class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource implements IDataSource
 {
@@ -21,7 +21,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 				sprintf('CONVERT(varchar(10), %s, 112) = ?', $filter->getColumn()),
 				$date->format('Ymd')
 			);
-		} catch (DataGridDateTimeHelperException) {
+		} catch (DatagridDateTimeHelperException) {
 			// ignore the invalid filter value
 		}
 	}
@@ -42,7 +42,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 					sprintf('CONVERT(varchar(10), %s, 112) >= ?', $filter->getColumn()),
 					$dateFrom->format('Ymd')
 				);
-			} catch (DataGridDateTimeHelperException) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -56,7 +56,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 					sprintf('CONVERT(varchar(10), %s, 112) <= ?', $filter->getColumn()),
 					$dateTo->format('Ymd')
 				);
-			} catch (DataGridDateTimeHelperException) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}

@@ -1,8 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Column;
+namespace Contributte\Datagrid\Column;
 
-use Ublaboo\DataGrid\Row;
+use Contributte\Datagrid\Row;
 
 class ColumnNumber extends Column
 {

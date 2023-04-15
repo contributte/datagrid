@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\GroupAction;
+namespace Contributte\Datagrid\GroupAction;
 
 /**
  * @method void onSelect()

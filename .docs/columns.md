@@ -134,7 +134,7 @@ $grid->addColumnText('name', 'Name')
 
 ### Default sort
 
-`DataGrid` implements default sorting mechanism:
+`Datagrid` implements default sorting mechanism:
 
 ```php
 $grid->setDefaultSort(['name' => 'DESC']);
@@ -142,7 +142,7 @@ $grid->setDefaultSort(['name' => 'DESC']);
 
 ### Resetting default sort
 
-By default, once you reset the filter, default sort is applied. If you don't want to apply it after resetting the filter, pass FALSE as a second parameter to `DataGrid::setDefaultSort()`:
+By default, once you reset the filter, default sort is applied. If you don't want to apply it after resetting the filter, pass FALSE as a second parameter to `Datagrid::setDefaultSort()`:
 
 ```php
 $grid->setDefaultSort(['id' => 'DESC'], FALSE);
@@ -422,7 +422,7 @@ $grid->addAggregationFunction('status', new FunctionSum('id'));
 
 This will render a sum of ids under the `"status"` column.
 
-As mentioned above, there is one aggregation function prepared: `Ublaboo\DataGrid\AggregationFunction\FunctionSum`. You can implement whatever function you like, it just have to implement `Ublaboo\DataGrid\AggregationFunction\ISingleColumnAggregationFunction`.
+As mentioned above, there is one aggregation function prepared: `Contributte\Datagrid\AggregationFunction\FunctionSum`. You can implement whatever function you like, it just have to implement `Contributte\Datagrid\AggregationFunction\ISingleColumnAggregationFunction`.
 
 ### Multiple columns
 

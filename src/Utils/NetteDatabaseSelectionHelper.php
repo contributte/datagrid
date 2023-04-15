@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Utils;
+namespace Contributte\Datagrid\Utils;
 
 use Nette\Database\Driver;
 use Nette\Database\Explorer;

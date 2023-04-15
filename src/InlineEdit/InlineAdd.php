@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\InlineEdit;
+namespace Contributte\Datagrid\InlineEdit;
 
 use Nette\Utils\ArrayHash;
 

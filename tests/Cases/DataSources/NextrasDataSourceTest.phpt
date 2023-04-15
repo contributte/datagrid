@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
+namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
 use Nette\Caching\Cache;
 use Nette\Caching\Storages\DevNullStorage;
@@ -15,9 +15,9 @@ use Nextras\Orm\Model\SimpleModelFactory;
 use Nextras\Orm\Repository\Repository;
 use Tester\Assert;
 use Tester\Environment;
-use Ublaboo\DataGrid\DataSource\NextrasDataSource;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
+use Contributte\Datagrid\DataSource\NextrasDataSource;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
@@ -54,8 +54,8 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 		$this->setUpDatabase();
 
 		$this->ds = new NextrasDataSource($this->model->users->findAll(), 'id');
-		$factory = new TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
 	protected function setUpDatabase(): void

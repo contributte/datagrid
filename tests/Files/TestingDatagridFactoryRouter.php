@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Files;
+namespace Contributte\Datagrid\Tests\Files;
 
 use Nette\Application\PresenterFactory;
 use Nette\Application\Request;
@@ -11,13 +11,13 @@ use Nette\Http\Response;
 use Nette\Http\Session;
 use Nette\Http\UrlScript;
 
-class TestingDataGridFactoryRouter
+class TestingDatagridFactoryRouter
 {
 
-	public function createTestingDataGrid(): ?IComponent
+	public function createTestingDatagrid(): ?IComponent
 	{
 		$presenterFactory = new PresenterFactory();
-		$presenterFactory->setMapping(['*' => 'Ublaboo\DataGrid\Tests\Files\*Presenter']);
+		$presenterFactory->setMapping(['*' => 'Contributte\Datagrid\Tests\Files\*Presenter']);
 
 		$presenter = $presenterFactory->createPresenter('Test');
 

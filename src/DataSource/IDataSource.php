@@ -1,9 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\DataSource;
+namespace Contributte\Datagrid\DataSource;
 
-use Ublaboo\DataGrid\Filter\Filter;
-use Ublaboo\DataGrid\Utils\Sorting;
+use Contributte\Datagrid\Filter\Filter;
+use Contributte\Datagrid\Utils\Sorting;
 
 interface IDataSource
 {

@@ -1,8 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Cases\Utils;
+namespace Contributte\Datagrid\Tests\Cases\Utils;
 
-class TestingDDataGridEntity
+class TestingDDatagridEntity
 {
 
 	/**
@@ -28,7 +28,7 @@ class TestingDDataGridEntity
 	/** @ORM\Column(type="string", enumType="GenderEnum") */
 	private ?GenderEnum $gender;
 
-	private ?TestingDDataGridEntity $partner = null;
+	private ?TestingDDatagridEntity $partner = null;
 
 	final public function getId(): int
 	{
@@ -58,12 +58,12 @@ class TestingDDataGridEntity
 		return $this->gender;
 	}
 
-	public function setPartner(TestingDDataGridEntity $partner): void
+	public function setPartner(TestingDDatagridEntity $partner): void
 	{
 		$this->partner = $partner;
 	}
 
-	public function getPartner(): ?TestingDDataGridEntity
+	public function getPartner(): ?TestingDDatagridEntity
 	{
 		return $this->partner;
 	}

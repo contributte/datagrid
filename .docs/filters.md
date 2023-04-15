@@ -240,7 +240,7 @@ $grid->setDefaultFilter(['status' => [1], 'age' => ['from' => 18]]);
 
 ### Resetting filter to default values
 
-By default, once you reset the filter, default fitler values are applied. If you don't want to apply them after resetting the filter, pass false as a second parameter to `DataGrid::setDefaultFilter()`:
+By default, once you reset the filter, default fitler values are applied. If you don't want to apply them after resetting the filter, pass false as a second parameter to `Datagrid::setDefaultFilter()`:
 
 ```php
 $grid->setDefaultFilter('id' => 10, false);
@@ -300,7 +300,7 @@ $grid->setRefreshUrl(false); // Or enabled again: $grid->setRefreshUrl(true);
 
 ## Auto submit
 
-DataGrid filter is submitted automatically after keypress (there is of course a little delay). If you want to disable that feature and use customizable submit button instead, use this code:
+Datagrid filter is submitted automatically after keypress (there is of course a little delay). If you want to disable that feature and use customizable submit button instead, use this code:
 
 ```php
 $grid->setAutoSubmit(false);

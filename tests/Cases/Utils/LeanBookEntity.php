@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Cases\Utils;
+namespace Contributte\Datagrid\Tests\Cases\Utils;
 
 use LeanMapper\Entity;
 

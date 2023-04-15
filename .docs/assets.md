@@ -6,7 +6,7 @@ Table of contents
 
 # Assets
 
-DataGrid needs for its precise functionality some third party scripts and styles. Install all required assets with NPM.
+Datagrid needs for its precise functionality some third party scripts and styles. Install all required assets with NPM.
 
 **CSS (external)**
 
@@ -37,7 +37,7 @@ DataGrid needs for its precise functionality some third party scripts and styles
 **Icons**
 
 You will probably want to use some icon font, but that is in your command.
-On this project website we use font awesome (you can change the icon prefix by setting new value to static property `DataGrid::$iconPrefix = 'fa fa-';`).
+On this project website we use font awesome (you can change the icon prefix by setting new value to static property `Datagrid::$iconPrefix = 'fa fa-';`).
 
 **Spinners**
 

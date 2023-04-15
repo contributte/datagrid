@@ -12,3 +12,6 @@
 # Node.jS
 /node_modules
 /package-lock.json
+
+# compatiblity.php
+compat.php

@@ -1,8 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\DataSource;
+namespace Contributte\Datagrid\DataSource;
 
-use Ublaboo\DataGrid\Filter\FilterText;
+use Contributte\Datagrid\Filter\FilterText;
 
 class DibiFluentPostgreDataSource extends DibiFluentDataSource
 {

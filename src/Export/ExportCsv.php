@@ -1,16 +1,16 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Export;
+namespace Contributte\Datagrid\Export;
 
 use Contributte\Application\Response\CSVResponse;
-use Ublaboo\DataGrid\CsvDataModel;
-use Ublaboo\DataGrid\DataGrid;
+use Contributte\Datagrid\CsvDataModel;
+use Contributte\Datagrid\Datagrid;
 
 class ExportCsv extends Export
 {
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $text,
 		string $name,
 		bool $filtered,
@@ -40,7 +40,7 @@ class ExportCsv extends Export
 	{
 		return function (
 			array $data,
-			DataGrid $grid
+			Datagrid $grid
 		) use (
 			$name,
 			$outputEncoding,

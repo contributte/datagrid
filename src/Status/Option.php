@@ -1,14 +1,14 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Status;
+namespace Contributte\Datagrid\Status;
 
-use Ublaboo\DataGrid\Column\Action\Confirmation\CallbackConfirmation;
-use Ublaboo\DataGrid\Column\Action\Confirmation\IConfirmation;
-use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
-use Ublaboo\DataGrid\Column\ColumnStatus;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridException;
-use Ublaboo\DataGrid\Row;
+use Contributte\Datagrid\Column\Action\Confirmation\CallbackConfirmation;
+use Contributte\Datagrid\Column\Action\Confirmation\IConfirmation;
+use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
+use Contributte\Datagrid\Column\ColumnStatus;
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridException;
+use Contributte\Datagrid\Row;
 
 class Option
 {
@@ -27,7 +27,7 @@ class Option
 
 	protected ?IConfirmation $confirmation = null;
 
-	public function __construct(private DataGrid $grid, protected ColumnStatus $columnStatus, protected mixed $value, protected string $text)
+	public function __construct(private Datagrid $grid, protected ColumnStatus $columnStatus, protected mixed $value, protected string $text)
 	{
 	}
 
@@ -174,7 +174,7 @@ class Option
 			);
 		}
 
-		throw new DataGridException('Unsupported confirmation');
+		throw new DatagridException('Unsupported confirmation');
 	}
 
 }

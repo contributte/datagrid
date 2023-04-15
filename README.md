@@ -36,7 +36,7 @@ For details on how to use this package, check out our [documentation](.docs).
 
 **Shortly**
 
-You are looking at first class DataGrid for Nette Framework. Supported features: filtering, sorting, pagination, tree view, table view, translator and many others.
+You are looking at first class datagrid for Nette Framework. Supported features: filtering, sorting, pagination, tree view, table view, translator and many others.
 Give us a star, it makes us so happy. Thanks ⭐.️
 
 | What | Where |
