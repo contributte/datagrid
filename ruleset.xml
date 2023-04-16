@@ -32,6 +32,14 @@
 		<exclude-pattern>*tests/Cases/*</exclude-pattern>
 	</rule>
 
+	<rule ref="PSR1.Classes.ClassDeclaration">
+		<exclude-pattern>*tests/Cases/*</exclude-pattern>
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses">
+		<exclude>compatibility.php</exclude>
+	</rule>
+
 	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
 		<exclude-pattern>*tests/Cases/*</exclude-pattern>
 	</rule>
