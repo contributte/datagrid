@@ -66,6 +66,8 @@ use Ublaboo\DataGrid\Utils\Sorting;
  * @method onRedraw()
  * @method onRender(DataGrid $dataGrid)
  * @method onColumnAdd(string $key, Column $column)
+ * @method onColumnShow(string $key)
+ * @method onColumnHide(string $key)
  * @method onExport(DataGrid $dataGrid)
  * @method onFiltersAssembled(Filter[] $filters)
  */
@@ -98,6 +100,16 @@ class DataGrid extends Control
 	 * @var array|callable[]
 	 */
 	public $onColumnAdd = [];
+
+	/**
+	 * @var array|callable[]
+	 */
+	public $onColumnShow = [];
+
+	/**
+	 * @var array|callable[]
+	 */
+	public $onColumnHide = [];
 
 	/**
 	 * @var array|callable[]
@@ -2357,6 +2369,7 @@ class DataGrid extends Control
 
 		$this->redrawControl();
 
+		$this->onColumnShow($column);
 		$this->onRedraw();
 	}
 
@@ -2379,6 +2392,7 @@ class DataGrid extends Control
 
 		$this->redrawControl();
 
+		$this->onColumnHide($column);
 		$this->onRedraw();
 	}
 
