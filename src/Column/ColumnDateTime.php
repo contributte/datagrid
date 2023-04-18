@@ -2,10 +2,10 @@
 
 namespace Contributte\Datagrid\Column;
 
-use DateTime;
 use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
 use Contributte\Datagrid\Row;
 use Contributte\Datagrid\Utils\DateTimeHelper;
+use DateTime;
 
 class ColumnDateTime extends Column
 {

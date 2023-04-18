@@ -2,8 +2,8 @@
 
 namespace Contributte\Datagrid;
 
-use Nette\Localization\Translator;
 use Contributte\Datagrid\Column\Column;
+use Nette\Localization\Translator;
 
 class CsvDataModel
 {

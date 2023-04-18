@@ -2,8 +2,8 @@
 
 namespace Contributte\Datagrid\Tests\Files;
 
-use Nette\Application\UI\Control;
 use Contributte\Datagrid\Datagrid;
+use Nette\Application\UI\Control;
 
 class TestGridControl extends Control
 {

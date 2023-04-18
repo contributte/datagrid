@@ -4,10 +4,10 @@ namespace Contributte\Datagrid\Tests\Cases;
 
 require __DIR__ . '/../bootstrap.php';
 
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Nette\Application\AbortException;
 use Tester\Assert;
 use Tester\TestCase;
-use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 
 final class ExportLinkTest extends TestCase
 {

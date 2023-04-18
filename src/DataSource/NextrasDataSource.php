@@ -2,9 +2,6 @@
 
 namespace Contributte\Datagrid\DataSource;
 
-use Nextras\Orm\Collection\DbalCollection;
-use Nextras\Orm\Collection\Expression\LikeExpression;
-use Nextras\Orm\Collection\ICollection;
 use Contributte\Datagrid\AggregationFunction\IAggregatable;
 use Contributte\Datagrid\AggregationFunction\IAggregationFunction;
 use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
@@ -17,6 +14,9 @@ use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\ArraysHelper;
 use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
+use Nextras\Orm\Collection\DbalCollection;
+use Nextras\Orm\Collection\Expression\LikeExpression;
+use Nextras\Orm\Collection\ICollection;
 use function str_contains;
 
 class NextrasDataSource extends FilterableDataSource implements IDataSource, IAggregatable

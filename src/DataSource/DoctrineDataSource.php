@@ -2,10 +2,6 @@
 
 namespace Contributte\Datagrid\DataSource;
 
-use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use Nette\SmartObject;
 use Contributte\Datagrid\AggregationFunction\IAggregatable;
 use Contributte\Datagrid\AggregationFunction\IAggregationFunction;
 use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
@@ -18,6 +14,10 @@ use Contributte\Datagrid\Filter\FilterSelect;
 use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Nette\SmartObject;
 use function str_contains;
 
 /**

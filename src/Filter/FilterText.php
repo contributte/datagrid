@@ -2,8 +2,8 @@
 
 namespace Contributte\Datagrid\Filter;
 
-use Nette\Forms\Container;
 use Contributte\Datagrid\Datagrid;
+use Nette\Forms\Container;
 
 class FilterText extends Filter
 {

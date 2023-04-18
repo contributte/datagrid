@@ -2,10 +2,10 @@
 
 namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
-use dibi;
-use Dibi\Connection;
 use Contributte\Datagrid\DataSource\DibiFluentDataSource;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
+use dibi;
+use Dibi\Connection;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 

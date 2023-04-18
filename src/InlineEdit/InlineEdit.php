@@ -2,10 +2,6 @@
 
 namespace Contributte\Datagrid\InlineEdit;
 
-use Nette\Forms\Container;
-use Nette\SmartObject;
-use Nette\Utils\ArrayHash;
-use Nette\Utils\Html;
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Row;
 use Contributte\Datagrid\Traits\TButtonClass;
@@ -13,6 +9,10 @@ use Contributte\Datagrid\Traits\TButtonIcon;
 use Contributte\Datagrid\Traits\TButtonText;
 use Contributte\Datagrid\Traits\TButtonTitle;
 use Contributte\Datagrid\Traits\TButtonTryAddIcon;
+use Nette\Forms\Container;
+use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
+use Nette\Utils\Html;
 
 /**
  * @method onSubmit($id, ArrayHash $values)

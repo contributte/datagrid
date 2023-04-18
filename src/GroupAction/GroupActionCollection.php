@@ -2,13 +2,13 @@
 
 namespace Contributte\Datagrid\GroupAction;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridGroupActionException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form as NetteForm;
-use Contributte\Datagrid\Datagrid;
-use Contributte\Datagrid\Exception\DatagridGroupActionException;
 use UnexpectedValueException;
 
 class GroupActionCollection

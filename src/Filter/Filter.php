@@ -2,9 +2,9 @@
 
 namespace Contributte\Datagrid\Filter;
 
+use Contributte\Datagrid\Datagrid;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Contributte\Datagrid\Datagrid;
 
 /**
  * @method void addToFormContainer(Container $container)

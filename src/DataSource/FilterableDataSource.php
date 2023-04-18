@@ -2,7 +2,6 @@
 
 namespace Contributte\Datagrid\DataSource;
 
-use Nette\Utils\ArrayHash;
 use Contributte\Datagrid\Filter\Filter;
 use Contributte\Datagrid\Filter\FilterDate;
 use Contributte\Datagrid\Filter\FilterDateRange;
@@ -10,6 +9,7 @@ use Contributte\Datagrid\Filter\FilterMultiSelect;
 use Contributte\Datagrid\Filter\FilterRange;
 use Contributte\Datagrid\Filter\FilterSelect;
 use Contributte\Datagrid\Filter\FilterText;
+use Nette\Utils\ArrayHash;
 
 abstract class FilterableDataSource
 {

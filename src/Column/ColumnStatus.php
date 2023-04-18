@@ -2,13 +2,13 @@
 
 namespace Contributte\Datagrid\Column;
 
-use Nette\SmartObject;
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Exception\DatagridColumnStatusException;
 use Contributte\Datagrid\Row;
 use Contributte\Datagrid\Status\Option;
 use Contributte\Datagrid\Traits\TButtonCaret;
 use Contributte\Datagrid\Traits\TRenderCondition;
+use Nette\SmartObject;
 
 /**
  * @method onChange(string $id, string $value)

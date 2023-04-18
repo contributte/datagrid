@@ -40,8 +40,8 @@ class SimpleTranslator implements Translator
 	public function __construct(array $dictionary = [])
 	{
 		// BC support for 'ublaboo' translations
-		$oldPrefix = "ublaboo_";
-		$newPrefix = "contributte_";
+		$oldPrefix = 'ublaboo_';
+		$newPrefix = 'contributte_';
 		foreach ($dictionary as $key => $value) {
 			if (str_starts_with($key, $oldPrefix)) {
 				$newKey = $newPrefix . substr($key, strlen($oldPrefix));

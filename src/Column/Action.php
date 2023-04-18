@@ -2,7 +2,6 @@
 
 namespace Contributte\Datagrid\Column;
 
-use Nette\Utils\Html;
 use Contributte\Datagrid\Column\Action\Confirmation\CallbackConfirmation;
 use Contributte\Datagrid\Column\Action\Confirmation\IConfirmation;
 use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
@@ -14,6 +13,7 @@ use Contributte\Datagrid\Traits\TButtonText;
 use Contributte\Datagrid\Traits\TButtonTryAddIcon;
 use Contributte\Datagrid\Traits\TLink;
 use Contributte\Datagrid\Traits\TRenderCondition;
+use Nette\Utils\Html;
 
 class Action extends Column
 {

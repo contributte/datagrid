@@ -2,6 +2,9 @@
 
 namespace Contributte\Datagrid;
 
+use Contributte\Datagrid\Column\Column;
+use Contributte\Datagrid\Exception\DatagridException;
+use Contributte\Datagrid\Utils\PropertyAccessHelper;
 use Dibi\Row as DibiRow;
 use LeanMapper\Entity;
 use Nette\Database\Row as NetteRow;
@@ -9,9 +12,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
 use Nette\Utils\Html;
 use Nextras\Orm\Entity\Entity as NextrasEntity;
-use Contributte\Datagrid\Column\Column;
-use Contributte\Datagrid\Exception\DatagridException;
-use Contributte\Datagrid\Utils\PropertyAccessHelper;
 
 class Row
 {

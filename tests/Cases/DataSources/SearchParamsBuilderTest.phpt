@@ -2,9 +2,9 @@
 
 namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
+use Contributte\Datagrid\DataSource\SearchParamsBuilder;
 use Tester\Assert;
 use Tester\TestCase;
-use Contributte\Datagrid\DataSource\SearchParamsBuilder;
 
 require __DIR__ . '/../../bootstrap.php';
 

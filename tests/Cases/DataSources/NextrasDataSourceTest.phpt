@@ -2,6 +2,9 @@
 
 namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
+use Contributte\Datagrid\DataSource\NextrasDataSource;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Nette\Caching\Cache;
 use Nette\Caching\Storages\DevNullStorage;
 use Nette\Utils\Arrays;
@@ -15,9 +18,6 @@ use Nextras\Orm\Model\SimpleModelFactory;
 use Nextras\Orm\Repository\Repository;
 use Tester\Assert;
 use Tester\Environment;
-use Contributte\Datagrid\DataSource\NextrasDataSource;
-use Contributte\Datagrid\Filter\FilterText;
-use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 

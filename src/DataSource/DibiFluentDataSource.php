@@ -2,10 +2,6 @@
 
 namespace Contributte\Datagrid\DataSource;
 
-use dibi;
-use Dibi\Fluent;
-use Dibi\Helpers;
-use ReflectionClass;
 use Contributte\Datagrid\AggregationFunction\IAggregatable;
 use Contributte\Datagrid\AggregationFunction\IAggregationFunction;
 use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
@@ -17,6 +13,10 @@ use Contributte\Datagrid\Filter\FilterSelect;
 use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
+use dibi;
+use Dibi\Fluent;
+use Dibi\Helpers;
+use ReflectionClass;
 
 class DibiFluentDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {

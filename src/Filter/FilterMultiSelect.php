@@ -2,10 +2,10 @@
 
 namespace Contributte\Datagrid\Filter;
 
+use Contributte\Datagrid\Datagrid;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Contributte\Datagrid\Datagrid;
 use UnexpectedValueException;
 
 class FilterMultiSelect extends FilterSelect

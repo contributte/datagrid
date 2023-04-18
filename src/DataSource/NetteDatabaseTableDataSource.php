@@ -2,9 +2,6 @@
 
 namespace Contributte\Datagrid\DataSource;
 
-use LogicException;
-use Nette\Database\Table\Selection;
-use Nette\Utils\Strings;
 use Contributte\Datagrid\AggregationFunction\IAggregationFunction;
 use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
 use Contributte\Datagrid\Filter\FilterDate;
@@ -15,6 +12,9 @@ use Contributte\Datagrid\Filter\FilterSelect;
 use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
+use LogicException;
+use Nette\Database\Table\Selection;
+use Nette\Utils\Strings;
 
 class NetteDatabaseTableDataSource extends FilterableDataSource implements IDataSource
 {

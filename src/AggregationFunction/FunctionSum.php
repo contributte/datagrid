@@ -2,13 +2,13 @@
 
 namespace Contributte\Datagrid\AggregationFunction;
 
+use Contributte\Datagrid\Utils\PropertyAccessHelper;
 use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Nette\Database\Table\Selection;
 use Nextras\Orm\Collection\DbalCollection;
 use Nextras\Orm\Collection\ICollection;
-use Contributte\Datagrid\Utils\PropertyAccessHelper;
 
 class FunctionSum implements ISingleColumnAggregationFunction
 {

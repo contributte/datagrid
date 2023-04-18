@@ -2,13 +2,13 @@
 
 namespace Contributte\Datagrid\Tests\Cases;
 
-use Tester\Assert;
-use Tester\TestCase;
 use Contributte\Datagrid\Column\Action;
 use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Row;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
+use Tester\Assert;
+use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/TestingDatagridFactory.php';

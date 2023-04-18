@@ -12,11 +12,11 @@
 
 namespace Contributte\Datagrid\Components\DatagridPaginator;
 
+use Contributte\Datagrid\Datagrid;
 use Nette\Application\UI\Control;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Localization\Translator;
 use Nette\Utils\Paginator;
-use Contributte\Datagrid\Datagrid;
 use UnexpectedValueException;
 
 class DatagridPaginator extends Control

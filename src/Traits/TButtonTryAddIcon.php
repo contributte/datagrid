@@ -2,8 +2,8 @@
 
 namespace Contributte\Datagrid\Traits;
 
-use Nette\Utils\Html;
 use Contributte\Datagrid\Datagrid;
+use Nette\Utils\Html;
 
 trait TButtonTryAddIcon
 {

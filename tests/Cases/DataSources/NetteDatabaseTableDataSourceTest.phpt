@@ -2,14 +2,14 @@
 
 namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
+use Contributte\Datagrid\DataSource\NetteDatabaseTableDataSource;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Nette\Caching\Storages\DevNullStorage;
 use Nette\Database\Connection;
 use Nette\Database\Conventions\DiscoveredConventions;
 use Nette\Database\Explorer;
 use Nette\Database\Structure;
 use Nette\Database\Table\Selection;
-use Contributte\Datagrid\DataSource\NetteDatabaseTableDataSource;
-use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 

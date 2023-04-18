@@ -2,6 +2,8 @@
 
 namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
+use Contributte\Datagrid\DataSource\DoctrineDataSource;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -10,8 +12,6 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\AST\PathExpression;
 use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Tools\Setup;
-use Contributte\Datagrid\DataSource\DoctrineDataSource;
-use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 

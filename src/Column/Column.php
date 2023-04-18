@@ -2,11 +2,11 @@
 
 namespace Contributte\Datagrid\Column;
 
-use Nette\Utils\Html;
 use Contributte\Datagrid\Exception\DatagridColumnRendererException;
 use Contributte\Datagrid\Row;
 use Contributte\Datagrid\Traits\TButtonRenderer;
 use Contributte\Datagrid\Traits\TLink;
+use Nette\Utils\Html;
 
 abstract class Column extends FilterableColumn
 {

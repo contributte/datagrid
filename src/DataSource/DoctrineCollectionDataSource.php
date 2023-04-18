@@ -2,10 +2,6 @@
 
 namespace Contributte\Datagrid\DataSource;
 
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\Selectable;
-use LogicException;
 use Contributte\Datagrid\AggregationFunction\IAggregatable;
 use Contributte\Datagrid\AggregationFunction\IAggregationFunction;
 use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
@@ -17,6 +13,10 @@ use Contributte\Datagrid\Filter\FilterSelect;
 use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Selectable;
+use LogicException;
 
 final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	IDataSource,

@@ -2,10 +2,10 @@
 
 namespace Contributte\Datagrid\Column;
 
-use Nette\Utils\Html;
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Exception\DatagridColumnRendererException;
 use Contributte\Datagrid\Row;
+use Nette\Utils\Html;
 
 class ColumnLink extends Column
 {

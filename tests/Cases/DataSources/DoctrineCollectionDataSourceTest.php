@@ -2,11 +2,11 @@
 
 namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Tester\Assert;
 use Contributte\Datagrid\DataSource\DoctrineCollectionDataSource;
 use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
+use Doctrine\Common\Collections\ArrayCollection;
+use Tester\Assert;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 

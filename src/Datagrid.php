@@ -2,25 +2,6 @@
 
 namespace Contributte\Datagrid;
 
-use DateTime;
-use InvalidArgumentException;
-use Nette\Application\ForbiddenRequestException;
-use Nette\Application\IPresenter;
-use Nette\Application\Request;
-use Nette\Application\UI\Component;
-use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
-use Nette\Application\UI\Link;
-use Nette\Application\UI\Presenter;
-use Nette\Bridges\ApplicationLatte\Template;
-use Nette\ComponentModel\IContainer;
-use Nette\Forms\Container;
-use Nette\Forms\Control as FormControl;
-use Nette\Forms\Controls\SubmitButton as FormsSubmitButton;
-use Nette\Forms\Form as NetteForm;
-use Nette\Http\SessionSection;
-use Nette\Localization\Translator;
-use Nette\Utils\ArrayHash;
 use Contributte\Datagrid\AggregationFunction\TDatagridAggregationFunction;
 use Contributte\Datagrid\Column\Action;
 use Contributte\Datagrid\Column\ActionCallback;
@@ -59,6 +40,25 @@ use Contributte\Datagrid\Toolbar\ToolbarButton;
 use Contributte\Datagrid\Utils\ArraysHelper;
 use Contributte\Datagrid\Utils\ItemDetailForm;
 use Contributte\Datagrid\Utils\Sorting;
+use DateTime;
+use InvalidArgumentException;
+use Nette\Application\ForbiddenRequestException;
+use Nette\Application\IPresenter;
+use Nette\Application\Request;
+use Nette\Application\UI\Component;
+use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
+use Nette\Application\UI\Link;
+use Nette\Application\UI\Presenter;
+use Nette\Bridges\ApplicationLatte\Template;
+use Nette\ComponentModel\IContainer;
+use Nette\Forms\Container;
+use Nette\Forms\Control as FormControl;
+use Nette\Forms\Controls\SubmitButton as FormsSubmitButton;
+use Nette\Forms\Form as NetteForm;
+use Nette\Http\SessionSection;
+use Nette\Localization\Translator;
+use Nette\Utils\ArrayHash;
 use UnexpectedValueException;
 
 /**

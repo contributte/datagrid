@@ -2,18 +2,6 @@
 
 namespace Contributte\Datagrid;
 
-use Dibi\Drivers\MsSqlDriver;
-use Dibi\Drivers\OdbcDriver;
-use Dibi\Drivers\PostgreDriver;
-use Dibi\Drivers\SqlsrvDriver;
-use Dibi\Fluent;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\QueryBuilder;
-use Nette\Database\Drivers\MsSqlDriver as NDBMsSqlDriver;
-use Nette\Database\Drivers\SqlsrvDriver as NDBSqlsrvDriver;
-use Nette\Database\Table\Selection;
-use Nette\SmartObject;
-use Nextras\Orm\Collection\ICollection;
 use Contributte\Datagrid\Components\DatagridPaginator\DatagridPaginator;
 use Contributte\Datagrid\DataSource\ArrayDataSource;
 use Contributte\Datagrid\DataSource\DibiFluentDataSource;
@@ -28,6 +16,18 @@ use Contributte\Datagrid\DataSource\NextrasDataSource;
 use Contributte\Datagrid\Exception\DatagridWrongDataSourceException;
 use Contributte\Datagrid\Utils\NetteDatabaseSelectionHelper;
 use Contributte\Datagrid\Utils\Sorting;
+use Dibi\Drivers\MsSqlDriver;
+use Dibi\Drivers\OdbcDriver;
+use Dibi\Drivers\PostgreDriver;
+use Dibi\Drivers\SqlsrvDriver;
+use Dibi\Fluent;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\QueryBuilder;
+use Nette\Database\Drivers\MsSqlDriver as NDBMsSqlDriver;
+use Nette\Database\Drivers\SqlsrvDriver as NDBSqlsrvDriver;
+use Nette\Database\Table\Selection;
+use Nette\SmartObject;
+use Nextras\Orm\Collection\ICollection;
 
 /**
  * @method onBeforeFilter(IDataSource $dataSource)

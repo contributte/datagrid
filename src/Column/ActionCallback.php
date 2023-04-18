@@ -2,8 +2,8 @@
 
 namespace Contributte\Datagrid\Column;
 
-use Nette\SmartObject;
 use Contributte\Datagrid\Datagrid;
+use Nette\SmartObject;
 
 /**
  * @method void onClick(mixed $id)

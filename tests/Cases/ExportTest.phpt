@@ -2,11 +2,11 @@
 
 namespace Contributte\Datagrid\Tests\Cases;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Tester\Assert;
 use Tester\TestCase;
 use Tracy\Debugger;
-use Contributte\Datagrid\Datagrid;
-use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/TestingDatagridFactory.php';

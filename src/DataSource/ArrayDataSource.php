@@ -3,9 +3,6 @@
 namespace Contributte\Datagrid\DataSource;
 
 use ArrayAccess;
-use DateTime;
-use DateTimeInterface;
-use Nette\Utils\Strings;
 use Contributte\Datagrid\Exception\DatagridArrayDataSourceException;
 use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
 use Contributte\Datagrid\Filter\Filter;
@@ -17,6 +14,9 @@ use Contributte\Datagrid\Filter\FilterSelect;
 use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
+use DateTime;
+use DateTimeInterface;
+use Nette\Utils\Strings;
 
 class ArrayDataSource implements IDataSource
 {

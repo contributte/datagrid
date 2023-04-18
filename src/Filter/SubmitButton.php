@@ -2,14 +2,14 @@
 
 namespace Contributte\Datagrid\Filter;
 
-use Nette\Forms\Controls\Button;
-use Nette\Utils\Html;
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Traits\TButtonClass;
 use Contributte\Datagrid\Traits\TButtonIcon;
 use Contributte\Datagrid\Traits\TButtonText;
 use Contributte\Datagrid\Traits\TButtonTitle;
 use Contributte\Datagrid\Traits\TButtonTryAddIcon;
+use Nette\Forms\Controls\Button;
+use Nette\Utils\Html;
 
 class SubmitButton extends Button
 {

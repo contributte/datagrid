@@ -2,8 +2,8 @@
 
 namespace Contributte\Datagrid\Tests\Files;
 
-use Nette\Application\UI\Presenter;
 use Contributte\Datagrid\Datagrid;
+use Nette\Application\UI\Presenter;
 
 final class ExportTestingPresenter extends Presenter
 {

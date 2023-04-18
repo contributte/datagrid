@@ -2,14 +2,14 @@
 
 namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
-use Tester\Assert;
-use Tester\TestCase;
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\DataSource\IDataSource;
 use Contributte\Datagrid\Filter\FilterRange;
 use Contributte\Datagrid\Filter\FilterSelect;
 use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\Sorting;
+use Tester\Assert;
+use Tester\TestCase;
 
 require __DIR__ . '/../../bootstrap.php';
 require __DIR__ . '/../../Files/TestingDatagridFactory.php';

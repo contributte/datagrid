@@ -2,13 +2,13 @@
 
 namespace Contributte\Datagrid\Traits;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridHasToBeAttachedToPresenterComponentException;
+use Contributte\Datagrid\Exception\DatagridLinkCreationException;
 use InvalidArgumentException;
 use Nette\Application\UI\Component;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Contributte\Datagrid\Datagrid;
-use Contributte\Datagrid\Exception\DatagridHasToBeAttachedToPresenterComponentException;
-use Contributte\Datagrid\Exception\DatagridLinkCreationException;
 use UnexpectedValueException;
 
 trait TLink

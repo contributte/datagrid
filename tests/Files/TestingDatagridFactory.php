@@ -2,12 +2,12 @@
 
 namespace Contributte\Datagrid\Tests\Files;
 
+use Contributte\Datagrid\Datagrid;
 use Nette\Application\PresenterFactory;
 use Nette\Http\Request;
 use Nette\Http\Response;
 use Nette\Http\Session;
 use Nette\Http\UrlScript;
-use Contributte\Datagrid\Datagrid;
 
 class TestingDatagridFactory
 {

@@ -2,8 +2,6 @@
 
 namespace Contributte\Datagrid\DataSource;
 
-use Elastic\Elasticsearch\Client;
-use RuntimeException;
 use Contributte\Datagrid\Filter\FilterDate;
 use Contributte\Datagrid\Filter\FilterDateRange;
 use Contributte\Datagrid\Filter\FilterMultiSelect;
@@ -12,6 +10,8 @@ use Contributte\Datagrid\Filter\FilterSelect;
 use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
+use Elastic\Elasticsearch\Client;
+use RuntimeException;
 use UnexpectedValueException;
 
 class ElasticsearchDataSource extends FilterableDataSource implements IDataSource

@@ -2,12 +2,12 @@
 
 namespace Contributte\Datagrid\Tests\Cases;
 
-use Nette\Application\UI\Presenter;
-use Tester\Assert;
-use Tester\TestCase;
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactoryRouter;
 use Contributte\Datagrid\Traits\TLink;
+use Nette\Application\UI\Presenter;
+use Tester\Assert;
+use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
 
