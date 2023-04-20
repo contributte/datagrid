@@ -31,7 +31,8 @@ class SubmitButton extends Button
 		$this->control = Html::el('button', ['type' => 'submit', 'name' => 'submit']);
 	}
 
-	public function getControl(string|object|null $caption = null): Html
+	/** @inheritdoc */
+	public function getControl($caption = null): Html
 	{
 		$el = parent::getControl($caption);
 
