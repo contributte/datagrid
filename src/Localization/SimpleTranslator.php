@@ -47,7 +47,7 @@ class SimpleTranslator implements Translator
 				$newKey = $newPrefix . substr($key, strlen($oldPrefix));
 				// Only change the keys that are in the default $dictionary (other keys are left as-is)
 				if (array_key_exists($newKey, $this->dictionary)) {
-					trigger_error(`Translation key '$key' is deprecated, please use '$newKey' instead`, E_USER_DEPRECATED);
+					trigger_error(sprintf("Translation key '%s' is deprecated, please use '%s' instead", $key, $newKey), E_USER_DEPRECATED);
 					unset($dictionary[$key]);
 					$dictionary[$newKey] = $value;
 				}
