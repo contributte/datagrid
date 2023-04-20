@@ -30,3 +30,11 @@ jobs:
     with:
         php: "8.0"
         database: tests
+
+  test80-lower:
+    name: "Nette Tester"
+    uses: contributte/.github/.github/workflows/nette-tester-mysql.yml@v1
+    with:
+        php: "8.0"
+        composer: "composer update --no-interaction --no-progress --prefer-dist --prefer-stable --prefer-lowest"
+        database: tests
