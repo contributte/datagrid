@@ -69,7 +69,7 @@
 						{if $toolbarButtons}
 							{foreach $toolbarButtons as $toolbar_button}
 								<span n:class="!$iterator->first? ms-1">
-									{$toolbar_button->renderButton()}
+									{$toolbar_button->renderButton()|noescape}
 								</span>
 							{/foreach}
 						{/if}
