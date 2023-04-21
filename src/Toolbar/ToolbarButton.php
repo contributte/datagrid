@@ -66,7 +66,7 @@ class ToolbarButton
 	/**
 	 * Render toolbar button
 	 */
-	public function renderButton(): Html
+	public function renderButton(): Html|string
 	{
 		try {
 			// Renderer function may be used
