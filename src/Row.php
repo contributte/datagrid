@@ -216,6 +216,10 @@ class Row
 			return (string) $value;
 		}
 
+		if (interface_exists(\BackedEnum::class) && $value instanceof \BackedEnum) {
+			return $value->value;
+		}
+
 		return $value;
 	}
 
