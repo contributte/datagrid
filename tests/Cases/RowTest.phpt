@@ -12,6 +12,7 @@ use Tester\Assert;
 use Tester\TestCase;
 use Ublaboo;
 use Ublaboo\DataGrid\Row;
+use Ublaboo\DataGrid\Tests\Cases\Utils\GenderEnum;
 use Ublaboo\DataGrid\Tests\Cases\Utils\TestingDDataGridEntity;
 use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
@@ -68,8 +69,8 @@ final class RowTest extends TestCase
 
 	public function testDoctrineEntity(): void
 	{
-		$entity = new TestingDDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
-		$entity2 = new TestingDDataGridEntity(['id' => 21, 'name' => 'Francis', 'age' => 20]);
+		$entity = new TestingDDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23, 'gender' => GenderEnum::Male]);
+		$entity2 = new TestingDDataGridEntity(['id' => 21, 'name' => 'Francis', 'age' => 20, 'gender' => GenderEnum::Female]);
 
 		$entity->setPartner($entity2);
 
@@ -79,6 +80,7 @@ final class RowTest extends TestCase
 		Assert::same('John Doe', $row->getValue('name'));
 		Assert::same(23, $row->getValue('age'));
 		Assert::same(20, $row->getValue('partner.age'));
+		Assert::same(GenderEnum::Male->value, $row->getValue('gender'));
 	}
 
 	public function testLeanMapperEntity(): void
