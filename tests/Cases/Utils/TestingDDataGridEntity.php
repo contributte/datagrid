@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\Utils;
 
@@ -8,62 +6,68 @@ class TestingDDataGridEntity
 {
 
 	/**
+	 * @var int
 	 * @ORM\Id
 	 * @ORM\Column(type="integer")
 	 * @ORM\GeneratedValue
-	 * @var int
 	 */
-	private $id;
+	private mixed $id;
 
 	/**
-	 * @ORM\Column(type="string")
 	 * @var string
+	 * @ORM\Column(type="string")
 	 */
-	private $name;
+	private mixed $name;
 
 	/**
-	 * @ORM\Column(type="integer")
 	 * @var int
+	 * @ORM\Column(type="integer")
 	 */
-	private $age;
+	private mixed $age;
 
 	/**
-	 * @var TestingDDataGridEntity|null
+	 * @ORM\Column(type="string", enumType="GenderEnum")
+	 * @var GenderEnum|null
 	 */
-	private $partner;
+	private ?GenderEnum $gender;
 
-
-	public function __construct($args)
-	{
-		$this->id = $args['id'];
-		$this->age = $args['age'];
-		$this->name = $args['name'];
-	}
-
-
-	public function getName(): string
-	{
-		return $this->name;
-	}
-
+	private ?TestingDDataGridEntity $partner = null;
 
 	final public function getId(): int
 	{
 		return $this->id;
 	}
 
+	public function __construct(array $args)
+	{
+		$this->id = $args['id'];
+		$this->age = $args['age'];
+		$this->name = $args['name'];
+
+		if (isset($args['gender'])) {
+			$this->gender = $args['gender'];
+		}
+	}
+
+	public function getName(): string
+	{
+		return $this->name;
+	}
 
 	public function getAge(): int
 	{
 		return $this->age;
 	}
 
+	public function getGender(): ?GenderEnum
+	{
+		return $this->gender;
+	}
 
 	public function setPartner(TestingDDataGridEntity $partner): void
 	{
 		$this->partner = $partner;
 	}
-
 
 	public function getPartner(): ?TestingDDataGridEntity
 	{

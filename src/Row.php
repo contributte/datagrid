@@ -271,6 +271,10 @@ class Row
 			return (string) $value;
 		}
 
+		if (is_object($value) && $value instanceof \BackedEnum) {
+			return $value->value;
+		}
+
 		return $value;
 	}
 
