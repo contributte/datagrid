@@ -480,11 +480,6 @@
 	white-space: nowrap
 }
 
-.datagrid select {
-	padding: 0;
-	text-transform: none
-}
-
 .datagrid .row-grid-bottom {
 	font-size: 0;
 	padding: 8px;
