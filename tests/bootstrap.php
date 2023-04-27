@@ -1,8 +1,8 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-Tester\Environment::setup();
+use Tester\Environment;
+
+Environment::setup();
 date_default_timezone_set('Europe/Prague');

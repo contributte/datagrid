@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\AggregationFunction;
 
@@ -19,9 +17,6 @@ interface IAggregationFunction
 
 	public function getFilterDataType(): string;
 
+	public function processDataSource(Fluent|QueryBuilder|Collection|Selection|ICollection $dataSource): void;
 
-	/**
-	 * @param Fluent|QueryBuilder|Collection|Selection|ICollection $dataSource
-	 */
-	public function processDataSource($dataSource): void;
 }

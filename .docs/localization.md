@@ -5,7 +5,7 @@ Table of contents
 
 # Localization
 
-As you can see in the example below, a `SimpleTranslator` class comes with datagrid (the example was translated to czech). You can use it as shown (you will do that probably in some factory for all datagrids in your application). Of course you can use your own translator - it just has to implement `Nette\Localization\ITranslator`.
+As you can see in the example below, a `SimpleTranslator` class comes with datagrid (the example was translated to czech). You can use it as shown (you will do that probably in some factory for all datagrids in your application). Of course you can use your own translator - it just has to implement `Nette\Localization\Translator`.
 
 ```php
 public function createComponentLocalizationGrid($name): Ublaboo\DataGrid\DataGrid
@@ -15,7 +15,7 @@ public function createComponentLocalizationGrid($name): Ublaboo\DataGrid\DataGri
 	$grid->setDataSource($this->ndb->table('ublaboo_example'));
 
 	$grid->addColumnNumber('id', 'Id')
-		->setAlign('left')
+		->setAlign('start')
 		->setSortable();
 
 	$grid->addColumnText('name', 'Name')

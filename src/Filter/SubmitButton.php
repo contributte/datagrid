@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Filter;
 
@@ -22,17 +20,9 @@ class SubmitButton extends Button
 	use TButtonTitle;
 	use TButtonText;
 
-	/**
-	 * @var DataGrid
-	 */
-	protected $grid;
-
-
-	public function __construct(DataGrid $grid)
+	public function __construct(protected DataGrid $grid)
 	{
 		parent::__construct($this->text);
-
-		$this->grid = $grid;
 
 		$this->text = 'ublaboo_datagrid.filter_submit_button';
 		$this->class = 'btn btn-sm btn-primary';
@@ -41,11 +31,7 @@ class SubmitButton extends Button
 		$this->control = Html::el('button', ['type' => 'submit', 'name' => 'submit']);
 	}
 
-
-	/**
-	 * @param string|object $caption
-	 */
-	public function getControl($caption = null): Html
+	public function getControl(string|object|null $caption = null): Html
 	{
 		$el = parent::getControl($caption);
 
@@ -69,4 +55,5 @@ class SubmitButton extends Button
 
 		return $el;
 	}
+
 }

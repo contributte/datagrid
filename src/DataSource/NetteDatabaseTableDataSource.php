@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -21,33 +19,12 @@ use Ublaboo\DataGrid\Utils\Sorting;
 class NetteDatabaseTableDataSource extends FilterableDataSource implements IDataSource
 {
 
-	/**
-	 * @var Selection
-	 */
-	protected $dataSource;
+	/** @var array */
+	protected array $data = [];
 
-	/**
-	 * @var array
-	 */
-	protected $data = [];
-
-	/**
-	 * @var string
-	 */
-	protected $primaryKey;
-
-
-	public function __construct(Selection $dataSource, string $primaryKey)
+	public function __construct(protected Selection $dataSource, protected string $primaryKey)
 	{
-		$this->dataSource = $dataSource;
-		$this->primaryKey = $primaryKey;
 	}
-
-
-	// *******************************************************************************
-	// *                          IDataSource implementation                         *
-	// *******************************************************************************
-
 
 	public function getCount(): int
 	{
@@ -56,7 +33,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		try {
 			$primary = $this->dataSource->getPrimary();
 
-		} catch (LogicException $e) {
+		} catch (LogicException) {
 			if ($dataSourceSqlBuilder->getGroup() !== '') {
 				return $this->dataSource->count(
 					'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
@@ -77,7 +54,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		);
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -87,7 +63,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			? $this->data
 			: $this->dataSource->fetchAll();
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -99,7 +74,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		return $this;
 	}
 
-
 	/**
 	 * @phpstan-param positive-int|0 $offset
 	 * @phpstan-param positive-int|0 $limit
@@ -110,7 +84,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 		return $this;
 	}
-
 
 	public function sort(Sorting $sorting): IDataSource
 	{
@@ -130,7 +103,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			$this->dataSource->getSqlBuilder()->setOrder([], []);
 
 			foreach ($sort as $column => $order) {
-				$this->dataSource->order("$column $order");
+				$this->dataSource->order(sprintf('%s %s', $column, $order));
 			}
 		} else {
 			/**
@@ -144,12 +117,10 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		return $this;
 	}
 
-
 	public function processAggregation(IAggregationFunction $function): void
 	{
 		$function->processDataSource(clone $this->dataSource);
 	}
-
 
 	protected function applyFilterDate(FilterDate $filter): void
 	{
@@ -158,12 +129,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		try {
 			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
-			$this->dataSource->where("DATE({$filter->getColumn()}) = ?", $date->format('Y-m-d'));
-		} catch (DataGridDateTimeHelperException $ex) {
+			$this->dataSource->where(sprintf('DATE(%s) = ?', $filter->getColumn()), $date->format('Y-m-d'));
+		} catch (DataGridDateTimeHelperException) {
 			// ignore the invalid filter value
 		}
 	}
-
 
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
@@ -178,10 +148,10 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 				$dateFrom->setTime(0, 0, 0);
 
 				$this->dataSource->where(
-					"DATE({$filter->getColumn()}) >= ?",
+					sprintf('DATE(%s) >= ?', $filter->getColumn()),
 					$dateFrom->format('Y-m-d')
 				);
-			} catch (DataGridDateTimeHelperException $ex) {
+			} catch (DataGridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -191,13 +161,15 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 				$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
 				$dateTo->setTime(23, 59, 59);
 
-				$this->dataSource->where("DATE({$filter->getColumn()}) <= ?", $dateTo->format('Y-m-d'));
-			} catch (DataGridDateTimeHelperException $ex) {
+				$this->dataSource->where(
+					sprintf('DATE(%s) <= ?', $filter->getColumn()),
+					$dateTo->format('Y-m-d')
+				);
+			} catch (DataGridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
 	}
-
 
 	protected function applyFilterRange(FilterRange $filter): void
 	{
@@ -207,14 +179,13 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$valueTo = $conditions[$filter->getColumn()]['to'];
 
 		if ($valueFrom) {
-			$this->dataSource->where("{$filter->getColumn()} >= ?", $valueFrom);
+			$this->dataSource->where(sprintf('%s >= ?', $filter->getColumn()), $valueFrom);
 		}
 
 		if ($valueTo) {
-			$this->dataSource->where("{$filter->getColumn()} <= ?", $valueTo);
+			$this->dataSource->where(sprintf('%s <= ?', $filter->getColumn()), $valueTo);
 		}
 	}
-
 
 	protected function applyFilterText(FilterText $filter): void
 	{
@@ -229,37 +200,36 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 			$args = [];
 
 			if ($filter->isExactSearch()) {
-				$like .= "$column = ? OR ";
-				$args[] = "$value";
+				$like .= sprintf('%s = ? OR ', $column);
+				$args[] = sprintf('%s', $value);
 			} else {
 				$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 				foreach ($words as $word) {
-					$like .= "$column LIKE ? OR ";
-					$args[] = "%$word%";
+					$like .= sprintf('%s LIKE ? OR ', $column);
+					$args[] = sprintf('%%%s%%', $word);
 				}
 			}
 
 			$like = substr($like, 0, strlen($like) - 4) . ')';
 
 			$or[] = $like;
-			$bigOr .= "$like OR ";
-			$bigOrArgs = array_merge($bigOrArgs, $args);
+			$bigOr .= sprintf('%s OR ', $like);
+			$bigOrArgs = [...$bigOrArgs, ...$args];
 		}
 
-		if (sizeof($or) > 1) {
+		if (count($or) > 1) {
 			$bigOr = substr($bigOr, 0, strlen($bigOr) - 4) . ')';
 
-			$query = array_merge([$bigOr], $bigOrArgs);
+			$query = [...[$bigOr], ...$bigOrArgs];
 
 			call_user_func_array([$this->dataSource, 'where'], $query);
 		} else {
-			$query = array_merge($or, $args);
+			$query = [...$or, ...$args];
 
 			call_user_func_array([$this->dataSource, 'where'], $query);
 		}
 	}
-
 
 	protected function applyFilterMultiSelect(FilterMultiSelect $filter): void
 	{
@@ -267,11 +237,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$values = $condition[$filter->getColumn()];
 		$or = '(';
 
-		if (sizeof($values) > 1) {
-			$length = sizeof($values);
+		if ((is_countable($values) ? count($values) : 0) > 1) {
+			$length = is_countable($values) ? count($values) : 0;
 			$i = 1;
 
-			for ($iterator = 0; $iterator < count($values); $iterator++) {
+			for ($iterator = 0; $iterator < (is_countable($values) ? count($values) : 0); $iterator++) {
 				if ($i === $length) {
 					$or .= $filter->getColumn() . ' = ?)';
 				} else {
@@ -289,18 +259,14 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		}
 	}
 
-
 	protected function applyFilterSelect(FilterSelect $filter): void
 	{
 		$this->dataSource->where($filter->getCondition());
 	}
 
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function getDataSource()
+	protected function getDataSource(): Selection
 	{
 		return $this->dataSource;
 	}
+
 }

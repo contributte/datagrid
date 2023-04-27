@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\DataSource;
 
@@ -23,35 +21,20 @@ use Ublaboo\DataGrid\Utils\Sorting;
 class ArrayDataSource implements IDataSource
 {
 
-	/**
-	 * @var array
-	 */
-	protected $data = [];
+	/** @var array */
+	protected array $data = [];
 
-	/**
-	 * @var int
-	 */
-	protected $count = 0;
+	protected int $count = 0;
 
-	/**
-	 * @param array $dataSource
-	 */
 	public function __construct(array $dataSource)
 	{
 		$this->setData($dataSource);
 	}
 
-
-	// *******************************************************************************
-	// *                          IDataSource implementation                         *
-	// *******************************************************************************
-
-
 	public function getCount(): int
 	{
-		return sizeof($this->data);
+		return count($this->data);
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -60,7 +43,6 @@ class ArrayDataSource implements IDataSource
 	{
 		return $this->data;
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -76,15 +58,12 @@ class ArrayDataSource implements IDataSource
 					);
 					$this->setData($data);
 				} else {
-					$data = array_filter($this->data, function ($row) use ($filter) {
-						return $this->applyFilter($row, $filter);
-					});
+					$data = array_filter($this->data, fn ($row) => $this->applyFilter($row, $filter));
 					$this->setData($data);
 				}
 			}
 		}
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -106,7 +85,6 @@ class ArrayDataSource implements IDataSource
 		return $this;
 	}
 
-
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$data = array_slice($this->data, $offset, $limit);
@@ -114,7 +92,6 @@ class ArrayDataSource implements IDataSource
 
 		return $this;
 	}
-
 
 	public function sort(Sorting $sorting): IDataSource
 	{
@@ -167,12 +144,7 @@ class ArrayDataSource implements IDataSource
 		return $this;
 	}
 
-
-	/**
-	 * @param mixed $row
-	 * @return mixed
-	 */
-	protected function applyFilter($row, Filter $filter)
+	protected function applyFilter(mixed $row, Filter $filter): mixed
 	{
 		if (is_array($row) || $row instanceof ArrayAccess) {
 			if ($filter instanceof FilterDate) {
@@ -210,7 +182,7 @@ class ArrayDataSource implements IDataSource
 				$row_value = strtolower(Strings::toAscii((string) $row[$column]));
 
 				foreach ($words as $word) {
-					if (strpos($row_value, strtolower(Strings::toAscii($word))) !== false) {
+					if (str_contains($row_value, strtolower(Strings::toAscii($word)))) {
 						return $row;
 					}
 				}
@@ -220,11 +192,7 @@ class ArrayDataSource implements IDataSource
 		return false;
 	}
 
-
-	/**
-	 * @param mixed $row
-	 */
-	protected function applyFilterMultiSelect($row, FilterMultiSelect $filter): bool
+	protected function applyFilterMultiSelect(mixed $row, FilterMultiSelect $filter): bool
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -232,11 +200,7 @@ class ArrayDataSource implements IDataSource
 		return in_array($row[$filter->getColumn()], $values, true);
 	}
 
-
-	/**
-	 * @param mixed $row
-	 */
-	protected function applyFilterRange($row, FilterRange $filter): bool
+	protected function applyFilterRange(mixed $row, FilterRange $filter): bool
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
@@ -256,11 +220,7 @@ class ArrayDataSource implements IDataSource
 		return true;
 	}
 
-
-	/**
-	 * @param mixed $row
-	 */
-	protected function applyFilterDateRange($row, FilterDateRange $filter): bool
+	protected function applyFilterDateRange(mixed $row, FilterDateRange $filter): bool
 	{
 		$format = $filter->getPhpFormat();
 		$condition = $filter->getCondition();
@@ -277,7 +237,7 @@ class ArrayDataSource implements IDataSource
 				 */
 				try {
 					$row_value = DateTimeHelper::tryConvertToDate($row_value);
-				} catch (DataGridDateTimeHelperException $e) {
+				} catch (DataGridDateTimeHelperException) {
 					/**
 					 * Otherwise just return raw string
 					 */
@@ -300,7 +260,7 @@ class ArrayDataSource implements IDataSource
 				 */
 				try {
 					$row_value = DateTimeHelper::tryConvertToDate($row_value);
-				} catch (DataGridDateTimeHelperException $e) {
+				} catch (DataGridDateTimeHelperException) {
 					/**
 					 * Otherwise just return raw string
 					 */
@@ -316,13 +276,10 @@ class ArrayDataSource implements IDataSource
 		return true;
 	}
 
-
 	/**
 	 * Apply fitler date and tell whether row value matches or not
-	 *
-	 * @param mixed $row
 	 */
-	protected function applyFilterDate($row, FilterDate $filter): bool
+	protected function applyFilterDate(mixed $row, FilterDate $filter): bool
 	{
 		$format = $filter->getPhpFormat();
 		$condition = $filter->getCondition();
@@ -338,7 +295,7 @@ class ArrayDataSource implements IDataSource
 				 */
 				try {
 					$row_value = DateTimeHelper::tryConvertToDateTime($row_value);
-				} catch (DataGridDateTimeHelperException $e) {
+				} catch (DataGridDateTimeHelperException) {
 					/**
 					 * Otherwise just return raw string
 					 */
@@ -352,7 +309,6 @@ class ArrayDataSource implements IDataSource
 		return false;
 	}
 
-
 	/**
 	 * Set the data
 	 */
@@ -362,4 +318,5 @@ class ArrayDataSource implements IDataSource
 
 		return $this;
 	}
+
 }

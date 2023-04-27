@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Files;
 
@@ -10,16 +8,12 @@ use Ublaboo\DataGrid\DataGrid;
 final class TestingPresenter extends Presenter
 {
 
-	/**
-	 * @var bool
-	 */
-	public $actionHandeled = false;
+	public bool $actionHandeled = false;
 
 	public function handleDoStuff(int $id): void
 	{
 		$this->actionHandeled = true;
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -29,19 +23,9 @@ final class TestingPresenter extends Presenter
 		return $destination . '?' . http_build_query($args);
 	}
 
-
-	/*protected function createRequest(
-		Component $component,
-		string $destination,
-		array $args,
-		string $mode
-	): ?string
-	{
-		return ucfirst($component->getName()) . $this->link($destination, $args);
-	}*/
-
 	protected function createComponentGrid(string $name): DataGrid
 	{
 		return new DataGrid($this, $name);
 	}
+
 }

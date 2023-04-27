@@ -1,12 +1,11 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
 
 use dibi;
-use DibiConnection;
-use Ublaboo;
+use Dibi\Connection;
+use Ublaboo\DataGrid\DataSource\DibiFluentDataSource;
+use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
@@ -16,16 +15,13 @@ error_reporting(E_ERROR | E_PARSE);
 final class DibiFluentDataSourceTest extends BaseDataSourceTest
 {
 
-	/**
-	 * @var DibiConnection
-	 */
-	private $db;
+	private Connection $db;
 
 	public function setUp(): void
 	{
 		$this->setUpDatabase();
-		$this->ds = new Ublaboo\DataGrid\DataSource\DibiFluentDataSource($this->db->select('*')->from('users'), 'id');
-		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
+		$this->ds = new DibiFluentDataSource($this->db->select('*')->from('users'), 'id');
+		$factory = new TestingDataGridFactory();
 		$this->grid = $factory->createTestingDataGrid();
 	}
 

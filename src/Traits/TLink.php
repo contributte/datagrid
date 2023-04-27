@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Ublaboo\DataGrid\Traits;
 
@@ -32,7 +30,7 @@ trait TLink
 
 		$presenter = $grid->getPresenter();
 
-		if (strpos($href, ':') !== false) {
+		if (str_contains($href, ':')) {
 			return $presenter->link($href, $params);
 		}
 
@@ -45,15 +43,15 @@ trait TLink
 
 			try {
 				$link = $targetComponent->link($href, $params);
-			} catch (InvalidLinkException $e) {
+			} catch (InvalidLinkException) {
 				$link = false;
 			}
 
 			if (is_string($link)) {
 				if (
-					strpos($link, '#error') === 0 ||
-					(strrpos($href, '!') !== false && strpos($link, '#') === 0) ||
-					(in_array($presenter->invalidLinkMode, [Presenter::INVALID_LINK_WARNING, Presenter::INVALID_LINK_SILENT], true) && strpos($link, '#') === 0)
+					str_starts_with($link, '#error') ||
+					(strrpos($href, '!') !== false && str_starts_with($link, '#')) ||
+					(in_array($presenter->invalidLinkMode, [Presenter::INVALID_LINK_WARNING, Presenter::INVALID_LINK_SILENT], true) && str_starts_with($link, '#'))
 				) {
 					continue; // Did not find signal handler
 				}
@@ -67,7 +65,6 @@ trait TLink
 		// Went 10 steps up to the Presenter and did not find any signal handler
 		throw $this->createHierarchyLookupException($grid, $href, $params);
 	}
-
 
 	private function createHierarchyLookupException(
 		DataGrid $grid,
@@ -84,13 +81,13 @@ trait TLink
 			);
 		}
 
-		$desiredHandler = get_class($parent) . '::handle' . ucfirst($href) . '()';
+		$desiredHandler = $parent::class . '::handle' . ucfirst($href) . '()';
 
 		return new DataGridLinkCreationException(
 			'DataGrid could not create link "'
 			. $href . '" - did not find any signal handler in componenet hierarchy from '
-			. get_class($parent) . ' up to the '
-			. get_class($presenter) . '. '
+			. $parent::class . ' up to the '
+			. $presenter::class . '. '
 			. 'Try adding handler ' . $desiredHandler
 		);
 	}

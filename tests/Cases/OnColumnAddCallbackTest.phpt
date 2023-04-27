@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 /**
  * TEST: OnColumnAddCallbackTest
@@ -10,31 +8,30 @@ declare(strict_types=1);
 
 namespace Ublaboo\DataGrid\Tests\Cases;
 
-use Tester;
-use Ublaboo;
+use Tester\Assert;
+use Tester\TestCase;
+use Ublaboo\DataGrid\Column\Column;
+use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/TestingDataGridFactory.php';
 
 
-class OnColumnAddCallbackTest extends Tester\TestCase
+class OnColumnAddCallbackTest extends TestCase
 {
 
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
-	private $grid;
+	private DataGrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
+		$factory = new TestingDataGridFactory();
 		$this->grid = $factory->createTestingDataGrid();
 	}
 
-
 	public function testSetSortable(): void
 	{
-		$this->grid->onColumnAdd[] = function ($key, Ublaboo\DataGrid\Column\Column $column): void {
+		$this->grid->onColumnAdd[] = function ($key, Column $column): void {
 			$column->setSortable();
 		};
 
@@ -45,11 +42,11 @@ class OnColumnAddCallbackTest extends Tester\TestCase
 		$columnTextNotSortable = $this->grid->addColumnText('textNotSortable', 'textName')
 			->setSortable(false);
 
-		Tester\Assert::true($columnText->isSortable());
-		Tester\Assert::true($columnNumber->isSortable());
-		Tester\Assert::true($columnDateTime->isSortable());
+		Assert::true($columnText->isSortable());
+		Assert::true($columnNumber->isSortable());
+		Assert::true($columnDateTime->isSortable());
 
-		Tester\Assert::false($columnTextNotSortable->isSortable());
+		Assert::false($columnTextNotSortable->isSortable());
 	}
 
 }
