@@ -109,9 +109,6 @@ class DataGrid extends Control
 	/** @var array|callable[] */
 	public array $onFiltersAssembled = [];
 
-	/** @var array|callable[] */
-	public array $onFiltersAssembled = [];
-
 	/**
 	 * When set to TRUE, datagrid throws an exception
 	 *  when tring to get related entity within join and entity does not exist
