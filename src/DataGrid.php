@@ -95,19 +95,19 @@ class DataGrid extends Control
 	public array $onColumnAdd = [];
 
 	/** @var array|callable[] */
-	public $onColumnShow = [];
+	public array $onColumnShow = [];
 
 	/** @var array|callable[] */
-	public $onColumnHide = [];
+	public array $onColumnHide = [];
 
 	/** @var array|callable[] */
-	public $onShowDefaultColumns = [];
+	public array $onShowDefaultColumns = [];
 
 	/** @var array|callable[] */
-	public $onShowAllColumns = [];
+	public array $onShowAllColumns = [];
 
 	/** @var array|callable[] */
-	public $onFiltersAssembled = [];
+	public array $onFiltersAssembled = [];
 
 	/** @var array|callable[] */
 	public array $onFiltersAssembled = [];
