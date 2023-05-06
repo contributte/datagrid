@@ -65,6 +65,10 @@ use UnexpectedValueException;
  * @method onRedraw()
  * @method onRender(DataGrid $dataGrid)
  * @method onColumnAdd(string $key, Column $column)
+ * @method onColumnShow(string $key)
+ * @method onColumnHide(string $key)
+ * @method onShowDefaultColumns()
+ * @method onShowAllColumns()
  * @method onExport(DataGrid $dataGrid)
  * @method onFiltersAssembled(Filter[] $filters)
  */
@@ -89,6 +93,18 @@ class DataGrid extends Control
 
 	/** @var array|callable[] */
 	public array $onColumnAdd = [];
+
+	/** @var array|callable[] */
+	public array $onColumnShow = [];
+
+	/** @var array|callable[] */
+	public array $onColumnHide = [];
+
+	/** @var array|callable[] */
+	public array $onShowDefaultColumns = [];
+
+	/** @var array|callable[] */
+	public array $onShowAllColumns = [];
 
 	/** @var array|callable[] */
 	public array $onFiltersAssembled = [];
@@ -2020,6 +2036,7 @@ class DataGrid extends Control
 
 		$this->redrawControl();
 
+		$this->onShowAllColumns();
 		$this->onRedraw();
 	}
 
@@ -2030,6 +2047,7 @@ class DataGrid extends Control
 
 		$this->redrawControl();
 
+		$this->onShowDefaultColumns();
 		$this->onRedraw();
 	}
 
@@ -2050,6 +2068,7 @@ class DataGrid extends Control
 
 		$this->redrawControl();
 
+		$this->onColumnShow($column);
 		$this->onRedraw();
 	}
 
@@ -2071,6 +2090,7 @@ class DataGrid extends Control
 
 		$this->redrawControl();
 
+		$this->onColumnHide($column);
 		$this->onRedraw();
 	}
 
