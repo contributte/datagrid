@@ -13,6 +13,23 @@ use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactoryRouter;
 final class DataGridTest extends TestCase
 {
 
+	public function testDefaultFilter(): void
+	{
+		$factory = new TestingDataGridFactoryRouter();
+		/** @var DataGrid $grid */
+		$grid = $factory->createTestingDataGrid()->getComponent('grid');
+		$grid->addFilterText('test', 'Test filter');
+		$grid->setDefaultFilter([
+			'test' => 'value',
+		]);
+
+		$grid->setFilter(['test' => 'value']);
+		Assert::true($grid->isFilterDefault());
+
+		$grid->setFilter(['test' => null]);
+		Assert::false($grid->isFilterDefault());
+	}
+
 	public function testResetFilterLinkWithRememberOption(): void
 	{
 		$factory = new TestingDataGridFactoryRouter();
