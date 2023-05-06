@@ -68,6 +68,10 @@ class Row
 				return (string) $arrayValue;
 			}
 
+			if (interface_exists(\BackedEnum::class) && $arrayValue instanceof \BackedEnum) {
+				return $arrayValue->value;
+			}
+
 			return $arrayValue;
 		}
 
