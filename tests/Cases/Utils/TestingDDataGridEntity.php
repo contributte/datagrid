@@ -25,6 +25,9 @@ class TestingDDataGridEntity
 	 */
 	private mixed $age;
 
+	/** @ORM\Column(type="string", enumType="GenderEnum") */
+	private ?GenderEnum $gender;
+
 	private ?TestingDDataGridEntity $partner = null;
 
 	final public function getId(): int
@@ -37,6 +40,7 @@ class TestingDDataGridEntity
 		$this->id = $args['id'];
 		$this->age = $args['age'];
 		$this->name = $args['name'];
+		$this->gender = $args['gender'] ?? null;
 	}
 
 	public function getName(): string
@@ -47,6 +51,11 @@ class TestingDDataGridEntity
 	public function getAge(): int
 	{
 		return $this->age;
+	}
+
+	public function getGender(): ?GenderEnum
+	{
+		return $this->gender;
 	}
 
 	public function setPartner(TestingDDataGridEntity $partner): void
