@@ -1,21 +1,21 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Files;
+namespace Contributte\Datagrid\Tests\Files;
 
+use Contributte\Datagrid\Datagrid;
 use Nette\Application\PresenterFactory;
 use Nette\Http\Request;
 use Nette\Http\Response;
 use Nette\Http\Session;
 use Nette\Http\UrlScript;
-use Ublaboo\DataGrid\DataGrid;
 
-class TestingDataGridFactory
+class TestingDatagridFactory
 {
 
-	public function createTestingDataGrid(string $presenterName = 'Testing'): DataGrid
+	public function createTestingDatagrid(string $presenterName = 'Testing'): Datagrid
 	{
 		$presenterFactory = new PresenterFactory();
-		$presenterFactory->setMapping(['*' => 'Ublaboo\DataGrid\Tests\Files\*Presenter']);
+		$presenterFactory->setMapping(['*' => 'Contributte\Datagrid\Tests\Files\*Presenter']);
 
 		$presenter = $presenterFactory->createPresenter($presenterName);
 

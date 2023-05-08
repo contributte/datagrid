@@ -1,22 +1,22 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\DataSource;
+namespace Contributte\Datagrid\DataSource;
 
+use Contributte\Datagrid\AggregationFunction\IAggregatable;
+use Contributte\Datagrid\AggregationFunction\IAggregationFunction;
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterMultiSelect;
+use Contributte\Datagrid\Filter\FilterRange;
+use Contributte\Datagrid\Filter\FilterSelect;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Utils\DateTimeHelper;
+use Contributte\Datagrid\Utils\Sorting;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
 use LogicException;
-use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
-use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
-use Ublaboo\DataGrid\Utils\Sorting;
 
 final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	IDataSource,
@@ -121,7 +121,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 				$to = Criteria::expr()->lte($filter->getColumn(), $date->format('Y-m-d 23:59:59'));
 
 				$this->criteria->andWhere($from)->andWhere($to);
-			} catch (DataGridDateTimeHelperException) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -141,7 +141,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 				$expr = Criteria::expr()->gte($filter->getColumn(), $dateFrom->format('Y-m-d H:i:s'));
 				$this->criteria->andWhere($expr);
-			} catch (DataGridDateTimeHelperException) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -155,7 +155,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 				$expr = Criteria::expr()->lte($filter->getColumn(), $dateTo->format('Y-m-d H:i:s'));
 				$this->criteria->andWhere($expr);
-			} catch (DataGridDateTimeHelperException) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}

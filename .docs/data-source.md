@@ -59,7 +59,7 @@ Basic usage:
 
 ```php
 $grid->setDataSource(
-	new Ublaboo\DataGrid\DataSource\ApiDataSource('http://my.remote.api')
+	new Contributte\Datagrid\DataSource\ApiDataSource('http://my.remote.api')
 );
 ```
 

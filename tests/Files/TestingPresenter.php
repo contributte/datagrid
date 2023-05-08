@@ -1,9 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Files;
+namespace Contributte\Datagrid\Tests\Files;
 
+use Contributte\Datagrid\Datagrid;
 use Nette\Application\UI\Presenter;
-use Ublaboo\DataGrid\DataGrid;
 
 final class TestingPresenter extends Presenter
 {
@@ -23,9 +23,9 @@ final class TestingPresenter extends Presenter
 		return $destination . '?' . http_build_query($args);
 	}
 
-	protected function createComponentGrid(string $name): DataGrid
+	protected function createComponentGrid(string $name): Datagrid
 	{
-		return new DataGrid($this, $name);
+		return new Datagrid($this, $name);
 	}
 
 }

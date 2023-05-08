@@ -1,10 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Filter;
+namespace Contributte\Datagrid\Filter;
 
+use Contributte\Datagrid\Datagrid;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Ublaboo\DataGrid\DataGrid;
 
 /**
  * @method void addToFormContainer(Container $container)
@@ -31,7 +31,7 @@ abstract class Filter
 
 	abstract public function getCondition(): array;
 
-	public function __construct(protected DataGrid $grid, protected string $key, protected string $name)
+	public function __construct(protected Datagrid $grid, protected string $key, protected string $name)
 	{
 	}
 

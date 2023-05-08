@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Column;
+namespace Contributte\Datagrid\Column;
 
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Utils\DateTimeHelper;
 use DateTime;
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
 
 class ColumnDateTime extends Column
 {
@@ -26,7 +26,7 @@ class ColumnDateTime extends Column
 				$date = DateTimeHelper::tryConvertToDateTime($value);
 
 				return $date->format($this->format);
-			} catch (DataGridDateTimeHelperException) {
+			} catch (DatagridDateTimeHelperException) {
 				/**
 				 * Otherwise just return raw string
 				 */

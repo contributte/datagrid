@@ -1,14 +1,14 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Filter;
+namespace Contributte\Datagrid\Filter;
 
-use Ublaboo\DataGrid\DataGrid;
+use Contributte\Datagrid\Datagrid;
 
 abstract class OneColumnFilter extends Filter
 {
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		string $name,
 		protected string $column

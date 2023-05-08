@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\AggregationFunction;
+namespace Contributte\Datagrid\AggregationFunction;
 
 use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;

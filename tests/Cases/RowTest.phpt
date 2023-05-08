@@ -1,28 +1,28 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Cases;
+namespace Contributte\Datagrid\Tests\Cases;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/TestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Tests\Cases\Utils\LeanBookEntity;
+use Contributte\Datagrid\Tests\Cases\Utils\TestingDDatagridEntity;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Nette\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Tests\Cases\Utils\LeanBookEntity;
-use Ublaboo\DataGrid\Tests\Cases\Utils\TestingDDataGridEntity;
-use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 final class RowTest extends TestCase
 {
 
-	private DataGrid $grid;
+	private Datagrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
 	public function testControl(): void
@@ -60,8 +60,8 @@ final class RowTest extends TestCase
 
 	public function testDoctrineEntity(): void
 	{
-		$entity = new TestingDDataGridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
-		$entity2 = new TestingDDataGridEntity(['id' => 21, 'name' => 'Francis', 'age' => 20]);
+		$entity = new TestingDDatagridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23]);
+		$entity2 = new TestingDDatagridEntity(['id' => 21, 'name' => 'Francis', 'age' => 20]);
 
 		$entity->setPartner($entity2);
 

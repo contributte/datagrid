@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Column;
+namespace Contributte\Datagrid\Column;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridColumnRendererException;
+use Contributte\Datagrid\Row;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Row;
 
 class ColumnLink extends Column
 {
@@ -25,7 +25,7 @@ class ColumnLink extends Column
 	protected array $parameters = [];
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		string $column,
 		string $name,
@@ -43,7 +43,7 @@ class ColumnLink extends Column
 		 */
 		try {
 			return $this->useRenderer($row);
-		} catch (DataGridColumnRendererException) {
+		} catch (DatagridColumnRendererException) {
 			/**
 			 * Do not use renderer
 			 */
@@ -84,7 +84,7 @@ class ColumnLink extends Column
 
 		if ($this->icon !== null) {
 			$a->addHtml(
-				Html::el('span')->setAttribute('class', DataGrid::$iconPrefix . $this->icon)
+				Html::el('span')->setAttribute('class', Datagrid::$iconPrefix . $this->icon)
 			);
 
 			if (strlen($value) > 0) {

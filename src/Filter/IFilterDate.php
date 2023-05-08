@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Filter;
+namespace Contributte\Datagrid\Filter;
 
 interface IFilterDate
 {

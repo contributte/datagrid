@@ -1,20 +1,20 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Cases;
+namespace Contributte\Datagrid\Tests\Cases;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Tester\Assert;
 use Tester\TestCase;
 use Tracy\Debugger;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/TestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
 final class ExportTest extends TestCase
 {
 
-	private DataGrid $grid;
+	private Datagrid $grid;
 
 	private array $data = [
 		[
@@ -41,8 +41,8 @@ final class ExportTest extends TestCase
 
 	public function setUp(): void
 	{
-		$factory = new TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
 	public function testExportNotFiltered(): void
@@ -58,7 +58,7 @@ final class ExportTest extends TestCase
 			$this->grid->handleExport(1);
 		};
 
-		Assert::exception($trigger, 'Ublaboo\DataGrid\Exception\DataGridException', 'You have to set a data source first.');
+		Assert::exception($trigger, 'Contributte\Datagrid\Exception\DatagridException', 'You have to set a data source first.');
 
 		$this->grid->setDataSource($this->data);
 
@@ -81,7 +81,7 @@ final class ExportTest extends TestCase
 			$this->grid->handleExport(1);
 		};
 
-		Assert::exception($trigger, 'Ublaboo\DataGrid\Exception\DataGridException', 'You have to set a data source first.');
+		Assert::exception($trigger, 'Contributte\Datagrid\Exception\DatagridException', 'You have to set a data source first.');
 
 		$this->grid->setDataSource($this->data);
 

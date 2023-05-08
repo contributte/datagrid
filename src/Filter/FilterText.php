@@ -1,9 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Filter;
+namespace Contributte\Datagrid\Filter;
 
+use Contributte\Datagrid\Datagrid;
 use Nette\Forms\Container;
-use Ublaboo\DataGrid\DataGrid;
 
 class FilterText extends Filter
 {
@@ -20,7 +20,7 @@ class FilterText extends Filter
 	 * @param array|string[] $columns
 	 */
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		string $name,
 		protected array $columns

@@ -1,19 +1,19 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Column;
+namespace Contributte\Datagrid\Column;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridItemDetailException;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Traits\TButtonClass;
+use Contributte\Datagrid\Traits\TButtonIcon;
+use Contributte\Datagrid\Traits\TButtonText;
+use Contributte\Datagrid\Traits\TButtonTitle;
+use Contributte\Datagrid\Traits\TButtonTryAddIcon;
+use Contributte\Datagrid\Traits\TRenderCondition;
+use Contributte\Datagrid\Utils\ItemDetailForm;
 use LogicException;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridItemDetailException;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
-use Ublaboo\DataGrid\Traits\TRenderCondition;
-use Ublaboo\DataGrid\Utils\ItemDetailForm;
 
 class ItemDetail
 {
@@ -39,9 +39,9 @@ class ItemDetail
 
 	protected array $templateParameters = [];
 
-	public function __construct(protected DataGrid $grid, protected string $primaryWhereColumn)
+	public function __construct(protected Datagrid $grid, protected string $primaryWhereColumn)
 	{
-		$this->title = 'ublaboo_datagrid.show';
+		$this->title = 'contributte_datagrid.show';
 		$this->class = sprintf('btn btn-xs %s ajax', $grid::$btnSecondaryClass);
 		$this->icon = 'eye';
 	}
@@ -78,7 +78,7 @@ class ItemDetail
 	public function render(mixed $item): mixed
 	{
 		if ($this->getType() === 'block') {
-			throw new DataGridItemDetailException('ItemDetail is set to render as block, but block #detail is not defined');
+			throw new DatagridItemDetailException('ItemDetail is set to render as block, but block #detail is not defined');
 		}
 
 		if ($this->getRenderer() === null) {

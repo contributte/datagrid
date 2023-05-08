@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Files;
+namespace Contributte\Datagrid\Tests\Files;
 
 use Mockery;
 use Nette\Application\UI\Presenter;

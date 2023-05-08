@@ -1,27 +1,27 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Traits;
+namespace Contributte\Datagrid\Traits;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridHasToBeAttachedToPresenterComponentException;
+use Contributte\Datagrid\Exception\DatagridLinkCreationException;
 use InvalidArgumentException;
 use Nette\Application\UI\Component;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridHasToBeAttachedToPresenterComponentException;
-use Ublaboo\DataGrid\Exception\DataGridLinkCreationException;
 use UnexpectedValueException;
 
 trait TLink
 {
 
 	/**
-	 * @throws DataGridHasToBeAttachedToPresenterComponentException
+	 * @throws DatagridHasToBeAttachedToPresenterComponentException
 	 * @throws InvalidArgumentException
-	 * @throws DataGridLinkCreationException
+	 * @throws DatagridLinkCreationException
 	 * @throws UnexpectedValueException
 	 */
 	protected function createLink(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $href,
 		array $params
 	): string
@@ -67,10 +67,10 @@ trait TLink
 	}
 
 	private function createHierarchyLookupException(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $href,
 		array $params
-	): DataGridLinkCreationException
+	): DatagridLinkCreationException
 	{
 		$parent = $grid->getParent();
 		$presenter = $grid->getPresenter();
@@ -83,8 +83,8 @@ trait TLink
 
 		$desiredHandler = $parent::class . '::handle' . ucfirst($href) . '()';
 
-		return new DataGridLinkCreationException(
-			'DataGrid could not create link "'
+		return new DatagridLinkCreationException(
+			'Datagrid could not create link "'
 			. $href . '" - did not find any signal handler in componenet hierarchy from '
 			. $parent::class . ' up to the '
 			. $presenter::class . '. '

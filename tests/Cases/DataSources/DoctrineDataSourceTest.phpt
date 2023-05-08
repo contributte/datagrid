@@ -1,7 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
+namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
+use Contributte\Datagrid\DataSource\DoctrineDataSource;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -10,8 +12,6 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\AST\PathExpression;
 use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Tools\Setup;
-use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
-use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
@@ -27,7 +27,7 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 		$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/tmp']);
 		$entityManager = EntityManager::create($this->db, $config);
 
-		$queryBuilder = $entityManager->getRepository('Ublaboo\\DataGrid\\Tests\\Cases\\DataSources\\User')->createQueryBuilder('e');
+		$queryBuilder = $entityManager->getRepository('Contributte\\Datagrid\\Tests\\Cases\\DataSources\\User')->createQueryBuilder('e');
 
 		$this->ds = new DoctrineDataSource($queryBuilder, 'id');
 		$this->ds->setQueryHint(Query::HINT_CUSTOM_OUTPUT_WALKER, SortableNullsWalker::class);
@@ -35,8 +35,8 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 			'e.name' => SortableNullsWalker::NULLS_LAST,
 		]);
 
-		$factory = new TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
 	protected function setUpDatabase(): void

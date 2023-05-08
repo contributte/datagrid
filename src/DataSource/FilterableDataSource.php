@@ -1,15 +1,15 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\DataSource;
+namespace Contributte\Datagrid\DataSource;
 
+use Contributte\Datagrid\Filter\Filter;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterMultiSelect;
+use Contributte\Datagrid\Filter\FilterRange;
+use Contributte\Datagrid\Filter\FilterSelect;
+use Contributte\Datagrid\Filter\FilterText;
 use Nette\Utils\ArrayHash;
-use Ublaboo\DataGrid\Filter\Filter;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
 
 abstract class FilterableDataSource
 {

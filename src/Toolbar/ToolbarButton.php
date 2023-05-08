@@ -1,17 +1,17 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Toolbar;
+namespace Contributte\Datagrid\Toolbar;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridColumnRendererException;
+use Contributte\Datagrid\Traits\TButtonClass;
+use Contributte\Datagrid\Traits\TButtonIcon;
+use Contributte\Datagrid\Traits\TButtonRenderer;
+use Contributte\Datagrid\Traits\TButtonText;
+use Contributte\Datagrid\Traits\TButtonTitle;
+use Contributte\Datagrid\Traits\TButtonTryAddIcon;
+use Contributte\Datagrid\Traits\TLink;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonRenderer;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
-use Ublaboo\DataGrid\Traits\TLink;
 
 class ToolbarButton
 {
@@ -32,7 +32,7 @@ class ToolbarButton
 	/**
 	 * Toolbar button constructor
 	 */
-	public function __construct(protected DataGrid $grid, protected string $href, string $text, protected array $params = [])
+	public function __construct(protected Datagrid $grid, protected string $href, string $text, protected array $params = [])
 	{
 		$this->text = $text;
 	}
@@ -45,7 +45,7 @@ class ToolbarButton
 		try {
 			// Renderer function may be used
 			return $this->useRenderer();
-		} catch (DataGridColumnRendererException) {
+		} catch (DatagridColumnRendererException) {
 			// Do not use renderer
 		}
 

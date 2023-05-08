@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid;
+namespace Contributte\Datagrid;
 
-use Ublaboo\DataGrid\Column\Column;
-use Ublaboo\DataGrid\Column\ColumnNumber;
-use Ublaboo\DataGrid\Column\Renderer;
-use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
+use Contributte\Datagrid\Column\Column;
+use Contributte\Datagrid\Column\ColumnNumber;
+use Contributte\Datagrid\Column\Renderer;
+use Contributte\Datagrid\Exception\DatagridColumnRendererException;
 
 class ColumnsSummary
 {
@@ -27,7 +27,7 @@ class ColumnsSummary
 	 * @param array|string[] $columns
 	 */
 	public function __construct(
-		protected DataGrid $datagrid,
+		protected Datagrid $datagrid,
 		array $columns,
 		?callable $rowCallback
 	)
@@ -61,7 +61,7 @@ class ColumnsSummary
 	{
 		try {
 			return $this->useRenderer($key);
-		} catch (DataGridColumnRendererException) {
+		} catch (DatagridColumnRendererException) {
 			// No need to worry.
 		}
 
@@ -86,7 +86,7 @@ class ColumnsSummary
 		$renderer = $this->getRenderer();
 
 		if ($renderer === null) {
-			throw new DataGridColumnRendererException();
+			throw new DatagridColumnRendererException();
 		}
 
 		return call_user_func_array($renderer->getCallback(), [$this->summary[$key], $key]);

@@ -3,30 +3,30 @@
 /**
  * TEST: ItemsPerPageTest
  *
- * @testCase Ublaboo\DataGrid\Tests\Cases\ItemsPerPageTest
+ * @testCase Contributte\Datagrid\Tests\Cases\ItemsPerPageTest
  */
 
-namespace Ublaboo\DataGrid\Tests\Cases;
+namespace Contributte\Datagrid\Tests\Cases;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Localization\SimpleTranslator;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Localization\SimpleTranslator;
-use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/TestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
 
 class ItemsPerPageTest extends TestCase
 {
 
-	private DataGrid $grid;
+	private Datagrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
 	public function testGetPerPage(): void
@@ -54,7 +54,7 @@ class ItemsPerPageTest extends TestCase
 	public function testGetPerPageAllTranslated(): void
 	{
 		$translator = new SimpleTranslator([
-			'ublaboo_datagrid.all' => 'všechny',
+			'contributte_datagrid.all' => 'všechny',
 		]);
 		$this->grid->setTranslator($translator);
 

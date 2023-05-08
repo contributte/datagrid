@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Filter;
+namespace Contributte\Datagrid\Filter;
 
+use Contributte\Datagrid\Datagrid;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Ublaboo\DataGrid\DataGrid;
 use UnexpectedValueException;
 
 class FilterMultiSelect extends FilterSelect
@@ -19,7 +19,7 @@ class FilterMultiSelect extends FilterSelect
 	];
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		string $name,
 		array $options,
@@ -28,7 +28,7 @@ class FilterMultiSelect extends FilterSelect
 	{
 		parent::__construct($grid, $key, $name, $options, $column);
 
-		$this->addAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
+		$this->addAttribute('data-selected-icon-check', Datagrid::$iconPrefix . 'check');
 	}
 
 	/**
@@ -69,11 +69,11 @@ class FilterMultiSelect extends FilterSelect
 
 		$this->addAttribute(
 			'title',
-			$translator->translate('ublaboo_datagrid.multiselect_choose')
+			$translator->translate('contributte_datagrid.multiselect_choose')
 		);
 		$this->addAttribute(
 			'data-i18n-selected',
-			$translator->translate('ublaboo_datagrid.multiselect_selected')
+			$translator->translate('contributte_datagrid.multiselect_selected')
 		);
 
 		/**

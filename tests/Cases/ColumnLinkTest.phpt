@@ -1,26 +1,26 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Cases;
+namespace Contributte\Datagrid\Tests\Cases;
 
+use Contributte\Datagrid\Column\ColumnLink;
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo\DataGrid\Column\ColumnLink;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/TestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
 final class ColumnLinkTest extends TestCase
 {
 
-	private DataGrid $grid;
+	private Datagrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
 	public function render(ColumnLink $column): string

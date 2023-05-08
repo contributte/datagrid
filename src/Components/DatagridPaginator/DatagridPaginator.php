@@ -10,16 +10,16 @@
  * @link http://addons.nette.org
  */
 
-namespace Ublaboo\DataGrid\Components\DataGridPaginator;
+namespace Contributte\Datagrid\Components\DatagridPaginator;
 
+use Contributte\Datagrid\Datagrid;
 use Nette\Application\UI\Control;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Localization\Translator;
 use Nette\Utils\Paginator;
-use Ublaboo\DataGrid\DataGrid;
 use UnexpectedValueException;
 
-class DataGridPaginator extends Control
+class DatagridPaginator extends Control
 {
 
 	private ?Paginator $paginator = null;
@@ -111,7 +111,7 @@ class DataGridPaginator extends Control
 	{
 		parent::loadState($params);
 
-		if ($this->getParent() instanceof DataGrid) {
+		if ($this->getParent() instanceof Datagrid) {
 			$this->getPaginator()->page = $this->getParent()->page;
 		}
 	}

@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Utils;
+namespace Contributte\Datagrid\Utils;
 
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
 
 final class DateTimeHelper
 {
@@ -14,7 +14,7 @@ final class DateTimeHelper
 	 * Try to convert string into \DateTime object
 	 *
 	 * @param array|string[] $formats
-	 * @throws DataGridDateTimeHelperException
+	 * @throws DatagridDateTimeHelperException
 	 */
 	public static function tryConvertToDateTime(mixed $value, array $formats = []): DateTime
 	{
@@ -25,7 +25,7 @@ final class DateTimeHelper
 	 * Try to convert string into \DateTime object from more date formats
 	 *
 	 * @param array|string[] $formats
-	 * @throws DataGridDateTimeHelperException
+	 * @throws DatagridDateTimeHelperException
 	 */
 	public static function tryConvertToDate(mixed $value, array $formats = []): DateTime
 	{
@@ -36,7 +36,7 @@ final class DateTimeHelper
 	 * Convert string into \DateTime object from more date without time
 	 *
 	 * @param array|string[] $formats
-	 * @throws DataGridDateTimeHelperException
+	 * @throws DatagridDateTimeHelperException
 	 */
 	public static function fromString(mixed $value, array $formats = []): DateTime
 	{
@@ -82,7 +82,7 @@ final class DateTimeHelper
 			return $date;
 		}
 
-		throw new DataGridDateTimeHelperException();
+		throw new DatagridDateTimeHelperException();
 	}
 
 }

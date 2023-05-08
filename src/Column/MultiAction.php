@@ -1,18 +1,18 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Column;
+namespace Contributte\Datagrid\Column;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridException;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Traits\TButtonCaret;
+use Contributte\Datagrid\Traits\TButtonClass;
+use Contributte\Datagrid\Traits\TButtonIcon;
+use Contributte\Datagrid\Traits\TButtonText;
+use Contributte\Datagrid\Traits\TButtonTitle;
+use Contributte\Datagrid\Traits\TButtonTryAddIcon;
+use Contributte\Datagrid\Traits\TLink;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridException;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits\TButtonCaret;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
-use Ublaboo\DataGrid\Traits\TLink;
 
 class MultiAction extends Column
 {
@@ -25,7 +25,7 @@ class MultiAction extends Column
 	use TButtonCaret;
 	use TLink;
 
-	protected DataGrid $grid;
+	protected Datagrid $grid;
 
 	protected string $name;
 
@@ -35,7 +35,7 @@ class MultiAction extends Column
 	/** @var array|callable[] */
 	private array $rowConditions = [];
 
-	public function __construct(DataGrid $grid, string $key, string $name)
+	public function __construct(Datagrid $grid, string $key, string $name)
 	{
 		parent::__construct($grid, $key, '', $name);
 
@@ -82,7 +82,7 @@ class MultiAction extends Column
 	): self
 	{
 		if (isset($this->actions[$key])) {
-			throw new DataGridException(
+			throw new DatagridException(
 				sprintf('There is already action at key [%s] defined for MultiAction.', $key)
 			);
 		}
@@ -113,7 +113,7 @@ class MultiAction extends Column
 	public function getAction(string $key): Action
 	{
 		if (!isset($this->actions[$key])) {
-			throw new DataGridException(
+			throw new DatagridException(
 				sprintf('There is no action at key [%s] defined for MultiAction.', $key)
 			);
 		}

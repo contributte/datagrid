@@ -1,14 +1,14 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\GroupAction;
+namespace Contributte\Datagrid\GroupAction;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridGroupActionException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form as NetteForm;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridGroupActionException;
 use UnexpectedValueException;
 
 class GroupActionCollection
@@ -19,7 +19,7 @@ class GroupActionCollection
 	/** @var array<GroupAction> */
 	protected array $groupActions = [];
 
-	public function __construct(protected DataGrid $datagrid)
+	public function __construct(protected Datagrid $datagrid)
 	{
 	}
 
@@ -66,7 +66,7 @@ class GroupActionCollection
 		}
 
 		$groupActionSelect = $container->addSelect('group_action', '', $main_options)
-			->setPrompt('ublaboo_datagrid.choose');
+			->setPrompt('contributte_datagrid.choose');
 
 		/**
 		 * Third for creating select for each "sub"-action
@@ -80,7 +80,7 @@ class GroupActionCollection
 						$control = $container->addMultiSelect((string) $id, '', $action->getOptions());
 						$control->setHtmlAttribute('data-datagrid-multiselect-id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);
 						$control->setHtmlAttribute('data-style', 'hidden');
-						$control->setHtmlAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
+						$control->setHtmlAttribute('data-selected-icon-check', Datagrid::$iconPrefix . 'check');
 					} else {
 						$control = $container->addSelect((string) $id, '', $action->getOptions());
 					}
@@ -92,7 +92,7 @@ class GroupActionCollection
 
 				$control->setHtmlAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
-					->setRequired('ublaboo_datagrid.choose_input_required')
+					->setRequired('contributte_datagrid.choose_input_required')
 					->endCondition();
 
 			} elseif ($action instanceof GroupTextareaAction) {
@@ -100,7 +100,7 @@ class GroupActionCollection
 
 				$control->setHtmlAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
 					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
-					->setRequired('ublaboo_datagrid.choose_input_required');
+					->setRequired('contributte_datagrid.choose_input_required');
 			}
 
 			if (isset($control)) {
@@ -129,7 +129,7 @@ class GroupActionCollection
 					strtolower($this->datagrid->getFullName()) . 'group_action_submit'
 				);
 
-			$container->addSubmit('submit', 'ublaboo_datagrid.execute')
+			$container->addSubmit('submit', 'contributte_datagrid.execute')
 				->setValidationScope([$container])
 				->setHtmlAttribute(
 					'id',
@@ -255,7 +255,7 @@ class GroupActionCollection
 			}
 		}
 
-		throw new DataGridGroupActionException(sprintf('Group action %s does not exist.', $title));
+		throw new DatagridGroupActionException(sprintf('Group action %s does not exist.', $title));
 	}
 
 	private function getFormSubmitter(NetteForm $form): ?SubmitButton

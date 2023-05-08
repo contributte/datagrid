@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
+namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
+use Contributte\Datagrid\DataSource\DibiFluentDataSource;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use dibi;
 use Dibi\Connection;
-use Ublaboo\DataGrid\DataSource\DibiFluentDataSource;
-use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
@@ -21,8 +21,8 @@ final class DibiFluentDataSourceTest extends BaseDataSourceTest
 	{
 		$this->setUpDatabase();
 		$this->ds = new DibiFluentDataSource($this->db->select('*')->from('users'), 'id');
-		$factory = new TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
 	protected function setUpDatabase(): void

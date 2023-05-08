@@ -17,11 +17,11 @@ parameters:
 		-
 			message: '/^Call to an undefined method Nette\\Bridges\\ApplicationLatte\\Template::add\(\)\.$/'
 			count: 2
-			path: src/DataGrid.php
+			path: src/Datagrid.php
 		-
-			message: '/^Instanceof between Ublaboo\\DataGrid\\Filter\\Filter and Ublaboo\\DataGrid\\Filter\\FilterDateRange will always evaluate to false\.$/'
+			message: '/^Instanceof between Contributte\\Datagrid\\Filter\\Filter and Contributte\\Datagrid\\Filter\\FilterDateRange will always evaluate to false\.$/'
 			count: 1
-			path: src/DataGrid.php
+			path: src/Datagrid.php
 		-
 			message: '/^Class Dibi\\Drivers\\MsSqlDriver not found\.$/'
 			count: 1
@@ -31,13 +31,13 @@ parameters:
 			count: 1
 			path: src/DataSource/DibiFluentMssqlDataSource.php
 		-
-			message: "#^Cannot call method filterData\\(\\) on Ublaboo\\\\DataGrid\\\\DataModel\\|null\\.$#"
+			message: "#^Cannot call method filterData\\(\\) on Contributte\\\\Datagrid\\\\DataModel\\|null\\.$#"
 			count: 1
-			path: src/DataGrid.php
+			path: src/Datagrid.php
 		-
-			message: "#^Cannot call method filterRow\\(\\) on Ublaboo\\\\DataGrid\\\\DataModel\\|null\\.$#"
+			message: "#^Cannot call method filterRow\\(\\) on Contributte\\\\Datagrid\\\\DataModel\\|null\\.$#"
 			count: 1
-			path: src/DataGrid.php
+			path: src/Datagrid.php
 		-
 			message: "#^Parameter \\#1 \\$x of method Doctrine\\\\ORM\\\\Query\\\\Expr\\:\\:like\\(\\) expects string, Doctrine\\\\ORM\\\\Query\\\\Expr\\\\Func given\\.$#"
 			count: 1

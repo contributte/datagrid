@@ -1,15 +1,15 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Export;
+namespace Contributte\Datagrid\Export;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Traits\TButtonClass;
+use Contributte\Datagrid\Traits\TButtonIcon;
+use Contributte\Datagrid\Traits\TButtonText;
+use Contributte\Datagrid\Traits\TButtonTitle;
+use Contributte\Datagrid\Traits\TButtonTryAddIcon;
 use Nette\Application\UI\Link;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
 
 class Export
 {
@@ -35,7 +35,7 @@ class Export
 	protected ?string $target = null;
 
 	public function __construct(
-		protected DataGrid $grid,
+		protected Datagrid $grid,
 		string $text,
 		callable $callback,
 		protected bool $filtered

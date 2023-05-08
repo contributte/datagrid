@@ -1,18 +1,18 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
+namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\DataSource\IDataSource;
+use Contributte\Datagrid\Filter\FilterRange;
+use Contributte\Datagrid\Filter\FilterSelect;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Utils\Sorting;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\DataSource\IDataSource;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Ublaboo\DataGrid\Utils\Sorting;
 
 require __DIR__ . '/../../bootstrap.php';
-require __DIR__ . '/../../Files/TestingDataGridFactory.php';
+require __DIR__ . '/../../Files/TestingDatagridFactory.php';
 
 abstract class BaseDataSourceTest extends TestCase
 {
@@ -28,7 +28,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	protected IDataSource $ds;
 
-	protected DataGrid $grid;
+	protected Datagrid $grid;
 
 	public function testGetCount(): void
 	{

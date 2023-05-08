@@ -1,7 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid;
+namespace Contributte\Datagrid;
 
+use Contributte\Datagrid\Column\Column;
+use Contributte\Datagrid\Exception\DatagridException;
+use Contributte\Datagrid\Utils\PropertyAccessHelper;
 use Dibi\Row as DibiRow;
 use LeanMapper\Entity;
 use Nette\Database\Row as NetteRow;
@@ -9,9 +12,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
 use Nette\Utils\Html;
 use Nextras\Orm\Entity\Entity as NextrasEntity;
-use Ublaboo\DataGrid\Column\Column;
-use Ublaboo\DataGrid\Exception\DataGridException;
-use Ublaboo\DataGrid\Utils\PropertyAccessHelper;
 
 class Row
 {
@@ -20,7 +20,7 @@ class Row
 
 	protected Html $control;
 
-	public function __construct(protected DataGrid $datagrid, protected mixed $item, protected string $primaryKey)
+	public function __construct(protected Datagrid $datagrid, protected mixed $item, protected string $primaryKey)
 	{
 		$this->control = Html::el('tr');
 		$this->id = $this->getValue($primaryKey);
@@ -148,7 +148,7 @@ class Row
 
 			if (!$value->__isset($property)) {
 				if ($this->datagrid->strictEntityProperty) {
-					throw new DataGridException(sprintf(
+					throw new DatagridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
 						$value,
 						str_replace('.', '->', $key)
@@ -175,7 +175,7 @@ class Row
 		while ($property = array_shift($properties)) {
 			if (!$value->__isset($property)) {
 				if ($this->datagrid->strictEntityProperty) {
-					throw new DataGridException(sprintf(
+					throw new DatagridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
 						$value,
 						str_replace('.', '->', $key)
@@ -203,7 +203,7 @@ class Row
 		while ($property = array_shift($properties)) {
 			if (!is_object($value) && ! (bool) $value) {
 				if ($this->datagrid->strictEntityProperty) {
-					throw new DataGridException(sprintf(
+					throw new DatagridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
 						$value,
 						str_replace('.', '->', $key)

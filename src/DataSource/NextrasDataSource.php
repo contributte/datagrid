@@ -1,22 +1,22 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\DataSource;
+namespace Contributte\Datagrid\DataSource;
 
+use Contributte\Datagrid\AggregationFunction\IAggregatable;
+use Contributte\Datagrid\AggregationFunction\IAggregationFunction;
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterMultiSelect;
+use Contributte\Datagrid\Filter\FilterRange;
+use Contributte\Datagrid\Filter\FilterSelect;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Utils\ArraysHelper;
+use Contributte\Datagrid\Utils\DateTimeHelper;
+use Contributte\Datagrid\Utils\Sorting;
 use Nextras\Orm\Collection\DbalCollection;
 use Nextras\Orm\Collection\Expression\LikeExpression;
 use Nextras\Orm\Collection\ICollection;
-use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
-use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Ublaboo\DataGrid\Utils\ArraysHelper;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
-use Ublaboo\DataGrid\Utils\Sorting;
 use function str_contains;
 
 class NextrasDataSource extends FilterableDataSource implements IDataSource, IAggregatable
@@ -122,7 +122,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 					$this->prepareColumn($column) . '>=' => $date->setTime(0, 0, 0),
 					$this->prepareColumn($column) . '<=' => $date_end->setTime(23, 59, 59),
 				]);
-			} catch (DataGridDateTimeHelperException) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -144,7 +144,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 					[$filter->getPhpFormat()]
 				);
 				$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $dateFrom->setTime(0, 0, 0);
-			} catch (DataGridDateTimeHelperException) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -156,7 +156,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 					[$filter->getPhpFormat()]
 				);
 				$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $dateTo->setTime(23, 59, 59);
-			} catch (DataGridDateTimeHelperException) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -233,7 +233,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 	}
 
 	/**
-	 * Adjust column from DataGrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
+	 * Adjust column from Datagrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
 	 */
 	private function prepareColumn(string $column): string
 	{

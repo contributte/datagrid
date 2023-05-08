@@ -1,16 +1,16 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\DataSource;
+namespace Contributte\Datagrid\DataSource;
 
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Utils\DateTimeHelper;
 use dibi;
 use Dibi\Fluent;
 use Dibi\Helpers;
 use Dibi\Result;
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use UnexpectedValueException;
 
 class DibiFluentMssqlDataSource extends DibiFluentDataSource
@@ -73,7 +73,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 				$filter->getColumn(),
 				$date->format('Ymd')
 			);
-		} catch (DataGridDateTimeHelperException) {
+		} catch (DatagridDateTimeHelperException) {
 			// ignore the invalid filter value
 		}
 	}

@@ -1,23 +1,23 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\DataSource;
+namespace Contributte\Datagrid\DataSource;
 
+use Contributte\Datagrid\AggregationFunction\IAggregatable;
+use Contributte\Datagrid\AggregationFunction\IAggregationFunction;
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use Contributte\Datagrid\Exception\DatagridException;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterMultiSelect;
+use Contributte\Datagrid\Filter\FilterRange;
+use Contributte\Datagrid\Filter\FilterSelect;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Utils\DateTimeHelper;
+use Contributte\Datagrid\Utils\Sorting;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Nette\SmartObject;
-use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
-use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Exception\DataGridException;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
-use Ublaboo\DataGrid\Utils\Sorting;
 use function str_contains;
 
 /**
@@ -183,7 +183,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 				$this->dataSource->andWhere(sprintf('%s >= :%s AND %s <= :%s', $c, $p1, $c, $p2))
 					->setParameter($p1, $date->format('Y-m-d 00:00:00'))
 					->setParameter($p2, $date->format('Y-m-d 23:59:59'));
-			} catch (DataGridDateTimeHelperException) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -208,7 +208,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 					$p,
 					$dateFrom->format('Y-m-d H:i:s')
 				);
-			} catch (DataGridDateTimeHelperException) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -224,7 +224,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 					$p,
 					$dateTo->format('Y-m-d H:i:s')
 				);
-			} catch (DataGridDateTimeHelperException) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -321,7 +321,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 			$rootAlias = $this->dataSource->getRootAliases();
 
 			if ($rootAlias === []) {
-				throw new DataGridException('No root alias given from datasource');
+				throw new DatagridException('No root alias given from datasource');
 			}
 
 			$this->rootAlias = current($rootAlias);

@@ -1,10 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
+namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
+use Contributte\Datagrid\DataSource\SearchParamsBuilder;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo\DataGrid\DataSource\SearchParamsBuilder;
 
 require __DIR__ . '/../../bootstrap.php';
 

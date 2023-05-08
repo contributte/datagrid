@@ -15,9 +15,9 @@
 	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
 		<properties>
 			<property name="rootNamespaces" type="array">
-				<element key="src" value="Ublaboo\DataGrid"/>
-				<element key="tests/Cases" value="Ublaboo\DataGrid\Tests\Cases"/>
-				<element key="tests/Files" value="Ublaboo\DataGrid\Tests\Files"/>
+				<element key="src" value="Contributte\Datagrid"/>
+				<element key="tests/Cases" value="Contributte\Datagrid\Tests\Cases"/>
+				<element key="tests/Files" value="Contributte\Datagrid\Tests\Files"/>
 			</property>
 			<property name="extensions" type="array" value="php,phpt"/>
 		</properties>
@@ -30,6 +30,14 @@
 
 	<rule ref="PSR1.Classes.ClassDeclaration">
 		<exclude-pattern>*tests/Cases/*</exclude-pattern>
+	</rule>
+
+	<rule ref="PSR1.Classes.ClassDeclaration">
+		<exclude-pattern>*tests/Cases/*</exclude-pattern>
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses">
+		<exclude>compatibility.php</exclude>
 	</rule>
 
 	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">

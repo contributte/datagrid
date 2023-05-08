@@ -1,15 +1,15 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
+namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
+use Contributte\Datagrid\DataSource\NetteDatabaseTableDataSource;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Nette\Caching\Storages\DevNullStorage;
 use Nette\Database\Connection;
 use Nette\Database\Conventions\DiscoveredConventions;
 use Nette\Database\Explorer;
 use Nette\Database\Structure;
 use Nette\Database\Table\Selection;
-use Ublaboo\DataGrid\DataSource\NetteDatabaseTableDataSource;
-use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
@@ -23,8 +23,8 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 		$this->setUpDatabase();
 		$this->ds = new NetteDatabaseTableDataSource($this->db->table('users'), 'id');
 
-		$factory = new TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
 	protected function setUpDatabase(): void

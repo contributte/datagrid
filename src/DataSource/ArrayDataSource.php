@@ -1,22 +1,22 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\DataSource;
+namespace Contributte\Datagrid\DataSource;
 
 use ArrayAccess;
+use Contributte\Datagrid\Exception\DatagridArrayDataSourceException;
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use Contributte\Datagrid\Filter\Filter;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterMultiSelect;
+use Contributte\Datagrid\Filter\FilterRange;
+use Contributte\Datagrid\Filter\FilterSelect;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Utils\DateTimeHelper;
+use Contributte\Datagrid\Utils\Sorting;
 use DateTime;
 use DateTimeInterface;
 use Nette\Utils\Strings;
-use Ublaboo\DataGrid\Exception\DataGridArrayDataSourceException;
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Filter\Filter;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
-use Ublaboo\DataGrid\Utils\Sorting;
 
 class ArrayDataSource implements IDataSource
 {
@@ -103,7 +103,7 @@ class ArrayDataSource implements IDataSource
 			);
 
 			if (!is_array($data)) {
-				throw new DataGridArrayDataSourceException('Sorting callback has to return array');
+				throw new DatagridArrayDataSourceException('Sorting callback has to return array');
 			}
 
 			$this->setData($data);
@@ -237,7 +237,7 @@ class ArrayDataSource implements IDataSource
 				 */
 				try {
 					$row_value = DateTimeHelper::tryConvertToDate($row_value);
-				} catch (DataGridDateTimeHelperException) {
+				} catch (DatagridDateTimeHelperException) {
 					/**
 					 * Otherwise just return raw string
 					 */
@@ -260,7 +260,7 @@ class ArrayDataSource implements IDataSource
 				 */
 				try {
 					$row_value = DateTimeHelper::tryConvertToDate($row_value);
-				} catch (DataGridDateTimeHelperException) {
+				} catch (DatagridDateTimeHelperException) {
 					/**
 					 * Otherwise just return raw string
 					 */
@@ -295,7 +295,7 @@ class ArrayDataSource implements IDataSource
 				 */
 				try {
 					$row_value = DateTimeHelper::tryConvertToDateTime($row_value);
-				} catch (DataGridDateTimeHelperException) {
+				} catch (DatagridDateTimeHelperException) {
 					/**
 					 * Otherwise just return raw string
 					 */

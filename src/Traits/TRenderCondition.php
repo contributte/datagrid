@@ -1,8 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Traits;
+namespace Contributte\Datagrid\Traits;
 
-use Ublaboo\DataGrid\Row;
+use Contributte\Datagrid\Row;
 
 trait TRenderCondition
 {

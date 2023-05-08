@@ -1,7 +1,21 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid;
+namespace Contributte\Datagrid;
 
+use Contributte\Datagrid\Components\DatagridPaginator\DatagridPaginator;
+use Contributte\Datagrid\DataSource\ArrayDataSource;
+use Contributte\Datagrid\DataSource\DibiFluentDataSource;
+use Contributte\Datagrid\DataSource\DibiFluentMssqlDataSource;
+use Contributte\Datagrid\DataSource\DibiFluentPostgreDataSource;
+use Contributte\Datagrid\DataSource\DoctrineCollectionDataSource;
+use Contributte\Datagrid\DataSource\DoctrineDataSource;
+use Contributte\Datagrid\DataSource\IDataSource;
+use Contributte\Datagrid\DataSource\NetteDatabaseTableDataSource;
+use Contributte\Datagrid\DataSource\NetteDatabaseTableMssqlDataSource;
+use Contributte\Datagrid\DataSource\NextrasDataSource;
+use Contributte\Datagrid\Exception\DatagridWrongDataSourceException;
+use Contributte\Datagrid\Utils\NetteDatabaseSelectionHelper;
+use Contributte\Datagrid\Utils\Sorting;
 use Dibi\Drivers\MsSqlDriver;
 use Dibi\Drivers\OdbcDriver;
 use Dibi\Drivers\PostgreDriver;
@@ -14,20 +28,6 @@ use Nette\Database\Drivers\SqlsrvDriver as NDBSqlsrvDriver;
 use Nette\Database\Table\Selection;
 use Nette\SmartObject;
 use Nextras\Orm\Collection\ICollection;
-use Ublaboo\DataGrid\Components\DataGridPaginator\DataGridPaginator;
-use Ublaboo\DataGrid\DataSource\ArrayDataSource;
-use Ublaboo\DataGrid\DataSource\DibiFluentDataSource;
-use Ublaboo\DataGrid\DataSource\DibiFluentMssqlDataSource;
-use Ublaboo\DataGrid\DataSource\DibiFluentPostgreDataSource;
-use Ublaboo\DataGrid\DataSource\DoctrineCollectionDataSource;
-use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
-use Ublaboo\DataGrid\DataSource\IDataSource;
-use Ublaboo\DataGrid\DataSource\NetteDatabaseTableDataSource;
-use Ublaboo\DataGrid\DataSource\NetteDatabaseTableMssqlDataSource;
-use Ublaboo\DataGrid\DataSource\NextrasDataSource;
-use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
-use Ublaboo\DataGrid\Utils\NetteDatabaseSelectionHelper;
-use Ublaboo\DataGrid\Utils\Sorting;
 
 /**
  * @method onBeforeFilter(IDataSource $dataSource)
@@ -87,8 +87,8 @@ final class DataModel
 			$source = new NextrasDataSource($source, $primaryKey);
 
 		} elseif (!($source instanceof IDataSource)) {
-			throw new DataGridWrongDataSourceException(sprintf(
-				'DataGrid can not take [%s] as data source.',
+			throw new DatagridWrongDataSourceException(sprintf(
+				'Datagrid can not take [%s] as data source.',
 				is_object($source) ? $source::class : 'null'
 			));
 		}
@@ -102,7 +102,7 @@ final class DataModel
 	}
 
 	public function filterData(
-		?DataGridPaginator $paginatorComponent,
+		?DatagridPaginator $paginatorComponent,
 		Sorting $sorting,
 		array $filters
 	): iterable

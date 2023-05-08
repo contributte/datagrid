@@ -1,15 +1,15 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Filter;
+namespace Contributte\Datagrid\Filter;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Traits\TButtonClass;
+use Contributte\Datagrid\Traits\TButtonIcon;
+use Contributte\Datagrid\Traits\TButtonText;
+use Contributte\Datagrid\Traits\TButtonTitle;
+use Contributte\Datagrid\Traits\TButtonTryAddIcon;
 use Nette\Forms\Controls\Button;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
 
 class SubmitButton extends Button
 {
@@ -20,18 +20,19 @@ class SubmitButton extends Button
 	use TButtonTitle;
 	use TButtonText;
 
-	public function __construct(protected DataGrid $grid)
+	public function __construct(protected Datagrid $grid)
 	{
 		parent::__construct($this->text);
 
-		$this->text = 'ublaboo_datagrid.filter_submit_button';
+		$this->text = 'contributte_datagrid.filter_submit_button';
 		$this->class = 'btn btn-sm btn-primary';
 		$this->icon = 'search';
 
 		$this->control = Html::el('button', ['type' => 'submit', 'name' => 'submit']);
 	}
 
-	public function getControl(string|object|null $caption = null): Html
+	/** @inheritdoc */
+	public function getControl($caption = null): Html
 	{
 		$el = parent::getControl($caption);
 
@@ -42,7 +43,7 @@ class SubmitButton extends Button
 			$el->addHtml(
 				Html::el('span')->appendAttribute(
 					'class',
-					DataGrid::$iconPrefix . $this->getIcon()
+					Datagrid::$iconPrefix . $this->getIcon()
 				)
 			);
 

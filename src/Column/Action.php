@@ -1,19 +1,19 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Column;
+namespace Contributte\Datagrid\Column;
 
+use Contributte\Datagrid\Column\Action\Confirmation\CallbackConfirmation;
+use Contributte\Datagrid\Column\Action\Confirmation\IConfirmation;
+use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridColumnRendererException;
+use Contributte\Datagrid\Exception\DatagridException;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Traits\TButtonText;
+use Contributte\Datagrid\Traits\TButtonTryAddIcon;
+use Contributte\Datagrid\Traits\TLink;
+use Contributte\Datagrid\Traits\TRenderCondition;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\Column\Action\Confirmation\CallbackConfirmation;
-use Ublaboo\DataGrid\Column\Action\Confirmation\IConfirmation;
-use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Exception\DataGridException;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
-use Ublaboo\DataGrid\Traits\TLink;
-use Ublaboo\DataGrid\Traits\TRenderCondition;
 
 class Action extends Column
 {
@@ -51,7 +51,7 @@ class Action extends Column
 	private $customHref;
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		protected string $href,
 		string $name,
@@ -71,7 +71,7 @@ class Action extends Column
 
 		try {
 			return $this->useRenderer($row);
-		} catch (DataGridColumnRendererException) {
+		} catch (DatagridColumnRendererException) {
 			// No need to worry.
 		}
 
@@ -132,7 +132,7 @@ class Action extends Column
 
 	/**
 	 * @return static
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function setTitle(string|callable $title): self
 	{
@@ -144,7 +144,7 @@ class Action extends Column
 	}
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function getTitle(Row $row): ?string
 	{
@@ -156,7 +156,7 @@ class Action extends Column
 
 	/**
 	 * @return static
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function setCustomHref(string|callable $customHref): self
 	{
@@ -168,7 +168,7 @@ class Action extends Column
 	}
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function getCustomHref(Row $row): ?string
 	{
@@ -187,7 +187,7 @@ class Action extends Column
 	 *
 	 * @param string|callable $class
 	 * @return static
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function setClass(null|string|callable $class): self
 	{
@@ -199,7 +199,7 @@ class Action extends Column
 	}
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function getClass(Row $row): ?string
 	{
@@ -211,7 +211,7 @@ class Action extends Column
 
 	/**
 	 * @return static
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function setIcon(string|callable $icon): self
 	{
@@ -223,7 +223,7 @@ class Action extends Column
 	}
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function getIcon(Row $row): ?string
 	{
@@ -244,7 +244,7 @@ class Action extends Column
 	}
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function getConfirmationDialog(Row $row): ?string
 	{
@@ -270,7 +270,7 @@ class Action extends Column
 			);
 		}
 
-		throw new DataGridException('Unsupported confirmation');
+		throw new DatagridException('Unsupported confirmation');
 	}
 
 	/**
@@ -294,7 +294,7 @@ class Action extends Column
 	}
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	public function getPropertyStringOrCallableGetString(
 		Row $row,
@@ -310,7 +310,7 @@ class Action extends Column
 			$value = call_user_func($property, $row->getItem());
 
 			if (!is_string($value)) {
-				throw new DataGridException(sprintf('Action %s callback has to return a string', $name));
+				throw new DatagridException(sprintf('Action %s callback has to return a string', $name));
 			}
 
 			return $value;
@@ -335,12 +335,12 @@ class Action extends Column
 	}
 
 	/**
-	 * @throws DataGridException
+	 * @throws DatagridException
 	 */
 	protected function checkPropertyStringOrCallable(mixed $property, string $name): void
 	{
 		if (!is_string($property) && !is_callable($property) && $property !== null) {
-			throw new DataGridException(
+			throw new DatagridException(
 				sprintf('Action %s has to be either string or a callback returning string', $name)
 			);
 		}

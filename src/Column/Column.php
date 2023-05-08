@@ -1,12 +1,12 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Column;
+namespace Contributte\Datagrid\Column;
 
+use Contributte\Datagrid\Exception\DatagridColumnRendererException;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Traits\TButtonRenderer;
+use Contributte\Datagrid\Traits\TLink;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits\TButtonRenderer;
-use Ublaboo\DataGrid\Traits\TLink;
 
 abstract class Column extends FilterableColumn
 {
@@ -57,7 +57,7 @@ abstract class Column extends FilterableColumn
 	{
 		try {
 			return $this->useRenderer($row);
-		} catch (DataGridColumnRendererException) {
+		} catch (DatagridColumnRendererException) {
 			/**
 			 * Do not use renderer
 			 */

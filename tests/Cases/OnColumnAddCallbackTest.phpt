@@ -3,30 +3,30 @@
 /**
  * TEST: OnColumnAddCallbackTest
  *
- * @testCase Ublaboo\DataGrid\Tests\Cases\OnColumnAddCallbackTest
+ * @testCase Contributte\Datagrid\Tests\Cases\OnColumnAddCallbackTest
  */
 
-namespace Ublaboo\DataGrid\Tests\Cases;
+namespace Contributte\Datagrid\Tests\Cases;
 
+use Contributte\Datagrid\Column\Column;
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo\DataGrid\Column\Column;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/TestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
 
 class OnColumnAddCallbackTest extends TestCase
 {
 
-	private DataGrid $grid;
+	private Datagrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
 	public function testSetSortable(): void

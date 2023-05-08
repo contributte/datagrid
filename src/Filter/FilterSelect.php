@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Filter;
+namespace Contributte\Datagrid\Filter;
 
+use Contributte\Datagrid\Datagrid;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Ublaboo\DataGrid\DataGrid;
 use UnexpectedValueException;
 
 class FilterSelect extends OneColumnFilter
@@ -24,7 +24,7 @@ class FilterSelect extends OneColumnFilter
 	protected ?string $prompt = null;
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		string $name,
 		protected array $options,

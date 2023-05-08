@@ -1,18 +1,18 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\InlineEdit;
+namespace Contributte\Datagrid\InlineEdit;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Traits\TButtonClass;
+use Contributte\Datagrid\Traits\TButtonIcon;
+use Contributte\Datagrid\Traits\TButtonText;
+use Contributte\Datagrid\Traits\TButtonTitle;
+use Contributte\Datagrid\Traits\TButtonTryAddIcon;
 use Nette\Forms\Container;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
 
 /**
  * @method onSubmit($id, ArrayHash $values)
@@ -58,9 +58,9 @@ class InlineEdit
 	 */
 	protected bool $showNonEditingColumns = true;
 
-	public function __construct(protected DataGrid $grid, protected ?string $primaryWhereColumn = null)
+	public function __construct(protected Datagrid $grid, protected ?string $primaryWhereColumn = null)
 	{
-		$this->title = 'ublaboo_datagrid.edit';
+		$this->title = 'contributte_datagrid.edit';
 		$this->class = sprintf('btn btn-xs %s ajax', $grid::$btnSecondaryClass);
 		$this->icon = 'pencil pencil-alt';
 

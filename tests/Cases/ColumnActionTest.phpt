@@ -1,27 +1,27 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Tests\Cases;
+namespace Contributte\Datagrid\Tests\Cases;
 
+use Contributte\Datagrid\Column\Action;
+use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo\DataGrid\Column\Action;
-use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/TestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
 final class ColumnActionTest extends TestCase
 {
 
-	private DataGrid $grid;
+	private Datagrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
 	public function render(Action $column): string
@@ -40,7 +40,7 @@ final class ColumnActionTest extends TestCase
 			$grid->addAction('action', 'Do', 'doStuff!');
 		};
 
-		Assert::exception($add_action, 'Ublaboo\DataGrid\Exception\DataGridException', 'There is already action at key [action] defined.');
+		Assert::exception($add_action, 'Contributte\Datagrid\Exception\DatagridException', 'There is already action at key [action] defined.');
 	}
 
 	public function testActionLink(): void
@@ -79,7 +79,7 @@ final class ColumnActionTest extends TestCase
 	{
 		$action = $this->grid->addAction('action', 'Do', 'doStuff!');
 
-		DataGrid::$iconPrefix = 'icon-';
+		Datagrid::$iconPrefix = 'icon-';
 		$action->setIcon('user');
 
 		Assert::same(

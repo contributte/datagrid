@@ -1,14 +1,14 @@
 <?php declare(strict_types = 1);
 
-namespace Ublaboo\DataGrid\Column;
+namespace Contributte\Datagrid\Column;
 
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridColumnStatusException;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Status\Option;
+use Contributte\Datagrid\Traits\TButtonCaret;
+use Contributte\Datagrid\Traits\TRenderCondition;
 use Nette\SmartObject;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Status\Option;
-use Ublaboo\DataGrid\Traits\TButtonCaret;
-use Ublaboo\DataGrid\Traits\TRenderCondition;
 
 /**
  * @method onChange(string $id, string $value)
@@ -29,7 +29,7 @@ class ColumnStatus extends Column
 	protected array $options = [];
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		string $column,
 		string $name
@@ -53,7 +53,7 @@ class ColumnStatus extends Column
 	}
 
 	/**
-	 * @throws DataGridColumnStatusException
+	 * @throws DatagridColumnStatusException
 	 */
 	public function getOption(mixed $value): Option
 	{
@@ -63,7 +63,7 @@ class ColumnStatus extends Column
 			}
 		}
 
-		throw new DataGridColumnStatusException(sprintf('Option [%s] does not exist', $value));
+		throw new DatagridColumnStatusException(sprintf('Option [%s] does not exist', $value));
 	}
 
 	public function getColumn(): string
@@ -86,12 +86,12 @@ class ColumnStatus extends Column
 	}
 
 	/**
-	 * @throws DataGridColumnStatusException
+	 * @throws DatagridColumnStatusException
 	 */
 	public function addOption(mixed $value, string $text): Option
 	{
 		if (!is_scalar($value)) {
-			throw new DataGridColumnStatusException('Option value has to be scalar');
+			throw new DatagridColumnStatusException('Option value has to be scalar');
 		}
 
 		$option = new Option($this->grid, $this, $value, $text);
@@ -139,7 +139,7 @@ class ColumnStatus extends Column
 
 	public function setReplacement(array $replacements): Column
 	{
-		throw new DataGridColumnStatusException(
+		throw new DatagridColumnStatusException(
 			'Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)'
 		);
 	}
