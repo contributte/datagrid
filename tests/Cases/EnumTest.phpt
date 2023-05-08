@@ -9,13 +9,13 @@ namespace Contributte\Datagrid\Tests\Cases;
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
-use Tester\Assert;
-use Tester\TestCase;
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Row;
 use Contributte\Datagrid\Tests\Cases\Utils\GenderEnum;
 use Contributte\Datagrid\Tests\Cases\Utils\TestingDDatagridEntity;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
+use Tester\Assert;
+use Tester\TestCase;
 
 final class EnumTest extends TestCase
 {
