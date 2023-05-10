@@ -480,11 +480,6 @@
 	white-space: nowrap
 }
 
-.datagrid select {
-	padding: 0;
-	text-transform: none
-}
-
 .datagrid .row-grid-bottom {
 	font-size: 0;
 	padding: 8px;
@@ -496,19 +491,19 @@
 .datagrid .row-grid-bottom .col-items {
 	font-size: 14px;
 	display: inline-block;
-	width: 25%
+	/*width: 25%*/
 }
 
 .datagrid .row-grid-bottom .col-pagination {
 	font-size: 14px;
 	display: inline-block;
-	width: 50%
+	/*width: 50%*/
 }
 
 .datagrid .row-grid-bottom .col-per-page {
 	font-size: 14px;
 	display: inline-block;
-	width: 25%
+	/*width: 25%*/
 }
 
 .datagrid .row-grid-bottom .col-per-page form {
