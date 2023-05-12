@@ -430,6 +430,7 @@ class DataGrid extends Control
     protected array $rowLabels = [];
     protected ?string $columnForRowLabels = null;
     protected ?int $maxColLabelForRows = null;
+    protected string $class = '';
 
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
@@ -481,6 +482,24 @@ class DataGrid extends Control
 				$this->componentFullName = $this->lookupPath();
 			});
 	}
+    
+    /**
+     * @return string
+     */
+    public function getClass(): string
+    {
+        return $this->class;
+    }
+    
+    /**
+     * @param string $class
+     * @return DataGrid
+     */
+    public function setClass(string $class): DataGrid
+    {
+        $this->class = $class;
+        return $this;
+    }    
 
     /**
      * @return array
@@ -1387,7 +1406,7 @@ class DataGrid extends Control
 		return $is_filter || $this->forceFilterActive;
 	}
 
-	
+
     /**
      * @return bool
      */
@@ -3563,7 +3582,7 @@ class DataGrid extends Control
 		return $this->getPresenter();
 	}
 
-	
+
     /**
      * @param  bool  $useDefaultSortAfterSortingEmpty
      */

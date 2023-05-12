@@ -16,7 +16,7 @@
 
 {varType Ublaboo\DataGrid\DataGrid $control}
 
-<div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()} table-responsive{/block}" data-refresh-state="{link refreshState!}">
+<div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()} table-responsive{/block} {$control->getClass()}" data-refresh-state="{link refreshState!}">
 	<div n:snippet="grid" class="datagrid-main-snippet">
 	{snippetArea gridSnippets}
 		<!-- Modal -->
