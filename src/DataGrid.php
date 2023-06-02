@@ -431,6 +431,7 @@ class DataGrid extends Control
     protected ?string $columnForRowLabels = null;
     protected ?int $maxColLabelForRows = null;
     protected string $class = '';
+    protected bool $naja_cache = true;
 
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
@@ -482,7 +483,26 @@ class DataGrid extends Control
 				$this->componentFullName = $this->lookupPath();
 			});
 	}
-    
+
+    /**
+     * @return bool
+     */
+    public  function isNajaCache(): bool
+    {
+        return $this->naja_cache;
+    }
+
+    /**
+     * @param bool $naja_cache
+     * @return DataGrid
+     */
+    public function setNajaCache(bool $naja_cache): DataGrid
+    {
+        $this->naja_cache = $naja_cache;
+        return $this;
+    }
+
+
     /**
      * @return string
      */
@@ -490,7 +510,7 @@ class DataGrid extends Control
     {
         return $this->class;
     }
-    
+
     /**
      * @param string $class
      * @return DataGrid
@@ -499,7 +519,17 @@ class DataGrid extends Control
     {
         $this->class = $class;
         return $this;
-    }    
+    }
+
+    /**
+     * @param string $class
+     * @return $this
+     */
+    public function addClass(string $class): DataGrid
+    {
+        $this->class .= ' ' . $class;
+        return $this;
+    }
 
     /**
      * @return array

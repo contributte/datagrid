@@ -17,7 +17,7 @@
 {varType Ublaboo\DataGrid\DataGrid $control}
 
 <div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()} table-responsive{/block} {$control->getClass()}" data-refresh-state="{link refreshState!}">
-	<div n:snippet="grid" class="datagrid-main-snippet">
+	<div n:snippet="grid" class="datagrid-main-snippet" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 	{snippetArea gridSnippets}
 		<!-- Modal -->
 		<div class="modal fade" id="multipleColumnselect_{$control->getFullname()}" tabindex="-1" aria-labelledby="exampleModalLabel">
@@ -74,7 +74,7 @@
 							{/foreach}
 						{/if}
 						{if $exports}
-							<div class="datagrid-exports" n:snippet="exports" n:block="exports">
+							<div class="datagrid-exports" n:snippet="exports" n:block="exports" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 								{foreach $exports as $export}
 									<span n:class="!$iterator->first? ms-1">
 										{$export->render()}
@@ -145,7 +145,7 @@
 					</div>
 				{/block}
 			{/if}
-			<table class="{block table-class}table table-hover table-striped table-bordered table-sm text-break{/block}" n:snippet="table" n:block="data">
+			<table class="{block table-class}table table-hover table-striped table-bordered table-sm text-break{/block}" n:snippet="table" n:block="data" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 				<thead n:block="header">
 
                     {php $cnt_thead = 0}
@@ -220,7 +220,7 @@
 
 					<tr n:block="header-column-row" class="align-top">
                         {if empty($filters)}
-                            <th n:snippet="thead-group-action" n:if="$hasGroupActions" class="col-checkbox">
+                            <th n:snippet="thead-group-action" n:if="$hasGroupActions" class="col-checkbox" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
                                 <input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
                             </th>
                         {else}
@@ -335,7 +335,7 @@
 				</thead>
 
 				{block tbody}
-				<tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/}>
+				<tbody n:snippet="tbody" {if $control->isSortable()}data-sortable data-sortable-url="{plink $control->getSortableHandler()}" data-sortable-parent-path="{$control->getSortableParentPath()}"{/} {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 					{snippetArea items}
 						{if $inlineAdd && $inlineAdd->isPositionTop()}
 							{include inlineAddRow, columns => $columns}
@@ -352,7 +352,7 @@
 								{if $inlineEdit && $inlineEdit->getItemId() == $row->getId()}
 									{php $inlineEdit->onSetDefaults($filter['inline_edit'], $item)}
 
-									<tr data-id="{$row->getId()}" n:snippet='"item-{$row->getId()}"' n:attr="$row->getControl()->attrs">
+									<tr data-id="{$row->getId()}" n:snippet='"item-{$row->getId()}"' n:attr="$row->getControl()->attrs" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 										<td n:if="$hasGroupActions" class="col-checkbox"></td>
 
 										{foreach $columns as $key => $column}
@@ -383,7 +383,7 @@
 										</td>
 									</tr>
 								{else}
-									<tr data-id="{$row->getId()}" n:snippet='"item-{$row->getId()}"' n:attr="$row->getControl()->attrs">
+									<tr data-id="{$row->getId()}" n:snippet='"item-{$row->getId()}"' n:attr="$row->getControl()->attrs" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 										<td n:if="$hasGroupActions" class="col-checkbox">
 											{if $row->hasGroupAction()}
 												<input n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getFullName()}" data-check-all-{$control->getFullName()|noescape} name="{$control->getFullName()|lower}_group_action_item[{$row->getId()}]">
@@ -473,7 +473,7 @@
 							 * Item detail
 							 *}
 							{if $itemsDetail && $itemsDetail->shouldBeRendered($row)}
-								<tr class="row-item-detail item-detail-{$control->getFullname()}-id-{$row->getId()}" n:snippet='"item-{$row->getId()}-detail"'>
+								<tr class="row-item-detail item-detail-{$control->getFullname()}-id-{$row->getId()}" n:snippet='"item-{$row->getId()}-detail"' {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 									{if isset($toggle_detail) && $toggle_detail == $row->getId()}
 										{var $item_detail_params = ['item' => $item, '_form' => $filter] + $itemsDetail->getTemplateVariables()}
 
@@ -527,7 +527,7 @@
 				</tbody>
 				{/block}
 				{block tfoot}
-					<tfoot n:snippet="pagination">
+					<tfoot n:snippet="pagination" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 						{if $control->isPaginated() || $filter_active}
 							<tr n:block="pagination">
 								<td colspan="{$control->getColumnsCount()}" n:if="!$control->isTreeView()" class="row-grid-bottom">
@@ -626,7 +626,7 @@
 
 {define columnSummary}
 
-	<tr class="datagrid-row-columns-summary" n:if="!empty($rows) && ($columnsSummary || $control->hasSomeAggregationFunction())" n:snippet="summary">
+	<tr class="datagrid-row-columns-summary" n:if="!empty($rows) && ($columnsSummary || $control->hasSomeAggregationFunction())" n:snippet="summary" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 		<td n:if="$hasGroupActions" class="col-checkbox"></td>
 
 		{if $columnsSummary && $columnsSummary->someColumnsExist($columns)}
