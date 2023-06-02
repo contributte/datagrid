@@ -218,7 +218,7 @@
                     </tr>
                     {/foreach}
 
-					<tr n:block="header-column-row" class="align-top">
+					<tr n:block="header-column-row" class="align-top filter-row">
                         {if empty($filters)}
                             <th n:snippet="thead-group-action" n:if="$hasGroupActions" class="col-checkbox">
                                 <input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
