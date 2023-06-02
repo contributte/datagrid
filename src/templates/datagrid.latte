@@ -218,7 +218,7 @@
                     </tr>
                     {/foreach}
 
-					<tr n:block="header-column-row" class="align-top filter-row">
+					<tr n:block="header-column-row" class="align-top">
                         {if empty($filters)}
                             <th n:snippet="thead-group-action" n:if="$hasGroupActions" class="col-checkbox">
                                 <input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
@@ -299,7 +299,7 @@
 							{='ublaboo_datagrid.action'|translate}
 						</th>
 					</tr>
-					<tr n:block="header-filters" n:if="!empty($filters) && !$control->hasOuterFilterRendering()" class="align-top">
+					<tr n:block="header-filters" n:if="!empty($filters) && !$control->hasOuterFilterRendering()" class="align-top filter-row">
                         <th n:if="$hasGroupActions" class="col-checkbox align-middle">
                             <input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
                         </th>
