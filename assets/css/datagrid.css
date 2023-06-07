@@ -1,3 +1,15 @@
+/* .datagrid--slide-toggle > td > div {
+	-webkit-transition: height .25s ease;
+	-o-transition: height .25s ease;
+	transition: height .25s ease;
+	overflow: hidden;
+} */
+
+.datagrid--content-row:not(.is-active) > td /*> div*/
+{
+	display: none;
+}
+
 @keyframes edited {
 	0% {
 		background-color: #A6E2A9
@@ -24,14 +36,6 @@
 	background-color: #fff;
 	padding: 1em;
 	box-sizing: border-box
-}
-
-.datagrid a {
-	text-decoration: none;
-}
-
-.datagrid a:not(.btn):not(.dropdown-item):hover {
-	text-decoration: underline;
 }
 
 .datagrid .datagrid-input-group-full-width {
@@ -225,32 +229,12 @@
 	opacity: 1
 }
 
-.datagrid .table > :not(:first-child) {
-	border-top: 0;
-}
-
 .datagrid table tbody td {
 	vertical-align: middle
 }
 
 .datagrid table tbody tr.ui-sortable-helper {
 	display: table
-}
-
-.datagrid table tbody tr.row-item-detail {
-	display: none
-}
-
-.datagrid table tbody tr.row-item-detail.toggled {
-	display: table-row
-}
-
-.datagrid table tbody tr.row-item-detail .item-detail-content {
-	display: none
-}
-
-.datagrid table tbody tr.row-item-detail-helper {
-	display: none
 }
 
 .datagrid table tbody tr .datagrid-inline-edit .form-control {
@@ -493,7 +477,8 @@
 }
 
 .datagrid select {
-	text-transform: none;
+	padding: 0;
+	text-transform: none
 }
 
 .datagrid .row-grid-bottom {
@@ -526,8 +511,7 @@
 	display: inline-block
 }
 
-.datagrid .row-grid-bottom .col-per-page .form-control,
-.datagrid .row-grid-bottom .col-per-page .form-select {
+.datagrid .row-grid-bottom .col-per-page .form-control {
 	width: auto;
 	display: inline-block
 }
