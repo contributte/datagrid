@@ -631,6 +631,6 @@
 	font-size: 12px;
 }
 
-.datagrid table thead tr.row-group-actions select.form-select:disable {
+.datagrid table thead tr.row-group-actions select.form-select:disabled {
     visibility: hidden !important;
 }
