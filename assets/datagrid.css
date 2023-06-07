@@ -630,3 +630,7 @@
 	line-height: 1.42857143;
 	font-size: 12px;
 }
+
+.datagrid table thead tr.row-group-actions select.form-select:disable {
+    visibility: hidden !important;
+}
