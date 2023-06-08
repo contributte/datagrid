@@ -623,6 +623,20 @@ class DataGrid extends Control
     }
 
     /**
+     * @return int
+     */
+    public function getRowLabelsColumnCount(): int
+    {
+        $max_count = 0;
+        foreach ($this->rowLabels as $k => $row) {
+            if ($max_count < count($row)) {
+                $max_count = count($row);
+            }
+        }
+        return $max_count;
+    }
+
+    /**
      * @param array $rowLabels
      * @return $this
      */
@@ -3346,6 +3360,8 @@ class DataGrid extends Control
 		if ($this->hasGroupActions()) {
 			$count++;
 		}
+
+        $count = $count + $this->getRowLabelsColumnCount();
 
 		return $count;
 	}

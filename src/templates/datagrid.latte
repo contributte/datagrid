@@ -62,40 +62,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="row mx-0 fixed-header">
-			<div class="col-12 px-0 d-flex justify-content-end">
-				<div class="{block datagrid-fixed-header}{/block}">
-					<div class="datagrid-toolbar pe-1 my-2 d-inline-flex align-baseline justify-content-end" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
-						{if $toolbarButtons}
-							{foreach $toolbarButtons as $toolbar_button}
-								<span n:class="!$iterator->first? ms-1">
-									{$toolbar_button->renderButton()|noescape}
-								</span>
-							{/foreach}
-						{/if}
-						{if $exports}
-							<div class="datagrid-exports" n:snippet="exports" n:block="exports" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
-								{foreach $exports as $export}
-									<span n:class="!$iterator->first? ms-1">
-										{$export->render()}
-									</span>
-								{/foreach}
-							</div>
-						{/if}
-						<div class="datagrid-settings d-flex ms-1" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
-							{if $inlineAdd}
-								{$inlineAdd->renderButtonAdd()}
-							{/if}
-
-							<button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#multipleColumnselect_{$control->getFullname()}">
-								<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
-							</button>
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 		{form filter, class => 'ajax'}
 			{if $control->hasOuterFilterRendering()}
 				{block outer-filters}
@@ -160,8 +126,8 @@
                         {php $cnt_thead += 1}
                     {/if}
 
-					<tr class="row-group-actions" n:if="$hasGroupActions || $exports || $inlineAdd" n:block="group-actions">
-						<th colspan="{$control->getColumnsCount()}" class="ublaboo-datagrid-th-form-inline">
+					<tr class="row-group-actions">
+						<th colspan="{(int) round(($control->getColumnsCount() / 2), 0, PHP_ROUND_HALF_DOWN)}" n:if="$hasGroupActions || $exports || $inlineAdd" n:block="group-actions" class="ublaboo-datagrid-th-form-inline">
 							{if $hasGroupActions}
 								{block group_actions}
                                     <div class="row mx-0">
@@ -195,6 +161,41 @@
 								{/block}
 							{/if}
 						</th>
+						<th colspan="{if !$hasGroupActions && !$exports && !$inlineAdd} {$control->getColumnsCount()} {else} {(int) round(($control->getColumnsCount() / 2), 0, PHP_ROUND_HALF_UP)} {/if}" class="ublaboo-datagrid-th-form-inline">
+                            <div class="row mx-0 fixed-header">
+                                <div class="col-12 px-0 d-flex justify-content-end">
+                                    <div class="{block datagrid-fixed-header}{/block}">
+                                        <div class="datagrid-toolbar pe-1 my-2 d-inline-flex align-baseline justify-content-end" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
+                                            {if $toolbarButtons}
+                                                {foreach $toolbarButtons as $toolbar_button}
+                                                    <span n:class="!$iterator->first? ms-1">
+                                                        {$toolbar_button->renderButton()|noescape}
+                                                    </span>
+                                                {/foreach}
+                                            {/if}
+                                            {if $exports}
+                                                <div class="datagrid-exports" n:snippet="exports" n:block="exports" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
+                                                    {foreach $exports as $export}
+                                                        <span n:class="!$iterator->first? ms-1">
+                                                            {$export->render()}
+                                                        </span>
+                                                    {/foreach}
+                                                </div>
+                                            {/if}
+                                            <div class="datagrid-settings d-flex ms-1" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
+                                                {if $inlineAdd}
+                                                    {$inlineAdd->renderButtonAdd()}
+                                                {/if}
+
+                                                <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#multipleColumnselect_{$control->getFullname()}">
+                                                    <i n:block="icon-gear" class="{$iconPrefix}cog"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </th>
 					</tr>
 
                     {foreach $columnLabels as $rowOfColumns}
