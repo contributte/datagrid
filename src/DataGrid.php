@@ -157,7 +157,7 @@ class DataGrid extends Control
 	/**
 	 * @var string
 	 */
-	public static string $iconPrefix = 'fa fa-';
+	public static string $iconPrefix = 'fa-fw fa fa-';
 
 	/**
 	 * Default form method
