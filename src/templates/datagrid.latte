@@ -145,11 +145,11 @@
                                                 <div class="col-auto d-inline-flex">
                                                     {foreach $filter['group_action']->getControls() as $form_control}
                                                         {if $form_control instanceof \Nette\Forms\Controls\SubmitButton && $form_control->getName() === 'submit'}
-                                                            {input $form_control, class => 'btn btn-primary btn-sm ms-1', disabled => TRUE}
+                                                            {input $form_control, class => 'btn btn-primary ms-1', disabled => TRUE}
                                                         {elseif $form_control instanceof \Nette\Forms\Controls\SubmitButton}
                                                             {input $form_control, disabled => TRUE}
                                                         {elseif $form_control->getName() == 'group_action'}
-                                                            {input $form_control, class => 'form-select form-select-sm', disabled => TRUE}
+                                                            {input $form_control, class => 'form-select', disabled => TRUE}
                                                         {else}
                                                             {input $form_control}
                                                         {/if}
