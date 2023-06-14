@@ -1387,6 +1387,29 @@ class DataGrid extends Control
 				continue;
 			}
 
+            if (isset($this->filters[$key]) && $this->filters[$key] instanceof FilterDateRange && is_string($value)) {
+
+                if (str_contains($value, ',')) {
+                    $str = explode(',', $value);
+                } elseif (str_contains($value, ';')) {
+                    $str = explode(';', $value);
+                } else {
+                    $str = [$value];
+                }
+
+                $from = trim($str[0] ?? '');
+                $to = trim($str[1] ?? '');
+
+                $dates = [];
+                if (!empty($from)) {
+                    $dates['from'] = $from;
+                }
+                if (!empty($to)) {
+                    $dates['to'] = $to;
+                }
+                $value = ArrayHash::from($dates);
+            }
+
 			if (is_array($value) || $value instanceof Traversable) {
 				if (!ArraysHelper::testEmpty($value)) {
 					$this->filters[$key]->setValue($value);

@@ -27,51 +27,26 @@ class FilterDateRange extends FilterRange implements IFilterDate
 	/**
 	 * Adds select box to filter form
 	 */
-	public function addToFormContainer(Container $container): void
-	{
-		$container = $container->addContainer($this->key);
+    public function addToFormContainer(Container $container): void
+    {
+        $control = $container->addText($this->key, $this->name);
 
-		$from = $container->addText('from', $this->name);
+        $control->setAttribute('data-provide', 'datepicker')
+                ->setAttribute('data-date-orientation', 'bottom')
+                ->setAttribute('data-date-format', $this->getJsFormat())
+                ->setAttribute('data-date-today-highlight', 'true')
+                ->setAttribute('data-date-autoclose', 'true');
 
-		$from->setAttribute('data-provide', 'datepicker')
-			->setAttribute('data-date-orientation', 'bottom')
-			->setAttribute('data-date-format', $this->getJsFormat())
-			->setAttribute('data-date-today-highlight', 'true')
-			->setAttribute('data-date-autoclose', 'true');
+        $this->addAttributes($control);
 
-		$to = $container->addText('to', $this->nameSecond);
+        if ($this->grid->hasAutoSubmit()) {
+            $control->setAttribute('data-autosubmit-change', true);
+        }
 
-		$to->setAttribute('data-provide', 'datepicker')
-			->setAttribute('data-date-orientation', 'bottom')
-			->setAttribute('data-date-format', $this->getJsFormat())
-			->setAttribute('data-date-today-highlight', 'true')
-			->setAttribute('data-date-autoclose', 'true');
-
-		$this->addAttributes($from);
-		$this->addAttributes($to);
-
-		if ($this->grid->hasAutoSubmit()) {
-			$from->setAttribute('data-autosubmit-change', true);
-			$to->setAttribute('data-autosubmit-change', true);
-		}
-
-		$placeholders = $this->getPlaceholders();
-
-		if ($placeholders !== []) {
-			$textFrom = reset($placeholders);
-
-			if ($textFrom) {
-				$from->setAttribute('placeholder', $textFrom);
-			}
-
-			$textTo = end($placeholders);
-
-			if ($textTo && ($textTo !== $textFrom)) {
-				$to->setAttribute('placeholder', $textTo);
-			}
-		}
-	}
-
+        if ($this->getPlaceholder() !== null) {
+            $control->setAttribute('placeholder', $this->getPlaceholder());
+        }
+    }
 
 	/**
 	 * Set format for datepicker etc
