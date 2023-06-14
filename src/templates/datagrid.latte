@@ -165,7 +165,7 @@
                             <div class="row mx-0 fixed-header">
                                 <div class="col-12 px-0 d-flex justify-content-end">
                                     <div class="{block datagrid-fixed-header}{/block}">
-                                        <div class="datagrid-toolbar pe-1 my-2 d-inline-flex align-baseline justify-content-end" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
+                                        <div class="datagrid-toolbar my-2 d-inline-flex align-baseline justify-content-end" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
                                             {if $toolbarButtons}
                                                 {foreach $toolbarButtons as $toolbar_button}
                                                     <span n:class="!$iterator->first? ms-1">
