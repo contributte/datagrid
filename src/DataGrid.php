@@ -2610,7 +2610,6 @@ class DataGrid extends Control
 		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 
 		$this->redrawControl();
-
 		$this->onRedraw();
 	}
 
@@ -2621,7 +2620,6 @@ class DataGrid extends Control
 		$this->saveSessionData('_grid_hidden_columns_manipulated', false);
 
 		$this->redrawControl();
-
 		$this->onRedraw();
 	}
 
@@ -2642,7 +2640,8 @@ class DataGrid extends Control
 		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 
 		$this->redrawControl();
-
+        $this->payload->postGet = true;
+        $this->payload->url = $this->link('this');
 		$this->onRedraw();
 	}
 
@@ -2664,7 +2663,8 @@ class DataGrid extends Control
 		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 
 		$this->redrawControl();
-
+        $this->payload->postGet = true;
+        $this->payload->url = $this->link('this');
 		$this->onRedraw();
 	}
 
@@ -2699,7 +2699,8 @@ class DataGrid extends Control
 		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 
 		$this->redrawControl();
-
+        $this->getPresenter()->payload->postGet = true;
+        $this->getPresenter()->payload->url = $this->link('this');
 		$this->onRedraw();
 	}
 
