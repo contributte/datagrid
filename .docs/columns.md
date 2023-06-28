@@ -33,7 +33,7 @@ Table of contents
 
 # Columns
 
-There are several column classes, and they all have some common behaviour and properties.
+There are several column classes and they all have some common behaviour and properties.
 
 ## Api
 
