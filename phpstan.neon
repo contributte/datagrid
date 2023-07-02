@@ -48,3 +48,19 @@ parameters:
 			message: "#^Parameter \\#1 \\$x of method Doctrine\\\\ORM\\\\Query\\\\Expr\\:\\:like\\(\\) expects string, Doctrine\\\\ORM\\\\Query\\\\Expr\\\\Func given\\.$#"
 			count: 1
 			path: src/DataSource/DoctrineDataSource.php
+		- # In PHP 8+, the Stringable typehint should be used, and this can be removed.
+			message: '#string\\|Stringable#'
+			count: 1
+			path: src/Column/Action.php
+		- # In PHP 8+, the Stringable typehint should be used, and this can be removed.
+			message: '#string\\|Stringable#'
+			count: 1
+			path: src/DataGrid.php
+		- # In PHP 8+, the Stringable typehint should be used, and this can be removed.
+			message: '#string\\|Stringable#'
+			count: 3
+			path: src/Export/Export.php
+		- # In PHP 8+, the Stringable typehint should be used, and this can be removed.
+			message: '#string\\|Stringable#'
+			count: 2
+			path: src/Status/Option.php

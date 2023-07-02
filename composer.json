@@ -38,7 +38,7 @@
 		"contributte/application": "^0.5.0",
 		"nette/di": "^3.0.0",
 		"nette/forms": "^3.1.3",
-		"nette/utils": "^3.0.1",
+		"nette/utils": "^3.0.1 || ^4.0.0",
 		"symfony/property-access": "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0"
 	},
 	"require-dev": {
