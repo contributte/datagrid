@@ -1,12 +1,10 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\Tests\Files;
+namespace Contributte\Datagrid\Tests\Files;
 
 use Mockery;
-use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
+use Nette\Application\UI\Template;
 
 final class TestPresenter extends Presenter
 {
@@ -16,11 +14,12 @@ final class TestPresenter extends Presenter
 		return new TestGridControl();
 	}
 
-	protected function createTemplate(): ITemplate
+	protected function createTemplate(): Template
 	{
-		return Mockery::mock(ITemplate::class)
+		return Mockery::mock(Template::class)
 			->shouldReceive('getFile')
 			->andReturn(__DIR__ . '/template.latte')
 			->getMock();
 	}
+
 }

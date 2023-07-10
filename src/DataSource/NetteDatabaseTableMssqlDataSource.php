@@ -1,13 +1,11 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\DataSource;
 
-namespace Ublaboo\DataGrid\DataSource;
-
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Utils\DateTimeHelper;
 
 class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource implements IDataSource
 {
@@ -20,14 +18,13 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
 			$this->dataSource->where(
-				"CONVERT(varchar(10), {$filter->getColumn()}, 112) = ?",
+				sprintf('CONVERT(varchar(10), %s, 112) = ?', $filter->getColumn()),
 				$date->format('Ymd')
 			);
-		} catch (DataGridDateTimeHelperException $ex) {
+		} catch (DatagridDateTimeHelperException) {
 			// ignore the invalid filter value
 		}
 	}
-
 
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
@@ -42,10 +39,10 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 				$dateFrom->setTime(0, 0, 0);
 
 				$this->dataSource->where(
-					"CONVERT(varchar(10), {$filter->getColumn()}, 112) >= ?",
+					sprintf('CONVERT(varchar(10), %s, 112) >= ?', $filter->getColumn()),
 					$dateFrom->format('Ymd')
 				);
-			} catch (DataGridDateTimeHelperException $ex) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -56,12 +53,13 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 				$dateTo->setTime(23, 59, 59);
 
 				$this->dataSource->where(
-					"CONVERT(varchar(10), {$filter->getColumn()}, 112) <= ?",
+					sprintf('CONVERT(varchar(10), %s, 112) <= ?', $filter->getColumn()),
 					$dateTo->format('Ymd')
 				);
-			} catch (DataGridDateTimeHelperException $ex) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
 	}
+
 }

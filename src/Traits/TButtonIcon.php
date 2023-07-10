@@ -1,16 +1,11 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\Traits;
+namespace Contributte\Datagrid\Traits;
 
 trait TButtonIcon
 {
 
-	/**
-	 * @var string|null
-	 */
-	protected $icon;
+	protected ?string $icon = null;
 
 	/**
 	 * @return static
@@ -21,7 +16,6 @@ trait TButtonIcon
 
 		return $this;
 	}
-
 
 	public function getIcon(): ?string
 	{

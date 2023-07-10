@@ -1,29 +1,22 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Tests\Cases;
 
-namespace Ublaboo\DataGrid\Tests\Cases;
-
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Tester\Assert;
 use Tester\TestCase;
 use Tracy\Debugger;
-use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/TestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
 final class ExportTest extends TestCase
 {
 
-	/**
-	 * @var DataGrid
-	 */
-	private $grid;
+	private Datagrid $grid;
 
-	/**
-	 * @var array
-	 */
-	private $data = [
+	private array $data = [
 		[
 			'id' => 1,
 			'name' => 'John Doe',
@@ -48,10 +41,9 @@ final class ExportTest extends TestCase
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
-
 
 	public function testExportNotFiltered(): void
 	{
@@ -62,19 +54,16 @@ final class ExportTest extends TestCase
 
 		$this->grid->addExportCallback('Export', $callback);
 
-		$this->grid;
 		$trigger = function (): void {
 			$this->grid->handleExport(1);
 		};
 
-		Assert::exception($trigger, 'Ublaboo\DataGrid\Exception\DataGridException', 'You have to set a data source first.');
+		Assert::exception($trigger, 'Contributte\Datagrid\Exception\DatagridException', 'You have to set a data source first.');
 
 		$this->grid->setDataSource($this->data);
 
 		$this->grid->handleExport(1);
 	}
-
-
 
 	public function testExportFiltered(): void
 	{
@@ -92,7 +81,7 @@ final class ExportTest extends TestCase
 			$this->grid->handleExport(1);
 		};
 
-		Assert::exception($trigger, 'Ublaboo\DataGrid\Exception\DataGridException', 'You have to set a data source first.');
+		Assert::exception($trigger, 'Contributte\Datagrid\Exception\DatagridException', 'You have to set a data source first.');
 
 		$this->grid->setDataSource($this->data);
 

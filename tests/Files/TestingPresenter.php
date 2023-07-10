@@ -1,25 +1,19 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Tests\Files;
 
-namespace Ublaboo\DataGrid\Tests\Files;
-
+use Contributte\Datagrid\Datagrid;
 use Nette\Application\UI\Presenter;
-use Ublaboo\DataGrid\DataGrid;
 
 final class TestingPresenter extends Presenter
 {
 
-	/**
-	 * @var bool
-	 */
-	public $actionHandeled = false;
+	public bool $actionHandeled = false;
 
 	public function handleDoStuff(int $id): void
 	{
 		$this->actionHandeled = true;
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -29,19 +23,9 @@ final class TestingPresenter extends Presenter
 		return $destination . '?' . http_build_query($args);
 	}
 
-
-	/*protected function createRequest(
-		Component $component,
-		string $destination,
-		array $args,
-		string $mode
-	): ?string
+	protected function createComponentGrid(string $name): Datagrid
 	{
-		return ucfirst($component->getName()) . $this->link($destination, $args);
-	}*/
-
-	protected function createComponentGrid(string $name): DataGrid
-	{
-		return new DataGrid($this, $name);
+		return new Datagrid($this, $name);
 	}
+
 }

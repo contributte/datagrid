@@ -1,25 +1,20 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\DataSource;
 
-namespace Ublaboo\DataGrid\DataSource;
-
+use Contributte\Datagrid\Filter\Filter;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterMultiSelect;
+use Contributte\Datagrid\Filter\FilterRange;
+use Contributte\Datagrid\Filter\FilterSelect;
+use Contributte\Datagrid\Filter\FilterText;
 use Nette\Utils\ArrayHash;
-use Ublaboo\DataGrid\Filter\Filter;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
 
 abstract class FilterableDataSource
 {
 
-	/**
-	 * @return mixed
-	 */
-	abstract protected function getDataSource();
+	abstract protected function getDataSource(): mixed;
 
 	abstract protected function applyFilterDate(FilterDate $filter): void;
 
@@ -32,7 +27,6 @@ abstract class FilterableDataSource
 	abstract protected function applyFilterMultiSelect(FilterMultiSelect $filter): void;
 
 	abstract protected function applyFilterSelect(FilterSelect $filter): void;
-
 
 	/**
 	 * {@inheritDoc}
@@ -69,4 +63,5 @@ abstract class FilterableDataSource
 			}
 		}
 	}
+
 }

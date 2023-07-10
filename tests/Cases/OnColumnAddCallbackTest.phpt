@@ -1,40 +1,37 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 /**
  * TEST: OnColumnAddCallbackTest
  *
- * @testCase Ublaboo\DataGrid\Tests\Cases\OnColumnAddCallbackTest
+ * @testCase Contributte\Datagrid\Tests\Cases\OnColumnAddCallbackTest
  */
 
-namespace Ublaboo\DataGrid\Tests\Cases;
+namespace Contributte\Datagrid\Tests\Cases;
 
-use Tester;
-use Ublaboo;
+use Contributte\Datagrid\Column\Column;
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
+use Tester\Assert;
+use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/TestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
 
-class OnColumnAddCallbackTest extends Tester\TestCase
+class OnColumnAddCallbackTest extends TestCase
 {
 
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
-	private $grid;
+	private Datagrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
-
 
 	public function testSetSortable(): void
 	{
-		$this->grid->onColumnAdd[] = function ($key, Ublaboo\DataGrid\Column\Column $column): void {
+		$this->grid->onColumnAdd[] = function ($key, Column $column): void {
 			$column->setSortable();
 		};
 
@@ -45,11 +42,11 @@ class OnColumnAddCallbackTest extends Tester\TestCase
 		$columnTextNotSortable = $this->grid->addColumnText('textNotSortable', 'textName')
 			->setSortable(false);
 
-		Tester\Assert::true($columnText->isSortable());
-		Tester\Assert::true($columnNumber->isSortable());
-		Tester\Assert::true($columnDateTime->isSortable());
+		Assert::true($columnText->isSortable());
+		Assert::true($columnNumber->isSortable());
+		Assert::true($columnDateTime->isSortable());
 
-		Tester\Assert::false($columnTextNotSortable->isSortable());
+		Assert::false($columnTextNotSortable->isSortable());
 	}
 
 }

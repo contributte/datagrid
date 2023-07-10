@@ -1,65 +1,50 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\DataSource;
 
-namespace Ublaboo\DataGrid\DataSource;
-
-use Elasticsearch\Client;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
-use Ublaboo\DataGrid\Utils\Sorting;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterMultiSelect;
+use Contributte\Datagrid\Filter\FilterRange;
+use Contributte\Datagrid\Filter\FilterSelect;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Utils\DateTimeHelper;
+use Contributte\Datagrid\Utils\Sorting;
+use Elastic\Elasticsearch\Client;
+use RuntimeException;
+use UnexpectedValueException;
 
 class ElasticsearchDataSource extends FilterableDataSource implements IDataSource
 {
 
-	/**
-	 * @var SearchParamsBuilder
-	 */
-	protected $searchParamsBuilder;
+	protected SearchParamsBuilder $searchParamsBuilder;
 
-	/**
-	 * @var Client
-	 */
-	private $client;
-
-	/**
-	 * @var callable
-	 */
+	/** @var callable */
 	private $rowFactory;
 
-	public function __construct(Client $client, string $indexName, ?callable $rowFactory = null)
+	public function __construct(private Client $client, string $indexName, ?callable $rowFactory = null)
 	{
-		$this->client = $client;
 		$this->searchParamsBuilder = new SearchParamsBuilder($indexName);
 
 		if ($rowFactory === null) {
-			$rowFactory = static function (array $hit): array {
-				return $hit['_source'];
-			};
+			$rowFactory = static fn (array $hit): array => $hit['_source'];
 		}
 
 		$this->rowFactory = $rowFactory;
 	}
-
 
 	public function getCount(): int
 	{
 		$searchResult = $this->client->search($this->searchParamsBuilder->buildParams());
 
 		if (!isset($searchResult['hits'])) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		return is_array($searchResult['hits']['total'])
 			? $searchResult['hits']['total']['value']
 			: $searchResult['hits']['total'];
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -69,12 +54,11 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 		$searchResult = $this->client->search($this->searchParamsBuilder->buildParams());
 
 		if (!isset($searchResult['hits'])) {
-			throw new \UnexpectedValueException;
+			throw new UnexpectedValueException();
 		}
 
 		return array_map($this->rowFactory, $searchResult['hits']['hits']);
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -88,7 +72,6 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 		return $this;
 	}
 
-
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->searchParamsBuilder->setFrom($offset);
@@ -96,7 +79,6 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 
 		return $this;
 	}
-
 
 	public function applyFilterDate(FilterDate $filter): void
 	{
@@ -119,7 +101,6 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 			}
 		}
 	}
-
 
 	public function applyFilterDateRange(FilterDateRange $filter): void
 	{
@@ -147,14 +128,12 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 		}
 	}
 
-
 	public function applyFilterRange(FilterRange $filter): void
 	{
 		foreach ($filter->getCondition() as $column => $value) {
 			$this->searchParamsBuilder->addRangeQuery($column, $value['from'] ?? null, $value['to'] ?? null);
 		}
 	}
-
 
 	public function applyFilterText(FilterText $filter): void
 	{
@@ -167,14 +146,12 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 		}
 	}
 
-
 	public function applyFilterMultiSelect(FilterMultiSelect $filter): void
 	{
 		foreach ($filter->getCondition() as $column => $values) {
 			$this->searchParamsBuilder->addBooleanMatchQuery($column, $values);
 		}
 	}
-
 
 	public function applyFilterSelect(FilterSelect $filter): void
 	{
@@ -183,15 +160,15 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 		}
 	}
 
-
 	/**
 	 * {@inheritDoc}
-	 * @throws \RuntimeException
+	 *
+	 * @throws RuntimeException
 	 */
 	public function sort(Sorting $sorting): IDataSource
 	{
 		if (is_callable($sorting->getSortCallback())) {
-			throw new \RuntimeException('No can do - not implemented yet');
+			throw new RuntimeException('No can do - not implemented yet');
 		}
 
 		foreach ($sorting->getSort() as $column => $order) {
@@ -203,13 +180,9 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 		return $this;
 	}
 
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function getDataSource()
+	protected function getDataSource(): SearchParamsBuilder
 	{
-		return $this->client;
+		return $this->searchParamsBuilder;
 	}
 
 }

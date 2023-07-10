@@ -143,7 +143,7 @@ $grid->addGroupTextareaAction('aaaa')
 
 ## Happy inputs
 
-DataGrid uses tiny library `happy` for those nice checkboxes. You can disable them:
+Datagrid uses tiny library `happy` for those nice checkboxes. You can disable them:
 
 ```php
 $grid->useHappyComponents(false);

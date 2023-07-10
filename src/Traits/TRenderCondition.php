@@ -1,17 +1,13 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Traits;
 
-namespace Ublaboo\DataGrid\Traits;
-
-use Ublaboo\DataGrid\Row;
+use Contributte\Datagrid\Row;
 
 trait TRenderCondition
 {
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $renderConditionCallback;
 
 	/**
@@ -24,7 +20,6 @@ trait TRenderCondition
 		return $this;
 	}
 
-
 	public function shouldBeRendered(Row $row): bool
 	{
 		$condition = $this->renderConditionCallback;
@@ -33,4 +28,5 @@ trait TRenderCondition
 			? ($condition)($row->getItem())
 			: true;
 	}
+
 }

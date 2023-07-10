@@ -1,14 +1,10 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\AggregationFunction;
+namespace Contributte\Datagrid\AggregationFunction;
 
 interface IMultipleAggregationFunction extends IAggregationFunction
 {
 
-	/**
-	 * @return mixed
-	 */
-	public function renderResult(string $key);
+	public function renderResult(string $key): mixed;
+
 }

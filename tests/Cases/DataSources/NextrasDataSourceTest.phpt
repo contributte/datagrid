@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
-namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
-
+use Contributte\Datagrid\DataSource\NextrasDataSource;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Nette\Caching\Cache;
 use Nette\Caching\Storages\DevNullStorage;
 use Nette\Utils\Arrays;
@@ -17,9 +18,6 @@ use Nextras\Orm\Model\SimpleModelFactory;
 use Nextras\Orm\Repository\Repository;
 use Tester\Assert;
 use Tester\Environment;
-use Ublaboo\DataGrid\DataSource\NextrasDataSource;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
@@ -33,10 +31,7 @@ if (!extension_loaded('mysqli')) {
 final class NextrasDataSourceTest extends BaseDataSourceTest
 {
 
-	/**
-	 * @var Model
-	 */
-	private $model;
+	private Model $model;
 
 	public function testFilterOnJoinedTable(): void
 	{
@@ -59,8 +54,8 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 		$this->setUpDatabase();
 
 		$this->ds = new NextrasDataSource($this->model->users->findAll(), 'id');
-		$factory = new TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
 	protected function setUpDatabase(): void
@@ -104,12 +99,10 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 		$this->model = $simpleModelFactory->create();
 
 		$connection->query('INSERT INTO [users] %values[]', $this->data);
-		$connection->query('INSERT INTO [books] %values[]', Arrays::map($this->data, function (array $data): array {
-			return ['id' => $data['id'], 'author_id' => $data['id']];
-		}));
+		$connection->query('INSERT INTO [books] %values[]', Arrays::map($this->data, fn (array $data): array => ['id' => $data['id'], 'author_id' => $data['id']]));
 	}
 
-	protected function getActualResultAsArray()
+	protected function getActualResultAsArray(): array
 	{
 		$result = [];
 

@@ -1,29 +1,20 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\Utils;
+namespace Contributte\Datagrid\Utils;
 
 final class Sorting
 {
 
-	/**
-	 * @var array|string[]
-	 */
-	private $sort = [];
-
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	private $sortCallback = null;
 
-
-	public function __construct(array $sort, ?callable $sortCallback = null)
+	/**
+	 * @param mixed[]|string[] $sort
+	 */
+	public function __construct(private array $sort, ?callable $sortCallback = null)
 	{
-		$this->sort = $sort;
 		$this->sortCallback = $sortCallback;
 	}
-
 
 	/**
 	 * @return array|string[]
@@ -32,7 +23,6 @@ final class Sorting
 	{
 		return $this->sort;
 	}
-
 
 	public function getSortCallback(): ?callable
 	{

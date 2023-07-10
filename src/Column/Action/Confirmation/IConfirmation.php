@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\Column\Action\Confirmation;
+namespace Contributte\Datagrid\Column\Action\Confirmation;
 
 interface IConfirmation
 {

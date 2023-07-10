@@ -1,38 +1,34 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Tests\Cases;
 
-namespace Ublaboo\DataGrid\Tests\Cases;
-
+use Contributte\Datagrid\Column\ColumnNumber;
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/TestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
 final class ColumnNumberTest extends TestCase
 {
 
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
-	private $grid;
+	private Datagrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
-
-	public function render($column)
+	public function render(ColumnNumber $column): string
 	{
-		$item = new Ublaboo\DataGrid\Row($this->grid, ['id' => 1, 'name' => 'John', 'amount' => 345678.567], 'id');
+		$item = new Row($this->grid, ['id' => 1, 'name' => 'John', 'amount' => 345678.567], 'id');
 
-		return (string) $column->render($item);
+		return $column->render($item);
 	}
-
 
 	public function testFormat(): void
 	{
@@ -45,4 +41,4 @@ final class ColumnNumberTest extends TestCase
 
 }
 
-(new ColumnNumberTest)->run();
+(new ColumnNumberTest())->run();

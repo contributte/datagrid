@@ -1,17 +1,16 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Tests\Files;
 
-namespace Ublaboo\DataGrid\Tests\Files;
-
+use Contributte\Datagrid\Datagrid;
 use Nette\Application\UI\Control;
-use Ublaboo\DataGrid\DataGrid;
 
 class TestGridControl extends Control
 {
 
-	public function createComponentGrid(): DataGrid
+	public function createComponentGrid(): Datagrid
 	{
-		return new DataGrid();
+		return new Datagrid();
 	}
+
 }

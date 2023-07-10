@@ -1,30 +1,33 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid;
 
-namespace Ublaboo\DataGrid;
-
-use Dibi;
+use Contributte\Datagrid\Components\DatagridPaginator\DatagridPaginator;
+use Contributte\Datagrid\DataSource\ArrayDataSource;
+use Contributte\Datagrid\DataSource\DibiFluentDataSource;
+use Contributte\Datagrid\DataSource\DibiFluentMssqlDataSource;
+use Contributte\Datagrid\DataSource\DibiFluentPostgreDataSource;
+use Contributte\Datagrid\DataSource\DoctrineCollectionDataSource;
+use Contributte\Datagrid\DataSource\DoctrineDataSource;
+use Contributte\Datagrid\DataSource\IDataSource;
+use Contributte\Datagrid\DataSource\NetteDatabaseTableDataSource;
+use Contributte\Datagrid\DataSource\NetteDatabaseTableMssqlDataSource;
+use Contributte\Datagrid\DataSource\NextrasDataSource;
+use Contributte\Datagrid\Exception\DatagridWrongDataSourceException;
+use Contributte\Datagrid\Utils\NetteDatabaseSelectionHelper;
+use Contributte\Datagrid\Utils\Sorting;
+use Dibi\Drivers\MsSqlDriver;
+use Dibi\Drivers\OdbcDriver;
+use Dibi\Drivers\PostgreDriver;
+use Dibi\Drivers\SqlsrvDriver;
+use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
-use Nette\Database\Drivers as NDBDrivers;
+use Nette\Database\Drivers\MsSqlDriver as NDBMsSqlDriver;
+use Nette\Database\Drivers\SqlsrvDriver as NDBSqlsrvDriver;
 use Nette\Database\Table\Selection;
 use Nette\SmartObject;
 use Nextras\Orm\Collection\ICollection;
-use Ublaboo\DataGrid\Components\DataGridPaginator\DataGridPaginator;
-use Ublaboo\DataGrid\DataSource\ArrayDataSource;
-use Ublaboo\DataGrid\DataSource\DibiFluentDataSource;
-use Ublaboo\DataGrid\DataSource\DibiFluentMssqlDataSource;
-use Ublaboo\DataGrid\DataSource\DibiFluentPostgreDataSource;
-use Ublaboo\DataGrid\DataSource\DoctrineCollectionDataSource;
-use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
-use Ublaboo\DataGrid\DataSource\IDataSource;
-use Ublaboo\DataGrid\DataSource\NetteDatabaseTableDataSource;
-use Ublaboo\DataGrid\DataSource\NetteDatabaseTableMssqlDataSource;
-use Ublaboo\DataGrid\DataSource\NextrasDataSource;
-use Ublaboo\DataGrid\Exception\DataGridWrongDataSourceException;
-use Ublaboo\DataGrid\Utils\NetteDatabaseSelectionHelper;
-use Ublaboo\DataGrid\Utils\Sorting;
 
 /**
  * @method onBeforeFilter(IDataSource $dataSource)
@@ -36,53 +39,35 @@ final class DataModel
 
 	use SmartObject;
 
-	/**
-	 * @var array|callable[]
-	 */
-	public $onBeforeFilter = [];
+	/** @var array|callable[] */
+	public array $onBeforeFilter = [];
 
-	/**
-	 * @var array|callable[]
-	 */
-	public $onAfterFilter = [];
+	/** @var array|callable[] */
+	public array $onAfterFilter = [];
 
-	/**
-	 * @var array|callable[]
-	 */
-	public $onAfterPaginated = [];
+	/** @var array|callable[] */
+	public array $onAfterPaginated = [];
 
-	/**
-	 * @var IDataSource
-	 */
-	private $dataSource;
+	private IDataSource $dataSource;
 
-	/**
-	 * @param mixed $source
-	 */
-	public function __construct($source, string $primaryKey)
+	public function __construct(mixed $source, string $primaryKey)
 	{
-		if ($source instanceof IDataSource) {
-			/**
-			 * Custom user datasource is ready for use
-			 *
-			 * $source = $source;
-			 */
-		} elseif (is_array($source)) {
+		if (is_array($source)) {
 			$source = new ArrayDataSource($source);
 
-		} elseif ($source instanceof Dibi\Fluent) {
+		} elseif ($source instanceof Fluent) {
 			$driver = $source->getConnection()->getDriver();
 
-			if ($driver instanceof Dibi\Drivers\OdbcDriver) {
+			if ($driver instanceof OdbcDriver) {
 				$source = new DibiFluentMssqlDataSource($source, $primaryKey);
 
-			} elseif ($driver instanceof Dibi\Drivers\MsSqlDriver) {
+			} elseif ($driver instanceof MsSqlDriver) {
 				$source = new DibiFluentMssqlDataSource($source, $primaryKey);
 
-			} elseif ($driver instanceof Dibi\Drivers\PostgreDriver) {
+			} elseif ($driver instanceof PostgreDriver) {
 				$source = new DibiFluentPostgreDataSource($source, $primaryKey);
 
-			} elseif ($driver instanceof Dibi\Drivers\SqlsrvDriver) {
+			} elseif ($driver instanceof SqlsrvDriver) {
 				$source = new DibiFluentMssqlDataSource($source, $primaryKey);
 
 			} else {
@@ -91,11 +76,7 @@ final class DataModel
 		} elseif ($source instanceof Selection) {
 			$driver = NetteDatabaseSelectionHelper::getDriver($source);
 
-			if ($driver instanceof NDBDrivers\MsSqlDriver || $driver instanceof NDBDrivers\SqlsrvDriver) {
-				$source = new NetteDatabaseTableMssqlDataSource($source, $primaryKey);
-			} else {
-				$source = new NetteDatabaseTableDataSource($source, $primaryKey);
-			}
+			$source = $driver instanceof NDBMsSqlDriver || $driver instanceof NDBSqlsrvDriver ? new NetteDatabaseTableMssqlDataSource($source, $primaryKey) : new NetteDatabaseTableDataSource($source, $primaryKey);
 		} elseif ($source instanceof QueryBuilder) {
 			$source = new DoctrineDataSource($source, $primaryKey);
 
@@ -105,25 +86,23 @@ final class DataModel
 		} elseif ($source instanceof ICollection) {
 			$source = new NextrasDataSource($source, $primaryKey);
 
-		} else {
-			throw new DataGridWrongDataSourceException(sprintf(
-				'DataGrid can not take [%s] as data source.',
-				is_object($source) ? get_class($source) : 'null'
+		} elseif (!($source instanceof IDataSource)) {
+			throw new DatagridWrongDataSourceException(sprintf(
+				'Datagrid can not take [%s] as data source.',
+				is_object($source) ? $source::class : 'null'
 			));
 		}
 
 		$this->dataSource = $source;
 	}
 
-
 	public function getDataSource(): IDataSource
 	{
 		return $this->dataSource;
 	}
 
-
 	public function filterData(
-		?DataGridPaginator $paginatorComponent,
+		?DatagridPaginator $paginatorComponent,
 		Sorting $sorting,
 		array $filters
 	): iterable
@@ -154,15 +133,12 @@ final class DataModel
 		return $this->dataSource->sort($sorting)->getData();
 	}
 
-
-	/**
-	 * @return mixed
-	 */
-	public function filterRow(array $condition)
+	public function filterRow(array $condition): mixed
 	{
 		$this->onBeforeFilter($this->dataSource);
 		$this->onAfterFilter($this->dataSource);
 
 		return $this->dataSource->filterOne($condition)->getData();
 	}
+
 }

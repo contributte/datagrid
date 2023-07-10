@@ -1,101 +1,45 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Status;
 
-namespace Ublaboo\DataGrid\Status;
-
-use Ublaboo\DataGrid\Column\Action\Confirmation\CallbackConfirmation;
-use Ublaboo\DataGrid\Column\Action\Confirmation\IConfirmation;
-use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
-use Ublaboo\DataGrid\Column\ColumnStatus;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridException;
-use Ublaboo\DataGrid\Row;
+use Contributte\Datagrid\Column\Action\Confirmation\CallbackConfirmation;
+use Contributte\Datagrid\Column\Action\Confirmation\IConfirmation;
+use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
+use Contributte\Datagrid\Column\ColumnStatus;
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridException;
+use Contributte\Datagrid\Row;
 
 class Option
 {
 
-	/**
-	 * @var ColumnStatus
-	 */
-	protected $columnStatus;
+	protected ?string $title = null;
 
-	/**
-	 * @var mixed
-	 */
-	protected $value;
+	protected string $class = 'btn-success';
 
-	/**
-	 * @var string
-	 */
-	protected $text;
+	protected string $classSecondary = 'btn btn-xs';
 
-	/**
-	 * @var string|null
-	 */
-	protected $title;
+	protected string $classInDropdown = 'ajax dropdown-item';
 
-	/**
-	 * @var string
-	 */
-	protected $class = 'btn-success';
+	protected ?string $icon = null;
 
-	/**
-	 * @var string
-	 */
-	protected $classSecondary = 'btn btn-xs';
+	protected ?string $iconSecondary = null;
 
-	/**
-	 * @var string
-	 */
-	protected $classInDropdown = 'ajax dropdown-item';
+	protected ?IConfirmation $confirmation = null;
 
-	/**
-	 * @var string|null
-	 */
-	protected $icon;
-
-	/**
-	 * @var string|null
-	 */
-	protected $iconSecondary;
-
-	/**
-	 * @var IConfirmation|null
-	 */
-	protected $confirmation;
-
-	/**
-	 * @var DataGrid
-	 */
-	private $grid;
-
-	/**
-	 * @param mixed $value
-	 */
-	public function __construct(DataGrid $grid, ColumnStatus $columnStatus, $value, string $text)
+	public function __construct(private Datagrid $grid, protected ColumnStatus $columnStatus, protected mixed $value, protected string $text)
 	{
-		$this->grid = $grid;
-		$this->columnStatus = $columnStatus;
-		$this->value = $value;
-		$this->text = $text;
 	}
 
-
-	/**
-	 * @return mixed
-	 */
-	public function getValue()
+	public function getValue(): mixed
 	{
 		return $this->value;
 	}
-
 
 	public function endOption(): ColumnStatus
 	{
 		return $this->columnStatus;
 	}
-
 
 	/**
 	 * @return static
@@ -107,12 +51,10 @@ class Option
 		return $this;
 	}
 
-
 	public function getTitle(): ?string
 	{
 		return $this->title;
 	}
-
 
 	/**
 	 * @return static
@@ -128,12 +70,10 @@ class Option
 		return $this;
 	}
 
-
 	public function getClass(): ?string
 	{
 		return $this->class;
 	}
-
 
 	/**
 	 * @return static
@@ -145,12 +85,10 @@ class Option
 		return $this;
 	}
 
-
 	public function getClassSecondary(): string
 	{
 		return $this->classSecondary;
 	}
-
 
 	/**
 	 * @return static
@@ -162,12 +100,10 @@ class Option
 		return $this;
 	}
 
-
 	public function getClassInDropdown(): string
 	{
 		return $this->classInDropdown;
 	}
-
 
 	/**
 	 * @return static
@@ -179,12 +115,10 @@ class Option
 		return $this;
 	}
 
-
 	public function getIcon(): ?string
 	{
 		return $this->icon;
 	}
-
 
 	/**
 	 * @return static
@@ -196,18 +130,15 @@ class Option
 		return $this;
 	}
 
-
 	public function getIconSecondary(): ?string
 	{
 		return $this->iconSecondary;
 	}
 
-
 	public function getText(): string
 	{
 		return $this->text;
 	}
-
 
 	/**
 	 * @return static
@@ -218,7 +149,6 @@ class Option
 
 		return $this;
 	}
-
 
 	public function getConfirmationDialog(Row $row): ?string
 	{
@@ -244,6 +174,7 @@ class Option
 			);
 		}
 
-		throw new DataGridException('Unsupported confirmation');
+		throw new DatagridException('Unsupported confirmation');
 	}
+
 }

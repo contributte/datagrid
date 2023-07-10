@@ -1,55 +1,33 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Filter;
 
-namespace Ublaboo\DataGrid\Filter;
-
+use Contributte\Datagrid\Datagrid;
 use Nette\Forms\Container;
-use Ublaboo\DataGrid\DataGrid;
 
 class FilterText extends Filter
 {
 
-	/**
-	 * @var string
-	 */
-	protected $template = 'datagrid_filter_text.latte';
+	protected ?string $template = 'datagrid_filter_text.latte';
 
-	/**
-	 * @var string
-	 */
-	protected $type = 'text';
+	protected ?string $type = 'text';
 
-	/**
-	 * @var bool
-	 */
-	protected $exact = false;
+	protected bool $exact = false;
 
-	/**
-	 * @var bool
-	 */
-	protected $splitWordsSearch = true;
-
-	/**
-	 * @var array|string[]
-	 */
-	protected $columns;
-
+	protected bool $splitWordsSearch = true;
 
 	/**
 	 * @param array|string[] $columns
 	 */
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		string $name,
-		array $columns
-	) {
+		protected array $columns
+	)
+	{
 		parent::__construct($grid, $key, $name);
-
-		$this->columns = $columns;
 	}
-
 
 	/**
 	 * Adds text field to filter form
@@ -61,10 +39,9 @@ class FilterText extends Filter
 		$this->addAttributes($control);
 
 		if ($this->getPlaceholder() !== null) {
-			$control->setAttribute('placeholder', $this->getPlaceholder());
+			$control->setHtmlAttribute('placeholder', $this->getPlaceholder());
 		}
 	}
-
 
 	/**
 	 * Return array of conditions to put in result [column1 => value, column2 => value]
@@ -77,12 +54,10 @@ class FilterText extends Filter
 		return array_fill_keys($this->columns, $this->getValue());
 	}
 
-
 	public function isExactSearch(): bool
 	{
 		return $this->exact;
 	}
-
 
 	/**
 	 * @return static
@@ -94,7 +69,6 @@ class FilterText extends Filter
 		return $this;
 	}
 
-
 	/**
 	 * @return static
 	 */
@@ -105,9 +79,9 @@ class FilterText extends Filter
 		return $this;
 	}
 
-
 	public function hasSplitWordsSearch(): bool
 	{
 		return $this->splitWordsSearch;
 	}
+
 }

@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\DataSource;
 
-namespace Ublaboo\DataGrid\DataSource;
-
-use Ublaboo\DataGrid\Filter\FilterText;
+use Contributte\Datagrid\Filter\FilterText;
 
 class DibiFluentPostgreDataSource extends DibiFluentDataSource
 {
@@ -20,7 +18,7 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 			$column = '[' . $column . ']';
 
 			if ($filter->isExactSearch()) {
-				$this->dataSource->where("$column = %s", $value);
+				$this->dataSource->where(sprintf('%s = %%s', $column), $value);
 
 				continue;
 			}
@@ -28,14 +26,15 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 			foreach ($words as $word) {
-				$or[] = "$column ILIKE " . $driver->escapeText('%' . $word . '%');
+				$or[] = $column . ' ILIKE ' . $driver->escapeText('%' . $word . '%');
 			}
 		}
 
-		if (sizeof($or) > 1) {
+		if (count($or) > 1) {
 			$this->dataSource->where('(%or)', $or);
 		} else {
 			$this->dataSource->where($or);
 		}
 	}
+
 }
