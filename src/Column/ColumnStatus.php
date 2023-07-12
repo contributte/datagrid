@@ -123,6 +123,7 @@ class ColumnStatus extends Column
 	/**
 	 * Set all options at once
 	 *
+	 * @param string[] $options
 	 * @return static
 	 */
 	public function setOptions(array $options): self
