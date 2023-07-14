@@ -17,7 +17,7 @@
 <div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()}{/block}" data-refresh-state="{link refreshState!}">
 	<div n:snippet="grid">
 	{snippetArea gridSnippets}
-		{form filter, class => 'ajax'}
+		{form filter, class => 'ajax', autocomplete => 'off'}
 			{if $control->hasOuterFilterRendering()}
 				{block outer-filters}
 					<div class="row text-right datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
@@ -301,7 +301,7 @@
 													{/if}
 												{/if}
 											{/foreach}
-											<span class="handle-sort btn btn-xs btn-default btn-secondary" n:if="$control->isSortable()">
+											<span class="handle-sort btn btn-xs btn-default btn-secondary " n:if="$control->isSortable()">
 												<i n:block="icon-arrows-v" class="{$iconPrefix}arrows-v {$iconPrefix}arrows-alt-v"></i>
 											</span>
 											{if $inlineEdit && $row->hasInlineEdit()}
