@@ -42,7 +42,7 @@ ExportCsv ignores column template, because i don't like the idea Latte (templati
 
 ## Export columns
 
-When you're exporting the data, you can have different columns in export and in the datagrid. Or differently rendered. So there is another method `Contributte\DataGrid\Export\Export::setColumns()`. You can create instances of another columns and pass them in array to this method. These will be rendered in export:
+When you're exporting the data, you can have different columns in export and in the datagrid. Or differently rendered. So there is another method `Contributte\Datagrid\Export\Export::setColumns()`. You can create instances of another columns and pass them in array to this method. These will be rendered in export:
 
 ```php
 $column_name = new Contributte\Datagrid\Column\ColumnText($grid, 'name', 'name', 'Name');
