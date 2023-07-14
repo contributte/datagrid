@@ -768,7 +768,6 @@ class DataGrid extends Control
 		$template->show_default_sort_button = $this->isSortButtonActive();
 		$template->originalTemplate = $this->getOriginalTemplateFile();
 		$template->iconPrefix = static::$iconPrefix;
-		$template->iconPrefix = static::$iconPrefix;
 		$template->itemsDetail = $this->itemsDetail;
 		$template->columnsVisibility = $this->getColumnsVisibility();
 		$template->columnsSummary = $this->columnsSummary;
