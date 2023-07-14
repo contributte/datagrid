@@ -111,7 +111,7 @@
 					</div>
 				{/block}
 			{/if}
-			<table class="{block table-class}table table-hover table-striped table-bordered table-sm text-break{/block}" n:snippet="table" n:block="data" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
+			<table class="{block table-class}table table-hover table-striped table-bordered table-sm{/block}" n:snippet="table" n:block="data" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 				<thead n:block="header">
 
                     {php $cnt_thead = 0}
@@ -425,30 +425,30 @@
                                                 {php $cnt += 1}
                                             {/if}
 
-                                            <td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action" width="{if $cnt <= 1}5%{elseif $cnt === 2}10%{else}15%{/if}">
-                                                 <div class="row g-1 mx-0 justify-content-center">
-                                                    {foreach $actions as $key => $action}
-                                                        {if $row->hasAction($key)}
-                                                            {if $action->hasTemplate()}
+										<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action" width="{if $cnt <= 1}5%{elseif $cnt === 2}10%{else}15%{/if}">
+											 <div class="row g-1 mx-0 justify-content-center">
+                                                {foreach $actions as $key => $action}
+                                                    {if $row->hasAction($key)}
+                                                        {if $action->hasTemplate()}
+                                                            <div class="col-auto">
+                                                                {include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables(), row => $row}
+                                                            </div>
+                                                        {else}
+                                                            {if $action->render($row)}
                                                                 <div class="col-auto">
-                                                                    {include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables(), row => $row}
+                                                                    {$action->render($row)|noescape}
                                                                 </div>
-                                                            {else}
-                                                                {if $action->render($row)}
-                                                                    <div class="col-auto">
-                                                                        {$action->render($row)|noescape}
-                                                                    </div>
-                                                                {/if}
                                                             {/if}
                                                         {/if}
-                                                    {/foreach}
-                                                    <div class="col-auto" n:if="$control->isSortable()">
-                                                        <span class="handle-sort">
-                                                            <a class="btn btn-sm">
-                                                                <i n:block="icon-arrows-v" class="fa-fw {$iconPrefix}arrows-v"></i>
-                                                            </a>
-                                                        </span>
-                                                    </div>
+                                                    {/if}
+                                                {/foreach}
+                                                <div class="col-auto" n:if="$control->isSortable()">
+                                                    <span class="handle-sort">
+                                                        <a class="btn btn-sm p-0 rounded-0">
+                                                            <i n:block="icon-arrows-v" class="fa-fw {$iconPrefix}arrows-v"></i>
+                                                        </a>
+                                                    </span>
+                                                </div>
 
                                                     {if $inlineEdit && $row->hasInlineEdit()}
                                                         <div class="col-auto">
