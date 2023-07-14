@@ -109,7 +109,7 @@
 				</div>
 			</div>
 		</div>
-		{form filter, class => 'ajax'}
+		{form filter, class => 'ajax', autocomplete => 'off'}
 			{if $control->hasOuterFilterRendering()}
 				{block outer-filters}
 					<div class="row text-right datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">

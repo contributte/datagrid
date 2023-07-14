@@ -102,10 +102,18 @@ class FilterRange extends OneColumnFilter
 	{
 		$value = $this->getValue();
 
+        if (str_contains($value, ',')) {
+            $str = explode(',', $value);
+        } elseif (str_contains($value, ';')) {
+            $str = explode(';', $value);
+        }
+        $from = $str[0] ?? '';
+        $to = $str[1] ?? '';
+
 		return [
 			$this->column => [
-				'from' => $value['from'] ?? '',
-				'to' => $value['to'] ?? '',
+				'from' => $from,
+				'to' => $to,
 			],
 		];
 	}

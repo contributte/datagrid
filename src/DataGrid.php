@@ -157,7 +157,7 @@ class DataGrid extends Control
 	/**
 	 * @var string
 	 */
-	public static string $iconPrefix = 'fa fa-';
+	public static string $iconPrefix = 'fa-fw fa fa-';
 
 	/**
 	 * Default form method
@@ -430,6 +430,8 @@ class DataGrid extends Control
     protected array $rowLabels = [];
     protected ?string $columnForRowLabels = null;
     protected ?int $maxColLabelForRows = null;
+    protected string $class = '';
+    protected bool $naja_cache = true;
 
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
@@ -481,6 +483,53 @@ class DataGrid extends Control
 				$this->componentFullName = $this->lookupPath();
 			});
 	}
+
+    /**
+     * @return bool
+     */
+    public  function isNajaCache(): bool
+    {
+        return $this->naja_cache;
+    }
+
+    /**
+     * @param bool $naja_cache
+     * @return DataGrid
+     */
+    public function setNajaCache(bool $naja_cache): DataGrid
+    {
+        $this->naja_cache = $naja_cache;
+        return $this;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getClass(): string
+    {
+        return $this->class;
+    }
+
+    /**
+     * @param string $class
+     * @return DataGrid
+     */
+    public function setClass(string $class): DataGrid
+    {
+        $this->class = $class;
+        return $this;
+    }
+
+    /**
+     * @param string $class
+     * @return $this
+     */
+    public function addClass(string $class): DataGrid
+    {
+        $this->class .= ' ' . $class;
+        return $this;
+    }
 
     /**
      * @return array
@@ -571,6 +620,20 @@ class DataGrid extends Control
     public function getRowLabels(): array
     {
         return $this->rowLabels;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRowLabelsColumnCount(): int
+    {
+        $max_count = 0;
+        foreach ($this->rowLabels as $k => $row) {
+            if ($max_count < count($row)) {
+                $max_count = count($row);
+            }
+        }
+        return $max_count;
     }
 
     /**
@@ -1324,6 +1387,29 @@ class DataGrid extends Control
 				continue;
 			}
 
+            if (isset($this->filters[$key]) && $this->filters[$key] instanceof FilterDateRange && is_string($value)) {
+
+                if (str_contains($value, ',')) {
+                    $str = explode(',', $value);
+                } elseif (str_contains($value, ';')) {
+                    $str = explode(';', $value);
+                } else {
+                    $str = [$value];
+                }
+
+                $from = trim($str[0] ?? '');
+                $to = trim($str[1] ?? '');
+
+                $dates = [];
+                if (!empty($from)) {
+                    $dates['from'] = $from;
+                }
+                if (!empty($to)) {
+                    $dates['to'] = $to;
+                }
+                $value = ArrayHash::from($dates);
+            }
+
 			if (is_array($value) || $value instanceof Traversable) {
 				if (!ArraysHelper::testEmpty($value)) {
 					$this->filters[$key]->setValue($value);
@@ -1387,7 +1473,7 @@ class DataGrid extends Control
 		return $is_filter || $this->forceFilterActive;
 	}
 
-	
+
     /**
      * @return bool
      */
@@ -2524,7 +2610,6 @@ class DataGrid extends Control
 		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 
 		$this->redrawControl();
-
 		$this->onRedraw();
 	}
 
@@ -2535,7 +2620,6 @@ class DataGrid extends Control
 		$this->saveSessionData('_grid_hidden_columns_manipulated', false);
 
 		$this->redrawControl();
-
 		$this->onRedraw();
 	}
 
@@ -2556,7 +2640,8 @@ class DataGrid extends Control
 		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 
 		$this->redrawControl();
-
+        $this->payload->postGet = true;
+        $this->payload->url = $this->link('this');
 		$this->onRedraw();
 	}
 
@@ -2578,7 +2663,8 @@ class DataGrid extends Control
 		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 
 		$this->redrawControl();
-
+        $this->payload->postGet = true;
+        $this->payload->url = $this->link('this');
 		$this->onRedraw();
 	}
 
@@ -2613,7 +2699,8 @@ class DataGrid extends Control
 		$this->saveSessionData('_grid_hidden_columns_manipulated', true);
 
 		$this->redrawControl();
-
+        $this->getPresenter()->payload->postGet = true;
+        $this->getPresenter()->payload->url = $this->link('this');
 		$this->onRedraw();
 	}
 
@@ -3298,6 +3385,8 @@ class DataGrid extends Control
 			$count++;
 		}
 
+        $count = $count + $this->getRowLabelsColumnCount();
+
 		return $count;
 	}
 
@@ -3563,7 +3652,7 @@ class DataGrid extends Control
 		return $this->getPresenter();
 	}
 
-	
+
     /**
      * @param  bool  $useDefaultSortAfterSortingEmpty
      */
