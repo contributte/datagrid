@@ -34,7 +34,7 @@
 		}
 	},
 	"require": {
-		"php": ">=8.0",
+		"php": ">=8.2",
 		"contributte/application": "^0.5.0",
 		"nette/di": "^3.0.0",
 		"nette/forms": "^3.1.3",
