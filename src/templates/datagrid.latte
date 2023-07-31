@@ -111,7 +111,7 @@
 					</div>
 				{/block}
 			{/if}
-			<table class="{block table-class}table table-hover table-striped table-bordered table-sm{/block}" n:snippet="table" n:block="data" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
+			<table class="{block table-class}table table-hover table-striped table-bordered table-sm text-break{/block}" n:snippet="table" n:block="data" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 				<thead n:block="header">
 
                     {php $cnt_thead = 0}
@@ -444,7 +444,7 @@
                                                 {/foreach}
                                                 <div class="col-auto" n:if="$control->isSortable()">
                                                     <span class="handle-sort">
-                                                        <a class="btn btn-sm p-0 rounded-0">
+                                                        <a class="btn btn-sm">
                                                             <i n:block="icon-arrows-v" class="fa-fw {$iconPrefix}arrows-v"></i>
                                                         </a>
                                                     </span>

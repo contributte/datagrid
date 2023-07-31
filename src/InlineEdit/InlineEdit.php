@@ -94,12 +94,11 @@ class InlineEdit
 		$this->primaryWhereColumn = $primaryWhereColumn;
 
 		$this->title = 'ublaboo_datagrid.edit';
-		$this->class = 'btn btn-sm btn-secondary ajax p-0 rounded-0';
+		$this->class = 'btn btn-sm btn-secondary ajax';
 		$this->icon = 'pencil pencil-alt';
 
 		$this->onControlAfterAdd[] = [$this, 'addControlsClasses'];
 	}
-
 
 	/**
 	 * @param mixed $id

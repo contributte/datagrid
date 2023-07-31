@@ -43,19 +43,11 @@ class ColumnStatus extends Column
 		string $key,
 		string $column,
 		string $name
-	)
-	{
+	) {
 		parent::__construct($grid, $key, $column, $name);
 
 		$this->key = $key;
-
-        if ($grid->isB4()) {
-            $this->setTemplate(__DIR__ . '/../templates/b4/column_status.latte');
-        } elseif ($grid->isB3()){
-			$this->setTemplate(__DIR__ . '/../templates/b3/column_status.latte');
-		}  else {
-            $this->setTemplate(__DIR__ . '/../templates/column_status.latte');
-        }
+		$this->setTemplate(__DIR__ . '/../templates/column_status.latte');
 	}
 
 

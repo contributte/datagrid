@@ -354,78 +354,21 @@ class DataGrid extends Control
 		'action' => [],
 	];
 
-	/**
-	 * @var array
-	 */
 	protected array $columnCallbacks = [];
-
-	/**
-	 * @var bool
-	 */
 	protected bool $canHideColumns = false;
-
-	/**
-	 * @var array
-	 */
 	protected array $columnsVisibility = [];
-
-	/**
-	 * @var InlineEdit|null
-	 */
 	protected ?InlineEdit $inlineEdit = null;
-
-	/**
-	 * @var InlineAdd|null
-	 */
 	protected ?InlineAdd $inlineAdd = null;
-
-	/**
-	 * @var bool
-	 */
 	protected bool $snippetsSet = false;
-
-	/**
-	 * @var bool
-	 */
 	protected bool $someColumnDefaultHide = false;
-
-	/**
-	 * @var ColumnsSummary|null
-	 */
 	protected ?ColumnsSummary $columnsSummary = null;
-
-	/**
-	 * @var bool
-	 */
 	protected bool $autoSubmit = true;
-
-	/**
-	 * @var SubmitButton|null
-	 */
 	protected ?SubmitButton $filterSubmitButton = null;
 
-	/**
-	 * @var bool
-	 */
 	protected bool $hasColumnReset = true;
-
-	/**
-	 * @var bool
-	 */
 	protected bool $showSelectedRowsCount = true;
-
-	/**
-	 * @var string|null
-	 */
 	private ?string $customPaginatorTemplate = null;
-
-	/**
-	 * @var string|null
-	 */
 	private ?string $componentFullName;
-
-    protected bool $isB4 = false;
-    protected bool $isB3 = false;
     protected array $columnLabels = [];
     protected array $rowLabels = [];
     protected ?string $columnForRowLabels = null;
@@ -562,18 +505,20 @@ class DataGrid extends Control
 
     /**
      * @return bool
-     */
+	 * @deprecated BS5 only
+	 */
     public function isB4(): bool
     {
-        return $this->isB4;
+		return false;
     }
 
 	/**
      * @return bool
+	 * @deprecated BS5 only
      */
     public function isB3(): bool
     {
-        return $this->isB3;
+        return false;
     }
 
     /**
@@ -597,20 +542,20 @@ class DataGrid extends Control
     /**
      * @param bool $isB4
      * @return $this
+	 * @deprecated BS5 only
      */
     public function setB4(bool $isB4): DataGrid
     {
-        $this->isB4 = $isB4;
         return $this;
     }
 
 	/**
 	 * @param bool $isB3
 	 * @return $this
+	 * @deprecated BS5 only
 	 */
     public function setB3(bool $isB3): DataGrid
     {
-        $this->isB3 = $isB3;
         return $this;
     }
 
@@ -879,15 +824,11 @@ class DataGrid extends Control
 		return $this->templateFile ?? $this->getOriginalTemplateFile();
 	}
 
-
+	/**
+	 * @return string
+	 */
 	public function getOriginalTemplateFile(): string
 	{
-        if ($this->isB4()) {
-            return __DIR__ . '/templates/b4/datagrid.latte';
-        }elseif ($this->isB3()){
-			return __DIR__ . '/templates/b3/datagrid.latte';
-		}
-
 		return __DIR__ . '/templates/datagrid.latte';
 	}
 
