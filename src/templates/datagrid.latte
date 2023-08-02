@@ -14,7 +14,7 @@
  * @param InlineEdit|null $inlineAdd   Inline add data
  *}
 
-<div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()}{/block}" data-refresh-state="{link refreshState!}">
+<div {block datagrid-class}data-datagrid-{$control->getFullName()}{/block} data-refresh-state="{link refreshState!}">
 	<div n:snippet="grid">
 	{snippetArea gridSnippets}
 		{form filter, class => 'ajax'}
