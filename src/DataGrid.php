@@ -172,11 +172,6 @@ class DataGrid extends Control
 	protected $sortCallback = null;
 
 	/**
-	 * @var bool
-	 */
-	protected bool $useHappyComponents = true;
-
-	/**
 	 * @var callable
 	 */
 	protected $rowCallback;
@@ -830,22 +825,6 @@ class DataGrid extends Control
 	public function getOriginalTemplateFile(): string
 	{
 		return __DIR__ . '/templates/datagrid.latte';
-	}
-
-	/**
-	 * @return static
-	 */
-	public function useHappyComponents(bool $useHappyComponents): self
-	{
-		$this->useHappyComponents = $useHappyComponents;
-
-		return $this;
-	}
-
-
-	public function shouldUseHappyComponents(): bool
-	{
-		return $this->useHappyComponents;
 	}
 
 

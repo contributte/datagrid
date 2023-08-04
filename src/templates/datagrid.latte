@@ -218,7 +218,7 @@
 					<tr n:block="header-column-row" class="align-top">
                         {if empty($filters)}
                             <th n:snippet="thead-group-action" n:if="$hasGroupActions" class="col-checkbox" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
-                                <input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
+                                <input n:if="$hasGroupActionOnRows" n:class="form-check-input" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
                             </th>
                         {else}
                             <th n:if="$hasGroupActions"></th>
@@ -298,7 +298,7 @@
 					</tr>
 					<tr n:block="header-filters" n:if="!empty($filters) && !$control->hasOuterFilterRendering()" class="align-top filter-row">
                         <th n:if="$hasGroupActions" class="col-checkbox align-middle">
-                            <input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
+                            <input n:if="$hasGroupActionOnRows" n:class="form-check-input" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
                         </th>
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementForRender('th', $key)}
@@ -383,7 +383,7 @@
                                         <tr data-id="{$row->getId()}" n:snippet='"item-{$row->getId()}"' n:attr="$row->getControl()->attrs" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
                                             <td n:if="$hasGroupActions" class="col-checkbox">
                                                 {if $row->hasGroupAction()}
-                                                    <input n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getFullName()}" data-check-all-{$control->getFullName()|noescape} name="{$control->getFullName()|lower}_group_action_item[{$row->getId()}]">
+                                                    <input n:class="form-check-input" type="checkbox" data-check="{$control->getFullName()}" data-check-all-{$control->getFullName()|noescape} name="{$control->getFullName()|lower}_group_action_item[{$row->getId()}]">
                                                 {/if}
                                             </td>
 
