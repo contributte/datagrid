@@ -120,7 +120,7 @@ export function debounce<TArgs, TFun extends (...args: TArgs[]) => unknown | Pro
 	fn: TFun,
 	slowdown: number = 200
 ): (...args: TArgs[]) => void {
-	let timeout: number | null = null;
+	let timeout: ReturnType<typeof setTimeout> | null = null;
 	let blockedByPromise: boolean = false;
 
 	return (...args) => {
