@@ -5,24 +5,29 @@
  *}
 
 {if $outer}
-	<div class="row">
-		{label $input class => 'col-sm-3 control-label' /}
-		<div class="col-sm-9 form-inline">
-			<div class="input-group input-group-sm datagrid-input-group-full-width">
-				{input $input}
-				<label n:name="$input" class="input-group-text">
-					<i class="{$iconPrefix}calendar"></i>
-				</label>
+	<div class="row align-items-center">
+		<div class="col-sm-3">
+
+			<span>{$filter->getName()}</span>
+
+		</div>
+		<div class="col-sm-9 d-flex">
+			<div class="w-auto input-group datagrid-input-group-full-width">
+
+				<input n:name="$input" aria-label="{$filter->getName()}">
+
 			</div>
 		</div>
 	</div>
 {else}
-	<div class="form-inline">
-		<div class="input-group input-group-sm">
-			{input $input}
-			<label n:name="$input" class="input-group-text">
-				<i class="{$iconPrefix}calendar"></i>
-			</label>
+
+	{var $align = $this->params['columns'][$filter->getKey()]->getAlign()}
+
+	<div class="d-flex justify-content-{$align}">
+		<div class="w-auto input-group">
+
+			<input n:name="$input" aria-label="{$filter->getName()}">
+
 		</div>
 	</div>
 {/if}

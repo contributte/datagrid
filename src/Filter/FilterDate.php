@@ -18,6 +18,20 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 	{
 		$control = $container->addText($this->key, $this->name);
 
+		/**
+		 * @var ColumnDateTime $columnDatetime
+		 */
+		$columnDatetime = $this->grid->getColumn($this->column);
+
+		$htmlType = 'date';
+		// Is there any time in format?
+		if(preg_match('/[gGhHis]/', $columnDatetime->getFormat()))
+		{
+			$htmlType = 'datetime-local';
+		}
+
+		$control->setHtmlType($htmlType);
+
 		$control->setHtmlAttribute('data-provide', 'datepicker')
 			->setHtmlAttribute('data-date-orientation', 'bottom')
 			->setHtmlAttribute('data-date-format', $this->getJsFormat())
