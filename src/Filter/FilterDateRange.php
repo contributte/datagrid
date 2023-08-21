@@ -30,12 +30,6 @@ class FilterDateRange extends FilterRange implements IFilterDate
 		$this->grid->template->add($columnDatetime->getName() . '-align', $columnDatetime->getAlign());
 
 		$htmlType = 'date';
-		
-		// Is there any time in format?
-		if(preg_match('/[gGhHis]/', $columnDatetime->getFormat()))
-		{
-			$htmlType = 'datetime-local';
-		}
 
 		$from = $container->addText('from', $this->name);
 
