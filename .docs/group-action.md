@@ -1,14 +1,14 @@
 Table of contents
 
 - [Group action](#group-action)
-	- [Api](#api)
- 		- [Zero level](#zero-level)
-		- [One level](#one-level)
-		- [Two level](#two-level)
-		- [Text input](#text-input)
-		- [Textarea](#textarea)
-		- [Attributes, classes](#attributes-classes)
-	- [Happy inputs](#happy-inputs)
+    - [Api](#api)
+        - [Zero level](#zero-level)
+        - [One level](#one-level)
+        - [Two level](#two-level)
+        - [Text input](#text-input)
+        - [Textarea](#textarea)
+        - [Attributes, classes](#attributes-classes)
+    - [Happy inputs](#happy-inputs)
 
 # Group action
 
@@ -32,10 +32,10 @@ $grid->addGroupButtonAction('Say hello')->onClick[] = [$this, 'sayHello'];
 
 ```php
 $grid->addGroupAction('Delete examples')->onSelect[] = [$this, 'deleteExamples'];
-$grid->addGroupAction('Something alse')->onSelect[] = [$this, 'doSomethingElse'];
+$grid->addGroupAction('Something else')->onSelect[] = [$this, 'doSomethingElse'];
 ```
 
-This will create one select box (['Delete examples', 'Something alse']) and submit button. If you submit that form, your handler will be called. It will be called via ajax.
+This will create one select box (['Delete examples', 'Something else']) and submit button. If you submit that form, your handler will be called. It will be called via ajax.
 
 This is how your handler can look like:
 
@@ -64,7 +64,7 @@ $grid->addGroupAction('Change order status', [
 	2 => 'Ready',
 	3 => 'Processing',
 	4 => 'Sent',
-	5 => 'Storno'
+	5 => 'Canceled'
 ])->onSelect[] = [$this, 'groupChangeStatus'];
 
 $grid->addGroupAction('Send', [
@@ -97,7 +97,7 @@ public function groupChangeStatus(array $ids, $status): void
 
 ### Text input
 
-Group action can also containe a text input instad of select (As show in example above - option called "**Add note**"). Example code:
+Group action can also contain a text input instead of select (As show in example above - option called "**Add note**"). Example code:
 
 ```php
 $grid->addGroupTextAction('Add note')

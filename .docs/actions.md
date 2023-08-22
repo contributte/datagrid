@@ -1,24 +1,24 @@
 Table of contents
 
 - [Actions](#actions)
-	- [Api](#api)
-		- [Parameters](#parameters)
-		- [Icon](#icon)
-		- [Class](#class)
-		- [Title](#title)
-		- [Confirmation](#confirmation)
-	- [Ajax](#ajax)
-		- [Redrawing the data](#redrawing-the-data)
-		- [Redrawing one row](#redrawing-one-row)
-	- [Sortable](#sortable)
-		- [Sorting handler](#sorting-handler)
-	- [MultiAction](#multiaction)
-	- [Item detail](#item-detail)
-		- [Item detail form](#item-detail-form)
-		- [Item detail template variables](#item-detail-template-variables)
-		- [Item detail render condition](#item-detail-render-condition)
-	- [ActionCallback](#actioncallback)
-	- [Toolbar button](#toolbar-button)
+    - [Api](#api)
+        - [Parameters](#parameters)
+        - [Icon](#icon)
+        - [Class](#class)
+        - [Title](#title)
+        - [Confirmation](#confirmation)
+    - [Ajax](#ajax)
+        - [Redrawing the data](#redrawing-the-data)
+        - [Redrawing one row](#redrawing-one-row)
+    - [Sortable](#sortable)
+        - [Sorting handler](#sorting-handler)
+    - [MultiAction](#multiaction)
+    - [Item detail](#item-detail)
+        - [Item detail form](#item-detail-form)
+        - [Item detail template variables](#item-detail-template-variables)
+        - [Item detail render condition](#item-detail-render-condition)
+    - [ActionCallback](#actioncallback)
+    - [Toolbar button](#toolbar-button)
 
 # Actions
 
@@ -242,7 +242,7 @@ The name of the handler used for sorting can be changed:
 $grid->setSortableHandler('foo!');
 ```
 
-Also when you are using datagrid in component, you have to alter the name a bit:
+Also, when you are using datagrid in component, you have to alter the name a bit:
 
 ```php
 $grid->setSortableHandler('myComponent:sort!');
@@ -261,7 +261,7 @@ $grid->addMultiAction('multi_action', 'MultiAction')
 	->addAction('blah2', 'Blahblah2', 'blah!', ['name']);
 ```
 
-Sure you can alter multiaction class, icons, etc. Same you can change icon, class, etc of nested actions:
+Sure you can alter multiaction class, icons, etc. Same you can change icon, class, etc. of nested actions:
 
 ```php
 $grid->getAction('multi_blah')

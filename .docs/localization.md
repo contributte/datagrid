@@ -5,7 +5,7 @@ Table of contents
 
 # Localization
 
-As you can see in the example below, a `SimpleTranslator` class comes with datagrid (the example was translated to czech). You can use it as shown (you will do that probably in some factory for all datagrids in your application). Of course you can use your own translator - it just has to implement `Nette\Localization\Translator`.
+As you can see in the example below, a `SimpleTranslator` class comes with datagrid (the example was translated to czech). You can use it as shown (you will do that probably in some factory for all datagrids in your application). Of course, you can use your own translator - it just has to implement `Nette\Localization\Translator`.
 
 ```php
 public function createComponentLocalizationGrid($name): Contributte\Datagrid\Datagrid

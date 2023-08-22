@@ -1,11 +1,11 @@
 Table of contents
 
 - [Exports](#exports)
-	- [ExportCallback](#exportcallback)
-	- [CSV export](#csv-export)
-		- [\(Not\) Using templates in CSV export](#not-using-templates-in-csv-export)
-	- [Export columns](#export-columns)
-	- [Export encoding, delimiter](#export-encoding-delimiter)
+    - [ExportCallback](#exportcallback)
+    - [CSV export](#csv-export)
+        - [\(Not\) Using templates in CSV export](#not-using-templates-in-csv-export)
+    - [Export columns](#export-columns)
+    - [Export encoding, delimiter](#export-encoding-delimiter)
 
 # Exports
 
@@ -38,11 +38,11 @@ $grid->addExportCsv('Csv export (filtered)', 'examples.csv')
 
 ### (Not) Using templates in CSV export
 
-ExportCsv ignores column template, because i don't like the idea Latte (tempalting engine for HTML) exporting data for CSV format. Using custom renderer sounds better to me in that case.
+ExportCsv ignores column template, because i don't like the idea Latte (templating engine for HTML) exporting data for CSV format. Using custom renderer sounds better to me in that case.
 
 ## Export columns
 
-When you exporting the data, you can have different columns in export and in the datagrid. Or differently rendered. So there is another method `Contributte\Datagrid\Export\Export::setColumns()`. You can create instances of another columns and pass them in array to this method. These will be rendered in export:
+When you're exporting the data, you can have different columns in export and in the datagrid. Or differently rendered. So there is another method `Contributte\Datagrid\Export\Export::setColumns()`. You can create instances of another columns and pass them in array to this method. These will be rendered in export:
 
 ```php
 $column_name = new Contributte\Datagrid\Column\ColumnText($grid, 'name', 'name', 'Name');
