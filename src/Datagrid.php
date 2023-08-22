@@ -82,6 +82,15 @@ class Datagrid extends Control
 		'_grid_hidden_columns_manipulated',
 	];
 
+	public static string $iconPrefix = 'fa fa-';
+
+	public static string $btnSecondaryClass = 'btn-default btn-secondary';
+
+	/**
+	 * Default form method
+	 */
+	public static string $formMethod = 'post';
+
 	/** @var array|callable[] */
 	public array $onRedraw = [];
 
@@ -148,15 +157,6 @@ class Datagrid extends Control
 	 * @persistent
 	 */
 	public array $filter = [];
-
-	public static string $iconPrefix = 'fa fa-';
-
-	public static string $btnSecondaryClass = 'btn-default btn-secondary';
-
-	/**
-	 * Default form method
-	 */
-	public static string $formMethod = 'post';
 
 	/** @var callable|null */
 	protected $sortCallback = null;
@@ -2201,7 +2201,7 @@ class Datagrid extends Control
 	}
 
 	/**
-	 * @return array|array|int[]|array|string[]
+	 * @return array|array|int[]|array|string[]|\Stringable[]
 	 */
 	public function getItemsPerPageList(): array
 	{
