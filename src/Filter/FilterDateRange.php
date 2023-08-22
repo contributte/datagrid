@@ -21,14 +21,6 @@ class FilterDateRange extends FilterRange implements IFilterDate
 	{
 		$container = $container->addContainer($this->key);
 
-		/**
-		 * @var ColumnDateTime $columnDatetime
-		 */
-		$columnDatetime = $this->grid->getColumn($this->column);
-
-		// Set same align as for column
-		$this->grid->template->add($columnDatetime->getName() . '-align', $columnDatetime->getAlign());
-
 		$htmlType = 'date';
 
 		$from = $container->addText('from', $this->name);
