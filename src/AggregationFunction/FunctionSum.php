@@ -41,7 +41,7 @@ class FunctionSum implements ISingleColumnAggregationFunction
 				? $this->column
 				: current($dataSource->getRootAliases()) . '.' . $this->column;
 
-			$this->result = $dataSource
+			$this->result = (int) $dataSource
 				->select(sprintf('SUM(%s)', $column))
 				->setMaxResults(1)
 				->setFirstResult(0)
