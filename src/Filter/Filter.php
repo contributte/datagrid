@@ -29,11 +29,11 @@ abstract class Filter
 
 	private ?string $placeholder = null;
 
-	abstract public function getCondition(): array;
-
 	public function __construct(protected Datagrid $grid, protected string $key, protected string $name)
 	{
 	}
+
+	abstract public function getCondition(): array;
 
 	/**
 	 * Get filter key

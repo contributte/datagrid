@@ -30,17 +30,17 @@ class TestingDDatagridEntity
 
 	private ?TestingDDatagridEntity $partner = null;
 
-	final public function getId(): int
-	{
-		return $this->id;
-	}
-
 	public function __construct(array $args)
 	{
 		$this->id = $args['id'];
 		$this->age = $args['age'];
 		$this->name = $args['name'];
 		$this->gender = $args['gender'] ?? null;
+	}
+
+	final public function getId(): int
+	{
+		return $this->id;
 	}
 
 	public function getName(): string
