@@ -30,15 +30,19 @@
 					<form class="row m-3">
 						<div class="form-check-{$control->getFullname()} px-0 d-flex justify-content-start align-items-center mb-1 list-group-item" n:foreach="$columnsVisibility as $v_key => $visibility">
 							{if $visibility['visible']}
-								<input class="form-check-input-{$control->getFullname()} ajax me-2" type="checkbox" value="{$v_key}" id="checkbox_{$control->getFullname()}_{$v_key}" checked>
-								<label class="form-check-label" for="checkbox_{$control->getFullname()}_{$v_key}">
-									{include #column-header, column => $visibility['column']}
-								</label>
+							    <div class="form-check">
+                                    <input class="form-check-input form-check-input-{$control->getFullname()} ajax me-2" type="checkbox" value="{$v_key}" id="checkbox_{$control->getFullname()}_{$v_key}" checked>
+                                    <label class="form-check-label" for="checkbox_{$control->getFullname()}_{$v_key}">
+                                        {include #column-header, column => $visibility['column']}
+                                    </label>
+								</div>
 							{else}
-								<input class="form-check-input-{$control->getFullname()} ajax me-2" type="checkbox" value="{$v_key}" id="checkbox_{$control->getFullname()}_{$v_key}">
-								<label class="form-check-label" for="checkbox_{$control->getFullname()}_{$v_key}">
-									{include #column-header, column => $visibility['column']}
-								</label>
+							    <div class="form-check">
+                                    <input class="form-check-input form-check-input-{$control->getFullname()} ajax me-2" type="checkbox" value="{$v_key}" id="checkbox_{$control->getFullname()}_{$v_key}">
+                                    <label class="form-check-label" for="checkbox_{$control->getFullname()}_{$v_key}">
+                                        {include #column-header, column => $visibility['column']}
+                                    </label>
+								</div>
 							{/if}
 						</div>
 						<div class="row mt-2 mx-0 px-0">
