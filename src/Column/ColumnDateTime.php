@@ -47,9 +47,4 @@ class ColumnDateTime extends Column
 		return $this;
 	}
 
-	public function getFormat(): string
-	{
-		return $this->format;
-	}
-
 }
