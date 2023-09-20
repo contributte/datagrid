@@ -20,6 +20,10 @@ export class ConfirmPlugin implements DatagridPlugin {
 		const message = el.getAttribute(ConfirmAttribute)!;
 		if (!message) return;
 
+		if (el.getAttribute('data-group-action') === null) {
+			return;
+		}
+
 		if (!this.confirm(message)) {
 			e.stopPropagation();
 			e.preventDefault();
