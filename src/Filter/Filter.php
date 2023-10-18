@@ -61,6 +61,11 @@ abstract class Filter
 		'class' => ['form-control', 'input-sm', 'form-control-sm'],
 	];
 
+    /**
+     * @var bool
+     */
+    protected $outerRendering = false;
+
 	/**
 	 * @var string|null
 	 */
@@ -190,6 +195,23 @@ abstract class Filter
 	{
 		return $this->type;
 	}
+
+
+    /**
+     * @return static
+     */
+    public function setOuterRendering(bool $outerRendering = true): self
+    {
+        $this->outerRendering = $outerRendering;
+
+        return $this;
+    }
+
+
+    public function hasOuterRendering(): bool
+    {
+        return $this->outerRendering;
+    }
 
 
 	/**

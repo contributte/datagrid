@@ -313,6 +313,7 @@ class DataGrid extends Control
 
 	/**
 	 * @var bool
+     * @deprecated 
 	 */
 	protected $outerFilterRendering = false;
 
@@ -1636,11 +1637,19 @@ class DataGrid extends Control
 		$this->reload();
 	}
 
+
 	/**
 	 * @return static
 	 */
 	public function setOuterFilterRendering(bool $outerFilterRendering = true): self
 	{
+        $this->onFiltersAssembled['setOuterFilterRendering'] = function (iterable $filters) use ($outerFilterRendering) {
+            /** @var Filter $filter */
+            foreach ($filters as $filter) {
+                $filter->setOuterRendering($outerFilterRendering);
+            }
+        };
+        
 		$this->outerFilterRendering = $outerFilterRendering;
 
 		return $this;
@@ -1649,8 +1658,26 @@ class DataGrid extends Control
 
 	public function hasOuterFilterRendering(): bool
 	{
-		return $this->outerFilterRendering;
+        foreach ($this->filters as $filter) {
+            if ($filter->hasOuterRendering()) {
+                return true;
+            }
+        }
+
+		return false;
 	}
+
+
+    public function hasColumnFilterRendering(): bool
+    {
+        foreach ($this->filters as $filter) {
+            if (!$filter->hasOuterRendering()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
 	/**
