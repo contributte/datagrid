@@ -145,6 +145,7 @@
 						</th>
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementForRender('th', $key)}
+
 							{$th->startTag()|noescape}
 								{var $col_header = 'col-' . $key . '-header'}
 
