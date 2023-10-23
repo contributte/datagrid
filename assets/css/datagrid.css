@@ -34,8 +34,8 @@
 
 [data-datagrid-name] {
 	background-color: #fff;
-	padding: 1em;
-	box-sizing: border-box
+	box-sizing: border-box;
+	padding: 1em
 }
 
 [data-datagrid-name] .datagrid-input-group-full-width {
@@ -153,7 +153,7 @@
 
 [data-datagrid-name] table thead tr.row-group-actions th {
 	border-bottom-width: 0 !important;
-	background-color: #f9f9f9
+	background-color: #f9f9f9;
 }
 
 [data-datagrid-name] table thead tr.row-group-actions .datagrid-selected-rows-count {
@@ -185,12 +185,12 @@
 	display: inline-block
 }
 
-[data-datagrid-name] table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-menu {
-	font-size: 12px
+[data-datagrid-name] table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-menu, [data-datagrid-name] .dropdown .dropdown-menu .dropdown-item {
+	font-size: 12px;
 }
 
 [data-datagrid-name] table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-menu li .fa {
-	margin-right: 0.5em
+	margin-right: 0.5em;
 }
 
 [data-datagrid-name] table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-toggle::after {
@@ -252,13 +252,13 @@
 [data-datagrid-name] table tbody tr td.edited {
 	animation-name: edited;
 	animation-duration: 1.2s;
-	animation-delay: 0
+	animation-delay: 0ms;
 }
 
 [data-datagrid-name] table tbody tr td.edited-error {
 	animation-name: edited-error;
 	animation-duration: 1.6s;
-	animation-delay: 0
+	animation-delay: 0ms;
 }
 
 [data-datagrid-name] table th.col-checkbox, [data-datagrid-name] table td.col-checkbox {
@@ -477,34 +477,42 @@
 }
 
 [data-datagrid-name] select {
-	padding: 0;
-	text-transform: none
+	text-transform: none;
 }
 
 [data-datagrid-name] .row-grid-bottom {
 	font-size: 0;
 	padding: 8px;
-	background-color: #f9f9f9;
 	border: 1px solid #ddd;
-	border-top: 0
+	background-color: #f9f9f9;
 }
 
 [data-datagrid-name] .row-grid-bottom .col-items {
 	font-size: 14px;
 	display: inline-block;
-	width: 25%
+	width: 25%;
+	margin-right: 0;
+	margin-left: 0;
 }
 
 [data-datagrid-name] .row-grid-bottom .col-pagination {
 	font-size: 14px;
 	display: inline-block;
-	width: 50%
+	width: 50%;
+	margin-right: 0;
+	margin-left: 0;
 }
 
 [data-datagrid-name] .row-grid-bottom .col-per-page {
 	font-size: 14px;
-	display: inline-block;
-	width: 25%
+	display: inline-flex;
+	justify-content: end;
+	align-items: center;
+	width: 25%;
+	margin-right: 0;
+	margin-left: 0;
+	text-align: right;
+	text-align: -webkit-right;
 }
 
 [data-datagrid-name] .row-grid-bottom .col-per-page form {
@@ -514,6 +522,11 @@
 [data-datagrid-name] .row-grid-bottom .col-per-page .form-control {
 	width: auto;
 	display: inline-block
+}
+
+[data-datagrid-name] .row-grid-bottom .col-per-page .form-select {
+	margin-left: 0.25rem;
+	width: fit-content;
 }
 
 [data-datagrid-name] .row-grid-bottom .datagrid-per-page-submit {
@@ -620,14 +633,15 @@
 }
 
 [data-datagrid-name] .btn-xs, [data-datagrid-name] .btn-group-xs > .btn {
-	padding: 1px 5px;
 	font-size: 12px;
 	line-height: 1.5;
-	border-radius: 3px
+	border-radius: .19rem;
+	padding: 0.063rem 0.313rem;
 }
 
+
 [data-datagrid-name] .dropdown-item {
-	padding: 3px 20px;
 	line-height: 1.42857143;
 	font-size: 12px;
+	padding: 0.19rem 1.3rem;
 }
