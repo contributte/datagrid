@@ -23,7 +23,7 @@ export class Datagrids {
 
 	constructor(readonly ajax: Ajax, options: Partial<DatagridsOptions> = {}) {
 		this.options = {
-			selector: "div.datagrid[data-refresh-state]",
+			selector: "div[data-datagrid-name]",
 			datagrid: {},
 			root: document.body,
 			...options,
