@@ -15,9 +15,13 @@ export class InlinePlugin implements DatagridPlugin {
 				const trigger = datagrid.el.querySelector('.datagrid-inline-edit-trigger');
 
 				if (payload._datagrid_inline_edited) {
-					datagrid.el.querySelector<HTMLTableCellElement>(
+					let rows = datagrid.el.querySelectorAll<HTMLTableCellElement>(
 						`tr[data-id='${payload._datagrid_inline_edited}'] > td`
-					)?.classList.remove("hidden");
+					);
+
+					rows.forEach(row => {
+						row.classList.add("edited");
+					})
 				}
 
 				trigger?.classList.remove("hidden");
