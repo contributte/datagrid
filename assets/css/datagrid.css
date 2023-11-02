@@ -32,58 +32,58 @@
 
 }
 
-.datagrid {
+[data-datagrid-name] {
 	background-color: #fff;
 	padding: 1em;
 	box-sizing: border-box
 }
 
-.datagrid .datagrid-input-group-full-width {
+[data-datagrid-name] .datagrid-input-group-full-width {
 	width: 100%
 }
 
-.datagrid .hidden {
+[data-datagrid-name] .hidden {
 	display: none !important
 }
 
-.datagrid .datagrid-collapse-filters-button-row {
+[data-datagrid-name] .datagrid-collapse-filters-button-row {
 	margin-bottom: 0.5em
 }
 
-.datagrid .col-action .dropdown {
+[data-datagrid-name] .col-action .dropdown {
 	display: inline-block
 }
 
-.datagrid .datagrid-row-inline-add.datagrid-row-inline-add-hidden {
+[data-datagrid-name] .datagrid-row-inline-add.datagrid-row-inline-add-hidden {
 	display: none
 }
 
-.datagrid .datagrid-row-columns-summary td {
+[data-datagrid-name] .datagrid-row-columns-summary td {
 	border-top: 2px solid #bbb;
 	border-left: 1px solid #eee;
 	border-right: 1px solid #eee;
 	font-weight: bold
 }
 
-.datagrid .datagrid-row-columns-summary td:first-child {
+[data-datagrid-name] .datagrid-row-columns-summary td:first-child {
 	border-left: 1px solid #ddd
 }
 
-.datagrid .datagrid-row-columns-summary td:last-child {
+[data-datagrid-name] .datagrid-row-columns-summary td:last-child {
 	border-right: 1px solid #ddd
 }
 
-.datagrid .datagrid-toolbar {
+[data-datagrid-name] .datagrid-toolbar {
 	margin-top: .35em;
 	float: right;
 	display: inline-block
 }
 
-.datagrid .datagrid-toolbar > span {
+[data-datagrid-name] .datagrid-toolbar > span {
 	margin-left: 1em
 }
 
-.datagrid .datagrid-toolbar > span > a {
+[data-datagrid-name] .datagrid-toolbar > span > a {
 	margin-left: 0.5em
 }
 
@@ -91,113 +91,113 @@
 	font-weight: normal;
 }
 
-.datagrid .datagrid-exports .btn {
+[data-datagrid-name] .datagrid-exports .btn {
 	margin-left: 0.5em
 }
 
-.datagrid .datagrid-exports .btn:first-child {
+[data-datagrid-name] .datagrid-exports .btn:first-child {
 	margin-left: 0
 }
 
-.datagrid .datagrid-settings {
+[data-datagrid-name] .datagrid-settings {
 	display: inline-block
 }
 
-.datagrid .datagrid-settings .dropdown-menu--grid {
+[data-datagrid-name] .datagrid-settings .dropdown-menu--grid {
 	font-size: 12px
 }
 
-.datagrid .datagrid-settings .dropdown-menu--grid li .fa {
+[data-datagrid-name] .datagrid-settings .dropdown-menu--grid li .fa {
 	margin-right: 0.5em
 }
 
-.datagrid .row-reset-filter {
+[data-datagrid-name] .row-reset-filter {
 	text-align: right;
 	margin-bottom: 0.5em
 }
 
-.datagrid .row-filters .datagrid-row-outer-filters-group {
+[data-datagrid-name] .row-filters .datagrid-row-outer-filters-group {
 	margin-bottom: 0.5em
 }
 
-.datagrid .datagrid-manual-submit {
+[data-datagrid-name] .datagrid-manual-submit {
 	margin-bottom: 0.5em
 }
 
-.datagrid .filter-range-delimiter {
+[data-datagrid-name] .filter-range-delimiter {
 	text-align: center
 }
 
-.datagrid .bootstrap-select.input-sm > .btn {
+[data-datagrid-name] .bootstrap-select.input-sm > .btn {
 	padding: 5px 25px 5px 10px;
 	font-size: 12px;
 	line-height: 1.5;
 	border-radius: 3px
 }
 
-.datagrid table {
+[data-datagrid-name] table {
 	margin: 0
 }
 
-.datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) {
+[data-datagrid-name] table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) {
 	width: auto
 }
 
-.datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) > .btn {
+[data-datagrid-name] table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) > .btn {
 	width: auto
 }
 
-.datagrid table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) .dropdown-menu li {
+[data-datagrid-name] table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) .dropdown-menu li {
 	font-size: 13px
 }
 
-.datagrid table thead tr.row-group-actions th {
+[data-datagrid-name] table thead tr.row-group-actions th {
 	border-bottom-width: 0 !important;
 	background-color: #f9f9f9
 }
 
-.datagrid table thead tr.row-group-actions .datagrid-selected-rows-count {
+[data-datagrid-name] table thead tr.row-group-actions .datagrid-selected-rows-count {
 	margin-left: 0.3em
 }
 
-.datagrid table thead tr th {
+[data-datagrid-name] table thead tr th {
 	font-size: 90%;
 	vertical-align: top
 }
 
-.datagrid table thead tr th hr {
+[data-datagrid-name] table thead tr th hr {
 	margin: 8px -8px
 }
 
-.datagrid table thead tr th .datagrid-column-header-additions {
+[data-datagrid-name] table thead tr th .datagrid-column-header-additions {
 	float: right
 }
 
-.datagrid table thead tr th .datagrid-column-header-additions a[data-datagrid-reset-filter-by-column] {
+[data-datagrid-name] table thead tr th .datagrid-column-header-additions a[data-datagrid-reset-filter-by-column] {
 	margin-left: 0.3em;
 	color: #858585
 }
 
-.datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu {
+[data-datagrid-name] table thead tr th .datagrid-column-header-additions .column-settings-menu {
 	opacity: 0;
 	cursor: pointer;
 	margin-left: 0.3em;
 	display: inline-block
 }
 
-.datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-menu {
+[data-datagrid-name] table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-menu {
 	font-size: 12px
 }
 
-.datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-menu li .fa {
+[data-datagrid-name] table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-menu li .fa {
 	margin-right: 0.5em
 }
 
-.datagrid table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-toggle::after {
+[data-datagrid-name] table thead tr th .datagrid-column-header-additions .column-settings-menu .dropdown-toggle::after {
 	display: none !important
 }
 
-.datagrid .datagrid-col-filter-date-range {
+[data-datagrid-name] .datagrid-col-filter-date-range {
 	width: auto;
 	position: relative;
 	display: flex;
@@ -205,7 +205,7 @@
 	align-items: stretch;
 }
 
-.datagrid .datagrid-col-filter-date-range > .input-group {
+[data-datagrid-name] .datagrid-col-filter-date-range > .input-group {
 	position: relative;
 	-ms-flex: 1 1 auto;
 	flex: 1 1 auto;
@@ -213,109 +213,109 @@
 	margin-bottom: 0;
 }
 
-.datagrid .datagrid-col-filter-datte-range-delimiter {
+[data-datagrid-name] .datagrid-col-filter-datte-range-delimiter {
 	background-color: inherit;
 	border: none;
 	padding: .25rem .5rem
 }
 
-.datagrid table thead tr th .datagrid-col-filter-range .form-control {
+[data-datagrid-name] table thead tr th .datagrid-col-filter-range .form-control {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px
 }
 
-.datagrid table thead tr th:hover .column-settings-menu {
+[data-datagrid-name] table thead tr th:hover .column-settings-menu {
 	opacity: 1
 }
 
-.datagrid table tbody td {
+[data-datagrid-name] table tbody td {
 	vertical-align: middle
 }
 
-.datagrid table tbody tr.ui-sortable-helper {
+[data-datagrid-name] table tbody tr.ui-sortable-helper {
 	display: table
 }
 
-.datagrid table tbody tr .datagrid-inline-edit .form-control {
+[data-datagrid-name] table tbody tr .datagrid-inline-edit .form-control {
 	margin: -3px;
 	padding-bottom: 4px;
 	padding-top: 4px;
 	height: 28px
 }
 
-.datagrid table tbody tr td[data-datagrid-editable-url].editing textarea {
+[data-datagrid-name] table tbody tr td[data-datagrid-editable-url].editing textarea {
 	padding: 2px;
 	margin: -3px
 }
 
-.datagrid table tbody tr td.edited {
+[data-datagrid-name] table tbody tr td.edited {
 	animation-name: edited;
 	animation-duration: 1.2s;
 	animation-delay: 0
 }
 
-.datagrid table tbody tr td.edited-error {
+[data-datagrid-name] table tbody tr td.edited-error {
 	animation-name: edited-error;
 	animation-duration: 1.6s;
 	animation-delay: 0
 }
 
-.datagrid table th.col-checkbox, .datagrid table td.col-checkbox {
+[data-datagrid-name] table th.col-checkbox, [data-datagrid-name] table td.col-checkbox {
 	padding: 0;
 	width: 2.1em;
 	text-align: center;
 	vertical-align: middle
 }
 
-.datagrid table th.col-checkbox .happy-checkbox, .datagrid table td.col-checkbox .happy-checkbox {
+[data-datagrid-name] table th.col-checkbox .happy-checkbox, [data-datagrid-name] table td.col-checkbox .happy-checkbox {
 	margin-right: 0
 }
 
-.datagrid table th.col-checkbox.col-checkbox-first, .datagrid table td.col-checkbox.col-checkbox-first {
+[data-datagrid-name] table th.col-checkbox.col-checkbox-first, [data-datagrid-name] table td.col-checkbox.col-checkbox-first {
 	border-top-color: transparent
 }
 
-.datagrid table th.col-checkbox {
+[data-datagrid-name] table th.col-checkbox {
 	background-color: #f9f9f9
 }
 
-.datagrid table th.col-action, .datagrid table td.col-action {
+[data-datagrid-name] table th.col-action, [data-datagrid-name] table td.col-action {
 	white-space: nowrap;
 	width: 10px
 }
 
-.datagrid table th.col-action {
+[data-datagrid-name] table th.col-action {
 	text-align: center
 }
 
-.datagrid table td.col-action {
+[data-datagrid-name] table td.col-action {
 	text-align: right
 }
 
-.datagrid table th.datagrid-fit-content, .datagrid table td.datagrid-fit-content {
+[data-datagrid-name] table th.datagrid-fit-content, [data-datagrid-name] table td.datagrid-fit-content {
 	width: 1%;
 	white-space: nowrap
 }
 
-.datagrid .datagrid-tree > .datagrid-tree-header .datagrid-tree-item-right-actions-action {
+[data-datagrid-name] .datagrid-tree > .datagrid-tree-header .datagrid-tree-item-right-actions-action {
 	opacity: 0
 }
 
-.datagrid .datagrid-tree > .datagrid-tree-item {
+[data-datagrid-name] .datagrid-tree > .datagrid-tree-item {
 	margin-left: 20px
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item {
 	position: relative
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item.ui-sortable-placeholder {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item.ui-sortable-placeholder {
 	visibility: visible !important;
 	background-color: rgba(70, 83, 93, 0.1)
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content {
 	position: relative;
 	display: flex;
 	flex-direction: row;
@@ -326,7 +326,7 @@
 	box-shadow: inset 0px -1px 1px -1px #9B9B9B
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left, .datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left, [data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
@@ -334,11 +334,11 @@
 	align-items: center
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left {
 	order: 1
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron {
 	-webkit-border-radius: 11px;
 	-moz-border-radius: 11px;
 	border-radius: 11px;
@@ -354,22 +354,22 @@
 	transition: transform 0.2s ease-in-out
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron:hover {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron:hover {
 	-webkit-box-shadow: 0px 0px 3px 0px #b4b4b4;
 	-moz-box-shadow: 0px 0px 3px 0px #b4b4b4;
 	box-shadow: 0px 0px 3px 0px #b4b4b4
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron.toggle-rotate {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron.toggle-rotate {
 	transform: rotate(90deg)
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron .fa {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron .fa {
 	font-size: 10px;
 	transform: translate(1px, 0)
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right {
 	position: relative;
 	order: 2;
 	flex-basis: 50%;
@@ -379,11 +379,11 @@
 	flex-direction: row
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .btn {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .btn {
 	margin-top: -3px
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns {
 	white-space: nowrap;
 	display: flex;
 	flex-basis: 70%;
@@ -392,17 +392,17 @@
 	justify-content: flex-end
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns .datagrid-tree-item-right-columns-column {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns .datagrid-tree-item-right-columns-column {
 	padding: 0 7px;
 	margin-right: 4px;
 	flex-basis: 25%
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns .datagrid-tree-item-right-columns-column:last-child {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-columns .datagrid-tree-item-right-columns-column:last-child {
 	margin-right: 0
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-actions {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-actions {
 	margin-left: 7px;
 	display: flex;
 	flex-direction: row;
@@ -411,19 +411,19 @@
 	align-items: center
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-actions .datagrid-tree-item-right-actions-action {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-actions .datagrid-tree-item-right-actions-action {
 	margin-right: 4px
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-actions .datagrid-tree-item-right-actions-action:last-child {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right .datagrid-tree-item-right-actions .datagrid-tree-item-right-actions-action:last-child {
 	margin-right: 0
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item .datagrid-tree-item-children:not(.datagrid-tree) {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-children:not(.datagrid-tree) {
 	margin-left: 28px
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item:not(.has-children) > .datagrid-tree-item-children {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item:not(.has-children) > .datagrid-tree-item-children {
 	box-sizing: border-box;
 	position: relative;
 	width: calc(100% - 28px);
@@ -431,57 +431,57 @@
 	margin-top: -9px
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item.has-children > .datagrid-tree-item-children {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item.has-children > .datagrid-tree-item-children {
 	display: none
 }
 
-.datagrid .datagrid-tree .datagrid-tree-item.has-children > .datagrid-tree-item-children .datagrid-tree-item-right {
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item.has-children > .datagrid-tree-item-children .datagrid-tree-item-right {
 	flex-basis: calc(50% + 14px)
 }
 
-.datagrid .datagrid-tree-item-children .datagrid-tree-item-right {
+[data-datagrid-name] .datagrid-tree-item-children .datagrid-tree-item-right {
 	flex-basis: calc(50% + 14px)
 }
 
-.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+[data-datagrid-name] .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
 	flex-basis: calc(50% + 28px) !important
 }
 
-.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+[data-datagrid-name] .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
 	flex-basis: calc(50% + 42px) !important
 }
 
-.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+[data-datagrid-name] .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
 	flex-basis: calc(50% + 56px) !important
 }
 
-.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+[data-datagrid-name] .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
 	flex-basis: calc(50% + 74px) !important
 }
 
-.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+[data-datagrid-name] .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
 	flex-basis: calc(50% + 88px) !important
 }
 
-.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+[data-datagrid-name] .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
 	flex-basis: calc(50% + 102px) !important
 }
 
-.datagrid .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
+[data-datagrid-name] .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-children .datagrid-tree-item-right {
 	flex-basis: calc(50% + 116px) !important
 }
 
-.datagrid .btn {
+[data-datagrid-name] .btn {
 	transition: all 0.1s ease-in-out;
 	white-space: nowrap
 }
 
-.datagrid select {
+[data-datagrid-name] select {
 	padding: 0;
 	text-transform: none
 }
 
-.datagrid .row-grid-bottom {
+[data-datagrid-name] .row-grid-bottom {
 	font-size: 0;
 	padding: 8px;
 	background-color: #f9f9f9;
@@ -489,59 +489,59 @@
 	border-top: 0
 }
 
-.datagrid .row-grid-bottom .col-items {
+[data-datagrid-name] .row-grid-bottom .col-items {
 	font-size: 14px;
 	display: inline-block;
 	width: 25%
 }
 
-.datagrid .row-grid-bottom .col-pagination {
+[data-datagrid-name] .row-grid-bottom .col-pagination {
 	font-size: 14px;
 	display: inline-block;
 	width: 50%
 }
 
-.datagrid .row-grid-bottom .col-per-page {
+[data-datagrid-name] .row-grid-bottom .col-per-page {
 	font-size: 14px;
 	display: inline-block;
 	width: 25%
 }
 
-.datagrid .row-grid-bottom .col-per-page form {
+[data-datagrid-name] .row-grid-bottom .col-per-page form {
 	display: inline-block
 }
 
-.datagrid .row-grid-bottom .col-per-page .form-control {
+[data-datagrid-name] .row-grid-bottom .col-per-page .form-control {
 	width: auto;
 	display: inline-block
 }
 
-.datagrid .row-grid-bottom .datagrid-per-page-submit {
+[data-datagrid-name] .row-grid-bottom .datagrid-per-page-submit {
 	position: absolute;
 	visibility: hidden;
 	width: 0;
 	top: -200px
 }
 
-.datagrid .pagination.active > span {
+[data-datagrid-name] .pagination.active > span {
 	color: #fff
 }
 
-.datagrid .pagination > a.disabled {
+[data-datagrid-name] .pagination > a.disabled {
 	color: #989898;
 	cursor: not-allowed
 }
 
-.datagrid .pagination > a.active {
+[data-datagrid-name] .pagination > a.active {
 	pointer-events: none;
 	cursor: default
 }
 
-.datagrid .row-group-actions th {
+[data-datagrid-name] .row-group-actions th {
 	font-weight: normal
 }
 
-.datagrid .col-checkbox {
+[data-datagrid-name] .col-checkbox {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
@@ -550,28 +550,28 @@
 	user-select: none
 }
 
-.datagrid .col-checkbox .happy-checkbox {
+[data-datagrid-name] .col-checkbox .happy-checkbox {
 	margin-top: 2px
 }
 
-.datagrid .datagrid-column-status-option-icon {
+[data-datagrid-name] .datagrid-column-status-option-icon {
 	float: right
 }
 
 @media (min-width: 768px) {
-	.datagrid .ublaboo-datagrid-th-form-inline .form-group {
+	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .form-group {
 		display: inline-block;
 		margin-bottom: 0;
 		vertical-align: middle
 	}
 
-	.datagrid .ublaboo-datagrid-th-form-inline .form-control {
+	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .form-control {
 		display: inline-block;
 		width: auto;
 		vertical-align: middle
 	}
 
-	.datagrid .ublaboo-datagrid-th-form-inline .form-control[hidden] {
+	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .form-control[hidden] {
 		display: none;
 	}
 
@@ -579,54 +579,54 @@
 		display: none;
 	}
 
-	.datagrid .ublaboo-datagrid-th-form-inline .input-group {
+	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .input-group {
 		display: inline-table;
 		vertical-align: middle
 	}
 
-	.datagrid .ublaboo-datagrid-th-form-inline .input-group .form-control {
+	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .input-group .form-control {
 		width: auto
 	}
 
-	.datagrid .ublaboo-datagrid-th-form-inline .input-group > .form-control {
+	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .input-group > .form-control {
 		width: 100%
 	}
 
-	.datagrid .input-group-text {
+	[data-datagrid-name] .input-group-text {
 		height: calc(1.5em + 0.5rem + 2px);
 	}
 
-	.datagrid .ublaboo-datagrid-th-form-inline .control-label {
+	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .control-label {
 		margin-bottom: 0;
 		vertical-align: middle
 	}
 
-	.datagrid .ublaboo-datagrid-th-form-inline .radio, .datagrid .ublaboo-datagrid-th-form-inline .checkbox {
+	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .radio, [data-datagrid-name] .ublaboo-datagrid-th-form-inline .checkbox {
 		display: inline-block;
 		margin-top: 0;
 		margin-bottom: 0;
 		vertical-align: middle
 	}
 
-	.datagrid .ublaboo-datagrid-th-form-inline .radio label, .datagrid .ublaboo-datagrid-th-form-inline .checkbox label {
+	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .radio label, [data-datagrid-name] .ublaboo-datagrid-th-form-inline .checkbox label {
 		padding-left: 0
 	}
 
-	.datagrid .ublaboo-datagrid-th-form-inline .radio input[type="radio"], .datagrid .ublaboo-datagrid-th-form-inline .checkbox input[type="checkbox"] {
+	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .radio input[type="radio"], [data-datagrid-name] .ublaboo-datagrid-th-form-inline .checkbox input[type="checkbox"] {
 		position: relative;
 		margin-left: 0
 	}
 
 }
 
-.datagrid .btn-xs, .datagrid .btn-group-xs > .btn {
+[data-datagrid-name] .btn-xs, [data-datagrid-name] .btn-group-xs > .btn {
 	padding: 1px 5px;
 	font-size: 12px;
 	line-height: 1.5;
 	border-radius: 3px
 }
 
-.datagrid .dropdown-item {
+[data-datagrid-name] .dropdown-item {
 	padding: 3px 20px;
 	line-height: 1.42857143;
 	font-size: 12px;
