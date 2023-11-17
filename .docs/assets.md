@@ -38,15 +38,13 @@ Full example of using bundler.
     "nette-forms": "^3.3.1",
     "prismjs": "^1.29.0",
     "sortablejs": "^1.15.0",
-    "tom-select": "^2.2.2",
-    "vanillajs-datepicker": "^1.3.1"
+    "tom-select": "^2.2.2"
   },
   "devDependencies": {
     "@types/bootstrap-select": "^1.13.4",
     "@types/jquery": "^3.5.16",
     "@types/jqueryui": "^1.12.16",
     "@types/sortablejs": "^1.15.1",
-    "@types/vanillajs-datepicker": "^1.2.1",
     "autoprefixer": "^10.4.0",
     "typescript": "^4.9.5",
     "vite": "^2.6.10"

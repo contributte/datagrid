@@ -7,10 +7,7 @@ use Nette\Forms\Container;
 class FilterDateRange extends FilterRange implements IFilterDate
 {
 
-	protected ?string $template = 'datagrid_filter_daterange.latte';
-
-	/** @var array */
-	protected array $format = ['j. n. Y', 'd. m. yyyy'];
+	protected ?string $template = 'datagrid_filter_range.latte';
 
 	protected ?string $type = 'date-range';
 
@@ -23,19 +20,11 @@ class FilterDateRange extends FilterRange implements IFilterDate
 
 		$from = $container->addText('from', $this->name);
 
-		$from->setHtmlAttribute('data-provide', 'datepicker')
-			->setHtmlAttribute('data-date-orientation', 'bottom')
-			->setHtmlAttribute('data-date-format', $this->getJsFormat())
-			->setHtmlAttribute('data-date-today-highlight', 'true')
-			->setHtmlAttribute('data-date-autoclose', 'true');
+		$from->setHtmlType('date');
 
 		$to = $container->addText('to', $this->nameSecond);
 
-		$to->setHtmlAttribute('data-provide', 'datepicker')
-			->setHtmlAttribute('data-date-orientation', 'bottom')
-			->setHtmlAttribute('data-date-format', $this->getJsFormat())
-			->setHtmlAttribute('data-date-today-highlight', 'true')
-			->setHtmlAttribute('data-date-autoclose', 'true');
+		$to->setHtmlType('date');
 
 		$this->addAttributes($from);
 		$this->addAttributes($to);
@@ -63,29 +52,11 @@ class FilterDateRange extends FilterRange implements IFilterDate
 	}
 
 	/**
-	 * Set format for datepicker etc
-	 */
-	public function setFormat(string $phpFormat, string $jsFormat): IFilterDate
-	{
-		$this->format = [$phpFormat, $jsFormat];
-
-		return $this;
-	}
-
-	/**
 	 * Get php format for datapicker
 	 */
 	public function getPhpFormat(): string
 	{
-		return $this->format[0];
-	}
-
-	/**
-	 * Get js format for datepicker
-	 */
-	public function getJsFormat(): string
-	{
-		return $this->format[1];
+		return 'Y-m-d';
 	}
 
 }

@@ -9,7 +9,3 @@ export interface Sortable {
 export interface Selectpicker {
 	initSelectpickers(elements: HTMLElement[], datagrid: Datagrid): void;
 }
-
-export interface Datepicker {
-	initDatepickers(elements: HTMLInputElement[], datagrid: Datagrid): void;
-}
