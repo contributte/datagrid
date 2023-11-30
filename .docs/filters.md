@@ -189,17 +189,6 @@ Keep in mind that `FilterMultiSelect` uses `bootstrap-select` JS library. Read m
 $grid->addFilterDate('created', 'User registerd on');
 ```
 
-This filter also has some special features. First, it shows datepicker. Second, You can set date format. Sadly, JavaScript has different date formatting modifiers, so you have to set them both at once:
-
-```php
-/**
- * This is default formatting
- * $php_format, $js_format
- */
-$grid->addFilterDate('created', 'User registerd on')
-	->setFormat('j. n. Y', 'd. m. yyyy');
-```
-
 ## FilterRange
 
 This filter renders two inputs: From and To. If you want to set inputs placeholders, you have to set both in an array.

@@ -11,8 +11,7 @@ import {
 } from "./plugins";
 import { Ajax, DatagridsOptions } from "./types";
 import { SortableJS } from "./integrations/sortable-js";
-import { DatepickerPlugin } from "./plugins/integrations/datepicker";
-import { BootstrapSelect, Happy, VanillaDatepicker } from "./integrations";
+import { BootstrapSelect, Happy } from "./integrations";
 
 export class Datagrids {
 	private datagrids: Datagrid[] = [];
@@ -71,7 +70,6 @@ export const createFullDatagrids = (ajax: Ajax, _options: Partial<DatagridsOptio
 				new NetteFormsPlugin(),
 				new HappyPlugin(new Happy()),
 				new SortablePlugin(new SortableJS()),
-				new DatepickerPlugin(new VanillaDatepicker()),
 				new SelectpickerPlugin(new BootstrapSelect())
 			],
 		},
