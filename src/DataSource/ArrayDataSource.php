@@ -247,8 +247,13 @@ class ArrayDataSource implements IDataSource
 		$row_value = $row[$filter->getColumn()];
 
 		if ($values['from'] !== null && $values['from'] !== '') {
-			$date_from = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
-			$date_from->setTime(0, 0, 0);
+			try {
+				$date_from = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
+				$date_from->setTime(0, 0, 0);
+			} catch (DataGridDateTimeHelperException $ex) {
+				return false;
+				// ignore the invalid filter value
+			}
 
 			if (!($row_value instanceof \DateTime)) {
 				/**
@@ -270,8 +275,15 @@ class ArrayDataSource implements IDataSource
 		}
 
 		if ($values['to'] !== null && $values['to'] !== '') {
-			$date_to = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
-			$date_to->setTime(23, 59, 59);
+
+
+			try {
+				$date_to = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
+				$date_to->setTime(23, 59, 59);
+			} catch (DataGridDateTimeHelperException $ex) {
+				return false;
+				// ignore the invalid filter value
+			}
 
 			if (!($row_value instanceof \DateTime)) {
 				/**
