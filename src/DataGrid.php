@@ -456,6 +456,8 @@ class DataGrid extends Nette\Application\UI\Control
 
                 $this->componentFullName = $this->lookupPath();
             });
+
+		$this->auto_submit = false;
 	}
 
 
@@ -3428,9 +3430,9 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function setAutoSubmit($auto = true)
 	{
-		$this->auto_submit = (bool) $auto;
-
-		return $this;
+//		$this->auto_submit = (bool) $auto;
+//
+//		return $this;
 	}
 
 
