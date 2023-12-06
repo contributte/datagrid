@@ -458,6 +458,11 @@ class DataGrid extends Nette\Application\UI\Control
             });
 
 		$this->auto_submit = false;
+
+		$this->addAction('dummy', '')
+			->setRenderer(static function ($item) {
+				return '';
+			});
 	}
 
 
