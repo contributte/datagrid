@@ -313,7 +313,7 @@ class DataGrid extends Control
 
 	/**
 	 * @var bool
-     * @deprecated 
+     * @deprecated
 	 */
 	protected $outerFilterRendering = false;
 
@@ -1643,13 +1643,13 @@ class DataGrid extends Control
 	 */
 	public function setOuterFilterRendering(bool $outerFilterRendering = true): self
 	{
-        $this->onFiltersAssembled['setOuterFilterRendering'] = function (iterable $filters) use ($outerFilterRendering) {
-            /** @var Filter $filter */
-            foreach ($filters as $filter) {
-                $filter->setOuterRendering($outerFilterRendering);
-            }
-        };
-        
+		$this->onFiltersAssembled['setOuterFilterRendering'] = function (iterable $filters) use ($outerFilterRendering) {
+			/** @var Filter $filter */
+			foreach ($filters as $filter) {
+				$filter->setOuterRendering($outerFilterRendering);
+			}
+		};
+
 		$this->outerFilterRendering = $outerFilterRendering;
 
 		return $this;
@@ -1658,26 +1658,26 @@ class DataGrid extends Control
 
 	public function hasOuterFilterRendering(): bool
 	{
-        foreach ($this->filters as $filter) {
-            if ($filter->hasOuterRendering()) {
-                return true;
-            }
-        }
+		foreach ($this->filters as $filter) {
+			if ($filter->hasOuterRendering()) {
+				return true;
+			}
+		}
 
 		return false;
 	}
 
 
-    public function hasColumnFilterRendering(): bool
-    {
-        foreach ($this->filters as $filter) {
-            if (!$filter->hasOuterRendering()) {
-                return true;
-            }
-        }
+	public function hasColumnFilterRendering(): bool
+	{
+		foreach ($this->filters as $filter) {
+			if (!$filter->hasOuterRendering()) {
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 
 	/**
