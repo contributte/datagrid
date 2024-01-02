@@ -49,15 +49,13 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 
 	public function getCount(): int
 	{
-		$searchResult = $this->client->search($this->searchParamsBuilder->buildParams());
+		$searchResult = $this->client->count($this->searchParamsBuilder->buildParams());
 
-		if (!isset($searchResult['hits'])) {
-			throw new \UnexpectedValueException;
-		}
+	        if (!isset($searchResult['count'])) {
+	            throw new \UnexpectedValueException;
+	        }
 
-		return is_array($searchResult['hits']['total'])
-			? $searchResult['hits']['total']['value']
-			: $searchResult['hits']['total'];
+        	return $searchResult['count'];
 	}
 
 
