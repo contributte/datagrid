@@ -446,8 +446,6 @@ class DataGrid extends Control
 			$parent->addComponent($this, $name);
 		}
 
-		$this->monitor('Nette\Application\UI\Presenter');
-
 		/**
 		 * Try to find previous filters, pagination, perPage and other values in session
 		 */
