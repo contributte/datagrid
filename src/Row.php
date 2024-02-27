@@ -121,13 +121,7 @@ class Row
 
 	public function getControlClass(): string
 	{
-		$class = $this->control->getAttribute('class');
-
-		if ($class === null) {
-			return '';
-		}
-
-		return implode(' ', array_keys($class));
+		return $this->control->getAttribute('class') ?? '';
 	}
 
 
