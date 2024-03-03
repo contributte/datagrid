@@ -349,25 +349,32 @@ document.addEventListener('change', function(e) {
 
 
 window.datagridSerializeUrl = function(obj, prefix) {
-var str = [];
-for(var p in obj) {
-	if (obj.hasOwnProperty(p)) {
-		var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-		if (v !== null && v !== "") {
-			if (typeof v == "object") {
-				var r = window.datagridSerializeUrl(v, k);
+	const str = [];
+	let urlPathForPersistentChecking = window.location.pathname;
+
+	for (const p in obj) {
+		if (obj.hasOwnProperty(p)) {
+			const k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+			if (v !== null && v !== "") {
+				// fix for persistent nette parameters
+				if (urlPathForPersistentChecking.includes('/' + v)) {
+					urlPathForPersistentChecking = urlPathForPersistentChecking.replace('/' + v, '');
+					continue;
+				}
+				if (typeof v == "object") {
+					const r = window.datagridSerializeUrl(v, k);
 					if (r) {
 						str.push(r);
 					}
-			} else {
-				str.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+				} else {
+					str.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+				}
 			}
 		}
 	}
-}
-return str.join("&");
-}
-;
+
+	return str.join("&");
+};
 
 datagridSortable = function() {
 	if (typeof $.fn.sortable === 'undefined') {
