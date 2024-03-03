@@ -62,6 +62,11 @@ abstract class Filter
 	];
 
 	/**
+	 * @var bool
+	 */
+	protected $outerRendering = false;
+
+	/**
 	 * @var string|null
 	 */
 	private $placeholder;
@@ -189,6 +194,23 @@ abstract class Filter
 	public function getType(): ?string
 	{
 		return $this->type;
+	}
+
+
+	/**
+	 * @return static
+	 */
+	public function setOuterRendering(bool $outerRendering = true): self
+	{
+		$this->outerRendering = $outerRendering;
+
+		return $this;
+	}
+
+
+	public function hasOuterRendering(): bool
+	{
+		return $this->outerRendering;
 	}
 
 
