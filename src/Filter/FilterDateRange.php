@@ -20,7 +20,11 @@ class FilterDateRange extends FilterRange implements IFilterDate
 	{
 		$container = $container->addContainer($this->key);
 
+		$htmlType = 'date';
+
 		$from = $container->addText('from', $this->name);
+
+		$from->setHtmlType($htmlType);
 
 		$from->setHtmlAttribute('data-provide', 'datepicker')
 			->setHtmlAttribute('data-date-orientation', 'bottom')
@@ -29,6 +33,8 @@ class FilterDateRange extends FilterRange implements IFilterDate
 			->setHtmlAttribute('data-date-autoclose', 'true');
 
 		$to = $container->addText('to', $this->nameSecond);
+
+		$to->setHtmlType($htmlType);
 
 		$to->setHtmlAttribute('data-provide', 'datepicker')
 			->setHtmlAttribute('data-date-orientation', 'bottom')
