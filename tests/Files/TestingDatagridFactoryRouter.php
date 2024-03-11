@@ -28,7 +28,7 @@ class TestingDatagridFactoryRouter
 
 		$presenter->autoCanonicalize = false;
 
-		$presenter->injectPrimary(null, $presenterFactory, new SimpleRouter(), $request, $response, $session);
+		$presenter->injectPrimary($request, $response, $presenterFactory, new SimpleRouter(), $session);
 
 		$presenter->run(new Request('Test', 'GET', []));
 

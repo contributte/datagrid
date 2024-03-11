@@ -24,7 +24,7 @@ class TestingDatagridFactory
 		$response = new Response();
 		$session = new Session($request, $response);
 
-		$presenter->injectPrimary(null, null, null, $request, $response, $session);
+		$presenter->injectPrimary($request, $response, $presenterFactory, null, $session);
 
 		return $presenter->getComponent('grid');
 	}

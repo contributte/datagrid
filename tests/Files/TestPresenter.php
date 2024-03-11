@@ -14,7 +14,7 @@ final class TestPresenter extends Presenter
 		return new TestGridControl();
 	}
 
-	protected function createTemplate(): Template
+	protected function createTemplate(?string $class = null): Template
 	{
 		return Mockery::mock(Template::class)
 			->shouldReceive('getFile')
