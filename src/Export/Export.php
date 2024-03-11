@@ -27,7 +27,6 @@ class Export
 
 	protected ?Link $link = null;
 
-	/** @var array */
 	protected array $columns = [];
 
 	protected ?string $confirmDialog = null;

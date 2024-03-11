@@ -9,7 +9,6 @@ class ColumnNumber extends Column
 
 	protected ?string $align = 'end';
 
-	/** @var array */
 	protected array $numberFormat = [
 		0, // Decimals
 		'.', // Decimal point

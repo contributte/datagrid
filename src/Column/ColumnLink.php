@@ -16,12 +16,10 @@ class ColumnLink extends Column
 
 	protected ?string $icon = null;
 
-	/** @var array */
 	protected array $dataAttributes = [];
 
 	protected bool $openInNewTab = false;
 
-	/** @var array */
 	protected array $parameters = [];
 
 	public function __construct(

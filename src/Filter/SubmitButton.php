@@ -10,6 +10,7 @@ use Contributte\Datagrid\Traits\TButtonTitle;
 use Contributte\Datagrid\Traits\TButtonTryAddIcon;
 use Nette\Forms\Controls\Button;
 use Nette\Utils\Html;
+use Stringable;
 
 class SubmitButton extends Button
 {
@@ -31,8 +32,7 @@ class SubmitButton extends Button
 		$this->control = Html::el('button', ['type' => 'submit', 'name' => 'submit']);
 	}
 
-	/** @inheritdoc */
-	public function getControl($caption = null): Html
+	public function getControl(Stringable|string|null $caption = null): Html
 	{
 		$el = parent::getControl($caption);
 

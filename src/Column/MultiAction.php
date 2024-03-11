@@ -29,7 +29,6 @@ class MultiAction extends Column
 
 	protected string $name;
 
-	/** @var array */
 	protected array $actions = [];
 
 	/** @var array|callable[] */

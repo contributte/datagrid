@@ -24,7 +24,6 @@ class ToolbarButton
 	use TButtonTitle;
 	use TLink;
 
-	/** @var array */
 	protected array $attributes = [];
 
 	protected ?string $confirmDialog = null;

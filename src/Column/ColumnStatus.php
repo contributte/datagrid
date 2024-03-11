@@ -25,7 +25,6 @@ class ColumnStatus extends Column
 
 	protected string $key;
 
-	/** @var array */
 	protected array $options = [];
 
 	public function __construct(

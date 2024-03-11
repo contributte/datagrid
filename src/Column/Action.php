@@ -27,13 +27,10 @@ class Action extends Column
 
 	protected ?IConfirmation $confirmation = null;
 
-	/** @var array */
 	protected array $dataAttributes = [];
 
-	/** @var array */
 	protected array $attributes = [];
 
-	/** @var array */
 	protected array $parameters = [];
 
 	/** @var string|callable|null */

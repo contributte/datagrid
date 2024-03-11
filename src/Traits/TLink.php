@@ -51,7 +51,7 @@ trait TLink
 				if (
 					str_starts_with($link, '#error') ||
 					(strrpos($href, '!') !== false && str_starts_with($link, '#')) ||
-					(in_array($presenter->invalidLinkMode, [Presenter::INVALID_LINK_WARNING, Presenter::INVALID_LINK_SILENT], true) && str_starts_with($link, '#'))
+					(in_array($presenter->invalidLinkMode, [Presenter::InvalidLinkWarning, Presenter::InvalidLinkSilent], true) && str_starts_with($link, '#'))
 				) {
 					continue; // Did not find signal handler
 				}

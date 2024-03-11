@@ -136,26 +136,18 @@ class Datagrid extends Control
 	/** @persistent */
 	public string|int|null $perPage = null;
 
-	/**
-	 * @var array
-	 * @persistent
-	 */
+	/** @persistent */
 	public array $sort = [];
 
-	/** @var array */
 	public array $defaultSort = [];
 
-	/** @var array */
 	public array $defaultFilter = [];
 
 	public bool $defaultFilterUseOnReset = true;
 
 	public bool $defaultSortUseOnReset = true;
 
-	/**
-	 * @var array
-	 * @persistent
-	 */
+	/** @persistent */
 	public array $filter = [];
 
 	/** @var callable|null */
@@ -166,7 +158,6 @@ class Datagrid extends Control
 	/** @var callable */
 	protected $rowCallback;
 
-	/** @var array */
 	protected array $itemsPerPageList = [10, 20, 50, 'all'];
 
 	protected ?int $defaultPerPage = null;
@@ -208,7 +199,6 @@ class Datagrid extends Control
 
 	protected ?string $originalTemplate = null;
 
-	/** @var array */
 	protected array $redrawItem = [];
 
 	protected ?Translator $translator = null;
@@ -242,18 +232,15 @@ class Datagrid extends Control
 
 	protected ?ItemDetail $itemsDetail = null;
 
-	/** @var array */
 	protected array $rowConditions = [
 		'group_action' => false,
 		'action' => [],
 	];
 
-	/** @var array */
 	protected array $columnCallbacks = [];
 
 	protected bool $canHideColumns = false;
 
-	/** @var array */
 	protected array $columnsVisibility = [];
 
 	protected ?InlineEdit $inlineEdit = null;
@@ -1311,8 +1298,8 @@ class Datagrid extends Control
 			}
 
 			if ($edit['submit']->isSubmittedBy() || $edit['cancel']->isSubmittedBy()) {
-				$id = $form->getHttpData(Form::DATA_LINE, 'inline_edit[_id]');
-				$primaryWhereColumn = $form->getHttpData(Form::DATA_LINE, 'inline_edit[_primary_where_column]');
+				$id = $form->getHttpData(Form::DataLine, 'inline_edit[_id]');
+				$primaryWhereColumn = $form->getHttpData(Form::DataLine, 'inline_edit[_primary_where_column]');
 
 				if ($edit['submit']->isSubmittedBy() && $edit->getErrors() === []) {
 					$this->inlineEdit->onSubmit($id, $values['inline_edit']);

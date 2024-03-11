@@ -22,7 +22,6 @@ use function str_contains;
 class NextrasDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
 
-	/** @var array */
 	protected array $data = [];
 
 	public function __construct(protected ICollection $dataSource, protected string $primaryKey)

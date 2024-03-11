@@ -16,7 +16,6 @@ use UnexpectedValueException;
 class DibiFluentMssqlDataSource extends DibiFluentDataSource
 {
 
-	/** @var array */
 	protected array $data = [];
 
 	public function __construct(Fluent $dataSource, string $primaryKey)

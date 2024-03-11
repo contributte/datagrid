@@ -19,7 +19,6 @@ use Nette\Utils\Strings;
 class NetteDatabaseTableDataSource extends FilterableDataSource implements IDataSource
 {
 
-	/** @var array */
 	protected array $data = [];
 
 	public function __construct(protected Selection $dataSource, protected string $primaryKey)

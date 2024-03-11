@@ -33,7 +33,6 @@ abstract class Column extends FilterableColumn
 
 	protected ?string $align = null;
 
-	/** @var array */
 	protected array $templateVariables = [];
 
 	/** @var callable|null */
@@ -42,7 +41,6 @@ abstract class Column extends FilterableColumn
 	/** @var callable|null */
 	protected $editableConditionCallback = null;
 
-	/** @var array */
 	protected array $editableElement = ['textarea', ['class' => 'form-control']];
 
 	protected bool $defaultHide = false;

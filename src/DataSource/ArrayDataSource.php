@@ -21,7 +21,6 @@ use Nette\Utils\Strings;
 class ArrayDataSource implements IDataSource
 {
 
-	/** @var array */
 	protected array $data = [];
 
 	protected int $count = 0;

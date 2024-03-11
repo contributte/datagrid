@@ -8,7 +8,6 @@ use UnexpectedValueException;
 class ApiDataSource implements IDataSource
 {
 
-	/** @var array */
 	protected array $data = [];
 
 	protected ?string $sortColumn = null;
@@ -21,7 +20,6 @@ class ApiDataSource implements IDataSource
 
 	protected int $filterOne = 0;
 
-	/** @var array */
 	protected array $filter = [];
 
 	public function __construct(protected string $url, protected array $queryParams = [])

@@ -91,7 +91,7 @@ class GroupActionCollection
 				$control = $container->addText((string) $id, '');
 
 				$control->setHtmlAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
-					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
+					->addConditionOn($groupActionSelect, Form::Equal, $id)
 					->setRequired('contributte_datagrid.choose_input_required')
 					->endCondition();
 
@@ -99,7 +99,7 @@ class GroupActionCollection
 				$control = $container->addTextArea((string) $id, '');
 
 				$control->setHtmlAttribute('id', $lookupPath . self::ID_ATTRIBUTE_PREFIX . $id)
-					->addConditionOn($groupActionSelect, Form::EQUAL, $id)
+					->addConditionOn($groupActionSelect, Form::Equal, $id)
 					->setRequired('contributte_datagrid.choose_input_required');
 			}
 
@@ -120,11 +120,11 @@ class GroupActionCollection
 
 		if ($main_options !== []) {
 			foreach (array_keys($this->groupActions) as $id) {
-				$groupActionSelect->addCondition(Form::EQUAL, $id)
+				$groupActionSelect->addCondition(Form::Equal, $id)
 					->toggle($lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);
 			}
 
-			$groupActionSelect->addCondition(Form::FILLED)
+			$groupActionSelect->addCondition(Form::Filled)
 				->toggle(
 					strtolower($this->datagrid->getFullName()) . 'group_action_submit'
 				);
@@ -165,7 +165,7 @@ class GroupActionCollection
 		}
 
 		$httpIds = $form->getHttpData(
-			Form::DATA_LINE | Form::DATA_KEYS,
+			Form::DataLine | Form::DataKeys,
 			strtolower($this->datagrid->getFullName()) . '_group_action_item[]'
 		);
 

@@ -9,7 +9,6 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 
 	protected ?string $template = 'datagrid_filter_date.latte';
 
-	/** @var array */
 	protected array $format = ['j. n. Y', 'd. m. yyyy'];
 
 	protected ?string $type = 'date';

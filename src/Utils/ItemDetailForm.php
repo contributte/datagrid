@@ -60,10 +60,6 @@ final class ItemDetailForm extends Container
 			$lookupPath = $this->lookupPath(Form::class);
 			$form = $this->getForm();
 
-			if ($lookupPath === null || $form === null) {
-				throw new UnexpectedValueException();
-			}
-
 			$path = explode(self::NameSeparator, $lookupPath);
 
 			$this->httpPost = Arrays::get($form->getHttpData(), $path, null);
@@ -78,10 +74,6 @@ final class ItemDetailForm extends Container
 	private function loadHttpData(): void
 	{
 		$form = $this->getForm();
-
-		if ($form === null) {
-			throw new UnexpectedValueException();
-		}
 
 		if ($form->isSubmitted() === false) {
 			return;

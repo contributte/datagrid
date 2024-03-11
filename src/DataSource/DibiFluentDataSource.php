@@ -21,7 +21,6 @@ use ReflectionClass;
 class DibiFluentDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
 
-	/** @var array */
 	protected array $data = [];
 
 	public function __construct(protected Fluent $dataSource, protected string $primaryKey)

@@ -8,7 +8,6 @@ use Nette\Forms\Container;
 class FilterRange extends OneColumnFilter
 {
 
-	/** @var array */
 	protected array $placeholders = [];
 
 	protected ?string $template = 'datagrid_filter_range.latte';

@@ -12,7 +12,6 @@ trait TButtonRenderer
 
 	protected ?Renderer $renderer = null;
 
-	/** @var array */
 	protected array $replacements = [];
 
 	/**

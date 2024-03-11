@@ -13,7 +13,6 @@ class ColumnsSummary
 	/** @var array|int[] */
 	protected array $summary;
 
-	/** @var array */
 	protected array $format = [];
 
 	/** @var callable|null */
