@@ -79,12 +79,16 @@
 	display: inline-block
 }
 
-[data-datagrid-name] .datagrid-toolbar > span {
+[data-datagrid-name] .datagrid-toolbar > div > span {
 	margin-left: 1em
 }
 
-[data-datagrid-name] .datagrid-toolbar > span > a {
+[data-datagrid-name] .datagrid-toolbar > div > span > a {
 	margin-left: 0.5em
+}
+
+[data-datagrid-name] .datagrid-toolbar > div {
+	display: inline-block
 }
 
 .datagrid-toolbar .fa-square, .datagrid-toolbar .fa-check-square {

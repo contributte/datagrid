@@ -284,8 +284,6 @@ class Datagrid extends Control
 			$parent->addComponent($this, $name);
 		}
 
-		$this->monitor(Presenter::class);
-
 		/**
 		 * Try to find previous filters, pagination, perPage and other values in session
 		 */
