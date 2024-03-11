@@ -9,6 +9,7 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form as NetteForm;
+use Ublaboo\DataGrid\Column\Action;
 use UnexpectedValueException;
 
 class GroupActionCollection
@@ -18,6 +19,8 @@ class GroupActionCollection
 
 	/** @var array<GroupAction> */
 	protected array $groupActions = [];
+
+	protected ?string $groupActionsConfirmDialog = null;
 
 	public function __construct(protected Datagrid $datagrid)
 	{
@@ -129,12 +132,17 @@ class GroupActionCollection
 					strtolower($this->datagrid->getFullName()) . 'group_action_submit'
 				);
 
-			$container->addSubmit('submit', 'contributte_datagrid.execute')
+			$submit = $container->addSubmit('submit', 'contributte_datagrid.execute')
 				->setValidationScope([$container])
 				->setHtmlAttribute(
 					'id',
 					strtolower($this->datagrid->getFullName()) . 'group_action_submit'
 				);
+
+			if ($this->groupActionsConfirmDialog !== null) {
+				$submit->setHtmlAttribute('data-' . Action::$dataConfirmAttributeName, $this->groupActionsConfirmDialog);
+				$submit->setHtmlAttribute('data-group-action', 'true');
+			}
 		} else {
 			unset($container['group_action']);
 		}
@@ -256,6 +264,11 @@ class GroupActionCollection
 		}
 
 		throw new DatagridGroupActionException(sprintf('Group action %s does not exist.', $title));
+	}
+
+	public function setGroupActionsConfirmDialog(string $confirmDialog): void
+	{
+		$this->groupActionsConfirmDialog = $confirmDialog;
 	}
 
 	private function getFormSubmitter(NetteForm $form): ?SubmitButton
