@@ -1,24 +1,24 @@
 Table of contents
 
 - [Actions](#actions)
-	- [Api](#api)
-		- [Parameters](#parameters)
-		- [Icon](#icon)
-		- [Class](#class)
-		- [Title](#title)
-		- [Confirmation](#confirmation)
-	- [Ajax](#ajax)
-		- [Redrawing the data](#redrawing-the-data)
-		- [Redrawing one row](#redrawing-one-row)
-	- [Sortable](#sortable)
-		- [Sorting handler](#sorting-handler)
-	- [MultiAction](#multiaction)
-	- [Item detail](#item-detail)
-		- [Item detail form](#item-detail-form)
-		- [Item detail template variables](#item-detail-template-variables)
-		- [Item detail render condition](#item-detail-render-condition)
-	- [ActionCallback](#actioncallback)
-	- [Toolbar button](#toolbar-button)
+    - [Api](#api)
+        - [Parameters](#parameters)
+        - [Icon](#icon)
+        - [Class](#class)
+        - [Title](#title)
+        - [Confirmation](#confirmation)
+    - [Ajax](#ajax)
+        - [Redrawing the data](#redrawing-the-data)
+        - [Redrawing one row](#redrawing-one-row)
+    - [Sortable](#sortable)
+        - [Sorting handler](#sorting-handler)
+    - [MultiAction](#multiaction)
+    - [Item detail](#item-detail)
+        - [Item detail form](#item-detail-form)
+        - [Item detail template variables](#item-detail-template-variables)
+        - [Item detail render condition](#item-detail-render-condition)
+    - [ActionCallback](#actioncallback)
+    - [Toolbar button](#toolbar-button)
 
 # Actions
 
@@ -105,7 +105,7 @@ All links are by default not-ajax. Do you see the bold `ajax` class in previous 
 ```php
 public function handleDelete($id)
 {
-	$this->connection->delete('ublaboo_example')
+	$this->connection->delete('example')
 		->where('id = ?', $id)
 		->execute();
 
@@ -127,7 +127,7 @@ When you are updating row data (i.e. status), you can send only one row as snipp
 ```php
 public function handleSetStatus($id, $status)
 {
-	$this->connection->update('ublaboo_example', ['status' => $satatus])
+	$this->connection->update('example', ['status' => $satatus])
 		->where('id = ?', $id)
 		->execute();
 
@@ -242,7 +242,7 @@ The name of the handler used for sorting can be changed:
 $grid->setSortableHandler('foo!');
 ```
 
-Also when you are using datagrid in component, you have to alter the name a bit:
+Also, when you are using datagrid in component, you have to alter the name a bit:
 
 ```php
 $grid->setSortableHandler('myComponent:sort!');
@@ -250,7 +250,7 @@ $grid->setSortableHandler('myComponent:sort!');
 
 ## MultiAction
 
-Same as there is column status with pretty dropdown menu, ublaboo datagrid comes with similar dropdown menu for actions. It is called MultiAction:
+Same as there is column status with pretty dropdown menu, the datagrid comes with similar dropdown menu for actions. It is called MultiAction:
 
 ```php
 /**
@@ -261,7 +261,7 @@ $grid->addMultiAction('multi_action', 'MultiAction')
 	->addAction('blah2', 'Blahblah2', 'blah!', ['name']);
 ```
 
-Sure you can alter multiaction class, icons, etc. Same you can change icon, class, etc of nested actions:
+Sure you can alter multiaction class, icons, etc. Same you can change icon, class, etc. of nested actions:
 
 ```php
 $grid->getAction('multi_blah')
@@ -312,7 +312,7 @@ $grid->setItemsDetailForm(function(Nette\Forms\Container $container) use ($grid,
 });
 ```
 
-DataGrid user template:
+Datagrid user template:
 
 ```latte
 {extends $originalTemplate}
@@ -361,7 +361,7 @@ $grid->addActionCallback('custom_callback', '')
 	};
 ```
 
-You treat `ActionCallback` same as `Action`, except for some arguments passed to the `DataGrid::addActionCallback` method.
+You treat `ActionCallback` same as `Action`, except for some arguments passed to the `Datagrid::addActionCallback` method.
 
 ## Toolbar button
 

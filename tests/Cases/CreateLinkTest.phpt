@@ -1,15 +1,13 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Tests\Cases;
 
-namespace Ublaboo\DataGrid\Tests\Cases;
-
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactoryRouter;
+use Contributte\Datagrid\Traits\TLink;
 use Nette\Application\UI\Presenter;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Tests\Files\TestingDataGridFactoryRouter;
-use Ublaboo\DataGrid\Traits\TLink;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -18,17 +16,13 @@ final class CreateLinkTest extends TestCase
 
 	use TLink;
 
-	/**
-	 * @var DataGrid
-	 */
-	private $grid;
+	private Datagrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new TestingDataGridFactoryRouter();
-		$this->grid = $factory->createTestingDataGrid()->getComponent('grid');
+		$factory = new TestingDatagridFactoryRouter();
+		$this->grid = $factory->createTestingDatagrid()->getComponent('grid');
 	}
-
 
 	public function testActionLink(): void
 	{
@@ -49,7 +43,7 @@ final class CreateLinkTest extends TestCase
 		Assert::same('/index.php?id=1&action=edit&presenter=Test', $link);
 	}
 
-	}
+}
 
 
 (new CreateLinkTest())->run();

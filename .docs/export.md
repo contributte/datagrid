@@ -1,17 +1,17 @@
 Table of contents
 
 - [Exports](#exports)
-	- [ExportCallback](#exportcallback)
-	- [CSV export](#csv-export)
-		- [\(Not\) Using templates in CSV export](#not-using-templates-in-csv-export)
-	- [Export columns](#export-columns)
-	- [Export encoding, delimiter](#export-encoding-delimiter)
+    - [ExportCallback](#exportcallback)
+    - [CSV export](#csv-export)
+        - [\(Not\) Using templates in CSV export](#not-using-templates-in-csv-export)
+    - [Export columns](#export-columns)
+    - [Export encoding, delimiter](#export-encoding-delimiter)
 
 # Exports
 
 ## ExportCallback
 
-DataGrid allows you to export the data via `$grid->addExportCallback()`. The parameters are:
+Datagrid allows you to export the data via `$grid->addExportCallback()`. The parameters are:
 
 ```php
 /**
@@ -38,15 +38,15 @@ $grid->addExportCsv('Csv export (filtered)', 'examples.csv')
 
 ### (Not) Using templates in CSV export
 
-ExportCsv ignores column template, because i don't like the idea Latte (tempalting engine for HTML) exporting data for CSV format. Using custom renderer sounds better to me in that case.
+ExportCsv ignores column template, because i don't like the idea Latte (templating engine for HTML) exporting data for CSV format. Using custom renderer sounds better to me in that case.
 
 ## Export columns
 
-When you exporting the data, you can have different columns in export and in the datagrid. Or differently rendered. So there is another method `Ublaboo\DataGrid\Export\Export::setColumns()`. You can create instances of another columns and pass them in array to this method. These will be rendered in export:
+When you're exporting the data, you can have different columns in export and in the datagrid. Or differently rendered. So there is another method `Contributte\Datagrid\Export\Export::setColumns()`. You can create instances of another columns and pass them in array to this method. These will be rendered in export:
 
 ```php
-$column_name = new Ublaboo\DataGrid\Column\ColumnText($grid, 'name', 'name', 'Name');
-$column_even = (new Ublaboo\DataGrid\Column\ColumnText($grid, 'name', 'even', 'Even ID (yes/no)'))
+$column_name = new Contributte\Datagrid\Column\ColumnText($grid, 'name', 'name', 'Name');
+$column_even = (new Contributte\Datagrid\Column\ColumnText($grid, 'name', 'even', 'Even ID (yes/no)'))
 	->setRenderer(function(array $item): string {
 		return $item['id'] % 2 ? 'No' : 'Yes';
 	});
@@ -61,7 +61,7 @@ $grid->addExportCsv('Csv export', 'examples_all.csv')
 
 ## Export encoding, delimiter
 
-By default, DataGrid exports data in `utf-8` with semicolon delimiter `;`. This can be changed:
+By default, Datagrid exports data in `utf-8` with semicolon delimiter `;`. This can be changed:
 
 ```php
 /**

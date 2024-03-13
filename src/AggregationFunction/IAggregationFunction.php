@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\AggregationFunction;
+namespace Contributte\Datagrid\AggregationFunction;
 
 use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;
@@ -19,9 +17,6 @@ interface IAggregationFunction
 
 	public function getFilterDataType(): string;
 
+	public function processDataSource(Fluent|QueryBuilder|Collection|Selection|ICollection $dataSource): void;
 
-	/**
-	 * @param Fluent|QueryBuilder|Collection|Selection|ICollection $dataSource
-	 */
-	public function processDataSource($dataSource): void;
 }

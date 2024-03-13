@@ -44,7 +44,7 @@ Click the link "Show me the code" above. This will show you the code of this dat
 
 ## Redrawing one row (ajax)
 
-Different situation occurs when you need to redraw just one row. DataGrid does not know about all the items (it has originally only top level rows). So before you call `DataGrid::redrawItem()`, you have to set datagrid datasource where the item will be visible:
+Different situation occurs when you need to redraw just one row. Datagrid does not know about all the items (it has originally only top level rows). So before you call `Datagrid::redrawItem()`, you have to set datagrid datasource where the item will be visible:
 
 ```php
 public function handleSetCategoryStatus($id, $status): void
@@ -54,12 +54,12 @@ public function handleSetCategoryStatus($id, $status): void
 	$this->flashMessage("Status of category [$id] was updated to [$status].", 'success');
 
 	$join = $this->db->select('COUNT(id) AS count, parent_category_id')
-		->from('ublaboo_category')
+		->from('category')
 		->groupBy('parent_category_id');
 
 	$fluent = $this->db
 		->select('c.*, c_b.count as has_children')
-		->from('ublaboo_category', 'c')
+		->from('category', 'c')
 		->leftJoin($join, 'c_b')
 			->on('c_b.parent_category_id = c.id');
 

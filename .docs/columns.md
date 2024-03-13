@@ -1,35 +1,35 @@
 Table of contents
 
 - [Columns](#columns)
-	- [Api](#api)
-		- [Parameters](#parameters)
-		- [Templates](#templates)
-		- [Renderers](#renderers)
-		- [Replacement](#replacement)
-		- [Escaping values](#escaping-values)
-		- [Sorting](#sorting)
-		- [Resetting pagination after sorting](#resetting-pagination-after-sorting)
-		- [Default sort](#default-sort)
-		- [Resetting default sort](#resetting-default-sort)
-		- [Multiple columns sort](#multiple-columns-sort)
-		- [Default per page](#default-per-page)
-		- [Custom sorting Callback](#custom-sorting-callback)
-		- [Align](#align)
-		- [Removing column](#removing-column)
-	- [Column Text](#column-text)
-	- [Column Number](#column-number)
-	- [Column DateTime](#column-datetime)
-	- [Column Link](#column-link)
-		- [Open in new tab](#open-in-new-tab)
-	- [Column Status](#column-status)
-	- [Hideable columns](#hideable-columns)
-		- [Default hide](#default-hide)
-	- [Columns Summary](#columns-summary)
-	- [Aggregation Function](#aggregation-function)
-		- [Single column](#single-column)
-		- [Multiple columns](#multiple-columns)
-	- [Column \(th&gt;, td&gt;\) attributes](#column-th-td-attributes)
-	- [Column callback](#column-callback)
+    - [Api](#api)
+        - [Parameters](#parameters)
+        - [Templates](#templates)
+        - [Renderers](#renderers)
+        - [Replacement](#replacement)
+        - [Escaping values](#escaping-values)
+        - [Sorting](#sorting)
+        - [Resetting pagination after sorting](#resetting-pagination-after-sorting)
+        - [Default sort](#default-sort)
+        - [Resetting default sort](#resetting-default-sort)
+        - [Multiple columns sort](#multiple-columns-sort)
+        - [Default per page](#default-per-page)
+        - [Custom sorting Callback](#custom-sorting-callback)
+        - [Align](#align)
+        - [Removing column](#removing-column)
+    - [Column Text](#column-text)
+    - [Column Number](#column-number)
+    - [Column DateTime](#column-datetime)
+    - [Column Link](#column-link)
+        - [Open in new tab](#open-in-new-tab)
+    - [Column Status](#column-status)
+    - [Hideable columns](#hideable-columns)
+        - [Default hide](#default-hide)
+    - [Columns Summary](#columns-summary)
+    - [Aggregation Function](#aggregation-function)
+        - [Single column](#single-column)
+        - [Multiple columns](#multiple-columns)
+    - [Column \(th&gt;, td&gt;\) attributes](#column-th-td-attributes)
+    - [Column callback](#column-callback)
 
 # Columns
 
@@ -39,7 +39,7 @@ There are several column classes and they all have some common behaviour and pro
 
 ### Parameters
 
-Lets add a simple text column like we've done before:
+Let's add a simple text column like we've done before:
 
 ```php
 $grid->addColumnText('name', 'Name');
@@ -55,7 +55,7 @@ $grid->addColumnText('name3', 'Name', 'name');
 
 ### Templates
 
-Column may have it's own template. I will add one more parameter (optional) to the method `::setTemplate()`, just for fun:
+Columns may have it's own template. I will add one more parameter (optional) to the method `::setTemplate()`, just for fun:
 
 ```php
 $grid->addColumnText('name', 'Name')
@@ -76,7 +76,7 @@ $grid->addColumnText('name', 'Name')
 	});
 ```
 
-But hey, what if i want to replace **just some** rows? No problem, the second optional argument tells me (callback again) whether the datagrid should use your renderer or not. Example:
+But hey, what if I want to replace **just some** rows? No problem, the second optional argument tells me (callback again) whether the datagrid should use your renderer or not. Example:
 
 ```php
 $grid->addColumnText('name', 'Name')
@@ -117,7 +117,7 @@ $grid->addColumnText('name', 'Name')
 	->setSortable();
 ```
 
-When using doctrine as data source, you can output data the object way using dot-notaion and property accessor. But when you are using collumn of related table for sorting, you probably want to use alias for sorting:
+When using doctrine as data source, you can output data the object way using dot-notation and property accessor. But when you are using column of related table for sorting, you probably want to use alias for sorting:
 
 ```php
 $grid->addColumnText('role', 'User role', 'role.name')
@@ -134,7 +134,7 @@ $grid->addColumnText('name', 'Name')
 
 ### Default sort
 
-`DataGrid` implements default sorting mechanism:
+`Datagrid` implements default sorting mechanism:
 
 ```php
 $grid->setDefaultSort(['name' => 'DESC']);
@@ -142,7 +142,7 @@ $grid->setDefaultSort(['name' => 'DESC']);
 
 ### Resetting default sort
 
-By default, once you reset the filter, default sort is applied. If you don't want to apply it after resetting the filter, pass FALSE as a second parameter to `DataGrid::setDefaultSort()`:
+By default, once you reset the filter, default sort is applied. If you don't want to apply it after resetting the filter, pass FALSE as a second parameter to `Datagrid::setDefaultSort()`:
 
 ```php
 $grid->setDefaultSort(['id' => 'DESC'], FALSE);
@@ -150,7 +150,7 @@ $grid->setDefaultSort(['id' => 'DESC'], FALSE);
 
 ### Multiple columns sort
 
-Sorting by multiple columns is disabled by default. But can be enaled:
+Sorting by multiple columns is disabled by default. But can be enabled:
 
 ```php
 $grid->setMultiSortEnabled($enabled = TRUE); // Pass FALSE to disable
@@ -266,7 +266,7 @@ $grid->addColumnLink('name', 'Name', 'edit')
 ![Status 1](https://github.com/contributte/datagrid/blob/master/.docs/assets/status1.gif?raw=true)
 ![Status 1](https://github.com/contributte/datagrid/blob/master/.docs/assets/status2.gif?raw=true)
 
-Once your item keep some "status" flag, it is appropriate to show user the status in highlighted form. Also there could be a dropdown with available statuses:
+Once your item keep some "status" flag, it is appropriate to show user the status in highlighted form. Also, there could be a dropdown with available statuses:
 
 ```php
 $grid->addColumnStatus('status', 'Status')
@@ -347,7 +347,7 @@ $grid->getColumn('status')->getOption(2)
 
 ![Columns Hiding](https://github.com/contributte/datagrid/blob/master/.docs/assets/hideable_columns.gif?raw=true)
 
-In example datargid above, you can hide columns and then reveal them again. This feature is disabled by default. You can enable it like this:
+In example datagrid above, you can hide columns and then reveal them again. This feature is disabled by default. You can enable it like this:
 
 ```php
 $grid->setColumnsHideable();
@@ -370,7 +370,7 @@ If default hide is used, new button is shown in that settings (gear) dropdown - 
 
 ## Columns Summary
 
-Datagrid implements a feature that allows you to display **sum** of column of displayed items at the bootom of the grid. Try it out:
+Datagrid implements a feature that allows you to display **sum** of column of displayed items at the bottom of the grid. Try it out:
 
 ```php
 $grid->addColumnNumber('in', 'Income')
@@ -422,11 +422,11 @@ $grid->addAggregationFunction('status', new FunctionSum('id'));
 
 This will render a sum of ids under the `"status"` column.
 
-As mentioned above, there is one aggregation function prepared: `Ublaboo\DataGrid\AggregationFunction\FunctionSum`. You can implement whatever function you like, it just have to implement `Ublaboo\DataGrid\AggregationFunction\ISingleColumnAggregationFunction`.
+As mentioned above, there is one aggregation function prepared: `Contributte\Datagrid\AggregationFunction\FunctionSum`. You can implement whatever function you like, it just have to implement `Contributte\Datagrid\AggregationFunction\ISingleColumnAggregationFunction`.
 
 ### Multiple columns
 
-In case you want to make the aggreagation directly using SQL by your domain, you will probably use interface `IMultipleAggregationFunction` (instead of `ISingleColumnAggregationFunction`):
+In case you want to make the aggregation directly using SQL by your domain, you will probably use interface `IMultipleAggregationFunction` (instead of `ISingleColumnAggregationFunction`):
 
 ```php
 $grid->setMultipleAggregationFunction(
@@ -476,7 +476,7 @@ $grid->setMultipleAggregationFunction(
 );
 ```
 
-This aggregatin is used along with `Dibi` in the demo.
+This aggregating is used along with `Dibi` in the demo.
 
 ## Column (th&gt;, td&gt;) attributes
 
@@ -499,7 +499,7 @@ $grid->addColumnText('name', 'Name')
 
 ## Column callback
 
-When you need to modify columns just before rendering (meybe remove some status options or completely change renderer for partucular items), you can create column callback, that will be called with `$column` and `$item` in parameter:
+When you need to modify columns just before rendering (maybe remove some status options or completely change renderer for particular items), you can create column callback, that will be called with `$column` and `$item` in parameter:
 
 ```php
 $grid->addColumnLink('link', 'Link', 'this#demo', 'name', ['id', 'surname' => 'name']);
@@ -531,7 +531,7 @@ $grid->addColumnCallback('link', function($column, $item) {
 });
 ```
 
-That is the code of the demove shown above. As you can see, item with id == 1 does have a empty link column and only 2 options in `ColumnStatus`.
+That is the code of the demo shown above. As you can see, item with id == 1 does have an empty link column and only 2 options in `ColumnStatus`.
 
 
 ```php

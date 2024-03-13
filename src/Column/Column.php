@@ -1,14 +1,12 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Column;
 
-namespace Ublaboo\DataGrid\Column;
-
+use Contributte\Datagrid\Exception\DatagridColumnRendererException;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Traits\TButtonRenderer;
+use Contributte\Datagrid\Traits\TLink;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits\TButtonRenderer;
-use Ublaboo\DataGrid\Traits\TLink;
 
 abstract class Column extends FilterableColumn
 {
@@ -16,94 +14,48 @@ abstract class Column extends FilterableColumn
 	use TButtonRenderer;
 	use TLink;
 
-	/**
-	 * @var string|null
-	 */
-	protected $template;
+	protected ?string $template = null;
 
-	/**
-	 * @var bool|string
-	 */
-	protected $sortable = false;
+	protected string|bool $sortable = false;
 
-	/**
-	 * @var bool
-	 */
-	protected $translatableHeader = true;
+	protected bool $translatableHeader = true;
 
-	/**
-	 * @var bool
-	 */
-	protected $sortableResetPagination = false;
+	protected bool $sortableResetPagination = false;
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $sortableCallback = null;
 
-	/**
-	 * @var string
-	 */
-	protected $sort;
+	protected string $sort = '';
 
-	/**
-	 * @var bool
-	 */
-	protected $templateEscaping = true;
+	protected bool $templateEscaping = true;
 
-	/**
-	 * @var bool
-	 */
-	protected $headerEscaping = false;
+	protected bool $headerEscaping = false;
 
-	/**
-	 * @var string|null
-	 */
-	protected $align;
+	protected ?string $align = null;
 
-	/**
-	 * @var array
-	 */
-	protected $templateVariables = [];
+	protected array $templateVariables = [];
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $editableCallback;
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $editableConditionCallback = null;
 
-	/**
-	 * @var array
-	 */
-	protected $editableElement = ['textarea', ['class' => 'form-control']];
+	protected array $editableElement = ['textarea', ['class' => 'form-control']];
 
-	/**
-	 * @var bool
-	 */
-	protected $defaultHide = false;
+	protected bool $defaultHide = false;
 
-	/**
-	 * @var array|Html[]|null[]
-	 */
-	protected $elementCache = ['td' => null, 'th' => null];
+	/** @var array|Html[]|null[] */
+	protected array $elementCache = ['td' => null, 'th' => null];
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $editableValueCallback = null;
 
-	/**
-	 * @return mixed
-	 */
-	public function render(Row $row)
+	public function render(Row $row): mixed
 	{
 		try {
 			return $this->useRenderer($row);
-		} catch (DataGridColumnRendererException $e) {
+		} catch (DatagridColumnRendererException) {
 			/**
 			 * Do not use renderer
 			 */
@@ -121,7 +73,6 @@ abstract class Column extends FilterableColumn
 		return $this->getColumnValue($row);
 	}
 
-
 	/**
 	 * Should be column values escaped in latte?
 	 *
@@ -134,12 +85,10 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	public function isTemplateEscaped(): bool
 	{
 		return $this->templateEscaping;
 	}
-
 
 	/**
 	 * Should be column header escaped in latte?
@@ -153,20 +102,17 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	public function isHeaderEscaped(): bool
 	{
 		return $this->headerEscaping;
 	}
 
-
 	/**
 	 * Set column sortable or not
 	 *
-	 * @param bool|string $sortable
 	 * @return static
 	 */
-	public function setSortable($sortable = true): self
+	public function setSortable(bool|string $sortable = true): self
 	{
 		$this->sortable = is_string($sortable)
 			? $sortable
@@ -174,7 +120,6 @@ abstract class Column extends FilterableColumn
 
 		return $this;
 	}
-
 
 	/**
 	 * Tell whether column is sortable
@@ -188,7 +133,6 @@ abstract class Column extends FilterableColumn
 		return $this->sortable !== '';
 	}
 
-
 	/**
 	 * Set column translatable or not
 	 *
@@ -201,7 +145,6 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	/**
 	 * Tell wheter column is translatable
 	 */
@@ -209,7 +152,6 @@ abstract class Column extends FilterableColumn
 	{
 		return $this->translatableHeader;
 	}
-
 
 	/**
 	 * Shoud be the pagination reseted after sorting?
@@ -223,7 +165,6 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	/**
 	 * Do reset pagination after sorting?
 	 */
@@ -231,7 +172,6 @@ abstract class Column extends FilterableColumn
 	{
 		return $this->sortableResetPagination;
 	}
-
 
 	/**
 	 * Set custom ORDER BY clause
@@ -245,7 +185,6 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	/**
 	 * Get custom ORDER BY clause
 	 */
@@ -254,7 +193,6 @@ abstract class Column extends FilterableColumn
 		return $this->sortableCallback;
 	}
 
-
 	public function getSortingColumn(): string
 	{
 		return is_string($this->sortable)
@@ -262,27 +200,20 @@ abstract class Column extends FilterableColumn
 			: $this->column;
 	}
 
-
 	public function getColumnName(): string
 	{
 		return $this->column;
 	}
 
-
-	/**
-	 * @return mixed
-	 */
-	public function getColumnValue(Row $row)
+	public function getColumnValue(Row $row): mixed
 	{
 		return $row->getValue($this->column);
 	}
-
 
 	public function getName(): string
 	{
 		return $this->name;
 	}
-
 
 	/**
 	 * Column may have its own template
@@ -297,7 +228,6 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	/**
 	 * Column can have variables that will be passed to custom template scope
 	 */
@@ -305,7 +235,6 @@ abstract class Column extends FilterableColumn
 	{
 		return $this->templateVariables;
 	}
-
 
 	/**
 	 * Tell whether column has its owntemplate
@@ -315,7 +244,6 @@ abstract class Column extends FilterableColumn
 		return $this->template !== null;
 	}
 
-
 	/**
 	 * Get column template path
 	 */
@@ -324,15 +252,13 @@ abstract class Column extends FilterableColumn
 		return $this->template;
 	}
 
-
 	/**
 	 * Tell whether data source is sorted by this column
 	 */
 	public function isSortedBy(): bool
 	{
-		return (bool) $this->sort;
+		return $this->sort !== '';
 	}
-
 
 	/**
 	 * Tell column his sorting options
@@ -345,7 +271,6 @@ abstract class Column extends FilterableColumn
 
 		return $this;
 	}
-
 
 	/**
 	 * What sorting will be applied after next click?
@@ -365,7 +290,6 @@ abstract class Column extends FilterableColumn
 		return [$this->key => 'ASC'];
 	}
 
-
 	public function hasSortNext(): bool
 	{
 		foreach ($this->getSortNext() as $order) {
@@ -375,12 +299,10 @@ abstract class Column extends FilterableColumn
 		return false;
 	}
 
-
 	public function isSortAsc(): bool
 	{
 		return $this->sort === 'ASC';
 	}
-
 
 	/**
 	 * Set column alignment
@@ -394,7 +316,6 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	/**
 	 * Has column some alignment?
 	 */
@@ -403,15 +324,13 @@ abstract class Column extends FilterableColumn
 		return (bool) $this->align;
 	}
 
-
 	/**
 	 * Get column alignment
 	 */
 	public function getAlign(): string
 	{
-		return $this->align ?? 'left';
+		return $this->align ?? 'start';
 	}
-
 
 	/**
 	 * @return static
@@ -425,7 +344,6 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	/**
 	 * Set callback that will be called after inline editing
 	 *
@@ -438,7 +356,6 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	/**
 	 * Return callback that is used after inline editing
 	 */
@@ -446,7 +363,6 @@ abstract class Column extends FilterableColumn
 	{
 		return $this->editableCallback;
 	}
-
 
 	/**
 	 * Set inline editing just if condition is truthy
@@ -460,12 +376,10 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	public function getEditableOnConditionCallback(): ?callable
 	{
 		return $this->editableConditionCallback;
 	}
-
 
 	public function isEditable(?Row $row = null): bool
 	{
@@ -484,7 +398,6 @@ abstract class Column extends FilterableColumn
 		return false;
 	}
 
-
 	/**
 	 * Element is by default textarea, user can change that
 	 *
@@ -496,7 +409,6 @@ abstract class Column extends FilterableColumn
 
 		return $this;
 	}
-
 
 	/**
 	 * Change small inline edit input type to select
@@ -518,7 +430,6 @@ abstract class Column extends FilterableColumn
 		return $this->setEditableInputType('select', $attrs);
 	}
 
-
 	/**
 	 * @return static
 	 */
@@ -529,18 +440,15 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	public function getEditableValueCallback(): ?callable
 	{
 		return $this->editableValueCallback;
 	}
 
-
 	public function getEditableInputType(): array
 	{
 		return $this->editableElement;
 	}
-
 
 	/**
 	 * Set attributes for both th and td element
@@ -555,7 +463,6 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	/**
 	 * Get th/td column element
 	 */
@@ -567,7 +474,6 @@ abstract class Column extends FilterableColumn
 
 		return $this->elementCache[$tag] = Html::el($tag);
 	}
-
 
 	/**
 	 * Method called from datagrid template, set appropriate classes and another attributes
@@ -597,7 +503,7 @@ abstract class Column extends FilterableColumn
 			$el->data('datagrid-editable-url', $link);
 
 			$el->data('datagrid-editable-type', $this->editableElement[0]);
-			$el->data('datagrid-editable-attrs', json_encode($this->editableElement[1]));
+			$el->data('datagrid-editable-attrs', json_encode($this->editableElement[1], JSON_THROW_ON_ERROR));
 
 			if ($this->getEditableValueCallback() !== null) {
 				$el->data(
@@ -609,7 +515,6 @@ abstract class Column extends FilterableColumn
 
 		return $el;
 	}
-
 
 	/**
 	 * @return static
@@ -625,12 +530,10 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	public function getDefaultHide(): bool
 	{
 		return $this->defaultHide;
 	}
-
 
 	public function getColumn(): string
 	{
@@ -647,7 +550,6 @@ abstract class Column extends FilterableColumn
 		return $this;
 	}
 
-
 	/**
 	 * Get row item params (E.g. action may be called id => $item->id, name => $item->name, ...)
 	 */
@@ -661,4 +563,5 @@ abstract class Column extends FilterableColumn
 
 		return $return;
 	}
+
 }

@@ -1,30 +1,25 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Tests\Cases;
 
-namespace Ublaboo\DataGrid\Tests\Cases;
-
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/TestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
 final class ColumnTranslatableTest extends TestCase
 {
 
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
-	private $grid;
+	private Datagrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
-
 
 	public function testTranslatable(): void
 	{

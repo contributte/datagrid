@@ -1,19 +1,17 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Toolbar;
 
-namespace Ublaboo\DataGrid\Toolbar;
-
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridColumnRendererException;
+use Contributte\Datagrid\Traits\TButtonClass;
+use Contributte\Datagrid\Traits\TButtonIcon;
+use Contributte\Datagrid\Traits\TButtonRenderer;
+use Contributte\Datagrid\Traits\TButtonText;
+use Contributte\Datagrid\Traits\TButtonTitle;
+use Contributte\Datagrid\Traits\TButtonTryAddIcon;
+use Contributte\Datagrid\Traits\TLink;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonRenderer;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
-use Ublaboo\DataGrid\Traits\TLink;
 
 class ToolbarButton
 {
@@ -26,42 +24,17 @@ class ToolbarButton
 	use TButtonTitle;
 	use TLink;
 
-	/**
-	 * @var DataGrid
-	 */
-	protected $grid;
+	protected array $attributes = [];
 
-	/**
-	 * @var string
-	 */
-	protected $href;
-
-	/**
-	 * @var array
-	 */
-	protected $params;
-
-	/**
-	 * @var array
-	 */
-	protected $attributes = [];
-
-	/**
-	 * @var string|null
-	 */
-	protected $confirmDialog = null;
+	protected ?string $confirmDialog = null;
 
 	/**
 	 * Toolbar button constructor
 	 */
-	public function __construct(DataGrid $grid, string $href, string $text, array $params = [])
+	public function __construct(protected Datagrid $grid, protected string $href, string $text, protected array $params = [])
 	{
-		$this->grid = $grid;
-		$this->href = $href;
 		$this->text = $text;
-		$this->params = $params;
 	}
-
 
 	/**
 	 * Render toolbar button
@@ -71,7 +44,7 @@ class ToolbarButton
 		try {
 			// Renderer function may be used
 			return $this->useRenderer();
-		} catch (DataGridColumnRendererException $e) {
+		} catch (DatagridColumnRendererException) {
 			// Do not use renderer
 		}
 
@@ -103,12 +76,10 @@ class ToolbarButton
 		return $a;
 	}
 
-
 	/**
-	 * @param array $attrs
 	 * @return static
 	 */
-	public function addAttributes(array $attrs)
+	public function addAttributes(array $attrs): static
 	{
 		$this->attributes += $attrs;
 
@@ -124,4 +95,5 @@ class ToolbarButton
 
 		return $this;
 	}
+
 }

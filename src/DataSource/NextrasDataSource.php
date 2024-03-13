@@ -1,70 +1,37 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\DataSource;
 
-namespace Ublaboo\DataGrid\DataSource;
-
-use Nette\Utils\Strings;
+use Contributte\Datagrid\AggregationFunction\IAggregatable;
+use Contributte\Datagrid\AggregationFunction\IAggregationFunction;
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterMultiSelect;
+use Contributte\Datagrid\Filter\FilterRange;
+use Contributte\Datagrid\Filter\FilterSelect;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Utils\ArraysHelper;
+use Contributte\Datagrid\Utils\DateTimeHelper;
+use Contributte\Datagrid\Utils\Sorting;
+use Nextras\Orm\Collection\DbalCollection;
 use Nextras\Orm\Collection\Expression\LikeExpression;
 use Nextras\Orm\Collection\ICollection;
-use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
-use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Ublaboo\DataGrid\Utils\ArraysHelper;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
-use Ublaboo\DataGrid\Utils\Sorting;
-use UnexpectedValueException;
+use function str_contains;
 
 class NextrasDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
 
-	/**
-	 * @var ICollection
-	 */
-	protected $dataSource;
+	protected array $data = [];
 
-	/**
-	 * @var array
-	 */
-	protected $data = [];
-
-	/**
-	 * @var string
-	 */
-	protected $primaryKey;
-
-	/**
-	 * @var string
-	 */
-	private $dbalCollectionClass;
-
-	public function __construct(ICollection $dataSource, string $primaryKey)
+	public function __construct(protected ICollection $dataSource, protected string $primaryKey)
 	{
-		$this->dataSource = $dataSource;
-		$this->primaryKey = $primaryKey;
-		// Support version 4.0 with 3.1 backward compatibility
-		$this->dbalCollectionClass = class_exists('Nextras\Orm\Collection\DbalCollection')
-			? 'Nextras\Orm\Collection\DbalCollection'
-			: 'Nextras\Orm\Mapper\Dbal\DbalCollection';
 	}
-
-
-	// *******************************************************************************
-	// *                          IDataSource implementation                         *
-	// *******************************************************************************
-
 
 	public function getCount(): int
 	{
 		return $this->dataSource->countStored();
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -78,7 +45,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 			? $this->data
 			: $this->dataSource->fetchAll();
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -96,14 +62,12 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 		return $this;
 	}
 
-
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->dataSource = $this->dataSource->limitBy($limit, $offset);
 
 		return $this;
 	}
-
 
 	public function sort(Sorting $sorting): IDataSource
 	{
@@ -127,25 +91,14 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 				);
 			}
 		} else {
-			if (!$this->dataSource instanceof $this->dbalCollectionClass) {
-				throw new UnexpectedValueException(
-					sprintf(
-						'Expeting %s, got %s',
-						$this->dbalCollectionClass,
-						get_class($this->dataSource)
-					)
-				);
-			}
+			if ($this->dataSource instanceof DbalCollection) {
+				$order = $this->dataSource->getQueryBuilder()->getClause('order');
 
-			/**
-			 * Has the statement already a order by clause?
-			 */
-			$order = $this->dataSource->getQueryBuilder()->getClause('order');
-
-			if (ArraysHelper::testEmpty($order)) {
-				$this->dataSource = $this->dataSource->orderBy(
-					$this->prepareColumn($this->primaryKey)
-				);
+				if (ArraysHelper::testEmpty($order)) {
+					$this->dataSource = $this->dataSource->orderBy(
+						$this->prepareColumn($this->primaryKey)
+					);
+				}
 			}
 		}
 
@@ -154,9 +107,8 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 
 	public function processAggregation(IAggregationFunction $function): void
 	{
-		$function->processDataSource( clone $this->dataSource );
+		$function->processDataSource(clone $this->dataSource);
 	}
-
 
 	protected function applyFilterDate(FilterDate $filter): void
 	{
@@ -169,12 +121,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 					$this->prepareColumn($column) . '>=' => $date->setTime(0, 0, 0),
 					$this->prepareColumn($column) . '<=' => $date_end->setTime(23, 59, 59),
 				]);
-			} catch (DataGridDateTimeHelperException $ex) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
 	}
-
 
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
@@ -192,7 +143,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 					[$filter->getPhpFormat()]
 				);
 				$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $dateFrom->setTime(0, 0, 0);
-			} catch (DataGridDateTimeHelperException $ex) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -204,7 +155,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 					[$filter->getPhpFormat()]
 				);
 				$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $dateTo->setTime(23, 59, 59);
-			} catch (DataGridDateTimeHelperException $ex) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -213,7 +164,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 			$this->dataSource = $this->dataSource->findBy($dataCondition);
 		}
 	}
-
 
 	protected function applyFilterRange(FilterRange $filter): void
 	{
@@ -237,83 +187,37 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 		}
 	}
 
-
 	protected function applyFilterText(FilterText $filter): void
 	{
-		// native handling with LikeFunction in v4
-		if (class_exists(LikeExpression::class)) {
-			$conditions = [
-				ICollection::OR,
-			];
+		$conditions = [
+			ICollection::OR,
+		];
 
-			foreach ($filter->getCondition() as $column => $value) {
-				$preparedColumn = $this->prepareColumn($column);
+		foreach ($filter->getCondition() as $column => $value) {
+			$preparedColumn = $this->prepareColumn($column);
 
-				if ($filter->isExactSearch()) {
+			if ($filter->isExactSearch()) {
+				$conditions[] = [
+					$preparedColumn => $value,
+				];
+			} else {
+				$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
+
+				foreach ($words as $word) {
 					$conditions[] = [
-						$preparedColumn => $value,
+						$preparedColumn . '~' => LikeExpression::contains($word),
 					];
-				} else {
-					$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
-
-					foreach ($words as $word) {
-						$conditions[] = [
-							$preparedColumn . '~' => LikeExpression::contains($word),
-						];
-					}
 				}
 			}
-
-			$this->dataSource = $this->dataSource->findBy($conditions);
-
-			return;
 		}
 
-		$condition = $filter->getCondition();
-		$expr = '(';
-		$params = [];
-
-		foreach ($condition as $column => $value) {
-			if ($filter->isExactSearch()) {
-				$expr .= '%column = %s OR ';
-				$params[] = $column;
-				$params[] = "$value";
-
-				continue;
-			}
-
-			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
-
-			foreach ($words as $word) {
-				$expr .= '%column LIKE %s OR ';
-				$params[] = $column;
-				$params[] = "%$word%";
-			}
-		}
-
-		$expr = preg_replace('/ OR $/', ')', $expr);
-
-		array_unshift($params, $expr);
-
-		if (!$this->dataSource instanceof $this->dbalCollectionClass) {
-			throw new UnexpectedValueException(
-				sprintf(
-					'Expeting %s, got %s',
-					$this->dbalCollectionClass,
-					get_class($this->dataSource)
-				)
-			);
-		}
-
-		$this->dataSource->getQueryBuilder()->andWhere(...$params);
+		$this->dataSource = $this->dataSource->findBy($conditions);
 	}
-
 
 	protected function applyFilterMultiSelect(FilterMultiSelect $filter): void
 	{
 		$this->applyFilterSelect($filter);
 	}
-
 
 	protected function applyFilterSelect(FilterSelect $filter): void
 	{
@@ -322,30 +226,21 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 		);
 	}
 
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function getDataSource()
+	protected function getDataSource(): ICollection
 	{
 		return $this->dataSource;
 	}
 
-
 	/**
-	 * Adjust column from DataGrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
+	 * Adjust column from Datagrid 'foreignKey.column' to Nextras 'this->foreignKey->column'
 	 */
 	private function prepareColumn(string $column): string
 	{
-		if (Strings::contains($column, '.')) {
-			// 'this->' is deprecated in v4
-			$prefix = $this->dbalCollectionClass === 'Nextras\Orm\Collection\DbalCollection'
-				? ''
-				: 'this->';
-
-			return $prefix . str_replace('.', '->', $column);
+		if (str_contains($column, '.')) {
+			return str_replace('.', '->', $column);
 		}
 
 		return $column;
 	}
+
 }

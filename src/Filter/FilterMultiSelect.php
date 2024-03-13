@@ -1,34 +1,25 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Filter;
 
-namespace Ublaboo\DataGrid\Filter;
-
+use Contributte\Datagrid\Datagrid;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Ublaboo\DataGrid\DataGrid;
 use UnexpectedValueException;
 
 class FilterMultiSelect extends FilterSelect
 {
 
-	/**
-	 * @var string
-	 */
-	protected $type = 'multi-select';
+	protected ?string $type = 'multi-select';
 
-	/**
-	 * @var array
-	 */
-	protected $attributes = [
-		'class' => ['form-control', 'input-sm', 'selectpicker', 'form-control-sm'],
+	protected array $attributes = [
+		'class' => ['form-select', 'selectpicker', 'form-select-sm'],
 		'data-selected-text-format' => ['count'],
 	];
 
-
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		string $name,
 		array $options,
@@ -37,9 +28,8 @@ class FilterMultiSelect extends FilterSelect
 	{
 		parent::__construct($grid, $key, $name, $options, $column);
 
-		$this->addAttribute('data-selected-icon-check', DataGrid::$iconPrefix . 'check');
+		$this->addAttribute('data-selected-icon-check', Datagrid::$iconPrefix . 'check');
 	}
-
 
 	/**
 	 * Get filter condition
@@ -55,7 +45,6 @@ class FilterMultiSelect extends FilterSelect
 		return $return;
 	}
 
-
 	protected function addControl(
 		Container $container,
 		string $key,
@@ -66,7 +55,7 @@ class FilterMultiSelect extends FilterSelect
 		/**
 		 * Set some translated texts
 		 */
-		$form = $container->lookup('Nette\Application\UI\Form');
+		$form = $container->lookup(Form::class);
 
 		if (!$form instanceof Form) {
 			throw new UnexpectedValueException();
@@ -80,11 +69,11 @@ class FilterMultiSelect extends FilterSelect
 
 		$this->addAttribute(
 			'title',
-			$translator->translate('ublaboo_datagrid.multiselect_choose')
+			$translator->translate('contributte_datagrid.multiselect_choose')
 		);
 		$this->addAttribute(
 			'data-i18n-selected',
-			$translator->translate('ublaboo_datagrid.multiselect_selected')
+			$translator->translate('contributte_datagrid.multiselect_selected')
 		);
 
 		/**
@@ -96,4 +85,5 @@ class FilterMultiSelect extends FilterSelect
 
 		return $input;
 	}
+
 }

@@ -5,17 +5,17 @@ Table of contents
 
 # Localization
 
-As you can see in the example below, a `SimpleTranslator` class comes with datagrid (the example was translated to czech). You can use it as shown (you will do that probably in some factory for all datagrids in your application). Of course you can use your own translator - it just has to implement `Nette\Localization\ITranslator`.
+As you can see in the example below, a `SimpleTranslator` class comes with datagrid (the example was translated to czech). You can use it as shown (you will do that probably in some factory for all datagrids in your application). Of course, you can use your own translator - it just has to implement `Nette\Localization\Translator`.
 
 ```php
-public function createComponentLocalizationGrid($name): Ublaboo\DataGrid\DataGrid
+public function createComponentLocalizationGrid($name): Contributte\Datagrid\Datagrid
 {
-	$grid = new DataGrid($this, $name);
+	$grid = new Datagrid($this, $name);
 
-	$grid->setDataSource($this->ndb->table('ublaboo_example'));
+	$grid->setDataSource($this->ndb->table('example'));
 
 	$grid->addColumnNumber('id', 'Id')
-		->setAlign('left')
+		->setAlign('start')
 		->setSortable();
 
 	$grid->addColumnText('name', 'Name')
@@ -23,22 +23,22 @@ public function createComponentLocalizationGrid($name): Ublaboo\DataGrid\DataGri
 
 	$grid->addColumnDateTime('inserted', 'Inserted');
 
-	$translator = new Ublaboo\DataGrid\Localization\SimpleTranslator([
-		'ublaboo_datagrid.no_item_found_reset' => 'Žádné položky nenalezeny. Filtr můžete vynulovat',
-		'ublaboo_datagrid.no_item_found' => 'Žádné položky nenalezeny.',
-		'ublaboo_datagrid.here' => 'zde',
-		'ublaboo_datagrid.items' => 'Položky',
-		'ublaboo_datagrid.all' => 'všechny',
-		'ublaboo_datagrid.from' => 'z',
-		'ublaboo_datagrid.reset_filter' => 'Resetovat filtr',
-		'ublaboo_datagrid.group_actions' => 'Hromadné akce',
-		'ublaboo_datagrid.show_all_columns' => 'Zobrazit všechny sloupce',
-		'ublaboo_datagrid.hide_column' => 'Skrýt sloupec',
-		'ublaboo_datagrid.action' => 'Akce',
-		'ublaboo_datagrid.previous' => 'Předchozí',
-		'ublaboo_datagrid.next' => 'Další',
-		'ublaboo_datagrid.choose' => 'Vyberte',
-		'ublaboo_datagrid.execute' => 'Provést',
+	$translator = new Contributte\Datagrid\Localization\SimpleTranslator([
+		'contributte_datagrid.no_item_found_reset' => 'Žádné položky nenalezeny. Filtr můžete vynulovat',
+		'contributte_datagrid.no_item_found' => 'Žádné položky nenalezeny.',
+		'contributte_datagrid.here' => 'zde',
+		'contributte_datagrid.items' => 'Položky',
+		'contributte_datagrid.all' => 'všechny',
+		'contributte_datagrid.from' => 'z',
+		'contributte_datagrid.reset_filter' => 'Resetovat filtr',
+		'contributte_datagrid.group_actions' => 'Hromadné akce',
+		'contributte_datagrid.show_all_columns' => 'Zobrazit všechny sloupce',
+		'contributte_datagrid.hide_column' => 'Skrýt sloupec',
+		'contributte_datagrid.action' => 'Akce',
+		'contributte_datagrid.previous' => 'Předchozí',
+		'contributte_datagrid.next' => 'Další',
+		'contributte_datagrid.choose' => 'Vyberte',
+		'contributte_datagrid.execute' => 'Provést',
 
 		'Name' => 'Jméno',
 		'Inserted' => 'Vloženo'

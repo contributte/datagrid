@@ -1,10 +1,6 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\Utils;
-
-use Traversable;
+namespace Contributte\Datagrid\Utils;
 
 final class ArraysHelper
 {
@@ -33,14 +29,13 @@ final class ArraysHelper
 		return true;
 	}
 
-
 	/**
 	 * Is array and its values truthy?
 	 */
 	public static function testTruthy(iterable $iterable): bool
 	{
 		foreach ($iterable as $value) {
-			if (is_array($value) || $value instanceof Traversable) {
+			if (is_iterable($value)) {
 				if (self::testTruthy($value)) {
 					return true;
 				}
@@ -53,4 +48,5 @@ final class ArraysHelper
 
 		return false;
 	}
+
 }

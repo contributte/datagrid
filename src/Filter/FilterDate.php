@@ -1,50 +1,38 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\Filter;
+namespace Contributte\Datagrid\Filter;
 
 use Nette\Forms\Container;
 
 class FilterDate extends OneColumnFilter implements IFilterDate
 {
 
-	/**
-	 * @var string
-	 */
-	protected $template = 'datagrid_filter_date.latte';
+	protected ?string $template = 'datagrid_filter_date.latte';
 
-	/**
-	 * @var array
-	 */
-	protected $format = ['j. n. Y', 'd. m. yyyy'];
+	protected array $format = ['j. n. Y', 'd. m. yyyy'];
 
-	/**
-	 * @var string
-	 */
-	protected $type = 'date';
+	protected ?string $type = 'date';
 
 	public function addToFormContainer(Container $container): void
 	{
 		$control = $container->addText($this->key, $this->name);
 
-		$control->setAttribute('data-provide', 'datepicker')
-			->setAttribute('data-date-orientation', 'bottom')
-			->setAttribute('data-date-format', $this->getJsFormat())
-			->setAttribute('data-date-today-highlight', 'true')
-			->setAttribute('data-date-autoclose', 'true');
+		$control->setHtmlAttribute('data-provide', 'datepicker')
+			->setHtmlAttribute('data-date-orientation', 'bottom')
+			->setHtmlAttribute('data-date-format', $this->getJsFormat())
+			->setHtmlAttribute('data-date-today-highlight', 'true')
+			->setHtmlAttribute('data-date-autoclose', 'true');
 
 		$this->addAttributes($control);
 
 		if ($this->grid->hasAutoSubmit()) {
-			$control->setAttribute('data-autosubmit-change', true);
+			$control->setHtmlAttribute('data-autosubmit-change', true);
 		}
 
 		if ($this->getPlaceholder() !== null) {
-			$control->setAttribute('placeholder', $this->getPlaceholder());
+			$control->setHtmlAttribute('placeholder', $this->getPlaceholder());
 		}
 	}
-
 
 	/**
 	 * Set format for datepicker etc
@@ -56,7 +44,6 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 		return $this;
 	}
 
-
 	/**
 	 * Get php format for datapicker
 	 */
@@ -64,7 +51,6 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 	{
 		return $this->format[0];
 	}
-
 
 	/**
 	 * Get js format for datepicker

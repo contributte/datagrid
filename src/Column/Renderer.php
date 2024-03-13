@@ -1,22 +1,15 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\Column;
+namespace Contributte\Datagrid\Column;
 
 class Renderer
 {
 
-	/**
-	 * @var callable
-	 */
+	/** @var callable */
 	protected $callback;
 
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $conditionCallback;
-
 
 	public function __construct(
 		callable $callback,
@@ -27,7 +20,6 @@ class Renderer
 		$this->conditionCallback = $conditionCallback;
 	}
 
-
 	/**
 	 * Get custom renderer callback
 	 */
@@ -36,7 +28,6 @@ class Renderer
 		return $this->callback;
 	}
 
-
 	/**
 	 * Get custom renderer condition callback
 	 */
@@ -44,4 +35,5 @@ class Renderer
 	{
 		return $this->conditionCallback;
 	}
+
 }

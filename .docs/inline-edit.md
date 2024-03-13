@@ -1,12 +1,12 @@
 Table of contents
 
 - [Inline editing](#inline-editing)
-	- [Small inline editing](#small-inline-editing)
-		- [Different input types and element attributes](#different-input-types-and-element-attributes)
-		- [Render different content then is edited](#render-different-content-then-is-edited)
-	- [Big inline editing](#big-inline-editing)
-		- [What happens after editing](#what-happens-after-editing)
-		- [Show non editing Columns](#show-non-editing-columns)
+    - [Small inline editing](#small-inline-editing)
+        - [Different input types and element attributes](#different-input-types-and-element-attributes)
+        - [Render different content then is edited](#render-different-content-then-is-edited)
+    - [Big inline editing](#big-inline-editing)
+        - [What happens after editing](#what-happens-after-editing)
+        - [Show non editing Columns](#show-non-editing-columns)
 
 # Inline editting
 
@@ -85,9 +85,9 @@ Example useage:
 
 ```php
 /**
- * @var Ublaboo\DataGrid\DataGrid
+ * @var Contributte\Datagrid\Datagrid
  */
-$grid = new DataGrid($this, $name);
+$grid = new Datagrid($this, $name);
 
 /**
  * Big inline editing
@@ -118,7 +118,7 @@ $grid->getInlineEdit()->onSubmit[] = function($id, Nette\Utils\ArrayHash $values
 
 ### What happens after editing
 
-By default, after submitting inline edit, the row is redrawed and the green animated background is triggered. Bud if you want to do something else, you can, just create new listener to event `InlineEdit::onCustomRedraw()`:
+By default, after submitting inline edit, the row is redrawn and the green animated background is triggered. Bud if you want to do something else, you can, just create new listener to event `InlineEdit::onCustomRedraw()`:
 
 ```php
 /**

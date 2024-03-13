@@ -1,27 +1,27 @@
 Table of contents
 
 - [Filters](#filters)
-	- [Api](#api)
-		- [Placeholder](#placeholder)
-		- [Custom where condition](#custom-where-condition)
-		- [Templates:](#templates)
-		- [Filter blocks](#filter-blocks)
-		- [Filter type blocks](#filter-type-blocks)
-		- [Removing filter](#removing-filter)
-	- [FilterText](#filtertext)
-	- [FilterSelect](#filterselect)
-	- [FilterMultiSelect](#filtermultiselect)
-	- [FilterDate](#filterdate)
-	- [FilterRange](#filterrange)
-	- [FilterDateRange](#filterdaterange)
-	- [Default filter values](#default-filter-values)
-		- [Resetting filter to default values](#resetting-filter-to-default-values)
-	- [Filters rendering](#filters-rendering)
-	- [Outer filters rendering](#outer-filters-rendering)
-	- [Session - remeber state](#session---remeber-state)
-	- [Session - filters / filter values changed](#session---filters--filter-values-changed)
-	- [URL refreshing - history API](#url-refreshing---history-api)
-	- [Auto submit](#auto-submit)
+    - [Api](#api)
+        - [Placeholder](#placeholder)
+        - [Custom where condition](#custom-where-condition)
+        - [Templates:](#templates)
+        - [Filter blocks](#filter-blocks)
+        - [Filter type blocks](#filter-type-blocks)
+        - [Removing filter](#removing-filter)
+    - [FilterText](#filtertext)
+    - [FilterSelect](#filterselect)
+    - [FilterMultiSelect](#filtermultiselect)
+    - [FilterDate](#filterdate)
+    - [FilterRange](#filterrange)
+    - [FilterDateRange](#filterdaterange)
+    - [Default filter values](#default-filter-values)
+        - [Resetting filter to default values](#resetting-filter-to-default-values)
+    - [Filters rendering](#filters-rendering)
+    - [Outer filters rendering](#outer-filters-rendering)
+    - [Session - remeber state](#session---remeber-state)
+    - [Session - filters / filter values changed](#session---filters--filter-values-changed)
+    - [URL refreshing - history API](#url-refreshing---history-api)
+    - [Auto submit](#auto-submit)
 
 # Filters
 
@@ -111,7 +111,7 @@ There is how the default FilterText template looks like:
 <div class="row">
 	{label $input class =>; 'col-sm-3 control-label' /}
 	<div class="col-sm-9">
-		{input $input, class => 'form-control input-sm', data-autosubmit => true}
+		{input $input, class => 'form-control form-control-sm', data-autosubmit => true}
 	</div>
 </div>
 
@@ -218,7 +218,7 @@ $grid->addFilterDateRange('date_created', 'User registered:');
 
 ## Default filter values
 
-Datagrid filters can have contain default filter values.  Once user changes the filter, default values are not longer applied to the filter. Example usage:
+Datagrid filters can have default filter values. Once user changes the filter, default values are no longer applied to the filter. Example usage:
 
 ```php
 $grid->setDefaultFilter(['status' => 1, 'name' => 'Joe']);
@@ -240,7 +240,7 @@ $grid->setDefaultFilter(['status' => [1], 'age' => ['from' => 18]]);
 
 ### Resetting filter to default values
 
-By default, once you reset the filter, default fitler values are applied. If you don't want to apply them after resetting the filter, pass false as a second parameter to `DataGrid::setDefaultFilter()`:
+By default, once you reset the filter, default fitler values are applied. If you don't want to apply them after resetting the filter, pass false as a second parameter to `Datagrid::setDefaultFilter()`:
 
 ```php
 $grid->setDefaultFilter('id' => 10, false);
@@ -270,13 +270,13 @@ $grid->setOuterFilterRendering(); // - that is true. Or $grid->setOuterFilterRen
 
 ## Session - remeber state
 
-Grid refreshes its state on several levels. One could be session. It is by defaut turned on, but can be disabled:
+Grid refreshes its state on several levels. One could be session. It is by default turned on, but can be disabled:
 
 ```php
 $grid->setRememberState(false); // Or turned on again: $grid->setRememberState(true);
 ```
 
-If you want to keep hideable columns in session even when rememebr state is turned off, use second argument:
+If you want to keep hideable columns in session even when remember state is turned off, use second argument:
 
 ```php
 $grid->setRememberState(false, true);
@@ -284,7 +284,7 @@ $grid->setRememberState(false, true);
 
 ## Session - filters / filter values changed
 
-When you set some filters and user do some filtering, values are stored in session. After that, when filters are changed (maybe some select options are removed, etc), datagrid would throw an exception, because it can not find particular filters / filter values that are still stored in session. You can supress those exception:
+When you set some filters and user do some filtering, values are stored in session. After that, when filters are changed (maybe some select options are removed, etc.), datagrid would throw an exception, because it can not find particular filters / filter values that are still stored in session. You can suppress those exception:
 
 ```php
 $grid->setStrictSessionFilterValues(false);
@@ -300,7 +300,7 @@ $grid->setRefreshUrl(false); // Or enabled again: $grid->setRefreshUrl(true);
 
 ## Auto submit
 
-DataGrid filter is submitted automatically after keypress (there is of course a little delay). If you want to disable that feature and use customizable submit button instead, use this code:
+Datagrid filter is submitted automatically after keypress (there is of course a little delay). If you want to disable that feature and use customizable submit button instead, use this code:
 
 ```php
 $grid->setAutoSubmit(false);

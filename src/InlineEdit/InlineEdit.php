@@ -1,26 +1,24 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\InlineEdit;
 
-namespace Ublaboo\DataGrid\InlineEdit;
-
-use Nette;
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Traits\TButtonClass;
+use Contributte\Datagrid\Traits\TButtonIcon;
+use Contributte\Datagrid\Traits\TButtonText;
+use Contributte\Datagrid\Traits\TButtonTitle;
+use Contributte\Datagrid\Traits\TButtonTryAddIcon;
 use Nette\Forms\Container;
 use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Traits\TButtonClass;
-use Ublaboo\DataGrid\Traits\TButtonIcon;
-use Ublaboo\DataGrid\Traits\TButtonText;
-use Ublaboo\DataGrid\Traits\TButtonTitle;
-use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
 
 /**
- * @method onSubmit($id, Nette\Utils\ArrayHash $values)
- * @method onControlAdd(Nette\Forms\Container $container)
- * @method onControlAfterAdd(Nette\Forms\Container $container)
- * @method onSetDefaults(Nette\Forms\Container $container, $item)
+ * @method onSubmit($id, ArrayHash $values)
+ * @method onControlAdd(Container $container)
+ * @method onControlAfterAdd(Container $container)
+ * @method onSetDefaults(Container $container, $item)
  * @method onCustomRedraw(string $buttonName)
  */
 class InlineEdit
@@ -33,100 +31,61 @@ class InlineEdit
 	use TButtonTitle;
 	use TButtonText;
 
-	/**
-	 * @var array|callable[]
-	 */
-	public $onSubmit = [];
+	/** @var array|callable[] */
+	public array $onSubmit = [];
 
-	/**
-	 * @var array|callable[]
-	 */
-	public $onControlAdd = [];
+	/** @var array|callable[] */
+	public array $onControlAdd = [];
 
-	/**
-	 * @var array|callable[]
-	 */
-	public $onControlAfterAdd = [];
+	/** @var array|callable[] */
+	public array $onControlAfterAdd = [];
 
-	/**
-	 * @var array|callable[]
-	 */
-	public $onSetDefaults = [];
+	/** @var array|callable[] */
+	public array $onSetDefaults = [];
 
-	/**
-	 * @var array|callable[]
-	 */
-	public $onCustomRedraw = [];
+	/** @var array|callable[] */
+	public array $onCustomRedraw = [];
 
-	/**
-	 * @var mixed
-	 */
-	protected $itemID;
-
-	/**
-	 * @var DataGrid
-	 */
-	protected $grid;
-
-	/**
-	 * @var string|null
-	 */
-	protected $primaryWhereColumn = null;
+	protected mixed $itemID = null;
 
 	/**
 	 * Inline adding - render on the top or in the bottom?
-	 *
-	 * @var bool
 	 */
-	protected $positionTop = false;
+	protected bool $positionTop = false;
 
 	/**
 	 * Columns that are not edited can displey normal value instaad of nothing..
-	 *
-	 * @var bool
 	 */
-	protected $showNonEditingColumns = true;
+	protected bool $showNonEditingColumns = true;
 
-
-	public function __construct(DataGrid $grid, ?string $primaryWhereColumn = null)
+	public function __construct(protected Datagrid $grid, protected ?string $primaryWhereColumn = null)
 	{
-		$this->grid = $grid;
-		$this->primaryWhereColumn = $primaryWhereColumn;
-
-		$this->title = 'ublaboo_datagrid.edit';
+		$this->title = 'contributte_datagrid.edit';
 		$this->class = sprintf('btn btn-xs %s ajax', $grid::$btnSecondaryClass);
 		$this->icon = 'pencil pencil-alt';
 
 		$this->onControlAfterAdd[] = [$this, 'addControlsClasses'];
 	}
 
-
 	/**
-	 * @param mixed $id
 	 * @return static
 	 */
-	public function setItemId($id): self
+	public function setItemId(mixed $id): self
 	{
 		$this->itemID = $id;
 
 		return $this;
 	}
 
-
-	/**
-	 * @return mixed
-	 */
-	public function getItemId()
+	public function getItemId(): mixed
 	{
 		return $this->itemID;
 	}
-
 
 	public function getPrimaryWhereColumn(): ?string
 	{
 		return $this->primaryWhereColumn;
 	}
-
 
 	public function renderButton(Row $row): Html
 	{
@@ -144,7 +103,7 @@ class InlineEdit
 			);
 		}
 
-		if ($this->class !== null) {
+		if ($this->class !== '') {
 			$a->appendAttribute('class', $this->class);
 		}
 
@@ -152,7 +111,6 @@ class InlineEdit
 
 		return $a;
 	}
-
 
 	/**
 	 * Render row item detail button
@@ -173,13 +131,12 @@ class InlineEdit
 			);
 		}
 
-		if ($this->class !== null) {
+		if ($this->class !== '') {
 			$a->appendAttribute('class', $this->class);
 		}
 
 		return $a;
 	}
-
 
 	/**
 	 * @return static
@@ -191,18 +148,15 @@ class InlineEdit
 		return $this;
 	}
 
-
 	public function isPositionTop(): bool
 	{
 		return $this->positionTop;
 	}
 
-
 	public function isPositionBottom(): bool
 	{
 		return !$this->positionTop;
 	}
-
 
 	public function addControlsClasses(Container $container): void
 	{
@@ -213,21 +167,22 @@ class InlineEdit
 					$control->setAttribute('class', 'btn btn-xs btn-primary');
 
 					break;
+
 				case 'cancel':
 					$control->setValidationScope([]);
 					$control->setAttribute('class', 'btn btn-xs btn-danger');
 
 					break;
+
 				default:
 					if ($control->getControl()->getAttribute('class') === null) {
-						$control->setAttribute('class', 'form-control input-sm form-control-sm');
+						$control->setAttribute('class', 'form-control form-control-sm');
 					}
 
 					break;
 			}
 		}
 	}
-
 
 	/**
 	 * @return static
@@ -239,9 +194,9 @@ class InlineEdit
 		return $this;
 	}
 
-
 	public function showNonEditingColumns(): bool
 	{
 		return $this->showNonEditingColumns;
 	}
+
 }

@@ -1,16 +1,14 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Column;
 
-namespace Ublaboo\DataGrid\Column;
-
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridColumnStatusException;
+use Contributte\Datagrid\Row;
+use Contributte\Datagrid\Status\Option;
+use Contributte\Datagrid\Traits\TButtonCaret;
+use Contributte\Datagrid\Traits\TRenderCondition;
 use Nette\SmartObject;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridColumnStatusException;
-use Ublaboo\DataGrid\Row;
-use Ublaboo\DataGrid\Status\Option;
-use Ublaboo\DataGrid\Traits\TButtonCaret;
-use Ublaboo\DataGrid\Traits\TRenderCondition;
 
 /**
  * @method onChange(string $id, string $value)
@@ -22,24 +20,15 @@ class ColumnStatus extends Column
 	use SmartObject;
 	use TRenderCondition;
 
-	/**
-	 * @var array|callable[]
-	 */
-	public $onChange = [];
+	/** @var array|callable[] */
+	public array $onChange = [];
 
-	/**
-	 * @var string
-	 */
-	protected $key;
+	protected string $key;
 
-	/**
-	 * @var array
-	 */
-	protected $options = [];
-
+	protected array $options = [];
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		string $column,
 		string $name
@@ -52,24 +41,20 @@ class ColumnStatus extends Column
 		$this->setTemplate(__DIR__ . '/../templates/column_status.latte');
 	}
 
-
 	public function getKey(): string
 	{
 		return $this->key;
 	}
-
 
 	public function getOptions(): array
 	{
 		return $this->options;
 	}
 
-
 	/**
-	 * @param mixed $value
-	 * @throws DataGridColumnStatusException
+	 * @throws DatagridColumnStatusException
 	 */
-	public function getOption($value): Option
+	public function getOption(mixed $value): Option
 	{
 		foreach ($this->options as $option) {
 			if ($option->getValue() === $value) {
@@ -77,15 +62,13 @@ class ColumnStatus extends Column
 			}
 		}
 
-		throw new DataGridColumnStatusException("Option [$value] does not exist");
+		throw new DatagridColumnStatusException(sprintf('Option [%s] does not exist', $value));
 	}
-
 
 	public function getColumn(): string
 	{
 		return $this->column;
 	}
-
 
 	/**
 	 * Find selected option for current item/row
@@ -101,15 +84,13 @@ class ColumnStatus extends Column
 		return null;
 	}
 
-
 	/**
-	 * @param mixed $value
-	 * @throws DataGridColumnStatusException
+	 * @throws DatagridColumnStatusException
 	 */
-	public function addOption($value, string $text): Option
+	public function addOption(mixed $value, string $text): Option
 	{
 		if (!is_scalar($value)) {
-			throw new DataGridColumnStatusException('Option value has to be scalar');
+			throw new DatagridColumnStatusException('Option value has to be scalar');
 		}
 
 		$option = new Option($this->grid, $this, $value, $text);
@@ -119,10 +100,10 @@ class ColumnStatus extends Column
 		return $option;
 	}
 
-
 	/**
 	 * Set all options at once
 	 *
+	 * @param string[] $options
 	 * @return static
 	 */
 	public function setOptions(array $options): self
@@ -134,11 +115,7 @@ class ColumnStatus extends Column
 		return $this;
 	}
 
-
-	/**
-	 * @param mixed $value
-	 */
-	public function removeOption($value): void
+	public function removeOption(mixed $value): void
 	{
 		foreach ($this->options as $key => $option) {
 			if ($option->getValue() === $value) {
@@ -146,7 +123,6 @@ class ColumnStatus extends Column
 			}
 		}
 	}
-
 
 	/**
 	 * Column can have variables that will be passed to custom template scope
@@ -161,11 +137,11 @@ class ColumnStatus extends Column
 		]);
 	}
 
-
 	public function setReplacement(array $replacements): Column
 	{
-		throw new DataGridColumnStatusException(
+		throw new DatagridColumnStatusException(
 			'Cannot set replacement for Column Status. For status texts replacement use ->setOptions($replacements)'
 		);
 	}
+
 }

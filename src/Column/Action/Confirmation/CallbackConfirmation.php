@@ -1,26 +1,21 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\Column\Action\Confirmation;
+namespace Contributte\Datagrid\Column\Action\Confirmation;
 
 final class CallbackConfirmation implements IConfirmation
 {
 
-	/**
-	 * @var callable
-	 */
+	/** @var callable */
 	private $callback;
-
 
 	public function __construct(callable $callback)
 	{
 		$this->callback = $callback;
 	}
 
-
 	public function getCallback(): callable
 	{
 		return $this->callback;
 	}
+
 }

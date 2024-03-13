@@ -1,32 +1,21 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Column;
 
-namespace Ublaboo\DataGrid\Column;
-
-use Ublaboo\DataGrid\Row;
+use Contributte\Datagrid\Row;
 
 class ColumnNumber extends Column
 {
 
-	/**
-	 * @var string
-	 */
-	protected $align = 'right';
+	protected ?string $align = 'end';
 
-	/**
-	 * @var array
-	 */
-	protected $numberFormat = [
+	protected array $numberFormat = [
 		0, // Decimals
 		'.', // Decimal point
 		' ', // Thousands separator
 	];
 
-	/**
-	 * @return mixed
-	 */
-	public function getColumnValue(Row $row)
+	public function getColumnValue(Row $row): mixed
 	{
 		$value = parent::getColumnValue($row);
 
@@ -42,7 +31,6 @@ class ColumnNumber extends Column
 		);
 	}
 
-
 	/**
 	 * @return static
 	 */
@@ -57,7 +45,6 @@ class ColumnNumber extends Column
 		return $this;
 	}
 
-
 	public function getFormat(): array
 	{
 		return [
@@ -66,4 +53,5 @@ class ColumnNumber extends Column
 			$this->numberFormat[2],
 		];
 	}
+
 }

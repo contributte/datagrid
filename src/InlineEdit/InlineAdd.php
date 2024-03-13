@@ -1,29 +1,25 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\InlineEdit;
 
-namespace Ublaboo\DataGrid\InlineEdit;
+use Nette\Utils\ArrayHash;
 
 /**
- * @method onSubmit(Nette\Utils\ArrayHash $values)
+ * @method onSubmit(ArrayHash $values)
  */
 class InlineAdd extends InlineEdit
 {
 
-	/**
-	 * @var bool
-	 */
-	private $shouldBeRendered = false;
-
+	private bool $shouldBeRendered = false;
 
 	public function shouldBeRendered(): bool
 	{
 		return $this->shouldBeRendered;
 	}
-	
-	
+
 	public function setShouldBeRendered(bool $shouldBeRendered): void
 	{
 		$this->shouldBeRendered = $shouldBeRendered;
 	}
+
 }

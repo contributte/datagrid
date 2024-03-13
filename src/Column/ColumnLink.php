@@ -1,85 +1,47 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Column;
 
-namespace Ublaboo\DataGrid\Column;
-
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridColumnRendererException;
+use Contributte\Datagrid\Row;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\DataGrid;
-use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
-use Ublaboo\DataGrid\Row;
 
 class ColumnLink extends Column
 {
 
-	/**
-	 * @var string|null
-	 */
-	protected $title;
+	protected ?string $title = null;
 
-	/**
-	 * @var string|null
-	 */
-	protected $class;
+	protected ?string $class = null;
 
-	/**
-	 * @var array
-	 */
-	protected $params;
+	protected ?string $icon = null;
 
-	/**
-	 * @var string
-	 */
-	protected $href;
+	protected array $dataAttributes = [];
 
-	/**
-	 * @var string|null
-	 */
-	protected $icon;
+	protected bool $openInNewTab = false;
 
-	/**
-	 * @var array
-	 */
-	protected $dataAttributes = [];
-
-	/**
-	 * @var bool
-	 */
-	protected $openInNewTab = false;
-
-	/**
-	 * @var array
-	 */
-	protected $parameters = [];
-
+	protected array $parameters = [];
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		string $column,
 		string $name,
-		string $href,
-		array $params
+		protected string $href,
+		protected array $params
 	)
 	{
 		parent::__construct($grid, $key, $column, $name);
-
-		$this->href = $href;
-		$this->params = $params;
 	}
 
-
-	/**
-	 * @return mixed
-	 */
-	public function render(Row $row)
+	public function render(Row $row): mixed
 	{
 		/**
 		 * Renderer function may be used
 		 */
 		try {
 			return $this->useRenderer($row);
-		} catch (DataGridColumnRendererException $e) {
+		} catch (DatagridColumnRendererException) {
 			/**
 			 * Do not use renderer
 			 */
@@ -120,7 +82,7 @@ class ColumnLink extends Column
 
 		if ($this->icon !== null) {
 			$a->addHtml(
-				Html::el('span')->setAttribute('class', DataGrid::$iconPrefix . $this->icon)
+				Html::el('span')->setAttribute('class', Datagrid::$iconPrefix . $this->icon)
 			);
 
 			if (strlen($value) > 0) {
@@ -137,7 +99,6 @@ class ColumnLink extends Column
 		return $element;
 	}
 
-
 	/**
 	 * @return static
 	 */
@@ -147,7 +108,6 @@ class ColumnLink extends Column
 
 		return $this;
 	}
-
 
 	/**
 	 * @return static
@@ -159,18 +119,15 @@ class ColumnLink extends Column
 		return $this;
 	}
 
-
 	/**
-	 * @param mixed $value
 	 * @return static
 	 */
-	public function setDataAttribute(string $key, $value): self
+	public function setDataAttribute(string $key, mixed $value): self
 	{
 		$this->dataAttributes[$key] = $value;
 
 		return $this;
 	}
-
 
 	/**
 	 * @return static
@@ -182,12 +139,10 @@ class ColumnLink extends Column
 		return $this;
 	}
 
-
 	public function getTitle(): ?string
 	{
 		return $this->title;
 	}
-
 
 	/**
 	 * @return static
@@ -199,18 +154,15 @@ class ColumnLink extends Column
 		return $this;
 	}
 
-
 	public function getClass(): ?string
 	{
 		return $this->class;
 	}
 
-
 	public function isOpenInNewTab(): bool
 	{
 		return $this->openInNewTab;
 	}
-
 
 	/**
 	 * @return static
@@ -221,4 +173,5 @@ class ColumnLink extends Column
 
 		return $this;
 	}
+
 }

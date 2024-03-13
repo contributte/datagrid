@@ -1,46 +1,43 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 /**
  * TEST: ItemsPerPageTest
- * @testCase Ublaboo\DataGrid\Tests\Cases\ItemsPerPageTest
+ *
+ * @testCase Contributte\Datagrid\Tests\Cases\ItemsPerPageTest
  */
 
-namespace Ublaboo\DataGrid\Tests\Cases;
+namespace Contributte\Datagrid\Tests\Cases;
 
-use Tester;
-use Ublaboo;
+use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Localization\SimpleTranslator;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
+use Tester\Assert;
+use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../Files/TestingDataGridFactory.php';
+require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
 
-class ItemsPerPageTest extends Tester\TestCase
+class ItemsPerPageTest extends TestCase
 {
 
-	/**
-	 * @var Ublaboo\DataGrid\DataGrid
-	 */
-	private $grid;
-
+	private Datagrid $grid;
 
 	public function setUp(): void
 	{
-		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
-
 
 	public function testGetPerPage(): void
 	{
 		$this->grid->setItemsPerPageList([10, 20, 50], false);
 
 		$this->grid->perPage = 20;
-		Tester\Assert::same(20, $this->grid->getPerPage());
+		Assert::same(20, $this->grid->getPerPage());
 
 		$this->grid->perPage = 'all';
-		Tester\Assert::same(10, $this->grid->getPerPage());
+		Assert::same(10, $this->grid->getPerPage());
 	}
 
 	public function testGetPerPageAll(): void
@@ -48,27 +45,28 @@ class ItemsPerPageTest extends Tester\TestCase
 		$this->grid->setItemsPerPageList([10, 20, 50], true);
 
 		$this->grid->perPage = 20;
-		Tester\Assert::same(20, $this->grid->getPerPage());
+		Assert::same(20, $this->grid->getPerPage());
 
 		$this->grid->perPage = 'all';
-		Tester\Assert::same('all', $this->grid->getPerPage());
+		Assert::same('all', $this->grid->getPerPage());
 	}
 
 	public function testGetPerPageAllTranslated(): void
 	{
-		$translator = new Ublaboo\DataGrid\Localization\SimpleTranslator([
-			'ublaboo_datagrid.all' => 'všechny',
+		$translator = new SimpleTranslator([
+			'contributte_datagrid.all' => 'všechny',
 		]);
 		$this->grid->setTranslator($translator);
 
 		$this->grid->setItemsPerPageList([10, 20, 50], true);
 
 		$this->grid->perPage = 20;
-		Tester\Assert::same(20, $this->grid->getPerPage());
+		Assert::same(20, $this->grid->getPerPage());
 
 		$this->grid->perPage = 'all';
-		Tester\Assert::same('all', $this->grid->getPerPage());
+		Assert::same('all', $this->grid->getPerPage());
 	}
+
 }
 
 $test = new ItemsPerPageTest();
