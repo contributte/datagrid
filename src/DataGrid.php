@@ -1498,7 +1498,10 @@ class DataGrid extends Control
 			return;
 		}
 
-		$values = (array) $form->getUnsafeValues(null);
+		$values = (array) $form->getUnsafeValues(null, [
+			$form['perPage'],
+			$form['filter'],
+		]);
 
 		if ($this->getPresenterInstance()->isAjax()) {
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
@@ -1538,7 +1541,7 @@ class DataGrid extends Control
 				$primaryWhereColumn = $form->getHttpData(Form::DATA_LINE, 'inline_edit[_primary_where_column]');
 
 				if ($edit['submit']->isSubmittedBy() && $edit->getErrors() === []) {
-					$this->inlineEdit->onSubmit($id, $values['inline_edit']);
+					$this->inlineEdit->onSubmit($id, $form['inline_edit']->getUnsafeValues(null));
 					$this->getPresenterInstance()->payload->_datagrid_inline_edited = $id;
 					$this->getPresenterInstance()->payload->_datagrid_name = $this->getFullName();
 				} else {
@@ -1580,7 +1583,7 @@ class DataGrid extends Control
 
 			if ($add['submit']->isSubmittedBy() || $add['cancel']->isSubmittedBy()) {
 				if ($add['submit']->isSubmittedBy() && $add->getErrors() === []) {
-					$this->inlineAdd->onSubmit($values['inline_add']);
+					$this->inlineAdd->onSubmit($form['inline_add']->getUnsafeValues(null));
 				}
 
 				$this->redrawControl('tbody');
