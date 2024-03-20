@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\GroupAction;
+namespace Contributte\Datagrid\GroupAction;
 
 use Nette\SmartObject;
 
@@ -14,38 +12,21 @@ abstract class GroupAction
 
 	use SmartObject;
 
-	/**
-	 * @var array|callable[]
-	 */
-	public $onSelect = [];
+	/** @var array|callable[] */
+	public array $onSelect = [];
 
-	/**
-	 * @var string
-	 */
-	protected $title;
+	protected string $class = 'form-control input-sm form-control-sm';
 
-	/**
-	 * @var string
-	 */
-	protected $class = 'form-control input-sm form-control-sm';
+	protected array $attributes = [];
 
-	/**
-	 * @var array
-	 */
-	protected $attributes = [];
-
-
-	public function __construct(string $title)
+	public function __construct(protected string $title)
 	{
-		$this->title = $title;
 	}
-
 
 	public function getTitle(): string
 	{
 		return $this->title;
 	}
-
 
 	/**
 	 * @return static
@@ -57,27 +38,24 @@ abstract class GroupAction
 		return $this;
 	}
 
-
 	public function getClass(): string
 	{
 		return $this->class;
 	}
 
-
 	/**
-	 * @param mixed $value
 	 * @return static
 	 */
-	public function setAttribute(string $key, $value): self
+	public function setAttribute(string $key, mixed $value): self
 	{
 		$this->attributes[$key] = $value;
 
 		return $this;
 	}
 
-
 	public function getAttributes(): array
 	{
 		return $this->attributes;
 	}
+
 }

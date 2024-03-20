@@ -1,28 +1,17 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\Filter;
+namespace Contributte\Datagrid\Filter;
 
 use Nette\Forms\Container;
 
 class FilterDateRange extends FilterRange implements IFilterDate
 {
 
-	/**
-	 * @var string
-	 */
-	protected $template = 'datagrid_filter_daterange.latte';
+	protected ?string $template = 'datagrid_filter_daterange.latte';
 
-	/**
-	 * @var array
-	 */
-	protected $format = ['j. n. Y', 'd. m. yyyy'];
+	protected array $format = ['j. n. Y', 'd. m. yyyy'];
 
-	/**
-	 * @var string
-	 */
-	protected $type = 'date-range';
+	protected ?string $type = 'date-range';
 
 	/**
 	 * Adds select box to filter form
@@ -33,26 +22,26 @@ class FilterDateRange extends FilterRange implements IFilterDate
 
 		$from = $container->addText('from', $this->name);
 
-		$from->setAttribute('data-provide', 'datepicker')
-			->setAttribute('data-date-orientation', 'bottom')
-			->setAttribute('data-date-format', $this->getJsFormat())
-			->setAttribute('data-date-today-highlight', 'true')
-			->setAttribute('data-date-autoclose', 'true');
+		$from->setHtmlAttribute('data-provide', 'datepicker')
+			->setHtmlAttribute('data-date-orientation', 'bottom')
+			->setHtmlAttribute('data-date-format', $this->getJsFormat())
+			->setHtmlAttribute('data-date-today-highlight', 'true')
+			->setHtmlAttribute('data-date-autoclose', 'true');
 
 		$to = $container->addText('to', $this->nameSecond);
 
-		$to->setAttribute('data-provide', 'datepicker')
-			->setAttribute('data-date-orientation', 'bottom')
-			->setAttribute('data-date-format', $this->getJsFormat())
-			->setAttribute('data-date-today-highlight', 'true')
-			->setAttribute('data-date-autoclose', 'true');
+		$to->setHtmlAttribute('data-provide', 'datepicker')
+			->setHtmlAttribute('data-date-orientation', 'bottom')
+			->setHtmlAttribute('data-date-format', $this->getJsFormat())
+			->setHtmlAttribute('data-date-today-highlight', 'true')
+			->setHtmlAttribute('data-date-autoclose', 'true');
 
 		$this->addAttributes($from);
 		$this->addAttributes($to);
 
 		if ($this->grid->hasAutoSubmit()) {
-			$from->setAttribute('data-autosubmit-change', true);
-			$to->setAttribute('data-autosubmit-change', true);
+			$from->setHtmlAttribute('data-autosubmit-change', true);
+			$to->setHtmlAttribute('data-autosubmit-change', true);
 		}
 
 		$placeholders = $this->getPlaceholders();
@@ -61,17 +50,16 @@ class FilterDateRange extends FilterRange implements IFilterDate
 			$textFrom = reset($placeholders);
 
 			if ($textFrom) {
-				$from->setAttribute('placeholder', $textFrom);
+				$from->setHtmlAttribute('placeholder', $textFrom);
 			}
 
 			$textTo = end($placeholders);
 
 			if ($textTo && ($textTo !== $textFrom)) {
-				$to->setAttribute('placeholder', $textTo);
+				$to->setHtmlAttribute('placeholder', $textTo);
 			}
 		}
 	}
-
 
 	/**
 	 * Set format for datepicker etc
@@ -83,7 +71,6 @@ class FilterDateRange extends FilterRange implements IFilterDate
 		return $this;
 	}
 
-
 	/**
 	 * Get php format for datapicker
 	 */
@@ -91,7 +78,6 @@ class FilterDateRange extends FilterRange implements IFilterDate
 	{
 		return $this->format[0];
 	}
-
 
 	/**
 	 * Get js format for datepicker

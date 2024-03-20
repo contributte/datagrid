@@ -1,38 +1,22 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\Column\Action\Confirmation;
+namespace Contributte\Datagrid\Column\Action\Confirmation;
 
 final class StringConfirmation implements IConfirmation
 {
 
-	/**
-	 * @var string
-	 */
-	private $question;
-
-	/**
-	 * @var string|null
-	 */
-	private $placeholderName;
-
-
-	public function __construct(string $question, ?string $placeholderName = null)
+	public function __construct(private string $question, private ?string $placeholderName = null)
 	{
-		$this->question = $question;
-		$this->placeholderName = $placeholderName;
 	}
-
 
 	public function getQuestion(): string
 	{
 		return $this->question;
 	}
 
-
 	public function getPlaceholderName(): ?string
 	{
 		return $this->placeholderName;
 	}
+
 }

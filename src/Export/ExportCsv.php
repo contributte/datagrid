@@ -1,18 +1,16 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\Export;
+namespace Contributte\Datagrid\Export;
 
 use Contributte\Application\Response\CSVResponse;
-use Ublaboo\DataGrid\CsvDataModel;
-use Ublaboo\DataGrid\DataGrid;
+use Contributte\Datagrid\CsvDataModel;
+use Contributte\Datagrid\Datagrid;
 
 class ExportCsv extends Export
 {
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $text,
 		string $name,
 		bool $filtered,
@@ -21,7 +19,7 @@ class ExportCsv extends Export
 		bool $includeBom = false
 	)
 	{
-		if (strpos($name, '.csv') === false) {
+		if (!str_contains($name, '.csv')) {
 			$name .= '.csv';
 		}
 
@@ -33,7 +31,6 @@ class ExportCsv extends Export
 		);
 	}
 
-
 	private function getExportCallback(
 		string $name,
 		string $outputEncoding,
@@ -43,8 +40,13 @@ class ExportCsv extends Export
 	{
 		return function (
 			array $data,
-			DataGrid $grid
-		) use ($name, $outputEncoding, $delimiter, $includeBom): void {
+			Datagrid $grid
+		) use (
+			$name,
+			$outputEncoding,
+			$delimiter,
+			$includeBom
+): void {
 			$columns = $this->getColumns();
 
 			if ($columns === []) {
@@ -62,4 +64,5 @@ class ExportCsv extends Export
 			));
 		};
 	}
+
 }

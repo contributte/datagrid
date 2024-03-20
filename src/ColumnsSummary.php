@@ -1,58 +1,37 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid;
 
-namespace Ublaboo\DataGrid;
-
-use Ublaboo\DataGrid\Column\Column;
-use Ublaboo\DataGrid\Column\ColumnNumber;
-use Ublaboo\DataGrid\Column\Renderer;
-use Ublaboo\DataGrid\Exception\DataGridColumnRendererException;
+use Contributte\Datagrid\Column\Column;
+use Contributte\Datagrid\Column\ColumnNumber;
+use Contributte\Datagrid\Column\Renderer;
+use Contributte\Datagrid\Exception\DatagridColumnRendererException;
 
 class ColumnsSummary
 {
 
-	/**
-	 * @var DataGrid
-	 */
-	protected $datagrid;
+	/** @var array|int[] */
+	protected array $summary;
 
-	/**
-	 * @var array|int[]
-	 */
-	protected $summary;
+	protected array $format = [];
 
-	/**
-	 * @var array
-	 */
-	protected $format = [];
-
-	/**
-	 * @var callable|null
-	 */
+	/** @var callable|null */
 	protected $rowCallback = null;
 
-	/**
-	 * @var Renderer|null
-	 */
-	protected $renderer;
+	protected ?Renderer $renderer = null;
 
-	/**
-	 * @var bool
-	 */
-	protected $positionTop = false;
-
+	protected bool $positionTop = false;
 
 	/**
 	 * @param array|string[] $columns
 	 */
 	public function __construct(
-		DataGrid $datagrid,
+		protected Datagrid $datagrid,
 		array $columns,
 		?callable $rowCallback
-	) {
+	)
+	{
 		$this->summary = array_fill_keys(array_values($columns), 0);
-		$this->datagrid = $datagrid;
 		$this->rowCallback = $rowCallback;
 
 		foreach (array_keys($this->summary) as $key) {
@@ -67,7 +46,6 @@ class ColumnsSummary
 		}
 	}
 
-
 	public function add(Row $row): void
 	{
 		foreach (array_keys($this->summary) as $key) {
@@ -78,12 +56,12 @@ class ColumnsSummary
 		}
 	}
 
-
 	public function render(string $key): ?string
 	{
 		try {
 			return $this->useRenderer($key);
-		} catch (DataGridColumnRendererException $e) {
+		} catch (DatagridColumnRendererException) {
+			// No need to worry.
 		}
 
 		if (!isset($this->summary[$key])) {
@@ -98,11 +76,7 @@ class ColumnsSummary
 		);
 	}
 
-
-	/**
-	 * @return mixed
-	 */
-	public function useRenderer(string $key)
+	public function useRenderer(string $key): mixed
 	{
 		if (!isset($this->summary[$key])) {
 			return null;
@@ -111,18 +85,16 @@ class ColumnsSummary
 		$renderer = $this->getRenderer();
 
 		if ($renderer === null) {
-			throw new DataGridColumnRendererException;
+			throw new DatagridColumnRendererException();
 		}
 
 		return call_user_func_array($renderer->getCallback(), [$this->summary[$key], $key]);
 	}
 
-
 	public function getRenderer(): ?Renderer
 	{
 		return $this->renderer;
 	}
-
 
 	/**
 	 * @return static
@@ -133,7 +105,6 @@ class ColumnsSummary
 
 		return $this;
 	}
-
 
 	/**
 	 * @return static
@@ -150,7 +121,6 @@ class ColumnsSummary
 		return $this;
 	}
 
-
 	public function someColumnsExist(array $columns): bool
 	{
 		foreach (array_keys($columns) as $key) {
@@ -162,7 +132,6 @@ class ColumnsSummary
 		return false;
 	}
 
-
 	/**
 	 * @return static
 	 */
@@ -173,19 +142,15 @@ class ColumnsSummary
 		return $this;
 	}
 
-
 	public function getPositionTop(): bool
 	{
 		return $this->positionTop;
 	}
 
-
 	/**
 	 * Get value from column using Row::getValue() or custom callback
-	 *
-	 * @return mixed
 	 */
-	private function getValue(Row $row, Column $column)
+	private function getValue(Row $row, Column $column): mixed
 	{
 		if ($this->rowCallback === null) {
 			return $row->getValue($column->getColumn());
@@ -193,4 +158,5 @@ class ColumnsSummary
 
 		return call_user_func_array($this->rowCallback, [$row->getItem(), $column->getColumn()]);
 	}
+
 }

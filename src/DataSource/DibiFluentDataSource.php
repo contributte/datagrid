@@ -1,60 +1,36 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\DataSource;
 
-namespace Ublaboo\DataGrid\DataSource;
-
+use Contributte\Datagrid\AggregationFunction\IAggregatable;
+use Contributte\Datagrid\AggregationFunction\IAggregationFunction;
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterMultiSelect;
+use Contributte\Datagrid\Filter\FilterRange;
+use Contributte\Datagrid\Filter\FilterSelect;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Utils\DateTimeHelper;
+use Contributte\Datagrid\Utils\Sorting;
+use dibi;
 use Dibi\Fluent;
 use Dibi\Helpers;
 use ReflectionClass;
-use Ublaboo\DataGrid\AggregationFunction\IAggregatable;
-use Ublaboo\DataGrid\AggregationFunction\IAggregationFunction;
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
-use Ublaboo\DataGrid\Filter\FilterDate;
-use Ublaboo\DataGrid\Filter\FilterDateRange;
-use Ublaboo\DataGrid\Filter\FilterMultiSelect;
-use Ublaboo\DataGrid\Filter\FilterRange;
-use Ublaboo\DataGrid\Filter\FilterSelect;
-use Ublaboo\DataGrid\Filter\FilterText;
-use Ublaboo\DataGrid\Utils\DateTimeHelper;
-use Ublaboo\DataGrid\Utils\Sorting;
 
 class DibiFluentDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
 
-	/**
-	 * @var Fluent
-	 */
-	protected $dataSource;
+	protected array $data = [];
 
-	/**
-	 * @var array
-	 */
-	protected $data = [];
-
-	/**
-	 * @var string
-	 */
-	protected $primaryKey;
-
-
-	public function __construct(Fluent $dataSource, string $primaryKey)
+	public function __construct(protected Fluent $dataSource, protected string $primaryKey)
 	{
-		$this->dataSource = $dataSource;
-		$this->primaryKey = $primaryKey;
 	}
-
-
-	// *******************************************************************************
-	// *                          IDataSource implementation                         *
-	// *******************************************************************************
-
 
 	public function getCount(): int
 	{
 		return $this->dataSource->count();
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -63,7 +39,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	{
 		return $this->data !== [] ? $this->data : $this->dataSource->fetchAll();
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -75,7 +50,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		return $this;
 	}
 
-
 	public function limit(int $offset, int $limit): IDataSource
 	{
 		$this->dataSource->limit($limit)->offset($offset);
@@ -84,7 +58,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 		return $this;
 	}
-
 
 	public function sort(Sorting $sorting): IDataSource
 	{
@@ -123,12 +96,10 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		return $this;
 	}
 
-
 	public function processAggregation(IAggregationFunction $function): void
 	{
 		$function->processDataSource(clone $this->dataSource);
 	}
-
 
 	protected function applyFilterDate(FilterDate $filter): void
 	{
@@ -138,11 +109,10 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
 			$this->dataSource->where('DATE(%n) = ?', $filter->getColumn(), $date->format('Y-m-d'));
-		} catch (DataGridDateTimeHelperException $ex) {
+		} catch (DatagridDateTimeHelperException) {
 			// ignore the invalid filter value
 		}
 	}
-
 
 	protected function applyFilterDateRange(FilterDateRange $filter): void
 	{
@@ -157,7 +127,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 				$dateFrom->setTime(0, 0, 0);
 
 				$this->dataSource->where('DATE(%n) >= ?', $filter->getColumn(), $dateFrom);
-			} catch (DataGridDateTimeHelperException $ex) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
@@ -168,12 +138,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 				$dateTo->setTime(23, 59, 59);
 
 				$this->dataSource->where('DATE(%n) <= ?', $filter->getColumn(), $dateTo);
-			} catch (DataGridDateTimeHelperException $ex) {
+			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
 		}
 	}
-
 
 	protected function applyFilterRange(FilterRange $filter): void
 	{
@@ -191,7 +160,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		}
 	}
 
-
 	protected function applyFilterText(FilterText $filter): void
 	{
 		$condition = $filter->getCondition();
@@ -199,10 +167,10 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			$column = Helpers::escape($driver, $column, \dibi::IDENTIFIER);
+			$column = Helpers::escape($driver, $column, dibi::IDENTIFIER);
 
 			if ($filter->isExactSearch()) {
-				$this->dataSource->where("$column = %s", $value);
+				$this->dataSource->where(sprintf('%s = %%s', $column), $value);
 
 				continue;
 			}
@@ -210,26 +178,25 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 			foreach ($words as $word) {
-				$or[] = ["$column LIKE %~like~", $word];
+				$or[] = [sprintf('%s LIKE %%~like~', $column), $word];
 			}
 		}
 
-		if (sizeof($or) > 1) {
+		if (count($or) > 1) {
 			$this->dataSource->where('(%or)', $or);
 		} else {
 			$this->dataSource->where($or);
 		}
 	}
 
-
 	protected function applyFilterMultiSelect(FilterMultiSelect $filter): void
 	{
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
 
-		if (sizeof($values) > 1) {
+		if ((is_countable($values) ? count($values) : 0) > 1) {
 			$value1 = array_shift($values);
-			$length = sizeof($values);
+			$length = count($values);
 			$i = 1;
 
 			$this->dataSource->where('(%n = ?', $filter->getColumn(), $value1);
@@ -248,18 +215,14 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		}
 	}
 
-
 	protected function applyFilterSelect(FilterSelect $filter): void
 	{
 		$this->dataSource->where($filter->getCondition());
 	}
 
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function getDataSource()
+	protected function getDataSource(): Fluent
 	{
 		return $this->dataSource;
 	}
+
 }

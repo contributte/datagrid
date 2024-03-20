@@ -1,10 +1,10 @@
 Table of contents
 
 - [Data sources](#data-sources)
-	- [ORM Relations](#orm-relations)
-	- [ApiDataSource](#apidatasource)
-	- [NextrasDataSource](#nextrasdatasource)
-	- [NetteDatabaseTableDataSource](#nettedatabasetabledatasource)
+    - [ORM Relations](#orm-relations)
+    - [ApiDataSource](#apidatasource)
+    - [NextrasDataSource](#nextrasdatasource)
+    - [NetteDatabaseTableDataSource](#nettedatabasetabledatasource)
 
 # Data sources
 
@@ -44,7 +44,7 @@ Once you have set a data source, you can add columns to the datagrid.
 
 ## ORM Relations
 
-When you are using for example Doctrine as a data source, you can easily access another related entites for rendering in column. Let's say you have an entity `User` and each instance can have a property `$name` and `$grandma`. `$grandma` is also an instance of `User` class. Displaying people and their grandmas is very simple then - just use this dot notation:
+When you are using for example Doctrine as a data source, you can easily access another related entities for rendering in column. Let's say you have an entity `User` and each instance can have a property `$name` and `$grandma`. `$grandma` is also an instance of `User` class. Displaying people and their grandmas is very simple then - just use this dot notation:
 
 ```php
 $grid->addColumnText('name', 'Name', 'name');
@@ -59,7 +59,7 @@ Basic usage:
 
 ```php
 $grid->setDataSource(
-	new Ublaboo\DataGrid\DataSource\ApiDataSource('http://my.remote.api')
+	new Contributte\Datagrid\DataSource\ApiDataSource('http://my.remote.api')
 );
 ```
 
@@ -67,7 +67,7 @@ The idea is simply to forward filtering/sorting/limit/... to remote api. Feel fr
 
 ## NextrasDataSource
 
-There is one specific behaviour when using Netras ORM. When custom filter conditions are used, user has to work not with given `Collection` instance, but with `Collection::getQueryBuilder()`. That snippet of code will not work correctly, because `DbalCollection` calls clone on each of it's methods:
+There is one specific behaviour when using Nextras ORM. When custom filter conditions are used, user has to work not with given `Collection` instance, but with `Collection::getQueryBuilder()`. That snippet of code will not work correctly, because `DbalCollection` calls clone on each of it's methods:
 
 ```php
 $grid->getFilter('name')

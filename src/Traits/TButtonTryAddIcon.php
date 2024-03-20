@@ -1,11 +1,9 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Traits;
 
-namespace Ublaboo\DataGrid\Traits;
-
+use Contributte\Datagrid\Datagrid;
 use Nette\Utils\Html;
-use Ublaboo\DataGrid\DataGrid;
 
 trait TButtonTryAddIcon
 {
@@ -16,7 +14,7 @@ trait TButtonTryAddIcon
 			$iconClass = '';
 
 			foreach (explode(' ', $iconString) as $icon) {
-				$iconClass .= ' ' . DataGrid::$iconPrefix . $icon;
+				$iconClass .= ' ' . Datagrid::$iconPrefix . $icon;
 			}
 
 			$el->addHtml(Html::el('span')->setAttribute('class', trim($iconClass)));
@@ -26,4 +24,5 @@ trait TButtonTryAddIcon
 			}
 		}
 	}
+
 }

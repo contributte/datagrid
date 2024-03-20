@@ -6,116 +6,103 @@ Table of contents
 
 # Assets
 
-DataGrid needs for its precise functionality some third party scripts and styles. Install all required assets with NPM.
+There are prepare JS/TS and CSS files for precise functionality. The best way is to use some frontend bundler, for example [Vite](https://vitejs.dev).
 
-**CSS (external)**
+## Installation
 
-- bootstrap
-- bootstrap datepicker
-- bootstrap select
-
-**CSS**
-
-- datagrid.css
-- datagrid-spinners.css
-
-**JS (external)**
-
-- jquery
-- nette forms
-- nette ajax / naja
-- bootstrap
-- bootstrap datepicker
-- bootstrap select
-
-**JS**
-
-- datagrid.js
-- datagrid-instant-url-refresh.js
-- datagrid-spinners.js
-
-**Icons**
-
-You will probably want to use some icon font, but that is in your command.
-On this project website we use font awesome (you can change the icon prefix by setting new value to static property `DataGrid::$iconPrefix = 'fa fa-';`).
-
-**Spinners**
-
-As you can see, there is also a `datagrid-spinners.js` script in a datagrid repository. If you include this file within you project layout, there are some actions, that will show spinner/some other animation when waiting for ajax response. Actions, that has somehow animated spinner:
-
-- Group actions
-- Pagination
-- Changing items per page
-- Toggling item detail - loading the detail for the first time
-
-## NPM
-
-```
-npm install --save ublaboo-datagrid
-```
-
-package.json:
+You need to install datagrid's assets. For example this way.
 
 ```json
 {
-	"dependencies": {
-		"bootstrap-datepicker": "^1.9",
-		"bootstrap-select": "^1.13",
-		"bootstrap": "^4.4.1",
-		"happy-inputs": "^2.0",
-		"jquery": "^3.4.1",
-		"jquery-ui-sortable": "^1.0",
-		"nette-forms": "^3.0",
-		"nette.ajax.js": "^2.3",
-		"popper.js": "^1.14.7",
-		"ublaboo-datagrid": "^6.2"
-	}
+  "dependencies": {
+    "@contributte/datagrid": "git+ssh://git@github.com:contributte/datagrid.git#next"
+  }
 }
 ```
 
-## Example html when not using NPM
+##
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.css">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/happy-inputs@2.0.4/src/happy.css">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.css">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9.1/assets/datagrid.css">
+## Demo
 
-	<!-- Use this css for ajax spinners -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9.1/assets/datagrid-spinners.css">
+Full example of using bundler.
 
-	<!-- Include this css when using FilterMultiSelect (silviomoreto.github.io/bootstrap-select) -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.15/dist/css/bootstrap-select.css">
+**package.json**
 
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-</head>
+```json
+{
+  "dependencies": {
+    "@contributte/datagrid": "git+ssh://git@github.com:contributte/datagrid.git#next",
+    "@fortawesome/fontawesome-free": "^6.3.0",
+    "bootstrap": "^5.3.0-alpha3",
+    "naja": "^2.5.0",
+    "nette-forms": "^3.3.1",
+    "prismjs": "^1.29.0",
+    "sortablejs": "^1.15.0",
+    "tom-select": "^2.2.2",
+    "vanillajs-datepicker": "^1.3.1"
+  },
+  "devDependencies": {
+    "@types/bootstrap-select": "^1.13.4",
+    "@types/jquery": "^3.5.16",
+    "@types/jqueryui": "^1.12.16",
+    "@types/sortablejs": "^1.15.1",
+    "@types/vanillajs-datepicker": "^1.2.1",
+    "autoprefixer": "^10.4.0",
+    "typescript": "^4.9.5",
+    "vite": "^2.6.10"
+  },
+  "scripts": {
+    "watch": "vite build --watch --mode=development",
+    "build": "vite build --mode=production"
+  }
+}
+```
 
-<body>
-	<script src="https://cdn.jsdelivr.net/npm/happy-inputs@2.1.0/src/nomodule-es5-fallback.js"></script>
-	<script>
-		var happy = new Happy;
+**vite.config.js**
 
-		happy.init();
-	</script>
-	<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/jquery-ui-sortable@1.0.0/jquery-ui.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/nette.ajax.js@2.3.0/nette.ajax.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9.1/assets/datagrid.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/nette-forms@3.0.4/src/assets/netteForms.min.js"></script>
+```js
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
 
-	<!-- It is recommended to include this JS file with just a few bits. It refreshes URL on non ajax request -->
-	<script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9.1/assets/datagrid-instant-url-refresh.js"></script>
+export default defineConfig(({ mode }) => {
+	const DEV = mode === 'development';
 
-	<!-- Use this little extension for ajax spinners -->
-	<script src="https://cdn.jsdelivr.net/npm/ublaboo-datagrid@6.9.1/assets/datagrid-spinners.js"></script>
-
-	<!-- Include bootstrap-select.js when using FilterMultiSelect (silviomoreto.github.io/bootstrap-select) -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.15/dist/js/bootstrap-select.js"></script>
-</body>
-</html>
+	return {
+		publicDir: './assets/public',
+		resolve: {
+			alias: {
+				'@': resolve(__dirname, 'assets/js'),
+				'~': resolve(__dirname, 'node_modules'),
+			},
+		},
+		base: '/dist/',
+		server: {
+			open: false,
+			hmr: false,
+		},
+		css: {
+			postcss: [
+				"autoprefixer"
+			]
+		},
+		build: {
+			manifest: true,
+			assetsDir: '',
+			outDir: './www/dist/',
+			emptyOutDir: true,
+			minify: DEV ? false : 'esbuild',
+			rollupOptions: {
+				output: {
+					manualChunks: undefined,
+					chunkFileNames: '[name].js',
+					entryFileNames: '[name].js',
+					assetFileNames: '[name].[ext]',
+				},
+				input: {
+					app: './assets/js/main.js'
+				}
+			}
+		},
+	}
+});
 ```

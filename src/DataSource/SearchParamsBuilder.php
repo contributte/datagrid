@@ -1,114 +1,69 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\DataSource;
+namespace Contributte\Datagrid\DataSource;
 
 final class SearchParamsBuilder
 {
 
-	/**
-	 * @var string
-	 */
-	private $indexName;
+	private array $sort = [];
 
-	/**
-	 * @var array
-	 */
-	private $sort = [];
+	private ?int $from = null;
 
-	/**
-	 * @var int|null
-	 */
-	private $from = null;
+	private ?int $size = null;
 
-	/**
-	 * @var int|null
-	 */
-	private $size = null;
+	private array $phrasePrefixQueries = [];
 
-	/**
-	 * @var array
-	 */
-	private $phrasePrefixQueries = [];
+	private array $matchQueries = [];
 
-	/**
-	 * @var array
-	 */
-	private $matchQueries = [];
+	private array $booleanMatchQueries = [];
 
-	/**
-	 * @var array
-	 */
-	private $booleanMatchQueries = [];
+	private array $rangeQueries = [];
 
-	/**
-	 * @var array
-	 */
-	private $rangeQueries = [];
+	private array $idsQueries = [];
 
-	/**
-	 * @var array
-	 */
-	private $idsQueries = [];
-
-
-	public function __construct(string $indexName)
+	public function __construct(private string $indexName)
 	{
-		$this->indexName = $indexName;
 	}
-
 
 	public function addPhrasePrefixQuery(string $field, string $query): void
 	{
 		$this->phrasePrefixQueries[] = [$field => $query];
 	}
 
-
-	/**
-	 * @param mixed $query
-	 */
-	public function addMatchQuery(string $field, $query): void
+	public function addMatchQuery(string $field, mixed $query): void
 	{
 		$this->matchQueries[] = [$field => $query];
 	}
-
 
 	public function addBooleanMatchQuery(string $field, array $queries): void
 	{
 		$this->booleanMatchQueries[] = [$field => $queries];
 	}
 
-
 	public function addRangeQuery(string $field, ?int $from, ?int $to): void
 	{
 		$this->rangeQueries[] = [$field => ['from' => $from, 'to' => $to]];
 	}
-
 
 	public function addIdsQuery(array $ids): void
 	{
 		$this->idsQueries[] = $ids;
 	}
 
-
 	public function setSort(array $sort): void
 	{
 		$this->sort = $sort;
 	}
-
 
 	public function setFrom(int $from): void
 	{
 		$this->from = $from;
 	}
 
-
 	public function setSize(int $size): void
 	{
 		$this->size = $size;
 	}
-
 
 	public function buildParams(): array
 	{
@@ -226,4 +181,5 @@ final class SearchParamsBuilder
 
 		return $return;
 	}
+
 }

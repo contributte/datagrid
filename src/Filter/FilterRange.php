@@ -1,49 +1,29 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Filter;
 
-namespace Ublaboo\DataGrid\Filter;
-
+use Contributte\Datagrid\Datagrid;
 use Nette\Forms\Container;
-use Ublaboo\DataGrid\DataGrid;
 
 class FilterRange extends OneColumnFilter
 {
 
-	/**
-	 * @var array
-	 */
-	protected $placeholders = [];
+	protected array $placeholders = [];
 
-	/**
-	 * @var string
-	 */
-	protected $nameSecond;
+	protected ?string $template = 'datagrid_filter_range.latte';
 
-	/**
-	 * @var string
-	 */
-	protected $template = 'datagrid_filter_range.latte';
-
-	/**
-	 * @var string
-	 */
-	protected $type = 'range';
-
+	protected ?string $type = 'range';
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		string $name,
 		string $column,
-		string $nameSecond
+		protected string $nameSecond
 	)
 	{
 		parent::__construct($grid, $key, $name, $column);
-
-		$this->nameSecond = $nameSecond;
 	}
-
 
 	public function addToFormContainer(Container $container): void
 	{
@@ -61,17 +41,16 @@ class FilterRange extends OneColumnFilter
 			$text_from = reset($placeholders);
 
 			if ($text_from) {
-				$from->setAttribute('placeholder', $text_from);
+				$from->setHtmlAttribute('placeholder', $text_from);
 			}
 
 			$text_to = end($placeholders);
 
 			if ($text_to && ($text_to !== $text_from)) {
-				$to->setAttribute('placeholder', $text_to);
+				$to->setHtmlAttribute('placeholder', $text_to);
 			}
 		}
 	}
-
 
 	/**
 	 * Set html attr placeholder of both inputs
@@ -85,7 +64,6 @@ class FilterRange extends OneColumnFilter
 		return $this;
 	}
 
-
 	/**
 	 * Get html attr placeholders
 	 */
@@ -93,7 +71,6 @@ class FilterRange extends OneColumnFilter
 	{
 		return $this->placeholders;
 	}
-
 
 	/**
 	 * Get filter condition
@@ -109,4 +86,5 @@ class FilterRange extends OneColumnFilter
 			],
 		];
 	}
+
 }

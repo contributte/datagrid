@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\GroupAction;
+namespace Contributte\Datagrid\GroupAction;
 
 class GroupTextareaAction extends GroupAction
 {
@@ -11,4 +9,5 @@ class GroupTextareaAction extends GroupAction
 	{
 		parent::__construct($title);
 	}
+
 }

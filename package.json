@@ -1,20 +1,39 @@
 {
-  "name": "ublaboo-datagrid",
-  "version": "6.9.1",
-  "description": "Assets for php composer package ublaboo/datagrid",
-  "keywords": [
-    "ublaboo",
-    "contributte",
-    "datagrid"
-  ],
-  "author": "Pavel Janda <me@paveljanda.com>",
-  "license": "MIT",
-  "main": "assets/datagrid.js",
-  "files": [
-    "assets/*"
-  ],
-  "scripts": {
-    "release-dry": "npm publish --dry-run",
-    "release": "npm publish"
-  }
+	"name": "@contributte/datagrid",
+	"version": "6.9.1",
+	"description": "Assets for contributte/datagrid",
+	"keywords": [
+		"contributte",
+		"datagrid",
+		"tables"
+	],
+	"license": "MIT",
+	"main": "assets/datagrid.js",
+	"files": [
+		"assets/*"
+	],
+	"scripts": {
+		"release-dry": "npm publish --dry-run",
+		"release": "npm publish"
+	},
+	"dependencies": {
+		"naja": "^2.5.0"
+	},
+	"devDependencies": {
+		"@fortawesome/fontawesome-free": "^6.3.0",
+		"bootstrap": "^5.3.0-alpha3",
+		"nette-forms": "^3.3.1",
+		"prismjs": "^1.29.0",
+		"sortablejs": "^1.15.0",
+		"tom-select": "^2.2.2",
+		"vanillajs-datepicker": "^1.3.1",
+		"@types/bootstrap-select": "^1.13.4",
+		"@types/jquery": "^3.5.16",
+		"@types/jqueryui": "^1.12.16",
+		"@types/sortablejs": "^1.15.1",
+		"@types/vanillajs-datepicker": "^1.2.1",
+		"autoprefixer": "^10.4.0",
+		"typescript": "^4.9.5",
+		"vite": "^2.6.10"
+	}
 }

@@ -1,31 +1,19 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\GroupAction;
+namespace Contributte\Datagrid\GroupAction;
 
 class GroupSelectAction extends GroupAction
 {
 
-	/**
-	 * @var array
-	 */
-	protected $options;
-
-
-	public function __construct(string $title, array $options = [])
+	public function __construct(string $title, protected array $options = [])
 	{
 		parent::__construct($title);
-
-		$this->options = $options;
 	}
-
 
 	public function getOptions(): array
 	{
 		return $this->options;
 	}
-
 
 	/**
 	 * Has the action some options?
@@ -34,4 +22,5 @@ class GroupSelectAction extends GroupAction
 	{
 		return $this->options !== [];
 	}
+
 }

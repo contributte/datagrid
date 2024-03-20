@@ -1,12 +1,12 @@
 Table of contents
 
 - [Row](#row)
-	- [Row conditions](#row-conditions)
-		- [Allow Group Action](#allow-group-action)
-		- [Allow Inline Edit](#allow-inline-edit)
-		- [Allow Actions](#allow-actions)
-		- [Allow Action of MultiAction](#allow-action-of-multiaction)
-	- [Row callback](#row-callback)
+    - [Row conditions](#row-conditions)
+        - [Allow Group Action](#allow-group-action)
+        - [Allow Inline Edit](#allow-inline-edit)
+        - [Allow Actions](#allow-actions)
+        - [Allow Action of MultiAction](#allow-action-of-multiaction)
+    - [Row callback](#row-callback)
 
 # Row
 
@@ -14,7 +14,7 @@ Table of contents
 
 ### Allow Group Action
 
-Now all rows have to provide group action or editing. Or some other of your actions. You can forbid group acitons rendering for some items like this:
+Now all rows have to provide group action or editing. Or some other of your actions. You can forbid group actions rendering for some items like this:
 
 ```php
 $grid->allowRowsGroupAction(function(Row $item): bool {
@@ -24,7 +24,7 @@ $grid->allowRowsGroupAction(function(Row $item): bool {
 
 ### Allow Inline Edit
 
-Also inline editing cound be disabled for some rows:
+Also, inline editing can be disabled for some rows:
 
 ```php
 $grid->allowRowsInlineEdit(function(Row $item): bool {
@@ -34,7 +34,7 @@ $grid->allowRowsInlineEdit(function(Row $item): bool {
 
 ### Allow Actions
 
-It works simalary when you want to allow actions for just some of your items:
+It works similarly, when you want to allow actions for just some of your items:
 
 ```php
 $grid->allowRowsAction('delete', function(Row $item): bool {

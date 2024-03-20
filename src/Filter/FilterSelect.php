@@ -1,57 +1,38 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Filter;
 
-namespace Ublaboo\DataGrid\Filter;
-
+use Contributte\Datagrid\Datagrid;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Ublaboo\DataGrid\DataGrid;
 use UnexpectedValueException;
 
 class FilterSelect extends OneColumnFilter
 {
 
-	/**
-	 * @var array
-	 */
-	protected $options;
+	protected bool $translateOptions = false;
 
-	/**
-	 * @var bool
-	 */
-	protected $translateOptions = false;
+	protected array $attributes = [
+		'class' => ['form-select', 'form-select-sm'],
+	];
 
-	/**
-	 * @var string
-	 */
-	protected $template = 'datagrid_filter_select.latte';
+	protected ?string $template = 'datagrid_filter_select.latte';
 
-	/**
-	 * @var string
-	 */
-	protected $type = 'select';
+	protected ?string $type = 'select';
 
-	/**
-	 * @var string|null
-	 */
-	protected $prompt = null;
-
+	protected ?string $prompt = null;
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $key,
 		string $name,
-		array $options,
+		protected array $options,
 		string $column
 	)
 	{
 		parent::__construct($grid, $key, $name, $column);
-
-		$this->options = $options;
 	}
-
 
 	public function addToFormContainer(Container $container): void
 	{
@@ -74,7 +55,6 @@ class FilterSelect extends OneColumnFilter
 		}
 	}
 
-
 	/**
 	 * @return static
 	 */
@@ -85,30 +65,25 @@ class FilterSelect extends OneColumnFilter
 		return $this;
 	}
 
-
 	public function getOptions(): array
 	{
 		return $this->options;
 	}
-
 
 	public function getTranslateOptions(): bool
 	{
 		return $this->translateOptions;
 	}
 
-
 	public function getCondition(): array
 	{
 		return [$this->column => $this->getValue()];
 	}
 
-
 	public function getPrompt(): ?string
 	{
 		return $this->prompt;
 	}
-
 
 	/**
 	 * @return static
@@ -119,7 +94,6 @@ class FilterSelect extends OneColumnFilter
 
 		return $this;
 	}
-
 
 	protected function addControl(
 		Container $container,
@@ -138,4 +112,5 @@ class FilterSelect extends OneColumnFilter
 
 		return $input;
 	}
+
 }

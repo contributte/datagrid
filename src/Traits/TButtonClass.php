@@ -1,16 +1,11 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Ublaboo\DataGrid\Traits;
+namespace Contributte\Datagrid\Traits;
 
 trait TButtonClass
 {
 
-	/**
-	 * @var string
-	 */
-	protected $class = 'btn btn-xs btn-default btn-secondary';
+	protected string $class = 'btn btn-xs btn-default btn-secondary';
 
 	/**
 	 * @return static
@@ -21,7 +16,6 @@ trait TButtonClass
 
 		return $this;
 	}
-
 
 	public function getClass(): string
 	{

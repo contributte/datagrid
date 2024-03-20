@@ -1,34 +1,30 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
-namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
-
+use Contributte\Datagrid\DataSource\NetteDatabaseTableDataSource;
+use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Nette\Caching\Storages\DevNullStorage;
 use Nette\Database\Connection;
-use Nette\Database\Context;
 use Nette\Database\Conventions\DiscoveredConventions;
+use Nette\Database\Explorer;
 use Nette\Database\Structure;
 use Nette\Database\Table\Selection;
-use Ublaboo;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
 final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 {
 
-	/**
-	 * @var Context
-	 */
-	private $db;
+	private Explorer $db;
 
 	public function setUp(): void
 	{
 		$this->setUpDatabase();
-		$this->ds = new Ublaboo\DataGrid\DataSource\NetteDatabaseTableDataSource($this->db->table('users'), 'id');
+		$this->ds = new NetteDatabaseTableDataSource($this->db->table('users'), 'id');
 
-		$factory = new Ublaboo\DataGrid\Tests\Files\TestingDataGridFactory();
-		$this->grid = $factory->createTestingDataGrid();
+		$factory = new TestingDatagridFactory();
+		$this->grid = $factory->createTestingDatagrid();
 	}
 
 	protected function setUpDatabase(): void
@@ -37,13 +33,13 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 		$storage = new DevNullStorage();
 		$structure = new Structure($connection, $storage);
 		$conventions = new DiscoveredConventions($structure);
-		$this->db = new Context($connection, $structure, $conventions, $storage);
+		$this->db = new Explorer($connection, $structure, $conventions, $storage);
 
 		$this->db->query('CREATE TABLE users (
 								id      INTEGER      PRIMARY KEY AUTOINCREMENT,
 								name    VARCHAR (50),
 								age     INTEGER (3),
-								address VARCHAR (50) 
+								address VARCHAR (50)
 							);
 		');
 
@@ -52,7 +48,7 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 		}
 	}
 
-	protected function getActualResultAsArray()
+	protected function getActualResultAsArray(): array
 	{
 		/** @var Selection $data */
 		$data = $this->ds->getData();

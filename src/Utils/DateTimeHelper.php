@@ -1,11 +1,11 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Utils;
 
-namespace Ublaboo\DataGrid\Utils;
-
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use DateTime;
 use DateTimeImmutable;
-use Ublaboo\DataGrid\Exception\DataGridDateTimeHelperException;
+use DateTimeZone;
 
 final class DateTimeHelper
 {
@@ -13,37 +13,32 @@ final class DateTimeHelper
 	/**
 	 * Try to convert string into \DateTime object
 	 *
-	 * @param mixed $value
 	 * @param array|string[] $formats
-	 * @throws DataGridDateTimeHelperException
+	 * @throws DatagridDateTimeHelperException
 	 */
-	public static function tryConvertToDateTime($value, array $formats = []): \DateTime
+	public static function tryConvertToDateTime(mixed $value, array $formats = []): DateTime
 	{
 		return self::fromString($value, $formats);
 	}
-
 
 	/**
 	 * Try to convert string into \DateTime object from more date formats
 	 *
-	 * @param mixed $value
 	 * @param array|string[] $formats
-	 * @throws DataGridDateTimeHelperException
+	 * @throws DatagridDateTimeHelperException
 	 */
-	public static function tryConvertToDate($value, array $formats = []): \DateTime
+	public static function tryConvertToDate(mixed $value, array $formats = []): DateTime
 	{
 		return self::fromString($value, $formats);
 	}
 
-
 	/**
 	 * Convert string into \DateTime object from more date without time
 	 *
-	 * @param mixed $value
 	 * @param array|string[] $formats
-	 * @throws DataGridDateTimeHelperException
+	 * @throws DatagridDateTimeHelperException
 	 */
-	public static function fromString($value, array $formats = []): \DateTime
+	public static function fromString(mixed $value, array $formats = []): DateTime
 	{
 		$formats = array_merge($formats, [
 			'Y-m-d H:i:s.u',
@@ -55,21 +50,21 @@ final class DateTimeHelper
 			'U',
 		]);
 
-		if ($value instanceof \DateTime) {
+		if ($value instanceof DateTime) {
 			return $value;
 		}
 
 		if ($value instanceof DateTimeImmutable) {
-			/** @var \DateTimeZone|false $tz */
+			/** @var DateTimeZone|false $tz */
 			$tz = $value->getTimezone();
-			$date = new \DateTime('now', $tz !== false ? $tz : null);
+			$date = new DateTime('now', $tz !== false ? $tz : null);
 			$date->setTimestamp($value->getTimestamp());
 
 			return $date;
 		}
 
 		foreach ($formats as $format) {
-			$date = \DateTime::createFromFormat($format, (string) $value);
+			$date = DateTime::createFromFormat($format, (string) $value);
 
 			if ($date === false) {
 				continue;
@@ -81,13 +76,13 @@ final class DateTimeHelper
 		$timestamp = strtotime((string) $value);
 
 		if ($timestamp !== false) {
-			$date = new \DateTime;
+			$date = new DateTime();
 			$date->setTimestamp($timestamp);
 
 			return $date;
 		}
 
-		throw new DataGridDateTimeHelperException();
+		throw new DatagridDateTimeHelperException();
 	}
 
 }

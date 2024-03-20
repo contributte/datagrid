@@ -1,29 +1,22 @@
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
-namespace Ublaboo\DataGrid\Tests\Cases\DataSources;
-
+use Contributte\Datagrid\DataSource\SearchParamsBuilder;
 use Tester\Assert;
 use Tester\TestCase;
-use Ublaboo\DataGrid\DataSource\SearchParamsBuilder;
 
 require __DIR__ . '/../../bootstrap.php';
 
 final class SearchParamsBuilderTest extends TestCase
 {
 
-	/**
-	 * @var SearchParamsBuilder
-	 */
-	private $searchParamsBuilder;
-
+	private SearchParamsBuilder $searchParamsBuilder;
 
 	public function setUp(): void
 	{
 		$this->searchParamsBuilder = new SearchParamsBuilder('users', 'user');
 	}
-
 
 	public function testEmptyQuery(): void
 	{
@@ -34,7 +27,6 @@ final class SearchParamsBuilderTest extends TestCase
 			$this->searchParamsBuilder->buildParams()
 		);
 	}
-
 
 	public function testSort(): void
 	{
@@ -50,7 +42,6 @@ final class SearchParamsBuilderTest extends TestCase
 			$this->searchParamsBuilder->buildParams()
 		);
 	}
-
 
 	public function testPagination(): void
 	{
@@ -68,7 +59,6 @@ final class SearchParamsBuilderTest extends TestCase
 			$this->searchParamsBuilder->buildParams()
 		);
 	}
-
 
 	public function testPhrasePrefixQuery(): void
 	{
@@ -97,7 +87,6 @@ final class SearchParamsBuilderTest extends TestCase
 		);
 	}
 
-
 	public function testMatchQuery(): void
 	{
 		$this->searchParamsBuilder->addMatchQuery('name', 'john');
@@ -125,7 +114,6 @@ final class SearchParamsBuilderTest extends TestCase
 		);
 	}
 
-
 	public function testBooleanMatchQuery(): void
 	{
 		$this->searchParamsBuilder->addBooleanMatchQuery('status', ['active', 'disabled']);
@@ -134,24 +122,24 @@ final class SearchParamsBuilderTest extends TestCase
 			[
 				'index' => 'users',
 				'body' => [
-					"query" => [
-						"bool" => [
-							"must" => [
+					'query' => [
+						'bool' => [
+							'must' => [
 								[
-									"bool" => [
-										"should" => [
+									'bool' => [
+										'should' => [
 											[
 												[
-													"match" => [
-														"status" => [
-															"query" => "active",
+													'match' => [
+														'status' => [
+															'query' => 'active',
 														],
 													],
 												],
 												[
-													"match" => [
-														"status" => [
-															"query" => "disabled",
+													'match' => [
+														'status' => [
+															'query' => 'disabled',
 														],
 													],
 												],
@@ -168,7 +156,6 @@ final class SearchParamsBuilderTest extends TestCase
 		);
 	}
 
-
 	public function testRangeQuery(): void
 	{
 		$this->searchParamsBuilder->addRangeQuery('score', 8, 64);
@@ -177,8 +164,8 @@ final class SearchParamsBuilderTest extends TestCase
 			[
 				'index' => 'users',
 				'body' => [
-					"query" => [
-						"bool" => [
+					'query' => [
+						'bool' => [
 							'must' => [
 								[
 									'range' => [
@@ -197,7 +184,6 @@ final class SearchParamsBuilderTest extends TestCase
 		);
 	}
 
-
 	public function testIdsQuery(): void
 	{
 		$this->searchParamsBuilder->addIdsQuery([0, 1, 1, 2, 3, 5, 8]);
@@ -206,13 +192,19 @@ final class SearchParamsBuilderTest extends TestCase
 			[
 				'index' => 'users',
 				'body' => [
-					"query" => [
-						"bool" => [
+					'query' => [
+						'bool' => [
 							'must' => [
 								[
 									'ids' => [
 										'values' => [
-											0, 1, 1, 2, 3, 5, 8,
+											0,
+			1,
+			1,
+			2,
+			3,
+			5,
+			8,
 										],
 									],
 								],
@@ -224,7 +216,6 @@ final class SearchParamsBuilderTest extends TestCase
 			$this->searchParamsBuilder->buildParams()
 		);
 	}
-
 
 	public function testAllTogether(): void
 	{
@@ -287,8 +278,9 @@ final class SearchParamsBuilderTest extends TestCase
 			$this->searchParamsBuilder->buildParams()
 		);
 	}
+
 }
 
 
-$test_case = new SearchParamsBuilderTest;
+$test_case = new SearchParamsBuilderTest();
 $test_case->run();
