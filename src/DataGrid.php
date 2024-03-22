@@ -1606,6 +1606,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 */
 	public function createComponentFilter()
 	{
+		$this->findSessionValues();
 		$form = new Form($this, 'filter');
 
 		$form->setMethod(static::$form_method);
@@ -1812,6 +1813,7 @@ class DataGrid extends Nette\Application\UI\Control
 		 * Filter itself
 		 */
 		$values = $values['filter'];
+		$this->filter = [];
 
 		foreach ($values as $key => $value) {
 			/**
