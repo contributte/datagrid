@@ -59,7 +59,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 
 	public function getCount(): int
 	{
-		return $this->getFilteredCollection()->count();
+		return $this->dataSource->matching($this->criteria)->count();
 	}
 
 
@@ -68,7 +68,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	 */
 	public function getData(): array
 	{
-		return $this->getFilteredCollection()->toArray();
+		return $this->dataSource->matching($this->criteria)->toArray();
 	}
 
 
@@ -248,9 +248,4 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 		}
 	}
 
-
-	private function getFilteredCollection(): Collection
-	{
-		return $this->dataSource->matching($this->criteria);
-	}
 }
