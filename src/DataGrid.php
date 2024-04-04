@@ -3491,7 +3491,11 @@ class DataGrid extends Control
 			$sort[$column->getSortingColumn()] = $order;
 		}
 
-		if ($sortCallback === null && isset($column)) {
+        if (empty($sort[$this->getPrimaryKey()])) {
+            $sort[$this->getPrimaryKey()] = 'DESC';
+        }
+
+        if ($sortCallback === null && isset($column)) {
 			$sortCallback = $column->getSortableCallback();
 		}
 
