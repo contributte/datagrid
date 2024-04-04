@@ -224,11 +224,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 
 		$dataCondition = [];
 
-		if ($valueFrom) {
+		if (is_numeric($valueFrom)) {
 			$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $valueFrom;
 		}
 
-		if ($valueTo) {
+		if (is_numeric($valueTo)) {
 			$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $valueTo;
 		}
 

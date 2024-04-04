@@ -166,13 +166,15 @@
                                 <div class="col-12 px-0 d-flex justify-content-end">
                                     <div class="{block datagrid-fixed-header}{/block}">
                                         <div class="datagrid-toolbar my-2 d-inline-flex align-baseline justify-content-end" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
-                                            {if $toolbarButtons}
-                                                {foreach $toolbarButtons as $toolbar_button}
-                                                    <span n:class="!$iterator->first? ms-1">
-                                                        {$toolbar_button->renderButton()|noescape}
-                                                    </span>
-                                                {/foreach}
-                                            {/if}
+                                            {snippet toolbarButtons}
+                                                {if $toolbarButtons}
+                                                    {foreach $toolbarButtons as $toolbar_button}
+                                                        <span n:class="!$iterator->first? ms-1">
+                                                            {$toolbar_button->renderButton()|noescape}
+                                                        </span>
+                                                    {/foreach}
+                                                {/if}
+                                            {/snippet}
                                             {if $exports}
                                                 <div class="datagrid-exports" n:snippet="exports" n:block="exports" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
                                                     {foreach $exports as $export}
@@ -187,7 +189,7 @@
                                                     {$inlineAdd->renderButtonAdd()}
                                                 {/if}
 
-                                                <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#multipleColumnselect_{$control->getFullname()}">
+                                                <button type="button" class="btn btn-sm {$btnSecondaryClass} " data-bs-toggle="modal" data-bs-target="#multipleColumnselect_{$control->getFullname()}">
                                                     <i n:block="icon-gear" class="{$iconPrefix}cog"></i>
                                                 </button>
                                             </div>
@@ -722,10 +724,6 @@
 		}
 
 		const columnStatusToJson = JSON.stringify(columnStatus);
-
-        console.log(columnStatusToJson);
-        console.log(JSON.parse(columnStatusToJson));
-        console.log(columnStatus);
 
         naja.makeRequest(
             'POST',

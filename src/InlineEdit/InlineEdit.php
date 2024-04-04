@@ -94,7 +94,7 @@ class InlineEdit
 		$this->primaryWhereColumn = $primaryWhereColumn;
 
 		$this->title = 'ublaboo_datagrid.edit';
-		$this->class = 'btn btn-sm btn-secondary ajax';
+		$this->class = sprintf('btn btn-sm %s ajax', $grid::$btnSecondaryClass);
 		$this->icon = 'pencil pencil-alt';
 
 		$this->onControlAfterAdd[] = [$this, 'addControlsClasses'];

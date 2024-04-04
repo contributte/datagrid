@@ -24,9 +24,9 @@ final class TestingPresenter extends Presenter
 	/**
 	 * {@inheritDoc}
 	 */
-	public function link(string $destination, ...$args): string
+	public function link(string $destination, $args = []): string
 	{
-		return $destination . '?' . http_build_query($args[0]);
+		return $destination . '?' . http_build_query($args);
 	}
 
 

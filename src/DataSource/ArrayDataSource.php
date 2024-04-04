@@ -15,6 +15,7 @@ use Ublaboo\DataGrid\Filter\FilterDate;
 use Ublaboo\DataGrid\Filter\FilterDateRange;
 use Ublaboo\DataGrid\Filter\FilterMultiSelect;
 use Ublaboo\DataGrid\Filter\FilterRange;
+use Ublaboo\DataGrid\Filter\FilterSelect;
 use Ublaboo\DataGrid\Filter\FilterText;
 use Ublaboo\DataGrid\Utils\DateTimeHelper;
 use Ublaboo\DataGrid\Utils\Sorting;
@@ -195,6 +196,10 @@ class ArrayDataSource implements IDataSource
 			foreach ($condition as $column => $value) {
 				$value = (string) $value;
 				$rowVal = (string) $row[$column];
+
+				if ($filter instanceof FilterSelect) {
+					return $rowVal === $value;
+				}
 
 				if ($filter instanceof FilterText && $filter->isExactSearch()) {
 					return $rowVal === $value;

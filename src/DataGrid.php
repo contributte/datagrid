@@ -160,6 +160,11 @@ class DataGrid extends Control
 	public static string $iconPrefix = 'fa-fw fa fa-';
 
 	/**
+	 * @var string
+	 */
+	public static $btnSecondaryClass = 'btn-default btn-secondary';
+
+	/**
 	 * Default form method
 	 *
 	 * @var string
@@ -377,8 +382,6 @@ class DataGrid extends Control
 		if ($parent !== null) {
 			$parent->addComponent($this, $name);
 		}
-
-		$this->monitor('Nette\Application\UI\Presenter');
 
 		/**
 		 * Try to find previous filters, pagination, perPage and other values in session
@@ -658,11 +661,15 @@ class DataGrid extends Control
 		 */
 		$rows = [];
 
-		$items = $this->redrawItem !== [] ? $this->dataModel->filterRow($this->redrawItem) : $this->dataModel->filterData(
-			$this->getPaginator(),
-			$this->createSorting($this->sort, $this->sortCallback),
-			$this->assembleFilters()
-		);
+		if ($this->redrawItem !== []) {
+			$items = $this->dataModel->filterRow($this->redrawItem);
+		} else {
+			$items = $this->dataModel->filterData(
+				$this->getPaginator(),
+				$this->createSorting($this->sort, $this->sortCallback),
+				$this->assembleFilters()
+			);
+		}
 
 		$hasGroupActionOnRows = false;
 
@@ -708,6 +715,7 @@ class DataGrid extends Control
 		$template->show_default_sort_button = $this->isSortButtonActive();
 		$template->originalTemplate = $this->getOriginalTemplateFile();
 		$template->iconPrefix = static::$iconPrefix;
+		$template->btnSecondaryClass = static::$btnSecondaryClass;
 		$template->itemsDetail = $this->itemsDetail;
 		$template->columnsVisibility = $this->getColumnsVisibility();
 		$template->columnsSummary = $this->columnsSummary;
@@ -2696,7 +2704,8 @@ class DataGrid extends Control
 	{
 		$component = new DataGridPaginator(
 			$this->getTranslator(),
-			static::$iconPrefix
+			static::$iconPrefix,
+			static::$btnSecondaryClass
 		);
 		$paginator = $component->getPaginator();
 
