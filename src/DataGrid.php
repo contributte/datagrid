@@ -3500,7 +3500,7 @@ class DataGrid extends Control
 			$sort[$column->getSortingColumn()] = $order;
 		}
 
-        if (empty($sort[$this->getPrimaryKey()])) {
+        if (!empty($sort) && empty($sort[$this->getPrimaryKey()])) {
             $sort[$this->getPrimaryKey()] = 'ASC';
         }
 
