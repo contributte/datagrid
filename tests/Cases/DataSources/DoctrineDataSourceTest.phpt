@@ -24,7 +24,7 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 	{
 		$this->setUpDatabase();
 
-		$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/tmp']);
+		$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/tmp'], true);
 		$entityManager = EntityManager::create($this->db, $config);
 
 		$queryBuilder = $entityManager->getRepository('Contributte\\Datagrid\\Tests\\Cases\\DataSources\\User')->createQueryBuilder('e');
