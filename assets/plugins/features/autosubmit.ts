@@ -10,25 +10,38 @@ export const AutosubmitChangeAttribute = "data-autosubmit-change";
 
 export class AutosubmitPlugin implements DatagridPlugin {
 	onDatagridInit(datagrid: Datagrid): boolean {
-		// Auto-submit perPage
-		datagrid.el
-			.querySelectorAll<HTMLSelectElement>(`select[${AutosubmitPerPageAttribute}]`)
+		datagrid.ajax.addEventListener('complete', (event) => {
+			this.initPerPage(datagrid);
+			this.initChange(datagrid);
+		});
+
+		this.initPerPage(datagrid);
+		this.initChange(datagrid);
+
+		return true;
+	};
+
+	// Auto-submit perPage
+	initPerPage(datagrid: Datagrid) {
+		datagrid.el.querySelectorAll<HTMLSelectElement>(`select[${AutosubmitPerPageAttribute}]`)
 			.forEach(pageSelectEl => {
 				pageSelectEl.addEventListener("change", () => {
 					let inputEl = pageSelectEl.parentElement?.querySelector("input[type=submit]");
 					if (!inputEl) {
 						inputEl = pageSelectEl.parentElement?.querySelector("button[type=submit]");
 					}
-
+					console.log({ inputEl });
 					if (!(inputEl instanceof HTMLElement)) return;
-
 					const form = inputEl.closest('form');
+					console.log({ form });
 					form && datagrid.ajax.submitForm(form);
 				});
 			});
+	}
 
-		datagrid.el
-			.querySelectorAll<HTMLSelectElement | HTMLInputElement>(`[${AutosubmitAttribute}]`)
+	// Auto-submit change
+	initChange(datagrid: Datagrid) {
+		datagrid.el.querySelectorAll<HTMLSelectElement | HTMLInputElement>(`[${AutosubmitAttribute}]`)
 			.forEach(submitEl => {
 				const form = submitEl.closest("form");
 				if (!form) return;
@@ -63,7 +76,7 @@ export class AutosubmitPlugin implements DatagridPlugin {
 					);
 				}
 			});
-
-		return true;
-	};
+	}
 }
+
+

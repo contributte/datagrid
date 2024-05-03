@@ -100,6 +100,14 @@ export class NajaAjax<C extends Naja = Naja, G extends Datagrid = Datagrid> exte
 			});
 		})
 
+		this.client.addEventListener('complete', (e) => {
+			return this.dispatch('complete', {
+				...e.detail,
+				params: e.detail.request,
+				response: e.detail.response,
+			});
+		})
+
 		return this;
 	}
 

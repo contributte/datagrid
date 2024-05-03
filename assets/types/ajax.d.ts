@@ -60,6 +60,12 @@ export interface SuccessEventDetail<P = DatagridPayload, R extends Response = Re
 	response: Response;
 }
 
+export interface CompleteEventDetail<P = DatagridPayload, R extends Response = Response> {
+	params: BaseRequestParams;
+	payload: Payload<P>;
+	response: Response;
+}
+
 export interface ErrorEventDetail<E extends Error = Error, R extends Response = Response> {
 	params: BaseRequestParams;
 	response?: Response;
@@ -71,6 +77,7 @@ export interface AjaxEventMap extends EventMap {
 	interact: CustomEvent<InteractEventDetail>;
 	snippetUpdate: CustomEvent<InteractEventDetail>;
 	success: CustomEvent<SuccessEventDetail>;
+	complete: CustomEvent<CompleteEventDetail>;
 	error: CustomEvent<ErrorEventDetail>;
 }
 
