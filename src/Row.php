@@ -85,7 +85,13 @@ class Row
 
 	public function getControlClass(): string
 	{
-		return $this->control->getAttribute('class') ?? '';
+		$class = $this->control->getAttribute('class');
+
+		if ($class === null) {
+			return '';
+		}
+
+		return implode(' ', array_keys($class));
 	}
 
 	public function getActiveRowProperty(ActiveRow $item, string $key): mixed
