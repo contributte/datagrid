@@ -58,7 +58,7 @@ class InlineEdit
 	 */
 	protected bool $showNonEditingColumns = true;
 
-	/** @var array */
+	/** @var array<string, mixed> */
 	protected array $dataAttributes = [];
 
 	public function __construct(protected Datagrid $grid, protected ?string $primaryWhereColumn = null)
@@ -99,7 +99,7 @@ class InlineEdit
 
 		if ($this->dataAttributes !== []) {
 			foreach ($this->dataAttributes as $key => $value) {
-				$a->data((string) $key, $value);
+				$a->data($key, $value);
 			}
 		}
 
@@ -133,7 +133,7 @@ class InlineEdit
 
 		if ($this->dataAttributes !== []) {
 			foreach ($this->dataAttributes as $key => $value) {
-				$a->data((string) $key, $value);
+				$a->data($key, $value);
 			}
 		}
 
