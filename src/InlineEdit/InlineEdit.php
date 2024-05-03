@@ -58,6 +58,9 @@ class InlineEdit
 	 */
 	protected bool $showNonEditingColumns = true;
 
+	/** @var array */
+	protected array $dataAttributes = [];
+
 	public function __construct(protected Datagrid $grid, protected ?string $primaryWhereColumn = null)
 	{
 		$this->title = 'contributte_datagrid.edit';
@@ -94,6 +97,12 @@ class InlineEdit
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
+		if ($this->dataAttributes !== []) {
+			foreach ($this->dataAttributes as $key => $value) {
+				$a->data((string) $key, $value);
+			}
+		}
+
 		$a->addText($this->text);
 
 		if ($this->title !== null) {
@@ -121,6 +130,12 @@ class InlineEdit
 			->href($this->grid->link('showInlineAdd!'));
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
+
+		if ($this->dataAttributes !== []) {
+			foreach ($this->dataAttributes as $key => $value) {
+				$a->data((string) $key, $value);
+			}
+		}
 
 		$a->addText($this->text);
 
@@ -197,6 +212,16 @@ class InlineEdit
 	public function showNonEditingColumns(): bool
 	{
 		return $this->showNonEditingColumns;
+	}
+
+	/**
+	 * @return static
+	 */
+	public function setDataAttribute(string $key, mixed $value): self
+	{
+		$this->dataAttributes[$key] = $value;
+
+		return $this;
 	}
 
 }
