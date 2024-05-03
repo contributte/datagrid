@@ -124,9 +124,9 @@ class ArrayDataSource implements IDataSource
 			}
 
 			if ($order === 'ASC') {
-				ksort($data);
+				ksort($data, SORT_LOCALE_STRING);
 			} else {
-				krsort($data);
+				krsort($data, SORT_LOCALE_STRING);
 			}
 
 			$dataSource = [];
