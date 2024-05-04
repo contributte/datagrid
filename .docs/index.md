@@ -82,15 +82,3 @@ class SimplePresenter extends BasePresenter
 ```
 
 And that's it. Go check the app. :)
-
-When you don't like pagination, you can disable it:
-
-```php
-$grid->setPagination(false);
-```
-
-But that would be a long dump - there are about a thousand rows in database. To change the items per page, select options you will do that via:
-
-```php
-$grid->setItemsPerPageList([1, 100, 9090, 2]);
-```
