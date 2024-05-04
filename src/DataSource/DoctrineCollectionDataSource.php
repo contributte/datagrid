@@ -23,8 +23,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 	IAggregatable
 {
 
-	/** @var Collection&Selectable */
-	protected $dataSource;
+	protected Selectable&Collection $dataSource;
 
 	protected Criteria $criteria;
 
