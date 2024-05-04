@@ -16,6 +16,7 @@ final class TestPresenter extends Presenter
 
 	protected function createTemplate(?string $class = null): Template
 	{
+		// @phpstan-ignore-next-line
 		return Mockery::mock(Template::class)
 			->shouldReceive('getFile')
 			->andReturn(__DIR__ . '/template.latte')
