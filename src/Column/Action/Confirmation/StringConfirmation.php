@@ -5,7 +5,7 @@ namespace Contributte\Datagrid\Column\Action\Confirmation;
 final class StringConfirmation implements IConfirmation
 {
 
-	public function __construct(private string $question, private ?string $placeholderName = null)
+	public function __construct(private readonly string $question, private readonly ?string $placeholderName = null)
 	{
 	}
 

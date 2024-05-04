@@ -27,7 +27,7 @@ class Option
 
 	protected ?IConfirmation $confirmation = null;
 
-	public function __construct(private Datagrid $grid, protected ColumnStatus $columnStatus, protected mixed $value, protected string $text)
+	public function __construct(private readonly Datagrid $grid, protected ColumnStatus $columnStatus, protected mixed $value, protected string $text)
 	{
 	}
 

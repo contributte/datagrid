@@ -21,7 +21,7 @@ final class SearchParamsBuilder
 
 	private array $idsQueries = [];
 
-	public function __construct(private string $indexName)
+	public function __construct(private readonly string $indexName)
 	{
 	}
 
