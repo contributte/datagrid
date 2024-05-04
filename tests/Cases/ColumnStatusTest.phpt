@@ -14,19 +14,19 @@ require __DIR__ . '/../Files/TestingDatagridFactory.php';
 final class ColumnStatusTest extends TestCase
 {
 
-	private Datagrid $grid;
+	private Datagrid $datagrid;
 
 	public function setUp(): void
 	{
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	public function testStatus(): void
 	{
-		$grid = $this->grid;
+		$datagrid = $this->datagrid;
 
-		$grid->addColumnStatus('status', 'Status')
+		$datagrid->addColumnStatus('status', 'Status')
 			->setCaret(false)
 			->addOption(1, 'Online')
 			->setIcon('check')
@@ -42,12 +42,12 @@ final class ColumnStatusTest extends TestCase
 			->endOption()
 			->onChange[] = [$this, 'statusChange'];
 
-		$status = $grid->getColumn('status');
+		$status = $datagrid->getColumn('status');
 
 		Assert::same('status', $status->getKey());
 		Assert::same(3, count($status->getOptions()));
 
-		$row = new Row($grid, ['id' => 10, 'status' => 2], 'id');
+		$row = new Row($datagrid, ['id' => 10, 'status' => 2], 'id');
 
 		$current_option = $status->getCurrentOption($row);
 
@@ -56,10 +56,10 @@ final class ColumnStatusTest extends TestCase
 
 	public function testRemoveColumn(): void
 	{
-		$grid = $this->grid;
-		$grid->addColumnText('test', 'Test');
-		$grid->removeColumn('test');
-		$grid->getColumnsVisibility();
+		$datagrid = $this->datagrid;
+		$datagrid->addColumnText('test', 'Test');
+		$datagrid->removeColumn('test');
+		$datagrid->getColumnsVisibility();
 	}
 
 }

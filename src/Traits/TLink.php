@@ -21,14 +21,14 @@ trait TLink
 	 * @throws UnexpectedValueException
 	 */
 	protected function createLink(
-		Datagrid $grid,
+		Datagrid $datagrid,
 		string $href,
 		array $params
 	): string
 	{
-		$targetComponent = $grid;
+		$targetComponent = $datagrid;
 
-		$presenter = $grid->getPresenter();
+		$presenter = $datagrid->getPresenter();
 
 		if (str_contains($href, ':')) {
 			return $presenter->link($href, $params);
@@ -38,7 +38,7 @@ trait TLink
 			$targetComponent = $targetComponent->getParent();
 
 			if (!$targetComponent instanceof Component) {
-				throw $this->createHierarchyLookupException($grid, $href, $params);
+				throw $this->createHierarchyLookupException($datagrid, $href, $params);
 			}
 
 			try {
@@ -63,17 +63,17 @@ trait TLink
 		}
 
 		// Went 10 steps up to the Presenter and did not find any signal handler
-		throw $this->createHierarchyLookupException($grid, $href, $params);
+		throw $this->createHierarchyLookupException($datagrid, $href, $params);
 	}
 
 	private function createHierarchyLookupException(
-		Datagrid $grid,
+		Datagrid $datagrid,
 		string $href,
 		array $params
 	): DatagridLinkCreationException
 	{
-		$parent = $grid->getParent();
-		$presenter = $grid->getPresenter();
+		$parent = $datagrid->getParent();
+		$presenter = $datagrid->getPresenter();
 
 		if ($parent === null) {
 			throw new UnexpectedValueException(

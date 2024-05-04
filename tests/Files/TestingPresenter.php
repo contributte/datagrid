@@ -23,7 +23,7 @@ final class TestingPresenter extends Presenter
 		return $destination . '?' . http_build_query($args);
 	}
 
-	protected function createComponentGrid(string $name): Datagrid
+	protected function createComponentDatagrid(string $name): Datagrid
 	{
 		return new Datagrid($this, $name);
 	}

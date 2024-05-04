@@ -34,7 +34,7 @@ class Export
 	protected ?string $target = null;
 
 	public function __construct(
-		protected Datagrid $grid,
+		protected Datagrid $datagrid,
 		string $text,
 		callable $callback,
 		protected bool $filtered
@@ -49,7 +49,7 @@ class Export
 	{
 		$a = Html::el('a', [
 			'class' => [$this->class],
-			'title' => $this->grid->getTranslator()->translate($this->getTitle()),
+			'title' => $this->datagrid->getTranslator()->translate($this->getTitle()),
 			'href' => $this->link,
 			'target' => $this->target,
 		]);
@@ -57,10 +57,10 @@ class Export
 		$this->tryAddIcon(
 			$a,
 			$this->getIcon(),
-			$this->grid->getTranslator()->translate($this->getTitle())
+			$this->datagrid->getTranslator()->translate($this->getTitle())
 		);
 
-		$a->addText($this->grid->getTranslator()->translate($this->text));
+		$a->addText($this->datagrid->getTranslator()->translate($this->text));
 
 		if ($this->isAjax()) {
 			$a->appendAttribute('class', 'ajax');
@@ -145,7 +145,7 @@ class Export
 	 */
 	public function invoke(iterable $data): void
 	{
-		($this->callback)($data, $this->grid);
+		($this->callback)($data, $this->datagrid);
 	}
 
 	/**

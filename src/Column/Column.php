@@ -277,7 +277,7 @@ abstract class Column extends FilterableColumn
 	 */
 	public function getSortNext(): array
 	{
-		$defaultSort = $this->grid->getColumnDefaultSort($this->key);
+		$defaultSort = $this->datagrid->getColumnDefaultSort($this->key);
 
 		if ($this->sort === 'ASC') {
 			return [$this->key => $defaultSort === 'DESC' ? false : 'DESC'];
@@ -498,7 +498,7 @@ abstract class Column extends FilterableColumn
 		$el->appendAttribute('class', sprintf('col-%s', $key));
 
 		if ($row !== null && $tag === 'td' && $this->isEditable($row)) {
-			$link = $this->grid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
+			$link = $this->datagrid->link('edit!', ['key' => $key, 'id' => $row->getId()]);
 
 			$el->data('datagrid-editable-url', $link);
 
@@ -524,7 +524,7 @@ abstract class Column extends FilterableColumn
 		$this->defaultHide = $defaultHide;
 
 		if ($defaultHide) {
-			$this->grid->setSomeColumnDefaultHide($defaultHide);
+			$this->datagrid->setSomeColumnDefaultHide($defaultHide);
 		}
 
 		return $this;

@@ -28,13 +28,13 @@ class ColumnStatus extends Column
 	protected array $options = [];
 
 	public function __construct(
-		Datagrid $grid,
+		Datagrid $datagrid,
 		string $key,
 		string $column,
 		string $name
 	)
 	{
-		parent::__construct($grid, $key, $column, $name);
+		parent::__construct($datagrid, $key, $column, $name);
 
 		$this->key = $key;
 
@@ -93,7 +93,7 @@ class ColumnStatus extends Column
 			throw new DatagridColumnStatusException('Option value has to be scalar');
 		}
 
-		$option = new Option($this->grid, $this, $value, $text);
+		$option = new Option($this->datagrid, $this, $value, $text);
 
 		$this->options[] = $option;
 

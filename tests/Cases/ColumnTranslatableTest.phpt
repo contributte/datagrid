@@ -13,33 +13,33 @@ require __DIR__ . '/../Files/TestingDatagridFactory.php';
 final class ColumnTranslatableTest extends TestCase
 {
 
-	private Datagrid $grid;
+	private Datagrid $datagrid;
 
 	public function setUp(): void
 	{
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	public function testTranslatable(): void
 	{
-		$grid = $this->grid;
+		$datagrid = $this->datagrid;
 
-		$grid->addColumnText('translatable', 'translatable');
+		$datagrid->addColumnText('translatable', 'translatable');
 
-		$translatable = $grid->getColumn('translatable');
+		$translatable = $datagrid->getColumn('translatable');
 
 		Assert::same(true, $translatable->isTranslatableHeader());
 	}
 
 	public function testDisabledTranslating(): void
 	{
-		$grid = $this->grid;
+		$datagrid = $this->datagrid;
 
-		$grid->addColumnText('non_translatable', 'non_translatable')
+		$datagrid->addColumnText('non_translatable', 'non_translatable')
 			->setTranslatableHeader(false);
 
-		$translatable = $grid->getColumn('non_translatable');
+		$translatable = $datagrid->getColumn('non_translatable');
 
 		Assert::same(false, $translatable->isTranslatableHeader());
 	}

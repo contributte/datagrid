@@ -24,14 +24,14 @@ class FilterSelect extends OneColumnFilter
 	protected ?string $prompt = null;
 
 	public function __construct(
-		Datagrid $grid,
+		Datagrid $datagrid,
 		string $key,
 		string $name,
 		protected array $options,
 		string $column
 	)
 	{
-		parent::__construct($grid, $key, $name, $column);
+		parent::__construct($datagrid, $key, $name, $column);
 	}
 
 	public function addToFormContainer(Container $container): void

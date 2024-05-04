@@ -13,7 +13,7 @@ use Contributte\Datagrid\Filter\FilterText;
 abstract class FilterableColumn
 {
 
-	public function __construct(protected Datagrid $grid, protected string $key, protected string $column, protected string $name)
+	public function __construct(protected Datagrid $datagrid, protected string $key, protected string $column, protected string $name)
 	{
 	}
 
@@ -27,7 +27,7 @@ abstract class FilterableColumn
 				: $columns;
 		}
 
-		return $this->grid->addFilterText($this->key, $this->name, $columns);
+		return $this->datagrid->addFilterText($this->key, $this->name, $columns);
 	}
 
 	public function setFilterSelect(
@@ -37,7 +37,7 @@ abstract class FilterableColumn
 	{
 		$column ??= $this->column;
 
-		return $this->grid->addFilterSelect($this->key, $this->name, $options, $column);
+		return $this->datagrid->addFilterSelect($this->key, $this->name, $options, $column);
 	}
 
 	public function setFilterMultiSelect(
@@ -47,14 +47,14 @@ abstract class FilterableColumn
 	{
 		$column ??= $this->column;
 
-		return $this->grid->addFilterMultiSelect($this->key, $this->name, $options, $column);
+		return $this->datagrid->addFilterMultiSelect($this->key, $this->name, $options, $column);
 	}
 
 	public function setFilterDate(?string $column = null): FilterDate
 	{
 		$column ??= $this->column;
 
-		return $this->grid->addFilterDate($this->key, $this->name, $column);
+		return $this->datagrid->addFilterDate($this->key, $this->name, $column);
 	}
 
 	public function setFilterRange(
@@ -64,7 +64,7 @@ abstract class FilterableColumn
 	{
 		$column ??= $this->column;
 
-		return $this->grid->addFilterRange($this->key, $this->name, $column, $nameSecond);
+		return $this->datagrid->addFilterRange($this->key, $this->name, $column, $nameSecond);
 	}
 
 	public function setFilterDateRange(
@@ -74,7 +74,7 @@ abstract class FilterableColumn
 	{
 		$column ??= $this->column;
 
-		return $this->grid->addFilterDateRange($this->key, $this->name, $column, $nameSecond);
+		return $this->datagrid->addFilterDateRange($this->key, $this->name, $column, $nameSecond);
 	}
 
 }

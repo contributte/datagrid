@@ -32,7 +32,7 @@ class TestingDatagridFactoryRouter
 
 		$presenter->run(new Request('Test', 'GET', []));
 
-		return $presenter->getComponent('grid');
+		return $presenter->getComponent('datagrid');
 	}
 
 }

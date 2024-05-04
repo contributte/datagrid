@@ -16,7 +16,7 @@ There is a possibility to render the data as a tree:
  * First parameter is a callback that will return particular children rows for given parent
  * Second is a column name (or callback), that indicates whether the row has some children or not
  */
-$grid->setTreeView(callable $getChildrenCallback, string|callable $has_children_column);
+$datagrid->setTreeView(callable $getChildrenCallback, string|callable $has_children_column);
 ```
 
 ## Example table structure

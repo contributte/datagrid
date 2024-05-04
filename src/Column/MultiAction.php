@@ -25,7 +25,7 @@ class MultiAction extends Column
 	use TButtonCaret;
 	use TLink;
 
-	protected Datagrid $grid;
+	protected Datagrid $datagrid;
 
 	protected string $name;
 
@@ -34,9 +34,9 @@ class MultiAction extends Column
 	/** @var array|callable[] */
 	private array $rowConditions = [];
 
-	public function __construct(Datagrid $grid, string $key, string $name)
+	public function __construct(Datagrid $datagrid, string $key, string $name)
 	{
-		parent::__construct($grid, $key, '', $name);
+		parent::__construct($datagrid, $key, '', $name);
 
 		$this->setTemplate(__DIR__ . '/../templates/column_multi_action.latte');
 	}
@@ -49,7 +49,7 @@ class MultiAction extends Column
 
 		$this->tryAddIcon($button, $this->getIcon(), $this->getName());
 
-		$button->addText($this->grid->getTranslator()->translate($this->name));
+		$button->addText($this->datagrid->getTranslator()->translate($this->name));
 
 		if ($this->hasCaret()) {
 			$button->addHtml('&nbsp;');
@@ -59,7 +59,7 @@ class MultiAction extends Column
 		if ($this->getTitle() !== null) {
 			$button->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->getTitle())
+				$this->datagrid->getTranslator()->translate($this->getTitle())
 			);
 		}
 
@@ -89,10 +89,10 @@ class MultiAction extends Column
 		$href ??= $key;
 
 		if ($params === null) {
-			$params = [$this->grid->getPrimaryKey()];
+			$params = [$this->datagrid->getPrimaryKey()];
 		}
 
-		$action = new Action($this->grid, $key, $href, $name, $params);
+		$action = new Action($this->datagrid, $key, $href, $name, $params);
 
 		$action->setClass('dropdown-item datagrid-multiaction-dropdown-item');
 

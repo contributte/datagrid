@@ -19,14 +19,14 @@ class ActionCallback extends Action
 	/**
 	 * Create link to datagrid::handleActionCallback() to fire custom callback
 	 */
-	protected function createLink(Datagrid $grid, string $href, array $params): string
+	protected function createLink(Datagrid $datagrid, string $href, array $params): string
 	{
 		/**
 		 * Int case of ActionCallback, $this->href is a identifier of user callback
 		 */
 		$params += ['__key' => $this->href];
 
-		return $this->grid->link('actionCallback!', $params);
+		return $this->datagrid->link('actionCallback!', $params);
 	}
 
 }

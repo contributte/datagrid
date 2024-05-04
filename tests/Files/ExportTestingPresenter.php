@@ -8,12 +8,12 @@ use Nette\Application\UI\Presenter;
 final class ExportTestingPresenter extends Presenter
 {
 
-	protected function createComponentGrid(string $name): Datagrid
+	protected function createComponentDatagrid(string $name): Datagrid
 	{
-		$grid = new Datagrid(null, $name);
-		$grid->addExportCsv('export', 'export.csv');
+		$datagrid = new Datagrid(null, $name);
+		$datagrid->addExportCsv('export', 'export.csv');
 
-		return $grid;
+		return $datagrid;
 	}
 
 }

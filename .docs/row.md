@@ -17,7 +17,7 @@ Table of contents
 Now all rows have to provide group action or editing. Or some other of your actions. You can forbid group actions rendering for some items like this:
 
 ```php
-$grid->allowRowsGroupAction(function(Row $item): bool {
+$datagrid->allowRowsGroupAction(function(Row $item): bool {
 	return $item->id !== 2;
 });
 ```
@@ -27,7 +27,7 @@ $grid->allowRowsGroupAction(function(Row $item): bool {
 Also, inline editing can be disabled for some rows:
 
 ```php
-$grid->allowRowsInlineEdit(function(Row $item): bool {
+$datagrid->allowRowsInlineEdit(function(Row $item): bool {
 	return $item->role === 'admin';
 });
 ```
@@ -37,7 +37,7 @@ $grid->allowRowsInlineEdit(function(Row $item): bool {
 It works similarly, when you want to allow actions for just some of your items:
 
 ```php
-$grid->allowRowsAction('delete', function(Row $item): bool {
+$datagrid->allowRowsAction('delete', function(Row $item): bool {
 	return $item->id !== 3;
 });
 ```
@@ -47,12 +47,12 @@ $grid->allowRowsAction('delete', function(Row $item): bool {
 In case you need to show user just some actions in MultiAction list:
 
 ```php
-$grid->addMultiAction('goto', 'Go to')
+$datagrid->addMultiAction('goto', 'Go to')
 	->addAction('profile', 'Profile', 'Profile:default')
 	->addAction('settings', 'Settings', 'Settings:default')
 	->addAction('homepage', 'Homepage', 'Homepage:default');
 
-$grid->allowRowsMultiAction(
+$datagrid->allowRowsMultiAction(
 	'goto',
 	'profile',
 	function($item): bool {
@@ -60,7 +60,7 @@ $grid->allowRowsMultiAction(
 	}
 );
 
-$grid->allowRowsMultiAction(
+$datagrid->allowRowsMultiAction(
 	'goto',
 	'settings',
 	function($item): bool {
@@ -74,7 +74,7 @@ $grid->allowRowsMultiAction(
 If you want to alter table row class, you can do this with row callback:
 
 ```php
-$grid->setRowCallback(function($item, $tr) {
+$datagrid->setRowCallback(function($item, $tr) {
 	$tr->addClass('super-' . $item->id);
 });
 ```

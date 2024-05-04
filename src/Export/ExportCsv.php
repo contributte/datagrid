@@ -10,7 +10,7 @@ class ExportCsv extends Export
 {
 
 	public function __construct(
-		Datagrid $grid,
+		Datagrid $datagrid,
 		string $text,
 		string $name,
 		bool $filtered,
@@ -24,7 +24,7 @@ class ExportCsv extends Export
 		}
 
 		parent::__construct(
-			$grid,
+			$datagrid,
 			$text,
 			$this->getExportCallback($name, $outputEncoding, $delimiter, $includeBom),
 			$filtered
@@ -40,7 +40,7 @@ class ExportCsv extends Export
 	{
 		return function (
 			array $data,
-			Datagrid $grid
+			Datagrid $datagrid
 		) use (
 			$name,
 			$outputEncoding,
@@ -50,12 +50,12 @@ class ExportCsv extends Export
 			$columns = $this->getColumns();
 
 			if ($columns === []) {
-				$columns = $this->grid->getColumns();
+				$columns = $this->datagrid->getColumns();
 			}
 
-			$csvDataModel = new CsvDataModel($data, $columns, $this->grid->getTranslator());
+			$csvDataModel = new CsvDataModel($data, $columns, $this->datagrid->getTranslator());
 
-			$this->grid->getPresenter()->sendResponse(new CSVResponse(
+			$this->datagrid->getPresenter()->sendResponse(new CSVResponse(
 				$csvDataModel->getSimpleData(),
 				$name,
 				$outputEncoding,

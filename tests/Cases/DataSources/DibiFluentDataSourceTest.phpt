@@ -22,7 +22,7 @@ final class DibiFluentDataSourceTest extends BaseDataSourceTest
 		$this->setUpDatabase();
 		$this->ds = new DibiFluentDataSource($this->db->select('*')->from('users'), 'id');
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	protected function setUpDatabase(): void

@@ -16,41 +16,41 @@ final class DatagridTest extends TestCase
 	public function testDefaultFilter(): void
 	{
 		$factory = new TestingDatagridFactoryRouter();
-		/** @var Datagrid $grid */
-		$grid = $factory->createTestingDatagrid()->getComponent('grid');
-		$grid->addFilterText('test', 'Test filter');
-		$grid->setDefaultFilter([
+		/** @var Datagrid $datagrid */
+		$datagrid = $factory->createTestingDatagrid()->getComponent('datagrid');
+		$datagrid->addFilterText('test', 'Test filter');
+		$datagrid->setDefaultFilter([
 			'test' => 'value',
 		]);
 
-		$grid->setFilter(['test' => 'value']);
-		Assert::true($grid->isFilterDefault());
+		$datagrid->setFilter(['test' => 'value']);
+		Assert::true($datagrid->isFilterDefault());
 
-		$grid->setFilter(['test' => null]);
-		Assert::false($grid->isFilterDefault());
+		$datagrid->setFilter(['test' => null]);
+		Assert::false($datagrid->isFilterDefault());
 	}
 
 	public function testResetFilterLinkWithRememberOption(): void
 	{
 		$factory = new TestingDatagridFactoryRouter();
-		/** @var Datagrid $grid */
-		$grid = $factory->createTestingDatagrid()->getComponent('grid');
-		$grid->setRememberState(true);
+		/** @var Datagrid $datagrid */
+		$datagrid = $factory->createTestingDatagrid()->getComponent('datagrid');
+		$datagrid->setRememberState(true);
 
-		Assert::exception(function () use ($grid): void {
-			$grid->handleResetFilter();
+		Assert::exception(function () use ($datagrid): void {
+			$datagrid->handleResetFilter();
 		}, AbortException::class);
 	}
 
 	public function testResetFilterLinkWithNoRememberOption(): void
 	{
 		$factory = new TestingDatagridFactoryRouter();
-		/** @var Datagrid $grid */
-		$grid = $factory->createTestingDatagrid()->getComponent('grid');
-		$grid->setRememberState(false);
+		/** @var Datagrid $datagrid */
+		$datagrid = $factory->createTestingDatagrid()->getComponent('datagrid');
+		$datagrid->setRememberState(false);
 
-		Assert::exception(function () use ($grid): void {
-			$grid->handleResetFilter();
+		Assert::exception(function () use ($datagrid): void {
+			$datagrid->handleResetFilter();
 		}, AbortException::class);
 	}
 

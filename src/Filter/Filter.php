@@ -29,7 +29,7 @@ abstract class Filter
 
 	private ?string $placeholder = null;
 
-	public function __construct(protected Datagrid $grid, protected string $key, protected string $name)
+	public function __construct(protected Datagrid $datagrid, protected string $key, protected string $name)
 	{
 	}
 
@@ -156,7 +156,7 @@ abstract class Filter
 
 	protected function addAttributes(BaseControl $input): BaseControl
 	{
-		if ($this->grid->hasAutoSubmit()) {
+		if ($this->datagrid->hasAutoSubmit()) {
 			$input->setHtmlAttribute('data-autosubmit', true);
 		} else {
 			$input->setHtmlAttribute('data-datagrid-manualsubmit', true);

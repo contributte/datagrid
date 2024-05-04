@@ -72,10 +72,10 @@ class SimplePresenter extends BasePresenter
 
 	public function createComponentSimpleGrid($name)
 	{
-		$grid = new Datagrid($this, $name);
+		$datagrid = new Datagrid($this, $name);
 
-		$grid->setDataSource($this->db->select('*')->from('example'));
-		$grid->addColumnText('name', 'Name');
+		$datagrid->setDataSource($this->db->select('*')->from('example'));
+		$datagrid->addColumnText('name', 'Name');
 	}
 
 }
@@ -86,11 +86,11 @@ And that's it. Go check the app. :)
 When you don't like pagination, you can disable it:
 
 ```php
-$grid->setPagination(false);
+$datagrid->setPagination(false);
 ```
 
 But that would be a long dump - there are about a thousand rows in database. To change the items per page, select options you will do that via:
 
 ```php
-$grid->setItemsPerPageList([1, 100, 9090, 2]);
+$datagrid->setItemsPerPageList([1, 100, 9090, 2]);
 ```

@@ -14,7 +14,7 @@ Table of contents
 When you set custom datagrid template, you will probably want to extend it. There are some `blocks` defined, so you can extend just some blocks. Presenter:
 
 ```php
-$grid->setTemplateFile(__DIR__ . '/../../custom_datagrid_template.latte');
+$datagrid->setTemplateFile(__DIR__ . '/../../custom_datagrid_template.latte');
 ```
 
 Template:
@@ -50,7 +50,7 @@ Or you can define column template by defining special block(s):
 
 ```
 
-This will overwrite native rendering of ID column (`$grid->addColumn('id', 'Id');`).
+This will overwrite native rendering of ID column (`$datagrid->addColumn('id', 'Id');`).
 
 ## Column header definition
 

@@ -17,12 +17,12 @@ use Tester\TestCase;
 final class RowTest extends TestCase
 {
 
-	private Datagrid $grid;
+	private Datagrid $datagrid;
 
 	public function setUp(): void
 	{
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	public function testControl(): void
@@ -32,7 +32,7 @@ final class RowTest extends TestCase
 			$row->addClass('bg-warning');
 		};
 
-		$row = new Row($this->grid, $item, 'id');
+		$row = new Row($this->datagrid, $item, 'id');
 		$callback($item, $row->getControl());
 
 		Assert::same(20, $row->getId());
@@ -43,7 +43,7 @@ final class RowTest extends TestCase
 	{
 		$item = ['id' => 20, 'name' => 'John Doe'];
 
-		$row = new Row($this->grid, $item, 'id');
+		$row = new Row($this->datagrid, $item, 'id');
 
 		Assert::same(20, $row->getId());
 		Assert::same('John Doe', $row->getValue('name'));
@@ -53,7 +53,7 @@ final class RowTest extends TestCase
 	{
 		$item = (object) ['id' => 20, 'name' => 'John Doe'];
 
-		$row = new Row($this->grid, $item, 'id');
+		$row = new Row($this->datagrid, $item, 'id');
 
 		Assert::same(20, $row->getId());
 	}
@@ -65,7 +65,7 @@ final class RowTest extends TestCase
 
 		$entity->setPartner($entity2);
 
-		$row = new Row($this->grid, $entity, 'id');
+		$row = new Row($this->datagrid, $entity, 'id');
 
 		Assert::same(20, $row->getId());
 		Assert::same('John Doe', $row->getValue('name'));
@@ -79,7 +79,7 @@ final class RowTest extends TestCase
 		$entity->id = '978-80-257-1309-9';
 		$entity->pageCount = 42;
 
-		$row = new Row($this->grid, $entity, 'id');
+		$row = new Row($this->datagrid, $entity, 'id');
 
 		Assert::same('978-80-257-1309-9', $row->getValue('id'));
 		Assert::same(42, $row->getValue('pageCount'));

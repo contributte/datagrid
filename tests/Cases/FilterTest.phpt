@@ -16,12 +16,12 @@ final class FilterTest extends TestCase
 	public function testFilterSubmit(): void
 	{
 		$factory = new TestingDatagridFactoryRouter();
-		/** @var Datagrid $grid */
-		$grid = $factory->createTestingDatagrid()->getComponent('grid');
-		$filterForm = $grid->createComponentFilter();
+		/** @var Datagrid $datagrid */
+		$datagrid = $factory->createTestingDatagrid()->getComponent('datagrid');
+		$filterForm = $datagrid->createComponentFilter();
 
-		Assert::exception(function () use ($grid, $filterForm): void {
-			$grid->filterSucceeded($filterForm);
+		Assert::exception(function () use ($datagrid, $filterForm): void {
+			$datagrid->filterSucceeded($filterForm);
 		}, AbortException::class);
 	}
 

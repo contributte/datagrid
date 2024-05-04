@@ -15,7 +15,7 @@ final class ArrayDataSourceTest extends BaseDataSourceTest
 	{
 		$this->ds = new ArrayDataSource($this->data);
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 }

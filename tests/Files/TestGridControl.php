@@ -8,7 +8,7 @@ use Nette\Application\UI\Control;
 class TestGridControl extends Control
 {
 
-	public function createComponentGrid(): Datagrid
+	public function createComponentDatagrid(): Datagrid
 	{
 		return new Datagrid();
 	}

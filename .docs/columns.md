@@ -42,15 +42,15 @@ There are several column classes and they all have some common behaviour and pro
 Let's add a simple text column like we've done before:
 
 ```php
-$grid->addColumnText('name', 'Name');
+$datagrid->addColumnText('name', 'Name');
 ```
 
 Parameters that the method takes are: `$key, $title, $column = $key`. By default, the column name is the same as the key. There is a key, because you can show more data grid columns that will display only one database table column:
 
 ```php
-$grid->addColumnText('name', 'Name'); // Equivalent to $grid->addColumnText('name', 'Name', 'name');
-$grid->addColumnText('name2', 'Name', 'name');
-$grid->addColumnText('name3', 'Name', 'name');
+$datagrid->addColumnText('name', 'Name'); // Equivalent to $datagrid->addColumnText('name', 'Name', 'name');
+$datagrid->addColumnText('name2', 'Name', 'name');
+$datagrid->addColumnText('name3', 'Name', 'name');
 ```
 
 ### Templates
@@ -58,7 +58,7 @@ $grid->addColumnText('name3', 'Name', 'name');
 Columns may have it's own template. I will add one more parameter (optional) to the method `::setTemplate()`, just for fun:
 
 ```php
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setTemplate(__DIR__ . '/templates/name.latte', ['foo' => 'bar']);
 ```
 
@@ -70,7 +70,7 @@ In that template (name.latte), we will have two variables available: `$item` and
 We can also modify data outputting via renderer callbacks:
 
 ```php
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setRenderer(function($item) {
 		return strtoupper($item->id . ': ' . $item->name);
 	});
@@ -79,7 +79,7 @@ $grid->addColumnText('name', 'Name')
 But hey, what if I want to replace **just some** rows? No problem, the second optional argument tells me (callback again) whether the datagrid should use your renderer or not. Example:
 
 ```php
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setRenderer(function($item) {
 		return strtoupper($item->id . ': ' . $item->name);
 	}, function($item) {
@@ -92,7 +92,7 @@ $grid->addColumnText('name', 'Name')
 Outputted data could have a simple array replacement instead of renderer callback:
 
 ```php
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setReplacement([
 		'John' => 'Doe',
 		'Hell' => 'o'
@@ -104,7 +104,7 @@ $grid->addColumnText('name', 'Name')
 By default, latte escapes all values from data source. You can disable that:
 
 ```php
-$grid->addColumnText('link_html', 'Link')
+$datagrid->addColumnText('link_html', 'Link')
 	->setTemplateEscaping(FALSE);
 ```
 
@@ -113,21 +113,21 @@ $grid->addColumnText('link_html', 'Link')
 You can set the column as sortable.
 
 ```php
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setSortable();
 ```
 
 When using doctrine as data source, you can output data the object way using dot-notation and property accessor. But when you are using column of related table for sorting, you probably want to use alias for sorting:
 
 ```php
-$grid->addColumnText('role', 'User role', 'role.name')
+$datagrid->addColumnText('role', 'User role', 'role.name')
 	->setSortable('r.name')
 ```
 
 ### Resetting pagination after sorting
 
 ```php
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setSortable()
 	->setSortableResetPagination();
 ```
@@ -137,7 +137,7 @@ $grid->addColumnText('name', 'Name')
 `Datagrid` implements default sorting mechanism:
 
 ```php
-$grid->setDefaultSort(['name' => 'DESC']);
+$datagrid->setDefaultSort(['name' => 'DESC']);
 ```
 
 ### Resetting default sort
@@ -145,7 +145,7 @@ $grid->setDefaultSort(['name' => 'DESC']);
 By default, once you reset the filter, default sort is applied. If you don't want to apply it after resetting the filter, pass FALSE as a second parameter to `Datagrid::setDefaultSort()`:
 
 ```php
-$grid->setDefaultSort(['id' => 'DESC'], FALSE);
+$datagrid->setDefaultSort(['id' => 'DESC'], FALSE);
 ```
 
 ### Multiple columns sort
@@ -153,7 +153,7 @@ $grid->setDefaultSort(['id' => 'DESC'], FALSE);
 Sorting by multiple columns is disabled by default. But can be enabled:
 
 ```php
-$grid->setMultiSortEnabled($enabled = TRUE); // Pass FALSE to disable
+$datagrid->setMultiSortEnabled($enabled = TRUE); // Pass FALSE to disable
 ```
 
 ### Default per page
@@ -161,7 +161,7 @@ $grid->setMultiSortEnabled($enabled = TRUE); // Pass FALSE to disable
 You can also set default "items per page" value:
 
 ```php
-$grid->setDefaultPerPage(20);
+$datagrid->setDefaultPerPage(20);
 ```
 
 ### Custom sorting Callback
@@ -169,7 +169,7 @@ $grid->setDefaultPerPage(20);
 You can define your own sorting callback:
 
 ```php
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setSortable()
 	->setSortableCallback(function($datasource, $sort) {
 		/**
@@ -184,7 +184,7 @@ $grid->addColumnText('name', 'Name')
 Column can be aligned to one side:
 
 ```php
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setAlign('center');
 ```
 
@@ -193,8 +193,8 @@ $grid->addColumnText('name', 'Name')
 You can remove column from grid like so:
 
 ```php
-$grid->addColumnText('foo', 'Name', 'name');
-$grid->removeColumn('foo');
+$datagrid->addColumnText('foo', 'Name', 'name');
+$datagrid->removeColumn('foo');
 ```
 
 ## Column Text
@@ -209,8 +209,8 @@ What more can ColumnNumber offer? Number formatting:
 /**
  * Default format: decimals = 0, dec_point = '.', thousands_sep = ' '
  */
-$grid->addColumnNumber('price', 'Price');
-$grid->addColumnNumber('price2', 'Price', 'price')
+$datagrid->addColumnNumber('price', 'Price');
+$datagrid->addColumnNumber('price2', 'Price', 'price')
 	->setFormat(2, ',', '.');
 ```
 
@@ -222,7 +222,7 @@ DateTime formatting (or just date or just time):
 /**
  * Default format: 'j. n. Y'
  */
-$grid->addColumnDateTime('created', 'Date registered')
+$datagrid->addColumnDateTime('created', 'Date registered')
 	->setFormat('H:i:s');
 ```
 
@@ -234,20 +234,20 @@ We can use column link to output a&gt; element:
 /**
  * Parameters order: $key, $name, $href = NULL, $column = NULL, array $params = NULL
  */
-$grid->addColumnLink('name', 'Name', 'edit');
+$datagrid->addColumnLink('name', 'Name', 'edit');
 ```
 
 Now, ColumnLink is pretty clever! It passes an id parameter to the "edit" destination. Well, not id, more likely `$primary_key`, which can be changed.
 But that is not all. What if we want to pass some other parameters to the action method (or handler - edit!)? Use the last method parameter:
 
 ```php
-$grid->addColumnLink('name', 'Name', 'edit', 'name', ['role']);
+$datagrid->addColumnLink('name', 'Name', 'edit', 'name', ['role']);
 ```
 
 That is still not all. You can pass the parameters under different name:
 
 ```php
-$grid->addColumnLink('name', 'Name', 'edit', 'name', ['id', 'surname' => 'name']);
+$datagrid->addColumnLink('name', 'Name', 'edit', 'name', ['id', 'surname' => 'name']);
 ```
 
 Now, suppose the row in database with **name = John** and **id = 5**. Then the link will look something like that: `/edit?id=5&amp;surname=John`!
@@ -257,7 +257,7 @@ Now, suppose the row in database with **name = John** and **id = 5**. Then the l
 You can tell `ColumnLink` to open its link in new tab:
 
 ```php
-$grid->addColumnLink('name', 'Name', 'edit')
+$datagrid->addColumnLink('name', 'Name', 'edit')
 	->setOpenInNewTab();
 ```
 
@@ -269,7 +269,7 @@ $grid->addColumnLink('name', 'Name', 'edit')
 Once your item keep some "status" flag, it is appropriate to show user the status in highlighted form. Also, there could be a dropdown with available statuses:
 
 ```php
-$grid->addColumnStatus('status', 'Status')
+$datagrid->addColumnStatus('status', 'Status')
 	->addOption(1, 'Online')
 		->endOption()
 	->addOption(0, 'Offline')
@@ -280,7 +280,7 @@ $grid->addColumnStatus('status', 'Status')
 ColumnStatus has optional caret, icon, class and confirmation. By default, there is a caret visible and the main button that toggles statuses dropdown has class "btn-success". You can change all these properties:
 
 ```php
-$grid->addColumnStatus('status', 'Status')
+$datagrid->addColumnStatus('status', 'Status')
 	->setCaret(FALSE)
 	->addOption(1, 'Online')
 		->setIcon('check')
@@ -305,7 +305,7 @@ When ajax request `changeStatus!` is called, you probably want to redraw the ite
 ```php
 public function createComponentColumnsGrid($name)
 {
-	$grid->addColumnStatus('status', 'Status')
+	$datagrid->addColumnStatus('status', 'Status')
 		# ...
 		->onChange[] = [$this, 'statusChange'];
 }
@@ -324,7 +324,7 @@ public function statusChange($id, $new_status)
 Also, option classes in dropdown can be altered:
 
 ```php
-$grid->addColumnStatus('status', 'Status')
+$datagrid->addColumnStatus('status', 'Status')
 	->addOption(1, 'Online')
 	->setClassInDropdown('foo');
 ```
@@ -332,14 +332,14 @@ $grid->addColumnStatus('status', 'Status')
 Options could be also set at once:
 
 ```php
-$grid->addColumnStatus('status', 'Status')
+$datagrid->addColumnStatus('status', 'Status')
 	->setOptions([1 => 'Online', 2 => 'Standby'])
 ```
 
 Accessing particular option:
 
 ```php
-$grid->getColumn('status')->getOption(2)
+$datagrid->getColumn('status')->getOption(2)
 	->setClass('btn-primary'); // For example
 ```
 
@@ -350,7 +350,7 @@ $grid->getColumn('status')->getOption(2)
 In example datagrid above, you can hide columns and then reveal them again. This feature is disabled by default. You can enable it like this:
 
 ```php
-$grid->setColumnsHideable();
+$datagrid->setColumnsHideable();
 ```
 
 Hidden columns are saved into session, so they will remain hidden along all next requests.
@@ -360,7 +360,7 @@ Hidden columns are saved into session, so they will remain hidden along all next
 Columns can be hidden by default:
 
 ```php
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setDefaultHide(); // Or disable default hide: ::setDefaultHide(FALSE)
 ```
 
@@ -373,26 +373,26 @@ If default hide is used, new button is shown in that settings (gear) dropdown - 
 Datagrid implements a feature that allows you to display **sum** of column of displayed items at the bottom of the grid. Try it out:
 
 ```php
-$grid->addColumnNumber('in', 'Income')
+$datagrid->addColumnNumber('in', 'Income')
 	->setFormat(2, ',', '.');
 
-$grid->addColumnNumber('out', 'Expenses')
+$datagrid->addColumnNumber('out', 'Expenses')
 	->setFormat(2, ',', '.');
 
-$grid->setColumnsSummary(['in', 'out']);
+$datagrid->setColumnsSummary(['in', 'out']);
 ```
 
 Summary will be aligned to the same site as the column it is counting. By default, number format is taken also from it's column, but you can change the formatting (for each sum separately):
 
 ```php
-$grid->setColumnsSummary(['in', 'out'])
+$datagrid->setColumnsSummary(['in', 'out'])
 	->setFormat('out', 0, '.', ' ');
 ```
 
 Sure you can use your own callback for each row item number to be add to summary:
 
 ```php
-$grid->setColumnsSummary(['id'], function($item, $column) {
+$datagrid->setColumnsSummary(['id'], function($item, $column) {
 	return $item->{$column} * 10;
 });
 ```
@@ -400,7 +400,7 @@ $grid->setColumnsSummary(['id'], function($item, $column) {
 And as many other places, you may want to use your own renderer callback to show user altered summary data:
 
 ```php
-$grid->setColumnsSummary(['price', 'amount'])
+$datagrid->setColumnsSummary(['price', 'amount'])
 	->setRenderer(function($sum, string $column): string {
 		if ($column === 'price') {
 			return $sum . ' $';
@@ -417,7 +417,7 @@ $grid->setColumnsSummary(['price', 'amount'])
 Some column aggregation can be viewed either using columns summary or using Aggregation Function:
 
 ```php
-$grid->addAggregationFunction('status', new FunctionSum('id'));
+$datagrid->addAggregationFunction('status', new FunctionSum('id'));
 ```
 
 This will render a sum of ids under the `"status"` column.
@@ -429,7 +429,7 @@ As mentioned above, there is one aggregation function prepared: `Contributte\Dat
 In case you want to make the aggregation directly using SQL by your domain, you will probably use interface `IMultipleAggregationFunction` (instead of `ISingleColumnAggregationFunction`):
 
 ```php
-$grid->setMultipleAggregationFunction(
+$datagrid->setMultipleAggregationFunction(
 	new class implements IMultipleAggregationFunction
 	{
 
@@ -483,7 +483,7 @@ This aggregating is used along with `Dibi` in the demo.
 Since table cell elements are rendered using `Nette\Utils\Html`, you can easily alter their html attributes (class, data-attributes etc):
 
 ```php
-$th = $grid->addColumnText('name', 'Name')
+$th = $datagrid->addColumnText('name', 'Name')
     ->getElementPrototype('td'); // Or element <th> via Column::getElementPrototype('th')
 
 $th->data('foo', 'bar');
@@ -493,7 +493,7 @@ $th->class('super-column')
 If you want to modify attributes for both th&gt; and td&gt; at one time, use directly Column::addCellAttributes():
 
 ```php
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
     ->addCellAttributes(['class' => 'text-center']);
 ```
 
@@ -502,9 +502,9 @@ $grid->addColumnText('name', 'Name')
 When you need to modify columns just before rendering (maybe remove some status options or completely change renderer for particular items), you can create column callback, that will be called with `$column` and `$item` in parameter:
 
 ```php
-$grid->addColumnLink('link', 'Link', 'this#demo', 'name', ['id', 'surname' => 'name']);
+$datagrid->addColumnLink('link', 'Link', 'this#demo', 'name', ['id', 'surname' => 'name']);
 
-$grid->addColumnStatus('status', 'Status')
+$datagrid->addColumnStatus('status', 'Status')
 	->addOption(1, 'Online')
 		->setClass('btn-success')
 		->endOption()
@@ -516,13 +516,13 @@ $grid->addColumnStatus('status', 'Status')
 		->endOption()
 	->onChange[] = [$this, 'changeStatus'];
 
-$grid->addColumnCallback('status', function($column, $item) {
+$datagrid->addColumnCallback('status', function($column, $item) {
 	if ($item->id == 2) {
 		$column->removeOption(2);
 	}
 });
 
-$grid->addColumnCallback('link', function($column, $item) {
+$datagrid->addColumnCallback('link', function($column, $item) {
 	if ($item->id == 2) {
 		$column->setRenderer(function() {
 			return '';
@@ -535,7 +535,7 @@ That is the code of the demo shown above. As you can see, item with id == 1 does
 
 
 ```php
-$grid->addColumnCallback('status', function($column, $item) {
+$datagrid->addColumnCallback('status', function($column, $item) {
 	if ($item->id == 2) {
 		$column->setTemplate(NULL);
 		$column->setRenderer(function() {

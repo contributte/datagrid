@@ -16,30 +16,30 @@ final class CreateLinkTest extends TestCase
 
 	use TLink;
 
-	private Datagrid $grid;
+	private Datagrid $datagrid;
 
 	public function setUp(): void
 	{
 		$factory = new TestingDatagridFactoryRouter();
-		$this->grid = $factory->createTestingDatagrid()->getComponent('grid');
+		$this->datagrid = $factory->createTestingDatagrid()->getComponent('datagrid');
 	}
 
 	public function testActionLink(): void
 	{
-		$this->grid->getPresenter()->invalidLinkMode = Presenter::INVALID_LINK_EXCEPTION;
-		$link = $this->createLink($this->grid, 'edit', ['id' => 1]);
+		$this->datagrid->getPresenter()->invalidLinkMode = Presenter::INVALID_LINK_EXCEPTION;
+		$link = $this->createLink($this->datagrid, 'edit', ['id' => 1]);
 		Assert::same('/index.php?id=1&action=edit&presenter=Test', $link);
 
-		$this->grid->getPresenter()->invalidLinkMode = Presenter::INVALID_LINK_EXCEPTION;
-		$link = $this->createLink($this->grid, 'edit', ['id' => 1]);
+		$this->datagrid->getPresenter()->invalidLinkMode = Presenter::INVALID_LINK_EXCEPTION;
+		$link = $this->createLink($this->datagrid, 'edit', ['id' => 1]);
 		Assert::same('/index.php?id=1&action=edit&presenter=Test', $link);
 
-		$this->grid->getPresenter()->invalidLinkMode = Presenter::INVALID_LINK_EXCEPTION;
-		$link = $this->createLink($this->grid, 'edit', ['id' => 1]);
+		$this->datagrid->getPresenter()->invalidLinkMode = Presenter::INVALID_LINK_EXCEPTION;
+		$link = $this->createLink($this->datagrid, 'edit', ['id' => 1]);
 		Assert::same('/index.php?id=1&action=edit&presenter=Test', $link);
 
-		$this->grid->getPresenter()->invalidLinkMode = Presenter::INVALID_LINK_EXCEPTION;
-		$link = $this->createLink($this->grid, 'edit', ['id' => 1]);
+		$this->datagrid->getPresenter()->invalidLinkMode = Presenter::INVALID_LINK_EXCEPTION;
+		$link = $this->createLink($this->datagrid, 'edit', ['id' => 1]);
 		Assert::same('/index.php?id=1&action=edit&presenter=Test', $link);
 	}
 

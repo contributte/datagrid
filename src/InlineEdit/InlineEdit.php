@@ -61,10 +61,10 @@ class InlineEdit
 	/** @var array<string, mixed> */
 	protected array $dataAttributes = [];
 
-	public function __construct(protected Datagrid $grid, protected ?string $primaryWhereColumn = null)
+	public function __construct(protected Datagrid $datagrid, protected ?string $primaryWhereColumn = null)
 	{
 		$this->title = 'contributte_datagrid.edit';
-		$this->class = sprintf('btn btn-xs %s ajax', $grid::$btnSecondaryClass);
+		$this->class = sprintf('btn btn-xs %s ajax', $datagrid::$btnSecondaryClass);
 		$this->icon = 'pencil pencil-alt';
 
 		$this->onControlAfterAdd[] = [$this, 'addControlsClasses'];
@@ -93,7 +93,7 @@ class InlineEdit
 	public function renderButton(Row $row): Html
 	{
 		$a = Html::el('a')
-			->href($this->grid->link('inlineEdit!', ['id' => $row->getId()]));
+			->href($this->datagrid->link('inlineEdit!', ['id' => $row->getId()]));
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
@@ -108,7 +108,7 @@ class InlineEdit
 		if ($this->title !== null) {
 			$a->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->title)
+				$this->datagrid->getTranslator()->translate($this->title)
 			);
 		}
 
@@ -127,7 +127,7 @@ class InlineEdit
 	public function renderButtonAdd(): Html
 	{
 		$a = Html::el('a')
-			->href($this->grid->link('showInlineAdd!'));
+			->href($this->datagrid->link('showInlineAdd!'));
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
@@ -142,7 +142,7 @@ class InlineEdit
 		if ($this->title !== null) {
 			$a->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->title)
+				$this->datagrid->getTranslator()->translate($this->title)
 			);
 		}
 

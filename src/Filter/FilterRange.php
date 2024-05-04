@@ -15,14 +15,14 @@ class FilterRange extends OneColumnFilter
 	protected ?string $type = 'range';
 
 	public function __construct(
-		Datagrid $grid,
+		Datagrid $datagrid,
 		string $key,
 		string $name,
 		string $column,
 		protected string $nameSecond
 	)
 	{
-		parent::__construct($grid, $key, $name, $column);
+		parent::__construct($datagrid, $key, $name, $column);
 	}
 
 	public function addToFormContainer(Container $container): void

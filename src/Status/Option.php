@@ -27,7 +27,7 @@ class Option
 
 	protected ?IConfirmation $confirmation = null;
 
-	public function __construct(private Datagrid $grid, protected ColumnStatus $columnStatus, protected mixed $value, protected string $text)
+	public function __construct(private Datagrid $datagrid, protected ColumnStatus $columnStatus, protected mixed $value, protected string $text)
 	{
 	}
 
@@ -161,7 +161,7 @@ class Option
 		}
 
 		if ($this->confirmation instanceof StringConfirmation) {
-			$question = $this->grid->getTranslator()->translate($this->confirmation->getQuestion());
+			$question = $this->datagrid->getTranslator()->translate($this->confirmation->getQuestion());
 
 			if ($this->confirmation->getPlaceholderName() === null) {
 				return $question;

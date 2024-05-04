@@ -42,7 +42,7 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 
 		$this->ds = new NextrasDataSource($this->model->books->findAll(), 'id');
 
-		$filter = new FilterText($this->grid, 'a', 'b', ['author.name']);
+		$filter = new FilterText($this->datagrid, 'a', 'b', ['author.name']);
 		$filter->setValue('John Red');
 
 		$this->ds->filter([$filter]);
@@ -55,7 +55,7 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 
 		$this->ds = new NextrasDataSource($this->model->users->findAll(), 'id');
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	protected function setUpDatabase(): void

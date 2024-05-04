@@ -25,7 +25,7 @@ class FilterDate extends OneColumnFilter implements IFilterDate
 
 		$this->addAttributes($control);
 
-		if ($this->grid->hasAutoSubmit()) {
+		if ($this->datagrid->hasAutoSubmit()) {
 			$control->setHtmlAttribute('data-autosubmit-change', true);
 		}
 

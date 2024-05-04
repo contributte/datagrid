@@ -15,11 +15,11 @@ final class ExportLinkTest extends TestCase
 	public function testExportLink(): void
 	{
 		$factory = new TestingDatagridFactory();
-		$grid = $factory->createTestingDatagrid('ExportTesting');
-		$grid->setDataSource([]);
+		$datagrid = $factory->createTestingDatagrid('ExportTesting');
+		$datagrid->setDataSource([]);
 
-		Assert::exception(function () use ($grid): void {
-			$grid->handleExport(1);
+		Assert::exception(function () use ($datagrid): void {
+			$datagrid->handleExport(1);
 		}, AbortException::class);
 	}
 

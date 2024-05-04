@@ -24,7 +24,7 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 		$this->ds = new NetteDatabaseTableDataSource($this->db->table('users'), 'id');
 
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	protected function setUpDatabase(): void

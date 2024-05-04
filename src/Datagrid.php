@@ -1982,7 +1982,7 @@ class Datagrid extends Control
 	public function reloadTheWholeGrid(): void
 	{
 		if ($this->getPresenterInstance()->isAjax()) {
-			$this->redrawControl('grid');
+			$this->redrawControl('datagrid');
 
 			$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
 			$this->getPresenterInstance()->payload->_datagrid_name = $this->getFullName();

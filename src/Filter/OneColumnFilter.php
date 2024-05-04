@@ -8,13 +8,13 @@ abstract class OneColumnFilter extends Filter
 {
 
 	public function __construct(
-		Datagrid $grid,
+		Datagrid $datagrid,
 		string $key,
 		string $name,
 		protected string $column
 	)
 	{
-		parent::__construct($grid, $key, $name);
+		parent::__construct($datagrid, $key, $name);
 	}
 
 	/**

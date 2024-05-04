@@ -32,23 +32,23 @@ Parameters are the same as in ColumnLink:
 /**
  * $key, $name = '', $href = $key, array $params = NULL
  */
-$grid->addAction('edit', 'Edit');
+$datagrid->addAction('edit', 'Edit');
 ```
 
 ### Icon
 
 ```php
-$grid->addAction('edit', '')
+$datagrid->addAction('edit', '')
 	->setIcon('pencil');
 
-$grid->addAction('send', '')
+$datagrid->addAction('send', '')
 	->setIcon(function($item) { return $item->sent_already ? 'repeat' : 'envelope'; });
 ```
 
 ### Class
 
 ```php
-$grid->addAction('dosth', '', 'doSomething!')
+$datagrid->addAction('dosth', '', 'doSomething!')
 	->setIcon('pencil')
 	->setClass('btn btn-xs btn-danger ajax');
 ```
@@ -56,7 +56,7 @@ $grid->addAction('dosth', '', 'doSomething!')
 Action class can be also defined by your callback. Row `$item` is passed to your callback as the only argument.
 
 ```php
-$grid->addAction('send', '')
+$datagrid->addAction('send', '')
 	->setIcon('envelope')
 	->setClass(function($item) { return $item->sent_already ? 'btn btn-xs btn-success' : 'btn btn-xs btn-default' });
 ```
@@ -64,7 +64,7 @@ $grid->addAction('send', '')
 ### Title
 
 ```php
-$grid->addAction('edit', '')
+$datagrid->addAction('edit', '')
 	->setIcon('pencil')
 	->setTitle('Edit row');
 ```
@@ -74,7 +74,7 @@ Action title can be defined by custom callback same as title or class.
 ### Confirmation
 
 ```php
-$grid->addAction('delete', '', 'delete!')
+$datagrid->addAction('delete', '', 'delete!')
 	->setIcon('trash')
 	->setTitle('Smazat')
 	->setClass('btn btn-xs btn-danger <strong class="text-danger">ajax</strong>')
@@ -86,7 +86,7 @@ $grid->addAction('delete', '', 'delete!')
 If you want to define confirmation dialog with a callback, the callback has to return string.
 
 ```php
-$grid->addAction('delete', '', 'delete!')
+$datagrid->addAction('delete', '', 'delete!')
 	->setConfirmation(
 		new CallbackConfirmation(
 			function($item) {
@@ -147,7 +147,7 @@ public function handleSetStatus($id, $status)
 You can tell datagrid to be sortable (drag &amp; drop):
 
 ```php
-$grid->setSortable();
+$datagrid->setSortable();
 ```
 
 This will show a handle in your datagrid. When you reorder items in datagrid, a nette.ajax request is sent as a signal to handler `sort!` in your presenter. Handler of datagrid above could look like this:
@@ -239,13 +239,13 @@ public function handleSort($item_id, $prev_id, $next_id)
 The name of the handler used for sorting can be changed:
 
 ```php
-$grid->setSortableHandler('foo!');
+$datagrid->setSortableHandler('foo!');
 ```
 
 Also, when you are using datagrid in component, you have to alter the name a bit:
 
 ```php
-$grid->setSortableHandler('myComponent:sort!');
+$datagrid->setSortableHandler('myComponent:sort!');
 ```
 
 ## MultiAction
@@ -256,7 +256,7 @@ Same as there is column status with pretty dropdown menu, the datagrid comes wit
 /**
  * Multiaction
  */
-$grid->addMultiAction('multi_action', 'MultiAction')
+$datagrid->addMultiAction('multi_action', 'MultiAction')
 	->addAction('blah', 'Blahblah', 'blah!')
 	->addAction('blah2', 'Blahblah2', 'blah!', ['name']);
 ```
@@ -264,7 +264,7 @@ $grid->addMultiAction('multi_action', 'MultiAction')
 Sure you can alter multiaction class, icons, etc. Same you can change icon, class, etc. of nested actions:
 
 ```php
-$grid->getAction('multi_blah')
+$datagrid->getAction('multi_blah')
 	->getAction('blah2')->setIcon('check');
 ```
 
@@ -276,17 +276,17 @@ As you can see in the demo page, there is a little eye button that toggles an it
 /**
  * This will enable rendering item detail in #detail block in your datagrid template
  */
-$grid->setItemsDetail($detail = TRUE, $primary_where_column = $grid->primary_key); // Or just $grid->setItemsDetail();
+$datagrid->setItemsDetail($detail = TRUE, $primary_where_column = $datagrid->primary_key); // Or just $datagrid->setItemsDetail();
 
 /**
  * That would include separate detail template
  */
-$grid->setItemsDetail(__DIR__ . '/templates/Datagrid/grid_item_detail.latte');
+$datagrid->setItemsDetail(__DIR__ . '/templates/Datagrid/grid_item_detail.latte');
 
 /**
  * And here is used just simple renderer callback
  */
-$grid->setItemsDetail(function() { return 'Lorem Ipsum'; });
+$datagrid->setItemsDetail(function() { return 'Lorem Ipsum'; });
 ```
 
 ### Item detail form
@@ -296,15 +296,15 @@ User may use a ItemDetail containing a form (`ItemDetailForm`). Example usage:
 ```php
 $presenter = $this;
 
-$grid->setItemsDetail();
+$datagrid->setItemsDetail();
 
-$grid->setItemsDetailForm(function(Nette\Forms\Container $container) use ($grid, $presenter) {
+$datagrid->setItemsDetailForm(function(Nette\Forms\Container $container) use ($datagrid, $presenter) {
 	$container->addHidden('id');
 	$container->addText('name');
 
 	$container->addSubmit('save', 'Save')
 		->setValidationScope([$container])
-		->onClick[] = function($button) use ($grid, $presenter) {
+		->onClick[] = function($button) use ($datagrid, $presenter) {
 			$values = $button->getParent()->getValues();
 
 			$presenter['examplesGrid']->redrawItem($values->id);
@@ -341,7 +341,7 @@ Additional variables can be passed to item detail template (/block) via `ItemDet
 Custom callback can be set to decide whether to render item detail or not:
 
 ```php
-$grid->getItemsDetail()->setRenderCondition(function($item) {
+$datagrid->getItemsDetail()->setRenderCondition(function($item) {
 	return TRUE;
 });
 ```
@@ -351,7 +351,7 @@ $grid->getItemsDetail()->setRenderCondition(function($item) {
 You don't have to fire event only using `PresenterComponent` signals. There is a possibility to fire events directly:
 
 ```php
-$grid->addActionCallback('custom_callback', '')
+$datagrid->addActionCallback('custom_callback', '')
 	->setIcon('sun-o')
 	->setTitle('Hello, sun')
 	->setClass('btn btn-xs btn-default ajax')
@@ -368,13 +368,13 @@ You treat `ActionCallback` same as `Action`, except for some arguments passed to
 If you need simple links to custom destinations from datagrid toolbar, they can be added like this:
 
 ```php
-$grid->addToolbarButton('this', 'Toolbar');
-$grid->addToolbarButton('this', 'Button', ['foo' => 'bar']);
+$datagrid->addToolbarButton('this', 'Toolbar');
+$datagrid->addToolbarButton('this', 'Button', ['foo' => 'bar']);
 ```
 
 Additional attributes could be added to these buttons
 
 ```php
-$grid->addToolbarButton('this', 'Toolbar')
+$datagrid->addToolbarButton('this', 'Toolbar')
 	->addAttributes(['foo' => 'bar']);
 ```

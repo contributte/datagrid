@@ -15,39 +15,39 @@ require __DIR__ . '/../Files/TestingDatagridFactory.php';
 final class ColumnLinkTest extends TestCase
 {
 
-	private Datagrid $grid;
+	private Datagrid $datagrid;
 
 	public function setUp(): void
 	{
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	public function render(ColumnLink $column): string
 	{
-		$item = new Row($this->grid, ['id' => 1, 'name' => 'John'], 'id');
+		$item = new Row($this->datagrid, ['id' => 1, 'name' => 'John'], 'id');
 
 		return (string) $column->render($item);
 	}
 
 	public function testLink(): void
 	{
-		$link = $this->grid->addColumnLink('name', 'Href');
+		$link = $this->datagrid->addColumnLink('name', 'Href');
 		Assert::same('<a href="name?id=1">John</a>', $this->render($link));
 
-		$link = $this->grid->addColumnLink('name2', 'Href', 'edit', 'name');
+		$link = $this->datagrid->addColumnLink('name2', 'Href', 'edit', 'name');
 		Assert::same('<a href="edit?id=1">John</a>', $this->render($link));
 
-		$link = $this->grid->addColumnLink('name3', 'Href', 'edit', 'id');
+		$link = $this->datagrid->addColumnLink('name3', 'Href', 'edit', 'id');
 		Assert::same('<a href="edit?id=1">1</a>', $this->render($link));
 
-		$link = $this->grid->addColumnLink('name4', 'Href', 'edit', 'id', ['name']);
+		$link = $this->datagrid->addColumnLink('name4', 'Href', 'edit', 'id', ['name']);
 		Assert::same('<a href="edit?name=John">1</a>', $this->render($link));
 
-		$link = $this->grid->addColumnLink('name5', 'Href', 'edit', 'id', ['name', 'id']);
+		$link = $this->datagrid->addColumnLink('name5', 'Href', 'edit', 'id', ['name', 'id']);
 		Assert::same('<a href="edit?name=John&amp;id=1">1</a>', $this->render($link));
 
-		$link = $this->grid->addColumnLink('name6', 'Href', 'edit', 'id', [
+		$link = $this->datagrid->addColumnLink('name6', 'Href', 'edit', 'id', [
 			'name' => 'id',
 			'id' => 'name',
 		]);
@@ -56,7 +56,7 @@ final class ColumnLinkTest extends TestCase
 
 	public function testLinkClass(): void
 	{
-		$link = $this->grid->addColumnLink('name', 'Href')->setClass('btn');
+		$link = $this->datagrid->addColumnLink('name', 'Href')->setClass('btn');
 		Assert::same('<a href="name?id=1" class="btn">John</a>', $this->render($link));
 
 		$link->setClass(null);
@@ -65,7 +65,7 @@ final class ColumnLinkTest extends TestCase
 
 	public function testLinkTitle(): void
 	{
-		$link = $this->grid->addColumnLink('name', 'Href')->setTitle('Hello');
+		$link = $this->datagrid->addColumnLink('name', 'Href')->setTitle('Hello');
 		Assert::same('<a href="name?id=1" title="Hello">John</a>', $this->render($link));
 	}
 

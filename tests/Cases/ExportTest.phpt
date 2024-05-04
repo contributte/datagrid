@@ -14,7 +14,7 @@ require __DIR__ . '/../Files/TestingDatagridFactory.php';
 final class ExportTest extends TestCase
 {
 
-	private Datagrid $grid;
+	private Datagrid $datagrid;
 
 	private array $data = [
 		[
@@ -42,7 +42,7 @@ final class ExportTest extends TestCase
 	public function setUp(): void
 	{
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	public function testExportNotFiltered(): void
@@ -52,17 +52,17 @@ final class ExportTest extends TestCase
 			Assert::same($data, $source);
 		};
 
-		$this->grid->addExportCallback('Export', $callback);
+		$this->datagrid->addExportCallback('Export', $callback);
 
 		$trigger = function (): void {
-			$this->grid->handleExport(1);
+			$this->datagrid->handleExport(1);
 		};
 
 		Assert::exception($trigger, 'Contributte\Datagrid\Exception\DatagridException', 'You have to set a data source first.');
 
-		$this->grid->setDataSource($this->data);
+		$this->datagrid->setDataSource($this->data);
 
-		$this->grid->handleExport(1);
+		$this->datagrid->handleExport(1);
 	}
 
 	public function testExportFiltered(): void
@@ -72,20 +72,20 @@ final class ExportTest extends TestCase
 			Assert::same($data, $source);
 		};
 
-		$this->grid->addExportCallback('Export', $callback, true);
+		$this->datagrid->addExportCallback('Export', $callback, true);
 
-		$this->grid->addFilterText('name', 'Name');
+		$this->datagrid->addFilterText('name', 'Name');
 
-		$this->grid;
+		$this->datagrid;
 		$trigger = function (): void {
-			$this->grid->handleExport(1);
+			$this->datagrid->handleExport(1);
 		};
 
 		Assert::exception($trigger, 'Contributte\Datagrid\Exception\DatagridException', 'You have to set a data source first.');
 
-		$this->grid->setDataSource($this->data);
+		$this->datagrid->setDataSource($this->data);
 
-		$this->grid->handleExport(1);
+		$this->datagrid->handleExport(1);
 	}
 
 }

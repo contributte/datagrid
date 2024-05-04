@@ -20,7 +20,7 @@ As you can see in the example above (or on the homepage), there is column name a
 /**
  * Example callback
  */
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setSortable()
 	->setEditableCallback(function($id, $value): void {
 		echo("Id: $id, new value: $value"); die;
@@ -29,7 +29,7 @@ $grid->addColumnText('name', 'Name')
 /**
  * Or you can do that properly
  */
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setEditableCallback([$this, 'columnNameEdited']);
 ```
 
@@ -38,7 +38,7 @@ $grid->addColumnText('name', 'Name')
 Small inline edit is not limited to textarea, you can you input of type of your choice (that input will be submitted with either **blur** or **submit** (enter press) event). Example usage:
 
 ```php
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setEditableCallback(/**...*/)
 	->setEditableInputType('text', ['class' => 'form-control']);
 ```
@@ -46,7 +46,7 @@ $grid->addColumnText('name', 'Name')
 Or you can use a select:
 
 ```php
-$grid->addColumnText('name', 'Name')
+$datagrid->addColumnText('name', 'Name')
 	->setEditableCallback(/**...*/)
 	->setEditableInputTypeSelect([
 		0 => 'Offline',
@@ -63,7 +63,7 @@ $grid->addColumnText('name', 'Name')
 As you can see in the demo above, you can edit the link column but actually, only the link text will be edited. That you can achieve by following code:
 
 ```php
-$grid->addColumnLink('link', 'Link', 'this#demo', 'name', ['id'])
+$datagrid->addColumnLink('link', 'Link', 'this#demo', 'name', ['id'])
 	->setEditableValueCallback(function(Dibi\Row $row): string {
 		return $row->name;
 	})
@@ -87,12 +87,12 @@ Example useage:
 /**
  * @var Contributte\Datagrid\Datagrid
  */
-$grid = new Datagrid($this, $name);
+$datagrid = new Datagrid($this, $name);
 
 /**
  * Big inline editing
  */
-$grid->addInlineEdit()
+$datagrid->addInlineEdit()
 	->onControlAdd[] = function(Nette\Forms\Container $container): void {
 		$container->addText('id', '');
 		$container->addText('name', '');
@@ -100,7 +100,7 @@ $grid->addInlineEdit()
 		$container->addText('link', '');
 	};
 
-$grid->getInlineEdit()->onSetDefaults[] = function(Nette\Forms\Container $container, $item): void {
+$datagrid->getInlineEdit()->onSetDefaults[] = function(Nette\Forms\Container $container, $item): void {
 	$container->setDefaults([
 		'id' => $item->id,
 		'name' => $item->name,
@@ -109,7 +109,7 @@ $grid->getInlineEdit()->onSetDefaults[] = function(Nette\Forms\Container $contai
 	]);
 };
 
-$grid->getInlineEdit()->onSubmit[] = function($id, Nette\Utils\ArrayHash $values): void {
+$datagrid->getInlineEdit()->onSubmit[] = function($id, Nette\Utils\ArrayHash $values): void {
 	/**
 	 * Save new values
 	 */
@@ -124,8 +124,8 @@ By default, after submitting inline edit, the row is redrawn and the green anima
 /**
  * This callback will redraw the whole grid
  */
-$grid->getInlineEdit()->onCustomRedraw[] = function() use ($grid): void {
-	$grid->redrawControl();
+$datagrid->getInlineEdit()->onCustomRedraw[] = function() use ($datagrid): void {
+	$datagrid->redrawControl();
 };
 ```
 
@@ -134,5 +134,5 @@ $grid->getInlineEdit()->onCustomRedraw[] = function() use ($grid): void {
 If you don't want to set all columns editable, you may want to show these columns normally rendered:
 
 ```php
-$grid->getInlineEdit()->setShowNonEditingColumns();
+$datagrid->getInlineEdit()->setShowNonEditingColumns();
 ```

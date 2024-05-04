@@ -39,7 +39,7 @@ class FilterDateRange extends FilterRange implements IFilterDate
 		$this->addAttributes($from);
 		$this->addAttributes($to);
 
-		if ($this->grid->hasAutoSubmit()) {
+		if ($this->datagrid->hasAutoSubmit()) {
 			$from->setHtmlAttribute('data-autosubmit-change', true);
 			$to->setHtmlAttribute('data-autosubmit-change', true);
 		}

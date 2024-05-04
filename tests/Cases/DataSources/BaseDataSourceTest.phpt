@@ -28,7 +28,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	protected IDataSource $ds;
 
-	protected Datagrid $grid;
+	protected Datagrid $datagrid;
 
 	public function testGetCount(): void
 	{
@@ -37,7 +37,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testGetFilteredCount(): void
 	{
-		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter = new FilterText($this->datagrid, 'a', 'b', ['name']);
 		$filter->setValue('John Red');
 
 		$this->ds->filter([$filter]);
@@ -51,7 +51,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testFilterSingleColumn(): void
 	{
-		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter = new FilterText($this->datagrid, 'a', 'b', ['name']);
 		$filter->setValue('John Red');
 
 		$this->ds->filter([$filter]);
@@ -63,7 +63,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testFilterMultipleColumns(): void
 	{
-		$filter = new FilterText($this->grid, 'a', 'b', ['name', 'address']);
+		$filter = new FilterText($this->datagrid, 'a', 'b', ['name', 'address']);
 		$filter->setValue('lu');
 		$this->ds->filter([$filter]);
 
@@ -79,7 +79,7 @@ abstract class BaseDataSourceTest extends TestCase
 		/**
 		 * Single column - SplitWordsSearch => FALSE
 		 */
-		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter = new FilterText($this->datagrid, 'a', 'b', ['name']);
 		$filter->setSplitWordsSearch(false);
 		$filter->setValue('John Red');
 
@@ -90,7 +90,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testFilterRangeMin(): void
 	{
-		$filter = new FilterRange($this->grid, 'a', 'b', 'age', '-');
+		$filter = new FilterRange($this->datagrid, 'a', 'b', 'age', '-');
 		$filter->setValue(['from' => 40]);
 		$this->ds->filter([$filter]);
 
@@ -103,7 +103,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testFilterRangeMax(): void
 	{
-		$filter = new FilterRange($this->grid, 'a', 'b', 'age', '-');
+		$filter = new FilterRange($this->datagrid, 'a', 'b', 'age', '-');
 		$filter->setValue(['to' => 30]);
 		$this->ds->filter([$filter]);
 
@@ -116,7 +116,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testFilterRangeMinMax(): void
 	{
-		$filter = new FilterRange($this->grid, 'a', 'b', 'age', '-');
+		$filter = new FilterRange($this->datagrid, 'a', 'b', 'age', '-');
 		$filter->setValue(['from' => 12, 'to' => 30]);
 		$this->ds->filter([$filter]);
 
@@ -135,7 +135,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testFilterExactSearch(): void
 	{
-		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter = new FilterText($this->datagrid, 'a', 'b', ['name']);
 		$filter->setExactSearch();
 		$filter->setValue('John Red');
 
@@ -146,7 +146,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testFilterExactSearchId(): void
 	{
-		$filter = new FilterText($this->grid, 'a', 'b', ['id']);
+		$filter = new FilterText($this->datagrid, 'a', 'b', ['id']);
 		$filter->setExactSearch();
 		$filter->setValue(3);
 
@@ -183,7 +183,7 @@ abstract class BaseDataSourceTest extends TestCase
 
 	public function testFilterSelect(): void
 	{
-		$filter = new FilterSelect($this->grid, 'a', 'b', ['John Red' => 'John Red'], 'name');
+		$filter = new FilterSelect($this->datagrid, 'a', 'b', ['John Red' => 'John Red'], 'name');
 		$filter->setValue('John Red');
 
 		$this->ds->filter([$filter]);

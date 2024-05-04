@@ -11,7 +11,7 @@ Table of contents
 
 ## ExportCallback
 
-Datagrid allows you to export the data via `$grid->addExportCallback()`. The parameters are:
+Datagrid allows you to export the data via `$datagrid->addExportCallback()`. The parameters are:
 
 ```php
 /**
@@ -19,7 +19,7 @@ Datagrid allows you to export the data via `$grid->addExportCallback()`. The par
  * $callback = your export callback
  * $filtered = $should datagrid pass a filtered data to your callback, or all?
  */
-$grid->addExportCallback($text, $callback, $filtered = false);
+$datagrid->addExportCallback($text, $callback, $filtered = false);
 ```
 
 You can tell whether to use ajax or not (`->setAjax()`). Or a button title (`->setTitle('Title')`). Or target (`->setTarget('_blank')`).
@@ -30,9 +30,9 @@ There is already a CSV export implemented (filtered and not filtered):
 
 ```php
 /**
- * Or $grid->addExportCsvFiltered();
+ * Or $datagrid->addExportCsvFiltered();
  */
-$grid->addExportCsv('Csv export (filtered)', 'examples.csv')
+$datagrid->addExportCsv('Csv export (filtered)', 'examples.csv')
 	->setTitle('Csv export (filtered)');
 ```
 
@@ -45,13 +45,13 @@ ExportCsv ignores column template, because i don't like the idea Latte (templati
 When you're exporting the data, you can have different columns in export and in the datagrid. Or differently rendered. So there is another method `Contributte\Datagrid\Export\Export::setColumns()`. You can create instances of another columns and pass them in array to this method. These will be rendered in export:
 
 ```php
-$column_name = new Contributte\Datagrid\Column\ColumnText($grid, 'name', 'name', 'Name');
-$column_even = (new Contributte\Datagrid\Column\ColumnText($grid, 'name', 'even', 'Even ID (yes/no)'))
+$column_name = new Contributte\Datagrid\Column\ColumnText($datagrid, 'name', 'name', 'Name');
+$column_even = (new Contributte\Datagrid\Column\ColumnText($datagrid, 'name', 'even', 'Even ID (yes/no)'))
 	->setRenderer(function(array $item): string {
 		return $item['id'] % 2 ? 'No' : 'Yes';
 	});
 
-$grid->addExportCsv('Csv export', 'examples_all.csv')
+$datagrid->addExportCsv('Csv export', 'examples_all.csv')
 	->setTitle('Csv export')
 	->setColumns([
 		$column_name,
@@ -69,10 +69,10 @@ By default, Datagrid exports data in `utf-8` with semicolon delimiter `;`. This 
  * $output_encoding = 'utf-8'
  * $delimiter       = ';'
  */
-$grid->addExportCsvFiltered('Csv export (filtered)', 'examples.csv');
+$datagrid->addExportCsvFiltered('Csv export (filtered)', 'examples.csv');
 
 /**
  * Changed
  */
-$grid->addExportCsv( 'Csv export', 'examples_all.csv', 'windows-1250', ',');
+$datagrid->addExportCsv( 'Csv export', 'examples_all.csv', 'windows-1250', ',');
 ```

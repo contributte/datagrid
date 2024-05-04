@@ -20,13 +20,13 @@ class FilterText extends Filter
 	 * @param array|string[] $columns
 	 */
 	public function __construct(
-		Datagrid $grid,
+		Datagrid $datagrid,
 		string $key,
 		string $name,
 		protected array $columns
 	)
 	{
-		parent::__construct($grid, $key, $name);
+		parent::__construct($datagrid, $key, $name);
 	}
 
 	/**

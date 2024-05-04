@@ -21,7 +21,7 @@ class SubmitButton extends Button
 	use TButtonTitle;
 	use TButtonText;
 
-	public function __construct(protected Datagrid $grid)
+	public function __construct(protected Datagrid $datagrid)
 	{
 		parent::__construct($this->text);
 
@@ -52,7 +52,7 @@ class SubmitButton extends Button
 			}
 		}
 
-		$el->addText($this->grid->getTranslator()->translate($this->getText()));
+		$el->addText($this->datagrid->getTranslator()->translate($this->getText()));
 
 		return $el;
 	}

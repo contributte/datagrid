@@ -19,14 +19,14 @@ class FilterMultiSelect extends FilterSelect
 	];
 
 	public function __construct(
-		Datagrid $grid,
+		Datagrid $datagrid,
 		string $key,
 		string $name,
 		array $options,
 		string $column
 	)
 	{
-		parent::__construct($grid, $key, $name, $options, $column);
+		parent::__construct($datagrid, $key, $name, $options, $column);
 
 		$this->addAttribute('data-selected-icon-check', Datagrid::$iconPrefix . 'check');
 	}

@@ -15,27 +15,27 @@ require __DIR__ . '/../Files/TestingDatagridFactory.php';
 final class ColumnNumberTest extends TestCase
 {
 
-	private Datagrid $grid;
+	private Datagrid $datagrid;
 
 	public function setUp(): void
 	{
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	public function render(ColumnNumber $column): string
 	{
-		$item = new Row($this->grid, ['id' => 1, 'name' => 'John', 'amount' => 345678.567], 'id');
+		$item = new Row($this->datagrid, ['id' => 1, 'name' => 'John', 'amount' => 345678.567], 'id');
 
 		return $column->render($item);
 	}
 
 	public function testFormat(): void
 	{
-		$number = $this->grid->addColumnNumber('amount', 'Amount');
+		$number = $this->datagrid->addColumnNumber('amount', 'Amount');
 		Assert::same('345 679', $this->render($number));
 
-		$number = $this->grid->addColumnNumber('amount2', 'Amount', 'amount')->setFormat(2, '.', ',');
+		$number = $this->datagrid->addColumnNumber('amount2', 'Amount', 'amount')->setFormat(2, '.', ',');
 		Assert::same('345,678.57', $this->render($number));
 	}
 

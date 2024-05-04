@@ -26,7 +26,7 @@ class TestingDatagridFactory
 
 		$presenter->injectPrimary($request, $response, $presenterFactory, null, $session);
 
-		return $presenter->getComponent('grid');
+		return $presenter->getComponent('datagrid');
 	}
 
 }

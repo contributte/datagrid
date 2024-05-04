@@ -20,18 +20,18 @@ use Tester\TestCase;
 final class EnumTest extends TestCase
 {
 
-	private Datagrid $grid;
+	private Datagrid $datagrid;
 
 	public function setUp(): void
 	{
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	public function testArrayWithEnum(): void
 	{
 		$entity = ['id' => 20, 'name' => 'John Doe', 'age' => 23, 'gender' => GenderEnum::Male];
-		$row = new Row($this->grid, $entity, 'id');
+		$row = new Row($this->datagrid, $entity, 'id');
 
 		Assert::same(GenderEnum::Male->value, $row->getValue('gender'));
 	}
@@ -39,7 +39,7 @@ final class EnumTest extends TestCase
 	public function testDoctrineEntityWithEnum(): void
 	{
 		$entity = new TestingDDatagridEntity(['id' => 20, 'name' => 'John Doe', 'age' => 23, 'gender' => GenderEnum::Male]);
-		$row = new Row($this->grid, $entity, 'id');
+		$row = new Row($this->datagrid, $entity, 'id');
 
 		Assert::same(GenderEnum::Male->value, $row->getValue('gender'));
 	}

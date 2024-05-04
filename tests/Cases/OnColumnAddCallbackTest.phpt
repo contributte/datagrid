@@ -21,25 +21,25 @@ require __DIR__ . '/../Files/TestingDatagridFactory.php';
 class OnColumnAddCallbackTest extends TestCase
 {
 
-	private Datagrid $grid;
+	private Datagrid $datagrid;
 
 	public function setUp(): void
 	{
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	public function testSetSortable(): void
 	{
-		$this->grid->onColumnAdd[] = function ($key, Column $column): void {
+		$this->datagrid->onColumnAdd[] = function ($key, Column $column): void {
 			$column->setSortable();
 		};
 
-		$columnText = $this->grid->addColumnText('text', 'textName');
-		$columnNumber = $this->grid->addColumnNumber('number', 'numberName');
-		$columnDateTime = $this->grid->addColumnDateTime('dateTime', 'dateTimeName');
+		$columnText = $this->datagrid->addColumnText('text', 'textName');
+		$columnNumber = $this->datagrid->addColumnNumber('number', 'numberName');
+		$columnDateTime = $this->datagrid->addColumnDateTime('dateTime', 'dateTimeName');
 
-		$columnTextNotSortable = $this->grid->addColumnText('textNotSortable', 'textName')
+		$columnTextNotSortable = $this->datagrid->addColumnText('textNotSortable', 'textName')
 			->setSortable(false);
 
 		Assert::true($columnText->isSortable());

@@ -10,18 +10,18 @@ As you can see in the example below, a `SimpleTranslator` class comes with datag
 ```php
 public function createComponentLocalizationGrid($name): Contributte\Datagrid\Datagrid
 {
-	$grid = new Datagrid($this, $name);
+	$datagrid = new Datagrid($this, $name);
 
-	$grid->setDataSource($this->ndb->table('example'));
+	$datagrid->setDataSource($this->ndb->table('example'));
 
-	$grid->addColumnNumber('id', 'Id')
+	$datagrid->addColumnNumber('id', 'Id')
 		->setAlign('start')
 		->setSortable();
 
-	$grid->addColumnText('name', 'Name')
+	$datagrid->addColumnText('name', 'Name')
 		->setSortable();
 
-	$grid->addColumnDateTime('inserted', 'Inserted');
+	$datagrid->addColumnDateTime('inserted', 'Inserted');
 
 	$translator = new Contributte\Datagrid\Localization\SimpleTranslator([
 		'contributte_datagrid.no_item_found_reset' => 'Žádné položky nenalezeny. Filtr můžete vynulovat',
@@ -44,7 +44,7 @@ public function createComponentLocalizationGrid($name): Contributte\Datagrid\Dat
 		'Inserted' => 'Vloženo'
 	]);
 
-	$grid->setTranslator($translator);
+	$datagrid->setTranslator($translator);
 }
 ```
 
@@ -55,7 +55,7 @@ All filters and their placeholders are translated normally except for `FilterSel
 You can change that behaviour:
 
 ```php
-$grid->addFilterMultiSelect('status', 'Status:', [
+$datagrid->addFilterMultiSelect('status', 'Status:', [
 	0 => 'Offline',
 	1 => 'Online',
 	2 => 'Standby'

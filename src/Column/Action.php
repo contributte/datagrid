@@ -48,16 +48,16 @@ class Action extends Column
 	private $customHref;
 
 	public function __construct(
-		Datagrid $grid,
+		Datagrid $datagrid,
 		string $key,
 		protected string $href,
 		string $name,
 		protected array $params
 	)
 	{
-		parent::__construct($grid, $key, '', $name);
+		parent::__construct($datagrid, $key, '', $name);
 
-		$this->class = sprintf('btn btn-xs %s', $grid::$btnSecondaryClass);
+		$this->class = sprintf('btn btn-xs %s', $datagrid::$btnSecondaryClass);
 	}
 
 	public function render(Row $row): mixed
@@ -73,7 +73,7 @@ class Action extends Column
 		}
 
 		$link = $this->getCustomHref($row) ?? $this->createLink(
-			$this->grid,
+			$this->datagrid,
 			$this->href,
 			$this->getItemParams($row, $this->params) + $this->parameters
 		);
@@ -345,7 +345,7 @@ class Action extends Column
 
 	protected function translate(string $message): string
 	{
-		return $this->grid->getTranslator()->translate($message);
+		return $this->datagrid->getTranslator()->translate($message);
 	}
 
 }

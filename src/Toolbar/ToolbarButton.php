@@ -31,7 +31,7 @@ class ToolbarButton
 	/**
 	 * Toolbar button constructor
 	 */
-	public function __construct(protected Datagrid $grid, protected string $href, string $text, protected array $params = [])
+	public function __construct(protected Datagrid $datagrid, protected string $href, string $text, protected array $params = [])
 	{
 		$this->text = $text;
 	}
@@ -48,7 +48,7 @@ class ToolbarButton
 			// Do not use renderer
 		}
 
-		$link = $this->createLink($this->grid, $this->href, $this->params);
+		$link = $this->createLink($this->datagrid, $this->href, $this->params);
 
 		$a = Html::el('a')->href($link);
 
@@ -58,12 +58,12 @@ class ToolbarButton
 			$a->addAttributes($this->attributes);
 		}
 
-		$a->addText($this->grid->getTranslator()->translate($this->text));
+		$a->addText($this->datagrid->getTranslator()->translate($this->text));
 
 		if ($this->getTitle() !== null) {
 			$a->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->getTitle())
+				$this->datagrid->getTranslator()->translate($this->getTitle())
 			);
 		}
 

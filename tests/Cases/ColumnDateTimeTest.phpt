@@ -16,18 +16,18 @@ require __DIR__ . '/../Files/TestingDatagridFactory.php';
 final class ColumnDateTimeTest extends TestCase
 {
 
-	private Datagrid $grid;
+	private Datagrid $datagrid;
 
 	public function setUp(): void
 	{
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	public function render(ColumnDateTime $column): string
 	{
 		$datetime = DateTime::createFromFormat('Y-m-d H:i:s', '2015-12-15 22:58:42');
-		$item = new Row($this->grid, ['id' => 1, 'name' => 'John', 'date' => $datetime], 'id');
+		$item = new Row($this->datagrid, ['id' => 1, 'name' => 'John', 'date' => $datetime], 'id');
 
 		return $column->render($item);
 	}
@@ -37,7 +37,7 @@ final class ColumnDateTimeTest extends TestCase
 		/**
 		 * Defaul forma is 'j. n. Y'
 		 */
-		$datetime = $this->grid->addColumnDateTime('date', 'Date');
+		$datetime = $this->datagrid->addColumnDateTime('date', 'Date');
 		Assert::same('15. 12. 2015', $this->render($datetime));
 
 		$datetime->setFormat('H:i:s');

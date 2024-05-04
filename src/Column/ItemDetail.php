@@ -39,10 +39,10 @@ class ItemDetail
 
 	protected array $templateParameters = [];
 
-	public function __construct(protected Datagrid $grid, protected string $primaryWhereColumn)
+	public function __construct(protected Datagrid $datagrid, protected string $primaryWhereColumn)
 	{
 		$this->title = 'contributte_datagrid.show';
-		$this->class = sprintf('btn btn-xs %s ajax', $grid::$btnSecondaryClass);
+		$this->class = sprintf('btn btn-xs %s ajax', $datagrid::$btnSecondaryClass);
 		$this->icon = 'eye';
 	}
 
@@ -52,10 +52,10 @@ class ItemDetail
 	public function renderButton(Row $row): Html
 	{
 		$a = Html::el('a')
-			->href($this->grid->link('getItemDetail!', ['id' => $row->getId()]))
+			->href($this->datagrid->link('getItemDetail!', ['id' => $row->getId()]))
 			->data('toggle-detail', $row->getId())
-			->data('toggle-detail-grid-fullname', $this->grid->getFullName())
-			->data('toggle-detail-grid', $this->grid->getName());
+			->data('toggle-detail-grid-fullname', $this->datagrid->getFullName())
+			->data('toggle-detail-grid', $this->datagrid->getName());
 
 		$this->tryAddIcon($a, $this->getIcon(), $this->getText());
 
@@ -64,7 +64,7 @@ class ItemDetail
 		if ($this->title !== null) {
 			$a->setAttribute(
 				'title',
-				$this->grid->getTranslator()->translate($this->title)
+				$this->datagrid->getTranslator()->translate($this->title)
 			);
 		}
 

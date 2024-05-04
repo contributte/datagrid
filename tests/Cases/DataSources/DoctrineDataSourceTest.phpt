@@ -36,7 +36,7 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 		]);
 
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	protected function setUpDatabase(): void

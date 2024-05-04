@@ -17,12 +17,12 @@ final class DoctrineCollectionDataSourceTest extends BaseDataSourceTest
 	{
 		$this->ds = new DoctrineCollectionDataSource(new ArrayCollection($this->data), 'id');
 		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->datagrid = $factory->createTestingDatagrid();
 	}
 
 	public function testFilterMultipleColumns(): void
 	{
-		$filter = new FilterText($this->grid, 'a', 'b', ['name', 'address']);
+		$filter = new FilterText($this->datagrid, 'a', 'b', ['name', 'address']);
 		$filter->setValue('lu');
 		$this->ds->filter([$filter]);
 

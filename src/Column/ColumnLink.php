@@ -23,7 +23,7 @@ class ColumnLink extends Column
 	protected array $parameters = [];
 
 	public function __construct(
-		Datagrid $grid,
+		Datagrid $datagrid,
 		string $key,
 		string $column,
 		string $name,
@@ -31,7 +31,7 @@ class ColumnLink extends Column
 		protected array $params
 	)
 	{
-		parent::__construct($grid, $key, $column, $name);
+		parent::__construct($datagrid, $key, $column, $name);
 	}
 
 	public function render(Row $row): mixed
@@ -55,7 +55,7 @@ class ColumnLink extends Column
 
 		$a = Html::el('a')
 			->href($this->createLink(
-				$this->grid,
+				$this->datagrid,
 				$this->href,
 				$this->getItemParams($row, $this->params) + $this->parameters
 			));

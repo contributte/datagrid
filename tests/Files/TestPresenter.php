@@ -9,7 +9,7 @@ use Nette\Application\UI\Template;
 final class TestPresenter extends Presenter
 {
 
-	protected function createComponentGrid(): TestGridControl
+	protected function createComponentDatagrid(): TestGridControl
 	{
 		return new TestGridControl();
 	}

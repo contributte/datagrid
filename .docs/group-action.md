@@ -23,7 +23,7 @@ If you need to do some operations with multiple rows, there are group actions. T
 When you want to show just one action button, do simply that:
 
 ```php
-$grid->addGroupButtonAction('Say hello')->onClick[] = [$this, 'sayHello'];
+$datagrid->addGroupButtonAction('Say hello')->onClick[] = [$this, 'sayHello'];
 ```
 
 ### One level
@@ -31,8 +31,8 @@ $grid->addGroupButtonAction('Say hello')->onClick[] = [$this, 'sayHello'];
 ![Group action 1](https://github.com/contributte/datagrid/blob/master/.docs/assets/group_button_action_1.gif?raw=true)
 
 ```php
-$grid->addGroupAction('Delete examples')->onSelect[] = [$this, 'deleteExamples'];
-$grid->addGroupAction('Something else')->onSelect[] = [$this, 'doSomethingElse'];
+$datagrid->addGroupAction('Delete examples')->onSelect[] = [$this, 'deleteExamples'];
+$datagrid->addGroupAction('Something else')->onSelect[] = [$this, 'doSomethingElse'];
 ```
 
 This will create one select box (['Delete examples', 'Something else']) and submit button. If you submit that form, your handler will be called. It will be called via ajax.
@@ -59,7 +59,7 @@ public function deleteExamples(array $ids): void
 There is also the two-level possibility of group action:
 
 ```php
-$grid->addGroupAction('Change order status', [
+$datagrid->addGroupAction('Change order status', [
 	1 => 'Received',
 	2 => 'Ready',
 	3 => 'Processing',
@@ -67,7 +67,7 @@ $grid->addGroupAction('Change order status', [
 	5 => 'Canceled'
 ])->onSelect[] = [$this, 'groupChangeStatus'];
 
-$grid->addGroupAction('Send', [
+$datagrid->addGroupAction('Send', [
 	'john'  => 'John',
 	'joe'   => 'Joe',
 	'frank' => 'Franta',
@@ -100,7 +100,7 @@ public function groupChangeStatus(array $ids, $status): void
 Group action can also contain a text input instead of select (As show in example above - option called "**Add note**"). Example code:
 
 ```php
-$grid->addGroupTextAction('Add note')
+$datagrid->addGroupTextAction('Add note')
 	->onSelect[] = [$this, 'addNote'];
 ```
 
@@ -128,7 +128,7 @@ public function addNote(array $ids, $value): void
 User may also use a textarea:
 
 ```php
-$grid->addGroupTextareaAction('aaaa');
+$datagrid->addGroupTextareaAction('aaaa');
 ```
 
 ### Attributes, classes
@@ -136,7 +136,7 @@ $grid->addGroupTextareaAction('aaaa');
 All group action inputs have optional class or other attributes:
 
 ```php
-$grid->addGroupTextareaAction('aaaa')
+$datagrid->addGroupTextareaAction('aaaa')
 	->setAttribute('rows', 10)
 	->setClass('fooo');
 ```
@@ -146,5 +146,5 @@ $grid->addGroupTextareaAction('aaaa')
 Datagrid uses tiny library `happy` for those nice checkboxes. You can disable them:
 
 ```php
-$grid->useHappyComponents(false);
+$datagrid->useHappyComponents(false);
 ```
