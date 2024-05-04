@@ -55,6 +55,7 @@
 		"nextras/dbal": "^4.0",
 		"nextras/orm": "^4.0",
 		"phpstan/phpstan-deprecation-rules": "^1.1",
+		"phpstan/phpstan-mockery": "^1.1",
 		"phpstan/phpstan-nette": "^1.0.0",
 		"phpstan/phpstan-strict-rules": "^1.4",
 		"tharos/leanmapper": "^3.4.2 || ^4.0.0",

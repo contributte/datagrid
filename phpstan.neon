@@ -3,12 +3,14 @@ includes:
 	- vendor/phpstan/phpstan-nette/extension.neon
 	- vendor/phpstan/phpstan-nette/rules.neon
 	- vendor/phpstan/phpstan-strict-rules/rules.neon
+	- vendor/phpstan/phpstan-mockery/extension.neon
 
 parameters:
 	level: 8
 
 	paths:
 		- src
+		- tests
 
 	checkMissingIterableValueType: false
 	checkGenericClassInNonGenericObjectType: false
