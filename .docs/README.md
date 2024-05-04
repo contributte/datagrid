@@ -14,3 +14,4 @@ Table of contents
 - [Inline edit](inline-edit.md)
 - [Inline add](inline-add.md)
 - [Localization](localization.md)
+- [Pagination](pagination.md)
