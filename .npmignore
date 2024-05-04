@@ -5,10 +5,6 @@
 /src
 /.docs
 
-# CI
-/.travis.yml
-/.scrutinizer.yml
-
 # PHP
 /composer.json
 /composer.lock
