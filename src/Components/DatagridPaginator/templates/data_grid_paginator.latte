@@ -7,12 +7,15 @@
 {var $link = [$control->getParent(), link]}
 
 <div n:if="$paginator->pageCount > 1">
+	{capture $firstButton}
+		<i n:block = "icon-arrow-left" class="{$iconPrefix}arrow-left"></i> {='ublaboo_datagrid.previous'|translate}
+	{/capture}
+
 	{if $paginator->isFirst()}
-		<a class="first btn btn-sm {$btnSecondaryClass} disabled">
+		<a class="first btn btn-sm {$btnSecondaryClass} disabled">{$firstButton}</a>
 	{else}
-		<a class="btn btn-sm {$btnSecondaryClass} ajax" href="{$link('page!', ['page' => $paginator->page - 1])}" rel="prev">
+		<a class="btn btn-sm {$btnSecondaryClass} ajax" href="{$link('page!', ['page' => $paginator->page - 1])}" rel="prev">{$firstButton}</a>
 	{/if}
-	<i n:block = "icon-arrow-left" class="{$iconPrefix}arrow-left"></i> {='contributte_datagrid.previous'|translate}</a>
 
 	{foreach $steps as $step}
 		{if $step == $paginator->page}
@@ -24,10 +27,13 @@
 		{if $iterator->nextValue > $step + 1}<span>…</span>{/if}
 	{/foreach}
 
+	{capture $lastButton}
+		{='ublaboo_datagrid.next'|translate}<i n:block = "icon-arrow-right" class="{$iconPrefix}arrow-right"></i>
+	{/capture}
+
 	{if $paginator->isLast()}
-		<a class="first btn btn-sm {$btnSecondaryClass} disabled">{='contributte_datagrid.next'|translate}
+		<a class="first btn btn-sm {$btnSecondaryClass} disabled">{$lastButton}</a>
 	{else}
-		<a class="btn btn-sm {$btnSecondaryClass} ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">{='contributte_datagrid.next'|translate}
+		<a class="btn btn-sm {$btnSecondaryClass} ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">{$lastButton}</a>
 	{/if}
-	<i n:block = "icon-arrow-right" class="{$iconPrefix}arrow-right"></i></a>
 </div>
