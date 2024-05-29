@@ -4,11 +4,10 @@ import { Datagrid, Datagrids } from "../..";
 
 export class InlinePlugin implements DatagridPlugin {
 	onInit(datagrids: Datagrids) {
-
 	}
 
 	onDatagridInit(datagrid: Datagrid): boolean {
-		datagrid.ajax.addEventListener('success', ({detail: {payload}}) => {
+		datagrid.ajax.addEventListener('success', ({ detail: { payload } }) => {
 			if (!payload._datagrid_name || payload._datagrid_name !== datagrid.name) return;
 
 			if (payload._datagrid_inline_edited || payload._datagrid_inline_edit_cancel) {
@@ -43,34 +42,34 @@ export class InlinePlugin implements DatagridPlugin {
 				datagrid.el.querySelector<HTMLElement>(".datagrid-inline-edit-trigger")
 					?.classList.add("hidden");
 			}
-		})
 
-		datagrid.el.querySelectorAll<HTMLElement>(".datagrid-inline-edit input").forEach(inputEl => {
-			inputEl.addEventListener("keydown", e => {
-				if (!isEnter(e)) return;
+			datagrid.el.querySelectorAll<HTMLElement>(".datagrid-inline-edit input").forEach(inputEl => {
+				inputEl.addEventListener("keydown", e => {
+					if (!isEnter(e)) return;
 
-				e.stopPropagation();
-				e.preventDefault();
-
-				return inputEl
-					.closest("tr")
-					?.querySelector<HTMLElement>(".col-action-inline-edit [name='inline_edit[submit]']")
-					?.click();
-			});
-		});
-
-		datagrid.el.querySelectorAll<HTMLElement>("[data-datagrid-cancel-inline-add]").forEach(cancel => {
-			cancel.addEventListener("mouseup", e => {
-				if (e.button === 0) {
 					e.stopPropagation();
 					e.preventDefault();
-					const inlineAdd = cancel.closest<HTMLElement>(".datagrid-row-inline-add");
-					if (inlineAdd) {
-						inlineAdd.classList.add("datagrid-row-inline-add-hidden");
-					}
-				}
+
+					return inputEl
+						.closest("tr")
+						?.querySelector<HTMLElement>(".col-action-inline-edit [name='inline_edit[submit]']")
+						?.click();
+				});
 			});
-		});
+
+			datagrid.el.querySelectorAll<HTMLElement>("[data-datagrid-cancel-inline-add]").forEach(cancel => {
+				cancel.addEventListener("mouseup", e => {
+					if (e.button === 0) {
+						e.stopPropagation();
+						e.preventDefault();
+						const inlineAdd = cancel.closest<HTMLElement>(".datagrid-row-inline-add");
+						if (inlineAdd) {
+							inlineAdd.classList.add("datagrid-row-inline-add-hidden");
+						}
+					}
+				});
+			});
+		})
 
 		return true;
 	}
