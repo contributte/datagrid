@@ -22,7 +22,7 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 	/** @var callable */
 	private $rowFactory;
 
-	public function __construct(private Client $client, string $indexName, ?callable $rowFactory = null)
+	public function __construct(private readonly Client $client, string $indexName, ?callable $rowFactory = null)
 	{
 		$this->searchParamsBuilder = new SearchParamsBuilder($indexName);
 
