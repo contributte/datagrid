@@ -425,7 +425,7 @@
 				{var $col = 'col-' . $key}
 
 				{var $td = clone $column->getElementForRender('td', $key)}
-				{var $td->class[] = 'datagrid-inline-edit'}
+				{var $td->class[] = 'datagrid-inline-add'}
 				{$td->startTag()|noescape}
 					{if isset($filter['inline_add'][$key])}
 						{if $filter['inline_add'][$key] instanceof \Nette\Forms\Container}

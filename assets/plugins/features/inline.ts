@@ -35,7 +35,6 @@ export class InlinePlugin implements DatagridPlugin {
 						"input:not([readonly]), textarea:not([readonly])"
 					)?.focus();
 				}
-				return;
 			}
 
 			if (payload._datagrid_inline_editing) {
@@ -53,6 +52,20 @@ export class InlinePlugin implements DatagridPlugin {
 					return inputEl
 						.closest("tr")
 						?.querySelector<HTMLElement>(".col-action-inline-edit [name='inline_edit[submit]']")
+						?.click();
+				});
+			});
+
+			datagrid.el.querySelectorAll<HTMLElement>(".datagrid-inline-add input").forEach(inputEl => {
+				inputEl.addEventListener("keydown", e => {
+					if (!isEnter(e)) return;
+
+					e.stopPropagation();
+					e.preventDefault();
+
+					return inputEl
+						.closest("tr")
+						?.querySelector<HTMLElement>(".col-action-inline-edit [name='inline_add[submit]']")
 						?.click();
 				});
 			});
