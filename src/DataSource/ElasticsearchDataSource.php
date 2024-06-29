@@ -11,6 +11,7 @@ use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
 use Elastic\Elasticsearch\Client;
+use Elastic\Elasticsearch\Response\Elasticsearch;
 use RuntimeException;
 use UnexpectedValueException;
 
@@ -35,6 +36,7 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 
 	public function getCount(): int
 	{
+		/** @var Elasticsearch $searchResult */
 		$searchResult = $this->client->search($this->searchParamsBuilder->buildParams());
 
 		if (!isset($searchResult['hits'])) {
@@ -51,6 +53,7 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 	 */
 	public function getData(): array
 	{
+		/** @var Elasticsearch $searchResult */
 		$searchResult = $this->client->search($this->searchParamsBuilder->buildParams());
 
 		if (!isset($searchResult['hits'])) {

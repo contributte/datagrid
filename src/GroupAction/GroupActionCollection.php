@@ -164,6 +164,7 @@ class GroupActionCollection
 			return;
 		}
 
+		/** @var array $httpIds */
 		$httpIds = $form->getHttpData(
 			Form::DataLine | Form::DataKeys,
 			strtolower($this->datagrid->getFullName()) . '_group_action_item[]'

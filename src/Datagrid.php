@@ -1298,6 +1298,7 @@ class Datagrid extends Control
 			}
 
 			if ($edit['submit']->isSubmittedBy() || $edit['cancel']->isSubmittedBy()) {
+				/** @var string $id */
 				$id = $form->getHttpData(Form::DataLine, 'inline_edit[_id]');
 				$primaryWhereColumn = $form->getHttpData(Form::DataLine, 'inline_edit[_primary_where_column]');
 
