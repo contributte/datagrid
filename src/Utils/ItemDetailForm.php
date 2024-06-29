@@ -62,7 +62,9 @@ final class ItemDetailForm extends Container
 
 			$path = explode(self::NameSeparator, $lookupPath);
 
-			$this->httpPost = Arrays::get($form->getHttpData(), $path, null);
+			/** @var array $httpData */
+			$httpData = $form->getHttpData();
+			$this->httpPost = Arrays::get($httpData, $path, null);
 		}
 
 		return $this->httpPost;
