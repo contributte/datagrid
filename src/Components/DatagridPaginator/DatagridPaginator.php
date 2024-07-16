@@ -26,7 +26,11 @@ class DatagridPaginator extends Control
 
 	private ?string $templateFile = null;
 
-	public function __construct(private Translator $translator, private string $iconPrefix = 'fa fa-', private string $btnSecondaryClass = 'btn-default btn-secondary')
+	public function __construct(
+		private readonly Translator $translator,
+		private readonly string $iconPrefix = 'fa fa-',
+		private readonly string $btnSecondaryClass = 'btn-default btn-secondary'
+	)
 	{
 	}
 

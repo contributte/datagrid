@@ -11,7 +11,7 @@ final class Sorting
 	/**
 	 * @param mixed[]|string[] $sort
 	 */
-	public function __construct(private array $sort, ?callable $sortCallback = null)
+	public function __construct(private readonly array $sort, ?callable $sortCallback = null)
 	{
 		$this->sortCallback = $sortCallback;
 	}
