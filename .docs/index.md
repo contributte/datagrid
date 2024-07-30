@@ -83,7 +83,7 @@ class SimplePresenter extends BasePresenter
 
 And that's it. Go check the app. :)
 
-When you don't line pagination, you can disable it:
+When you don't like pagination, you can disable it:
 
 ```php
 $grid->setPagination(false);

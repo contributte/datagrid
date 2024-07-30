@@ -30,15 +30,19 @@
 					<form class="row m-3">
 						<div class="form-check-{$control->getFullname()} px-0 d-flex justify-content-start align-items-center mb-1 list-group-item" n:foreach="$columnsVisibility as $v_key => $visibility">
 							{if $visibility['visible']}
-								<input class="form-check-input-{$control->getFullname()} ajax me-2" type="checkbox" value="{$v_key}" id="checkbox_{$control->getFullname()}_{$v_key}" checked>
-								<label class="form-check-label" for="checkbox_{$control->getFullname()}_{$v_key}">
-									{include #column-header, column => $visibility['column']}
-								</label>
+							    <div class="form-check">
+                                    <input class="form-check-input form-check-input-{$control->getFullname()} ajax me-2" type="checkbox" value="{$v_key}" id="checkbox_{$control->getFullname()}_{$v_key}" checked>
+                                    <label class="form-check-label" for="checkbox_{$control->getFullname()}_{$v_key}">
+                                        {include #column-header, column => $visibility['column']}
+                                    </label>
+								</div>
 							{else}
-								<input class="form-check-input-{$control->getFullname()} ajax me-2" type="checkbox" value="{$v_key}" id="checkbox_{$control->getFullname()}_{$v_key}">
-								<label class="form-check-label" for="checkbox_{$control->getFullname()}_{$v_key}">
-									{include #column-header, column => $visibility['column']}
-								</label>
+							    <div class="form-check">
+                                    <input class="form-check-input form-check-input-{$control->getFullname()} ajax me-2" type="checkbox" value="{$v_key}" id="checkbox_{$control->getFullname()}_{$v_key}">
+                                    <label class="form-check-label" for="checkbox_{$control->getFullname()}_{$v_key}">
+                                        {include #column-header, column => $visibility['column']}
+                                    </label>
+								</div>
 							{/if}
 						</div>
 						<div class="row mt-2 mx-0 px-0">
@@ -162,13 +166,15 @@
                                 <div class="col-12 px-0 d-flex justify-content-end">
                                     <div class="{block datagrid-fixed-header}{/block}">
                                         <div class="datagrid-toolbar my-2 d-inline-flex align-baseline justify-content-end" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
-                                            {if $toolbarButtons}
-                                                {foreach $toolbarButtons as $toolbar_button}
-                                                    <span n:class="!$iterator->first? ms-1">
-                                                        {$toolbar_button->renderButton()|noescape}
-                                                    </span>
-                                                {/foreach}
-                                            {/if}
+                                            {snippet toolbarButtons}
+                                                {if $toolbarButtons}
+                                                    {foreach $toolbarButtons as $toolbar_button}
+                                                        <span n:class="!$iterator->first? ms-1">
+                                                            {$toolbar_button->renderButton()|noescape}
+                                                        </span>
+                                                    {/foreach}
+                                                {/if}
+                                            {/snippet}
                                             {if $exports}
                                                 <div class="datagrid-exports" n:snippet="exports" n:block="exports" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
                                                     {foreach $exports as $export}
@@ -183,7 +189,7 @@
                                                     {$inlineAdd->renderButtonAdd()}
                                                 {/if}
 
-                                                <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#multipleColumnselect_{$control->getFullname()}">
+                                                <button type="button" class="btn btn-sm {$btnSecondaryClass} " data-bs-toggle="modal" data-bs-target="#multipleColumnselect_{$control->getFullname()}">
                                                     <i n:block="icon-gear" class="{$iconPrefix}cog"></i>
                                                 </button>
                                             </div>
@@ -218,7 +224,7 @@
 					<tr n:block="header-column-row" class="align-top">
                         {if empty($filters)}
                             <th n:snippet="thead-group-action" n:if="$hasGroupActions" class="col-checkbox" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
-                                <input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
+                                <input n:if="$hasGroupActionOnRows" n:class="form-check-input" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
                             </th>
                         {else}
                             <th n:if="$hasGroupActions"></th>
@@ -298,7 +304,7 @@
 					</tr>
 					<tr n:block="header-filters" n:if="!empty($filters) && !$control->hasOuterFilterRendering()" class="align-top filter-row">
                         <th n:if="$hasGroupActions" class="col-checkbox align-middle">
-                            <input n:if="$hasGroupActionOnRows" n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
+                            <input n:if="$hasGroupActionOnRows" n:class="form-check-input" name="{$control->getFullName()|lower}-toggle-all" type="checkbox" data-check="{$control->getFullName()}" data-check-all="{$control->getFullName()}">
                         </th>
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementForRender('th', $key)}
@@ -373,8 +379,8 @@
                                             {/foreach}
 
                                             <td class="col-action col-action-inline-edit">
-                                                {input $filter['inline_edit']['cancel'], class => 'btn-danger'}
-                                                {input $filter['inline_edit']['submit'], class => 'btn-default'}
+                                                {input $filter['inline_edit']['cancel'], class => 'btn btn-danger'}
+                                                {input $filter['inline_edit']['submit'], class => 'btn btn-success'}
                                                 {input $filter['inline_edit']['_id']}
                                                 {input $filter['inline_edit']['_primary_where_column']}
                                             </td>
@@ -383,7 +389,7 @@
                                         <tr data-id="{$row->getId()}" n:snippet='"item-{$row->getId()}"' n:attr="$row->getControl()->attrs" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
                                             <td n:if="$hasGroupActions" class="col-checkbox">
                                                 {if $row->hasGroupAction()}
-                                                    <input n:class="$control->shouldUseHappyComponents() ? 'happy gray-border' , primary" type="checkbox" data-check="{$control->getFullName()}" data-check-all-{$control->getFullName()|noescape} name="{$control->getFullName()|lower}_group_action_item[{$row->getId()}]">
+                                                    <input n:class="form-check-input" type="checkbox" data-check="{$control->getFullName()}" data-check-all-{$control->getFullName()|noescape} name="{$control->getFullName()|lower}_group_action_item[{$row->getId()}]">
                                                 {/if}
                                             </td>
 
@@ -718,10 +724,6 @@
 		}
 
 		const columnStatusToJson = JSON.stringify(columnStatus);
-
-        console.log(columnStatusToJson);
-        console.log(JSON.parse(columnStatusToJson));
-        console.log(columnStatus);
 
         naja.makeRequest(
             'POST',

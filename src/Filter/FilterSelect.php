@@ -67,17 +67,10 @@ class FilterSelect extends OneColumnFilter
 			throw new UnexpectedValueException();
 		}
 
-		if (!$this->translateOptions) {
-			$select = $this->addControl(
-				$container,
-				$this->key,
-				$translator->translate($this->name),
-				$this->options
-			);
+		$select = $this->addControl($container, $this->key, $this->name, $this->options);
 
+		if (!$this->translateOptions) {
 			$select->setTranslator(null);
-		} else {
-			$this->addControl($container, $this->key, $this->name, $this->options);
 		}
 	}
 

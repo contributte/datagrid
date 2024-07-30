@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ublaboo\DataGrid\Traits;
 
 use InvalidArgumentException;
-use Nette;
 use Nette\Application\UI\Component;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -46,10 +45,7 @@ trait TLink
 
 			try {
 				$link = $targetComponent->link($href, $params);
-
 			} catch (InvalidLinkException $e) {
-				$link = false;
-			} catch (Nette\InvalidArgumentException $e) {
 				$link = false;
 			}
 

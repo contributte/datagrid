@@ -60,7 +60,9 @@ final class DateTimeHelper
 		}
 
 		if ($value instanceof DateTimeImmutable) {
-			$date = new \DateTime('now', $value->getTimezone() ?? null);
+			/** @var \DateTimeZone|false $tz */
+			$tz = $value->getTimezone();
+			$date = new \DateTime('now', $tz !== false ? $tz : null);
 			$date->setTimestamp($value->getTimestamp());
 
 			return $date;

@@ -188,6 +188,16 @@ abstract class BaseDataSourceTest extends TestCase
 		], $result);
 	}
 
+	public function testFilterSelect(): void
+	{
+		$filter = new Ublaboo\DataGrid\Filter\FilterSelect($this->grid, 'a', 'b', ['John Red' => 'John Red'], 'name');
+		$filter->setValue('John Red');
+
+		$this->ds->filter([$filter]);
+
+		Assert::equal([$this->data[5]], $this->getActualResultAsArray());
+	}
+
 
 	protected function getActualResultAsArray()
 	{
