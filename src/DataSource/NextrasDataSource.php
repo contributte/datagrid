@@ -72,7 +72,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 	public function sort(Sorting $sorting): IDataSource
 	{
 		if (is_callable($sorting->getSortCallback())) {
-			call_user_func(
+			$this->dataSource = call_user_func(
 				$sorting->getSortCallback(),
 				$this->dataSource,
 				$sorting->getSort()
