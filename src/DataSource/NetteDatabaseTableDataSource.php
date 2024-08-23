@@ -177,11 +177,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$valueFrom = $conditions[$filter->getColumn()]['from'];
 		$valueTo = $conditions[$filter->getColumn()]['to'];
 
-		if ($valueFrom) {
+		if ($valueFrom !== '') {
 			$this->dataSource->where(sprintf('%s >= ?', $filter->getColumn()), $valueFrom);
 		}
 
-		if ($valueTo) {
+		if ($valueTo !== '') {
 			$this->dataSource->where(sprintf('%s <= ?', $filter->getColumn()), $valueTo);
 		}
 	}
