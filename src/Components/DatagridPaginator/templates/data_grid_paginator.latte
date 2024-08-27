@@ -8,7 +8,7 @@
 
 <div n:if="$paginator->pageCount > 1">
 	{capture $firstButton}
-		<i n:block = "icon-arrow-left" class="{$iconPrefix}arrow-left"></i> {='ublaboo_datagrid.previous'|translate}
+		<i n:block = "icon-arrow-left" class="{$iconPrefix}arrow-left"></i>&nbsp;{='contributte_datagrid.previous'|translate}
 	{/capture}
 
 	{if $paginator->isFirst()}
@@ -28,7 +28,7 @@
 	{/foreach}
 
 	{capture $lastButton}
-		{='ublaboo_datagrid.next'|translate}<i n:block = "icon-arrow-right" class="{$iconPrefix}arrow-right"></i>
+		{='contributte_datagrid.next'|translate}&nbsp;<i n:block = "icon-arrow-right" class="{$iconPrefix}arrow-right"></i>
 	{/capture}
 
 	{if $paginator->isLast()}
