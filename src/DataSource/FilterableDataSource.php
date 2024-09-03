@@ -50,7 +50,7 @@ abstract class FilterableDataSource
 		}
 	}
 
-	abstract protected function getDataSource(): mixed;
+	abstract public function getDataSource(): mixed;
 
 	abstract protected function applyFilterDate(FilterDate $filter): void;
 

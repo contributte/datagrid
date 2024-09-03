@@ -183,7 +183,7 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 		return $this;
 	}
 
-	protected function getDataSource(): SearchParamsBuilder
+	public function getDataSource(): SearchParamsBuilder
 	{
 		return $this->searchParamsBuilder;
 	}
