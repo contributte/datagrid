@@ -220,7 +220,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		$this->dataSource->where($filter->getCondition());
 	}
 
-	protected function getDataSource(): Fluent
+	public function getDataSource(): Fluent
 	{
 		return $this->dataSource;
 	}
