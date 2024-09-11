@@ -88,7 +88,7 @@ class DataGrid extends Nette\Application\UI\Control
 	 * 	when tring to set filter value, that does not exist (select, multiselect, etc)
 	 * @var bool
 	 */
-	public $strict_session_filter_values = true;
+	public $strict_session_filter_values = false;
 
 	/**
 	 * @var int
