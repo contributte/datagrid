@@ -2463,6 +2463,7 @@ class DataGrid extends Control
 			$this->redrawControl('pagination');
 			$this->redrawControl('summary');
 			$this->redrawControl('thead-group-action');
+            $this->redrawControl('grid');
 
 			/**
 			 * manualy reset exports links...
