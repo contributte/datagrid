@@ -165,8 +165,8 @@
                             <div class="row mx-0 fixed-header">
                                 <div class="col-12 px-0 d-flex justify-content-end">
                                     <div class="{block datagrid-fixed-header}{/block}">
-                                        <div class="datagrid-toolbar my-2 d-inline-flex align-baseline justify-content-end gap-1" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
-                                            {snippet toolbarButtons}
+                                        <div class="datagrid-toolbar my-2 d-flex flex-row align-baseline justify-content-end gap-1" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
+                                            <div n:snippet="toolbarButtons" class="d-flex flex-row gap-1">
                                                 {if $toolbarButtons}
                                                     {foreach $toolbarButtons as $toolbar_button}
                                                         <span n:class="!$iterator->first? ms-1">
@@ -174,7 +174,7 @@
                                                         </span>
                                                     {/foreach}
                                                 {/if}
-                                            {/snippet}
+											</div>
                                             {if $exports}
                                                 <div class="datagrid-exports" n:snippet="exports" n:block="exports" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
                                                     {foreach $exports as $export}
