@@ -196,7 +196,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 			}
 		}
 
-		$expr = call_user_func_array([Criteria::expr(), 'orX'], $exprs);
+		$expr = call_user_func_array([Criteria::expr(), $filter->hasConjunctionSearch() ? 'andX' : 'orX'], $exprs);
 		$this->criteria->andWhere($expr);
 	}
 

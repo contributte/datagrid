@@ -16,6 +16,8 @@ class FilterText extends Filter
 
 	protected bool $splitWordsSearch = true;
 
+	protected bool $conjunctionSearch = false;
+
 	/**
 	 * @param array|string[] $columns
 	 */
@@ -82,6 +84,16 @@ class FilterText extends Filter
 	public function hasSplitWordsSearch(): bool
 	{
 		return $this->splitWordsSearch;
+	}
+
+	public function setConjunctionSearch(bool $conjunctionSearch = true): void
+	{
+		$this->conjunctionSearch = $conjunctionSearch;
+	}
+
+	public function hasConjunctionSearch(): bool
+	{
+		return $this->conjunctionSearch;
 	}
 
 }
