@@ -42,6 +42,11 @@ abstract class BaseDataSourceTest extends TestCase
 
 		$this->ds->filter([$filter]);
 		Assert::same(2, $this->ds->getCount());
+
+		$filter->setConjunctionSearch();
+
+		$this->ds->filter([$filter]);
+		Assert::same(1, $this->ds->getCount());
 	}
 
 	public function testGetData(): void
@@ -57,6 +62,13 @@ abstract class BaseDataSourceTest extends TestCase
 		$this->ds->filter([$filter]);
 		Assert::equal([
 			$this->data[0],
+			$this->data[5],
+		], $this->getActualResultAsArray());
+
+		$filter->setConjunctionSearch();
+
+		$this->ds->filter([$filter]);
+		Assert::equal([
 			$this->data[5],
 		], $this->getActualResultAsArray());
 	}
