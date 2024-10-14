@@ -224,31 +224,33 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$bigOrArgs = [];
 		$condition = $filter->getCondition();
 
+		$operator = $filter->hasConjunctionSearch() ? 'AND' : 'OR';
+
 		foreach ($condition as $column => $value) {
 			$like = '(';
 			$args = [];
 
 			if ($filter->isExactSearch()) {
-				$like .= "$column = ? OR ";
+				$like .= "$column = ? $operator ";
 				$args[] = "$value";
 			} else {
 				$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 				foreach ($words as $word) {
-					$like .= "$column LIKE ? OR ";
+					$like .= "$column LIKE ? $operator ";
 					$args[] = "%$word%";
 				}
 			}
 
-			$like = substr($like, 0, strlen($like) - 4) . ')';
+			$like = substr($like, 0, strlen($like) - (strlen($operator) + 2)) . ')';
 
 			$or[] = $like;
-			$bigOr .= "$like OR ";
+			$bigOr .= "$like $operator ";
 			$bigOrArgs = array_merge($bigOrArgs, $args);
 		}
 
 		if (sizeof($or) > 1) {
-			$bigOr = substr($bigOr, 0, strlen($bigOr) - 4) . ')';
+			$bigOr = substr($bigOr, 0, strlen($bigOr) - (strlen($operator) + 2)) . ')';
 
 			$query = array_merge([$bigOr], $bigOrArgs);
 
