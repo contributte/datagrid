@@ -209,10 +209,20 @@ class ArrayDataSource implements IDataSource
 
 				$row_value = strtolower(Strings::toAscii((string) $row[$column]));
 
+				$found = [];
+
 				foreach ($words as $word) {
 					if (strpos($row_value, strtolower(Strings::toAscii($word))) !== false) {
-						return $row;
+						if ($filter instanceof FilterText && !$filter->hasConjunctionSearch()) {
+							return $row;
+						} else {
+							$found[] = true;
+						}
 					}
+				}
+
+				if (count($found) === count($words)) {
+					return $row;
 				}
 			}
 		}

@@ -215,7 +215,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		}
 
 		if (sizeof($or) > 1) {
-			$this->dataSource->where('(%or)', $or);
+			$this->dataSource->where($filter->hasConjunctionSearch() ? '(%and)' : '(%or)', $or);
 		} else {
 			$this->dataSource->where($or);
 		}

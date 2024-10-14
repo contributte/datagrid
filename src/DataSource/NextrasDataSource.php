@@ -243,7 +243,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 		// native handling with LikeFunction in v4
 		if (class_exists(LikeExpression::class)) {
 			$conditions = [
-				ICollection::OR,
+				$filter->hasConjunctionSearch() ? ICollection::AND : ICollection::OR,
 			];
 
 			foreach ($filter->getCondition() as $column => $value) {
@@ -272,10 +272,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 		$condition = $filter->getCondition();
 		$expr = '(';
 		$params = [];
+		$operator = $filter->hasConjunctionSearch() ? 'AND' : 'OR';
 
 		foreach ($condition as $column => $value) {
 			if ($filter->isExactSearch()) {
-				$expr .= '%column = %s OR ';
+				$expr .= "%column = %s $operator ";
 				$params[] = $column;
 				$params[] = "$value";
 
@@ -285,13 +286,13 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 			foreach ($words as $word) {
-				$expr .= '%column LIKE %s OR ';
+				$expr .= "%column LIKE %s $operator ";
 				$params[] = $column;
 				$params[] = "%$word%";
 			}
 		}
 
-		$expr = preg_replace('/ OR $/', ')', $expr);
+		$expr = preg_replace("/ $operator $/", ')', $expr);
 
 		array_unshift($params, $expr);
 
