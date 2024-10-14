@@ -178,7 +178,7 @@
                                             {if $exports}
                                                 <div class="datagrid-exports d-flex flex-row gap-1" n:snippet="exports" n:block="exports" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
                                                     {foreach $exports as $export}
-                                                        <span n:class="!$iterator->first? ms-1">
+                                                        <span>
                                                             {$export->render()}
                                                         </span>
                                                     {/foreach}
