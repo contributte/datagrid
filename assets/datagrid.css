@@ -67,28 +67,16 @@
 	display: inline-block
 }
 
-.datagrid .datagrid-toolbar > div > span {
+.datagrid .datagrid-toolbar > span {
 	margin-left: 1em
 }
 
-.datagrid .datagrid-toolbar > div > span > a {
+.datagrid .datagrid-toolbar > span > a {
 	margin-left: 0.5em
-}
-
-.datagrid .datagrid-toolbar > div {
-	display: inline-block
 }
 
 .datagrid-toolbar .fa-square, .datagrid-toolbar .fa-check-square {
 	font-weight: normal;
-}
-
-.datagrid .datagrid-exports .btn {
-	margin-left: 0.5em
-}
-
-.datagrid .datagrid-exports .btn:first-child {
-	margin-left: 0
 }
 
 .datagrid .datagrid-settings {
@@ -619,14 +607,6 @@
 		position: relative;
 		margin-left: 0
 	}
-
-}
-
-.datagrid .btn-xs, .datagrid .btn-group-xs > .btn {
-	padding: 1px 5px;
-	font-size: 12px;
-	line-height: 1.5;
-	border-radius: 3px
 }
 
 .datagrid .dropdown-item {
@@ -635,6 +615,6 @@
 	font-size: 12px;
 }
 
-.datagrid table thead tr.row-group-actions select.form-select:disabled {
+.datagrid table thead tr.row-group-actions select.form-select:disabled, .datagrid table thead tr.row-group-actions div.ts-wrapper.disabled  {
     visibility: hidden !important;
 }
