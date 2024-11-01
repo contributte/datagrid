@@ -158,6 +158,13 @@ $grid->addFilterText('name', 'Name')
 	->setSplitWordsSearch(false);
 ```
 
+If you need to find rows, that contains "foo" and "bar" (not just one of them), you can use `setConjunctionSearch()`.
+
+```php
+$grid->addFilterText('name', 'Name')
+	->setConjunctionSearch();
+```
+
 ## FilterSelect
 
 `FilterSelect` has one more parameter - options:

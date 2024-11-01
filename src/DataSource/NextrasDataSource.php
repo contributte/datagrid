@@ -190,7 +190,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 	protected function applyFilterText(FilterText $filter): void
 	{
 		$conditions = [
-			ICollection::OR,
+			$filter->hasConjunctionSearch() ? ICollection::AND : ICollection::OR,
 		];
 
 		foreach ($filter->getCondition() as $column => $value) {

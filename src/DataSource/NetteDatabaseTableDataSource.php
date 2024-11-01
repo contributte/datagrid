@@ -194,31 +194,33 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$bigOrArgs = [];
 		$condition = $filter->getCondition();
 
+		$operator = $filter->hasConjunctionSearch() ? 'AND' : 'OR';
+
 		foreach ($condition as $column => $value) {
 			$like = '(';
 			$args = [];
 
 			if ($filter->isExactSearch()) {
-				$like .= sprintf('%s = ? OR ', $column);
+				$like .= sprintf('%s = ? %s ', $column, $operator);
 				$args[] = sprintf('%s', $value);
 			} else {
 				$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
 				foreach ($words as $word) {
-					$like .= sprintf('%s LIKE ? OR ', $column);
+					$like .= sprintf('%s LIKE ? %s ', $column, $operator);
 					$args[] = sprintf('%%%s%%', $word);
 				}
 			}
 
-			$like = substr($like, 0, strlen($like) - 4) . ')';
+			$like = substr($like, 0, strlen($like) - (strlen($operator) + 2)) . ')';
 
 			$or[] = $like;
-			$bigOr .= sprintf('%s OR ', $like);
+			$bigOr .= sprintf('%s %s ', $like, $operator);
 			$bigOrArgs = [...$bigOrArgs, ...$args];
 		}
 
 		if (count($or) > 1) {
-			$bigOr = substr($bigOr, 0, strlen($bigOr) - 4) . ')';
+			$bigOr = substr($bigOr, 0, strlen($bigOr) - (strlen($operator) + 2)) . ')';
 
 			$query = [...[$bigOr], ...$bigOrArgs];
 
