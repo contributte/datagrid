@@ -7,7 +7,6 @@ use Contributte\Datagrid\Filter\FilterDate;
 use Contributte\Datagrid\Filter\FilterDateRange;
 use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
-use dibi;
 use Dibi\Fluent;
 use Dibi\Helpers;
 use Dibi\Result;
@@ -108,7 +107,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			$column = Helpers::escape($driver, $column, dibi::IDENTIFIER);
+			$column = Helpers::escape($driver, $column, Fluent::Identifier);
 
 			if ($filter->isExactSearch()) {
 				$this->dataSource->where(sprintf('%s = %%s', $column), $value);

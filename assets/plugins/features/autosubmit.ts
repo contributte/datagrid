@@ -46,6 +46,11 @@ export class AutosubmitPlugin implements DatagridPlugin {
 				const form = submitEl.closest("form");
 				if (!form) return;
 
+				if (submitEl.dataset.listenersAttached === "true") {
+					return; // Skip if listeners are already attached
+				}
+				submitEl.dataset.listenersAttached = "true";
+
 				// Select auto-submit
 				if (submitEl instanceof HTMLSelectElement) {
 					submitEl.addEventListener("change", () => datagrid.ajax.submitForm(form));
