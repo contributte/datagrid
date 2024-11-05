@@ -270,7 +270,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 			foreach ($words as $word) {
 				$exprs[] = $this->dataSource->expr()->like(
-					$this->dataSource->expr()->lower($c),
+					(string) $this->dataSource->expr()->lower($c),
 					$this->dataSource->expr()->lower(
 						$this->dataSource->expr()->literal('%' . $word . '%')
 					)
