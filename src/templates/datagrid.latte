@@ -237,7 +237,7 @@
 						{foreach $columns as $key => $column}
 							{var $th = $column->getElementForRender('th', $key)}
 							{$th->startTag()|noescape}
-							<div class="row mx-0 py-0">
+							<div class="row mx-0 py-1">
 								<div class="col-12 px-0 d-inline-flex align-center justify-content-between">
 									{var $col_header = 'col-' . $key . '-header'}
 
@@ -329,7 +329,7 @@
 							{/if}
 							{$th->endTag()|noescape}
 						{/foreach}
-						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center" width="{if $cnt_thead <= 1}5%{elseif $cnt_thead === 2}10%{else}15%{/if}">
+						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center p-0" width="{if $cnt_thead <= 1}5%{elseif $cnt_thead === 2}10%{else}15%{/if}">
 							{if !$control->hasAutoSubmit() && !$control->hasOuterFilterRendering()}
 								{input $filter['filter']['submit']}
 							{/if}

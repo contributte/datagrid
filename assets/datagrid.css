@@ -185,6 +185,23 @@
 	align-items: stretch;
 }
 
+thead th.col-action button {
+	line-height: normal !important;
+}
+
+tr.filter-row  .input-group-sm > .ts-wrapper, .ts-wrapper.form-select-sm, .ts-wrapper.form-control-sm {
+	min-height: calc(1.5em + 0.75rem + calc(var(--bs-border-width) * 2)) !important;
+}
+
+tr.filter-row .form-control {
+	border-color: transparent !important;
+}
+
+tr.filter-row .input-group-text {
+	border-top: 1px solid rgba(0, 0, 0, 0) !important;
+	border-bottom: 1px solid rgba(0, 0, 0, 0) !important;
+}
+
 .datagrid .datagrid-col-filter-date-range > .input-group {
 	position: relative;
 	-ms-flex: 1 1 auto;
@@ -583,9 +600,9 @@
 		width: 100%
 	}
 
-	.datagrid .input-group-text {
-		height: calc(1.5em + 0.5rem + 2px);
-	}
+	/*.datagrid .input-group-text {*/
+	/*	height: calc(1.5em + 0.5rem + 2px);*/
+	/*}*/
 
 	.datagrid .ublaboo-datagrid-th-form-inline .control-label {
 		margin-bottom: 0;

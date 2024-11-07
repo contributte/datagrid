@@ -582,7 +582,7 @@ abstract class Column extends FilterableColumn
 		 * If class was set by user via $el->class = '', fix it
 		 */
 		if (is_string($el->getAttribute('class'))) {
-			$class = $el->getAttribute('class');
+			$class = $el->getAttribute('class') . ' p-0';
 			$el->__unset('class');
 
 			$el->appendAttribute('class', $class);

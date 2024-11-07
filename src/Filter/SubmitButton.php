@@ -35,7 +35,7 @@ class SubmitButton extends Button
 		$this->grid = $grid;
 
 		$this->text = 'ublaboo_datagrid.filter_submit_button';
-		$this->class = 'btn btn-sm btn-secondary';
+		$this->class = 'btn btn-sm btn-secondary h-100';
 		$this->icon = 'search';
 
 		$this->control = Html::el('button', ['type' => 'submit', 'name' => 'submit']);
@@ -54,7 +54,7 @@ class SubmitButton extends Button
 
 		if ($this->getIcon() !== null) {
 			$el->addHtml(
-				Html::el('span')->appendAttribute(
+				Html::el('i')->appendAttribute(
 					'class',
 					DataGrid::$iconPrefix . $this->getIcon()
 				)
