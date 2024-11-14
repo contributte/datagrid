@@ -306,7 +306,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		}
 	}
 
-	protected function getDataSource(): QueryBuilder
+	public function getDataSource(): QueryBuilder
 	{
 		return $this->dataSource;
 	}
