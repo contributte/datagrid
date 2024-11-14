@@ -278,7 +278,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 			}
 		}
 
-		$or = call_user_func_array([$this->dataSource->expr(), 'orX'], $exprs);
+		$or = call_user_func_array([$this->dataSource->expr(), $filter->hasConjunctionSearch() ? 'andX' : 'orX'], $exprs);
 
 		$this->dataSource->andWhere($or);
 	}
