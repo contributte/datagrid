@@ -432,23 +432,23 @@
                                             {/if}
 
 										<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action" width="{if $cnt <= 1}5%{elseif $cnt === 2}10%{else}15%{/if}">
-											 <div class="row g-1 mx-0 justify-content-center">
+											 <div class="g-1 mx-0 d-flex flex-row gap-1 justify-content-center">
                                                 {foreach $actions as $key => $action}
                                                     {if $row->hasAction($key)}
                                                         {if $action->hasTemplate()}
-                                                            <div class="col-auto">
+                                                            <div class="">
                                                                 {include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables(), row => $row}
                                                             </div>
                                                         {else}
                                                             {if $action->render($row)}
-                                                                <div class="col-auto">
+                                                                <div class="">
                                                                     {$action->render($row)|noescape}
                                                                 </div>
                                                             {/if}
                                                         {/if}
                                                     {/if}
                                                 {/foreach}
-                                                <div class="col-auto" n:if="$control->isSortable()">
+                                                <div class="" n:if="$control->isSortable()">
                                                     <span class="handle-sort">
                                                         <a class="btn btn-sm">
                                                             <i n:block="icon-arrows-v" class="fa-fw {$iconPrefix}arrows-v"></i>
