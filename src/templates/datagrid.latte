@@ -298,7 +298,7 @@
 							{$th->endTag()|noescape}
 						{/foreach}
 
-						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center" width="{if $cnt_thead <= 1}5%{elseif $cnt_thead === 2 }10%{else}15%{/if}">
+						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-center py-1" width="{if $cnt_thead <= 1}5%{elseif $cnt_thead === 2 }10%{else}15%{/if}">
 							{='ublaboo_datagrid.action'|translate}
 						</th>
 					</tr>
