@@ -11,8 +11,8 @@ use Nette\Utils\Arrays;
 use Nextras\Dbal\Connection;
 use Nextras\Orm\Collection\Expression\LikeExpression;
 use Nextras\Orm\Entity\Entity;
+use Nextras\Orm\Mapper\Dbal\DbalMapper;
 use Nextras\Orm\Mapper\Dbal\DbalMapperCoordinator;
-use Nextras\Orm\Mapper\Mapper;
 use Nextras\Orm\Model\Model;
 use Nextras\Orm\Model\SimpleModelFactory;
 use Nextras\Orm\Repository\Repository;
@@ -129,7 +129,7 @@ class User extends Entity
 
 }
 
-class UsersMapper extends Mapper
+class UsersMapper extends DbalMapper
 {
 
 }
@@ -155,7 +155,7 @@ class Book extends Entity
 
 }
 
-class BooksMapper extends Mapper
+class BooksMapper extends DbalMapper
 {
 
 }
