@@ -12,6 +12,14 @@ use Nette;
 
 class FilterText extends Filter
 {
+	/** Query that is exactly equal to '#' returns empty/null values */
+	const TOKEN_EMPTY = '#';
+	/** However, if your friend is named '#' and you really want to find him, you have to type this */
+	const TOKEN_EMPTY_ESCAPED = '\#';
+	/** Query that contains words that start with '!', excludes those words from search results */
+	const TOKEN_NEGATION = '!';
+	/** However, if your friend's name starts with '!', you have to type this */
+	const TOKEN_NEGATION_ESCAPED = '\!';
 
 	/**
 	 * @var string
@@ -32,6 +40,11 @@ class FilterText extends Filter
 	 * @var bool
 	 */
 	protected $split_words_search = true;
+
+	/**
+	 * @var bool
+	 */
+	protected $enable_special_chars = true;
 
 
 	/**
@@ -101,5 +114,24 @@ class FilterText extends Filter
 	public function hasSplitWordsSearch()
 	{
 		return $this->split_words_search;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isSpecialChars()
+	{
+		return $this->enable_special_chars;
+	}
+
+	/**
+	 * @param bool $enabled
+	 * @return FilterText
+	 */
+	public function setSpecialChars($enabled)
+	{
+		$this->enable_special_chars = (bool) $enabled;
+
+		return $this;
 	}
 }
