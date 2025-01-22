@@ -169,7 +169,7 @@
                                             <div n:snippet="toolbarButtons" class="d-flex flex-row gap-1">
                                                 {if $toolbarButtons}
                                                     {foreach $toolbarButtons as $toolbar_button}
-                                                        <span n:class="!$iterator->first? ms-1">
+                                                        <span>
                                                             {$toolbar_button->renderButton()|noescape}
                                                         </span>
                                                     {/foreach}
