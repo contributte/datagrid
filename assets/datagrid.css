@@ -142,7 +142,7 @@
 
 .datagrid table thead tr th {
 	font-size: 90%;
-	vertical-align: top
+	vertical-align: middle;
 }
 
 .datagrid table thead tr th hr {
@@ -190,7 +190,7 @@ thead th.col-action button {
 }
 
 tr.filter-row  .input-group-sm > .ts-wrapper, .ts-wrapper.form-select-sm, .ts-wrapper.form-control-sm {
-	/*min-height: calc(1.5em + 0.75rem + calc(var(--bs-border-width) * 2)) !important;*/
+	/*min-height: calc(1.5em + 0.75rem + calc(var(--bs-border-width))) !important;*/
 	min-height: calc(1.5em + 0.7rem + calc(var(--bs-border-width) * 2)) !important;
 }
 
