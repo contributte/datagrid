@@ -17,10 +17,10 @@ export class ConfirmPlugin implements DatagridPlugin {
 	}
 
 	confirmEventHandler(this: Datagrid, el: HTMLElement, e: Event) {
-		const message = el.getAttribute(ConfirmAttribute)!;
+		const message = el.closest('a').getAttribute(ConfirmAttribute)!;
 		if (!message) return;
 
-		if (!this.confirm(message)) {
+		if (!window.confirm.bind(window)(message)) {
 			e.stopPropagation();
 			e.preventDefault();
 		}
