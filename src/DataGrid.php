@@ -133,6 +133,11 @@ class DataGrid extends Control
 	 */
 	public $perPage = null;
 
+    /**
+     * @var string|null
+     */
+    protected ?string $title = null;
+
 	/**
 	 * @var array
 	 * @persistent
@@ -499,6 +504,24 @@ class DataGrid extends Control
         }
 
         return $this->url_params;
+    }
+
+    /**
+     * @param string $title
+     * @return $this
+     */
+    public function setTitle(string $title): DataGrid
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTitle(): ?string
+    {
+        return $this->title;
     }
 
     /**

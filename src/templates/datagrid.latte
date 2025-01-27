@@ -131,35 +131,38 @@
                     {/if}
 
 					<tr class="row-group-actions">
-						<th colspan="{(int) round(($control->getColumnsCount() / 2), 0, PHP_ROUND_HALF_DOWN)}" n:if="$hasGroupActions || $exports || $inlineAdd" n:block="group-actions" class="ublaboo-datagrid-th-form-inline align-middle">
-							{if $hasGroupActions}
-								{block group_actions}
-                                    <div class="row mx-0">
-                                        <div class="col-12 px-0">
-                                            <div class="row mx-0">
-                                                <div class="col-auto px-0 d-flex align-items-center">
-                                                    {if $control->shouldShowSelectedRowsCount()}
-                                                        <span class="datagrid-selected-rows-count text-muted ms-1"></span>
-                                                    {/if}
-                                                </div>
-                                                <div class="col-auto d-inline-flex">
-                                                    {foreach $filter['group_action']->getControls() as $form_control}
-                                                        {if $form_control instanceof \Nette\Forms\Controls\SubmitButton && $form_control->getName() === 'submit'}
-                                                            {input $form_control, class => 'btn btn-primary ms-1', disabled => TRUE}
-                                                        {elseif $form_control instanceof \Nette\Forms\Controls\SubmitButton}
-                                                            {input $form_control, disabled => TRUE}
-                                                        {elseif $form_control->getName() == 'group_action'}
-                                                            {input $form_control, class => 'form-select select-one', disabled => TRUE}
-                                                        {else}
-                                                            {input $form_control}
-                                                        {/if}
-                                                    {/foreach}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-								{/block}
-							{/if}
+						<th colspan="{(int) round(($control->getColumnsCount() / 2), 0, PHP_ROUND_HALF_DOWN)}" n:if="$hasGroupActions || $exports || $inlineAdd || $control->getTitle()" n:block="group-actions" class="ublaboo-datagrid-th-form-inline align-middle">
+							<div class="row mx-0">
+								<div class="px-0 d-flex flex-row">
+									{if $control->getTitle()}
+										<h5 class="m-0">{$control->getTitle()}</h5>
+									{/if}
+									{if $hasGroupActions}
+										{block group_actions}
+											<div class="row">
+												<div class="col-auto px-0 d-flex align-items-center">
+													{if $control->shouldShowSelectedRowsCount()}
+														<span class="datagrid-selected-rows-count text-muted ms-1"></span>
+													{/if}
+												</div>
+												<div class="col-auto d-inline-flex">
+													{foreach $filter['group_action']->getControls() as $form_control}
+														{if $form_control instanceof \Nette\Forms\Controls\SubmitButton && $form_control->getName() === 'submit'}
+															{input $form_control, class => 'btn btn-primary ms-1', disabled => TRUE}
+														{elseif $form_control instanceof \Nette\Forms\Controls\SubmitButton}
+															{input $form_control, disabled => TRUE}
+														{elseif $form_control->getName() == 'group_action'}
+															{input $form_control, class => 'form-select select-one', disabled => TRUE}
+														{else}
+															{input $form_control}
+														{/if}
+													{/foreach}
+												</div>
+											</div>
+										{/block}
+									{/if}
+								</div>
+							</div>
 						</th>
 						<th colspan="{if !$hasGroupActions && !$exports && !$inlineAdd} {$control->getColumnsCount()} {else} {(int) round(($control->getColumnsCount() / 2), 0, PHP_ROUND_HALF_UP)} {/if}" class="ublaboo-datagrid-th-form-inline">
                             <div class="row mx-0 fixed-header">
