@@ -135,7 +135,7 @@
 							<div class="row mx-0">
 								<div class="px-0 d-flex flex-row">
 									{if $control->getTitle()}
-										<h5 class="m-0">{$control->getTitle()}</h5>
+										<h5 class="m-0">{$control->getTitle()|noescape}</h5>
 									{/if}
 									{if $hasGroupActions}
 										{block group_actions}

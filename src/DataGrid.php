@@ -134,9 +134,9 @@ class DataGrid extends Control
 	public $perPage = null;
 
     /**
-     * @var string|null
+     * @var \Stringable|null
      */
-    protected ?string $title = null;
+    protected \Stringable|string|null $title = null;
 
 	/**
 	 * @var array
@@ -507,19 +507,19 @@ class DataGrid extends Control
     }
 
     /**
-     * @param string $title
+     * @param \Stringable|string $title
      * @return $this
      */
-    public function setTitle(string $title): DataGrid
+    public function setTitle(\Stringable|string $title): DataGrid
     {
         $this->title = $title;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return \Stringable|string|null
      */
-    public function getTitle(): ?string
+    public function getTitle(): \Stringable|string|null
     {
         return $this->title;
     }
