@@ -257,12 +257,12 @@
 													<div class="col-12 px-0 d-inline-flex align-items-baseline">
 														{if $column->isSortedBy()}
 															{if $column->isSortAsc()}
-																<i n:block="icon-sort-up" class="{$iconPrefix}caret-up"></i>
+																<i n:block="icon-sort-up" class="px-1 {$iconPrefix}caret-up"></i>
 															{else}
-																<i n:block="icon-sort-down" class="{$iconPrefix}caret-down"></i>
+																<i n:block="icon-sort-down" class="px-1 {$iconPrefix}caret-down"></i>
 															{/if}
 														{else}
-															<i n:block="icon-sort" class="{$iconPrefix}sort"></i>
+															<i n:block="icon-sort" class="px-1 {$iconPrefix}sort"></i>
 														{/if}
 														<span class="">
 															{include #column-header, column => $column}
