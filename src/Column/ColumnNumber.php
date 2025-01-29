@@ -23,12 +23,27 @@ class ColumnNumber extends Column
 			return $value;
 		}
 
-		return number_format(
-			(float) $value,
-			(int) $this->numberFormat[0],
-			(string) $this->numberFormat[1],
-			(string) $this->numberFormat[2]
-		);
+		$decimal = null;
+		$value = (string) $value;
+
+		if (str_contains($value, '.')) {
+			list($integer, $decimal) = explode('.', $value, 2);
+		}
+		else {
+			$integer = $value;
+		}
+
+		if ($this->numberFormat[0] > 0) {
+			$decimal = substr(
+				$decimal . str_repeat('0', $this->numberFormat[0]),
+				0,
+				$this->numberFormat[0]
+			);
+		}
+
+		$integer = preg_replace('/\B(?=(\d{3})+(?!\d))/', $this->numberFormat[2], $integer);
+
+		return $decimal ? $integer . $this->numberFormat[1] . $decimal : $integer;
 	}
 
 	/**
