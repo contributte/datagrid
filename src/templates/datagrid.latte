@@ -115,7 +115,7 @@
 					</div>
 				{/block}
 			{/if}
-			<table class="{block table-class}table table-hover table-striped table-bordered table-sm text-wrap{/block}" n:snippet="table" n:block="data" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
+			<table class="{block table-class}table table-hover table-striped table-bordered table-sm text-break{/block}" n:snippet="table" n:block="data" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 				<thead n:block="header">
 
                     {php $cnt_thead = 0}
@@ -164,11 +164,11 @@
 								</div>
 							</div>
 						</th>
-						<th colspan="{if !$hasGroupActions && !$exports && !$inlineAdd} {$control->getColumnsCount()} {else} {(int) round(($control->getColumnsCount() / 2), 0, PHP_ROUND_HALF_UP)} {/if}" class="ublaboo-datagrid-th-form-inline">
+						<th colspan="{if !$hasGroupActions && !$exports && !$inlineAdd} {$control->getColumnsCount()} {else} {(int) round(($control->getColumnsCount() / 2), 0, PHP_ROUND_HALF_UP)} {/if}" class="ublaboo-datagrid-th-form-inline" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
                             <div class="row mx-0 fixed-header">
                                 <div class="col-12 px-0 d-flex justify-content-end">
                                     <div class="{block datagrid-fixed-header}{/block}">
-                                        <div class="datagrid-toolbar my-2 d-flex flex-row align-baseline justify-content-end gap-1" n:if="$control->canHideColumns() || $inlineAdd || $exports || $toolbarButtons">
+                                        <div class="datagrid-toolbar my-2 d-flex flex-row align-baseline justify-content-end gap-1">
                                             <div n:snippet="toolbarButtons" class="d-flex flex-row gap-1">
                                                 {if $toolbarButtons}
                                                     {foreach $toolbarButtons as $toolbar_button}
@@ -301,7 +301,7 @@
 							{$th->endTag()|noescape}
 						{/foreach}
 
-						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action fw-semibold text-center py-1" width="{if $cnt_thead <= 1}5%{elseif $cnt_thead === 2 }10%{else}15%{/if}">
+						<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action fw-medium text-center py-1" width="{if $cnt_thead <= 1}5%{elseif $cnt_thead === 2 }10%{else}15%{/if}">
 							{='ublaboo_datagrid.action'|translate}
 						</th>
 					</tr>

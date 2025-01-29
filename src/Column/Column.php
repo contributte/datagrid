@@ -589,7 +589,7 @@ abstract class Column extends FilterableColumn
 		}
 
         if ($tag === 'th') {
-            $el->appendAttribute('class', 'p-0 fw-semibold');
+            $el->appendAttribute('class', 'p-0 fw-medium');
         }
 
 		$el->appendAttribute('class', sprintf('text-%s', $this->getAlign()));
