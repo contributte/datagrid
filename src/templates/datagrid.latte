@@ -187,7 +187,7 @@
                                                     {/foreach}
                                                 </div>
                                             {/if}
-                                            <div class="datagrid-settings d-flex" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
+                                            <div class="datagrid-settings d-flex gap-1" n:block="settings" n:if="$control->canHideColumns() || $inlineAdd">
                                                 {if $inlineAdd}
                                                     {$inlineAdd->renderButtonAdd()}
                                                 {/if}
