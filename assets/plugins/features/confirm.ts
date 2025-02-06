@@ -17,7 +17,7 @@ export class ConfirmPlugin implements DatagridPlugin {
 	}
 
 	confirmEventHandler(this: Datagrid, el: HTMLElement, e: Event) {
-		const message = el.closest('a').getAttribute(ConfirmAttribute)!;
+		const message = el.closest('a')?.getAttribute(ConfirmAttribute)!;
 		if (!message) return;
 
 		if (!window.confirm.bind(window)(message)) {
