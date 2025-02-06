@@ -171,7 +171,11 @@ export class Happy {
 
 		const checked = happyInput.classList.contains("active");
 		checked ? happyInput.classList.remove("active") : happyInput.classList.add("active");
-		input.checked = !checked;
+		if(input.checked !== !checked){
+			const evt = new Event('change',{bubbles: false, cancelable: true,composed: false});
+			input.checked = !checked;
+			input.dispatchEvent(evt);
+		}
 	}
 
 	checkCheckboxStateOnChange({target}: Event) {

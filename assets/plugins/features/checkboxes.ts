@@ -1,19 +1,49 @@
-import { DatagridPlugin } from "../../types";
-import { Datagrid } from "../..";
+import {DatagridPlugin} from "../../types";
+import {Datagrid} from "../..";
 
 export const CheckboxAttribute = "data-check";
 
 export class CheckboxPlugin implements DatagridPlugin {
+
+	private wasInit: Array<Datagrid> = [];
+
+	loadCheckboxCount(datagrid: Datagrid) {
+		const counter = document.querySelector<HTMLElement>(".datagrid-selected-rows-count");
+		const total = Array.from(datagrid.el.querySelectorAll<HTMLInputElement>(`input[data-check='${datagrid.name}']`)).filter(c => !c.hasAttribute("data-check-all"));
+		const checked = total.filter(e => (e.checked));
+		if (counter) {
+			counter.innerText = `${checked.length}/${total.length}`;
+		}
+		document.querySelectorAll<HTMLInputElement | HTMLButtonElement>(
+			".row-group-actions *[type='submit']"
+		).forEach(button => {
+			button.disabled = checked.length === 0;
+		});
+		const select = datagrid.el.querySelector<HTMLSelectElement>("select[name='group_action[group_action]']");
+		if (select) {
+			select.disabled = checked.length === 0;
+		}
+	}
+
 	onDatagridInit(datagrid: Datagrid): boolean {
-		let lastCheckbox = null;
+		if (!this.wasInit.includes(datagrid)) {
+			datagrid.ajax.addEventListener('complete', () => {
+				this.onDatagridInit(datagrid)
+			});
+			this.wasInit.push(datagrid);
+			this.loadCheckboxCount(datagrid);
+		}
+		this.loadCheckboxCount(datagrid);
+
+		let lastCheckbox: null | HTMLElement = null;
 
 		datagrid.el.addEventListener("click", e => {
-			if (!(e.target instanceof HTMLElement)) return;
-
+			if (!(e.target instanceof HTMLElement)) {
+				return;
+			}
 			if (e.target.classList.contains("col-checkbox")) {
-				lastCheckbox = e.target;
 				if (e.shiftKey && lastCheckbox) {
-					const currentCheckboxRow = lastCheckbox.closest("tr");
+					const currentCheckboxRow = e.target.closest("tr");
 					if (!currentCheckboxRow) return;
 
 					const lastCheckboxRow = lastCheckbox.closest("tr");
@@ -23,68 +53,69 @@ export class CheckboxPlugin implements DatagridPlugin {
 					if (!lastCheckboxTbody) return;
 
 					const checkboxesRows = Array.from(lastCheckboxTbody.querySelectorAll<HTMLElement>("tr"));
-					const [start, end] = [lastCheckboxRow.rowIndex, currentCheckboxRow.rowIndex].sort();
+					const headerRows = Array.from(lastCheckboxTbody.closest('table')?.querySelectorAll<HTMLElement>("thead tr") ?? []).length;
+
+					const [start, end] = [lastCheckboxRow.rowIndex -headerRows, currentCheckboxRow.rowIndex -headerRows].sort();
 					const rows = checkboxesRows.slice(start, end + 1);
 
 					rows.forEach(row => {
 						const input = row.querySelector<HTMLInputElement>('.col-checkbox input[type="checkbox"]');
 						if (input) {
-							input.checked = true;
+							if (!input.checked) {
+								input.checked = true;
+								input.dispatchEvent(new Event('change', {bubbles: true}))
+							}
+
 						}
 					});
 				}
+				lastCheckbox = e.target;
 			}
 		});
 
+
 		let checkboxes = datagrid.el.querySelectorAll<HTMLInputElement>(`input[data-check='${datagrid.name}']`);
-		const select = datagrid.el.querySelector<HTMLSelectElement>("select[name='group_action[group_action]']");
-		const actionButtons = document.querySelectorAll<HTMLInputElement | HTMLButtonElement>(
-			".row-group-actions *[type='submit']"
-		);
-		const counter = document.querySelector<HTMLElement>(".datagrid-selected-rows-count");
 
 		// Handling a checkbox click + select all checkbox
+		let notUserInvoked = false;
 		checkboxes.forEach(checkEl => {
 			checkEl.addEventListener("change", () => {
 				// Select all
 				const isSelectAll = checkEl.hasAttribute("data-check-all");
 				if (isSelectAll) {
+					if (notUserInvoked) {
+						return;
+					}
 					if (datagrid.name !== checkEl.getAttribute("data-check-all")) return;
-
-					checkboxes.forEach(checkbox => (checkbox.checked = checkEl.checked));
-
-					// todo: refactor not to repeat this code twice
-					actionButtons.forEach(button => (button.disabled = !checkEl.checked));
-
-					if (select) {
-						select.disabled = !checkEl.checked;
-					}
-
-					if (counter) {
-						const total = Array.from(checkboxes).filter(c => !c.hasAttribute("data-check-all")).length;
-						counter.innerText = `${checkEl.checked ? total : 0}/${total}`;
-					}
+					const targetCheck = checkEl.checked;//this is vital as it gets swithced around due to not all being checked just yet.
+					checkboxes.forEach(checkbox => {
+						if (checkbox !== checkEl && checkbox.checked !== targetCheck) {
+							checkbox.checked = targetCheck;
+							//this will end up calling this callback a lot. But it needs to eb done as otherwise the happy checkboxes fail horribly.
+							//Bubbles is needed as the happy callback catches on document
+							notUserInvoked = true;//prevent nesting
+							checkbox.dispatchEvent(new Event('change', {bubbles: true}));
+							notUserInvoked = false;
+						}
+					});
 					return;
-				} else {
-					const selectAll = datagrid.el.querySelector<HTMLInputElement>(`input[data-check='${datagrid.name}'][data-check-all]`);
-					if (selectAll) {
-						selectAll.checked = Array.from(checkboxes).filter(c => !c.hasAttribute("data-check-all")).every(c => c.checked);
+				}
+
+				const selectAll = datagrid.el.querySelector<HTMLInputElement>(`input[data-check='${datagrid.name}'][data-check-all]`);
+				if (selectAll) {
+					const allChecked = Array.from(checkboxes).filter(c => !c.hasAttribute("data-check-all")).every(c => c.checked);
+					if (allChecked != selectAll.checked) {
+						notUserInvoked = true;
+						selectAll.checked = allChecked;
+						selectAll.dispatchEvent(new Event('change', {bubbles: true}));
+						notUserInvoked = false;
 					}
-				}
-
-				const checkedBoxes = Array.from(checkboxes).filter(checkbox => checkbox.checked && !checkEl.hasAttribute("data-check-all"));
-				const hasChecked = checkedBoxes.length >= 1;
-
-				actionButtons.forEach(button => (button.disabled = !hasChecked));
-
-				if (select) {
-					select.disabled = !hasChecked;
-				}
-
-				if (counter) {
-					counter.innerText = `${checkedBoxes.length}/${checkboxes.length}`;
 				}
 			});
+
+			checkEl.addEventListener("change", () => {
+				this.loadCheckboxCount(datagrid);
+			})
 		});
 
 		return true;
