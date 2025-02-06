@@ -6,6 +6,8 @@ import { happyStyles } from "../css/happy.css";
 export class Happy {
 	private colors: string[] = ["primary", "success", "info", "warning", "danger", "white", "gray"];
 
+	private sheet :null|CSSStyleSheet = null;
+
 	private templates = {
 		radio: '<div class="happy-radio"><b></b></div>',
 		checkbox:
@@ -15,8 +17,11 @@ export class Happy {
 	};
 
 	init() {
-		if (!document.querySelector('[data-happy-stylesheet]')) {
-			document.head.append(`<style data-happy-stylesheet>${happyStyles}</style>`)
+		if(!this.sheet){
+			const styleElement = new CSSStyleSheet();
+			styleElement.replaceSync(happyStyles);
+			document.adoptedStyleSheets.push(styleElement);
+			this.sheet = styleElement;
 		}
 		this.removeBySelector(".happy-radio");
 		this.removeBySelector(".happy-checkbox");
