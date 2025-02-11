@@ -30,6 +30,9 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 				if ($value === Filter\FilterText::TOKEN_EMPTY) { // Handle single '#'
 					$this->data_source->where("($column IS NULL OR $column = '')");
 					continue;
+				} else if ($value === Filter\FilterText::TOKEN_NEGATION . Filter\FilterText::TOKEN_EMPTY) {
+					$this->data_source->where("($column IS NOT NULL AND $column <> '')");
+					continue;
 				}
 				$value = str_replace(Filter\FilterText::TOKEN_EMPTY_ESCAPED, Filter\FilterText::TOKEN_EMPTY, $value);
 			}
