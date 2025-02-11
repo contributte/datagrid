@@ -63,7 +63,7 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 					if ($allow_negation_filter && strpos($word, Filter\FilterText::TOKEN_NEGATION) === 0) {
 						//exclamation point means negation - the word is NOT included in the searched string
 						$escaped = $driver->escapeLike(substr($escaped, 2, -1),0);
-						$x[] = "public.unaccent($column) NOT ILIKE public.unaccent('%' || " . $escaped . " || '%')";
+						$x[] = "($column IS NULL OR $column = '' OR public.unaccent($column) NOT ILIKE public.unaccent('%' || " . $escaped . " || '%'))";
 						continue;
 					}
 				}
