@@ -139,13 +139,13 @@
 									{/if}
 									{if $hasGroupActions}
 										{block group_actions}
-											<div class="row">
-												<div class="col-auto px-0 d-flex align-items-center">
+											<div class="d-flex flex-row gap-1">
 													{if $control->shouldShowSelectedRowsCount()}
-														<span class="datagrid-selected-rows-count text-muted ms-1"></span>
+														<div class="d-flex align-items-center">
+															<span class="datagrid-selected-rows-count text-muted"></span>
+														</div>
 													{/if}
-												</div>
-												<div class="col-auto d-inline-flex">
+												<div class="d-inline-flex">
 													{foreach $filter['group_action']->getControls() as $form_control}
 														{if $form_control instanceof \Nette\Forms\Controls\SubmitButton && $form_control->getName() === 'submit'}
 															{input $form_control, class => 'btn btn-primary ms-1', disabled => TRUE}
