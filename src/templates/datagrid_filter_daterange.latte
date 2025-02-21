@@ -8,7 +8,7 @@
     <div class="row">
         {label $input class => 'col-sm-3 control-label' /}
         <div class="col-sm-9 form-inline d-inline-flex align-items-center">
-            <div class="input-group input-group-sm datagrid-input-group-full-width">
+            <div class="input-group datagrid-input-group-full-width">
                 {input $input}
             </div>
             <span class="datagrid-filter-icon filter-date ms-1">
@@ -17,12 +17,17 @@
         </div>
     </div>
 {else}
-    <div class="form-inline d-flex align-items-center">
-        <div class="input-group input-group-sm">
-            {input $input, class => 'form-control form-control-sm date-range-filter rounded-end' }
-        </div>
-        <span class="datagrid-filter-icon filter-date ms-1">
-			<i class="fal fa-calendar-alt"></i>
-		</span>
+{*    <div class="form-inline d-flex align-items-center">*}
+{*        <div class="input-group input-group-sm">*}
+{*            {input $input, class => 'form-control form-control-sm date-range-filter rounded-end' }*}
+{*        </div>*}
+{*        <span class="datagrid-filter-icon filter-date ms-1">*}
+{*			<i class="fal fa-calendar-alt"></i>*}
+{*		</span>*}
+{*    </div>*}
+    <div class="input-group flex-nowrap">
+        {input $input, class => 'form-control form-control-sm date-range-filter rounded-end'}
+        <span class="input-group-text border-0 px-1 d-none d-xxl-block"><i class="fal fa-fw fa-calendars"></i></span>
     </div>
+
 {/if}

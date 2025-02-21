@@ -133,6 +133,11 @@ class DataGrid extends Control
 	 */
 	public $perPage = null;
 
+    /**
+     * @var \Stringable|null
+     */
+    protected \Stringable|string|null $title = null;
+
 	/**
 	 * @var array
 	 * @persistent
@@ -499,6 +504,24 @@ class DataGrid extends Control
         }
 
         return $this->url_params;
+    }
+
+    /**
+     * @param \Stringable|string $title
+     * @return $this
+     */
+    public function setTitle(\Stringable|string $title): DataGrid
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * @return \Stringable|string|null
+     */
+    public function getTitle(): \Stringable|string|null
+    {
+        return $this->title;
     }
 
     /**
@@ -2463,6 +2486,7 @@ class DataGrid extends Control
 			$this->redrawControl('pagination');
 			$this->redrawControl('summary');
 			$this->redrawControl('thead-group-action');
+            $this->redrawControl('grid');
 
 			/**
 			 * manualy reset exports links...

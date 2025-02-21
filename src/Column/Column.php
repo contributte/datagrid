@@ -588,6 +588,10 @@ abstract class Column extends FilterableColumn
 			$el->appendAttribute('class', $class);
 		}
 
+        if ($tag === 'th') {
+            $el->appendAttribute('class', 'p-0 fw-medium');
+        }
+
 		$el->appendAttribute('class', sprintf('text-%s', $this->getAlign()));
 		$el->appendAttribute('class', sprintf('col-%s', $key));
 

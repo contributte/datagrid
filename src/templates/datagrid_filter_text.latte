@@ -6,18 +6,14 @@
 {if $outer}
     <div class="row">
         {label $input class => 'col-sm-3 control-label' /}
-        <div class="col-sm-9">
+        <div class="input-group col-sm-9">
             {input $input}
-            <span class="datagrid-filter-icon filter-text">
-                <i class="fal fa-filter"></i>
-            </span>
+            <span class="input-group-text"><i class="fal fa-filter"></i></span>
         </div>
     </div>
 {else}
-    <div class="col-12 d-inline-flex align-items-center">
+    <div class="input-group flex-nowrap">
         {input $input}
-        <span class="datagrid-filter-icon filter-text ms-1">
-            <i class="fal fa-filter"></i>
-        </span>
+        <span class="input-group-text border-0 px-1 d-none d-xxl-block"><i class="fal fa-fw fa-filter"></i></span>
     </div>
 {/if}

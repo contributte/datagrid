@@ -11,6 +11,7 @@ use Ublaboo\DataGrid\Traits\TButtonClass;
 use Ublaboo\DataGrid\Traits\TButtonIcon;
 use Ublaboo\DataGrid\Traits\TButtonText;
 use Ublaboo\DataGrid\Traits\TButtonTitle;
+use Ublaboo\DataGrid\Traits\TButtonTooltip;
 use Ublaboo\DataGrid\Traits\TButtonTryAddIcon;
 
 class Export
@@ -21,6 +22,7 @@ class Export
 	use TButtonClass;
 	use TButtonTitle;
 	use TButtonText;
+	use TButtonTooltip;
 
 	/**
 	 * @var callable
@@ -92,6 +94,10 @@ class Export
 			$this->getIcon(),
 			$this->grid->getTranslator()->translate($this->getTitle())
 		);
+
+        if (!empty($this->getTooltip())) {
+            $a->addAttributes(['data-bs-toggle' => 'tooltip', 'data-bs-placement' => 'top', 'data-bs-title' => $this->getTooltip()]);
+        }
 
 		$a->addText($this->grid->getTranslator()->translate($this->text));
 
