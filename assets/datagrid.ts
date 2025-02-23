@@ -78,8 +78,7 @@ export class Datagrid extends EventTarget {
 		this.ajax.addEventListener("success", ({detail: {payload}}) => {
 			// todo: maybe move?
 			if (payload._datagrid_name && payload._datagrid_name === this.name) {
-				this.el.querySelector<HTMLElement>("[data-datagrid-reset-filter-by-column]")
-					?.classList.add("hidden");
+				this.el.querySelectorAll<HTMLElement>("[data-datagrid-reset-filter-by-column]").forEach( el => el.classList.add("hidden"))
 
 				if (payload.non_empty_filters && payload.non_empty_filters.length >= 1) {
 					const resets = Array.from<HTMLElement>(this.el.querySelectorAll(
