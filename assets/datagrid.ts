@@ -90,9 +90,8 @@ export class Datagrid extends EventTarget {
 						"data-datagrid-reset-filter-by-column"
 					)
 
-					/// tf?
 					for (const columnName of payload.non_empty_filters) {
-						resets.find(getColumnName)?.classList.remove("hidden");
+						resets.find(el => getColumnName(el) === columnName)?.classList.remove("hidden");
 					}
 
 					const href = this.el.querySelector(".reset-filter")
