@@ -89,7 +89,7 @@ export class CheckboxPlugin implements DatagridPlugin {
 					if (datagrid.name !== checkEl.getAttribute("data-check-all")) return;
 					const targetCheck = checkEl.checked;//this is vital as it gets swithced around due to not all being checked just yet.
 					checkboxes.forEach(checkbox => {
-						if (checkbox !== checkEl && checkbox.checked !== targetCheck) {
+						if (checkbox !== checkEl && checkbox.checked !== targetCheck && !checkbox.hasAttribute("data-check-all")) {
 							checkbox.checked = targetCheck;
 							//this will end up calling this callback a lot. But it needs to eb done as otherwise the happy checkboxes fail horribly.
 							//Bubbles is needed as the happy callback catches on document
@@ -101,14 +101,19 @@ export class CheckboxPlugin implements DatagridPlugin {
 					return;
 				}
 
-				const selectAll = datagrid.el.querySelector<HTMLInputElement>(`input[data-check='${datagrid.name}'][data-check-all]`);
-				if (selectAll) {
+				const selectAll = datagrid.el.querySelectorAll<HTMLInputElement>(`input[data-check='${datagrid.name}'][data-check-all]`);
+				if (selectAll.length > 0) {
 					const allChecked = Array.from(checkboxes).filter(c => !c.hasAttribute("data-check-all")).every(c => c.checked);
 					if (allChecked != selectAll.checked) {
-						notUserInvoked = true;
-						selectAll.checked = allChecked;
-						selectAll.dispatchEvent(new Event('change', {bubbles: true}));
-						notUserInvoked = false;
+						selectAll.forEach(el => {
+							if(el.hasAttribute("data-override-check-all")){
+								return;
+							}
+							notUserInvoked = true;
+							el.checked = allChecked;
+							el.dispatchEvent(new Event('change', {bubbles: true}));
+							notUserInvoked = false;
+						})
 					}
 				}
 			});
