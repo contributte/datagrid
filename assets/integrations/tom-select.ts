@@ -14,9 +14,17 @@ export class TomSelect implements Selectpicker {
 		const Select = this.select ?? window()?.TomSelect ?? null;
 
 		if (Select) {
-			elements.forEach(element => new Select(
+
+			elements.forEach(element => {
+				if(element.hasAttribute('data-Tom-Initialised')){
+					return;
+				}
+				element.setAttribute('data-Tom-Initialised','true');
+
+				new Select(
 				element as TomInput,
 				typeof this.opts === "function" ? this.opts(element) : this.opts)
+			}
 			);
 		}
 	}
