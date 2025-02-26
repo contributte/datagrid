@@ -5,13 +5,21 @@ export class SelectpickerPlugin implements DatagridPlugin {
 	constructor(private selectpicker: Selectpicker) {
 	}
 
-	onDatagridInit(datagrid: Datagrid): boolean {
+	doInit(datagrid:Datagrid){
 		const elements = datagrid.el.querySelectorAll<HTMLElement>(".selectpicker");
-
 		if (elements.length >= 1) {
-			this.selectpicker.initSelectpickers(Array.from(elements), datagrid);
+			const filtered = Array.from(elements).filter(el => el instanceof HTMLInputElement || el instanceof HTMLSelectElement);
+			if(filtered.length >= 1){
+				this.selectpicker.initSelectpickers(filtered, datagrid);
+			}
 		}
 
+	}
+	onDatagridInit(datagrid: Datagrid): boolean {
+		datagrid.ajax.addEventListener('complete', (event) => {
+			this.doInit(datagrid);
+		});
+		this.doInit(datagrid);
 		return true;
 	}
 }

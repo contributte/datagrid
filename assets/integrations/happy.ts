@@ -6,6 +6,8 @@ import { happyStyles } from "../css/happy.css";
 export class Happy {
 	private colors: string[] = ["primary", "success", "info", "warning", "danger", "white", "gray"];
 
+	private sheet :null|CSSStyleSheet = null;
+
 	private templates = {
 		radio: '<div class="happy-radio"><b></b></div>',
 		checkbox:
@@ -15,14 +17,33 @@ export class Happy {
 	};
 
 	init() {
-		if (!document.querySelector('[data-happy-stylesheet]')) {
-			document.head.append(`<style data-happy-stylesheet>${happyStyles}</style>`)
+
+		if(!this.sheet) {
+			this.firstInit()
 		}
 		this.removeBySelector(".happy-radio");
 		this.removeBySelector(".happy-checkbox");
 
 		this.initRadio();
 		this.initCheckbox();
+	}
+
+	firstInit(){
+		const styleElement = new CSSStyleSheet();
+		styleElement.replaceSync(happyStyles);
+		document.adoptedStyleSheets.push(styleElement);
+		this.sheet = styleElement;
+
+		/**
+		 * The first init call, adds handlers for fancy looking checkboxes. The callback neds only be added once.
+		 */
+		document.addEventListener("click", this.checkCheckboxStateOnClick.bind(this));
+		document.addEventListener("change", this.checkCheckboxStateOnChange.bind(this));
+
+		/**
+		 * Set aciton functionality for native change of radios
+		 */
+		document.addEventListener("change", this.radioOnChange.bind(this));
 	}
 
 	/**
@@ -90,15 +111,11 @@ export class Happy {
 			 * Init state
 			 */
 			this.checkRadioState(input);
-
-			/**
-			 * Set aciton functionality for native change
-			 */
-			document.addEventListener("change", this.radioOnChange.bind(this));
 		});
 	}
 
 	initCheckbox() {
+
 		document.querySelectorAll<HTMLInputElement>("input[type=checkbox].happy").forEach(input => {
 			/**
 			 * Paste happy component into html
@@ -123,12 +140,6 @@ export class Happy {
 			 * Init state
 			 */
 			this.checkCheckboxState(input);
-
-			/**
-			 * Set action functionality for click || native change
-			 */
-			document.addEventListener("click", this.checkCheckboxStateOnClick.bind(this));
-			document.addEventListener("change", this.checkCheckboxStateOnChange.bind(this));
 		});
 	}
 
@@ -144,7 +155,6 @@ export class Happy {
 				: target instanceof SVGGraphicsElement
 					? target.closest("svg")?.parentNode
 					: target;
-
 		if (!(happyInput instanceof HTMLElement) || !happyInput.classList.contains("happy-checkbox")) {
 			return;
 		}
@@ -155,14 +165,17 @@ export class Happy {
 		const value = happyInput.getAttribute("data-value");
 
 		const input = document.querySelector(
-			`.happy-checkbox[data-name="${name}"]` + (!!value ? `[value="${value}"]` : "")
+			`input[type=checkbox].happy[name="${name}"]` + (!!value ? `[value="${value}"]` : "")
 		);
 		if (!(input instanceof HTMLInputElement)) return;
 
 		const checked = happyInput.classList.contains("active");
-
-		input.checked = !checked;
 		checked ? happyInput.classList.remove("active") : happyInput.classList.add("active");
+		if(input.checked !== !checked){
+			const evt = new Event('change',{bubbles: false, cancelable: true,composed: false});
+			input.checked = !checked;
+			input.dispatchEvent(evt);
+		}
 	}
 
 	checkCheckboxStateOnChange({target}: Event) {
