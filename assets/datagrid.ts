@@ -78,23 +78,27 @@ export class Datagrid extends EventTarget {
 		this.ajax.addEventListener("success", ({detail: {payload}}) => {
 			// todo: maybe move?
 			if (payload._datagrid_name && payload._datagrid_name === this.name) {
-				this.el.querySelector<HTMLElement>("[data-datagrid-reset-filter-by-column]")
-					?.classList.add("hidden");
+				const getColumnName = (el: HTMLElement) => el.getAttribute(
+					"data-datagrid-reset-filter-by-column"
+				)
 
-				if (payload.non_empty_filters && payload.non_empty_filters.length >= 1) {
-					const resets = Array.from<HTMLElement>(this.el.querySelectorAll(
-						`[data-datagrid-reset-filter-by-column]`
-					));
+				const resets = Array.from<HTMLElement>(this.el.querySelectorAll(
+					`[data-datagrid-reset-filter-by-column]`
+				));
 
-					const getColumnName = (el: HTMLElement) => el.getAttribute(
-						"data-datagrid-reset-filter-by-column"
-					)
+				const nonEmptyFilters = payload.non_empty_filters ? payload.non_empty_filters : [] as string[];
 
-					/// tf?
-					for (const columnName of payload.non_empty_filters) {
-						resets.find(getColumnName)?.classList.remove("hidden");
+				resets.forEach((el) => {
+					const columnName = getColumnName(el);
+
+					if (columnName && nonEmptyFilters.includes(columnName)) {
+						el.classList.remove("hidden");
+					} else {
+						el.classList.add("hidden");
 					}
+				});
 
+				if (nonEmptyFilters.length > 0) {
 					const href = this.el.querySelector(".reset-filter")
 						?.getAttribute("href");
 
