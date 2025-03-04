@@ -169,7 +169,7 @@ class Option
 
 			return str_replace(
 				'%s',
-				$row->getValue($this->confirmation->getPlaceholderName()),
+				(string) $row->getValue($this->confirmation->getPlaceholderName()),
 				$question
 			);
 		}
