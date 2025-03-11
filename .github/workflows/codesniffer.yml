@@ -2,6 +2,7 @@ name: "Codesniffer"
 
 on:
   pull_request:
+  workflow_dispatch:
 
   push:
     branches: ["*"]
@@ -12,6 +13,6 @@ on:
 jobs:
   codesniffer:
     name: "Codesniffer"
-    uses: contributte/.github/.github/workflows/codesniffer.yml@v1
+    uses: contributte/.github/.github/workflows/codesniffer.yml@master
     with:
       php: "8.3"
