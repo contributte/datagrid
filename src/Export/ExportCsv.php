@@ -2,9 +2,9 @@
 
 namespace Contributte\Datagrid\Export;
 
-use Contributte\Application\Response\CSVResponse;
 use Contributte\Datagrid\CsvDataModel;
 use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Response\CsvResponse;
 
 class ExportCsv extends Export
 {
@@ -55,7 +55,7 @@ class ExportCsv extends Export
 
 			$csvDataModel = new CsvDataModel($data, $columns, $this->grid->getTranslator());
 
-			$this->grid->getPresenter()->sendResponse(new CSVResponse(
+			$this->grid->getPresenter()->sendResponse(new CsvResponse(
 				$csvDataModel->getSimpleData(),
 				$name,
 				$outputEncoding,
