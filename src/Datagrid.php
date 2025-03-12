@@ -1262,8 +1262,6 @@ class Datagrid extends Control
 			return;
 		}
 
-		$values = (array) $form->getUntrustedValues(null);
-
 		if ($this->getPresenterInstance()->isAjax()) {
 			if (isset($form['group_action']['submit']) && $form['group_action']['submit']->isSubmittedBy()) {
 				return;
@@ -1273,9 +1271,11 @@ class Datagrid extends Control
 		/**
 		 * Per page
 		 */
-		if (isset($values['perPage'])) {
-			$this->saveSessionData('_grid_perPage', $values['perPage']);
-			$this->perPage = $values['perPage'];
+		$perPage = $form['perPage']->getValue();
+
+		if (isset($perPage)) {
+			$this->saveSessionData('_grid_perPage', $perPage);
+			$this->perPage = $perPage;
 		}
 
 		/**
@@ -1303,7 +1303,7 @@ class Datagrid extends Control
 				$primaryWhereColumn = $form->getHttpData(Form::DataLine, 'inline_edit[_primary_where_column]');
 
 				if ($edit['submit']->isSubmittedBy() && $edit->getErrors() === []) {
-					$this->inlineEdit->onSubmit($id, $values['inline_edit']);
+					$this->inlineEdit->onSubmit($id, $form['inline_edit']->getValues());
 					$this->getPresenterInstance()->payload->_datagrid_inline_edited = $id;
 					$this->getPresenterInstance()->payload->_datagrid_name = $this->getFullName();
 				} else {
@@ -1345,7 +1345,7 @@ class Datagrid extends Control
 
 			if ($add['submit']->isSubmittedBy() || $add['cancel']->isSubmittedBy()) {
 				if ($add['submit']->isSubmittedBy() && $add->getErrors() === []) {
-					$this->inlineAdd->onSubmit($values['inline_add']);
+					$this->inlineAdd->onSubmit($form['inline_add']->getValues());
 				}
 
 				$this->redrawControl('tbody');
@@ -1359,7 +1359,7 @@ class Datagrid extends Control
 		/**
 		 * Filter itself
 		 */
-		$values = $values['filter'];
+		$values = $form['filter']->getValues();
 
 		if (!$values instanceof ArrayHash) {
 			throw new UnexpectedValueException();
