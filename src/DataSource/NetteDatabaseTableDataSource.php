@@ -263,7 +263,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$this->dataSource->where($filter->getCondition());
 	}
 
-	protected function getDataSource(): Selection
+	public function getDataSource(): Selection
 	{
 		return $this->dataSource;
 	}
