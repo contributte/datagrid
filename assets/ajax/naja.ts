@@ -77,10 +77,17 @@ export class NajaAjax<C extends Naja = Naja, G extends Datagrid = Datagrid> exte
 				throw new Error("Element is not an instanceof HTMLElement");
 			}
 
-			return this.dispatch('interact', {
+			const dispatchResult = this.dispatch('interact', {
 				...e.detail,
 				element: e.detail.element as HTMLElement // Naja's event has a type of HTMLElement
-			})
+			});
+
+			if (!dispatchResult) {
+				e.stopPropagation();
+				e.preventDefault();
+			}
+
+			return dispatchResult;
 		})
 
 
@@ -122,7 +129,11 @@ export class NajaAjax<C extends Naja = Naja, G extends Datagrid = Datagrid> exte
 	dispatch<
 		K extends string, M extends BaseAjaxEventMap = AjaxEventMap
 	>(type: K, detail: K extends keyof M ? EventDetail<M[K]> : any, options?: boolean): boolean {
-		return this.dispatchEvent(new CustomEvent(type, {detail}));
+		return this.dispatchEvent(new CustomEvent(type, {
+			detail: detail,
+			cancelable: true,
+		}));
+
 	}
 
 	declare addEventListener: <K extends keyof M, M extends BaseAjaxEventMap = AjaxEventMap>(
