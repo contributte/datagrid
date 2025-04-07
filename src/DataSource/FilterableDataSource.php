@@ -14,6 +14,8 @@ use Nette\Utils\ArrayHash;
 abstract class FilterableDataSource
 {
 
+	abstract public function getDataSource(): mixed;
+
 	/**
 	 * {@inheritDoc}
 	 *
@@ -49,8 +51,6 @@ abstract class FilterableDataSource
 			}
 		}
 	}
-
-	abstract public function getDataSource(): mixed;
 
 	abstract protected function applyFilterDate(FilterDate $filter): void;
 

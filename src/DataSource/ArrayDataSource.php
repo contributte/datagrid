@@ -15,7 +15,6 @@ use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
 use DateTime;
-use DateTimeInterface;
 use Nette\Utils\Strings;
 
 class ArrayDataSource implements IDataSource

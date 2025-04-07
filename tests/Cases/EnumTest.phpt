@@ -2,10 +2,6 @@
 
 namespace Contributte\Datagrid\Tests\Cases;
 
-/**
- * @phpVersion >= 8.1
- */
-
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../Files/TestingDatagridFactory.php';
 
