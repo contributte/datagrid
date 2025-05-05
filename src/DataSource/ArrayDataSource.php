@@ -182,10 +182,11 @@ class ArrayDataSource implements IDataSource
 				$row_value = strtolower(Strings::toAscii($row[$column]));
 
 				foreach ($words as $word) {
-					if (strpos($row_value, strtolower(Strings::toAscii($word))) !== false) {
-						return $row;
+					if (strpos($row_value, strtolower(Strings::toAscii($word))) === false) {
+						return false;
 					}
 				}
+				return $row;
 			}
 		}
 
