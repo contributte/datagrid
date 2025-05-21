@@ -25,6 +25,7 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 		$driver = $this->data_source->getConnection()->getDriver();
 		$or = [];
 
+		$is_negation_search = false;
 		foreach ($condition as $column => $value) {
 			if ($filter->isSpecialChars()) {
 				if ($value === Filter\FilterText::TOKEN_EMPTY) { // Handle single '#'
@@ -76,7 +77,10 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 			$or[] = "((" . implode(") AND (", $x) . "))";
 		}
 
-		if (sizeof($or) > 1) {
+		if ($is_negation_search) {
+			$condition = sprintf("(%s)", implode(' AND ', $or));
+			$this->data_source->where($condition);
+		} else if (sizeof($or) > 1) {
 			$this->data_source->where('(%or)', $or);
 		} else {
 			$this->data_source->where($or);
