@@ -23,7 +23,7 @@ export class SortableJS implements SortableInterface {
 							let componentPrefix = tbody.getAttribute("data-sortable-parent-path") ?? '';
 							if (componentPrefix.length) componentPrefix = `${componentPrefix}-`;
 
-							const url = tbody.getAttribute("sortable-ul") ?? "?do=sort";
+							const url = tbody.getAttribute("data-sortable-url") ?? "?do=sort";
 
 							const data = {
 								[`${componentPrefix}item_id`]: itemId,
