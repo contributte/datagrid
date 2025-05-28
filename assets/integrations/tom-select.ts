@@ -14,10 +14,17 @@ export class TomSelect implements Selectpicker {
 		const Select = this.select ?? window()?.TomSelect ?? null;
 
 		if (Select) {
-			elements.forEach(element => new Select(
-				element as TomInput,
-				typeof this.opts === "function" ? this.opts(element) : this.opts)
-			);
+			for (const element of elements) {
+				// Check if TomSelect is already initialized on the element
+				if (element.tomselect) {
+					continue;
+				}
+
+				new Select(
+					element as TomInput,
+					typeof this.opts === "function" ? this.opts(element) : this.opts
+				)
+			}
 		}
 	}
 }
