@@ -14,7 +14,7 @@ class FilterMultiSelect extends FilterSelect
 	protected ?string $type = 'multi-select';
 
 	protected array $attributes = [
-		'class' => ['form-select', 'selectpicker', 'form-select-sm'],
+		'class' => ['selectpicker'],
 		'data-selected-text-format' => ['count'],
 	];
 
