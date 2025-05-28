@@ -1,3 +1,4 @@
+import Select from "tom-select";
 import { Datagrid } from "./datagrid";
 import {
 	AutosubmitPlugin,
@@ -12,7 +13,7 @@ import {
 import { Ajax, DatagridsOptions } from "./types";
 import { SortableJS } from "./integrations/sortable-js";
 import { DatepickerPlugin } from "./plugins/integrations/datepicker";
-import { BootstrapSelect, Happy, VanillaDatepicker } from "./integrations";
+import { Happy, TomSelect, VanillaDatepicker } from "./integrations";
 
 export class Datagrids {
 	private datagrids: Datagrid[] = [];
@@ -72,7 +73,7 @@ export const createFullDatagrids = (ajax: Ajax, _options: Partial<DatagridsOptio
 				new HappyPlugin(new Happy()),
 				new SortablePlugin(new SortableJS()),
 				new DatepickerPlugin(new VanillaDatepicker()),
-				new SelectpickerPlugin(new BootstrapSelect())
+				new SelectpickerPlugin(new TomSelect(Select))
 			],
 		},
 		..._options,
