@@ -6,9 +6,20 @@ export class VanillaDatepicker implements DatepickerInterface {
 	constructor(private opts: DatepickerOptions | ((input: HTMLInputElement) => DatepickerOptions) = {}) {
 	}
 
-
 	initDatepickers(elements: HTMLInputElement[]): void {
-		elements.forEach((element) => new Datepicker(element, typeof this.opts === "function" ? this.opts(element) : this.opts));
-	}
+		elements.forEach((element) => {
+			const options = typeof this.opts === "function" ? this.opts(element) : this.opts;
+			const picker = new Datepicker(element, {
+				...options,
+				updateOnBlur: false
+			});
 
+			element.addEventListener('changeDate', () => {
+				const form = element.closest('form');
+				if (form) {
+					form.submit();
+				}
+			});
+		});
+	}
 }
