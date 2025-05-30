@@ -11,11 +11,11 @@ on:
     - cron: "0 8 * * 1"
 
 jobs:
-  test82:
+  coverage:
     name: "Nette Tester"
     uses: contributte/.github/.github/workflows/nette-tester-mysql.yml@v1
     with:
-      php: "8.3"
+      php: "8.4"
       database: tests
       coverage: true
       make: coverage

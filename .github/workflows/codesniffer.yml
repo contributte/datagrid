@@ -15,4 +15,4 @@ jobs:
     name: "Codesniffer"
     uses: contributte/.github/.github/workflows/codesniffer.yml@master
     with:
-      php: "8.3"
+      php: "8.4"
