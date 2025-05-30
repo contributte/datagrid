@@ -1,5 +1,3 @@
-import { happyStyles } from "../css/happy.css";
-
 /**
  * Slightly cleaned up & typed version of happy-inputs by paveljanda.
  */
@@ -15,9 +13,6 @@ export class Happy {
 	};
 
 	init() {
-		if (!document.querySelector('[data-happy-stylesheet]')) {
-			document.head.append(`<style data-happy-stylesheet>${happyStyles}</style>`)
-		}
 		this.removeBySelector(".happy-radio");
 		this.removeBySelector(".happy-checkbox");
 

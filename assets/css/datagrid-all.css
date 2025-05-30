@@ -1,6 +1,5 @@
-/*
- * Use bootstrap and fontawesome from the CDN.
- */
+@import "@fortawesome/fontawesome-free/css/all.css";
+@import 'bootstrap/dist/css/bootstrap.css';
 @import 'vanillajs-datepicker/dist/css/datepicker-bs5.css';
 @import "tom-select/dist/css/tom-select.css";
 @import './happy.css';

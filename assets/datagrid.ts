@@ -1,5 +1,19 @@
 import { defaultDatagridNameResolver, isEnter } from "./utils";
-import type { Ajax, DatagridEventMap, DatagridOptions, EventDetail, EventListener, } from "./types";
+import type { Ajax, DatagridEventMap, DatagridOptions, DatagridsOptions, EventDetail, EventListener, } from "./types";
+import Select from "tom-select";
+import {
+	AutosubmitPlugin,
+	CheckboxPlugin,
+	ConfirmPlugin,
+	HappyPlugin,
+	InlinePlugin,
+	NetteFormsPlugin,
+	SelectpickerPlugin,
+	SortablePlugin
+} from "./plugins";
+import { SortableJS } from "./integrations";
+import { DatepickerPlugin } from "./plugins";
+import { Happy, TomSelect, VanillaDatepicker } from "./integrations";
 
 export class Datagrid extends EventTarget {
 	private static readonly defaultOptions: DatagridOptions = {
@@ -46,7 +60,7 @@ export class Datagrid extends EventTarget {
 	}
 
 	public init() {
-		let cancelled = !this.dispatch('beforeInit', {datagrid: this})
+		let cancelled = !this.dispatch('beforeInit', { datagrid: this })
 		if (!cancelled) {
 			this.options.plugins.forEach((plugin) => {
 				plugin.onDatagridInit?.(this)
@@ -75,7 +89,7 @@ export class Datagrid extends EventTarget {
 			});
 		});
 
-		this.ajax.addEventListener("success", ({detail: {payload}}) => {
+		this.ajax.addEventListener("success", ({ detail: { payload } }) => {
 			// todo: maybe move?
 			if (payload._datagrid_name && payload._datagrid_name === this.name) {
 				const getColumnName = (el: HTMLElement) => el.getAttribute(
@@ -114,7 +128,7 @@ export class Datagrid extends EventTarget {
 			}
 		})
 
-		this.dispatch('afterInit', {datagrid: this});
+		this.dispatch('afterInit', { datagrid: this });
 	}
 
 	public confirm(message: string): boolean {
@@ -128,7 +142,7 @@ export class Datagrid extends EventTarget {
 	dispatch<
 		K extends string, M extends DatagridEventMap = DatagridEventMap
 	>(type: K, detail: K extends keyof M ? EventDetail<M[K]> : any, options?: boolean): boolean {
-		return this.dispatchEvent(new CustomEvent(type, {detail}));
+		return this.dispatchEvent(new CustomEvent(type, { detail }));
 	}
 
 	declare addEventListener: <K extends keyof M, M extends DatagridEventMap = DatagridEventMap>(
@@ -147,3 +161,68 @@ export class Datagrid extends EventTarget {
 		event: K extends keyof M ? M[K] : CustomEvent
 	) => boolean;
 }
+
+export class Datagrids {
+	private datagrids: Datagrid[] = [];
+
+	readonly options: DatagridsOptions;
+
+	readonly root: HTMLElement;
+
+	constructor(readonly ajax: Ajax, options: Partial<DatagridsOptions> = {}) {
+		this.options = {
+			selector: "div[data-datagrid-name]",
+			datagrid: {},
+			root: document.body,
+			...options,
+		};
+
+		const root = typeof this.options.root === "string"
+			? document.querySelector(this.options.root)
+			: this.options.root;
+
+		if (!root || !(root instanceof HTMLElement)) {
+			throw new Error("Root element not found or is not an HTMLElement");
+		}
+
+		this.root = root;
+
+		this.init();
+	}
+
+	init() {
+		this.ajax.onInit();
+		(this.options.datagrid?.plugins ?? []).forEach((plugin) => plugin.onInit?.(this));
+
+		this.initDatagrids();
+	}
+
+	initDatagrids() {
+		this.datagrids = Array.from(this.root.querySelectorAll<HTMLElement>(this.options.selector)).map(
+			datagrid => new Datagrid(datagrid, this.ajax, this.options.datagrid)
+		);
+	}
+}
+
+export const createDatagrids = (ajax: Ajax, _options: Partial<DatagridsOptions> = {}) => {
+	return new Datagrids(ajax, _options);
+};
+
+export const createFullDatagrids = (ajax: Ajax, _options: Partial<DatagridsOptions> = {}) => {
+	return createDatagrids(ajax, {
+		datagrid: {
+			plugins: [
+				new AutosubmitPlugin(),
+				new CheckboxPlugin(),
+				new ConfirmPlugin(),
+				new InlinePlugin(),
+				new NetteFormsPlugin(),
+				new HappyPlugin(new Happy()),
+				new SortablePlugin(new SortableJS()),
+				new DatepickerPlugin(new VanillaDatepicker()),
+				new SelectpickerPlugin(new TomSelect(Select))
+			],
+		},
+		..._options,
+	})
+};

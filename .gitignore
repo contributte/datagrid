@@ -12,3 +12,6 @@
 # Node.jS
 /node_modules
 /package-lock.json
+
+# Assets
+/dist
