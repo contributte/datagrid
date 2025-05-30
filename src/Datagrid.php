@@ -1271,7 +1271,7 @@ class Datagrid extends Control
 		/**
 		 * Per page
 		 */
-		$perPage = $form['perPage']->getValue();
+		$perPage = $form->getComponent('perPage')->getValue();
 
 		if (isset($perPage)) {
 			$this->saveSessionData('_grid_perPage', $perPage);
@@ -1302,8 +1302,8 @@ class Datagrid extends Control
 				$id = $form->getHttpData(Form::DataLine, 'inline_edit[_id]');
 				$primaryWhereColumn = $form->getHttpData(Form::DataLine, 'inline_edit[_primary_where_column]');
 
-				if ($edit['submit']->isSubmittedBy() && $edit->getErrors() === []) {
-					$this->inlineEdit->onSubmit($id, $form['inline_edit']->getValues());
+				if ($edit->getComponent('submit')->isSubmittedBy() && $edit->getErrors() === []) {
+					$this->inlineEdit->onSubmit($id, $form->getComponent('inline_edit')->getValues());
 					$this->getPresenterInstance()->payload->_datagrid_inline_edited = $id;
 					$this->getPresenterInstance()->payload->_datagrid_name = $this->getFullName();
 				} else {
@@ -1345,7 +1345,7 @@ class Datagrid extends Control
 
 			if ($add['submit']->isSubmittedBy() || $add['cancel']->isSubmittedBy()) {
 				if ($add['submit']->isSubmittedBy() && $add->getErrors() === []) {
-					$this->inlineAdd->onSubmit($form['inline_add']->getValues());
+					$this->inlineAdd->onSubmit($form->getComponent('inline_add')->getValues());
 				}
 
 				$this->redrawControl('tbody');
@@ -1359,7 +1359,7 @@ class Datagrid extends Control
 		/**
 		 * Filter itself
 		 */
-		$values = $form['filter']->getValues();
+		$values = $form->getComponent('filter')->getValues();
 
 		if (!$values instanceof ArrayHash) {
 			throw new UnexpectedValueException();

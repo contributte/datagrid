@@ -15,6 +15,7 @@ use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
 use DateTime;
+use DateTimeInterface;
 use Nette\Utils\Strings;
 
 class ArrayDataSource implements IDataSource
@@ -115,12 +116,8 @@ class ArrayDataSource implements IDataSource
 			$data = [];
 
 			foreach ($this->data as $item) {
-				$value = is_object($item) ? $item->$column : $item[$column];
-				if ($value instanceof \DateTimeInterface) {
-					$sort_by = $value->format('Y-m-d H:i:s');
-				} else {
-					$sort_by = (string) $value;
-				}
+				$value = is_object($item) ? $item->$column : $item[$column]; // @phpstan-ignore-line
+				$sort_by = $value instanceof DateTimeInterface ? $value->format('Y-m-d H:i:s') : (string) $value;
 
 				$data[$sort_by][] = $item;
 			}
