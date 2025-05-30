@@ -121,6 +121,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		$function->processDataSource(clone $this->dataSource);
 	}
 
+	public function getDataSource(): Selection
+	{
+		return $this->dataSource;
+	}
+
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -263,11 +268,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	protected function applyFilterSelect(FilterSelect $filter): void
 	{
 		$this->dataSource->where($filter->getCondition());
-	}
-
-	public function getDataSource(): Selection
-	{
-		return $this->dataSource;
 	}
 
 }

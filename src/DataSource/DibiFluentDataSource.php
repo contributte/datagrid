@@ -100,6 +100,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		$function->processDataSource(clone $this->dataSource);
 	}
 
+	public function getDataSource(): Fluent
+	{
+		return $this->dataSource;
+	}
+
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		$conditions = $filter->getCondition();
@@ -217,11 +222,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 	protected function applyFilterSelect(FilterSelect $filter): void
 	{
 		$this->dataSource->where($filter->getCondition());
-	}
-
-	public function getDataSource(): Fluent
-	{
-		return $this->dataSource;
 	}
 
 }

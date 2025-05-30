@@ -40,7 +40,7 @@ final class FilterTest extends TestCase
 
 		$grid->addColumnText('status', 'Status');
 
-		$grid->addInlineAdd()->onControlAdd[] = function (Container $container) {
+		$grid->addInlineAdd()->onControlAdd[] = function (Container $container): void {
 			$container->setMappedType(FormValueObject::class);
 			$container->addSelect('status', '', [
 				// items are irrelevant, case is testing control returning null value
@@ -54,7 +54,7 @@ final class FilterTest extends TestCase
 
 		$filterForm = $grid->createComponentFilter();
 
-		Assert::exception(function() use ($grid, $filterForm): void {
+		Assert::exception(function () use ($grid, $filterForm): void {
 			$grid->filterSucceeded($filterForm);
 		}, AbortException::class);
 	}

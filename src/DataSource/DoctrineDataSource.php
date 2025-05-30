@@ -170,6 +170,11 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		$function->processDataSource(clone $this->dataSource);
 	}
 
+	public function getDataSource(): QueryBuilder
+	{
+		return $this->dataSource;
+	}
+
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		$p1 = $this->getPlaceholder();
@@ -304,11 +309,6 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 			$this->dataSource->andWhere(sprintf('%s = :%s', $c, $p))
 				->setParameter($p, $value);
 		}
-	}
-
-	public function getDataSource(): QueryBuilder
-	{
-		return $this->dataSource;
 	}
 
 	private function checkAliases(string $column): string

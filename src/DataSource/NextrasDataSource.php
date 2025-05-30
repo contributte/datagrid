@@ -110,6 +110,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 		$function->processDataSource(clone $this->dataSource);
 	}
 
+	public function getDataSource(): ICollection
+	{
+		return $this->dataSource;
+	}
+
 	protected function applyFilterDate(FilterDate $filter): void
 	{
 		foreach ($filter->getCondition() as $column => $value) {
@@ -224,11 +229,6 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 		$this->dataSource = $this->dataSource->findBy(
 			[$this->prepareColumn($filter->getColumn()) => $filter->getValue()]
 		);
-	}
-
-	public function getDataSource(): ICollection
-	{
-		return $this->dataSource;
 	}
 
 	/**
