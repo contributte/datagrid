@@ -20,11 +20,11 @@ Assets are available as NPM package [@contributte/datagrid](https://www.npmjs.co
 You can use CDN assets like this:
 
 ```latte
-	<!-- Datagrid (CDN) -->
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@contributte/datagrid@master/dist/datagrid-full.css">
-	<script defer src="https://cdn.jsdelivr.net/npm/@contributte/datagrid@master/dist/datagrid-full.js"></script>
+<!-- Datagrid (CDN) -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@contributte/datagrid@master/dist/datagrid-full.css">
+<script defer src="https://cdn.jsdelivr.net/npm/@contributte/datagrid@master/dist/datagrid-full.js"></script>
 ```
 
 > [!NOTE]
@@ -68,6 +68,7 @@ Follow these steps:
   ```
 
 6. Include `www/dist/datagrid.js` and `www/dist/datagrid.css` in your `@layout.latte`.
+
   ```latte
   <!-- Datagrid (bundled) -->
   <link rel="stylesheet" type="text/css" href="{$basePath}/dist/app.css">
