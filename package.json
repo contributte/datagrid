@@ -2,6 +2,10 @@
   "name": "@contributte/datagrid",
   "version": "6.9.2",
   "description": "Assets for contributte/datagrid",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/contributte/datagrid"
+  },
   "keywords": [
     "contributte",
     "datagrid",
