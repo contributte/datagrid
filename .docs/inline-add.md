@@ -1,9 +1,9 @@
-Table of contents
-
-- [Inline adding](#inline-adding)
-	- [Position of new item row](#position-of-new-item-row)
-
 # Inline adding
+
+- [Position of new item row](#position-of-new-item-row)
+- [Limitation when using array datasource](#limitation-when-using-array-datasource)
+
+-----
 
 Since version `3.3.0` there is a feature "inline adding" available. Up above is a demo where you can try that out. Just hit the "plus" button, fill some inputs and save the container. Example implementation:
 
@@ -30,7 +30,7 @@ $grid->getInlineAdd()->onSubmit[] = function(Nette\Utils\ArrayHash $values): voi
 };
 ```
 
-## Position of new item row
+# Position of new item row
 
 As you can see, new item row is rendered at the bottom of the table. You may change that and make datagrid render the new item row on the top:
 
@@ -39,7 +39,7 @@ $grid->addInlineAdd()
 	->setPositionTop(); // Or take it down again: ::setPositionTop(false)
 ```
 
-## Limitation when using array datasource
+# Limitation when using array datasource
 
 When you use array datasource, there is one limitation. Simply redrawing the grid won't do. You will also have to set the datasource again to refresh the data.
 

@@ -1,13 +1,12 @@
-Table of contents
-
-- [Tree view](#tree-view)
-	- [Api](#api)
-	- [Example table structure](#example-table-structure)
-	- [Redrawing one row \(ajax\)](#redrawing-one-row-ajax)
-
 # Tree view
 
-## Api
+- [Api](#api)
+- [Example table structure](#example-table-structure)
+- [Redrawing one row (ajax)](#redrawing-one-row-ajax)
+
+-----
+
+# Api
 
 There is a possibility to render the data as a tree:
 
@@ -19,7 +18,7 @@ There is a possibility to render the data as a tree:
 $grid->setTreeView(callable $getChildrenCallback, string|callable $has_children_column);
 ```
 
-## Example table structure
+# Example table structure
 
 Click the link "Show me the code" above. This will show you the code of this datagrid example. And here is a database table structure:
 
@@ -41,8 +40,7 @@ Click the link "Show me the code" above. This will show you the code of this dat
 | 14 | 3                  | 4gbik9rxbp | 0      |
 | 15 | 2                  | jl9ke3q9s7 | 2      |
 
-
-## Redrawing one row (ajax)
+# Redrawing one row (ajax)
 
 Different situation occurs when you need to redraw just one row. Datagrid does not know about all the items (it has originally only top level rows). So before you call `Datagrid::redrawItem()`, you have to set datagrid datasource where the item will be visible:
 

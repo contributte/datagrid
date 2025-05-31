@@ -1,9 +1,8 @@
-Table of contents
-
-- [Pagination](#pagination)
-	- [Custom template](#custom-template)
-
 # Pagination
+
+- [Custom template](#custom-template)
+
+-----
 
 You can **disable** pagination, if you don't want to use it:
 

@@ -1,16 +1,15 @@
-Table of contents
+# Inline editing
 
-- [Inline editing](#inline-editing)
-    - [Small inline editing](#small-inline-editing)
-        - [Different input types and element attributes](#different-input-types-and-element-attributes)
-        - [Render different content then is edited](#render-different-content-then-is-edited)
-    - [Big inline editing](#big-inline-editing)
-        - [What happens after editing](#what-happens-after-editing)
-        - [Show non editing Columns](#show-non-editing-columns)
+- [Small inline editing](#small-inline-editing)
+    - [Different input types and element attributes](#different-input-types-and-element-attributes)
+    - [Render different content then is edited](#render-different-content-then-is-edited)
+- [Big inline editing](#big-inline-editing)
+    - [What happens after editing](#what-happens-after-editing)
+    - [Show non editing Columns](#show-non-editing-columns)
 
-# Inline editting
+-----
 
-## Small inline editing
+# Small inline editing
 
 ![Small inline editing](https://github.com/contributte/datagrid/blob/master/.docs/assets/inline_edit.gif?raw=true)
 
@@ -33,7 +32,7 @@ $grid->addColumnText('name', 'Name')
 	->setEditableCallback([$this, 'columnNameEdited']);
 ```
 
-### Different input types and element attributes
+## Different input types and element attributes
 
 Small inline edit is not limited to textarea, you can you input of type of your choice (that input will be submitted with either **blur** or **submit** (enter press) event). Example usage:
 
@@ -55,8 +54,7 @@ $grid->addColumnText('name', 'Name')
 	]);
 ```
 
-
-### Render different content then is edited
+## Render different content then is edited
 
 ![different content](https://github.com/contributte/datagrid/blob/master/.docs/assets/inline_edit_2.gif?raw=true)
 
@@ -75,7 +73,7 @@ $grid->addColumnLink('link', 'Link', 'this#demo', 'name', ['id'])
 	});
 ```
 
-## Big inline editing
+# Big inline editing
 
 This one is much more powerful:
 
@@ -116,7 +114,7 @@ $grid->getInlineEdit()->onSubmit[] = function($id, Nette\Utils\ArrayHash $values
 };
 ```
 
-### What happens after editing
+## What happens after editing
 
 By default, after submitting inline edit, the row is redrawn and the green animated background is triggered. Bud if you want to do something else, you can, just create new listener to event `InlineEdit::onCustomRedraw()`:
 
@@ -129,7 +127,7 @@ $grid->getInlineEdit()->onCustomRedraw[] = function() use ($grid): void {
 };
 ```
 
-### Show non editing Columns
+## Show non editing Columns
 
 If you don't want to set all columns editable, you may want to show these columns normally rendered:
 

@@ -1,22 +1,19 @@
-Table of contents
-
-- [Group action](#group-action)
-    - [Api](#api)
-        - [Zero level](#zero-level)
-        - [One level](#one-level)
-        - [Two level](#two-level)
-        - [Text input](#text-input)
-        - [Textarea](#textarea)
-        - [Attributes, classes](#attributes-classes)
-    - [Happy inputs](#happy-inputs)
-
 # Group action
 
-## Api
+- [Api](#api)
+    - [Zero level](#zero-level)
+    - [One level](#one-level)
+    - [Two level](#two-level)
+    - [Text input](#text-input)
+    - [Textarea](#textarea)
+    - [Attributes, classes](#attributes-classes)
+- [Happy inputs](#happy-inputs)
 
-If you need to do some operations with multiple rows, there are group actions. There are zero, one or two level group actions.
+-----
 
-### Zero level
+# Api
+
+## Zero level
 
 ![Group button action](https://github.com/contributte/datagrid/blob/master/.docs/assets/group_button_action.gif?raw=true)
 
@@ -26,7 +23,7 @@ When you want to show just one action button, do simply that:
 $grid->addGroupButtonAction('Say hello')->onClick[] = [$this, 'sayHello'];
 ```
 
-### One level
+## One level
 
 ![Group action 1](https://github.com/contributte/datagrid/blob/master/.docs/assets/group_button_action_1.gif?raw=true)
 
@@ -52,7 +49,7 @@ public function deleteExamples(array $ids): void
 }
 ```
 
-### Second level
+## Two level
 
 ![Group action 2](https://github.com/contributte/datagrid/blob/master/.docs/assets/group_button_action_2.gif?raw=true)
 
@@ -95,7 +92,7 @@ public function groupChangeStatus(array $ids, $status): void
 }
 ```
 
-### Text input
+## Text input
 
 Group action can also contain a text input instead of select (As show in example above - option called "**Add note**"). Example code:
 
@@ -123,7 +120,7 @@ public function addNote(array $ids, $value): void
 }
 ```
 
-### Textarea
+## Textarea
 
 User may also use a textarea:
 
@@ -131,7 +128,7 @@ User may also use a textarea:
 $grid->addGroupTextareaAction('aaaa');
 ```
 
-### Attributes, classes
+## Attributes, classes
 
 All group action inputs have optional class or other attributes:
 
@@ -141,7 +138,7 @@ $grid->addGroupTextareaAction('aaaa')
 	->setClass('fooo');
 ```
 
-## Happy inputs
+# Happy inputs
 
 Datagrid uses tiny library `happy` for those nice checkboxes. You can disable them:
 

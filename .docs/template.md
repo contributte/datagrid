@@ -1,15 +1,14 @@
-Table of contents
-
-- [Templates](#templates)
-	- [Extending](#extending)
-	- [Column definition](#column-definition)
-	- [Column header definition](#column-header-definition)
-	- [Table class definition](#table-class-definition)
-	- [Icons definition](#icons-definition)
-
 # Templates
 
-## Extending
+- [Extending](#extending)
+- [Column definition](#column-definition)
+- [Column header definition](#column-header-definition)
+- [Table class definition](#table-class-definition)
+- [Icons definition](#icons-definition)
+
+-----
+
+# Extending
 
 When you set custom datagrid template, you will probably want to extend it. There are some `blocks` defined, so you can extend just some blocks. Presenter:
 
@@ -33,7 +32,7 @@ Template:
 {* Another latte code... *}
 ```
 
-## Column definition
+# Column definition
 
 Or you can define column template by defining special block(s):
 
@@ -52,7 +51,7 @@ Or you can define column template by defining special block(s):
 
 This will overwrite native rendering of ID column (`$grid->addColumn('id', 'Id');`).
 
-## Column header definition
+# Column header definition
 
 Or you can define column header template:
 
@@ -65,17 +64,7 @@ Or you can define column header template:
 
 ```
 
-
-## Containing div class definition
-
-By default, the containing div has this class: `datagrid datagrid-{$control->getFullName()}`. You can change that in `{block #datagrid-class}`:
-
-```latte
-{block datagrid-class}datagrid datagrid-{$control->getFullName()} custom-class{/block}
-```
-
-
-## Table class definition
+# Table class definition
 
 By default, table has this class: `table table-hover table-striped table-bordered table-sm`. You can change that in `{block #table-class}`:
 
@@ -83,7 +72,7 @@ By default, table has this class: `table table-hover table-striped table-bordere
 {block table-class}table table-hovertable-condensed table-bordered{/block}
 ```
 
-## Icons definition
+# Icons definition
 
 <p n:syntax="off">Some icons are also surrounded by `{block icon-*}` macro. You can overwrite these blocks with your icons. The blocks are:
 

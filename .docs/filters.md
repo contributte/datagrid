@@ -1,29 +1,28 @@
-Table of contents
-
-- [Filters](#filters)
-    - [Api](#api)
-        - [Placeholder](#placeholder)
-        - [Custom where condition](#custom-where-condition)
-        - [Templates:](#templates)
-        - [Filter blocks](#filter-blocks)
-        - [Filter type blocks](#filter-type-blocks)
-        - [Removing filter](#removing-filter)
-    - [FilterText](#filtertext)
-    - [FilterSelect](#filterselect)
-    - [FilterMultiSelect](#filtermultiselect)
-    - [FilterDate](#filterdate)
-    - [FilterRange](#filterrange)
-    - [FilterDateRange](#filterdaterange)
-    - [Default filter values](#default-filter-values)
-        - [Resetting filter to default values](#resetting-filter-to-default-values)
-    - [Filters rendering](#filters-rendering)
-    - [Outer filters rendering](#outer-filters-rendering)
-    - [Session - remeber state](#session---remeber-state)
-    - [Session - filters / filter values changed](#session---filters--filter-values-changed)
-    - [URL refreshing - history API](#url-refreshing---history-api)
-    - [Auto submit](#auto-submit)
-
 # Filters
+
+- [Api](#api)
+    - [Placeholder](#placeholder)
+    - [Custom where condition](#custom-where-condition)
+    - [Templates:](#templates)
+    - [Filter blocks](#filter-blocks)
+    - [Filter type blocks](#filter-type-blocks)
+    - [Removing filter](#removing-filter)
+- [FilterText](#filtertext)
+- [FilterSelect](#filterselect)
+- [FilterMultiSelect](#filtermultiselect)
+- [FilterDate](#filterdate)
+- [FilterRange](#filterrange)
+- [FilterDateRange](#filterdaterange)
+- [Default filter values](#default-filter-values)
+    - [Resetting filter to default values](#resetting-filter-to-default-values)
+- [Filters rendering](#filters-rendering)
+- [Outer filters rendering](#outer-filters-rendering)
+- [Session - remeber state](#session---remeber-state)
+- [Session - filters / filter values changed](#session---filters--filter-values-changed)
+- [URL refreshing - history API](#url-refreshing---history-api)
+- [Auto submit](#auto-submit)
+
+-----
 
 ## Api
 

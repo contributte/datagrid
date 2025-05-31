@@ -1,20 +1,19 @@
-Table of contents
+# Introduction
 
 - [Installation](#installation)
-	- [Composer](#composer)
-	- [Features](#features)
+- [Features](#features)
+
+-----
 
 # Installation
 
-## Composer
-
-Download this package using composer:
+Download this package using composer.
 
 ```bash
 composer require ublaboo/datagrid
 ```
 
-## Features
+# Features
 
 - Pagination
 - Sorting by columns
@@ -62,7 +61,6 @@ composer require ublaboo/datagrid
 Datagrid can do some really useful stuff.
 
 Let's create a datagrid component!
-We will demonstrate our examples in Presenters.
 
 ```php
 use Contributte\Datagrid\Datagrid;
@@ -80,5 +78,3 @@ class SimplePresenter extends BasePresenter
 
 }
 ```
-
-And that's it. Go check the app. :)

@@ -1,30 +1,29 @@
-Table of contents
-
-- [Actions](#actions)
-    - [Api](#api)
-        - [Parameters](#parameters)
-        - [Icon](#icon)
-        - [Class](#class)
-        - [Title](#title)
-        - [Confirmation](#confirmation)
-    - [Ajax](#ajax)
-        - [Redrawing the data](#redrawing-the-data)
-        - [Redrawing one row](#redrawing-one-row)
-    - [Sortable](#sortable)
-        - [Sorting handler](#sorting-handler)
-    - [MultiAction](#multiaction)
-    - [Item detail](#item-detail)
-        - [Item detail form](#item-detail-form)
-        - [Item detail template variables](#item-detail-template-variables)
-        - [Item detail render condition](#item-detail-render-condition)
-    - [ActionCallback](#actioncallback)
-    - [Toolbar button](#toolbar-button)
-
 # Actions
 
-## Api
+- [Api](#api)
+    - [Parameters](#parameters)
+    - [Icon](#icon)
+    - [Class](#class)
+    - [Title](#title)
+    - [Confirmation](#confirmation)
+- [Ajax](#ajax)
+    - [Redrawing the data](#redrawing-the-data)
+    - [Redrawing one row](#redrawing-one-row)
+- [Sortable](#sortable)
+    - [Sorting handler](#sorting-handler)
+- [MultiAction](#multiaction)
+- [Item detail](#item-detail)
+    - [Item detail form](#item-detail-form)
+    - [Item detail template variables](#item-detail-template-variables)
+    - [Item detail render condition](#item-detail-render-condition)
+- [ActionCallback](#actioncallback)
+- [Toolbar button](#toolbar-button)
 
-### Parameters
+-----
+
+# Api
+
+## Parameters
 
 Parameters are the same as in ColumnLink:
 
@@ -35,7 +34,7 @@ Parameters are the same as in ColumnLink:
 $grid->addAction('edit', 'Edit');
 ```
 
-### Icon
+## Icon
 
 ```php
 $grid->addAction('edit', '')
@@ -45,7 +44,7 @@ $grid->addAction('send', '')
 	->setIcon(function($item) { return $item->sent_already ? 'repeat' : 'envelope'; });
 ```
 
-### Class
+## Class
 
 ```php
 $grid->addAction('dosth', '', 'doSomething!')
@@ -61,7 +60,7 @@ $grid->addAction('send', '')
 	->setClass(function($item) { return $item->sent_already ? 'btn btn-xs btn-success' : 'btn btn-xs btn-default' });
 ```
 
-### Title
+## Title
 
 ```php
 $grid->addAction('edit', '')
@@ -71,7 +70,7 @@ $grid->addAction('edit', '')
 
 Action title can be defined by custom callback same as title or class.
 
-### Confirmation
+## Confirmation
 
 ```php
 $grid->addAction('delete', '', 'delete!')
@@ -96,9 +95,9 @@ $grid->addAction('delete', '', 'delete!')
 	);
 ```
 
-## Ajax
+# Ajax
 
-### Redrawing the data
+## Redrawing the data
 
 All links are by default not-ajax. Do you see the bold `ajax` class in previous example? The ajax handler could now look like this:
 
@@ -120,7 +119,7 @@ public function handleDelete($id)
 }
 ```
 
-### Redrawing one row
+## Redrawing one row
 
 When you are updating row data (i.e. status), you can send only one row as snippet, not the whole table:
 
@@ -142,7 +141,7 @@ public function handleSetStatus($id, $status)
 
 ```
 
-## Sortable
+# Sortable
 
 You can tell datagrid to be sortable (drag &amp; drop):
 
@@ -234,7 +233,7 @@ public function handleSort($item_id, $prev_id, $next_id)
 }
 ```
 
-### Sorting handler
+## Sorting handler
 
 The name of the handler used for sorting can be changed:
 
@@ -248,7 +247,7 @@ Also, when you are using datagrid in component, you have to alter the name a bit
 $grid->setSortableHandler('myComponent:sort!');
 ```
 
-## MultiAction
+# MultiAction
 
 Same as there is column status with pretty dropdown menu, the datagrid comes with similar dropdown menu for actions. It is called MultiAction:
 
@@ -268,7 +267,7 @@ $grid->getAction('multi_blah')
 	->getAction('blah2')->setIcon('check');
 ```
 
-## Item detail
+# Item detail
 
 As you can see in the demo page, there is a little eye button that toggles an item detail. This detail is loaded via ajax (just for the first time). The detail can be rendered in separate template or via custom renderer or in block `#detail`, which you define in you datagrid template. First, you need to enable the items detail functionality:
 
@@ -289,7 +288,7 @@ $grid->setItemsDetail(__DIR__ . '/templates/Datagrid/grid_item_detail.latte');
 $grid->setItemsDetail(function() { return 'Lorem Ipsum'; });
 ```
 
-### Item detail form
+## Item detail form
 
 User may use a ItemDetail containing a form (`ItemDetailForm`). Example usage:
 
@@ -332,11 +331,11 @@ Datagrid user template:
 
 ```
 
-### Item detail template variables
+## Item detail template variables
 
 Additional variables can be passed to item detail template (/block) via `ItemDetail::setTemplateParameters(['foo' => 'bar', ...])`
 
-### Item detail render condition
+## Item detail render condition
 
 Custom callback can be set to decide whether to render item detail or not:
 
@@ -346,7 +345,7 @@ $grid->getItemsDetail()->setRenderCondition(function($item) {
 });
 ```
 
-## ActionCallback
+# ActionCallback
 
 You don't have to fire event only using `PresenterComponent` signals. There is a possibility to fire events directly:
 
@@ -363,7 +362,7 @@ $grid->addActionCallback('custom_callback', '')
 
 You treat `ActionCallback` same as `Action`, except for some arguments passed to the `Datagrid::addActionCallback` method.
 
-## Toolbar button
+# Toolbar button
 
 If you need simple links to custom destinations from datagrid toolbar, they can be added like this:
 
