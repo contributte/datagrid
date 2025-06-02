@@ -124,6 +124,26 @@ You can use CDN assets like this:
 <script defer src="https://cdn.jsdelivr.net/npm/@contributte/datagrid@master/dist/datagrid-full.js"></script>
 ```
 
+By default, `datagrid-full.ts` and `datagrid-full.css` are bundled and accessible via CDN.
+
+1. Take a look how [`datagrid-full.ts`](https://github.com/contributte/datagrid/blob/master/assets/datagrid-full.ts) looks.
+
+It contains these plugins:
+
+- AutosubmitPlugin
+- CheckboxPlugin
+- ConfirmPlugin
+- InlinePlugin
+- ItemDetailPlugin
+- NetteFormsPlugin
+- HappyPlugin
+- SortablePlugin
+- DatepickerPlugin
+- SelectpickerPlugin
+- TreeViewPlugin
+
+2. Take a look how [`datagrid-full.css`](https://github.com/contributte/datagrid/blob/master/assets/css/datagrid-full.css) looks.
+
 > [!NOTE]
 > CDN assets are not ideal for customization and optimization. Use bundler instead.
 
