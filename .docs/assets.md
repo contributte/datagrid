@@ -1,19 +1,116 @@
 # Assets
 
-- [CDN](#cdn)
-- [Bundler](#bundler)
-    - [Files](#files)
+- [Architecture](#architecture)
+  - [Plugins](#plugins)
+- [Installation](#installation)
+  - [CDN](#cdn)
+  - [Bundler](#bundler)
+- [Example](#example)
 
 -----
+
+# Architecture
+
+The front-end part of the datagrid is completely rewritten in TypeScript, supports modern browsers and is fully customizable via plugins.
+
+## Plugins
+
+Datagrid has a lot of plugins. You can use them all or just some of them.
+
+**Plugins (features)**
+
+- AutosubmitPlugin
+  - Sends form on change
+- CheckboxPlugin
+  - Check/uncheck rows
+- ConfirmPlugin
+  - Confirmation dialog before action
+- InlinePlugin (advanced)
+  - Inline editing
+- EditablePlugin (advanced)
+  - Inline editing
+- ItemDetailPlugin
+  - Item detail view
+- TreeViewPlugin (advanced)
+  - Tree view
+
+**Plugins (integrations)**
+
+- DatepickerPlugin
+  - Abstraction for datepickers
+- HappyPlugin
+  - Abstraction for happy-inputs
+- NetteFormsPlugin
+  - Abstraction for Nette Forms
+- SelectpickerPlugin
+  - Abstraction for selectpickers
+- SortablePlugin
+  - Abstraction for sorting
+
+**Integrations**
+
+- Happy (+HappyPlugin)
+  - Implementation for happy-inputs
+- [SortableJS](https://sortablejs.github.io/Sortable/) (+SortablePlugin)
+  - Implementation for sorting
+- [TomSelect](https://tom-select.js.org/) (+SelectpickerPlugin)
+  - Implementation of selectpicker
+- [VanillaDatepicker](https://github.com/mymth/vanillajs-datepicker) (+DatepickerPlugin)
+  - Implementation of datepicker
+
+**Example**
+
+```js
+import {
+	AutosubmitPlugin,
+	CheckboxPlugin,
+	ConfirmPlugin,
+	createDatagrids,
+	DatepickerPlugin,
+	Happy,
+	HappyPlugin,
+	InlinePlugin,
+	ItemDetailPlugin,
+	NetteFormsPlugin,
+	SelectpickerPlugin,
+	SortableJS,
+	SortablePlugin,
+	TomSelect,
+	TreeViewPlugin,
+	VanillaDatepicker
+} from "../../vendor/ublaboo/datagrid/assets"
+
+document.addEventListener("DOMContentLoaded", () => {
+	createDatagrids(new NajaAjax(naja), {
+		datagrid: {
+			plugins: [
+				new AutosubmitPlugin(),
+				new CheckboxPlugin(),
+				new ConfirmPlugin(),
+				new InlinePlugin(),
+				new ItemDetailPlugin(),
+				new NetteFormsPlugin(netteForms),
+				new HappyPlugin(new Happy()),
+				new SortablePlugin(new SortableJS()),
+				new DatepickerPlugin(new VanillaDatepicker({ buttonClass: 'btn' })),
+				new SelectpickerPlugin(new TomSelect(Select)),
+				new TreeViewPlugin(),
+			],
+		},
+	});
+});
+```
+
+# Installation
 
 There are prepare JS/TS and CSS files for precise functionality.
 
 You have 2 ways to use datagrid's assets:
 
-1. Use frontend bundler.
 2. Use CDN assets.
+1. Use frontend bundler.
 
-# CDN
+## CDN
 
 Assets are available as NPM package [@contributte/datagrid](https://www.npmjs.com/package/@contributte/datagrid).
 
@@ -28,9 +125,9 @@ You can use CDN assets like this:
 ```
 
 > [!NOTE]
-> CDN assets are not recommended for production. But you can use them for development.
+> CDN assets are not ideal for customization and optimization. Use bundler instead.
 
-# Bundler
+## Bundler
 
 This example uses [Vite](https://vitejs.dev). You can see example of using bundler in [datagrid-skeleton](https://github.com/contributte/datagrid-skeleton).
 
@@ -75,9 +172,12 @@ Follow these steps:
   <script defer src="{$basePath}/dist/app.js"></script>
   ```
 
-### Files
+# Example
 
-**package.json**
+This example uses [Vite](https://vitejs.dev). You can see example of using bundler in [datagrid-skeleton](https://github.com/contributte/datagrid-skeleton).
+
+<details>
+<summary>package.json</summary>
 
 ```json
 {
@@ -107,7 +207,10 @@ Follow these steps:
 }
 ```
 
-**assets/js/main.js**
+</details>
+
+<details>
+<summary>assets/js/main.js</summary>
 
 ```js
 import naja from "naja";
@@ -168,17 +271,27 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 ```
 
-**assets/css/main.css**
+</details>
+
+<details>
+<summary>assets/css/main.css</summary>
 
 ```css
 /* Datagrid styles */
-@import '../../vendor/ublaboo/datagrid/assets/css/datagrid-all.css';
+@import "@fortawesome/fontawesome-free/css/all.css";
+@import 'bootstrap/dist/css/bootstrap.css';
+@import 'vanillajs-datepicker/css/datepicker-bs5.css';
+@import "tom-select/dist/css/tom-select.css";
+@import '../../vendor/ublaboo/datagrid/assets/css/happy.css';
+@import '../../vendor/ublaboo/datagrid/assets/css/datagrid.css';
 
-/* App styles */
 /* Your styles */
 ```
 
-**vite.config.mjs**
+</details>
+
+<details>
+<summary>vite.config.mjs</summary>
 
 ```js
 import { defineConfig } from 'vite';
@@ -226,3 +339,5 @@ export default defineConfig(({ mode }) => {
 	}
 });
 ```
+
+</details>
