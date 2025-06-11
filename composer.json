@@ -56,10 +56,7 @@
   "autoload": {
     "psr-4": {
       "Contributte\\Datagrid\\": "src/"
-    },
-    "files": [
-      "./compatibility.php"
-    ]
+    }
   },
   "autoload-dev": {
     "psr-4": {
