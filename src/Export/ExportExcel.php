@@ -2,7 +2,7 @@
 
 namespace Contributte\Datagrid\Export;
 
-use Contributte\DataGrid\DataGrid;
+use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\ExcelDataModel;
 use Contributte\Datagrid\Response\ExcelResponse;
 
@@ -10,7 +10,7 @@ class ExportExcel extends Export
 {
 
 	public function __construct(
-		DataGrid $grid,
+		Datagrid $grid,
 		string $text,
 		string $name,
 		bool $filtered,
@@ -32,7 +32,7 @@ class ExportExcel extends Export
 	{
 		return function (
 			array $data,
-			DataGrid $grid
+			Datagrid $grid
 		) use ($name): void {
 			$columns = $this->getColumns();
 

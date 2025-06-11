@@ -16,7 +16,7 @@ use Tracy\Debugger;
 class ExcelResponse implements Response
 {
 
-	public const string CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+	public const CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
 	/** @var array<int|string, array<scalar>> */
 	protected array $data;
@@ -72,12 +72,14 @@ class ExcelResponse implements Response
 		$sheet = $spreadsheet->createSheet(0);
 
 		foreach ($this->data as $_rowIndex => $_row) {
+			$_rowIndex = (int) $_rowIndex;
+
 			foreach ($_row as $_columnIndex => $_value) {
 				$sheet->setCellValue([$_columnIndex + 1, $_rowIndex + 1], $_value);
 			}
 		}
 
-		$highestColumnIndex = !empty($this->data) ? count($this->data[0]) : 0;
+		$highestColumnIndex = count($this->data) > 0 ? count($this->data[0]) : 0;
 
 		for ($col = 1; $col <= $highestColumnIndex; $col++) {
 			$columnLetter = Coordinate::stringFromColumnIndex($col);

@@ -35,7 +35,7 @@ final class FilterTest extends TestCase
 	public function testFilterSubmitWithInvalidInlineAddOpen(): void
 	{
 		$factory = new TestingDataGridFactoryRouter();
-		/** @var \Ublaboo\DataGrid\Datagrid $grid */
+		/** @var Datagrid $grid */
 		$grid = $factory->createTestingDataGrid()->getComponent('grid');
 
 		$grid->addColumnText('status', 'Status');
