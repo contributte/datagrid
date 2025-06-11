@@ -21,6 +21,7 @@ use Contributte\Datagrid\Exception\DatagridFilterNotFoundException;
 use Contributte\Datagrid\Exception\DatagridHasToBeAttachedToPresenterComponentException;
 use Contributte\Datagrid\Export\Export;
 use Contributte\Datagrid\Export\ExportCsv;
+use Contributte\Datagrid\Export\ExportExcel;
 use Contributte\Datagrid\Filter\Filter;
 use Contributte\Datagrid\Filter\FilterDate;
 use Contributte\Datagrid\Filter\FilterDateRange;
@@ -1581,6 +1582,19 @@ class Datagrid extends Control
 		return $exportCsv;
 	}
 
+	public function addExportExcel(
+		string $text,
+		string $fileName,
+		bool $filtered = false
+	): ExportExcel
+	{
+		$exportExcel = new ExportExcel($this, $text, $fileName, $filtered);
+
+		$this->addToExports($exportExcel);
+
+		return $exportExcel;
+	}
+
 	public function resetExportsLinks(): void
 	{
 		foreach ($this->exports as $id => $export) {
@@ -1858,7 +1872,7 @@ class Datagrid extends Control
 			$rows[] = new Row($this, $item, $this->getPrimaryKey());
 		}
 
-		if ($export instanceof ExportCsv) {
+		if ($export instanceof ExportCsv || $export instanceof ExportExcel) {
 			$export->invoke($rows);
 		} else {
 			$export->invoke($items);
