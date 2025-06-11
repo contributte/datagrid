@@ -24,7 +24,7 @@
     }
   ],
   "require": {
-    "php": ">=8.3",
+    "php": ">=8.2",
     "nette/application": "^3.2.0",
     "nette/di": "^3.0.0",
     "nette/forms": "^3.2.0",
