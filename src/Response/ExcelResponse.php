@@ -5,10 +5,8 @@ namespace Contributte\Datagrid\Response;
 use Nette\Application\Response;
 use Nette\Http\IRequest as HttpRequest;
 use Nette\Http\IResponse as HttpResponse;
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Tracy\Debugger;
+use XLSXWriter;
 
 /**
  * CSV file download response
@@ -68,28 +66,9 @@ class ExcelResponse implements Response
 			ob_start();
 		}
 
-		$spreadsheet = new Spreadsheet();
-		$sheet = $spreadsheet->createSheet(0);
-
-		foreach ($this->data as $_rowIndex => $_row) {
-			$_rowIndex = (int) $_rowIndex;
-
-			foreach ($_row as $_columnIndex => $_value) {
-				$sheet->setCellValue([$_columnIndex + 1, $_rowIndex + 1], $_value);
-			}
-		}
-
-		$highestColumnIndex = count($this->data) > 0 ? count($this->data[0]) : 0;
-
-		for ($col = 1; $col <= $highestColumnIndex; $col++) {
-			$columnLetter = Coordinate::stringFromColumnIndex($col);
-			$sheet->getColumnDimension($columnLetter)->setAutoSize(true);
-		}
-
-		$spreadsheet->setActiveSheetIndex(0);
-
-		$writer = new Xlsx($spreadsheet);
-		$writer->save('php://output');
+		$writer = new XLSXWriter();
+		$writer->writeSheet($this->data);
+		$writer->writeToStdOut();
 
 		if (function_exists('ob_end_flush')) {
 			ob_end_flush();

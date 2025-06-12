@@ -25,12 +25,12 @@
   ],
   "require": {
     "php": ">=8.2",
+    "mk-j/php_xlsxwriter": "^0.39.0",
     "nette/application": "^3.2.0",
     "nette/di": "^3.0.0",
     "nette/forms": "^3.2.0",
     "nette/utils": "^4.0.0",
-    "symfony/property-access": "^6.4.0 || ^7.2.0",
-    "phpoffice/phpspreadsheet": "^3.3"
+    "symfony/property-access": "^6.4.0 || ^7.2.0"
   },
   "require-dev": {
     "contributte/qa": "^0.3.0",
