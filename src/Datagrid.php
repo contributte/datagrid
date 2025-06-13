@@ -1271,9 +1271,8 @@ class Datagrid extends Control
 		/**
 		 * Per page
 		 */
-		$perPage = $form->getComponent('perPage')->getValue();
-
-		if (isset($perPage)) {
+		if ($form->getComponent('perPage', false) !== null) {
+			$perPage = $form->getComponent('perPage')->getValue();
 			$this->saveSessionData('_grid_perPage', $perPage);
 			$this->perPage = $perPage;
 		}
