@@ -107,7 +107,7 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-			$column = Helpers::escape($driver, $column, Fluent::Identifier);
+			$column = Helpers::escape($driver, $column, \dibi::IDENTIFIER);
 
 			if ($filter->isExactSearch()) {
 				$this->dataSource->where(sprintf('%s = %%s', $column), $value);
