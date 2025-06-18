@@ -2335,21 +2335,27 @@ class Datagrid extends Control
 
 	public function getSessionData(string $key, mixed $defaultValue = null): mixed
 	{
-		return $this->getStateStorage()->loadState($key) ?? $defaultValue;
+		if ($this->shouldRememberState($key)) {
+			return $this->getStateStorage()->loadState($key) ?? $defaultValue;
+		}
+		return $defaultValue;
 	}
 
 	public function saveSessionData(string $key, mixed $value): void
 	{
-		if ($this->rememberState) {
-			$this->getStateStorage()->saveState($key, $value);
-		} elseif ($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_SESSION_KEYS, true)) {
+		if ($this->shouldRememberState($key)) {
 			$this->getStateStorage()->saveState($key, $value);
 		}
 	}
 
+	private function shouldRememberState(string $key): bool
+	{
+		return $this->rememberState ||
+			($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_SESSION_KEYS, true));
+	}
+
 	public function deleteSessionData(string $key): void
 	{
-		//unset($this->gridSession[$key]);
 		$this->getStateStorage()->deleteState($key);
 	}
 
