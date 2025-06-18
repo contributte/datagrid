@@ -268,9 +268,9 @@ class Datagrid extends Control
 
 	private ?string $componentFullName = null;
 
-    protected ?IStateStorage $stateStorage = null; // State storage for the datagrid
+	protected ?IStateStorage $stateStorage = null; // State storage for the datagrid
 
-    public function __construct(?IContainer $parent = null, ?string $name = null)
+	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
 		if ($parent !== null) {
 			$parent->addComponent($this, $name);
@@ -319,23 +319,23 @@ class Datagrid extends Control
 		);
 	}
 
-    public function getStateStorage(): IStateStorage
-    {
-        if ($this->stateStorage === null) {
-            return $this->rememberState || $this->canHideColumns()
-                ? new SessionStateStorage($this->gridSession)
-                : new NoopStateStorage();
-        }
+	public function getStateStorage(): IStateStorage
+	{
+		if ($this->stateStorage === null) {
+			return $this->rememberState || $this->canHideColumns()
+				? new SessionStateStorage($this->gridSession)
+				: new NoopStateStorage();
+		}
 
-        return $this->stateStorage;
-    }
+		return $this->stateStorage;
+	}
 
-    public function setStateStorage(IStateStorage $stateStorage): self
-    {
-        $this->stateStorage = $stateStorage;
+	public function setStateStorage(IStateStorage $stateStorage): self
+	{
+		$this->stateStorage = $stateStorage;
 
-        return $this;
-    }
+		return $this;
+	}
 
 
 	/********************************************************************************
@@ -547,9 +547,9 @@ class Datagrid extends Control
 	 *                                   SORTING *
 	 ********************************************************************************/
 
- /**
-  * @return static
-  */
+	/**
+	 * @return static
+	 */
 	public function setDefaultSort(string|array $sort, bool $useOnReset = true): self
 	{
 		$sort = is_string($sort)
@@ -1138,11 +1138,11 @@ class Datagrid extends Control
 			$this->filter = $this->defaultFilter;
 		}
 
-		$storedFilter = $this->getFilterSessionData();
+		$storedFilters = $this->getSessionData('_grid_filters', []);
 		foreach ($this->filter as $key => $value) {
-			$storedFilter[(string) $key] = $value;
+			$storedFilters[(string) $key] = $value;
 		}
-		$this->saveFilterSessionData($storedFilter);
+		$this->saveSessionData('_grid_filters', $storedFilters);
 	}
 
 	public function createComponentFilter(): Form
@@ -1390,7 +1390,7 @@ class Datagrid extends Control
 			throw new UnexpectedValueException();
 		}
 
-		$storedFilters = $this->getFilterSessionData();
+		$storedFilters = $this->getSessionData('_grid_filters', []);
 		foreach ($values as $key => $value) {
 			/**
 			 * Session stuff
@@ -1410,7 +1410,7 @@ class Datagrid extends Control
 			 */
 			$this->filter[$key] = $value;
 		}
-		$this->saveFilterSessionData($storedFilters);
+		$this->saveSessionData('_grid_filters', $storedFilters);
 
 		if ($values->count() > 0) {
 			$this->saveSessionData('_grid_has_filtered', 1);
@@ -1520,7 +1520,7 @@ class Datagrid extends Control
 			$this->sort = $sort;
 		}
 
-		foreach ($this->getFilterSessionData() as $key => $value) {
+		foreach ($this->getSessionData('_grid_filters', []) as $key => $value) {
 			try {
 				$this->getFilter($key);
 
@@ -2333,44 +2333,24 @@ class Datagrid extends Control
 		return $this;
 	}
 
-	public function getSessionData(?string $key = null, mixed $defaultValue = null): mixed
+	public function getSessionData(string $key, mixed $defaultValue = null): mixed
 	{
-        $value = $key !== null ? $this->getStateStorage()->loadState($key) : $defaultValue;
-
-		if ($this->rememberState) {
-			return $value;
-		}
-
-		if ($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_SESSION_KEYS, true)) {
-			return $value;
-		}
-
-		return $key ?? $defaultValue;
+		return $this->getStateStorage()->loadState($key) ?? $defaultValue;
 	}
-	public function getFilterSessionData(): array
-	{
-		return $this->getSessionData('_grid_filters', []);
-	}
-
-	public function saveFilterSessionData(array $filters): void
-	{
-		$this->saveSessionData('_grid_filters', $filters);
-	}
-
 
 	public function saveSessionData(string $key, mixed $value): void
 	{
 		if ($this->rememberState) {
-            $this->getStateStorage()->saveState($key, $value);
+			$this->getStateStorage()->saveState($key, $value);
 		} elseif ($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_SESSION_KEYS, true)) {
-            $this->getStateStorage()->saveState($key, $value);
+			$this->getStateStorage()->saveState($key, $value);
 		}
 	}
 
 	public function deleteSessionData(string $key): void
 	{
 		//unset($this->gridSession[$key]);
-        $this->getStateStorage()->deleteState($key);
+		$this->getStateStorage()->deleteState($key);
 	}
 
 
@@ -2938,8 +2918,8 @@ class Datagrid extends Control
 			);
 		}
 	}/********************************************************************************
-	  *                                    FILTERS *
-	  ********************************************************************************/
+ *                                    FILTERS *
+ ********************************************************************************/
 
 	/**
 	 * Check whether given key already exists in $this->filters
