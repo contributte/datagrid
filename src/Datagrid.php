@@ -36,10 +36,13 @@ use Contributte\Datagrid\GroupAction\GroupButtonAction;
 use Contributte\Datagrid\InlineEdit\InlineAdd;
 use Contributte\Datagrid\InlineEdit\InlineEdit;
 use Contributte\Datagrid\Localization\SimpleTranslator;
+use Contributte\Datagrid\Storage\NoopStateStorage;
+use Contributte\Datagrid\Storage\SessionStateStorage;
 use Contributte\Datagrid\Toolbar\ToolbarButton;
 use Contributte\Datagrid\Utils\ArraysHelper;
 use Contributte\Datagrid\Utils\ItemDetailForm;
 use Contributte\Datagrid\Utils\Sorting;
+use Contributte\Datagrid\Storage\IStateStorage;
 use DateTime;
 use InvalidArgumentException;
 use Nette\Application\ForbiddenRequestException;
@@ -265,7 +268,9 @@ class Datagrid extends Control
 
 	private ?string $componentFullName = null;
 
-	public function __construct(?IContainer $parent = null, ?string $name = null)
+    protected ?IStateStorage $stateStorage = null; // State storage for the datagrid
+
+    public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
 		if ($parent !== null) {
 			$parent->addComponent($this, $name);
@@ -313,6 +318,25 @@ class Datagrid extends Control
 			}
 		);
 	}
+
+    public function getStateStorage(): IStateStorage
+    {
+        if ($this->stateStorage === null) {
+            return $this->rememberState || $this->canHideColumns()
+                ? new SessionStateStorage($this->gridSession)
+                : new NoopStateStorage();
+        }
+
+        return $this->stateStorage;
+    }
+
+    public function setStateStorage(IStateStorage $stateStorage): self
+    {
+        $this->stateStorage = $stateStorage;
+
+        return $this;
+    }
+
 
 	/********************************************************************************
 	 *                                  RENDERING *
@@ -1114,9 +1138,11 @@ class Datagrid extends Control
 			$this->filter = $this->defaultFilter;
 		}
 
+		$storedFilter = $this->getFilterSessionData();
 		foreach ($this->filter as $key => $value) {
-			$this->saveSessionData($key, $value);
+			$storedFilter[(string) $key] = $value;
 		}
+		$this->saveFilterSessionData($storedFilter);
 	}
 
 	public function createComponentFilter(): Form
@@ -1364,25 +1390,27 @@ class Datagrid extends Control
 			throw new UnexpectedValueException();
 		}
 
+		$storedFilters = $this->getFilterSessionData();
 		foreach ($values as $key => $value) {
 			/**
 			 * Session stuff
 			 */
-			if ($this->rememberState && $this->getSessionData((string) $key) !== $value) {
+			$storedValue = $storedFilters[(string) $key] ?? null;
+			if ($this->rememberState && $storedValue !== $value) {
 				/**
 				 * Has been filter changed?
 				 */
 				$this->page = 1;
 				$this->saveSessionData('_grid_page', 1);
 			}
-
-			$this->saveSessionData((string) $key, $value);
+			$storedFilters[(string) $key] = $value;
 
 			/**
 			 * Other stuff
 			 */
 			$this->filter[$key] = $value;
 		}
+		$this->saveFilterSessionData($storedFilters);
 
 		if ($values->count() > 0) {
 			$this->saveSessionData('_grid_has_filtered', 1);
@@ -1492,29 +1520,17 @@ class Datagrid extends Control
 			$this->sort = $sort;
 		}
 
-		foreach ($this->getSessionData() as $key => $value) {
-			$other_session_keys = [
-				'_grid_perPage',
-				'_grid_sort',
-				'_grid_page',
-				'_grid_has_sorted',
-				'_grid_has_filtered',
-				'_grid_hidden_columns',
-				'_grid_hidden_columns_manipulated',
-			];
+		foreach ($this->getFilterSessionData() as $key => $value) {
+			try {
+				$this->getFilter($key);
 
-			if (!in_array($key, $other_session_keys, true)) {
-				try {
-					$this->getFilter($key);
+				$this->filter[$key] = $value;
 
-					$this->filter[$key] = $value;
-
-				} catch (DatagridException) {
-					if ($this->strictSessionFilterValues) {
-						throw new DatagridFilterNotFoundException(
-							sprintf('Session filter: Filter [%s] not found', $key)
-						);
-					}
+			} catch (DatagridException) {
+				if ($this->strictSessionFilterValues) {
+					throw new DatagridFilterNotFoundException(
+						sprintf('Session filter: Filter [%s] not found', $key)
+					);
 				}
 			}
 		}
@@ -1758,15 +1774,7 @@ class Datagrid extends Control
 			$this->deleteSessionData('_grid_has_sorted');
 		}
 
-		$sessionData = is_array($this->getSessionData())
-			? $this->getSessionData()
-			: iterator_to_array($this->getSessionData());
-
-		foreach (array_keys($sessionData) as $key) {
-			if (!in_array($key, ['_grid_perPage', '_grid_sort', '_grid_page', '_grid_has_filtered', '_grid_has_sorted', '_grid_hidden_columns', '_grid_hidden_columns_manipulated'], true)) {
-				$this->deleteSessionData((string) $key);
-			}
-		}
+		$this->deleteSessionData('_grid_filters');
 
 		$this->filter = [];
 
@@ -2327,33 +2335,42 @@ class Datagrid extends Control
 
 	public function getSessionData(?string $key = null, mixed $defaultValue = null): mixed
 	{
-		$getValue = fn () => ($key !== null ? $this->gridSession[$key] : $this->gridSession) ?? $defaultValue;
+        $value = $key !== null ? $this->getStateStorage()->loadState($key) : $defaultValue;
 
 		if ($this->rememberState) {
-			return ($getValue)();
+			return $value;
 		}
 
 		if ($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_SESSION_KEYS, true)) {
-			return ($getValue)();
+			return $value;
 		}
 
-		return $key === null
-			? []
-			: $defaultValue;
+		return $key ?? $defaultValue;
 	}
+	public function getFilterSessionData(): array
+	{
+		return $this->getSessionData('_grid_filters', []);
+	}
+
+	public function saveFilterSessionData(array $filters): void
+	{
+		$this->saveSessionData('_grid_filters', $filters);
+	}
+
 
 	public function saveSessionData(string $key, mixed $value): void
 	{
 		if ($this->rememberState) {
-			$this->gridSession[$key] = $value;
+            $this->getStateStorage()->saveState($key, $value);
 		} elseif ($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_SESSION_KEYS, true)) {
-			$this->gridSession[$key] = $value;
+            $this->getStateStorage()->saveState($key, $value);
 		}
 	}
 
 	public function deleteSessionData(string $key): void
 	{
-		unset($this->gridSession[$key]);
+		//unset($this->gridSession[$key]);
+        $this->getStateStorage()->deleteState($key);
 	}
 
 
@@ -2746,7 +2763,7 @@ class Datagrid extends Control
 
 			$hidden_columns = $this->getSessionData('_grid_hidden_columns', []);
 
-			foreach ($hidden_columns as $column) {
+			foreach ($hidden_columns ?? [] as $column) {
 				if (isset($this->columns[$column])) {
 					$this->columnsVisibility[$column] = [
 						'visible' => false,
