@@ -1398,7 +1398,6 @@ class Datagrid extends Control
 		if (!$values instanceof ArrayHash) {
 			throw new UnexpectedValueException();
 		}
-
 		$storedFilters = $this->getStorageData('_grid_filters', []);
 		foreach ($values as $key => $value) {
 			/**
