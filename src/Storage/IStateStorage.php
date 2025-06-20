@@ -9,5 +9,4 @@ interface IStateStorage
     public function loadState(string $key): mixed;
     public function saveState(string $key, mixed $value): void;
     public function deleteState(string $key): void;
-    public function hasState(string $key): bool;
 }

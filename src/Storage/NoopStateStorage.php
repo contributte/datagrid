@@ -24,9 +24,4 @@ class NoopStateStorage implements IStateStorage
     {
         // Do nothing
     }
-
-    public function hasState(string $key): bool
-    {
-        return false; // Always returns false, as nothing is stored
-    }
 }

@@ -32,9 +32,4 @@ class SessionStateStorage implements IStateStorage
     {
         $this->sessionSection->remove($key);
     }
-
-    public function hasState(string $key): bool
-    {
-        return $this->sessionSection->offsetExists($key);
-    }
 }
