@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Contributte\Datagrid\Storage;
 
@@ -10,18 +8,20 @@ namespace Contributte\Datagrid\Storage;
  */
 class NoopStateStorage implements IStateStorage
 {
-    public function loadState(string $key): mixed
-    {
-        return null; // Always returns null, as nothing is stored
-    }
 
-    public function saveState(string $key, mixed $value): void
-    {
-        // Do nothing
-    }
+	public function loadState(string $key): mixed
+	{
+		return null; // Always returns null, as nothing is stored
+	}
 
-    public function deleteState(string $key): void
-    {
-        // Do nothing
-    }
+	public function saveState(string $key, mixed $value): void
+	{
+		// Do nothing
+	}
+
+	public function deleteState(string $key): void
+	{
+		// Do nothing
+	}
+
 }

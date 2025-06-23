@@ -36,13 +36,13 @@ use Contributte\Datagrid\GroupAction\GroupButtonAction;
 use Contributte\Datagrid\InlineEdit\InlineAdd;
 use Contributte\Datagrid\InlineEdit\InlineEdit;
 use Contributte\Datagrid\Localization\SimpleTranslator;
+use Contributte\Datagrid\Storage\IStateStorage;
 use Contributte\Datagrid\Storage\NoopStateStorage;
 use Contributte\Datagrid\Storage\SessionStateStorage;
 use Contributte\Datagrid\Toolbar\ToolbarButton;
 use Contributte\Datagrid\Utils\ArraysHelper;
 use Contributte\Datagrid\Utils\ItemDetailForm;
 use Contributte\Datagrid\Utils\Sorting;
-use Contributte\Datagrid\Storage\IStateStorage;
 use DateTime;
 use InvalidArgumentException;
 use Nette\Application\ForbiddenRequestException;
@@ -264,11 +264,11 @@ class Datagrid extends Control
 
 	protected bool $showSelectedRowsCount = true;
 
+	protected ?IStateStorage $stateStorage = null;
+
 	private ?string $customPaginatorTemplate = null;
 
 	private ?string $componentFullName = null;
-
-	protected ?IStateStorage $stateStorage = null; // State storage for the datagrid
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
@@ -336,7 +336,6 @@ class Datagrid extends Control
 
 		return $this;
 	}
-
 
 	/********************************************************************************
 	 *                                  RENDERING *
@@ -1151,6 +1150,7 @@ class Datagrid extends Control
 		foreach ($this->filter as $key => $value) {
 			$storedFilters[(string) $key] = $value;
 		}
+
 		$this->saveStorageData('_grid_filters', $storedFilters);
 	}
 
@@ -1398,6 +1398,7 @@ class Datagrid extends Control
 		if (!$values instanceof ArrayHash) {
 			throw new UnexpectedValueException();
 		}
+
 		$storedFilters = $this->getStorageData('_grid_filters', []);
 		foreach ($values as $key => $value) {
 			/**
@@ -1411,6 +1412,7 @@ class Datagrid extends Control
 				$this->page = 1;
 				$this->saveStorageData('_grid_page', 1);
 			}
+
 			$storedFilters[(string) $key] = $value;
 
 			/**
@@ -1418,6 +1420,7 @@ class Datagrid extends Control
 			 */
 			$this->filter[$key] = $value;
 		}
+
 		$this->saveStorageData('_grid_filters', $storedFilters);
 
 		if ($values->count() > 0) {
@@ -2346,6 +2349,7 @@ class Datagrid extends Control
 		if ($this->shouldRememberState($key)) {
 			return $this->getStateStorage()->loadState($key) ?? $defaultValue;
 		}
+
 		return $defaultValue;
 	}
 
@@ -2356,17 +2360,10 @@ class Datagrid extends Control
 		}
 	}
 
-	private function shouldRememberState(string $key): bool
-	{
-		return $this->rememberState ||
-			($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_STORAGE_KEYS, true));
-	}
-
 	public function deleteStorageData(string $key): void
 	{
 		$this->getStateStorage()->deleteState($key);
 	}
-
 
 	/********************************************************************************
 	 *                                  ITEM DETAIL *
@@ -2931,9 +2928,11 @@ class Datagrid extends Control
 				sprintf('There is already action at key [%s] defined.', $key)
 			);
 		}
-	}/********************************************************************************
- *                                    FILTERS *
- ********************************************************************************/
+	}
+
+ /********************************************************************************
+  *                                    FILTERS *
+  ********************************************************************************/
 
 	/**
 	 * Check whether given key already exists in $this->filters
@@ -2963,6 +2962,12 @@ class Datagrid extends Control
 	private function getPresenterInstance(): Presenter
 	{
 		return $this->getPresenter();
+	}
+
+	private function shouldRememberState(string $key): bool
+	{
+		return $this->rememberState ||
+			($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_STORAGE_KEYS, true));
 	}
 
 }
