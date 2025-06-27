@@ -352,7 +352,7 @@ In example datagrid above, you can hide columns and then reveal them again. This
 $grid->setColumnsHideable();
 ```
 
-Hidden columns are saved into session, so they will remain hidden along all next requests.
+Hidden columns are saved into [state storage](state-storage.md), so they will remain hidden along all next requests.
 
 ### Default hide
 
