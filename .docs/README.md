@@ -23,6 +23,9 @@
 **Export**
 - [Exports](export.md)
 
+**State storage**
+- [State storage](state-storage.md)
+
 **Inline** (advanced)
 - [Inline edit](inline-edit.md)
 - [Inline add](inline-add.md)

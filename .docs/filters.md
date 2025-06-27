@@ -17,8 +17,7 @@
     - [Resetting filter to default values](#resetting-filter-to-default-values)
 - [Filters rendering](#filters-rendering)
 - [Outer filters rendering](#outer-filters-rendering)
-- [Session - remeber state](#session---remeber-state)
-- [Session - filters / filter values changed](#session---filters--filter-values-changed)
+- [Storage - filters / filter values changed](#storage---filters--filter-values-changed)
 - [URL refreshing - history API](#url-refreshing---history-api)
 - [Auto submit](#auto-submit)
 
@@ -274,27 +273,18 @@ You can set outer filters rendering:
 $grid->setOuterFilterRendering(); // - that is true. Or $grid->setOuterFilterRendering(false);
 ```
 
-## Session - remeber state
 
-Grid refreshes its state on several levels. One could be session. It is by default turned on, but can be disabled:
+## Storage - filters / filter values changed
 
-```php
-$grid->setRememberState(false); // Or turned on again: $grid->setRememberState(true);
-```
-
-If you want to keep hideable columns in session even when remember state is turned off, use second argument:
+When you set some filters and the user performs filtering, values are stored in storage. Later, when filters are changed (for example, some select options are removed, etc.), the datagrid will throw an exception because it cannot find specific filters or filter values that are still stored in storage. You can suppress this exception:
 
 ```php
-$grid->setRememberState(false, true);
+$grid->setStrictStorageFilterValues(false);
 ```
 
-## Session - filters / filter values changed
+See [state storage](state-storage.md) for more information about storage.
 
-When you set some filters and user do some filtering, values are stored in session. After that, when filters are changed (maybe some select options are removed, etc.), datagrid would throw an exception, because it can not find particular filters / filter values that are still stored in session. You can suppress those exception:
 
-```php
-$grid->setStrictSessionFilterValues(false);
-```
 
 ## URL refreshing - history API
 
