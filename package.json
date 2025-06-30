@@ -24,7 +24,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
     "bootstrap": "^5.3.6",
-    "naja": "^2.6.1",
+    "naja": "^3.2.1",
     "nette-forms": "^3.5.3",
     "sortablejs": "^1.15.6",
     "tom-select": "^2.4.3",

@@ -15,8 +15,7 @@ import type {
 	SuccessEventDetail as BaseSuccessEventDetail,
 } from "../types";
 import { Datagrid } from "../datagrid";
-import { BeforeEvent, ErrorEvent, Payload as NajaPayload, SuccessEvent } from "naja/dist/Naja";
-import { InteractionEvent } from "naja/dist/core/UIHandler";
+import { BeforeEvent, ErrorEvent, Payload as NajaPayload, SuccessEvent, InteractionEvent } from "naja";
 
 export interface BaseRequestParams extends AjaxBaseRequestParams, Request {
 	url: string;
