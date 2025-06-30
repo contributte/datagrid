@@ -15,12 +15,22 @@ export class TreeViewPlugin implements DatagridPlugin {
 					if (childrenBlock.classList.contains('showed')) {
 						childrenBlock.innerHTML = '';
 						childrenBlock.classList.remove('showed');
-						rowBlock.querySelector(`a.chevron`).style.transform = "rotate(0deg)";
+						if (rowBlock) {
+							const chevron = rowBlock.querySelector<HTMLAnchorElement>(`a.chevron`);
+							if (chevron) {
+								chevron.style.transform = "rotate(0deg)";
+							}
+						}
 						return;
 					}
 
 					childrenBlock.classList.add('showed');
-					rowBlock.querySelector(`a.chevron`).style.transform = "rotate(90deg)";
+					if (rowBlock) {
+						const chevron = rowBlock.querySelector<HTMLAnchorElement>(`a.chevron`);
+						if (chevron) {
+							chevron.style.transform = "rotate(90deg)";
+						}
+					}
 					const snippets = payload.snippets;
 					for (const snippetName in snippets) {
 						const snippet = snippets[snippetName];
