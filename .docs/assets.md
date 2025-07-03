@@ -305,6 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
 @import "tom-select/dist/css/tom-select.bootstrap5.css";
 @import '../../vendor/ublaboo/datagrid/assets/css/happy.css';
 @import '../../vendor/ublaboo/datagrid/assets/css/datagrid.css';
+@import '../../vendor/ublaboo/datagrid/assets/css/tom-select.css';
 
 /* Your styles */
 ```
