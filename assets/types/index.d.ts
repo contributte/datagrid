@@ -1,4 +1,3 @@
-import { Happy } from "../integrations";
 import TomSelect from "tom-select";
 
 export interface Nette {
@@ -13,7 +12,6 @@ export interface ExtendedWindow extends Window {
 	jQuery?: any;
 	Nette?: Nette;
 	TomSelect?: Constructor<TomSelect>;
-	happy?: Happy;
 }
 
 // https://github.com/naja-js/naja/blob/384d298a9199bf778985d1bcf5747fe8de305b22/src/utils.ts

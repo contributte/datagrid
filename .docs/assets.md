@@ -38,8 +38,6 @@ Datagrid has a lot of plugins. You can use them all or just some of them.
 
 - DatepickerPlugin
   - Abstraction for datepickers
-- HappyPlugin
-  - Abstraction for happy-inputs
 - NetteFormsPlugin
   - Abstraction for Nette Forms
 - SelectpickerPlugin
@@ -49,8 +47,6 @@ Datagrid has a lot of plugins. You can use them all or just some of them.
 
 **Integrations**
 
-- Happy (+HappyPlugin)
-  - Implementation for happy-inputs
 - [SortableJS](https://sortablejs.github.io/Sortable/) (+SortablePlugin)
   - Implementation for sorting
 - [TomSelect](https://tom-select.js.org/) (+SelectpickerPlugin)
@@ -67,8 +63,6 @@ import {
 	ConfirmPlugin,
 	createDatagrids,
 	DatepickerPlugin,
-	Happy,
-	HappyPlugin,
 	InlinePlugin,
 	ItemDetailPlugin,
 	NetteFormsPlugin,
@@ -90,7 +84,6 @@ document.addEventListener("DOMContentLoaded", () => {
 				new InlinePlugin(),
 				new ItemDetailPlugin(),
 				new NetteFormsPlugin(netteForms),
-				new HappyPlugin(new Happy()),
 				new SortablePlugin(new SortableJS()),
 				new DatepickerPlugin(new VanillaDatepicker({ buttonClass: 'btn' })),
 				new SelectpickerPlugin(new TomSelect(Select)),
@@ -136,7 +129,6 @@ It contains these plugins:
 - InlinePlugin
 - ItemDetailPlugin
 - NetteFormsPlugin
-- HappyPlugin
 - SortablePlugin
 - DatepickerPlugin
 - SelectpickerPlugin
@@ -241,8 +233,6 @@ import {
 	ConfirmPlugin,
 	createDatagrids,
 	DatepickerPlugin,
-	Happy,
-	HappyPlugin,
 	InlinePlugin,
 	ItemDetailPlugin,
 	NetteFormsPlugin,
@@ -280,7 +270,6 @@ document.addEventListener("DOMContentLoaded", () => {
 				new InlinePlugin(),
 				new ItemDetailPlugin(),
 				new NetteFormsPlugin(netteForms),
-				new HappyPlugin(new Happy()),
 				new SortablePlugin(new SortableJS()),
 				new DatepickerPlugin(new VanillaDatepicker({ buttonClass: 'btn' })),
 				new SelectpickerPlugin(new TomSelect(Select)),
@@ -303,7 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
 @import 'vanillajs-datepicker/css/datepicker-bs5.css';
 @import "tom-select/dist/css/tom-select.css";
 @import "tom-select/dist/css/tom-select.bootstrap5.css";
-@import '../../vendor/ublaboo/datagrid/assets/css/happy.css';
 @import '../../vendor/ublaboo/datagrid/assets/css/datagrid.css';
 @import '../../vendor/ublaboo/datagrid/assets/css/tom-select.css';
 

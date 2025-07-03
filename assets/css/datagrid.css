@@ -272,10 +272,6 @@
 	vertical-align: middle
 }
 
-[data-datagrid-name] table th.col-checkbox .happy-checkbox, [data-datagrid-name] table td.col-checkbox .happy-checkbox {
-	margin-right: 0
-}
-
 [data-datagrid-name] table th.col-checkbox.col-checkbox-first, [data-datagrid-name] table td.col-checkbox.col-checkbox-first {
 	border-top-color: transparent
 }
@@ -565,10 +561,6 @@
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none
-}
-
-[data-datagrid-name] .col-checkbox .happy-checkbox {
-	margin-top: 2px
 }
 
 [data-datagrid-name] .datagrid-column-status-option-icon {
