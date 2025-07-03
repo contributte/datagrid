@@ -5,6 +5,14 @@ export const CheckboxAttribute = "data-check";
 
 export class CheckboxPlugin implements DatagridPlugin {
 	onDatagridInit(datagrid: Datagrid): boolean {
+		datagrid.ajax.addEventListener('complete', (event) => {
+			this.init(datagrid);
+		});
+
+		return this.init(datagrid);
+	}
+
+	private init(datagrid: Datagrid): boolean {
 		let lastCheckbox = null;
 
 		datagrid.el.addEventListener("click", e => {
@@ -36,15 +44,18 @@ export class CheckboxPlugin implements DatagridPlugin {
 			}
 		});
 
-		let checkboxes = datagrid.el.querySelectorAll<HTMLInputElement>(`input[data-check='${datagrid.name}']`);
+		const checkboxes = Array.from(datagrid.el.querySelectorAll<HTMLInputElement>(`input[data-check='${datagrid.name}']:not([data-check-all])`));
+		const selectAll = datagrid.el.querySelector<HTMLInputElement>(`input[data-check='${datagrid.name}'][data-check-all]`);
+
 		const select = datagrid.el.querySelector<HTMLSelectElement>("select[name='group_action[group_action]']");
 		const actionButtons = document.querySelectorAll<HTMLInputElement | HTMLButtonElement>(
 			".row-group-actions *[type='submit']"
 		);
 		const counter = document.querySelector<HTMLElement>(".datagrid-selected-rows-count");
 
-		// Handling a checkbox click + select all checkbox
-		checkboxes.forEach(checkEl => {
+		[...checkboxes, selectAll].forEach(checkEl => {
+			if (!checkEl) return;
+
 			checkEl.addEventListener("change", () => {
 				// Select all
 				const isSelectAll = checkEl.hasAttribute("data-check-all");
@@ -53,7 +64,6 @@ export class CheckboxPlugin implements DatagridPlugin {
 
 					checkboxes.forEach(checkbox => (checkbox.checked = checkEl.checked));
 
-					// todo: refactor not to repeat this code twice
 					actionButtons.forEach(button => (button.disabled = !checkEl.checked));
 
 					if (select) {
@@ -61,18 +71,17 @@ export class CheckboxPlugin implements DatagridPlugin {
 					}
 
 					if (counter) {
-						const total = Array.from(checkboxes).filter(c => !c.hasAttribute("data-check-all")).length;
+						const total = checkboxes.length;
 						counter.innerText = `${checkEl.checked ? total : 0}/${total}`;
 					}
 					return;
 				} else {
-					const selectAll = datagrid.el.querySelector<HTMLInputElement>(`input[data-check='${datagrid.name}'][data-check-all]`);
 					if (selectAll) {
-						selectAll.checked = Array.from(checkboxes).filter(c => !c.hasAttribute("data-check-all")).every(c => c.checked);
+						selectAll.checked = checkboxes.every(c => c.checked);
 					}
 				}
 
-				const checkedBoxes = Array.from(checkboxes).filter(checkbox => checkbox.checked && !checkEl.hasAttribute("data-check-all"));
+				const checkedBoxes = checkboxes.filter(c => c.checked);
 				const hasChecked = checkedBoxes.length >= 1;
 
 				actionButtons.forEach(button => (button.disabled = !hasChecked));

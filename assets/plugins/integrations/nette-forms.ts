@@ -7,12 +7,20 @@ export class NetteFormsPlugin implements DatagridPlugin {
 	}
 
 	onDatagridInit(datagrid: Datagrid): boolean {
+		datagrid.ajax.addEventListener('complete', (event) => {
+			this.initNetteForms(datagrid);
+		});
+
+		this.initNetteForms(datagrid);
+
+		return true;
+	}
+
+	private initNetteForms(datagrid: Datagrid): void {
 		const nette = this.nette ?? window().Nette ?? null;
 
 		if (nette) {
 			datagrid.el.querySelectorAll<HTMLFormElement>("form").forEach(form => nette.initForm(form));
 		}
-
-		return true;
 	}
 }

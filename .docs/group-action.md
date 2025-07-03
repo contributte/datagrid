@@ -7,7 +7,6 @@
     - [Text input](#text-input)
     - [Textarea](#textarea)
     - [Attributes, classes](#attributes-classes)
-- [Happy inputs](#happy-inputs)
 
 -----
 
@@ -136,12 +135,4 @@ All group action inputs have optional class or other attributes:
 $grid->addGroupTextareaAction('aaaa')
 	->setAttribute('rows', 10)
 	->setClass('fooo');
-```
-
-# Happy inputs
-
-Datagrid uses tiny library `happy` for those nice checkboxes. You can disable them:
-
-```php
-$grid->useHappyComponents(false);
 ```

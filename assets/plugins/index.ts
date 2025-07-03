@@ -1,5 +1,4 @@
 export * from "./integrations/datepicker";
-export * from "./integrations/happy";
 export * from "./integrations/nette-forms"
 export * from "./integrations/selectpicker";
 export * from "./integrations/sortable";
