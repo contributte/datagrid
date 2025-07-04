@@ -1776,7 +1776,12 @@ class Datagrid extends Control
 
 	public function handleResetColumnFilter(string $key): void
 	{
-		$this->deleteStorageData($key);
+		$storedFilters = $this->getStorageData('_grid_filters', []);
+		if (isset($storedFilters[$key])) {
+			unset($storedFilters[$key]);
+			$this->saveStorageData('_grid_filters', $storedFilters);
+		}
+
 		unset($this->filter[$key]);
 
 		$this->reloadTheWholeGrid();
