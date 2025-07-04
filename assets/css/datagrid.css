@@ -568,36 +568,36 @@
 }
 
 @media (min-width: 768px) {
-	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .form-group {
+	[data-datagrid-name] .datagrid-th-form-inline .form-group {
 		display: inline-block;
 		margin-bottom: 0;
 		vertical-align: middle
 	}
 
-	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .form-control {
+	[data-datagrid-name] .datagrid-th-form-inline .form-control {
 		display: inline-block;
 		width: auto;
 		vertical-align: middle
 	}
 
-	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .form-control[hidden] {
+	[data-datagrid-name] .datagrid-th-form-inline .form-control[hidden] {
 		display: none;
 	}
 
-	.ublaboo-datagrid-th-form-inline .form-control[hidden] {
+	.datagrid-th-form-inline .form-control[hidden] {
 		display: none;
 	}
 
-	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .input-group {
+	[data-datagrid-name] .datagrid-th-form-inline .input-group {
 		display: inline-table;
 		vertical-align: middle
 	}
 
-	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .input-group .form-control {
+	[data-datagrid-name] .datagrid-th-form-inline .input-group .form-control {
 		width: auto
 	}
 
-	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .input-group > .form-control {
+	[data-datagrid-name] .datagrid-th-form-inline .input-group > .form-control {
 		width: 100%
 	}
 
@@ -605,23 +605,23 @@
 		height: calc(1.5em + 0.5rem + 2px);
 	}
 
-	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .control-label {
+	[data-datagrid-name] .datagrid-th-form-inline .control-label {
 		margin-bottom: 0;
 		vertical-align: middle
 	}
 
-	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .radio, [data-datagrid-name] .ublaboo-datagrid-th-form-inline .checkbox {
+	[data-datagrid-name] .datagrid-th-form-inline .radio, [data-datagrid-name] .datagrid-th-form-inline .checkbox {
 		display: inline-block;
 		margin-top: 0;
 		margin-bottom: 0;
 		vertical-align: middle
 	}
 
-	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .radio label, [data-datagrid-name] .ublaboo-datagrid-th-form-inline .checkbox label {
+	[data-datagrid-name] .datagrid-th-form-inline .radio label, [data-datagrid-name] .datagrid-th-form-inline .checkbox label {
 		padding-left: 0
 	}
 
-	[data-datagrid-name] .ublaboo-datagrid-th-form-inline .radio input[type="radio"], [data-datagrid-name] .ublaboo-datagrid-th-form-inline .checkbox input[type="checkbox"] {
+	[data-datagrid-name] .datagrid-th-form-inline .radio input[type="radio"], [data-datagrid-name] .datagrid-th-form-inline .checkbox input[type="checkbox"] {
 		position: relative;
 		margin-left: 0
 	}
