@@ -229,6 +229,7 @@ class ArrayDataSource implements IDataSource
 						}
 					}
 				}
+				return $row;
 			}
 			if ($is_negation_search) {
 				//we're looking for rows that don't have specific rows, and we haven't aborted by this point
