@@ -168,7 +168,18 @@ class ArrayDataSource implements IDataSource
 
 			$condition = $filter->getCondition();
 
+			$is_negation_search = false;
 			foreach ($condition as $column => $value) {
+				if ($filter->isSpecialChars()) {
+					if ($value === FilterText::TOKEN_EMPTY) { // Handle single '#'
+						return empty($row[$column]);
+					} else if ($value === FilterText::TOKEN_NEGATION . FilterText::TOKEN_EMPTY) {
+						return !empty($row[$column]);
+					} else if ($value === FilterText::TOKEN_EMPTY_ESCAPED) { // Handle '\#' for searching literal '#'
+						$value = FilterText::TOKEN_EMPTY;
+					}
+				}
+
 				if ($filter instanceof FilterText && $filter->isExactSearch()) {
 					return $row[$column] == $value;
 				}
@@ -182,11 +193,48 @@ class ArrayDataSource implements IDataSource
 				$row_value = strtolower(Strings::toAscii($row[$column]));
 
 				foreach ($words as $word) {
-					if (strpos($row_value, strtolower(Strings::toAscii($word))) === false) {
-						return false;
+					if ($filter instanceof FilterText && $filter->isSpecialChars()) {
+						if ($word === FilterText::TOKEN_NEGATION . FilterText::TOKEN_EMPTY) {
+							return !empty($row_value);
+						}
+						$allow_negation_filter = true;
+						if (strpos($word, FilterText::TOKEN_NEGATION_ESCAPED) !== false) {
+							//If the escaped negation token is in the beginning of text, explicitly forbid parsing it after it's replaced
+							if (strpos($word, FilterText::TOKEN_NEGATION_ESCAPED) === 0) {
+								$allow_negation_filter = false;
+							}
+
+							$word = str_replace(FilterText::TOKEN_NEGATION_ESCAPED, FilterText::TOKEN_NEGATION, $word);
+						}
+
+						if ($allow_negation_filter && strpos($word, FilterText::TOKEN_NEGATION) === 0) {
+							//exclamation point means negation - the word is NOT included in the searched string
+							$excludedWord = substr($word, 1);
+							if (empty($excludedWord)) {
+								return true;
+							}
+
+							$is_negation_search = true;
+							if (strpos($row_value, strtolower(Strings::toAscii($excludedWord))) !== false) {
+								return false;
+							}
+						}
+
+						if (!$is_negation_search) {
+							return strpos($row_value, strtolower(Strings::toAscii($word))) !== false;
+						}
+					} else {
+						if (strpos($row_value, strtolower(Strings::toAscii($word))) !== false) {
+							return true;
+						}
 					}
 				}
 				return $row;
+			}
+			if ($is_negation_search) {
+				//we're looking for rows that don't have specific rows, and we haven't aborted by this point
+				//-> should be good
+				return true;
 			}
 		}
 
