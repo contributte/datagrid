@@ -27,6 +27,7 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 
 		$is_negation_search = false;
 		foreach ($condition as $column => $value) {
+			$column = '[' . $column . ']::varchar';
 			if ($filter->isSpecialChars()) {
 				if ($value === Filter\FilterText::TOKEN_EMPTY) { // Handle single '#'
 					$this->data_source->where("($column IS NULL OR $column = '')");
@@ -37,7 +38,6 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 				}
 				$value = str_replace(Filter\FilterText::TOKEN_EMPTY_ESCAPED, Filter\FilterText::TOKEN_EMPTY, $value);
 			}
-			$column = '[' . $column . ']::varchar';
 
 			if ($filter->isExactSearch()) {
 				$this->data_source->where("$column = %s", $value);
@@ -66,6 +66,7 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 
 					if ($allow_negation_filter && strpos($word, Filter\FilterText::TOKEN_NEGATION) === 0) {
 						//exclamation point means negation - the word is NOT included in the searched string
+						$is_negation_search = true;
 						$escaped = $driver->escapeLike(substr($escaped, 2, -1),0);
 						$x[] = "($column IS NULL OR $column = '' OR public.unaccent($column) NOT ILIKE public.unaccent('%' || " . $escaped . " || '%'))";
 						continue;
@@ -82,7 +83,7 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 			$this->data_source->where($condition);
 		} else if (sizeof($or) > 1) {
 			$this->data_source->where('(%or)', $or);
-		} else {
+		} else if (!empty($or)) {
 			$this->data_source->where($or);
 		}
 	}
