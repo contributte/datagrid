@@ -23,7 +23,7 @@
 {varType string $getCheckValue_functionName}
 {php $getCheckValue_functionName = 'getCheckValue_' . preg_replace('/[^a-zA-Z0-9]/', '', $control->getFullName())}
 
-<div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()} table-responsive{/block} {$control->getClass()} p-0" data-refresh-state="{link refreshState!}">
+<div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()} table-responsive{/block} {$control->getClass()}" data-refresh-state="{link refreshState!}">
 	<div n:snippet="grid" class="datagrid-main-snippet" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 		{snippetArea gridSnippets}
 
