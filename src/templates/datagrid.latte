@@ -16,9 +16,20 @@
 
 {varType Ublaboo\DataGrid\DataGrid $control}
 
-<div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()} table-responsive{/block} {$control->getClass()} p-0" data-refresh-state="{link refreshState!}">
+{* This template defines a js getCheckValue function used for hiding columns.
+   This misbehaves when there are multiple datagrids on the same page, because the second datagrid overrides the first one.
+   This is a dirty that ensures that different datagrids have differently-named functions
+*}
+{varType string $getCheckValue_functionName}
+{php $getCheckValue_functionName = 'getCheckValue_' . preg_replace('/[^a-zA-Z0-9]/', '', $control->getFullName())}
+
+<div class="{block datagrid-class}datagrid datagrid-{$control->getFullName()} table-responsive{/block} {$control->getClass()}" data-refresh-state="{link refreshState!}">
 	<div n:snippet="grid" class="datagrid-main-snippet" {if !$control->isNajaCache()}data-naja-snippet-cache="off"{/if}>
 		{snippetArea gridSnippets}
+
+			{* Must define it again, otherwise it will crash when re-rendering the snippet *}
+			{php $getCheckValue_functionName = 'getCheckValue_' . preg_replace('/[^a-zA-Z0-9]/', '', $control->getFullName())}
+
 			<!-- Modal -->
 			<div class="modal fade" id="multipleColumnselect_{$control->getFullname()}" tabindex="-1" aria-labelledby="exampleModalLabel">
 				<div class="modal-dialog">
@@ -55,7 +66,7 @@
 							</div>
 							<div class="row mx-0 px-0 mt-2">
 								<div class="col-6 ps-0 pe-1">
-									<button type="button" class="btn btn-primary w-100 ajax" data-bs-dismiss="modal" onclick="getCheckValue('form-check-input-{$control->getFullname()|noescape}')">{='ublaboo_datagrid.save'|translate}</button>
+									<button type="button" class="btn btn-primary w-100 ajax" data-bs-dismiss="modal" onclick="{$getCheckValue_functionName|noescape}('form-check-input-{$control->getFullname()|noescape}')">{='ublaboo_datagrid.save'|translate}</button>
 								</div>
 
 								<div class="col-6 pe-0 ps-1">
@@ -716,7 +727,7 @@
 {/define}
 
 <script type="text/javascript">
-	function getCheckValue(inputClassCheckBoxesName){
+	function {$getCheckValue_functionName|noescape}(inputClassCheckBoxesName){
 		var columnStatus = {}
 
 		var inputElements = document.getElementsByClassName(inputClassCheckBoxesName);
