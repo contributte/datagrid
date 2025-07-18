@@ -44,6 +44,8 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	/** @var array<string, mixed> */
 	protected array $hints = [];
 
+	protected bool $useDoctrinePaginator = true;
+
 	public function __construct(QueryBuilder $dataSource, protected string $primaryKey)
 	{
 		$this->placeholder = count($dataSource->getParameters());
@@ -173,6 +175,17 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	public function getDataSource(): QueryBuilder
 	{
 		return $this->dataSource;
+	}
+
+	/**
+	 * The method deactivates or activates the use of the Doctrine Paginator for JOIN and GROUP BY.
+	 * @param bool $useDoctrinePaginator
+	 * @return IDataSource
+	 */
+	public function setDoctrinePaginator(bool $useDoctrinePaginator): IDataSource
+	{
+		$this->useDoctrinePaginator = $useDoctrinePaginator;
+		return $this;
 	}
 
 	protected function applyFilterDate(FilterDate $filter): void
@@ -310,6 +323,17 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 				->setParameter($p, $value);
 		}
 	}
+	protected function usePaginator(): bool
+	{
+		if($this->useDoctrinePaginator)
+		{
+			$hasJoin = (bool)$this->dataSource->getDQLPart('join');
+			$hasGroupBy = (bool)$this->dataSource->getDQLPart('groupBy');
+
+			return $hasJoin || $hasGroupBy;
+		}
+		return false;
+	}
 
 	private function checkAliases(string $column): string
 	{
@@ -328,14 +352,6 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		}
 
 		return $this->rootAlias . '.' . $column;
-	}
-
-	private function usePaginator(): bool
-	{
-		$hasJoin = (bool) $this->dataSource->getDQLPart('join');
-		$hasGroupBy = (bool) $this->dataSource->getDQLPart('groupBy');
-
-		return $hasJoin || $hasGroupBy;
 	}
 
 }
