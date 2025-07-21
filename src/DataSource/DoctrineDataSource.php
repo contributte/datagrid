@@ -44,7 +44,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	/** @var array<string, mixed> */
 	protected array $hints = [];
 
-	protected bool $useDoctrinePaginator = true;
+	protected bool $usePaginator = true;
 
 	public function __construct(QueryBuilder $dataSource, protected string $primaryKey)
 	{
@@ -179,12 +179,12 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 	/**
 	 * The method deactivates or activates the use of the Doctrine Paginator for JOIN and GROUP BY.
-	 * @param bool $useDoctrinePaginator
+	 * @param bool $usePaginator
 	 * @return IDataSource
 	 */
-	public function setDoctrinePaginator(bool $useDoctrinePaginator): IDataSource
+	public function setUsePaginator(bool $usePaginator): IDataSource
 	{
-		$this->useDoctrinePaginator = $useDoctrinePaginator;
+		$this->usePaginator = $usePaginator;
 		return $this;
 	}
 
@@ -325,7 +325,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	}
 	protected function usePaginator(): bool
 	{
-		if($this->useDoctrinePaginator)
+		if($this->usePaginator)
 		{
 			$hasJoin = (bool)$this->dataSource->getDQLPart('join');
 			$hasGroupBy = (bool)$this->dataSource->getDQLPart('groupBy');
