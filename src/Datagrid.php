@@ -45,6 +45,7 @@ use Contributte\Datagrid\Utils\ItemDetailForm;
 use Contributte\Datagrid\Utils\Sorting;
 use DateTime;
 use InvalidArgumentException;
+use Nette\Application\Attributes\Persistent;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
@@ -133,13 +134,13 @@ class Datagrid extends Control
 	 */
 	public bool $strictStorageFilterValues = true;
 
-	/** @persistent */
+	#[Persistent]
 	public int $page = 1;
 
-	/** @persistent */
+	#[Persistent]
 	public string|int|null $perPage = null;
 
-	/** @persistent */
+	#[Persistent]
 	public array $sort = [];
 
 	public array $defaultSort = [];
@@ -150,7 +151,7 @@ class Datagrid extends Control
 
 	public bool $defaultSortUseOnReset = true;
 
-	/** @persistent */
+	#[Persistent]
 	public array $filter = [];
 
 	/** @var callable|null */
