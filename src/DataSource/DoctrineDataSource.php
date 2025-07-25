@@ -180,7 +180,6 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 	/**
 	 * The method deactivates or activates the use of the Doctrine Paginator for JOIN and GROUP BY
 	 */
-
 	public function setUsePaginator(bool $usePaginator): void
 	{
 		$this->usePaginator = $usePaginator;
@@ -321,6 +320,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 				->setParameter($p, $value);
 		}
 	}
+
 	protected function usePaginator(): bool
 	{
 		if ($this->usePaginator) {
@@ -329,6 +329,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 			return $hasJoin || $hasGroupBy;
 		}
+
 		return false;
 	}
 
