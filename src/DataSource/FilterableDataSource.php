@@ -32,9 +32,9 @@ abstract class FilterableDataSource
 						$value = ArrayHash::from($filter->getValue());
 					}
 
-					if($this instanceof NextrasDataSource) {
+					if ($this instanceof NextrasDataSource) {
 						$returnCheck = ($filter->getConditionCallback())($this->getDataSource(), $value);
-						if($returnCheck) {
+						if ($returnCheck) {
 							$this->dataSource = $returnCheck;
 						}
 					} else {
