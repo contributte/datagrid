@@ -22,7 +22,8 @@ public function createComponentLocalizationGrid($name): Contributte\Datagrid\Dat
 
 	$grid->addColumnDateTime('inserted', 'Inserted');
 
-	$translator = new Contributte\Datagrid\Localization\SimpleTranslator([
+	$translator = new Contributte\Datagrid\Localization\SimpleTranslator();
+	$translator->setDictionary([
 		'contributte_datagrid.no_item_found_reset' => 'Žádné položky nenalezeny. Filtr můžete vynulovat',
 		'contributte_datagrid.no_item_found' => 'Žádné položky nenalezeny.',
 		'contributte_datagrid.here' => 'zde',
