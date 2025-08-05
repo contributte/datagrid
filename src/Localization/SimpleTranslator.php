@@ -37,6 +37,11 @@ class SimpleTranslator implements Translator
 		'contributte_datagrid.per_page_submit' => 'Change',
 	];
 
+	public function __construct(array $dictionary = [])
+	{
+		$this->dictionary = array_merge($this->dictionary, $dictionary);
+	}
+
 	public function translate(mixed $message, mixed ...$parameters): string
 	{
 		return $this->dictionary[$message] ?? $message;
