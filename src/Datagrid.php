@@ -86,7 +86,7 @@ class Datagrid extends Control
 		'_grid_hidden_columns_manipulated',
 	];
 
-	public static string $iconPrefix = 'fa fa-';
+	public static string $iconPrefix = 'fas fa-';
 
 	public static string $btnSecondaryClass = 'btn-default btn-secondary';
 
