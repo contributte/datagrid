@@ -8,5 +8,7 @@ tests export-ignore
 Makefile export-ignore
 phpstan.neon export-ignore
 ruleset.xml export-ignore
+tsconfig.json export-ignore
+rollup.config.js export-ignore
 # Assets
 .npmignore export-ignore
