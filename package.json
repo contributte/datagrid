@@ -18,6 +18,7 @@
     "assets"
   ],
   "scripts": {
+    "prepare": "npm run build",
     "build": "rollup -c",
     "dev": "rollup -c -w"
   },
