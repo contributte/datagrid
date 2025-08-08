@@ -247,6 +247,11 @@ Also, when you are using datagrid in component, you have to alter the name a bit
 $grid->setSortableHandler('myComponent:sort!');
 ```
 
+When you have nested components, eg. `MyChildComponent` used inside of `MyComponent`, you can set handler like this:
+```php
+$grid->setSortableHandler('myComponent:myChildComponent:sort!');
+```
+
 # MultiAction
 
 Same as there is column status with pretty dropdown menu, the datagrid comes with similar dropdown menu for actions. It is called MultiAction:
