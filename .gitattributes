@@ -7,10 +7,6 @@ tests export-ignore
 .github export-ignore
 Makefile export-ignore
 phpstan.neon export-ignore
-README.md export-ignore
 ruleset.xml export-ignore
 # Assets
 .npmignore export-ignore
-package.json export-ignore
-rollup.config.js export-ignore
-tsconfig.json export-ignore
