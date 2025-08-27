@@ -106,9 +106,9 @@ class ColumnStatus extends Column
 	 */
 	public function addOption($value, string $text): Option
 	{
-		if (!is_scalar($value)) {
-			throw new DataGridColumnStatusException('Option value has to be scalar');
-		}
+//		if (!is_scalar($value)) {
+//			throw new DataGridColumnStatusException('Option value has to be scalar');
+//		}
 
 		$option = new Option($this->grid, $this, $value, $text);
 
