@@ -3225,12 +3225,27 @@ class DataGrid extends Control
 	 *
 	 * @return static
 	 */
-	public function setColumnsHideable(): self
+	public function setColumnsHideable(bool $canHideColumns = true): self
 	{
-		$this->canHideColumns = true;
-
+		$this->canHideColumns = $canHideColumns;
 		return $this;
 	}
+
+    /**
+     * @return Action[]|MultiAction[]
+     */
+    public function getActions(): array
+    {
+        return $this->actions;
+    }
+
+    /**
+     * @return ToolbarButton[]
+     */
+    public function getToolbarButtons(): array
+    {
+        return $this->toolbarButtons;
+    }
 
 
 	/********************************************************************************
