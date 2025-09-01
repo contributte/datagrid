@@ -17,7 +17,7 @@ trait TButtonTryAddIcon
 				$iconClass .= ' ' . Datagrid::$iconPrefix . $icon;
 			}
 
-			$el->addHtml(Html::el('span')->setAttribute('class', trim($iconClass)));
+			$el->addHtml(Html::el('i')->setAttribute('class', trim($iconClass)));
 
 			if (mb_strlen($name) > 1) {
 				$el->addHtml('&nbsp;');
