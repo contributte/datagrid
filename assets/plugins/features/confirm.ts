@@ -8,7 +8,7 @@ export class ConfirmPlugin implements DatagridPlugin {
 		datagrid.el
 			.querySelectorAll<HTMLElement>(`[${ConfirmAttribute}]:not(.ajax)`)
 			.forEach(confirmEl =>
-				confirmEl.addEventListener("click", e => this.confirmEventHandler.call(datagrid, confirmEl, e))
+				confirmEl.addEventListener("click", e => this.confirmEventHandler.call(datagrid, e.target as HTMLElement, e))
 			);
 
 		datagrid.ajax.addEventListener("interact", e => {
