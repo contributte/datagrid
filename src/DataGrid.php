@@ -1952,10 +1952,9 @@ class DataGrid extends Control
 
 			if (!in_array($key, $other_session_keys, true)) {
 				try {
-					$this->getFilter($key);
-
-					$this->filter[$key] = $value;
-
+					$stringKey = (string) $key;
+					$this->getFilter($stringKey);
+					$this->filter[$stringKey] = $value;
 				} catch (DataGridException $e) {
 					if ($this->strictSessionFilterValues) {
 						throw new DataGridFilterNotFoundException(
@@ -2522,7 +2521,7 @@ class DataGrid extends Control
 		}
 	}
 
-    
+
 	public function handleChangeStatus(string $id, string $key, ?string $value): void
 	{
 		if (!isset($this->columns[$key])) {
