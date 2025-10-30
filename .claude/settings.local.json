@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git diff-tree:*)",
+      "Bash(for:*)",
+      "Bash(do echo \"=== $tag ===\")",
+      "Bash(done)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

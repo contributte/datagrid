@@ -83,7 +83,7 @@ final class ColumnActionTest extends TestCase
 		$action->setIcon('user');
 
 		Assert::same(
-			'<a href="doStuff!?id=1" class="btn btn-xs btn-default btn-secondary"><span class="icon-user"></span>&nbsp;Do</a>',
+			'<a href="doStuff!?id=1" class="btn btn-xs btn-default btn-secondary"><i class="icon-user"></i>&nbsp;Do</a>',
 			$this->render($action)
 		);
 	}

@@ -8,7 +8,7 @@ import { DatagridPlugin } from "../../types";
 export const ConfirmAttribute = "data-datagrid-confirm";
 
 export class ConfirmPlugin implements DatagridPlugin {
-	/**
+  /**
 	* Initializes the plugin and registers event handlers.
 	* @param datagrid The datagrid instance that the plugin is connected to.
 	* @returns true if initialization was successful.
