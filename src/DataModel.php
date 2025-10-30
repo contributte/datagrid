@@ -29,24 +29,10 @@ use Nette\Database\Table\Selection;
 use Nette\SmartObject;
 use Nextras\Orm\Collection\ICollection;
 
-/**
- * @method onBeforeFilter(IDataSource $dataSource)
- * @method onAfterFilter(IDataSource $dataSource)
- * @method onAfterPaginated(IDataSource $dataSource)
- */
-final class DataModel
+final class DataModel extends AbstractDataModel
 {
 
 	use SmartObject;
-
-	/** @var array|callable[] */
-	public array $onBeforeFilter = [];
-
-	/** @var array|callable[] */
-	public array $onAfterFilter = [];
-
-	/** @var array|callable[] */
-	public array $onAfterPaginated = [];
 
 	private IDataSource $dataSource;
 
@@ -133,7 +119,7 @@ final class DataModel
 		return $this->dataSource->sort($sorting)->getData();
 	}
 
-	public function filterRow(array $condition): mixed
+	public function filterRow(array $condition): array
 	{
 		$this->onBeforeFilter($this->dataSource);
 		$this->onAfterFilter($this->dataSource);

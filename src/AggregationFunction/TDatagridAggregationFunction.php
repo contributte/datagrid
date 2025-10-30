@@ -2,7 +2,7 @@
 
 namespace Contributte\Datagrid\AggregationFunction;
 
-use Contributte\Datagrid\DataModel;
+use Contributte\Datagrid\AbstractDataModel;
 use Contributte\Datagrid\DataSource\IDataSource;
 use Contributte\Datagrid\Exception\DatagridException;
 
@@ -27,7 +27,7 @@ trait TDatagridAggregationFunction
 			throw new DatagridException('You can use either ColumnsSummary or AggregationFunctions');
 		}
 
-		if (!$this->dataModel instanceof DataModel) {
+		if (!$this->dataModel instanceof AbstractDataModel) {
 			throw new DatagridException('You have to set a data source first.');
 		}
 
