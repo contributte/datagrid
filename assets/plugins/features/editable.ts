@@ -33,8 +33,8 @@ export class EditablePlugin implements DatagridPlugin {
 
 				if (!cell.classList.contains("editing")) {
 					cell.classList.add("editing");
-					const originalValue = cell.innerHTML.replace(/<\/?br>/g, "\n");
-					const valueToEdit = cell.getAttribute(EditableValueAttribute) ?? originalValue;
+					const originalValue = (cell.innerHTML.replace(/<\/?br>/g, "\n")).trim();
+					const valueToEdit = (cell.getAttribute(EditableValueAttribute) ?? originalValue).trim();
 
 					cell.setAttribute("originalValue", originalValue);
 					cell.setAttribute("valueToEdit", valueToEdit);
@@ -49,7 +49,8 @@ export class EditablePlugin implements DatagridPlugin {
 							input = cell.querySelector("textarea")!;
 							break;
 						case "select":
-							input = cell.querySelector(cell.getAttribute(EditableElementAttribute) ?? "")!;
+							cell.innerHTML = cell.getAttribute(EditableElementAttribute) ?? "";
+							input = cell.querySelector("select")!;
 							input
 								.querySelectorAll(`option[value='${valueToEdit}']`)
 								.forEach(input => input.setAttribute("selected", "true"));
@@ -57,7 +58,7 @@ export class EditablePlugin implements DatagridPlugin {
 						default:
 							cell.innerHTML = `<input type='${type}' />`;
 							input = cell.querySelector("input")!;
-							input.setAttribute("value", valueToEdit.trim());
+							input.setAttribute("value", valueToEdit);
 					}
 
 					const attributes = JSON.parse(cell.getAttribute(EditableAttrsAttribute) ?? "{}");
@@ -81,7 +82,9 @@ export class EditablePlugin implements DatagridPlugin {
 								}) as any;
 
 								if (type === "select") {
-									cell.innerHTML = cell.querySelector(`option[value='${value}']`)?.innerHTML ?? "";
+									cell.innerHTML = (el instanceof HTMLSelectElement)
+										? el.options[el.selectedIndex]?.text ?? value
+										: value;
 								} else {
 									if (response._datagrid_editable_new_value) {
 										value = response._datagrid_editable_new_value;
