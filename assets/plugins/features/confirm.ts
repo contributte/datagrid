@@ -108,7 +108,7 @@ export class ConfirmPlugin implements DatagridPlugin {
 			}
 
 			this.triggerNativeInteraction(el);
-			return
+			return;
 		}
 
 		this.triggerNativeInteraction(el);
