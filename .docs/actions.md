@@ -95,6 +95,30 @@ $grid->addAction('delete', '', 'delete!')
 	);
 ```
 
+### Using Bootstrap modal for confirmation
+
+If you'd like to display the confirmation prompt using a Bootstrap modal instead of the native `window.confirm`, simply include the following HTML snippet in your template:
+
+```html
+<div class="modal fade" id="datagridConfirmModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Delete ?</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body" id="datagridConfirmMessage"></div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-danger" id="datagridConfirmOk">Delete</button>
+			</div>
+		</div>
+	</div>
+</div>
+```
+
+The title and confirmation message are forwarded, so this is displayed in the modal window. If the modal is not present in the template, the plugin will fall back to using the native window.confirm.
+
 # Ajax
 
 ## Redrawing the data
