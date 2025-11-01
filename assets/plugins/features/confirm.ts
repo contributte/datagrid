@@ -60,6 +60,14 @@ export class ConfirmPlugin implements DatagridPlugin {
 	}
 
 	private showModalConfirm(modal: HTMLElement, message: string, el: HTMLElement, e: Event): void {
+		if (typeof bootstrap === 'undefined') {
+			console.warn('Bootstrap is not loaded, falling back to native confirm');
+			if (window.confirm(message)) {
+				this.executeConfirmedAction(el, e);
+			}
+			return;
+		}
+
 		const messageBox = this.getElement(this.messageBoxId);
 		const confirmButton = this.getElement(this.confirmButtonId);
 
