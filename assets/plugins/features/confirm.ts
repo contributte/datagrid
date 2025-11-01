@@ -5,6 +5,9 @@
 import { Datagrid } from "../../datagrid";
 import { DatagridPlugin } from "../../types";
 
+declare const bootstrap: any;
+declare const naja: any;
+
 export const ConfirmAttribute = "data-datagrid-confirm";
 
 export class ConfirmPlugin implements DatagridPlugin {
@@ -92,6 +95,10 @@ export class ConfirmPlugin implements DatagridPlugin {
 		if (el instanceof HTMLAnchorElement && el.href) {
 			const isAjax = el.classList.contains('ajax');
 			if (isAjax && detail) {
+				if (typeof naja === 'undefined') {
+					console.error('Naja is not loaded, cannot execute AJAX request');
+					return;
+				}
 				const options = { ...detail.options, history: false };
 				naja.makeRequest(detail.method, detail.url, detail.payload, options);
 			} else {
