@@ -1,7 +1,7 @@
 /**
-* Datagrid plugin that asks for confirmation before deleting.
-* If there is a modal in the DOM, use it, otherwise use a native confirm window.
-*/
+ * Datagrid plugin that asks for confirmation before deleting.
+ * If there is a modal in the DOM, use it, otherwise use a native confirm window.
+ */
 import { Datagrid } from "../../datagrid";
 import { DatagridPlugin } from "../../types";
 
@@ -12,10 +12,10 @@ export const ConfirmAttribute = "data-datagrid-confirm";
 
 export class ConfirmPlugin implements DatagridPlugin {
 	/**
-	  * Initializes the plugin and registers event handlers.
-	  * @param datagrid The datagrid instance that the plugin is connected to.
-	  * @returns true if initialization was successful.
-	  */
+	 * Initializes the plugin and registers event handlers.
+	 * @param datagrid The datagrid instance that the plugin is connected to.
+	 * @returns true if initialization was successful.
+	 */
 	private datagrid!: Datagrid;
 
 	private modalId = 'datagridConfirmModal';
@@ -49,10 +49,7 @@ export class ConfirmPlugin implements DatagridPlugin {
 		if (modal) {
 			this.showModalConfirm(modal, message, el, e);
 		} else {
-			if (!window.confirm(message)) {
-				e.preventDefault();
-				e.stopPropagation();
-			} else {
+			if (window.confirm(message)) {
 				this.executeConfirmedAction(el, e);
 			}
 		}
