@@ -74,7 +74,10 @@ export class ConfirmPlugin implements DatagridPlugin {
 		const messageBox = this.getElement(this.messageBoxId);
 		const confirmButton = this.getElement(this.confirmButtonId);
 
-		if (!messageBox || !confirmButton) return;
+		if (!messageBox || !confirmButton) {
+			console.warn('Missing modal elements: messageBox or confirmButton');
+			return;
+		}
 
 		messageBox.textContent = message;
 
@@ -101,15 +104,33 @@ export class ConfirmPlugin implements DatagridPlugin {
 				}
 				const options = { ...detail.options, history: false };
 				naja.makeRequest(detail.method, detail.url, detail.payload, options);
-			} else {
-				window.location.href = el.href;
+				return;
 			}
-		} else {
-			el.click();
+
+			this.triggerNativeInteraction(el);
+			return
 		}
+
+		this.triggerNativeInteraction(el);
 	}
 
 	private getElement(id: string): HTMLElement | null {
 		return document.getElementById(id);
+	}
+
+	private triggerNativeInteraction(el: HTMLElement): void {
+		const confirmValue = el.getAttribute(ConfirmAttribute);
+
+		if (confirmValue !== null) {
+			el.removeAttribute(ConfirmAttribute);
+		}
+
+		try {
+			el.click();
+		} finally {
+			if (confirmValue !== null) {
+				el.setAttribute(ConfirmAttribute, confirmValue);
+			}
+		}
 	}
 }
