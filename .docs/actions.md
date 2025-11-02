@@ -104,7 +104,7 @@ If you'd like to display the confirmation prompt using a Bootstrap modal instead
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Delete ?</h5>
+                <h5 class="modal-title">Delete confirmation</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" id="datagridConfirmMessage"></div>
@@ -117,7 +117,7 @@ If you'd like to display the confirmation prompt using a Bootstrap modal instead
 </div>
 ```
 
-The title and confirmation message are forwarded, so this is displayed in the modal window. If the modal is not present in the template, the plugin will fall back to using the native window.confirm.
+The confirmation message is forwarded and displayed in the modal window. If the modal is not present in the template, the plugin will fall back to using the native window.confirm.
 
 # Ajax
 

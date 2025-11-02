@@ -11,16 +11,17 @@ declare const naja: any;
 export const ConfirmAttribute = "data-datagrid-confirm";
 
 export class ConfirmPlugin implements DatagridPlugin {
-	/**
-	 * Initializes the plugin and registers event handlers.
-	 * @param datagrid The datagrid instance that the plugin is connected to.
-	 * @returns true if initialization was successful.
-	 */
 	private datagrid!: Datagrid;
 
 	private modalId = 'datagridConfirmModal';
 	private messageBoxId = 'datagridConfirmMessage';
 	private confirmButtonId = 'datagridConfirmOk';
+
+	/**
+	 * Initializes the plugin and registers event handlers.
+	 * @param datagrid The datagrid instance that the plugin is connected to.
+	 * @returns true if initialization was successful.
+	 */
 
 	onDatagridInit(datagrid: Datagrid): boolean {
 		this.datagrid = datagrid;
@@ -73,6 +74,9 @@ export class ConfirmPlugin implements DatagridPlugin {
 
 		if (!messageBox || !confirmButton) {
 			console.warn('Missing modal elements: messageBox or confirmButton');
+			if (window.confirm(message)) {
+				this.executeConfirmedAction(el, e);
+			}
 			return;
 		}
 
@@ -86,25 +90,21 @@ export class ConfirmPlugin implements DatagridPlugin {
 			this.executeConfirmedAction(el, e);
 		}, { once: true });
 
-		new bootstrap.Modal(modal).show();
+		const modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
+		modalInstance.show();
 	}
 
 	private executeConfirmedAction(el: HTMLElement, e?: Event): void {
-		const detail = (e instanceof CustomEvent) ? e.detail : null;
+		const isAjax = el.classList.contains('ajax');
 
-		if (el instanceof HTMLAnchorElement && el.href) {
-			const isAjax = el.classList.contains('ajax');
-			if (isAjax && detail) {
-				if (typeof naja === 'undefined') {
-					console.error('Naja is not loaded, cannot execute AJAX request');
-					return;
-				}
-				const options = { ...detail.options, history: false };
-				naja.makeRequest(detail.method, detail.url, detail.payload, options);
+		if (el instanceof HTMLAnchorElement && el.href && isAjax) {
+			if (typeof naja === 'undefined') {
+				console.error('Naja is not loaded, cannot execute AJAX request');
 				return;
 			}
 
-			this.triggerNativeInteraction(el);
+			const method = el.getAttribute('data-method') ?? 'GET';
+			naja.makeRequest(method, el.href, null, { history: false });
 			return;
 		}
 
