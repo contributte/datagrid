@@ -4,9 +4,14 @@
  */
 import { Datagrid } from "../../datagrid";
 import { DatagridPlugin } from "../../types";
+import naja from "naja";
 
-declare const bootstrap: any;
-declare const naja: any;
+interface NajaInteractDetail {
+	method: string;
+	url: string;
+	payload: any;
+	options: Record<string, any>;
+}
 
 export const ConfirmAttribute = "data-datagrid-confirm";
 
@@ -62,7 +67,6 @@ export class ConfirmPlugin implements DatagridPlugin {
 
 	private showModalConfirm(modal: HTMLElement, message: string, el: HTMLElement, e: Event): void {
 		if (typeof bootstrap === 'undefined') {
-			console.warn('Bootstrap is not loaded, falling back to native confirm');
 			if (window.confirm(message)) {
 				this.executeConfirmedAction(el, e);
 			}
@@ -73,7 +77,6 @@ export class ConfirmPlugin implements DatagridPlugin {
 		const confirmButton = this.getElement(this.confirmButtonId);
 
 		if (!messageBox || !confirmButton) {
-			console.warn('Missing modal elements: messageBox or confirmButton');
 			if (window.confirm(message)) {
 				this.executeConfirmedAction(el, e);
 			}
@@ -95,16 +98,21 @@ export class ConfirmPlugin implements DatagridPlugin {
 	}
 
 	private executeConfirmedAction(el: HTMLElement, e?: Event): void {
+		const detail: NajaInteractDetail | null = (e instanceof CustomEvent ? (e.detail as NajaInteractDetail) : null);
 		const isAjax = el.classList.contains('ajax');
 
 		if (el instanceof HTMLAnchorElement && el.href && isAjax) {
 			if (typeof naja === 'undefined') {
-				console.error('Naja is not loaded, cannot execute AJAX request');
 				return;
 			}
 
-			const method = el.getAttribute('data-method') ?? 'GET';
-			naja.makeRequest(method, el.href, null, { history: false });
+			if (detail && typeof detail.method === 'string' && typeof detail.url === 'string') {
+				const options = { ...detail.options, history: false };
+				naja.makeRequest(detail.method, detail.url, detail.payload ?? null, options);
+			} else {
+				const method = el.getAttribute('data-naja-method') ?? 'GET';
+				naja.makeRequest(method, el.href, null, { history: false });
+			}
 			return;
 		}
 
