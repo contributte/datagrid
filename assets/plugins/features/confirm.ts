@@ -4,7 +4,6 @@
  */
 import { Datagrid } from "../../datagrid";
 import { DatagridPlugin } from "../../types";
-import naja from "naja";
 
 interface NajaInteractDetail {
 	method: string;
@@ -98,7 +97,12 @@ export class ConfirmPlugin implements DatagridPlugin {
 	}
 
 	private executeConfirmedAction(el: HTMLElement, e?: Event): void {
-		const detail: NajaInteractDetail | null = (e instanceof CustomEvent ? (e.detail as NajaInteractDetail) : null);
+		//const detail: NajaInteractDetail | null = (e instanceof CustomEvent ? (e.detail as NajaInteractDetail) : null);
+		const detail: NajaInteractDetail | null = (
+			e instanceof CustomEvent &&
+			e.detail &&
+			typeof e.detail === 'object'
+		) ? e.detail as NajaInteractDetail : null;
 		const isAjax = el.classList.contains('ajax');
 
 		if (el instanceof HTMLAnchorElement && el.href && isAjax) {
