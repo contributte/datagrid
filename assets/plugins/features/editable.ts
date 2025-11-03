@@ -61,6 +61,8 @@ export class EditablePlugin implements DatagridPlugin {
 							input.setAttribute("value", valueToEdit);
 					}
 
+					input.focus();
+
 					const attributes = JSON.parse(cell.getAttribute(EditableAttrsAttribute) ?? "{}");
 					for (const key in attributes) {
 						const value = attributes[key];
