@@ -15,7 +15,7 @@ jobs:
     name: "Nette Tester"
     uses: contributte/.github/.github/workflows/nette-tester-mysql.yml@v1
     with:
-      php: "8.4"
+      php: "8.5"
       database: tests
       coverage: true
       make: coverage
