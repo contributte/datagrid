@@ -15,4 +15,4 @@ jobs:
     name: "Phpstan"
     uses: contributte/.github/.github/workflows/phpstan.yml@master
     with:
-      php: "8.4"
+      php: "8.5"
