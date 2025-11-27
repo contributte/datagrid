@@ -30,11 +30,11 @@ parameters:
 			count: 1
 			path: src/DataSource/DibiFluentMssqlDataSource.php
 		-
-			message: "#^Cannot call method filterData\\(\\) on Contributte\\\\Datagrid\\\\DataModel\\|null\\.$#"
+			message: "#^Cannot call method filterData\\(\\) on Contributte\\\\Datagrid\\\\AbstractDataModel\\|null\\.$#"
 			count: 1
 			path: src/Datagrid.php
 		-
-			message: "#^Cannot call method filterRow\\(\\) on Contributte\\\\Datagrid\\\\DataModel\\|null\\.$#"
+			message: "#^Cannot call method filterRow\\(\\) on Contributte\\\\Datagrid\\\\AbstractDataModel\\|null\\.$#"
 			count: 1
 			path: src/Datagrid.php
 		- # In PHP 8+, the Stringable typehint should be used, and this can be removed.

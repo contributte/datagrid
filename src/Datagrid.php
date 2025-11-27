@@ -183,7 +183,7 @@ class Datagrid extends Control
 	/** @var array<ToolbarButton> */
 	protected array $toolbarButtons = [];
 
-	protected ?DataModel $dataModel = null;
+	protected ?AbstractDataModel $dataModel = null;
 
 	protected string $primaryKey = 'id';
 
@@ -344,7 +344,7 @@ class Datagrid extends Control
 		/**
 		 * Check whether datagrid has set some columns, initiated data source, etc
 		 */
-		if (!($this->dataModel instanceof DataModel)) {
+		if (!($this->dataModel instanceof AbstractDataModel)) {
 			throw new DatagridException('You have to set a data source first.');
 		}
 
@@ -469,7 +469,7 @@ class Datagrid extends Control
 	 */
 	public function setPrimaryKey(string $primaryKey): self
 	{
-		if ($this->dataModel instanceof DataModel) {
+		if ($this->dataModel instanceof AbstractDataModel) {
 			throw new DatagridException('Please set datagrid primary key before setting datasource.');
 		}
 
@@ -481,10 +481,18 @@ class Datagrid extends Control
 	/**
 	 * @return static
 	 * @throws InvalidArgumentException
+	 * @throws DatagridException
 	 */
 	public function setDataSource(mixed $source): self
 	{
-		$this->dataModel = new DataModel($source, $this->primaryKey);
+		$this->setDataModel(new DataModel($source, $this->primaryKey));
+
+		return $this;
+	}
+
+	public function setDataModel(AbstractDataModel $dataModel): self
+	{
+		$this->dataModel = $dataModel;
 
 		$this->dataModel->onBeforeFilter[] = [$this, 'beforeDataModelFilter'];
 		$this->dataModel->onAfterFilter[] = [$this, 'afterDataModelFilter'];
