@@ -10,7 +10,7 @@ export const EditableElementAttribute = "data-datagrid-editable-element";
 
 export const EditableValueAttribute = "data-datagrid-editable-value";
 
-export const EditableAttrsAttribute = "datagrid-editable-attrs";
+export const EditableAttrsAttribute = "data-datagrid-editable-attrs";
 
 export class EditablePlugin implements DatagridPlugin {
 	onDatagridInit(datagrid: Datagrid): boolean {
