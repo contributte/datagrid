@@ -91,7 +91,7 @@ class ColumnLink extends Column
 		}
 
 		if ($this->isTemplateEscaped()) {
-			$a->addText($value);
+			$a->addText((string) $value);
 		} else {
 			$a->addHtml($value);
 		}
