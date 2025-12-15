@@ -11,8 +11,6 @@ export class InlinePlugin implements DatagridPlugin {
 			if (!payload._datagrid_name || payload._datagrid_name !== datagrid.name) return;
 
 			if (payload._datagrid_inline_edited || payload._datagrid_inline_edit_cancel) {
-				const trigger = datagrid.el.querySelector('.datagrid-inline-edit-trigger');
-
 				if (payload._datagrid_inline_edited) {
 					let rows = datagrid.el.querySelectorAll<HTMLTableCellElement>(
 						`tr[data-id='${payload._datagrid_inline_edited}'] > td`
@@ -20,10 +18,9 @@ export class InlinePlugin implements DatagridPlugin {
 
 					rows.forEach(row => {
 						row.classList.add("edited");
-					})
+					});
 				}
 
-				trigger?.classList.remove("hidden");
 				return;
 			}
 
@@ -35,11 +32,6 @@ export class InlinePlugin implements DatagridPlugin {
 						"input:not([readonly]), textarea:not([readonly])"
 					)?.focus();
 				}
-			}
-
-			if (payload._datagrid_inline_editing) {
-				datagrid.el.querySelector<HTMLElement>(".datagrid-inline-edit-trigger")
-					?.classList.add("hidden");
 			}
 
 			datagrid.el.querySelectorAll<HTMLElement>(".datagrid-inline-edit input").forEach(inputEl => {
