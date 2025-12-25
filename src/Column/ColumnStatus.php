@@ -6,7 +6,6 @@ use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Exception\DatagridColumnStatusException;
 use Contributte\Datagrid\Row;
 use Contributte\Datagrid\Status\Option;
-use Contributte\Datagrid\Traits\TButtonCaret;
 use Contributte\Datagrid\Traits\TRenderCondition;
 use Nette\SmartObject;
 
@@ -16,7 +15,6 @@ use Nette\SmartObject;
 class ColumnStatus extends Column
 {
 
-	use TButtonCaret;
 	use SmartObject;
 	use TRenderCondition;
 

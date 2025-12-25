@@ -27,7 +27,6 @@ final class ColumnStatusTest extends TestCase
 		$grid = $this->grid;
 
 		$grid->addColumnStatus('status', 'Status')
-			->setCaret(false)
 			->addOption(1, 'Online')
 			->setIcon('check')
 			->setClass('btn-success')

@@ -5,7 +5,6 @@ namespace Contributte\Datagrid\Column;
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Exception\DatagridException;
 use Contributte\Datagrid\Row;
-use Contributte\Datagrid\Traits\TButtonCaret;
 use Contributte\Datagrid\Traits\TButtonClass;
 use Contributte\Datagrid\Traits\TButtonIcon;
 use Contributte\Datagrid\Traits\TButtonText;
@@ -22,7 +21,6 @@ class MultiAction extends Column
 	use TButtonClass;
 	use TButtonTitle;
 	use TButtonText;
-	use TButtonCaret;
 	use TLink;
 
 	protected Datagrid $grid;
@@ -50,11 +48,6 @@ class MultiAction extends Column
 		$this->tryAddIcon($button, $this->getIcon(), $this->getName());
 
 		$button->addText($this->grid->getTranslator()->translate($this->name));
-
-		if ($this->hasCaret()) {
-			$button->addHtml('&nbsp;');
-			$button->addHtml('<i class="caret"></i>');
-		}
 
 		if ($this->getTitle() !== null) {
 			$button->setAttribute(
