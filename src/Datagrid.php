@@ -403,7 +403,7 @@ class Datagrid extends Control
 		}
 
 		if ($this->isTreeView()) {
-			$template->add('treeViewHasChildrenColumn', $this->treeViewHasChildrenColumn);
+			$template->treeViewHasChildrenColumn = $this->treeViewHasChildrenColumn;
 		}
 
 		$template->rows = $rows;
@@ -1903,7 +1903,7 @@ class Datagrid extends Control
 			throw new UnexpectedValueException();
 		}
 
-		$template->add('toggle_detail', $id);
+		$template->toggle_detail = $id;
 
 		if ($this->itemsDetail === null) {
 			throw new UnexpectedValueException();
