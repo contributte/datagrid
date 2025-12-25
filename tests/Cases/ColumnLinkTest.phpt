@@ -69,6 +69,33 @@ final class ColumnLinkTest extends TestCase
 		Assert::same('<a href="name?id=1" title="Hello">John</a>', $this->render($link));
 	}
 
+	public function testLinkIcon(): void
+	{
+		$link = $this->grid->addColumnLink('name', 'Href')->setIcon('edit');
+		Assert::same('<a href="name?id=1"><i class="fas fa-edit"></i>&nbsp;John</a>', $this->render($link));
+
+		$link->setIcon(null);
+		Assert::same('<a href="name?id=1">John</a>', $this->render($link));
+	}
+
+	public function testLinkData(): void
+	{
+		$link = $this->grid->addColumnLink('name', 'Href')->setDataAttribute('action', 'delete');
+		Assert::same('<a href="name?id=1" data-action="delete">John</a>', $this->render($link));
+
+		$link->setDataAttribute('toggle', 'modal');
+		Assert::same('<a href="name?id=1" data-action="delete" data-toggle="modal">John</a>', $this->render($link));
+	}
+
+	public function testLinkOpenInNewTab(): void
+	{
+		$link = $this->grid->addColumnLink('name', 'Href')->setOpenInNewTab();
+		Assert::same('<a href="name?id=1" target="_blank">John</a>', $this->render($link));
+
+		$link->setOpenInNewTab(false);
+		Assert::same('<a href="name?id=1">John</a>', $this->render($link));
+	}
+
 }
 
 

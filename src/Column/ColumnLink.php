@@ -82,7 +82,7 @@ class ColumnLink extends Column
 
 		if ($this->icon !== null) {
 			$a->addHtml(
-				Html::el('span')->setAttribute('class', Datagrid::$iconPrefix . $this->icon)
+				Html::el('i')->setAttribute('class', Datagrid::$iconPrefix . $this->icon)
 			);
 
 			if (strlen($value) > 0) {
