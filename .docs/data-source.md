@@ -14,7 +14,7 @@ There are these supported datasources so far:
 - Nextras (Collection)
 - Dibi (DibiFluent)
 - Dibi (DibiFluent) for MS-SQL
-- Nette\Database (Please see it's documentation [here](https://github.com/contributte/datagrid-nette-database-data-source))
+- Nette\Database (Please see its documentation [here](https://github.com/contributte/datagrid-nette-database-data-source))
 - Nette\Database\Table
 - Nette\Database\Table (for MS-SQL)
 - Nette\Database\Table (for PostgreSQL)
@@ -66,7 +66,7 @@ The idea is simply to forward filtering/sorting/limit/... to remote api. Feel fr
 
 ## NextrasDataSource
 
-There is one specific behaviour when using Nextras ORM. When custom filter conditions are used, user has to work not with given `Collection` instance, but with `Collection::getQueryBuilder()`. That snippet of code will not work correctly, because `DbalCollection` calls clone on each of it's methods:
+There is one specific behaviour when using Nextras ORM. When custom filter conditions are used, user has to work not with given `Collection` instance, but with `Collection::getQueryBuilder()`. That snippet of code will not work correctly, because `DbalCollection` calls clone on each of its methods:
 
 ```php
 $grid->getFilter('name')

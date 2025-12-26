@@ -25,10 +25,10 @@ composer require ublaboo/datagrid
 	- Nextras (Collection)
 	- Dibi (DibiFluent)
 	- Dibi (DibiFluent) for MS-SQL
-	- Nette\Database (Please see it's documentation [here](https://github.com/contributte/datagrid-nette-database-data-source))
+	- Nette\Database (Please see its documentation [here](https://github.com/contributte/datagrid-nette-database-data-source))
 	- Nette\Database\Table
 	- Nette\Database\Table (for MS-SQL)
-	- Nette\Database\Table (for PostreSQL)
+	- Nette\Database\Table (for PostgreSQL)
 	- Array
 	- Elasticsearch (Please see the documentation [here](https://github.com/contributte/datagrid-elasticsearch-data-source))
 	- Remote Api
@@ -68,12 +68,14 @@ use Contributte\Datagrid\Datagrid;
 class SimplePresenter extends BasePresenter
 {
 
-	public function createComponentSimpleGrid($name)
+	public function createComponentSimpleGrid($name): Datagrid
 	{
 		$grid = new Datagrid($this, $name);
 
 		$grid->setDataSource($this->db->select('*')->from('example'));
 		$grid->addColumnText('name', 'Name');
+
+		return $grid;
 	}
 
 }

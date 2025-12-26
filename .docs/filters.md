@@ -39,7 +39,7 @@ $grid->addColumnText('name', 'Name')
 	->setFilterText();
 ```
 
-There are several filter classes and they all have some common behaviour and properties. Let's start with parameters, I will take a `FiterText` as an example.
+There are several filter classes and they all have some common behaviour and properties. Let's start with parameters, I will take a `FilterText` as an example.
 
 ```php
 /**
@@ -107,7 +107,7 @@ There is how the default FilterText template looks like:
  *}
 
 <div class="row">
-	{label $input class =>; 'col-sm-3 control-label' /}
+	{label $input class => 'col-sm-3 control-label' /}
 	<div class="col-sm-9">
 		{input $input, class => 'form-control form-control-sm', data-autosubmit => true}
 	</div>
@@ -183,15 +183,15 @@ Again, you can use custom condition callback, the same in all other filters.
 Api of `FilterMultiSelect` is the same as of FilterSelect
 
 ```php
-$grid->addFilterMultiSelect('status', 'Status:', [1 => 'On', 2 => 'Off', 2 => 'Another option']);
+$grid->addFilterMultiSelect('status', 'Status:', [1 => 'On', 2 => 'Off', 3 => 'Another option']);
 ```
 
-Keep in mind that `FilterMultiSelect` uses `bootstrap-select` JS library. Read more on [Introduction](index.md).
+Keep in mind that `FilterMultiSelect` uses a selectpicker JS library. Read more in [Assets](assets.md).
 
 ## FilterDate
 
 ```php
-$grid->addFilterDate('created', 'User registerd on');
+$grid->addFilterDate('created', 'User registered on');
 ```
 
 This filter also has some special features. First, it shows datepicker. Second, You can set date format. Sadly, JavaScript has different date formatting modifiers, so you have to set them both at once:
@@ -201,7 +201,7 @@ This filter also has some special features. First, it shows datepicker. Second, 
  * This is default formatting
  * $php_format, $js_format
  */
-$grid->addFilterDate('created', 'User registerd on')
+$grid->addFilterDate('created', 'User registered on')
 	->setFormat('j. n. Y', 'd. m. yyyy');
 ```
 
@@ -245,10 +245,10 @@ $grid->setDefaultFilter(['status' => [1], 'age' => ['from' => 18]]);
 
 ### Resetting filter to default values
 
-By default, once you reset the filter, default fitler values are applied. If you don't want to apply them after resetting the filter, pass false as a second parameter to `Datagrid::setDefaultFilter()`:
+By default, once you reset the filter, default filter values are applied. If you don't want to apply them after resetting the filter, pass false as a second parameter to `Datagrid::setDefaultFilter()`:
 
 ```php
-$grid->setDefaultFilter('id' => 10, false);
+$grid->setDefaultFilter(['id' => 10], false);
 ```
 
 ## Filters rendering

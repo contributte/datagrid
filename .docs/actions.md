@@ -75,7 +75,7 @@ Action title can be defined by custom callback same as title or class.
 ```php
 $grid->addAction('delete', '', 'delete!')
 	->setIcon('trash')
-	->setTitle('Smazat')
+	->setTitle('Delete')
 	->setClass('btn btn-xs btn-danger <strong class="text-danger">ajax</strong>')
 	->setConfirmation(
 		new StringConfirmation('Do you really want to delete row %s?', 'name') // Second parameter is optional
@@ -150,7 +150,7 @@ When you are updating row data (i.e. status), you can send only one row as snipp
 ```php
 public function handleSetStatus($id, $status)
 {
-	$this->connection->update('example', ['status' => $satatus])
+	$this->connection->update('example', ['status' => $status])
 		->where('id = ?', $id)
 		->execute();
 
@@ -162,7 +162,7 @@ public function handleSetStatus($id, $status)
 	} else {
 		$this->redirect('this');
 	}
-
+}
 ```
 
 # Sortable

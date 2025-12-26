@@ -2,84 +2,80 @@
 
 This document lists typos, grammar issues, and missing/incorrect sections found in the documentation.
 
-## Typos
+## Typos (FIXED)
+
+The following typos have been fixed:
 
 ### introduction.md
-- **Line 28**: `PostreSQL` should be `PostgreSQL`
-- **Line 77**: Example factory is missing `return $grid;` statement at the end
+- [x] `PostreSQL` -> `PostgreSQL`
+- [x] `it's documentation` -> `its documentation`
+- [x] Added missing `return $grid;` statement and return type
 
 ### columns.md
-- **Line 57**: `it's own template` should be `its own template` (possessive, not contraction)
-- **Line 230**: `a>` should be `<a>` (HTML tag rendering issue)
-- **Line 480**: `th>` and `td>` should be `<th>` and `<td>` (missing opening brackets)
-- **Line 492**: Same as above - `th>` and `td>` should be `<th>` and `<td>`
-- **Line 533**: Comment says `id == 1` but the condition in code is `id == 2` - inconsistent
+- [x] `it's own template` -> `their own template`
+- [x] `a>` -> `<a>` (HTML tag)
+- [x] `th>` and `td>` -> `<th>` and `<td>`
+- [x] `from it's column` -> `from its column`
+- [x] `id == 1` -> `id == 2` (corrected comment)
 
 ### filters.md
-- **Line 42**: `FiterText` should be `FilterText`
-- **Line 186**: Duplicate key `2` in array: `[1 => 'On', 2 => 'Off', 2 => 'Another option']` - third should be `3`
-- **Line 189**: References `[Introduction](index.md)` but file should be `introduction.md` or `README.md`
-- **Line 194**: `User registerd` should be `User registered`
-- **Line 204**: `User registerd` should be `User registered` (same typo again)
-- **Line 248**: `fitler` should be `filter`
-- **Line 251**: Missing array brackets - should be `$grid->setDefaultFilter(['id' => 10], false);`
-- **Line 110**: Extra semicolon in Latte: `class =>;` should be `class =>`
+- [x] `FiterText` -> `FilterText`
+- [x] Duplicate key `2` -> `3` in array
+- [x] `[Introduction](index.md)` -> `[Assets](assets.md)`
+- [x] `User registerd` -> `User registered` (both occurrences)
+- [x] `fitler` -> `filter`
+- [x] Added missing array brackets in `setDefaultFilter()`
+- [x] `class =>;` -> `class =>`
 
 ### actions.md
-- **Line 78**: `Smazat` is Czech - should use English `Delete` in English docs
-- **Line 153**: Variable typo `$satatus` should be `$status`
-- **Line 166**: Missing closing brace `}` for the function
+- [x] `Smazat` -> `Delete`
+- [x] `$satatus` -> `$status`
+- [x] Added missing closing brace `}`
 
 ### data-source.md
-- **Line 17**: `it's documentation` should be `its documentation` (possessive)
+- [x] `it's documentation` -> `its documentation`
+- [x] `each of it's methods` -> `each of its methods`
 
 ### row.md
-- **Line 16**: Awkward phrasing `Now all rows have to provide group action` - should be `Not all rows have to provide group action`
-- **Line 59**: `canDispleyProfile` should be `canDisplayProfile`
-- **Line 66**: `canDispleySettings` should be `canDisplaySettings`
+- [x] `Now all rows` -> `Not all rows`
+- [x] `canDispleyProfile` -> `canDisplayProfile`
+- [x] `canDispleySettings` -> `canDisplaySettings`
 
 ### inline-edit.md
-- **Line 57**: Section title `Render different content then is edited` - `then` should be `than`
-- **Line 82**: `useage` should be `usage`
+- [x] `then is edited` -> `than is edited`
+- [x] `useage` -> `usage`
+- [x] `Bud if` -> `But if`
 
 ### group-action.md
-- **Line 109**: Missing closing parenthesis in sprintf call
+- [x] Added missing closing parenthesis in sprintf call
 
 ### assets.md
-- **Line 99**: `There are prepare JS/TS` should be `There are prepared JS/TS`
-- **Line 103-104**: List numbering is reversed (shows 2 then 1, should be 1 then 2)
+- [x] `There are prepare` -> `There are prepared`
+- [x] Fixed list numbering (2, 1 -> 1, 2)
 
 ### template.md
-- **Line 72**: Missing space: `table-hovertable-condensed` should be `table-hover table-condensed`
+- [x] `table-hovertable-condensed` -> `table-hover table-condensed`
 
 ### localization.md
-- **Line 7**: `czech` should be capitalized as `Czech`
+- [x] `czech` -> `Czech`
+- [x] Added missing `return $grid;` statement
 
-## Grammar and Style Issues
+### export.md
+- [x] `i don't like` -> `I don't like`
+- [x] Added missing `of` in sentence
+
+## Still Pending - Grammar and Style Issues
 
 ### Informal Tone (consider revising for consistency)
 - **columns.md line 78**: "But hey, what if I want to replace..."
 - **columns.md line 239**: "Well, not id, more likely `$primary_key`..."
 - **data-source.md line 55**: "The idea is simply to forward..." and "Feel free to leave me a comment..."
-- **export.md line 40**: "i don't like the idea" should be "I don't like the idea"
 
 ### Inconsistent Terminology
 - `datasource` vs `data source` - used inconsistently throughout docs
 - `datagrid` vs `Datagrid` vs `DataGrid` - should be consistent
 
-### Missing Return Types in Examples
-- **introduction.md line 71-78**: Factory method should have return type and return statement:
-  ```php
-  public function createComponentSimpleGrid($name): Datagrid
-  {
-      $grid = new Datagrid($this, $name);
-      // ...
-      return $grid;
-  }
-  ```
-- **localization.md line 10-47**: Same issue - method declares return type but doesn't return
-
-## Missing Documentation Sections
+## Still Pending - Missing Documentation Sections
 
 ### Completely Missing Topics
 1. **Aggregation Functions**: Only `FunctionSum` is documented, but other aggregation functions and how to create custom ones needs more detail
@@ -130,11 +126,10 @@ This document lists typos, grammar issues, and missing/incorrect sections found 
   - How to migrate from old session storage to new custom storage
   - Thread-safety considerations for custom implementations
 
-## Code Alignment Issues
+## Still Pending - Code Alignment Issues
 
 ### Outdated/Incorrect References
 1. **filters.md line 135**: References `vendor/ublaboo/datagrid/src/templates/datagrid_filter_text.latte` - verify path is correct
-2. **filters.md line 189**: Link to `index.md` doesn't exist
 
 ### API Changes Not Reflected
 - Verify all documented method signatures match actual code
@@ -142,17 +137,16 @@ This document lists typos, grammar issues, and missing/incorrect sections found 
 
 ## Recommendations
 
-### High Priority
-1. Fix all typos (especially `PostreSQL`, `registerd`, `FiterText`)
-2. Add missing return statements in example code
-3. Fix the broken link to `index.md`
-4. Complete the empty "Filter type blocks" section
+### High Priority (DONE)
+1. ~~Fix all typos (especially `PostreSQL`, `registerd`, `FiterText`)~~
+2. ~~Add missing return statements in example code~~
+3. ~~Fix the broken link to `index.md`~~
 
 ### Medium Priority
-1. Standardize terminology (datasource vs data source)
-2. Add missing documentation for `addGroupTextareaAction()`
-3. Document the difference between `EditablePlugin` and `InlinePlugin`
-4. Add return types to all example factory methods
+1. Complete the empty "Filter type blocks" section
+2. Standardize terminology (datasource vs data source)
+3. Add missing documentation for `addGroupTextareaAction()`
+4. Document the difference between `EditablePlugin` and `InlinePlugin`
 
 ### Low Priority
 1. Consider adjusting informal tone for consistency
