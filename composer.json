@@ -32,7 +32,7 @@
     "symfony/property-access": "^6.4.0 || ^7.2.0"
   },
   "require-dev": {
-    "contributte/qa": "^0.3.0",
+    "contributte/qa": "^0.4.0",
     "dibi/dibi": "^5.0.2",
     "doctrine/annotations": "^1.14.4",
     "doctrine/cache": "^1.13.0",
