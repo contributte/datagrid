@@ -84,7 +84,6 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 			$reflection = new ReflectionClass(Fluent::class);
 
 			$cursorProperty = $reflection->getProperty('cursor');
-			$cursorProperty->setAccessible(true);
 			$cursor = $cursorProperty->getValue($this->dataSource);
 
 			if (!(bool) $cursor) {

@@ -187,7 +187,7 @@ class GroupActionCollection
 
 				$form['group_action']['group_action']->setValue(null);
 			}
-		} else {
+		} elseif ($submitter->getName() !== null && array_key_exists($submitter->getName(), $this->groupActions)) {
 			$groupButtonAction = $this->groupActions[$submitter->getName()];
 
 			if (!$groupButtonAction instanceof GroupButtonAction) {
@@ -195,6 +195,8 @@ class GroupActionCollection
 			}
 
 			$groupButtonAction->onClick($ids);
+		} else {
+			throw new DatagridGroupActionException('Unknown submitter in group action form.');
 		}
 	}
 
