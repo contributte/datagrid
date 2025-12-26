@@ -22,7 +22,6 @@ final class NetteDatabaseSelectionHelper
 		$reflection = new ReflectionClass($selection);
 
 		$explorerProperty = $reflection->getProperty('explorer');
-		$explorerProperty->setAccessible(true);
 
 		return $explorerProperty->getValue($selection);
 	}

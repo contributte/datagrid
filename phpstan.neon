@@ -14,6 +14,8 @@ parameters:
 
 	ignoreErrors:
 		-
+			identifier: arrayFilter.strict
+		-
 			message: '/^Instanceof between Contributte\\Datagrid\\Filter\\Filter and Contributte\\Datagrid\\Filter\\FilterDateRange will always evaluate to false\.$/'
 			count: 1
 			path: src/Datagrid.php

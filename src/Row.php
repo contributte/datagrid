@@ -205,7 +205,7 @@ class Row
 				if ($this->datagrid->strictEntityProperty) {
 					throw new DatagridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
-						$value,
+						var_export($value, true),
 						str_replace('.', '->', $key)
 					));
 				}

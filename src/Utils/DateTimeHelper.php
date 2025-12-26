@@ -5,7 +5,6 @@ namespace Contributte\Datagrid\Utils;
 use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
 use DateTime;
 use DateTimeImmutable;
-use DateTimeZone;
 
 final class DateTimeHelper
 {
@@ -55,9 +54,7 @@ final class DateTimeHelper
 		}
 
 		if ($value instanceof DateTimeImmutable) {
-			/** @var DateTimeZone|false $tz */
-			$tz = $value->getTimezone();
-			$date = new DateTime('now', $tz !== false ? $tz : null);
+			$date = new DateTime('now', $value->getTimezone());
 			$date->setTimestamp($value->getTimestamp());
 
 			return $date;
