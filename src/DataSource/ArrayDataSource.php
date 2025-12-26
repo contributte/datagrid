@@ -236,48 +236,56 @@ class ArrayDataSource implements IDataSource
 		$row_value = $row[$filter->getColumn()];
 
 		if ($values['from'] !== null && $values['from'] !== '') {
-			$date_from = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
-			$date_from->setTime(0, 0, 0);
+			try {
+				$date_from = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
+				$date_from->setTime(0, 0, 0);
 
-			if (!($row_value instanceof DateTime)) {
-				/**
-				 * Try to convert string to DateTime object
-				 */
-				try {
-					$row_value = DateTimeHelper::tryConvertToDate($row_value);
-				} catch (DatagridDateTimeHelperException) {
+				if (!($row_value instanceof DateTime)) {
 					/**
-					 * Otherwise just return raw string
+					 * Try to convert string to DateTime object
 					 */
+					try {
+						$row_value = DateTimeHelper::tryConvertToDate($row_value);
+					} catch (DatagridDateTimeHelperException) {
+						/**
+						 * Otherwise just return raw string
+						 */
+						return false;
+					}
+				}
+
+				if ($row_value->getTimestamp() < $date_from->getTimestamp()) {
 					return false;
 				}
-			}
-
-			if ($row_value->getTimestamp() < $date_from->getTimestamp()) {
-				return false;
+			} catch (DatagridDateTimeHelperException) {
+				// ignore the invalid filter value and continue to check "to" date
 			}
 		}
 
 		if ($values['to'] !== null && $values['to'] !== '') {
-			$date_to = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
-			$date_to->setTime(23, 59, 59);
+			try {
+				$date_to = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
+				$date_to->setTime(23, 59, 59);
 
-			if (!($row_value instanceof DateTime)) {
-				/**
-				 * Try to convert string to DateTime object
-				 */
-				try {
-					$row_value = DateTimeHelper::tryConvertToDate($row_value);
-				} catch (DatagridDateTimeHelperException) {
+				if (!($row_value instanceof DateTime)) {
 					/**
-					 * Otherwise just return raw string
+					 * Try to convert string to DateTime object
 					 */
+					try {
+						$row_value = DateTimeHelper::tryConvertToDate($row_value);
+					} catch (DatagridDateTimeHelperException) {
+						/**
+						 * Otherwise just return raw string
+						 */
+						return false;
+					}
+				}
+
+				if ($row_value->getTimestamp() > $date_to->getTimestamp()) {
 					return false;
 				}
-			}
-
-			if ($row_value->getTimestamp() > $date_to->getTimestamp()) {
-				return false;
+			} catch (DatagridDateTimeHelperException) {
+				// ignore the invalid filter value
 			}
 		}
 
@@ -295,7 +303,12 @@ class ArrayDataSource implements IDataSource
 		foreach ($condition as $column => $value) {
 			$row_value = $row[$column];
 
-			$date = DateTimeHelper::tryConvertToDateTime($value, [$format]);
+			try {
+				$date = DateTimeHelper::tryConvertToDateTime($value, [$format]);
+			} catch (DatagridDateTimeHelperException) {
+				// ignore the invalid filter value
+				return true;
+			}
 
 			if (!($row_value instanceof DateTime)) {
 				/**

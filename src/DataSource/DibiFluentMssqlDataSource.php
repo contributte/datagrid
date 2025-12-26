@@ -84,19 +84,33 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$valueTo = $conditions[$filter->getColumn()]['to'];
 
 		if ($valueFrom) {
-			$this->dataSource->where(
-				'CONVERT(varchar(10), %n, 112) >= ?',
-				$filter->getColumn(),
-				$valueFrom
-			);
+			try {
+				$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
+				$dateFrom->setTime(0, 0, 0);
+
+				$this->dataSource->where(
+					'CONVERT(varchar(10), %n, 112) >= ?',
+					$filter->getColumn(),
+					$dateFrom->format('Ymd')
+				);
+			} catch (DatagridDateTimeHelperException) {
+				// ignore the invalid filter value
+			}
 		}
 
 		if ($valueTo) {
-			$this->dataSource->where(
-				'CONVERT(varchar(10), %n, 112) <= ?',
-				$filter->getColumn(),
-				$valueTo
-			);
+			try {
+				$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
+				$dateTo->setTime(23, 59, 59);
+
+				$this->dataSource->where(
+					'CONVERT(varchar(10), %n, 112) <= ?',
+					$filter->getColumn(),
+					$dateTo->format('Ymd')
+				);
+			} catch (DatagridDateTimeHelperException) {
+				// ignore the invalid filter value
+			}
 		}
 	}
 

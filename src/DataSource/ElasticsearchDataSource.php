@@ -2,6 +2,7 @@
 
 namespace Contributte\Datagrid\DataSource;
 
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
 use Contributte\Datagrid\Filter\FilterDate;
 use Contributte\Datagrid\Filter\FilterDateRange;
 use Contributte\Datagrid\Filter\FilterMultiSelect;
@@ -86,21 +87,22 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 	public function applyFilterDate(FilterDate $filter): void
 	{
 		foreach ($filter->getCondition() as $column => $value) {
-			$timestampFrom = null;
-			$timestampTo = null;
-
 			if ($value) {
-				$dateFrom = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
-				$dateFrom->setTime(0, 0, 0);
+				try {
+					$dateFrom = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+					$dateFrom->setTime(0, 0, 0);
 
-				$timestampFrom = $dateFrom->getTimestamp();
+					$timestampFrom = $dateFrom->getTimestamp();
 
-				$dateTo = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
-				$dateTo->setTime(23, 59, 59);
+					$dateTo = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+					$dateTo->setTime(23, 59, 59);
 
-				$timestampTo = $dateTo->getTimestamp();
+					$timestampTo = $dateTo->getTimestamp();
 
-				$this->searchParamsBuilder->addRangeQuery($column, $timestampFrom, $timestampTo);
+					$this->searchParamsBuilder->addRangeQuery($column, $timestampFrom, $timestampTo);
+				} catch (DatagridDateTimeHelperException) {
+					// ignore the invalid filter value
+				}
 			}
 		}
 	}
@@ -112,17 +114,25 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 			$timestampTo = null;
 
 			if ($values['from']) {
-				$dateFrom = DateTimeHelper::tryConvertToDateTime($values['from'], [$filter->getPhpFormat()]);
-				$dateFrom->setTime(0, 0, 0);
+				try {
+					$dateFrom = DateTimeHelper::tryConvertToDateTime($values['from'], [$filter->getPhpFormat()]);
+					$dateFrom->setTime(0, 0, 0);
 
-				$timestampFrom = $dateFrom->getTimestamp();
+					$timestampFrom = $dateFrom->getTimestamp();
+				} catch (DatagridDateTimeHelperException) {
+					// ignore the invalid filter value
+				}
 			}
 
 			if ($values['to']) {
-				$dateTo = DateTimeHelper::tryConvertToDateTime($values['to'], [$filter->getPhpFormat()]);
-				$dateTo->setTime(23, 59, 59);
+				try {
+					$dateTo = DateTimeHelper::tryConvertToDateTime($values['to'], [$filter->getPhpFormat()]);
+					$dateTo->setTime(23, 59, 59);
 
-				$timestampTo = $dateTo->getTimestamp();
+					$timestampTo = $dateTo->getTimestamp();
+				} catch (DatagridDateTimeHelperException) {
+					// ignore the invalid filter value
+				}
 			}
 
 			if (is_int($timestampFrom) || is_int($timestampTo)) {
