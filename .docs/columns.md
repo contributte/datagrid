@@ -54,7 +54,7 @@ $grid->addColumnText('name3', 'Name', 'name');
 
 ### Templates
 
-Columns may have it's own template. I will add one more parameter (optional) to the method `::setTemplate()`, just for fun:
+Columns may have their own template. I will add one more parameter (optional) to the method `::setTemplate()`, just for fun:
 
 ```php
 $grid->addColumnText('name', 'Name')
@@ -227,7 +227,7 @@ $grid->addColumnDateTime('created', 'Date registered')
 
 ## Column Link
 
-We can use column link to output a&gt; element:
+We can use column link to output an `<a>` element:
 
 ```php
 /**
@@ -380,7 +380,7 @@ $grid->addColumnNumber('out', 'Expenses')
 $grid->setColumnsSummary(['in', 'out']);
 ```
 
-Summary will be aligned to the same site as the column it is counting. By default, number format is taken also from it's column, but you can change the formatting (for each sum separately):
+Summary will be aligned to the same site as the column it is counting. By default, number format is taken also from its column, but you can change the formatting (for each sum separately):
 
 ```php
 $grid->setColumnsSummary(['in', 'out'])
@@ -476,7 +476,7 @@ $grid->setMultipleAggregationFunction(
 
 This aggregating is used along with `Dibi` in the demo.
 
-## Column (th&gt;, td&gt;) attributes
+## Column (`<th>`, `<td>`) attributes
 
 Since table cell elements are rendered using `Nette\Utils\Html`, you can easily alter their html attributes (class, data-attributes etc):
 
@@ -488,7 +488,7 @@ $th->data('foo', 'bar');
 $th->class('super-column')
 ```
 
-If you want to modify attributes for both th&gt; and td&gt; at one time, use directly Column::addCellAttributes():
+If you want to modify attributes for both `<th>` and `<td>` at one time, use directly Column::addCellAttributes():
 
 ```php
 $grid->addColumnText('name', 'Name')
@@ -529,7 +529,7 @@ $grid->addColumnCallback('link', function($column, $item) {
 });
 ```
 
-That is the code of the demo shown above. As you can see, item with id == 1 does have an empty link column and only 2 options in `ColumnStatus`.
+That is the code of the demo shown above. As you can see, item with id == 2 has an empty link column and only 2 options in `ColumnStatus`.
 
 
 ```php

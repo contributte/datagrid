@@ -37,7 +37,7 @@ $grid->addExportCsv('Csv export (filtered)', 'examples.csv')
 
 ## (Not) Using templates in CSV export
 
-ExportCsv ignores column template, because i don't like the idea Latte (templating engine for HTML) exporting data for CSV format. Using custom renderer sounds better to me in that case.
+ExportCsv ignores column template, because I don't like the idea of Latte (templating engine for HTML) exporting data for CSV format. Using custom renderer sounds better to me in that case.
 
 # Export columns
 

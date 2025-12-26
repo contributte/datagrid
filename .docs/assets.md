@@ -96,12 +96,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 # Installation
 
-There are prepare JS/TS and CSS files for precise functionality.
+There are prepared JS/TS and CSS files for precise functionality.
 
 You have 2 ways to use datagrid's assets:
 
-2. Use CDN assets.
-1. Use frontend bundler.
+1. Use CDN assets.
+2. Use frontend bundler.
 
 ## CDN
 

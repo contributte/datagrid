@@ -106,7 +106,7 @@ And the `::addNote()` method:
 public function addNote(array $ids, $value): void
 {
 	$this->flashMessage(
-		sprintf('Note [%s] was added to items with ID: [%s]', $value, implode(',', $ids),
+		sprintf('Note [%s] was added to items with ID: [%s]', $value, implode(',', $ids)),
 		'success'
 	);
 

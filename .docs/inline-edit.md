@@ -2,7 +2,7 @@
 
 - [Small inline editing](#small-inline-editing)
     - [Different input types and element attributes](#different-input-types-and-element-attributes)
-    - [Render different content then is edited](#render-different-content-then-is-edited)
+    - [Render different content than is edited](#render-different-content-than-is-edited)
 - [Big inline editing](#big-inline-editing)
     - [What happens after editing](#what-happens-after-editing)
     - [Show non editing Columns](#show-non-editing-columns)
@@ -54,7 +54,7 @@ $grid->addColumnText('name', 'Name')
 	]);
 ```
 
-## Render different content then is edited
+## Render different content than is edited
 
 ![different content](https://github.com/contributte/datagrid/blob/master/.docs/assets/inline_edit_2.gif?raw=true)
 
@@ -79,7 +79,7 @@ This one is much more powerful:
 
 ![Big inline editing](https://github.com/contributte/datagrid/blob/master/.docs/assets/big_inline_edit.gif?raw=true)
 
-Example useage:
+Example usage:
 
 ```php
 /**
@@ -116,7 +116,7 @@ $grid->getInlineEdit()->onSubmit[] = function($id, Nette\Utils\ArrayHash $values
 
 ## What happens after editing
 
-By default, after submitting inline edit, the row is redrawn and the green animated background is triggered. Bud if you want to do something else, you can, just create new listener to event `InlineEdit::onCustomRedraw()`:
+By default, after submitting inline edit, the row is redrawn and the green animated background is triggered. But if you want to do something else, you can, just create new listener to event `InlineEdit::onCustomRedraw()`:
 
 ```php
 /**

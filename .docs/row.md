@@ -13,7 +13,7 @@
 
 ### Allow Group Action
 
-Now all rows have to provide group action or editing. Or some other of your actions. You can forbid group actions rendering for some items like this:
+Not all rows have to provide group action or editing. Or some other of your actions. You can forbid group actions rendering for some items like this:
 
 ```php
 $grid->allowRowsGroupAction(function(Row $item): bool {
@@ -55,7 +55,7 @@ $grid->allowRowsMultiAction(
 	'goto',
 	'profile',
 	function($item): bool {
-		return $item->canDispleyProfile();
+		return $item->canDisplayProfile();
 	}
 );
 
@@ -63,7 +63,7 @@ $grid->allowRowsMultiAction(
 	'goto',
 	'settings',
 	function($item): bool {
-		return $item->canDispleySettings();
+		return $item->canDisplaySettings();
 	}
 );
 ```
