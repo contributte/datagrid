@@ -59,6 +59,57 @@ final class FilterTest extends TestCase
 		}, AbortException::class);
 	}
 
+	public function testEmptyFiltersAreNotAddedToPersistentParameter(): void
+	{
+		$factory = new TestingDatagridFactoryRouter();
+		/** @var Datagrid $grid */
+		$grid = $factory->createTestingDatagrid()->getComponent('grid');
+
+		// Add multiple filters
+		$grid->addFilterText('name', 'Name');
+		$grid->addFilterText('email', 'Email');
+		$grid->addFilterText('status', 'Status');
+
+		$filterForm = $grid->createComponentFilter();
+
+		// Set only some filters with values
+		$filterForm['filter']['name']->setValue('John');
+		$filterForm['filter']['email']->setValue(''); // Empty value
+		$filterForm['filter']['status']->setValue(null); // Null value
+
+		Assert::exception(function () use ($grid, $filterForm): void {
+			$grid->filterSucceeded($filterForm);
+		}, AbortException::class);
+
+		Assert::count(1, $grid->filter);
+		Assert::true(isset($grid->filter['name']));
+		Assert::equal('John', $grid->filter['name']);
+		Assert::false(isset($grid->filter['email']));
+		Assert::false(isset($grid->filter['status']));
+	}
+
+	public function testAllEmptyFiltersResultInNoFilterPersistence(): void
+	{
+		$factory = new TestingDatagridFactoryRouter();
+		/** @var Datagrid $grid */
+		$grid = $factory->createTestingDatagrid()->getComponent('grid');
+
+		$grid->addFilterText('name', 'Name');
+		$grid->addFilterText('email', 'Email');
+
+		$filterForm = $grid->createComponentFilter();
+
+		// Set all filters to empty values
+		$filterForm['filter']['name']->setValue('');
+		$filterForm['filter']['email']->setValue('');
+
+		Assert::exception(function () use ($grid, $filterForm): void {
+			$grid->filterSucceeded($filterForm);
+		}, AbortException::class);
+
+		Assert::count(0, $grid->filter);
+	}
+
 }
 
 (new FilterTest())->run();
