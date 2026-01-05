@@ -118,7 +118,8 @@ export class NajaAjax<C extends Naja = Naja, G extends Datagrid = Datagrid> exte
 	}
 
 	async request<D = {}, P = DatagridPayload>(args: RequestParams<D>): Promise<P> {
-		return await this.client.makeRequest(args.method, args.url, args.data) as P;
+		const options = { history: false, ...args.options };
+		return await this.client.makeRequest(args.method, args.url, args.data ?? null, options) as P;
 	}
 
 	async submitForm<E extends HTMLFormElement = HTMLFormElement, P = Payload>(element: E): Promise<P> {
