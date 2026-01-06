@@ -1376,7 +1376,14 @@ class Datagrid extends Control
 		}
 
 		$storedFilters = $this->getStorageData('_grid_filters', []);
+		$hasNonEmptyFilter = false;
+
 		foreach ($values as $key => $value) {
+			/**
+			 * Check if value is empty
+			 */
+			$isEmpty = is_iterable($value) ? ArraysHelper::testEmpty($value) : $value === '' || $value === null;
+
 			/**
 			 * Storage stuff
 			 */
@@ -1392,14 +1399,19 @@ class Datagrid extends Control
 			$storedFilters[(string) $key] = $value;
 
 			/**
-			 * Other stuff
+			 * Only add non-empty filters to the persistent parameter
 			 */
-			$this->filter[$key] = $value;
+			if (!$isEmpty) {
+				$this->filter[$key] = $value;
+				$hasNonEmptyFilter = true;
+			} else {
+				unset($this->filter[$key]);
+			}
 		}
 
 		$this->saveStorageData('_grid_filters', $storedFilters);
 
-		if ($values->count() > 0) {
+		if ($hasNonEmptyFilter) {
 			$this->saveStorageData('_grid_has_filtered', 1);
 		}
 
