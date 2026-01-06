@@ -1073,14 +1073,7 @@ class Datagrid extends Control
 	public function setDefaultFilter(array $defaultFilter, bool $useOnReset = true): self
 	{
 		foreach ($defaultFilter as $key => $value) {
-			/** @var Filter|null $filter */
 			$filter = $this->getFilter($key);
-
-			if ($filter === null) {
-				throw new DatagridException(
-					sprintf('Can not set default value to nonexisting filter [%s]', $key)
-				);
-			}
 
 			if ($filter instanceof FilterMultiSelect && !is_array($value)) {
 				throw new DatagridException(
