@@ -7,7 +7,8 @@ export interface BaseRequestParams {
 }
 
 export interface RequestParams<D = any> extends BaseRequestParams {
-	data: D;
+	data?: D;
+	options?: Record<string, any>;
 }
 
 export interface DatagridPayload {
