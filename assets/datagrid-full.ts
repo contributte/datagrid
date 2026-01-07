@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		.forEach(el => new Dropdown(el))
 
 	// Initialize Naja (nette ajax)
+	naja.defaultOptions.history = false;
 	naja.formsHandler.netteForms = netteForms;
 	naja.initialize();
 
