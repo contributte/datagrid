@@ -4,6 +4,8 @@
  */
 import { Datagrid } from "../../datagrid";
 import { DatagridPlugin } from "../../types";
+import * as bootstrap from "bootstrap";
+import naja from "naja";
 
 interface NajaInteractDetail {
 	method: string;
