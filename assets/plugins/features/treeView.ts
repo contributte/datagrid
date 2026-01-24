@@ -32,6 +32,8 @@ export class TreeViewPlugin implements DatagridPlugin {
 						}
 					}
 					const snippets = payload.snippets;
+					const childrenHtml: string[] = [];
+
 					for (const snippetName in snippets) {
 						const snippet = snippets[snippetName];
 						const snippetDocEl = new DOMParser().parseFromString(snippet, "text/html")
@@ -42,10 +44,10 @@ export class TreeViewPlugin implements DatagridPlugin {
 
 						const template = `\n<div class="datagrid-tree-item" class='${hasChildren ? 'has-children' : ''}' id="${snippetName}" data-id="${id}">${snippet}</div>`;
 
-						childrenBlock.innerHTML = template;
+						childrenHtml.push(template);
 					}
-					//children_block.addClass('loaded');
-					//children_block.slideToggle('fast');
+
+					childrenBlock.innerHTML = childrenHtml.join('');
 				}
 			}
 		})
