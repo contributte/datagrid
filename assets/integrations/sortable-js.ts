@@ -46,13 +46,43 @@ export class SortableJS implements SortableInterface {
 	initSortableTree(datagrid: Datagrid): void {
 		datagrid.el.querySelectorAll<HTMLElement>(".datagrid-tree-item-children").forEach((el) => {
 			new Sortable(el, {
+				group: 'datagrid-tree',
 				handle: '.handle-sort',
 				draggable: '.datagrid-tree-item:not(.datagrid-tree-header)',
+				sort: true,
+				direction: 'vertical',
 				async onEnd({item}) {
-					// TODO
+					const itemId = item.getAttribute("data-id");
+					if (itemId) {
+						const prevId = item.previousElementSibling?.getAttribute("data-id") ?? null;
+						const nextId = item.nextElementSibling?.getAttribute("data-id") ?? null;
+
+						const container = item.parentElement;
+
+						if (container) {
+							const parentId = container.parentElement?.getAttribute("data-id") ?? null;
+
+							let componentPrefix = container.getAttribute("data-sortable-parent-path") ?? '';
+							if (componentPrefix.length) componentPrefix = `${componentPrefix}-`;
+
+							const url = container.getAttribute("data-sortable-url") ?? "?do=sort";
+
+							const data = {
+								[`${componentPrefix}item_id`]: itemId,
+								...(prevId ? {[`${componentPrefix}prev_id`]: prevId} : {}),
+								...(nextId ? {[`${componentPrefix}next_id`]: nextId} : {}),
+								...(parentId ? {[`${componentPrefix}parent_id`]: parentId} : {}),
+							};
+
+							return await datagrid.ajax.request({
+								method: "GET",
+								url,
+								data,
+							})
+						}
+					}
 				},
 			})
 		})
 	}
-
 }
