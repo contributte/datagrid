@@ -11,6 +11,7 @@ export class SortablePlugin implements DatagridPlugin {
 		})
 
 		this.sortable.initSortable(datagrid);
+		this.sortable.initSortableTree(datagrid);
 
 		datagrid.ajax.addEventListener('success', ({detail: {payload}}) => {
 			if (payload._datagrid_sort) {
