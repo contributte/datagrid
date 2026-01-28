@@ -10,6 +10,14 @@ export class InlinePlugin implements DatagridPlugin {
 		datagrid.ajax.addEventListener('success', ({ detail: { payload } }) => {
 			if (!payload._datagrid_name || payload._datagrid_name !== datagrid.name) return;
 
+			// Hide all edit triggers when inline editing starts
+			if (payload._datagrid_inline_editing) {
+				datagrid.el.querySelectorAll<HTMLElement>(".datagrid-inline-edit-trigger").forEach(trigger => {
+					trigger.classList.add("hidden");
+				});
+			}
+
+			// Show all edit triggers and mark row as edited when editing completes or is cancelled
 			if (payload._datagrid_inline_edited || payload._datagrid_inline_edit_cancel) {
 				if (payload._datagrid_inline_edited) {
 					let rows = datagrid.el.querySelectorAll<HTMLTableCellElement>(
@@ -20,6 +28,11 @@ export class InlinePlugin implements DatagridPlugin {
 						row.classList.add("edited");
 					});
 				}
+
+				// Show all edit triggers again
+				datagrid.el.querySelectorAll<HTMLElement>(".datagrid-inline-edit-trigger").forEach(trigger => {
+					trigger.classList.remove("hidden");
+				});
 
 				return;
 			}
