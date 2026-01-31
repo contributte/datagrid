@@ -47,33 +47,25 @@ export class InlinePlugin implements DatagridPlugin {
 				}
 			}
 
-			datagrid.el.querySelectorAll<HTMLElement>(".datagrid-inline-edit input").forEach(inputEl => {
-				inputEl.addEventListener("keydown", e => {
-					if (!isEnter(e)) return;
+			const inlineTypes = [
+				{ selector: '.datagrid-inline-edit input', submitName: 'inline_edit[submit]' },
+				{ selector: '.datagrid-inline-add input', submitName: 'inline_add[submit]' },
+			];
 
-					e.stopPropagation();
-					e.preventDefault();
+			for (const { selector, submitName } of inlineTypes) {
+				datagrid.el.querySelectorAll<HTMLElement>(selector).forEach(inputEl => {
+					inputEl.addEventListener("keydown", e => {
+						if (!isEnter(e)) return;
 
-					return inputEl
-						.closest("tr")
-						?.querySelector<HTMLElement>(".col-action-inline-edit [name='inline_edit[submit]']")
-						?.click();
+						e.stopPropagation();
+						e.preventDefault();
+
+						inputEl.closest("tr")
+							?.querySelector<HTMLElement>(`.col-action-inline-edit [name='${submitName}']`)
+							?.click();
+					});
 				});
-			});
-
-			datagrid.el.querySelectorAll<HTMLElement>(".datagrid-inline-add input").forEach(inputEl => {
-				inputEl.addEventListener("keydown", e => {
-					if (!isEnter(e)) return;
-
-					e.stopPropagation();
-					e.preventDefault();
-
-					return inputEl
-						.closest("tr")
-						?.querySelector<HTMLElement>(".col-action-inline-edit [name='inline_add[submit]']")
-						?.click();
-				});
-			});
+			}
 
 			datagrid.el.querySelectorAll<HTMLElement>("[data-datagrid-cancel-inline-add]").forEach(cancel => {
 				cancel.addEventListener("mouseup", e => {
