@@ -67,17 +67,10 @@ export class ConfirmPlugin implements DatagridPlugin {
 	}
 
 	private showModalConfirm(modal: HTMLElement, message: string, el: HTMLElement, e: Event): void {
-		if (typeof bootstrap === 'undefined') {
-			if (window.confirm(message)) {
-				this.executeConfirmedAction(el, e);
-			}
-			return;
-		}
-
 		const messageBox = this.getElement(this.messageBoxId);
 		const confirmButton = this.getElement(this.confirmButtonId);
 
-		if (!messageBox || !confirmButton) {
+		if (typeof bootstrap === 'undefined' || !messageBox || !confirmButton) {
 			if (window.confirm(message)) {
 				this.executeConfirmedAction(el, e);
 			}
@@ -99,12 +92,7 @@ export class ConfirmPlugin implements DatagridPlugin {
 	}
 
 	private executeConfirmedAction(el: HTMLElement, e?: Event): void {
-		//const detail: NajaInteractDetail | null = (e instanceof CustomEvent ? (e.detail as NajaInteractDetail) : null);
-		const detail: NajaInteractDetail | null = (
-			e instanceof CustomEvent &&
-			e.detail &&
-			typeof e.detail === 'object'
-		) ? e.detail as NajaInteractDetail : null;
+		const detail = e instanceof CustomEvent && e.detail ? e.detail as NajaInteractDetail : null;
 		const isAjax = el.classList.contains('ajax');
 
 		if (el instanceof HTMLAnchorElement && el.href && isAjax) {
