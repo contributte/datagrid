@@ -22,6 +22,7 @@
 				{block outer-filters}
 					<div class="row text-end datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
 						<div class="col-sm-12">
+							{include reset-filter}
 							<button class="btn btn-xs btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#datagrid-{$control->getFullName()}-row-filters">
 								<i n:block="icon-filter" class="{$iconPrefix}filter"></i> {='contributte_datagrid.show_filter'|translate}
 							</button>
@@ -396,7 +397,9 @@
 										{control paginator}
 									</div>
 									<div class="col-per-page text-end">
-										<a n:if="$filter_active" n:href="resetFilter!" class="ajax btn btn-danger btn-sm reset-filter">{='contributte_datagrid.reset_filter'|translate}</a>
+										{if !$control->hasOuterFilterRendering()}
+											{include reset-filter}
+										{/if}
 										{if $control->isPaginated()}
 											{input $filter['perPage'], data-autosubmit-per-page => TRUE, class => 'form-select form-select-sm'}
 											{input $filter['perPage_submit'], class => 'datagrid-per-page-submit'}
@@ -533,4 +536,13 @@
 			{/if}
 		{/ifset}
 	{/if}
+{/define}
+
+{define reset-filter}
+	<span n:snippet="reset-filter">
+		<a n:if="$filter_active" n:href="resetFilter!" n:class="ajax, btn, btn-danger, $control->hasOuterFilterRendering() ? btn-xs : btn-sm, reset-filter">
+			<i n:block="icon-reset-filter" class="{$iconPrefix}filter-circle-xmark"></i>
+			{='contributte_datagrid.reset_filter'|translate}
+		</a>
+	</span>
 {/define}

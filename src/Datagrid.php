@@ -1971,6 +1971,7 @@ class Datagrid extends Control
 			$this->redrawControl('pagination');
 			$this->redrawControl('summary');
 			$this->redrawControl('thead-group-action');
+			$this->redrawControl('reset-filter');
 
 			/**
 			 * manualy reset exports links...
@@ -2923,9 +2924,9 @@ class Datagrid extends Control
 		}
 	}
 
- /********************************************************************************
-  *                                    FILTERS *
-  ********************************************************************************/
+	/********************************************************************************
+	 *                                    FILTERS *
+	 ********************************************************************************/
 
 	/**
 	 * Check whether given key already exists in $this->filters
