@@ -385,7 +385,7 @@
 											{var $paginator = $control['paginator']->getPaginator()}
 
 											{if $control->getPerPage() === 'all'}
-												{='contributte_datagrid.items'|translate}: {='contributte_datagrid.all'|translate}
+												{='contributte_datagrid.items'|translate}: {='contributte_datagrid.all'|translate} {='contributte_datagrid.from'|translate} {count($rows)}
 											{else}
 												{='contributte_datagrid.items'|translate}: {$paginator->getOffset() > 0 ? $paginator->getOffset() + 1 : ($paginator->getItemCount() > 0 ? 1 : 0)}–{count($rows) + $paginator->getOffset()}
 												{='contributte_datagrid.from'|translate} {$paginator->getItemCount()}
