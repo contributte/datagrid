@@ -351,7 +351,6 @@
 	text-align: center;
 	position: relative;
 	margin: 0 5px 0 -27px;
-	transition: transform 0.2s ease-in-out
 }
 
 [data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron:hover {
@@ -360,13 +359,32 @@
 	box-shadow: 0px 0px 3px 0px #b4b4b4
 }
 
-[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron.toggle-rotate {
-	transform: rotate(90deg)
-}
-
 [data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron .fa {
 	font-size: 10px;
 	transform: translate(1px, 0)
+}
+
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron [data-tree-icon="expanded"],
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron [data-tree-icon="loading"] {
+	display: none;
+}
+
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron.is-loading [data-tree-icon="collapsed"],
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron.is-loading [data-tree-icon="expanded"] {
+	display: none;
+}
+
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron.is-loading [data-tree-icon="loading"] {
+	display: inline-block;
+}
+
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron.is-expanded [data-tree-icon="collapsed"],
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron.is-expanded [data-tree-icon="loading"] {
+	display: none;
+}
+
+[data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-left > .chevron.is-expanded [data-tree-icon="expanded"] {
+	display: inline-block;
 }
 
 [data-datagrid-name] .datagrid-tree .datagrid-tree-item .datagrid-tree-item-content .datagrid-tree-item-right {

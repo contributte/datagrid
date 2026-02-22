@@ -3,6 +3,26 @@ import { Datagrid } from "../..";
 
 export class TreeViewPlugin implements DatagridPlugin {
 	onDatagridInit(datagrid: Datagrid): boolean {
+		datagrid.ajax.addEventListener("interact", (event) => {
+			const element = event.detail.element;
+			if (!element.classList.contains('chevron')) return;
+
+			const rowBlock = element.closest<HTMLElement>('.datagrid-tree-item');
+			const childrenBlock = rowBlock?.querySelector<HTMLElement>('.datagrid-tree-item-children');
+
+			if (!childrenBlock) return;
+
+			if (childrenBlock.classList.contains('showed')) {
+				childrenBlock.innerHTML = '';
+				childrenBlock.classList.remove('showed');
+				element.classList.remove('is-expanded');
+				event.preventDefault();
+				return;
+			}
+
+			element.classList.add('is-loading');
+		});
+
 		datagrid.ajax.addEventListener("success", ({detail: {payload}}) => {
 			if (!payload._datagrid_tree) return;
 
@@ -12,18 +32,14 @@ export class TreeViewPlugin implements DatagridPlugin {
 
 			if (!childrenBlock) return;
 
-			const isExpanded = childrenBlock.classList.contains('showed');
-			const chevron = rowBlock?.querySelector<HTMLAnchorElement>('a.chevron');
-
-			if (isExpanded) {
-				childrenBlock.innerHTML = '';
-				childrenBlock.classList.remove('showed');
-				if (chevron) chevron.style.transform = "rotate(0deg)";
-				return;
-			}
+			const chevron = rowBlock?.querySelector<HTMLElement>('a.chevron');
 
 			childrenBlock.classList.add('showed');
-			if (chevron) chevron.style.transform = "rotate(90deg)";
+
+			if (chevron) {
+				chevron.classList.remove('is-loading');
+				chevron.classList.add('is-expanded');
+			}
 
 			const childrenHtml: string[] = [];
 			for (const snippetName in payload.snippets) {
@@ -39,7 +55,14 @@ export class TreeViewPlugin implements DatagridPlugin {
 			}
 
 			childrenBlock.innerHTML = childrenHtml.join('');
-		})
+		});
+
+		datagrid.ajax.addEventListener("error", () => {
+			document.querySelectorAll<HTMLElement>('a.chevron.is-loading').forEach((chevron) => {
+				chevron.classList.remove('is-loading');
+			});
+		});
+
 		return true;
 	}
 }
