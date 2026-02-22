@@ -110,10 +110,19 @@ export class EditablePlugin implements DatagridPlugin {
 							"input, textarea, select"
 						)
 						.forEach(el => {
-							if (!(el instanceof HTMLSelectElement)) {
+							if (el instanceof HTMLSelectElement) {
+								let submitted = false;
+								const submitOnce = () => {
+									if (submitted) return;
+									submitted = true;
+									submitCell(el);
+								};
+								el.addEventListener("change", submitOnce);
+								el.addEventListener("blur", submitOnce);
+							} else {
 								el.addEventListener("blur", () => submitCell(el));
 							}
-							
+
 							el.addEventListener("keydown", e => {
 								if (isEnter(e as KeyboardEvent)) {
 									e.stopPropagation();
@@ -129,9 +138,6 @@ export class EditablePlugin implements DatagridPlugin {
 								}
 							});
 
-							if (el instanceof HTMLSelectElement) {
-								el.addEventListener("change", () => submitCell(el));
-							}
 						});
 				}
 			});
