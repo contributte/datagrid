@@ -6,8 +6,8 @@
 
 {if $outer}
 	<div class="row">
-		{label $input class => 'col-sm-3 control-label' /}
-		<div class="col-sm-9 form-inline">
+		{label $input class => 'col-sm-3 form-label' /}
+		<div class="col-sm-9 d-flex">
 			<div class="input-group input-group-sm datagrid-input-group-full-width">
 				{input $input}
 				<label n:name="$input" class="input-group-text">
@@ -17,7 +17,7 @@
 		</div>
 	</div>
 {else}
-	<div class="form-inline">
+	<div class="d-flex">
 		<div class="input-group input-group-sm">
 			{input $input}
 			<label n:name="$input" class="input-group-text">

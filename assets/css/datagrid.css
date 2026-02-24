@@ -217,7 +217,7 @@
 	margin-bottom: 0;
 }
 
-[data-datagrid-name] .datagrid-col-filter-datte-range-delimiter {
+[data-datagrid-name] .datagrid-col-filter-range-delimiter {
 	background-color: inherit;
 	border: none;
 	padding: .25rem .5rem
