@@ -112,7 +112,7 @@
 										<button type="button" class="btn btn-xs {$btnSecondaryClass} dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" n:if="$control->canHideColumns()">
 											<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
 										</button>
-										<ul class="dropdown-menu dropdown-menu-right dropdown-menu--grid">
+										<ul class="dropdown-menu dropdown-menu-end dropdown-menu--grid">
 											<li n:foreach="$columnsVisibility as $v_key => $visibility">
 												{if $visibility['visible']}
 													<a n:href="hideColumn!, column => $v_key" class="ajax dropdown-item">
