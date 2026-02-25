@@ -132,27 +132,8 @@
 	text-align: center
 }
 
-[data-datagrid-name] .bootstrap-select.input-sm > .btn {
-	padding: 5px 25px 5px 10px;
-	font-size: 12px;
-	line-height: 1.5;
-	border-radius: 3px
-}
-
 [data-datagrid-name] table {
 	margin: 0
-}
-
-[data-datagrid-name] table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) {
-	width: auto
-}
-
-[data-datagrid-name] table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) > .btn {
-	width: auto
-}
-
-[data-datagrid-name] table thead tr .bootstrap-select:not([class*=col-]):not(.input-group-btn) .dropdown-menu li {
-	font-size: 13px
 }
 
 [data-datagrid-name] table thead tr.row-group-actions th {
@@ -568,12 +549,6 @@
 }
 
 @media (min-width: 768px) {
-	[data-datagrid-name] .datagrid-th-form-inline .form-group {
-		display: inline-block;
-		margin-bottom: 0;
-		vertical-align: middle
-	}
-
 	[data-datagrid-name] .datagrid-th-form-inline .form-control {
 		display: inline-block;
 		width: auto;
@@ -601,30 +576,7 @@
 		width: 100%
 	}
 
-	[data-datagrid-name] .input-group-text {
-		height: calc(1.5em + 0.5rem + 2px);
-	}
 
-	[data-datagrid-name] .datagrid-th-form-inline .control-label {
-		margin-bottom: 0;
-		vertical-align: middle
-	}
-
-	[data-datagrid-name] .datagrid-th-form-inline .radio, [data-datagrid-name] .datagrid-th-form-inline .checkbox {
-		display: inline-block;
-		margin-top: 0;
-		margin-bottom: 0;
-		vertical-align: middle
-	}
-
-	[data-datagrid-name] .datagrid-th-form-inline .radio label, [data-datagrid-name] .datagrid-th-form-inline .checkbox label {
-		padding-left: 0
-	}
-
-	[data-datagrid-name] .datagrid-th-form-inline .radio input[type="radio"], [data-datagrid-name] .datagrid-th-form-inline .checkbox input[type="checkbox"] {
-		position: relative;
-		margin-left: 0
-	}
 
 }
 

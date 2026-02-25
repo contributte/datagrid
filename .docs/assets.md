@@ -203,9 +203,6 @@ This example uses [Vite](https://vitejs.dev). You can see example of using bundl
     "vanillajs-datepicker": "^1.3.4"
   },
   "devDependencies": {
-    "@types/bootstrap-select": "^1.13.7",
-    "@types/jquery": "^3.5.32",
-    "@types/jqueryui": "^1.12.24",
     "@types/sortablejs": "^1.15.8",
     "@types/vanillajs-datepicker": "^1.3.5",
     "autoprefixer": "^10.4.21",
