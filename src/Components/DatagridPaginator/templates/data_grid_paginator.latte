@@ -6,34 +6,38 @@
 
 {var $link = [$control->getParent(), link]}
 
-<div n:if="$paginator->pageCount > 1">
-	{capture $firstButton}
-		<i n:block = "icon-arrow-left" class="{$iconPrefix}arrow-left"></i>&nbsp;{='contributte_datagrid.previous'|translate}
-	{/capture}
+<nav n:if="$paginator->pageCount > 1" aria-label="Pagination">
+	<ul class="pagination pagination-sm justify-content-center mb-0">
+		{capture $prevButton}
+			<i n:block="icon-arrow-left" class="{$iconPrefix}arrow-left"></i>&nbsp;{='contributte_datagrid.previous'|translate}
+		{/capture}
 
-	{if $paginator->isFirst()}
-		<a class="first btn btn-sm {$btnSecondaryClass} disabled">{$firstButton}</a>
-	{else}
-		<a class="btn btn-sm {$btnSecondaryClass} ajax" href="{$link('page!', ['page' => $paginator->page - 1])}" rel="prev">{$firstButton}</a>
-	{/if}
-
-	{foreach $steps as $step}
-		{if $step == $paginator->page}
-			<a class="first btn btn-sm btn-primary active">{$step}</a>
+		{if $paginator->isFirst()}
+			<li class="page-item disabled"><a class="page-link">{$prevButton}</a></li>
 		{else}
-			<a class="btn btn-sm {$btnSecondaryClass} ajax" href="{$link('page!', ['page' => $step])}">{$step}</a>
+			<li class="page-item"><a class="page-link ajax" href="{$link('page!', ['page' => $paginator->page - 1])}" rel="prev">{$prevButton}</a></li>
 		{/if}
 
-		{if $iterator->nextValue > $step + 1}<span>…</span>{/if}
-	{/foreach}
+		{foreach $steps as $step}
+			{if $step == $paginator->page}
+				<li class="page-item active" aria-current="page"><a class="page-link">{$step}</a></li>
+			{else}
+				<li class="page-item"><a class="page-link ajax" href="{$link('page!', ['page' => $step])}">{$step}</a></li>
+			{/if}
 
-	{capture $lastButton}
-		{='contributte_datagrid.next'|translate}&nbsp;<i n:block = "icon-arrow-right" class="{$iconPrefix}arrow-right"></i>
-	{/capture}
+			{if $iterator->nextValue > $step + 1}
+				<li class="page-item disabled"><span class="page-link">…</span></li>
+			{/if}
+		{/foreach}
 
-	{if $paginator->isLast()}
-		<a class="first btn btn-sm {$btnSecondaryClass} disabled">{$lastButton}</a>
-	{else}
-		<a class="btn btn-sm {$btnSecondaryClass} ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">{$lastButton}</a>
-	{/if}
-</div>
+		{capture $nextButton}
+			{='contributte_datagrid.next'|translate}&nbsp;<i n:block="icon-arrow-right" class="{$iconPrefix}arrow-right"></i>
+		{/capture}
+
+		{if $paginator->isLast()}
+			<li class="page-item disabled"><a class="page-link">{$nextButton}</a></li>
+		{else}
+			<li class="page-item"><a class="page-link ajax" href="{$link('page!', ['page' => $paginator->page + 1])}" rel="next">{$nextButton}</a></li>
+		{/if}
+	</ul>
+</nav>
