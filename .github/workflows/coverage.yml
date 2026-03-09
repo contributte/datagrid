@@ -13,9 +13,35 @@ on:
 jobs:
   coverage:
     name: "Nette Tester"
-    uses: contributte/.github/.github/workflows/nette-tester-mysql.yml@v1
-    with:
-      php: "8.5"
-      database: tests
-      coverage: true
-      make: coverage
+    runs-on: "ubuntu-latest"
+
+    services:
+      mysql:
+        image: "mysql:5.7"
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_DATABASE: "tests"
+        ports:
+          - 3306:3306
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+
+      - name: "PHP"
+        uses: "contributte/.github/.github/actions/setup-php@master"
+        with:
+          php: "8.5"
+
+      - name: "Composer"
+        uses: "contributte/.github/.github/actions/setup-composer@master"
+        with:
+          command: "composer install --no-interaction --no-progress --prefer-dist"
+
+      - name: "Run Nette Tester"
+        run: "make coverage"
+
+      - name: "Codecov"
+        uses: "codecov/codecov-action@v4"
+        env:
+          CODECOV_TOKEN: "${{ secrets.CODECOV_TOKEN }}"
