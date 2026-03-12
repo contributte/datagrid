@@ -9,6 +9,43 @@ import postcssUrl from 'postcss-url';
 
 export default [
 	{
+		input: 'assets/datagrid.ts',
+		output: {
+			file: 'dist/datagrid.js',
+			format: 'es',
+			sourcemap: true,
+		},
+		plugins: [
+			resolve(),
+			commonjs(),
+			typescript(),
+			terser({
+				mangle: {
+					reserved: ['$', 'jQuery'],
+				},
+			}),
+		],
+	},
+	{
+		input: 'assets/css/datagrid.css',
+		output: {
+			file: 'dist/datagrid.css',
+		},
+		plugins: [
+			postcss({
+				extract: true,
+				minimize: true,
+				modules: false,
+				inject: false,
+				plugins: [
+					postcssImport,
+					autoprefixer,
+					postcssUrl,
+				],
+			}),
+		],
+	},
+	{
 		input: 'assets/datagrid-full.ts',
 		output: {
 			file: 'dist/datagrid-full.js',

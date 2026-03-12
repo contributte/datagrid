@@ -4,8 +4,6 @@
  */
 import { Datagrid } from "../../datagrid";
 import { DatagridPlugin } from "../../types";
-import * as bootstrap from "bootstrap";
-import naja from "naja";
 
 interface NajaInteractDetail {
 	method: string;
@@ -69,8 +67,9 @@ export class ConfirmPlugin implements DatagridPlugin {
 	private showModalConfirm(modal: HTMLElement, message: string, el: HTMLElement, e: Event): void {
 		const messageBox = this.getElement(this.messageBoxId);
 		const confirmButton = this.getElement(this.confirmButtonId);
+		const bootstrap = (window as any).bootstrap;
 
-		if (typeof bootstrap === 'undefined' || !messageBox || !confirmButton) {
+		if (!bootstrap || !messageBox || !confirmButton) {
 			if (window.confirm(message)) {
 				this.executeConfirmedAction(el, e);
 			}
@@ -96,7 +95,9 @@ export class ConfirmPlugin implements DatagridPlugin {
 		const isAjax = el.classList.contains('ajax');
 
 		if (el instanceof HTMLAnchorElement && el.href && isAjax) {
-			if (typeof naja === 'undefined') {
+			const naja = (window as any).naja;
+
+			if (!naja) {
 				return;
 			}
 
