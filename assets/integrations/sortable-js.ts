@@ -1,12 +1,13 @@
 import { Datagrid } from "..";
 import { Constructor, Sortable as SortableInterface } from "../types";
+import { window } from "../utils";
 import type SortableType from "sortablejs";
 
 export class SortableJS implements SortableInterface {
 	constructor(private sortable?: Constructor<SortableType>) {}
 
 	private getSortable(): Constructor<SortableType> | null {
-		return this.sortable ?? (window as any).Sortable ?? null;
+		return this.sortable ?? window().Sortable ?? null;
 	}
 
 	private makeSortRequest(
