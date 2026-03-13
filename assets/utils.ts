@@ -6,7 +6,10 @@ export function isPromise<T = any>(p: any): p is Promise<T> {
 }
 
 export function isInKeyRange(e: KeyboardEvent, min: number, max: number): boolean {
-	const code = e.key.length === 1 ? e.key.charCodeAt(0) : 0;
+	if (e.key.length !== 1) { // Named keys (Tab, Shift, ArrowLeft, etc.) are always considered in range
+		return true;
+	}
+	const code = e.key.charCodeAt(0);
 	return code >= min && code <= max;
 }
 
