@@ -1,4 +1,6 @@
 import TomSelect from "tom-select";
+import type SortableType from "sortablejs";
+import type { Datepicker as DatepickerType } from "vanillajs-datepicker";
 
 export interface Nette {
 	initForm: (form: HTMLFormElement) => void;
@@ -8,10 +10,32 @@ export type Constructor<T> = new (...args: any[]) => T;
 
 export type KeysOf<T, TVal = any> = { [P in keyof T]: TVal; }
 
+interface BootstrapModalInstance {
+	hide(): void;
+	show(): void;
+}
+
+interface BootstrapModal {
+	new(el: HTMLElement): BootstrapModalInstance;
+	getInstance(el: HTMLElement): BootstrapModalInstance | null;
+}
+
+interface Bootstrap {
+	Modal: BootstrapModal;
+}
+
+interface NajaInstance {
+	makeRequest(method: string, url: string, data: any, options: Record<string, any>): Promise<any>;
+}
+
 export interface ExtendedWindow extends Window {
 	jQuery?: any;
 	Nette?: Nette;
 	TomSelect?: Constructor<TomSelect>;
+	Sortable?: Constructor<SortableType>;
+	Datepicker?: Constructor<DatepickerType>;
+	bootstrap?: Bootstrap;
+	naja?: NajaInstance;
 }
 
 // https://github.com/naja-js/naja/blob/384d298a9199bf778985d1bcf5747fe8de305b22/src/utils.ts

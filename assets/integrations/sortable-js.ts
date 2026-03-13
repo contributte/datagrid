@@ -1,8 +1,15 @@
 import { Datagrid } from "..";
-import { Sortable as SortableInterface } from "../types";
-import Sortable from "sortablejs"
+import { Constructor, Sortable as SortableInterface } from "../types";
+import { window } from "../utils";
+import type SortableType from "sortablejs";
 
 export class SortableJS implements SortableInterface {
+	constructor(private sortable?: Constructor<SortableType>) {}
+
+	private getSortable(): Constructor<SortableType> | null {
+		return this.sortable ?? window().Sortable ?? null;
+	}
+
 	private makeSortRequest(
 		datagrid: Datagrid,
 		item: HTMLElement,
@@ -33,18 +40,24 @@ export class SortableJS implements SortableInterface {
 		const sortable = datagrid.el.querySelector<HTMLElement>("[data-sortable]");
 		if (!sortable) return;
 
+		const Sortable = this.getSortable();
+		if (!Sortable) return;
+
 		new Sortable(sortable, {
 			handle: '.handle-sort',
 			draggable: 'tr',
 			sort: true,
 			direction: 'vertical',
-			onEnd: ({ item }) => {
+			onEnd: ({ item }: { item: HTMLElement }) => {
 				return this.makeSortRequest(datagrid, item, datagrid.el.querySelector("tbody"));
 			},
 		})
 	}
 
 	initSortableTree(datagrid: Datagrid): void {
+		const Sortable = this.getSortable();
+		if (!Sortable) return;
+
 		datagrid.el.querySelectorAll<HTMLElement>(".datagrid-tree-item-children").forEach((el) => {
 			new Sortable(el, {
 				group: 'datagrid-tree',
@@ -52,7 +65,7 @@ export class SortableJS implements SortableInterface {
 				draggable: '.datagrid-tree-item:not(.datagrid-tree-header)',
 				sort: true,
 				direction: 'vertical',
-				onEnd: ({ item }) => {
+				onEnd: ({ item }: { item: HTMLElement }) => {
 					const container = item.parentElement;
 					const parentId = container?.parentElement?.getAttribute("data-id") ?? null;
 					return this.makeSortRequest(datagrid, item, container, parentId);

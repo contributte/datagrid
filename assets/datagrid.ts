@@ -1,6 +1,5 @@
 import { defaultDatagridNameResolver, isEnter } from "./utils";
 import type { Ajax, DatagridEventMap, DatagridOptions, DatagridsOptions, EventDetail, EventListener, } from "./types";
-import Select from "tom-select";
 import {
 	AutosubmitPlugin,
 	CheckboxPlugin,
@@ -220,7 +219,7 @@ export const createFullDatagrids = (ajax: Ajax, _options: Partial<DatagridsOptio
 				new NetteFormsPlugin(),
 				new SortablePlugin(new SortableJS()),
 				new DatepickerPlugin(new VanillaDatepicker()),
-				new SelectpickerPlugin(new TomSelect(Select))
+				new SelectpickerPlugin(new TomSelect())
 			],
 		},
 		..._options,

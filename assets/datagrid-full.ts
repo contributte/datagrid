@@ -1,5 +1,8 @@
 import naja from "naja";
 import { default as netteForms } from "nette-forms";
+import Select from "tom-select";
+import Sortable from "sortablejs";
+import { Datepicker } from "vanillajs-datepicker";
 import {
 	AutosubmitPlugin,
 	CheckboxPlugin,
@@ -18,7 +21,6 @@ import {
 	VanillaDatepicker,
 } from "."
 import { NajaAjax } from "./ajax";
-import Select from "tom-select";
 import { Dropdown } from "bootstrap";
 
 // Datagrid + UI
@@ -43,8 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
 				new InlinePlugin(),
 				new ItemDetailPlugin(),
 				new NetteFormsPlugin(netteForms),
-				new SortablePlugin(new SortableJS()),
-				new DatepickerPlugin(new VanillaDatepicker({ buttonClass: 'btn' })),
+				new SortablePlugin(new SortableJS(Sortable)),
+				new DatepickerPlugin(new VanillaDatepicker(Datepicker, { buttonClass: 'btn' })),
 				new SelectpickerPlugin(new TomSelect(Select)),
 				new TreeViewPlugin(),
 			],
