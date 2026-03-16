@@ -20,6 +20,7 @@
 - [Storage - filters / filter values changed](#storage---filters--filter-values-changed)
 - [URL refreshing - history API](#url-refreshing---history-api)
 - [Auto submit](#auto-submit)
+- [Shareable filter URLs](#shareable-filter-urls)
 
 -----
 
@@ -301,3 +302,21 @@ Datagrid filter is submitted automatically after keypress (there is of course a 
 ```php
 $grid->setAutoSubmit(false);
 ```
+
+## Shareable filter URLs
+
+By default, the filter form uses the POST method, which means filter values are not reflected in the browser URL and cannot be shared via a link (e.g. in an email).
+
+To make filter values part of the URL, switch the form method to GET:
+
+```php
+Datagrid::$formMethod = 'GET';
+```
+
+With GET method, after applying filters the browser URL will contain the filter values as query parameters. Sharing or bookmarking that URL will open the grid with the same filters pre-applied.
+
+Resetting filters works correctly — the reset action redirects to a clean URL without filter parameters.
+
+> **Note:** `$formMethod` is a static property, so changing it affects all datagrid instances on the page.
+>
+> Keep in mind that filter values will be visible in the URL and in server access logs. Avoid using GET method if filters may contain sensitive data.
