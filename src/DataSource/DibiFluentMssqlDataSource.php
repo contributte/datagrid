@@ -5,10 +5,8 @@ namespace Contributte\Datagrid\DataSource;
 use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
 use Contributte\Datagrid\Filter\FilterDate;
 use Contributte\Datagrid\Filter\FilterDateRange;
-use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
 use Dibi\Fluent;
-use Dibi\Helpers;
 use Dibi\Result;
 use UnexpectedValueException;
 
@@ -97,31 +95,6 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 				$filter->getColumn(),
 				$valueTo
 			);
-		}
-	}
-
-	protected function applyFilterText(FilterText $filter): void
-	{
-		$condition = $filter->getCondition();
-		$driver = $this->dataSource->getConnection()->getDriver();
-		$or = [];
-
-		foreach ($condition as $column => $value) {
-			$column = Helpers::escape($driver, $column, Fluent::Identifier);
-
-			if ($filter->isExactSearch()) {
-				$this->dataSource->where(sprintf('%s = %%s', $column), $value);
-
-				continue;
-			}
-
-			$or[] = sprintf('%s LIKE "%%%s%%"', $column, $value);
-		}
-
-		if (count($or) > 1) {
-			$this->dataSource->where($filter->hasConjunctionSearch() ? '(%and)' : '(%or)', $or);
-		} else {
-			$this->dataSource->where($or);
 		}
 	}
 
