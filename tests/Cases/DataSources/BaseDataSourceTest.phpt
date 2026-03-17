@@ -138,6 +138,15 @@ abstract class BaseDataSourceTest extends TestCase
 		], $this->getActualResultAsArray());
 	}
 
+	public function testFilterRangeWithZeroToValue(): void
+	{
+		$filter = new FilterRange($this->grid, 'a', 'b', 'age', '-');
+		$filter->setValue(['from' => '', 'to' => '0']);
+		$this->ds->filter([$filter]);
+
+		Assert::equal([], $this->getActualResultAsArray());
+	}
+
 	public function testFilterOne(): void
 	{
 		$this->ds->filterOne(['id' => 8]);

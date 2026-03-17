@@ -5,6 +5,7 @@ namespace Contributte\Datagrid\Tests\Cases\DataSources;
 use Contributte\Datagrid\DataSource\ArrayDataSource;
 use Contributte\Datagrid\Filter\FilterDate;
 use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterRange;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Tester\Assert;
 
@@ -49,6 +50,21 @@ final class ArrayDataSourceTest extends BaseDataSourceTest
 		$ds->filter([$filter]);
 
 		Assert::same(0, $ds->getCount());
+	}
+
+	public function testFilterRangeWithZeroFromValue(): void
+	{
+		$ds = new ArrayDataSource([
+			['id' => 1, 'name' => 'Negative', 'age' => -5, 'address' => ''],
+			['id' => 2, 'name' => 'Zero', 'age' => 0, 'address' => ''],
+			['id' => 3, 'name' => 'Positive', 'age' => 5, 'address' => ''],
+		]);
+
+		$filter = new FilterRange($this->grid, 'a', 'b', 'age', '-');
+		$filter->setValue(['from' => '0', 'to' => '']);
+		$ds->filter([$filter]);
+
+		Assert::same(2, $ds->getCount());
 	}
 
 	public function testFilterDateRangeWithInvalidToValue(): void
