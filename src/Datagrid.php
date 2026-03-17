@@ -370,16 +370,35 @@ class Datagrid extends Control
 		 */
 		$rows = [];
 
-		$items = $this->redrawItem !== [] ? $this->dataModel->filterRow($this->redrawItem) : $this->dataModel->filterData(
-			$this->getPaginator(),
-			$this->createSorting($this->sort, $this->sortCallback),
-			$this->assembleFilters()
-		);
+		$items = $this->redrawItem !== [] && !($this->columnsSummary instanceof ColumnsSummary)
+			? $this->dataModel->filterRow($this->redrawItem)
+			: $this->dataModel->filterData(
+				$this->getPaginator(),
+				$this->createSorting($this->sort, $this->sortCallback),
+				$this->assembleFilters()
+			);
 
 		$hasGroupActionOnRows = false;
 
 		foreach ($items as $item) {
-			$rows[] = $row = new Row($this, $item, $this->getPrimaryKey());
+			$row = new Row($this, $item, $this->getPrimaryKey());
+
+			/**
+			 * When iterating all items (for ColumnsSummary), skip rows that are not the redraw target.
+			 * The Row object is still created above so ColumnsSummary::add() is called for every row.
+			 */
+			if ($this->redrawItem !== []) {
+				$redrawKey = array_key_first($this->redrawItem);
+
+				if ((string) $row->getValue($redrawKey) !== (string) $this->redrawItem[$redrawKey]) {
+					continue;
+				}
+
+				$this->getPresenterInstance()->payload->_datagrid_redrawItem_class = $row->getControlClass();
+				$this->getPresenterInstance()->payload->_datagrid_redrawItem_id = $row->getId();
+			}
+
+			$rows[] = $row;
 
 			if (!$hasGroupActionOnRows && $row->hasGroupAction()) {
 				$hasGroupActionOnRows = true;
@@ -387,14 +406,6 @@ class Datagrid extends Control
 
 			if ($this->rowCallback !== null) {
 				($this->rowCallback)($item, $row->getControl());
-			}
-
-			/**
-			 * Walkaround for item snippet - snippet is the <tr> element and its class has to be also updated
-			 */
-			if ($this->redrawItem !== []) {
-				$this->getPresenterInstance()->payload->_datagrid_redrawItem_class = $row->getControlClass();
-				$this->getPresenterInstance()->payload->_datagrid_redrawItem_id = $row->getId();
 			}
 		}
 
