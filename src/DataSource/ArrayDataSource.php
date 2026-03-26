@@ -128,15 +128,7 @@ class ArrayDataSource implements IDataSource
 				krsort($data, SORT_LOCALE_STRING);
 			}
 
-			$dataSource = [];
-
-			foreach ($data as $i) {
-				foreach ($i as $item) {
-					$dataSource[] = $item;
-				}
-			}
-
-			$this->setData($dataSource);
+			$this->setData($data !== [] ? array_merge(...array_values($data)) : []);
 		}
 
 		return $this;
@@ -235,7 +227,23 @@ class ArrayDataSource implements IDataSource
 		$values = $condition[$filter->getColumn()];
 		$rowValue = $row[$filter->getColumn()];
 
-		if ($values['from'] !== null && $values['from'] !== '') {
+		$hasFrom = $values['from'] !== null && $values['from'] !== '';
+		$hasTo = $values['to'] !== null && $values['to'] !== '';
+
+		if (!$hasFrom && !$hasTo) {
+			return true;
+		}
+
+		// Convert row value to DateTime once for both from/to checks
+		if (!($rowValue instanceof DateTime)) {
+			try {
+				$rowValue = DateTimeHelper::tryConvertToDate($rowValue);
+			} catch (DatagridDateTimeHelperException) {
+				return false;
+			}
+		}
+
+		if ($hasFrom) {
 			try {
 				$dateFrom = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
 				$dateFrom->setTime(0, 0, 0);
@@ -243,45 +251,17 @@ class ArrayDataSource implements IDataSource
 				return false;
 			}
 
-			if (!($rowValue instanceof DateTime)) {
-				/**
-				 * Try to convert string to DateTime object
-				 */
-				try {
-					$rowValue = DateTimeHelper::tryConvertToDate($rowValue);
-				} catch (DatagridDateTimeHelperException) {
-					/**
-					 * Otherwise just return raw string
-					 */
-					return false;
-				}
-			}
-
 			if ($rowValue->getTimestamp() < $dateFrom->getTimestamp()) {
 				return false;
 			}
 		}
 
-		if ($values['to'] !== null && $values['to'] !== '') {
+		if ($hasTo) {
 			try {
 				$dateTo = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
 				$dateTo->setTime(23, 59, 59);
 			} catch (DatagridDateTimeHelperException) {
 				return false;
-			}
-
-			if (!($rowValue instanceof DateTime)) {
-				/**
-				 * Try to convert string to DateTime object
-				 */
-				try {
-					$rowValue = DateTimeHelper::tryConvertToDate($rowValue);
-				} catch (DatagridDateTimeHelperException) {
-					/**
-					 * Otherwise just return raw string
-					 */
-					return false;
-				}
 			}
 
 			if ($rowValue->getTimestamp() > $dateTo->getTimestamp()) {
