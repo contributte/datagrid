@@ -1,4 +1,4 @@
-.PHONY: install qa cs csf phpstan tests coverage
+.PHONY: install qa cs csf phpstan tests coverage bench bench-baseline bench-compare
 
 install:
 	composer update
@@ -27,3 +27,12 @@ ifdef GITHUB_ACTION
 else
 	vendor/bin/tester -s -p php --colors 1 -C --coverage coverage.html --coverage-src src tests/Cases
 endif
+
+bench:
+	vendor/bin/phpbench run --report=aggregate
+
+bench-baseline:
+	vendor/bin/phpbench run --tag=baseline --report=aggregate
+
+bench-compare:
+	vendor/bin/phpbench run --ref=baseline --report=aggregate

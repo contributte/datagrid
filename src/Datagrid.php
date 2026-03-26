@@ -2743,13 +2743,10 @@ class Datagrid extends Control
 			$this->getParentComponent();
 
 			if (! (bool) $this->getStorageData('_grid_hidden_columns_manipulated', false)) {
-				$columns_to_hide = [];
-
-				foreach ($this->columns as $key => $column) {
-					if ($column->getDefaultHide()) {
-						$columns_to_hide[] = $key;
-					}
-				}
+				$columns_to_hide = array_keys(array_filter(
+					$this->columns,
+					static fn ($column) => $column->getDefaultHide()
+				));
 
 				if ($columns_to_hide !== []) {
 					$this->saveStorageData('_grid_hidden_columns', $columns_to_hide);

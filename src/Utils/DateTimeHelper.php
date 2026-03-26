@@ -9,6 +9,16 @@ use DateTimeImmutable;
 final class DateTimeHelper
 {
 
+	private const DEFAULT_FORMATS = [
+		'Y-m-d H:i:s.u',
+		'Y-m-d H:i:s',
+		'Y-m-d',
+		'j. n. Y G:i:s',
+		'j. n. Y G:i',
+		'j. n. Y',
+		'U',
+	];
+
 	/**
 	 * Try to convert string into \DateTime object
 	 *
@@ -39,15 +49,7 @@ final class DateTimeHelper
 	 */
 	public static function fromString(mixed $value, array $formats = []): DateTime
 	{
-		$formats = array_merge($formats, [
-			'Y-m-d H:i:s.u',
-			'Y-m-d H:i:s',
-			'Y-m-d',
-			'j. n. Y G:i:s',
-			'j. n. Y G:i',
-			'j. n. Y',
-			'U',
-		]);
+		$formats = $formats !== [] ? array_merge($formats, self::DEFAULT_FORMATS) : self::DEFAULT_FORMATS;
 
 		if ($value instanceof DateTime) {
 			return $value;

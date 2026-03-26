@@ -19,6 +19,8 @@ class GroupActionCollection
 	/** @var array<GroupAction> */
 	protected array $groupActions = [];
 
+	private int $nextId = 1;
+
 	public function __construct(protected Datagrid $datagrid)
 	{
 	}
@@ -36,42 +38,32 @@ class GroupActionCollection
 		}
 
 		/**
-		 * First foreach for adding button actions
+		 * Single pass: add button actions, build main options, and create sub-action controls
 		 */
 		foreach ($this->groupActions as $id => $action) {
 			if ($action instanceof GroupButtonAction) {
 				$control = $container->addSubmit((string) $id, $action->getTitle());
 
-				/**
-				 * User may set a class to the form control
-				 */
 				$control->setHtmlAttribute('class', $action->getClass());
 
-				/**
-				 * User may set additional attribtues to the form control
-				 */
 				foreach ($action->getAttributes() as $name => $value) {
 					$control->setHtmlAttribute($name, $value);
 				}
-			}
-		}
 
-		/**
-		 * Second foreach for filling "main" select
-		 */
-		foreach ($this->groupActions as $id => $action) {
-			if (! $action instanceof GroupButtonAction) {
-				$main_options[$id] = $action->getTitle();
+				continue;
 			}
+
+			$main_options[$id] = $action->getTitle();
 		}
 
 		$groupActionSelect = $container->addSelect('group_action', '', $main_options)
 			->setPrompt('contributte_datagrid.choose');
 
-		/**
-		 * Third for creating select for each "sub"-action
-		 */
 		foreach ($this->groupActions as $id => $action) {
+			if ($action instanceof GroupButtonAction) {
+				continue;
+			}
+
 			$control = null;
 
 			if ($action instanceof GroupSelectAction) {
@@ -104,14 +96,8 @@ class GroupActionCollection
 			}
 
 			if (isset($control)) {
-				/**
-				 * User may set a class to the form control
-				 */
 				$control->setHtmlAttribute('class', $action->getClass());
 
-				/**
-				 * User may set additional attribtues to the form control
-				 */
 				foreach ($action->getAttributes() as $name => $value) {
 					$control->setHtmlAttribute($name, $value);
 				}
@@ -205,7 +191,7 @@ class GroupActionCollection
 	 */
 	public function addGroupButtonAction(string $title, ?string $class = null): GroupButtonAction
 	{
-		$id = count($this->groupActions) > 0 ? count($this->groupActions) + 1 : 1;
+		$id = $this->nextId++;
 
 		return $this->groupActions[$id] = new GroupButtonAction($title, $class);
 	}
@@ -215,7 +201,7 @@ class GroupActionCollection
 	 */
 	public function addGroupSelectAction(string $title, array $options): GroupAction
 	{
-		$id = count($this->groupActions) > 0 ? count($this->groupActions) + 1 : 1;
+		$id = $this->nextId++;
 
 		return $this->groupActions[$id] = new GroupSelectAction($title, $options);
 	}
@@ -225,7 +211,7 @@ class GroupActionCollection
 	 */
 	public function addGroupMultiSelectAction(string $title, array $options): GroupAction
 	{
-		$id = count($this->groupActions) > 0 ? count($this->groupActions) + 1 : 1;
+		$id = $this->nextId++;
 
 		return $this->groupActions[$id] = new GroupMultiSelectAction($title, $options);
 	}
@@ -235,7 +221,7 @@ class GroupActionCollection
 	 */
 	public function addGroupTextAction(string $title): GroupAction
 	{
-		$id = count($this->groupActions) > 0 ? count($this->groupActions) + 1 : 1;
+		$id = $this->nextId++;
 
 		return $this->groupActions[$id] = new GroupTextAction($title);
 	}
@@ -245,7 +231,7 @@ class GroupActionCollection
 	 */
 	public function addGroupTextareaAction(string $title): GroupAction
 	{
-		$id = count($this->groupActions) > 0 ? count($this->groupActions) + 1 : 1;
+		$id = $this->nextId++;
 
 		return $this->groupActions[$id] = new GroupTextareaAction($title);
 	}

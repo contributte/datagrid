@@ -20,9 +20,13 @@ class Row
 
 	protected Html $control;
 
+	/** @var \Closure(mixed): mixed */
+	private \Closure $valueAccessor;
+
 	public function __construct(protected Datagrid $datagrid, protected mixed $item, protected string $primaryKey)
 	{
 		$this->control = Html::el('tr');
+		$this->valueAccessor = $this->createValueAccessor();
 		$this->id = $this->getValue($primaryKey);
 
 		if ($datagrid->getColumnsSummary() instanceof ColumnsSummary) {
@@ -41,41 +45,7 @@ class Row
 
 	public function getValue(mixed $key): mixed
 	{
-		if ($this->item instanceof Entity) {
-			return $this->getLeanMapperEntityProperty($this->item, $key);
-		}
-
-		if ($this->item instanceof NextrasEntity) {
-			return $this->getNextrasEntityProperty($this->item, $key);
-		}
-
-		if ($this->item instanceof DibiRow) {
-			return $this->item[$this->formatDibiRowKey($key)];
-		}
-
-		if ($this->item instanceof ActiveRow) {
-			return $this->getActiveRowProperty($this->item, $key);
-		}
-
-		if ($this->item instanceof NetteRow) {
-			return $this->item->{$key};
-		}
-
-		if (is_array($this->item)) {
-			$arrayValue = $this->item[$key];
-
-			if (is_object($arrayValue) && method_exists($arrayValue, '__toString')) {
-				return (string) $arrayValue;
-			}
-
-			if (interface_exists(\BackedEnum::class) && $arrayValue instanceof \BackedEnum) {
-				return $arrayValue->value;
-			}
-
-			return $arrayValue;
-		}
-
-		return $this->getDoctrineEntityProperty($this->item, $key);
+		return ($this->valueAccessor)($key);
 	}
 
 	public function getControl(): Html
@@ -286,6 +256,38 @@ class Row
 		}
 
 		return $column;
+	}
+
+	/**
+	 * Create a type-dispatching closure based on the item type.
+	 * This avoids repeated instanceof checks on every getValue() call.
+	 */
+	private function createValueAccessor(): \Closure
+	{
+		return match (true) {
+			$this->item instanceof Entity => fn ($key) => $this->getLeanMapperEntityProperty($this->item, $key),
+			$this->item instanceof NextrasEntity => fn ($key) => $this->getNextrasEntityProperty($this->item, $key),
+			$this->item instanceof DibiRow => fn ($key) => $this->item[$this->formatDibiRowKey($key)],
+			$this->item instanceof ActiveRow => fn ($key) => $this->getActiveRowProperty($this->item, $key),
+			$this->item instanceof NetteRow => fn ($key) => $this->item->{$key},
+			is_array($this->item) => fn ($key) => $this->getArrayValue($key),
+			default => fn ($key) => $this->getDoctrineEntityProperty($this->item, $key),
+		};
+	}
+
+	private function getArrayValue(mixed $key): mixed
+	{
+		$arrayValue = $this->item[$key];
+
+		if (is_object($arrayValue) && method_exists($arrayValue, '__toString')) {
+			return (string) $arrayValue;
+		}
+
+		if (interface_exists(\BackedEnum::class) && $arrayValue instanceof \BackedEnum) {
+			return $arrayValue->value;
+		}
+
+		return $arrayValue;
 	}
 
 	/**
