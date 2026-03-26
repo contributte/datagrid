@@ -15,14 +15,8 @@ final class ArraysHelper
 				if (!self::testEmpty($value)) {
 					return false;
 				}
-			} else {
-				if ($value) {
-					return false;
-				}
-
-				if (in_array($value, [0, '0', false], true)) {
-					return false;
-				}
+			} elseif ($value !== null && $value !== '') {
+				return false;
 			}
 		}
 
