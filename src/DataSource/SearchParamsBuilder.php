@@ -13,6 +13,8 @@ final class SearchParamsBuilder
 
 	private array $phrasePrefixQueries = [];
 
+	private array $wildCardQueries = [];
+
 	private array $matchQueries = [];
 
 	private array $booleanMatchQueries = [];
@@ -48,6 +50,11 @@ final class SearchParamsBuilder
 	public function addIdsQuery(array $ids): void
 	{
 		$this->idsQueries[] = $ids;
+	}
+
+	public function addWildCardQuery(string $field, string $query, array $options): void
+	{
+		$this->wildCardQueries[] = [$field => [$query, $options]];
 	}
 
 	public function setSort(array $sort): void
@@ -120,6 +127,26 @@ final class SearchParamsBuilder
 						$field => [
 							'query' => $query,
 						],
+					],
+				];
+			}
+		}
+
+		foreach ($this->wildCardQueries as $wildCardQuery) {
+			foreach ($wildCardQuery as $field => [$query, $options]) {
+
+				$fieldConfig = [
+					'value' => $query
+				];
+				if(!(str_contains($query, '*') || str_contains($query, '?'))) {
+					$query .= '*';
+				}
+				if ($this->isOpensearch && !empty($options)) {
+					$fieldConfig = array_merge($fieldConfig, $options);
+				}
+				$return['body']['query']['bool']['must'][] = [
+					'wildcard' => [
+						$field => $fieldConfig,
 					],
 				];
 			}
