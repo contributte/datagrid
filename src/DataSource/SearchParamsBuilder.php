@@ -13,6 +13,8 @@ final class SearchParamsBuilder
 
 	private array $phrasePrefixQueries = [];
 
+	private array $wildCardQueries = [];
+
 	private array $matchQueries = [];
 
 	private array $booleanMatchQueries = [];
@@ -21,7 +23,9 @@ final class SearchParamsBuilder
 
 	private array $idsQueries = [];
 
-	public function __construct(private string $indexName)
+	private array $termQueries = [];
+
+	public function __construct(private string $indexName, private bool $isOpensearch = false)
 	{
 	}
 
@@ -48,6 +52,16 @@ final class SearchParamsBuilder
 	public function addIdsQuery(array $ids): void
 	{
 		$this->idsQueries[] = $ids;
+	}
+
+	public function addWildCardQuery(string $field, string $query, array $options = []): void
+	{
+		$this->wildCardQueries[] = [$field => [$query, $options]];
+	}
+
+	public function addTermQuery(string $field, string $query, array $options = []): void
+	{
+		$this->termQueries[] = [$field => [$query, $options]];
 	}
 
 	public function setSort(array $sort): void
@@ -91,7 +105,9 @@ final class SearchParamsBuilder
 			&& $this->matchQueries === []
 			&& $this->booleanMatchQueries === []
 			&& $this->rangeQueries === []
-			&& $this->idsQueries === []) {
+			&& $this->idsQueries === []
+			&& $this->wildCardQueries === []
+			&& $this->termQueries === []) {
 			return $return;
 		}
 
@@ -117,9 +133,45 @@ final class SearchParamsBuilder
 			foreach ($matchQuery as $field => $query) {
 				$return['body']['query']['bool']['must'][] = [
 					'match' => [
-						$field => [
-							'query' => $query,
-						],
+						$field => ['query' => $query],
+					],
+				];
+			}
+		}
+
+		foreach ($this->termQueries as $matchQuery) {
+			foreach ($matchQuery as $field => [$query, $options]) {
+				$fieldQueryParams = [
+					'value' => $query,
+				];
+				if ($this->isOpensearch && count($options) > 0) {
+					$fieldQueryParams = array_merge($fieldQueryParams, $options);
+				}
+
+				$return['body']['query']['bool']['must'][] = [
+					'term' => [
+						$field => $fieldQueryParams,
+					],
+				];
+			}
+		}
+
+		foreach ($this->wildCardQueries as $wildCardQuery) {
+			foreach ($wildCardQuery as $field => [$query, $options]) {
+				if (!(str_contains($query, '*') || str_contains($query, '?'))) {
+					$query .= '*';
+				}
+
+				$fieldQueryParams = [
+					'value' => $query,
+				];
+				if (count($options) > 0) {
+					$fieldQueryParams = array_merge($fieldQueryParams, $options);
+				}
+
+				$return['body']['query']['bool']['must'][] = [
+					'wildcard' => [
+						$field => $fieldQueryParams,
 					],
 				];
 			}

@@ -14,6 +14,12 @@ class FilterText extends Filter
 
 	protected bool $exact = false;
 
+	protected bool $wildCard = false;
+
+	protected bool $caseInsensitive = false;
+
+	protected bool $term = false;
+
 	protected bool $splitWordsSearch = true;
 
 	protected bool $conjunctionSearch = false;
@@ -94,6 +100,42 @@ class FilterText extends Filter
 	public function hasConjunctionSearch(): bool
 	{
 		return $this->conjunctionSearch;
+	}
+
+	public function setWildCard(bool $wildCard = true): self
+	{
+		$this->wildCard = $wildCard;
+
+		return $this;
+	}
+
+	public function isWildCardSearch(): bool
+	{
+		return $this->wildCard;
+	}
+
+	public function setCaseInsensitive(bool $caseInsensitive = true): self
+	{
+		$this->caseInsensitive = $caseInsensitive;
+
+		return $this;
+	}
+
+	public function isCaseInsensitive(): bool
+	{
+		return $this->caseInsensitive;
+	}
+
+	public function setTermSearch(bool $term = true): self
+	{
+		$this->term = $term;
+
+		return $this;
+	}
+
+	public function isTermSearch(): bool
+	{
+		return $this->term;
 	}
 
 }
