@@ -1,0 +1,49 @@
+name: "Nette Tester MSSQL"
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+  push:
+    branches: [ "*" ]
+
+jobs:
+  test-mssql:
+    name: "MSSQL DataSource Tests (PHP ${{ matrix.php }})"
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: [ "8.4" ]
+
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: "Datagrid!234"
+          MSSQL_PID: "Developer"
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'Datagrid!234' -C -Q 'SELECT 1' || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+          --health-start-period 20s
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: sqlsrv, pdo_sqlsrv
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --no-interaction --no-progress --prefer-dist
+
+      - name: Run MSSQL DataSource tests
+        run: vendor/bin/tester -s -p php --colors 1 -C tests/Cases/DataSources/DibiFluentMssqlDataSourceTest.phpt
