@@ -150,13 +150,13 @@ class OpenSearchDataSource extends FilterableDataSource implements IDataSource
 	public function applyFilterText(FilterText $filter): void
 	{
 		foreach ($filter->getCondition() as $column => $value) {
+			$options = [];
+			if($filter->isCaseInsensitive()) {
+				$options['case_insensitive'] = true;
+			}
 			if ($filter->isExactSearch()) {
-				$this->searchParamsBuilder->addMatchQuery($column, $value);
+				$this->searchParamsBuilder->addMatchQuery($column, $value, $options);
 			} elseif ($filter->isWildCardSearch()) {
-				$options = [];
-				if($filter->isCaseInsensitive()) {
-					$options['case_insensitive'] = true;
-				}
 				$this->searchParamsBuilder->addWildCardQuery($column, $value, $options);
 			} else {
 				$this->searchParamsBuilder->addPhrasePrefixQuery($column, $value);
