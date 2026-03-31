@@ -117,6 +117,7 @@ class FilterText extends Filter
 	public function setCaseInsensitive(bool $caseInsensitive = true): self
 	{
 		$this->caseInsensitive = $caseInsensitive;
+
 		return $this;
 	}
 
@@ -128,6 +129,7 @@ class FilterText extends Filter
 	public function setTermSearch(bool $term = true): self
 	{
 		$this->term = $term;
+
 		return $this;
 	}
 
@@ -135,7 +137,5 @@ class FilterText extends Filter
 	{
 		return $this->term;
 	}
-
-
 
 }

@@ -280,113 +280,114 @@ final class SearchParamsBuilderTest extends TestCase
 	}
 
 	public function testWildCardQuery(): void
-    {
-    		$this->searchParamsBuilder->addWildCardQuery('name', 'john');
+	{
+			$this->searchParamsBuilder->addWildCardQuery('name', 'john');
 
-    		Assert::same(
-    			[
-    				'index' => 'users',
-    				'body' => [
-    					'query' => [
-    						'bool' => [
-    							'must' => [
-    								[
-    									'wildcard' => [
-    										'name' => [
-    											'value' => 'john*',
-    										],
-    									],
-    								],
-    							],
-    						],
-    					],
-    				],
-    			],
-    			$this->searchParamsBuilder->buildParams()
-    		);
-    }
+			Assert::same(
+				[
+					'index' => 'users',
+					'body' => [
+						'query' => [
+							'bool' => [
+								'must' => [
+									[
+										'wildcard' => [
+											'name' => [
+												'value' => 'john*',
+											],
+										],
+									],
+								],
+							],
+						],
+					],
+				],
+				$this->searchParamsBuilder->buildParams()
+			);
+	}
 
 	public function testWildCardQuery2(): void
-    {
-    		$this->searchParamsBuilder->addWildCardQuery('name', 'j?hn');
+	{
+			$this->searchParamsBuilder->addWildCardQuery('name', 'j?hn');
 
-    		Assert::same(
-    			[
-    				'index' => 'users',
-    				'body' => [
-    					'query' => [
-    						'bool' => [
-    							'must' => [
-    								[
-    									'wildcard' => [
-    										'name' => [
-    											'value' => 'j?hn',
-    										],
-    									],
-    								],
-    							],
-    						],
-    					],
-    				],
-    			],
-    			$this->searchParamsBuilder->buildParams()
-    		);
-    }
+			Assert::same(
+				[
+					'index' => 'users',
+					'body' => [
+						'query' => [
+							'bool' => [
+								'must' => [
+									[
+										'wildcard' => [
+											'name' => [
+												'value' => 'j?hn',
+											],
+										],
+									],
+								],
+							],
+						],
+					],
+				],
+				$this->searchParamsBuilder->buildParams()
+			);
+	}
 
 	public function testWildCardQuery3(): void
-    {
-    		$this->searchParamsBuilder->addWildCardQuery('name', '*john');
+	{
+			$this->searchParamsBuilder->addWildCardQuery('name', '*john');
 
-    		Assert::same(
-    			[
-    				'index' => 'users',
-    				'body' => [
-    					'query' => [
-    						'bool' => [
-    							'must' => [
-    								[
-    									'wildcard' => [
-    										'name' => [
-    											'value' => '*john',
-    										],
-    									],
-    								],
-    							],
-    						],
-    					],
-    				],
-    			],
-    			$this->searchParamsBuilder->buildParams()
-    		);
-    }
+			Assert::same(
+				[
+					'index' => 'users',
+					'body' => [
+						'query' => [
+							'bool' => [
+								'must' => [
+									[
+										'wildcard' => [
+											'name' => [
+												'value' => '*john',
+											],
+										],
+									],
+								],
+							],
+						],
+					],
+				],
+				$this->searchParamsBuilder->buildParams()
+			);
+	}
 
 	public function testWildCardQueryCaseInsensitive(): void
-    {
-    		$this->searchParamsBuilder->addWildCardQuery('name', 'john', ['case_insensitive' => true]);
+	{
+			$this->searchParamsBuilder->addWildCardQuery('name', 'john', ['case_insensitive' => true]);
 
-    		Assert::same(
-    			[
-    				'index' => 'users',
-    				'body' => [
-    					'query' => [
-    						'bool' => [
-    							'must' => [
-    								[
-    									'wildcard' => [
-    										'name' => [
-    											'value' => 'john*',
-    											'case_insensitive' => true
-    										],
-    									],
-    								],
-    							],
-    						],
-    					],
-    				],
-    			],
-    			$this->searchParamsBuilder->buildParams()
-    		);
-    }
+			Assert::same(
+				[
+					'index' => 'users',
+					'body' => [
+						'query' => [
+							'bool' => [
+								'must' => [
+									[
+										'wildcard' => [
+											'name' => [
+												'value' => 'john*',
+												'case_insensitive' => true,
+											],
+										],
+									],
+								],
+							],
+						],
+					],
+				],
+				$this->searchParamsBuilder->buildParams()
+			);
+	}
+
 	public function testAllTogetherWithWildCardAndTermSearch(): void
 	{
 		$this->searchParamsBuilder->setSort(['name' => ['order' => 'desc']]);
@@ -421,16 +422,16 @@ final class SearchParamsBuilderTest extends TestCase
 									'match' => ['name' => ['query' => 'john']],
 								],
 
-                                [
-                                	'term' => [
-                                			'name' => [
-                                				'value' => 'john',
-                                			],
-                                	],
-                                ],
-                                [
-                                    'wildcard' => ['name' => ['value' => 'john*', 'case_insensitive' => true]],
-                                ],
+								[
+									'term' => [
+											'name' => [
+												'value' => 'john',
+											],
+									],
+								],
+								[
+									'wildcard' => ['name' => ['value' => 'john*', 'case_insensitive' => true]],
+								],
 								[
 									'bool' => [
 										'should' => [
@@ -461,6 +462,7 @@ final class SearchParamsBuilderTest extends TestCase
 			$this->searchParamsBuilder->buildParams()
 		);
 	}
+
 	public function testTermQueryOpenSearch(): void
 	{
 		$searchBuilder = new SearchParamsBuilder('users', true);
@@ -477,7 +479,7 @@ final class SearchParamsBuilderTest extends TestCase
 									'term' => [
 										'name' => [
 											'value' => 'john',
-											'case_insensitive' => true
+											'case_insensitive' => true,
 										],
 									],
 								],
@@ -489,6 +491,7 @@ final class SearchParamsBuilderTest extends TestCase
 			$searchBuilder->buildParams()
 		);
 	}
+
 	public function testTermQueryElasticSearch(): void
 	{
 		$this->searchParamsBuilder->addTermQuery('name', 'john', ['case_insensitive' => true]);

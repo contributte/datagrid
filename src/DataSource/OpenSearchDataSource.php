@@ -41,7 +41,8 @@ class OpenSearchDataSource extends FilterableDataSource implements IDataSource
 		if (!isset($searchResult['hits'])) {
 			throw new UnexpectedValueException();
 		}
-        $count = $this->client->count($this->searchParamsBuilder->buildParams());
+
+		$count = $this->client->count($this->searchParamsBuilder->buildParams());
 
 		return $count['count'];
 	}
@@ -151,9 +152,10 @@ class OpenSearchDataSource extends FilterableDataSource implements IDataSource
 	{
 		foreach ($filter->getCondition() as $column => $value) {
 			$options = [];
-			if($filter->isCaseInsensitive()) {
+			if ($filter->isCaseInsensitive()) {
 				$options['case_insensitive'] = true;
 			}
+
 			if ($filter->isExactSearch()) {
 				$this->searchParamsBuilder->addMatchQuery($column, $value);
 			} elseif ($filter->isWildCardSearch()) {
