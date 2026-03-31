@@ -34,9 +34,9 @@ final class SearchParamsBuilder
 		$this->phrasePrefixQueries[] = [$field => $query];
 	}
 
-	public function addMatchQuery(string $field, mixed $query, array $options = []): void
+	public function addMatchQuery(string $field, mixed $query): void
 	{
-		$this->matchQueries[] = [$field => [$query, $options]];
+		$this->matchQueries[] = [$field => $query ];
 	}
 
 	public function addBooleanMatchQuery(string $field, array $queries): void
@@ -129,7 +129,7 @@ final class SearchParamsBuilder
 		}
 
 		foreach ($this->matchQueries as $matchQuery) {
-			foreach ($matchQuery as $field => [$query, $options]) {
+			foreach ($matchQuery as $field => $query) {
 				$return['body']['query']['bool']['must'][] = [
 					'match' => [
 						$field => ['query' => $query],
@@ -141,7 +141,7 @@ final class SearchParamsBuilder
 		foreach ($this->termQueries as $matchQuery) {
 			foreach ($matchQuery as $field => [$query, $options]) {
 				$fieldQueryParams = [
-					'query' => $query
+					'value' => $query
 				];
 				if ($this->isOpensearch && count($options) > 0) {
 					$fieldQueryParams = array_merge($fieldQueryParams, $options);

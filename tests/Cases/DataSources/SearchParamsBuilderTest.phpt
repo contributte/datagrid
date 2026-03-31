@@ -424,7 +424,7 @@ final class SearchParamsBuilderTest extends TestCase
                                 [
                                 	'term' => [
                                 			'name' => [
-                                				'query' => 'john',
+                                				'value' => 'john',
                                 			],
                                 	],
                                 ],
@@ -476,7 +476,7 @@ final class SearchParamsBuilderTest extends TestCase
 								[
 									'term' => [
 										'name' => [
-											'query' => 'john',
+											'value' => 'john',
 											'case_insensitive' => true
 										],
 									],
@@ -503,7 +503,7 @@ final class SearchParamsBuilderTest extends TestCase
 								[
 									'term' => [
 										'name' => [
-											'query' => 'john',
+											'value' => 'john',
 										],
 									],
 								],
