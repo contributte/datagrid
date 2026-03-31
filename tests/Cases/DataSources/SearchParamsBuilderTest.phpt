@@ -387,7 +387,7 @@ final class SearchParamsBuilderTest extends TestCase
     			$this->searchParamsBuilder->buildParams()
     		);
     }
-	public function testAllTogetherWithWildCard(): void
+	public function testAllTogetherWithWildCardAndTermSearch(): void
 	{
 		$this->searchParamsBuilder->setSort(['name' => ['order' => 'desc']]);
 		$this->searchParamsBuilder->setFrom(0);
@@ -398,6 +398,7 @@ final class SearchParamsBuilderTest extends TestCase
 		$this->searchParamsBuilder->addRangeQuery('score', 8, 64);
 		$this->searchParamsBuilder->addIdsQuery([0, 1, 1, 2, 3, 5, 8]);
 		$this->searchParamsBuilder->addWildCardQuery('name', 'john', ['case_insensitive' => true]);
+		$this->searchParamsBuilder->addTermQuery('name', 'john', ['case_insensitive' => true]);
 
 		Assert::same(
 			[
@@ -419,8 +420,16 @@ final class SearchParamsBuilderTest extends TestCase
 								[
 									'match' => ['name' => ['query' => 'john']],
 								],
-								[
-                                	'wildcard' => ['name' => ['value' => 'john*', 'case_insensitive' => true]],
+
+                                [
+                                	'term' => [
+                                			'name' => [
+                                				'query' => 'john',
+                                			],
+                                	],
+                                ],
+                                [
+                                    'wildcard' => ['name' => ['value' => 'john*', 'case_insensitive' => true]],
                                 ],
 								[
 									'bool' => [
@@ -452,10 +461,10 @@ final class SearchParamsBuilderTest extends TestCase
 			$this->searchParamsBuilder->buildParams()
 		);
 	}
-	public function testMatchQueryOpenSearch(): void
+	public function testTermQueryOpenSearch(): void
 	{
 		$searchBuilder = new SearchParamsBuilder('users', true);
-		$searchBuilder->addMatchQuery('name', 'john', ['case_insensitive' => true]);
+		$searchBuilder->addTermQuery('name', 'john', ['case_insensitive' => true]);
 
 		Assert::same(
 			[
@@ -465,7 +474,7 @@ final class SearchParamsBuilderTest extends TestCase
 						'bool' => [
 							'must' => [
 								[
-									'match' => [
+									'term' => [
 										'name' => [
 											'query' => 'john',
 											'case_insensitive' => true
@@ -480,9 +489,9 @@ final class SearchParamsBuilderTest extends TestCase
 			$searchBuilder->buildParams()
 		);
 	}
-	public function testMatchQueryElasticSearch(): void
+	public function testTermQueryElasticSearch(): void
 	{
-		$this->searchParamsBuilder->addMatchQuery('name', 'john', ['case_insensitive' => true]);
+		$this->searchParamsBuilder->addTermQuery('name', 'john', ['case_insensitive' => true]);
 
 		Assert::same(
 			[
@@ -492,7 +501,7 @@ final class SearchParamsBuilderTest extends TestCase
 						'bool' => [
 							'must' => [
 								[
-									'match' => [
+									'term' => [
 										'name' => [
 											'query' => 'john',
 										],

@@ -18,6 +18,8 @@ class FilterText extends Filter
 
 	protected bool $caseInsensitive = false;
 
+	protected bool $term = false;
+
 	protected bool $splitWordsSearch = true;
 
 	protected bool $conjunctionSearch = false;
@@ -122,5 +124,18 @@ class FilterText extends Filter
 	{
 		return $this->caseInsensitive;
 	}
+
+	public function setTermSearch(bool $term = true): self
+	{
+		$this->term = $term;
+		return $this;
+	}
+
+	public function isTermSearch(): bool
+	{
+		return $this->term;
+	}
+
+
 
 }

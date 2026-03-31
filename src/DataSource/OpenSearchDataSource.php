@@ -158,6 +158,8 @@ class OpenSearchDataSource extends FilterableDataSource implements IDataSource
 				$this->searchParamsBuilder->addMatchQuery($column, $value, $options);
 			} elseif ($filter->isWildCardSearch()) {
 				$this->searchParamsBuilder->addWildCardQuery($column, $value, $options);
+			} elseif ($filter->isTermSearch()) {
+				$this->searchParamsBuilder->addTermQuery($column, $value, $options);
 			} else {
 				$this->searchParamsBuilder->addPhrasePrefixQuery($column, $value);
 			}

@@ -23,6 +23,8 @@ final class SearchParamsBuilder
 
 	private array $idsQueries = [];
 
+	private array $termQueries = [];
+
 	public function __construct(private string $indexName, private bool $isOpensearch = false)
 	{
 	}
@@ -55,6 +57,10 @@ final class SearchParamsBuilder
 	public function addWildCardQuery(string $field, string $query, array $options = []): void
 	{
 		$this->wildCardQueries[] = [$field => [$query, $options]];
+	}
+	public function addTermQuery(string $field, string $query, array $options = []): void
+	{
+		$this->termQueries[] = [$field => [$query, $options]];
 	}
 
 	public function setSort(array $sort): void
@@ -99,7 +105,8 @@ final class SearchParamsBuilder
 			&& $this->booleanMatchQueries === []
 			&& $this->rangeQueries === []
 			&& $this->idsQueries === []
-		    && $this->wildCardQueries === []) {
+		    && $this->wildCardQueries === []
+			&& $this->termQueries === [] ) {
 			return $return;
 		}
 
@@ -123,6 +130,16 @@ final class SearchParamsBuilder
 
 		foreach ($this->matchQueries as $matchQuery) {
 			foreach ($matchQuery as $field => [$query, $options]) {
+				$return['body']['query']['bool']['must'][] = [
+					'match' => [
+						$field => ['query' => $query],
+					],
+				];
+			}
+		}
+
+		foreach ($this->termQueries as $matchQuery) {
+			foreach ($matchQuery as $field => [$query, $options]) {
 				$fieldQueryParams = [
 					'query' => $query
 				];
@@ -130,7 +147,7 @@ final class SearchParamsBuilder
 					$fieldQueryParams = array_merge($fieldQueryParams, $options);
 				}
 				$return['body']['query']['bool']['must'][] = [
-					'match' => [
+					'term' => [
 						$field => $fieldQueryParams,
 					],
 				];
