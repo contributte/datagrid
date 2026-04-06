@@ -45,7 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
 				new NetteFormsPlugin(netteForms),
 				new SortablePlugin(new SortableJS()),
 				new DatepickerPlugin(new VanillaDatepicker({ buttonClass: 'btn' })),
-				new SelectpickerPlugin(new TomSelect(Select)),
+				new SelectpickerPlugin(new TomSelect(Select, {
+					plugins: ['dropdown_input', 'clear_button'],
+					maxOptions: null,
+				})),
 				new TreeViewPlugin(),
 			],
 		},
