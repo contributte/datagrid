@@ -104,6 +104,13 @@ class FilterSelect extends OneColumnFilter
 	{
 		$input = $container->addSelect($key, $name, $options);
 
+		// SelectBox adds an implicit "Filled" rule when no prompt is set.
+		// A filter is never required, and when its column is hidden the input
+		// isn't rendered, so nothing is submitted and the rule fails — which
+		// invalidates the whole filter container and triggers a warning on
+		// getValues(). Filters don't need validation, so drop it here.
+		$input->getRules()->reset();
+
 		if ($this->getPrompt() !== null) {
 			$input->setPrompt($this->getPrompt());
 		}
