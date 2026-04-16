@@ -110,6 +110,40 @@ final class FilterTest extends TestCase
 		Assert::count(0, $grid->filter);
 	}
 
+	/**
+	 * Regression test for https://github.com/contributte/datagrid/issues/1281
+	 *
+	 * A FilterSelect on a hidden column isn't rendered in HTML, so no value is
+	 * submitted for it. SelectBox's constructor adds an implicit "Filled" rule
+	 * when no prompt is set, which used to fail validation for the missing
+	 * value, invalidate the filter container, and trigger an E_USER_WARNING
+	 * from Container::getValues() in Datagrid::filterSucceeded().
+	 */
+	public function testFilterSelectHasNoImplicitValidation(): void
+	{
+		$factory = new TestingDatagridFactoryRouter();
+		/** @var Datagrid $grid */
+		$grid = $factory->createTestingDatagrid()->getComponent('grid');
+
+		$grid->addColumnText('name', 'Name')
+			->setFilterText();
+
+		$grid->addColumnText('status', 'Status')
+			->setFilterSelect(['yes' => 'Yes', 'no' => 'No']);
+
+		$filterForm = $grid->createComponentFilter();
+
+		$filterContainer = $filterForm->getComponent('filter');
+		Assert::type(Container::class, $filterContainer);
+
+		$filterContainer->validate();
+
+		// With no value set (as if the select was hidden and not submitted),
+		// the container must still be valid — no implicit Filled rule should
+		// fire on the FilterSelect.
+		Assert::true($filterContainer->isValid());
+	}
+
 }
 
 (new FilterTest())->run();
