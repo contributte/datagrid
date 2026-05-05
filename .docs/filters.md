@@ -90,6 +90,16 @@ $grid->addFilterText('custom', 'Custom search:', 'name')
 	});
 ```
 
+
+When using `NetteDatabaseDataSource`, the callback receives the data source instance. Use `addWhereCondition()` to append raw SQL conditions:
+
+```php
+$grid->addFilterText('custom', 'Custom search:', 'name')
+	->setCondition(function(NetteDatabaseDataSource $dataSource, $value) {
+		$dataSource->addWhereCondition('id > ?', [strlen($value)]);
+	});
+```
+
 ### Templates:
 
 Filters can also have their own templates:

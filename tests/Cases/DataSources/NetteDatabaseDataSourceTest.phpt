@@ -167,7 +167,7 @@ final class NetteDatabaseDataSourceTest extends BaseDataSourceTest
 	public function testGetDataSource(): void
 	{
 		$s = new NetteDatabaseDataSource($this->db, 'SELECT * FROM users');
-		Assert::same($this->db, $s->getDataSource());
+		Assert::same($s, $s->getDataSource());
 	}
 
 	public function testGetDataCached(): void
@@ -307,6 +307,23 @@ final class NetteDatabaseDataSourceTest extends BaseDataSourceTest
 		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE ((name LIKE ?) AND (address LIKE ?))', $sql);
 		Assert::same(['%John%', '%John%'], $params);
 	}
+
+
+	public function testCustomWhereCondition(): void
+	{
+		$s = new NetteDatabaseDataSource($this->db, 'SELECT * FROM users');
+		$filter = new FilterText($this->grid, 'a', 'b', []);
+		$filter->setValue('text');
+		$filter->setCondition(function(NetteDatabaseDataSource $dataSource, $value){
+			$dataSource->addWhereCondition('id > ?', [strlen($value)]);
+		});
+		$s->filter([$filter]);
+		[$sql, $params] = $s->getQuery();
+
+		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE id > ?', $sql);
+		Assert::same([4], $params);
+	}
+
 
 	protected function setUpDatabase(): void
 	{
