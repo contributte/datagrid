@@ -308,13 +308,12 @@ final class NetteDatabaseDataSourceTest extends BaseDataSourceTest
 		Assert::same(['%John%', '%John%'], $params);
 	}
 
-
 	public function testCustomWhereCondition(): void
 	{
 		$s = new NetteDatabaseDataSource($this->db, 'SELECT * FROM users');
 		$filter = new FilterText($this->grid, 'a', 'b', []);
 		$filter->setValue('text');
-		$filter->setCondition(function(NetteDatabaseDataSource $dataSource, $value){
+		$filter->setCondition(function (NetteDatabaseDataSource $dataSource, $value): void {
 			$dataSource->addWhereCondition('id > ?', [strlen($value)]);
 		});
 		$s->filter([$filter]);
@@ -323,7 +322,6 @@ final class NetteDatabaseDataSourceTest extends BaseDataSourceTest
 		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE id > ?', $sql);
 		Assert::same([4], $params);
 	}
-
 
 	protected function setUpDatabase(): void
 	{
