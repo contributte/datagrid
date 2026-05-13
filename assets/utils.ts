@@ -20,7 +20,8 @@ export function shouldIgnoreKey(e: KeyboardEvent): boolean {
 	if (e.key.length === 1) { // Printable characters always change the input value
 		return false;
 	}
-	return e.key !== "Backspace" && e.key !== "Delete";
+	// Editing keys (and the virtual-keyboard placeholder "Unidentified") change the input value
+	return e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Unidentified";
 }
 
 export function isEnter(e: KeyboardEvent): boolean {
@@ -128,19 +129,31 @@ export function calculateCellLines(el: HTMLElement) {
 	return cellLines;
 }
 
+export type Debounced<TArgs = unknown> = ((...args: TArgs[]) => void) & { cancel: () => void };
+
 // A little better debounce ;)
 export function debounce<TArgs, TFun extends (...args: TArgs[]) => unknown | Promise<unknown>>(
 	fn: TFun,
 	slowdown: number = 200
-): (...args: TArgs[]) => void {
+): Debounced<TArgs> {
 	let timeout: ReturnType<typeof setTimeout> | null = null;
 
-	return (...args) => {
-		timeout && clearTimeout(timeout);
+	const cancel = () => {
+		if (timeout !== null) {
+			clearTimeout(timeout);
+			timeout = null;
+		}
+	};
+
+	const debounced = (...args: TArgs[]) => {
+		cancel();
 		timeout = setTimeout(() => {
+			timeout = null;
 			fn(...args);
 		}, slowdown);
 	};
+
+	return Object.assign(debounced, { cancel });
 }
 
 export function defaultDatagridNameResolver(this: Datagrid, datagrid: HTMLElement) {
