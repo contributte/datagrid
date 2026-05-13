@@ -7,8 +7,8 @@ export function isPromise<T = any>(p: any): p is Promise<T> {
 
 export function isInKeyRange(e: KeyboardEvent, min: number, max: number): boolean {
 	if (e.key.length !== 1) { // Named keys (Tab, Shift, ArrowLeft, etc.) are always considered in range
-		if (e.key === 'Backspace' || e.key === 'Delete') {
-			return false; // Editing keys change the input value and should still trigger autosubmit
+		if (e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Unidentified') {
+			return false; // Editing keys (and the virtual-keyboard placeholder) change the input value and should still trigger autosubmit
 		}
 		return true;
 	}
