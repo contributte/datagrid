@@ -38,10 +38,6 @@ class FilterSelect extends OneColumnFilter
 	{
 		$form = $container->lookup(Form::class);
 
-		if (!$form instanceof Form) {
-			throw new UnexpectedValueException();
-		}
-
 		$translator = $form->getTranslator();
 
 		if ($translator === null) {

@@ -47,7 +47,6 @@ use DateTime;
 use InvalidArgumentException;
 use Nette\Application\Attributes\Persistent;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\UI\Component;
 use Nette\Application\UI\Control;
@@ -2815,15 +2814,15 @@ class Datagrid extends Control
 	 */
 	public function getSortableParentPath(): string
 	{
-		if ($this->getParentComponent() instanceof IPresenter) {
+		if ($this->getParentComponent() instanceof Presenter) {
 			return '';
 		}
 
-		$presenter = $this->getParentComponent()->lookupPath(IPresenter::class, false);
+		$presenter = $this->getParentComponent()->lookupPath(Presenter::class, false);
 
 		if ($presenter === null) {
 			throw new UnexpectedValueException(
-				sprintf('%s needs %s', self::class, IPresenter::class)
+				sprintf('%s needs %s', self::class, Presenter::class)
 			);
 		}
 
