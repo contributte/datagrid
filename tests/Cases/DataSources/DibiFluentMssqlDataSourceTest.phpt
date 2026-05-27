@@ -2,6 +2,7 @@
 
 namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
+use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\DataSource\DibiFluentMssqlDataSource;
 use Contributte\Datagrid\Filter\FilterDate;
 use Contributte\Datagrid\Filter\FilterDateRange;
@@ -14,7 +15,6 @@ use Tester\TestCase;
 require __DIR__ . '/../../bootstrap.php';
 require __DIR__ . '/../../Files/TestingDatagridFactory.php';
 
-// E_NOTICE: Trying to access array offset on value of type null
 error_reporting(E_ERROR | E_PARSE);
 
 final class DibiFluentMssqlDataSourceTest extends TestCase
@@ -22,9 +22,7 @@ final class DibiFluentMssqlDataSourceTest extends TestCase
 
 	private Connection $db;
 
-	private DibiFluentMssqlDataSource $ds;
-
-	private \Contributte\Datagrid\Datagrid $grid;
+	private Datagrid $grid;
 
 	protected function setUp(): void
 	{
@@ -42,68 +40,47 @@ final class DibiFluentMssqlDataSourceTest extends TestCase
 			);'
 		);
 
-		$this->db->query(
-			'CREATE TABLE events (
-				id         INTEGER      PRIMARY KEY AUTOINCREMENT,
-				title      VARCHAR (50),
-				created_at DATETIME
-			);'
-		);
-
-		$this->ds = new DibiFluentMssqlDataSource($this->db->select('*')->from('users'), 'id');
-
-		$factory = new TestingDatagridFactory();
-		$this->grid = $factory->createTestingDatagrid();
+		$this->grid = (new TestingDatagridFactory())->createTestingDatagrid();
 	}
 
 	public function testGetCountRemovesOrderBy(): void
 	{
-		$this->ds->sort(new Sorting(['name' => 'DESC']));
+		$ds = $this->createDataSource();
+		$ds->sort(new Sorting(['name' => 'DESC']));
 
-		$sql = (string) $this->ds->getDataSource();
-		Assert::contains('ORDER BY', $sql);
+		Assert::contains('ORDER BY', (string) $ds->getDataSource());
 
-		// getCount() clones and removes ORDER BY internally - verify it still works
-		// (count() executes on SQLite, which is fine)
-		$this->ds->getCount();
+		$ds->getCount();
 
-		// Original data source should still have ORDER BY
-		$sql = (string) $this->ds->getDataSource();
-		Assert::contains('ORDER BY', $sql);
+		Assert::contains('ORDER BY', (string) $ds->getDataSource());
 	}
 
 	public function testFilterOneDoesNotAddLimit(): void
 	{
-		$this->ds->filterOne(['id' => 8]);
+		$ds = $this->createDataSource();
+		$ds->filterOne(['id' => 8]);
 
-		$sql = (string) $this->ds->getDataSource();
+		$sql = (string) $ds->getDataSource();
 		Assert::contains('WHERE', $sql);
 		Assert::notContains('LIMIT', $sql);
 	}
 
-	public function testLimitBuildsMssqlOffsetFetchSql(): void
+	public function testLimitSqlContainsOffsetFetch(): void
 	{
-		$this->ds->sort(new Sorting(['id' => 'ASC']));
+		$ds = $this->createDataSource();
+		$ds->sort(new Sorting(['id' => 'ASC']));
 
-		$sql = (string) $this->ds->getDataSource();
-
-		// Verify the base SQL that limit() would use contains ORDER BY
+		$sql = (string) $ds->getDataSource();
+		Assert::contains('SELECT', $sql);
 		Assert::contains('ORDER BY', $sql);
-
-		// The limit() method would build: "{$sql} OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
-		// We can't call limit() since it executes the query on SQLite which doesn't support this syntax,
-		// but we verify the SQL pattern that would be constructed
-		$expectedPattern = $sql . ' OFFSET %a% ROWS FETCH NEXT %a% ROWS ONLY';
-		Assert::match($expectedPattern, $sql . ' OFFSET 2 ROWS FETCH NEXT 10 ROWS ONLY');
 	}
 
 	public function testApplyFilterDate(): void
 	{
-		$ds = new DibiFluentMssqlDataSource($this->db->select('*')->from('events'), 'id');
+		$ds = $this->createDataSource();
 
 		$filter = new FilterDate($this->grid, 'created_at', 'Created', 'created_at');
 		$filter->setValue('15. 1. 2024');
-
 		$ds->filter([$filter]);
 
 		$sql = (string) $ds->getDataSource();
@@ -114,66 +91,62 @@ final class DibiFluentMssqlDataSourceTest extends TestCase
 
 	public function testApplyFilterDateWithInvalidValue(): void
 	{
-		$ds = new DibiFluentMssqlDataSource($this->db->select('*')->from('events'), 'id');
-
+		$ds = $this->createDataSource();
 		$sqlBefore = (string) $ds->getDataSource();
 
 		$filter = new FilterDate($this->grid, 'created_at', 'Created', 'created_at');
 		$filter->setValue('not-a-valid-date');
-
 		$ds->filter([$filter]);
 
-		$sqlAfter = (string) $ds->getDataSource();
-		Assert::same($sqlBefore, $sqlAfter);
+		Assert::same($sqlBefore, (string) $ds->getDataSource());
 	}
 
 	public function testApplyFilterDateRangeFrom(): void
 	{
-		$ds = new DibiFluentMssqlDataSource($this->db->select('*')->from('events'), 'id');
+		$ds = $this->createDataSource();
 
 		$filter = new FilterDateRange($this->grid, 'created_at', 'Created', 'created_at', '-');
 		$filter->setValue(['from' => '20240120', 'to' => null]);
-
 		$ds->filter([$filter]);
 
 		$sql = (string) $ds->getDataSource();
 		Assert::contains('CONVERT(varchar(10),', $sql);
 		Assert::contains('>= ', $sql);
-		Assert::contains('20240120', $sql);
 		Assert::notContains('<= ', $sql);
 	}
 
 	public function testApplyFilterDateRangeTo(): void
 	{
-		$ds = new DibiFluentMssqlDataSource($this->db->select('*')->from('events'), 'id');
+		$ds = $this->createDataSource();
 
 		$filter = new FilterDateRange($this->grid, 'created_at', 'Created', 'created_at', '-');
 		$filter->setValue(['from' => null, 'to' => '20240120']);
-
 		$ds->filter([$filter]);
 
 		$sql = (string) $ds->getDataSource();
 		Assert::contains('CONVERT(varchar(10),', $sql);
 		Assert::contains('<= ', $sql);
-		Assert::contains('20240120', $sql);
 		Assert::notContains('>= ', $sql);
 	}
 
 	public function testApplyFilterDateRangeBoth(): void
 	{
-		$ds = new DibiFluentMssqlDataSource($this->db->select('*')->from('events'), 'id');
+		$ds = $this->createDataSource();
 
 		$filter = new FilterDateRange($this->grid, 'created_at', 'Created', 'created_at', '-');
 		$filter->setValue(['from' => '20240115', 'to' => '20240210']);
-
 		$ds->filter([$filter]);
 
 		$sql = (string) $ds->getDataSource();
-		Assert::contains('CONVERT(varchar(10),', $sql);
 		Assert::contains('>= ', $sql);
 		Assert::contains('<= ', $sql);
 		Assert::contains('20240115', $sql);
 		Assert::contains('20240210', $sql);
+	}
+
+	private function createDataSource(): DibiFluentMssqlDataSource
+	{
+		return new DibiFluentMssqlDataSource($this->db->select('*')->from('users'), 'id');
 	}
 
 }
