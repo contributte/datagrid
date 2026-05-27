@@ -2,6 +2,8 @@
 
 namespace Contributte\Datagrid\Tests\Cases;
 
+use Contributte\Datagrid\Column\Action\Confirmation\CallbackConfirmation;
+use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Row;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
@@ -59,6 +61,49 @@ final class ColumnStatusTest extends TestCase
 		$grid->addColumnText('test', 'Test');
 		$grid->removeColumn('test');
 		$grid->getColumnsVisibility();
+	}
+
+	public function testOptionSettersAndGetters(): void
+	{
+		$option = $this->grid->addColumnStatus('status', 'Status')
+			->addOption(1, 'Online');
+
+		Assert::same($option, $option->setTitle('Currently online'));
+		Assert::same($option, $option->setClass('btn-primary', 'btn btn-sm'));
+		Assert::same($option, $option->setClassSecondary('btn btn-secondary'));
+		Assert::same($option, $option->setClassInDropdown('dropdown-item active'));
+		Assert::same($option, $option->setIcon('check'));
+		Assert::same($option, $option->setIconSecondary('circle'));
+
+		Assert::same(1, $option->getValue());
+		Assert::same('Online', $option->getText());
+		Assert::same('Currently online', $option->getTitle());
+		Assert::same('btn-primary', $option->getClass());
+		Assert::same('btn btn-secondary', $option->getClassSecondary());
+		Assert::same('dropdown-item active', $option->getClassInDropdown());
+		Assert::same('check', $option->getIcon());
+		Assert::same('circle', $option->getIconSecondary());
+	}
+
+	public function testOptionConfirmationDialog(): void
+	{
+		$row = new Row($this->grid, ['id' => 10, 'name' => 'John'], 'id');
+		$columnStatus = $this->grid->addColumnStatus('status', 'Status');
+
+		$withoutConfirmation = $columnStatus->addOption(1, 'Online');
+		Assert::null($withoutConfirmation->getConfirmationDialog($row));
+
+		$stringConfirmation = $columnStatus->addOption(2, 'Offline')
+			->setConfirmation(new StringConfirmation('Really?'));
+		Assert::same('Really?', $stringConfirmation->getConfirmationDialog($row));
+
+		$placeholderConfirmation = $columnStatus->addOption(3, 'Blocked')
+			->setConfirmation(new StringConfirmation('Block %s?', 'name'));
+		Assert::same('Block John?', $placeholderConfirmation->getConfirmationDialog($row));
+
+		$callbackConfirmation = $columnStatus->addOption(4, 'Deleted')
+			->setConfirmation(new CallbackConfirmation(fn (array $item): string => 'Delete #' . $item['id'] . '?'));
+		Assert::same('Delete #10?', $callbackConfirmation->getConfirmationDialog($row));
 	}
 
 }
