@@ -38,16 +38,16 @@ class FilterRange extends OneColumnFilter
 		$placeholders = $this->getPlaceholders();
 
 		if ($placeholders !== []) {
-			$text_from = reset($placeholders);
+			$textFrom = reset($placeholders);
 
-			if ($text_from) {
-				$from->setHtmlAttribute('placeholder', $text_from);
+			if ($textFrom) {
+				$from->setHtmlAttribute('placeholder', $textFrom);
 			}
 
-			$text_to = end($placeholders);
+			$textTo = end($placeholders);
 
-			if ($text_to && ($text_to !== $text_from)) {
-				$to->setHtmlAttribute('placeholder', $text_to);
+			if ($textTo && ($textTo !== $textFrom)) {
+				$to->setHtmlAttribute('placeholder', $textTo);
 			}
 		}
 	}

@@ -117,9 +117,9 @@ class ArrayDataSource implements IDataSource
 
 			foreach ($this->data as $item) {
 				$value = is_object($item) ? $item->$column : $item[$column]; // @phpstan-ignore-line
-				$sort_by = $value instanceof DateTimeInterface ? $value->format('Y-m-d H:i:s') : (string) $value;
+				$sortBy = $value instanceof DateTimeInterface ? $value->format('Y-m-d H:i:s') : (string) $value;
 
-				$data[$sort_by][] = $item;
+				$data[$sortBy][] = $item;
 			}
 
 			if ($order === 'ASC') {
@@ -177,12 +177,12 @@ class ArrayDataSource implements IDataSource
 
 				$words = $filter instanceof FilterText && $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
 
-				$row_value = strtolower(Strings::toAscii((string) $row[$column]));
+				$rowValue = strtolower(Strings::toAscii((string) $row[$column]));
 
 				$found = [];
 
 				foreach ($words as $word) {
-					if (str_contains($row_value, strtolower(Strings::toAscii($word)))) {
+					if (str_contains($rowValue, strtolower(Strings::toAscii($word)))) {
 						if ($filter instanceof FilterText && !$filter->hasConjunctionSearch()) {
 							return $row;
 						} else {
@@ -233,22 +233,22 @@ class ArrayDataSource implements IDataSource
 		$format = $filter->getPhpFormat();
 		$condition = $filter->getCondition();
 		$values = $condition[$filter->getColumn()];
-		$row_value = $row[$filter->getColumn()];
+		$rowValue = $row[$filter->getColumn()];
 
 		if ($values['from'] !== null && $values['from'] !== '') {
 			try {
-				$date_from = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
-				$date_from->setTime(0, 0, 0);
+				$dateFrom = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
+				$dateFrom->setTime(0, 0, 0);
 			} catch (DatagridDateTimeHelperException) {
 				return false;
 			}
 
-			if (!($row_value instanceof DateTime)) {
+			if (!($rowValue instanceof DateTime)) {
 				/**
 				 * Try to convert string to DateTime object
 				 */
 				try {
-					$row_value = DateTimeHelper::tryConvertToDate($row_value);
+					$rowValue = DateTimeHelper::tryConvertToDate($rowValue);
 				} catch (DatagridDateTimeHelperException) {
 					/**
 					 * Otherwise just return raw string
@@ -257,25 +257,25 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 
-			if ($row_value->getTimestamp() < $date_from->getTimestamp()) {
+			if ($rowValue->getTimestamp() < $dateFrom->getTimestamp()) {
 				return false;
 			}
 		}
 
 		if ($values['to'] !== null && $values['to'] !== '') {
 			try {
-				$date_to = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
-				$date_to->setTime(23, 59, 59);
+				$dateTo = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
+				$dateTo->setTime(23, 59, 59);
 			} catch (DatagridDateTimeHelperException) {
 				return false;
 			}
 
-			if (!($row_value instanceof DateTime)) {
+			if (!($rowValue instanceof DateTime)) {
 				/**
 				 * Try to convert string to DateTime object
 				 */
 				try {
-					$row_value = DateTimeHelper::tryConvertToDate($row_value);
+					$rowValue = DateTimeHelper::tryConvertToDate($rowValue);
 				} catch (DatagridDateTimeHelperException) {
 					/**
 					 * Otherwise just return raw string
@@ -284,7 +284,7 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 
-			if ($row_value->getTimestamp() > $date_to->getTimestamp()) {
+			if ($rowValue->getTimestamp() > $dateTo->getTimestamp()) {
 				return false;
 			}
 		}
@@ -301,7 +301,7 @@ class ArrayDataSource implements IDataSource
 		$condition = $filter->getCondition();
 
 		foreach ($condition as $column => $value) {
-			$row_value = $row[$column];
+			$rowValue = $row[$column];
 
 			try {
 				$date = DateTimeHelper::tryConvertToDateTime($value, [$format]);
@@ -309,12 +309,12 @@ class ArrayDataSource implements IDataSource
 				return false;
 			}
 
-			if (!($row_value instanceof DateTime)) {
+			if (!($rowValue instanceof DateTime)) {
 				/**
 				 * Try to convert string to DateTime object
 				 */
 				try {
-					$row_value = DateTimeHelper::tryConvertToDateTime($row_value);
+					$rowValue = DateTimeHelper::tryConvertToDateTime($rowValue);
 				} catch (DatagridDateTimeHelperException) {
 					/**
 					 * Otherwise just return raw string
@@ -323,7 +323,7 @@ class ArrayDataSource implements IDataSource
 				}
 			}
 
-			return $row_value->format($format) === $date->format($format);
+			return $rowValue->format($format) === $date->format($format);
 		}
 
 		return false;
