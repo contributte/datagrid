@@ -52,9 +52,7 @@ class FilterMultiSelect extends FilterSelect
 		array $options
 	): BaseControl
 	{
-		/**
-		 * Set some translated texts
-		 */
+		/** @var Form $form */
 		$form = $container->lookup(Form::class);
 
 		$translator = $form->getTranslator();

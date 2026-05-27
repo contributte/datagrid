@@ -15,8 +15,7 @@ final class ItemDetailForm extends Container
 	/** @var callable */
 	private $callableSetContainer;
 
-	/** @var ?array */
-	private ?array $httpPost = null;
+	private mixed $httpPost = null;
 
 	/** @var array<bool> */
 	private array $containerSetByName = [];
@@ -62,8 +61,12 @@ final class ItemDetailForm extends Container
 
 			$path = explode(self::NameSeparator, $lookupPath);
 
-			/** @var array $httpData */
 			$httpData = $form->getHttpData();
+
+			if (!is_array($httpData)) {
+				$httpData = [];
+			}
+
 			$this->httpPost = Arrays::get($httpData, $path, null);
 		}
 

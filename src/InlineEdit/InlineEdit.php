@@ -10,6 +10,8 @@ use Contributte\Datagrid\Traits\TButtonText;
 use Contributte\Datagrid\Traits\TButtonTitle;
 use Contributte\Datagrid\Traits\TButtonTryAddIcon;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
@@ -178,20 +180,24 @@ class InlineEdit
 		foreach ($container->getControls() as $key => $control) {
 			switch ($key) {
 				case 'submit':
-					$control->setValidationScope([$container]);
-					$control->setAttribute('class', 'btn btn-xs btn-primary');
+					if ($control instanceof SubmitButton) {
+						$control->setValidationScope([$container]);
+						$control->setHtmlAttribute('class', 'btn btn-xs btn-primary');
+					}
 
 					break;
 
 				case 'cancel':
-					$control->setValidationScope([]);
-					$control->setAttribute('class', 'btn btn-xs btn-danger');
+					if ($control instanceof SubmitButton) {
+						$control->setValidationScope([]);
+						$control->setHtmlAttribute('class', 'btn btn-xs btn-danger');
+					}
 
 					break;
 
 				default:
-					if ($control->getControlPrototype()->getAttribute('class') === null) {
-						$control->setAttribute('class', 'form-control form-control-sm');
+					if ($control instanceof BaseControl && $control->getControlPrototype()->getAttribute('class') === null) {
+						$control->setHtmlAttribute('class', 'form-control form-control-sm');
 					}
 
 					break;
