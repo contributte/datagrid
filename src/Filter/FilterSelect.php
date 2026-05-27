@@ -36,6 +36,7 @@ class FilterSelect extends OneColumnFilter
 
 	public function addToFormContainer(Container $container): void
 	{
+		/** @var Form $form */
 		$form = $container->lookup(Form::class);
 
 		$translator = $form->getTranslator();
