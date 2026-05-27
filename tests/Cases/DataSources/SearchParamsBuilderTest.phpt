@@ -184,6 +184,38 @@ final class SearchParamsBuilderTest extends TestCase
 		);
 	}
 
+	public function testEmptyBooleanMatchQueryIsSkipped(): void
+	{
+		$this->searchParamsBuilder->addBooleanMatchQuery('status', []);
+		$params = $this->searchParamsBuilder->buildParams();
+
+		Assert::same([], $params['body']['query']['bool']['must']);
+	}
+
+	public function testEmptyRangeQueryIsSkipped(): void
+	{
+		$this->searchParamsBuilder->addRangeQuery('score', null, null);
+		$params = $this->searchParamsBuilder->buildParams();
+
+		Assert::same([], $params['body']['query']['bool']['must']);
+	}
+
+	public function testOneSidedRangeQueries(): void
+	{
+		$this->searchParamsBuilder->addRangeQuery('score', 8, null);
+		$this->searchParamsBuilder->addRangeQuery('age', null, 64);
+
+		$params = $this->searchParamsBuilder->buildParams();
+
+		Assert::same(
+			[
+				['range' => ['score' => ['gte' => 8]]],
+				['range' => ['age' => ['lte' => 64]]],
+			],
+			$params['body']['query']['bool']['must']
+		);
+	}
+
 	public function testIdsQuery(): void
 	{
 		$this->searchParamsBuilder->addIdsQuery([0, 1, 1, 2, 3, 5, 8]);

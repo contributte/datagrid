@@ -3,6 +3,7 @@
 namespace Contributte\Datagrid\Tests\Cases;
 
 use Contributte\Datagrid\Column\Action;
+use Contributte\Datagrid\Column\Action\Confirmation\CallbackConfirmation;
 use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Row;
@@ -140,6 +141,28 @@ final class ColumnActionTest extends TestCase
 
 		Assert::same(
 			'<a href="doStuff!?id=1" class="btn btn-xs btn-default btn-secondary" data-datagrid-confirm="Really?">Do</a>',
+			$this->render($action)
+		);
+	}
+
+	public function testActionConfirmPlaceholder(): void
+	{
+		$action = $this->grid->addAction('action', 'Do', 'doStuff!')
+			->setConfirmation(new StringConfirmation('Delete %s?', 'name'));
+
+		Assert::same(
+			'<a href="doStuff!?id=1" class="btn btn-xs btn-default btn-secondary" data-datagrid-confirm="Delete John?">Do</a>',
+			$this->render($action)
+		);
+	}
+
+	public function testActionConfirmCallback(): void
+	{
+		$action = $this->grid->addAction('action', 'Do', 'doStuff!')
+			->setConfirmation(new CallbackConfirmation(fn (array $item): string => 'Delete ' . $item['name'] . '?'));
+
+		Assert::same(
+			'<a href="doStuff!?id=1" class="btn btn-xs btn-default btn-secondary" data-datagrid-confirm="Delete John?">Do</a>',
 			$this->render($action)
 		);
 	}
