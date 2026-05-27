@@ -29,7 +29,7 @@ class GroupActionCollection
 		$form = $container->lookup(Form::class);
 		$lookupPath = $container->lookupPath();
 		$translator = $form->getTranslator();
-		$main_options = [];
+		$mainOptions = [];
 
 		if ($translator === null) {
 			throw new UnexpectedValueException();
@@ -61,11 +61,11 @@ class GroupActionCollection
 		 */
 		foreach ($this->groupActions as $id => $action) {
 			if (! $action instanceof GroupButtonAction) {
-				$main_options[$id] = $action->getTitle();
+				$mainOptions[$id] = $action->getTitle();
 			}
 		}
 
-		$groupActionSelect = $container->addSelect('group_action', '', $main_options)
+		$groupActionSelect = $container->addSelect('group_action', '', $mainOptions)
 			->setPrompt('contributte_datagrid.choose');
 
 		/**
@@ -118,7 +118,7 @@ class GroupActionCollection
 			}
 		}
 
-		if ($main_options !== []) {
+		if ($mainOptions !== []) {
 			foreach (array_keys($this->groupActions) as $id) {
 				$groupActionSelect->addCondition(Form::Equal, $id)
 					->toggle($lookupPath . self::ID_ATTRIBUTE_PREFIX . $id);

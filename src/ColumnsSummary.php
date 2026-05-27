@@ -112,11 +112,11 @@ class ColumnsSummary
 	public function setFormat(
 		string $key,
 		int $decimals = 0,
-		string $dec_point = '.',
-		string $thousands_sep = ' '
+		string $decPoint = '.',
+		string $thousandsSep = ' '
 	): self
 	{
-		$this->format[$key] = [$decimals, $dec_point, $thousands_sep];
+		$this->format[$key] = [$decimals, $decPoint, $thousandsSep];
 
 		return $this;
 	}

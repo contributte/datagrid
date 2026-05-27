@@ -120,11 +120,11 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 		foreach ($filter->getCondition() as $column => $value) {
 			try {
 				$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
-				$date_end = clone $date;
+				$dateEnd = clone $date;
 
 				$this->dataSource = $this->dataSource->findBy([
 					$this->prepareColumn($column) . '>=' => $date->setTime(0, 0, 0),
-					$this->prepareColumn($column) . '<=' => $date_end->setTime(23, 59, 59),
+					$this->prepareColumn($column) . '<=' => $dateEnd->setTime(23, 59, 59),
 				]);
 			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value

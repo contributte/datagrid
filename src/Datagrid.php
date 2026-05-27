@@ -1038,9 +1038,9 @@ class Datagrid extends Control
 	 ********************************************************************************/
 	public function isFilterActive(): bool
 	{
-		$is_filter = ArraysHelper::testTruthy($this->filter);
+		$isFilter = ArraysHelper::testTruthy($this->filter);
 
-		return $is_filter || $this->forceFilterActive;
+		return $isFilter || $this->forceFilterActive;
 	}
 
 	public function isFilterDefault(): bool
@@ -1151,16 +1151,16 @@ class Datagrid extends Control
 		/**
 		 * InlineEdit part
 		 */
-		$inline_edit_container = $form->addContainer('inline_edit');
+		$inlineEditContainer = $form->addContainer('inline_edit');
 
 		if ($this->inlineEdit instanceof InlineEdit) {
-			$inline_edit_container->addSubmit('submit', 'contributte_datagrid.save')
-				->setValidationScope([$inline_edit_container]);
-			$inline_edit_container->addSubmit('cancel', 'contributte_datagrid.cancel')
+			$inlineEditContainer->addSubmit('submit', 'contributte_datagrid.save')
+				->setValidationScope([$inlineEditContainer]);
+			$inlineEditContainer->addSubmit('cancel', 'contributte_datagrid.cancel')
 				->setValidationScope(null);
 
-			$this->inlineEdit->onControlAdd($inline_edit_container);
-			$this->inlineEdit->onControlAfterAdd($inline_edit_container);
+			$this->inlineEdit->onControlAdd($inlineEditContainer);
+			$this->inlineEdit->onControlAfterAdd($inlineEditContainer);
 		}
 
 		/**
@@ -1827,15 +1827,15 @@ class Datagrid extends Control
 			return;
 		}
 
-		$non_empty_filters = [];
+		$nonEmptyFilters = [];
 
 		foreach ($filters as $filter) {
 			if ($filter->isValueSet()) {
-				$non_empty_filters[] = $filter->getKey();
+				$nonEmptyFilters[] = $filter->getKey();
 			}
 		}
 
-		$this->getPresenterInstance()->payload->non_empty_filters = $non_empty_filters;
+		$this->getPresenterInstance()->payload->non_empty_filters = $nonEmptyFilters;
 	}
 
 	public function handleExport(mixed $id): void
@@ -2287,16 +2287,16 @@ class Datagrid extends Control
 	 */
 	public function setColumnsOrder(array $order): self
 	{
-		$new_order = [];
+		$newOrder = [];
 
 		foreach ($order as $key) {
 			if (isset($this->columns[$key])) {
-				$new_order[$key] = $this->columns[$key];
+				$newOrder[$key] = $this->columns[$key];
 			}
 		}
 
-		if (count($new_order) === count($this->columns)) {
-			$this->columns = $new_order;
+		if (count($newOrder) === count($this->columns)) {
+			$this->columns = $newOrder;
 		} else {
 			throw new DatagridException('When changing columns order, you have to specify all columns');
 		}
@@ -2742,23 +2742,23 @@ class Datagrid extends Control
 			$this->getParentComponent();
 
 			if (! (bool) $this->getStorageData('_grid_hidden_columns_manipulated', false)) {
-				$columns_to_hide = [];
+				$columnsToHide = [];
 
 				foreach ($this->columns as $key => $column) {
 					if ($column->getDefaultHide()) {
-						$columns_to_hide[] = $key;
+						$columnsToHide[] = $key;
 					}
 				}
 
-				if ($columns_to_hide !== []) {
-					$this->saveStorageData('_grid_hidden_columns', $columns_to_hide);
+				if ($columnsToHide !== []) {
+					$this->saveStorageData('_grid_hidden_columns', $columnsToHide);
 					$this->saveStorageData('_grid_hidden_columns_manipulated', true);
 				}
 			}
 
-			$hidden_columns = $this->getStorageData('_grid_hidden_columns', []);
+			$hiddenColumns = $this->getStorageData('_grid_hidden_columns', []);
 
-			foreach ($hidden_columns ?? [] as $column) {
+			foreach ($hiddenColumns ?? [] as $column) {
 				if (isset($this->columns[$column])) {
 					$this->columnsVisibility[$column] = [
 						'visible' => false,
