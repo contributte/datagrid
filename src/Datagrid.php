@@ -43,7 +43,7 @@ use Contributte\Datagrid\Toolbar\ToolbarButton;
 use Contributte\Datagrid\Utils\ArraysHelper;
 use Contributte\Datagrid\Utils\ItemDetailForm;
 use Contributte\Datagrid\Utils\Sorting;
-use DateTime;
+use DateTimeInterface;
 use InvalidArgumentException;
 use Nette\Application\Attributes\Persistent;
 use Nette\Application\ForbiddenRequestException;
@@ -1251,7 +1251,7 @@ class Datagrid extends Control
 
 			$value = $values[$key];
 
-			if ($value instanceof DateTime) {
+			if ($value instanceof DateTimeInterface) {
 				$filter = $parentKey !== null ? $this->getFilter($parentKey) : $this->getFilter((string) $key);
 
 				if ($filter instanceof IFilterDate) {
