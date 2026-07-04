@@ -22,26 +22,7 @@ Website 🚀 <a href="https://contributte.org">contributte.org</a> | Contact �
 	<img src="https://github.com/contributte/datagrid/blob/master/.docs/assets/datagrid.gif">
 </p>
 
-## About
-
-You are looking at first class datagrid for Nette Framework. Supported features: filtering, sorting, pagination, tree view, table view, translator and many others.
-Give us a star, it makes us so happy. Thanks ⭐.️
-
-| Resource | Link |
-|----------|------|
-| **Documentation** | [documentation](.docs) |
-| **Skeleton Demo** | [https://examples.contributte.org/datagrid-skeleton/](https://examples.contributte.org/datagrid-skeleton/) |
-| **Skeleton Repository** | [github.com/contributte/datagrid-skeleton](https://github.com/contributte/datagrid-skeleton) |
-
-## Usage
-
-To install latest version of `datagrid` use [Composer](https://getcomposer.org).
-
-```
-composer require ublaboo/datagrid
-```
-
-For details on how to use this package, check out our [documentation](.docs).
+First class datagrid for Nette Framework with filtering, sorting, pagination, tree view, table view, localization, exports and inline editing.
 
 ## Versions
 
@@ -51,6 +32,64 @@ For details on how to use this package, check out our [documentation](.docs).
 | stable | `^7.1.0`  | `master` | `3.2+` | `>=8.2` |
 | stable | `^7.0.0`  | `master` | `3.2+` | `>=8.1` |
 | stable | `^6.10.0` | `master` | `3.0+` | `>=7.2` |
+
+## Installation
+
+To install latest version of `ublaboo/datagrid` use [Composer](https://getcomposer.org).
+
+```
+composer require ublaboo/datagrid
+```
+
+## Resources
+
+| Resource | Link |
+|----------|------|
+| **Skeleton Demo** | [https://examples.contributte.org/datagrid-skeleton/](https://examples.contributte.org/datagrid-skeleton/) |
+| **Skeleton Repository** | [github.com/contributte/datagrid-skeleton](https://github.com/contributte/datagrid-skeleton) |
+
+## Topics
+
+- [Introduction](.docs/introduction.md)
+
+**Data sources**
+
+- [Data sources](.docs/data-source.md)
+
+**UI**
+
+- [Columns](.docs/columns.md)
+- [Filters](.docs/filters.md)
+- [Localization](.docs/localization.md)
+- [Pagination](.docs/pagination.md)
+- [Assets](.docs/assets.md)
+
+**Actions**
+
+- [Actions](.docs/actions.md)
+- [Group action](.docs/group-action.md)
+
+**Templates**
+
+- [Row](.docs/row.md)
+- [Templates](.docs/template.md)
+
+**Export**
+
+- [Exports](.docs/export.md)
+
+**State storage**
+
+- [State storage](.docs/state-storage.md)
+
+**Inline** (advanced)
+
+- [Inline edit](.docs/inline-edit.md)
+- [Inline add](.docs/inline-add.md)
+
+**Tree view** (advanced)
+
+- [Tree view](.docs/tree-view.md)
 
 ## Development
 
