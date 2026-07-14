@@ -2435,7 +2435,7 @@ class Datagrid extends Control
 		throw new DatagridException('Please set the ItemDetail first.');
 	}
 
-	public function getItemDetailForm(): ?Container
+	public function getItemDetailForm(): ?ItemDetailForm
 	{
 		if ($this->itemsDetail instanceof ItemDetail) {
 			return $this->itemsDetail->getForm();

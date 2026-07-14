@@ -12,6 +12,9 @@ use UnexpectedValueException;
 final class ItemDetailForm extends Container
 {
 
+	/** @var array<callable(Container, mixed): void> */
+	public array $onSetDefaults = [];
+
 	/** @var callable */
 	private $callableSetContainer;
 
@@ -19,6 +22,8 @@ final class ItemDetailForm extends Container
 
 	/** @var array<bool> */
 	private array $containerSetByName = [];
+
+	private mixed $item = null;
 
 	public function __construct(callable $callableSetContainer)
 	{
@@ -47,7 +52,14 @@ final class ItemDetailForm extends Container
 			$this->containerSetByName[$name] = true;
 		}
 
+		$this->applyDefaults($container);
+
 		return $container;
+	}
+
+	public function setItem(mixed $item): void
+	{
+		$this->item = $item;
 	}
 
 	/**
@@ -88,6 +100,21 @@ final class ItemDetailForm extends Container
 			if ((is_iterable($value))) {
 				$this->getComponentAndSetContainer($name);
 			}
+		}
+	}
+
+	private function applyDefaults(Container $container): void
+	{
+		if ($this->item === null) {
+			return;
+		}
+
+		if ($this->getForm()->isSubmitted() !== false) {
+			return;
+		}
+
+		foreach ($this->onSetDefaults as $onSetDefaults) {
+			$onSetDefaults($container, $this->item);
 		}
 	}
 
