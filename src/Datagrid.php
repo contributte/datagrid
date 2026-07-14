@@ -47,7 +47,6 @@ use DateTimeInterface;
 use InvalidArgumentException;
 use Nette\Application\Attributes\Persistent;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\Request;
 use Nette\Application\UI\Component;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -1948,10 +1947,6 @@ class Datagrid extends Control
 	{
 		$column = $this->getColumn($key);
 		$request = $this->getPresenterInstance()->getRequest();
-
-		if (!$request instanceof Request) {
-			throw new UnexpectedValueException();
-		}
 
 		$value = $request->getPost('value');
 
