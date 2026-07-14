@@ -14,7 +14,6 @@ use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
 use LogicException;
 use Nette\Database\Table\Selection;
-use Nette\Utils\Strings;
 
 class NetteDatabaseTableDataSource extends FilterableDataSource implements IDataSource
 {
@@ -29,23 +28,20 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	{
 		$dataSourceSqlBuilder = $this->dataSource->getSqlBuilder();
 
+		if ($dataSourceSqlBuilder->getGroup() !== '') {
+			$query = sprintf('SELECT COUNT(*) FROM (%s) AS datagrid_count', $this->dataSource->getSql());
+
+			/** @phpstan-ignore argument.type */
+			$result = $this->dataSource->getExplorer()->query($query, ...$dataSourceSqlBuilder->getParameters());
+
+			return (int) $result->fetchField();
+		}
+
 		try {
 			$primary = $this->dataSource->getPrimary();
 
 		} catch (LogicException) {
-			if ($dataSourceSqlBuilder->getGroup() !== '') {
-				return $this->dataSource->count(
-					'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
-				);
-			}
-
 			return $this->dataSource->count('*');
-		}
-
-		if ($dataSourceSqlBuilder->getGroup() !== '') {
-			return $this->dataSource->count(
-				'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
-			);
 		}
 
 		return $this->dataSource->count(
