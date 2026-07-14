@@ -11,6 +11,7 @@ use Contributte\Datagrid\Filter\FilterRange;
 use Contributte\Datagrid\Filter\FilterSelect;
 use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
+use Contributte\Datagrid\Utils\NetteDatabaseSelectionHelper;
 use Contributte\Datagrid\Utils\Sorting;
 use LogicException;
 use Nette\Database\Table\Selection;
@@ -30,9 +31,10 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 
 		if ($dataSourceSqlBuilder->getGroup() !== '') {
 			$query = sprintf('SELECT COUNT(*) FROM (%s) AS datagrid_count', $this->dataSource->getSql());
+			$explorer = NetteDatabaseSelectionHelper::getContext($this->dataSource);
 
 			/** @phpstan-ignore argument.type */
-			$result = $this->dataSource->getExplorer()->query($query, ...$dataSourceSqlBuilder->getParameters());
+			$result = $explorer->query($query, ...$dataSourceSqlBuilder->getParameters());
 
 			return (int) $result->fetchField();
 		}
