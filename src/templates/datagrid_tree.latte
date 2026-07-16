@@ -96,7 +96,7 @@
 							{foreach $columns as $key => $column}
 								{continueIf $iterator->isFirst()}
 
-								<div class="datagrid-tree-item-right-columns-column text-{$column->hasAlign() ? $column->getAlign() : 'start'}">
+								<div class="datagrid-tree-item-right-columns-column col-{$column->getColumnName()} text-{$column->hasAlign() ? $column->getAlign() : 'start'}">
 									{var $col = 'col-' . $key}
 									{php $column = $row->applyColumnCallback($key, clone $column)}
 
