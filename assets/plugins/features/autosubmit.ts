@@ -66,17 +66,20 @@ export class AutosubmitPlugin implements DatagridPlugin {
 						);
 					}
 
-					submitEl.addEventListener(
-						"keyup",
-						debounce(e => {
-							// Ignore keys such as alt, ctrl, etc, F-keys... (when enter is not pressed)
-							if (!isEnter(e) && (isInKeyRange(e, 9, 40) || isFunctionKey(e))) {
-								return;
-							}
-
-							return datagrid.ajax.submitForm(form);
-						})
-					);
+					const debouncedSubmit = debounce(() => datagrid.ajax.submitForm(form));
+					submitEl.addEventListener("keyup", (e) => {
+						// Enter submits immediately, no debounce wait.
+						if (isEnter(e)) {
+							datagrid.ajax.submitForm(form);
+							return;
+						}
+						// Skip alt/ctrl/etc and F-keys here, not inside debounce — a late
+						// modifier keyup would otherwise overwrite the debounced submit's target.
+						if (isInKeyRange(e, 9, 40) || isFunctionKey(e)) {
+							return;
+						}
+						debouncedSubmit();
+					});
 				}
 			});
 	}
