@@ -360,6 +360,41 @@ Datagrid user template:
 
 ```
 
+### Default values
+
+Setting a default value via `{input name, value => $item->name}` only works for controls that
+carry their value in the `value` HTML attribute (like `<input>`). It does **not** work for
+`<textarea>`, `<select>` or checkboxes, whose value is not rendered as an attribute.
+
+To set default values reliably for any control type, use the `onSetDefaults` callback. It receives
+the per-item container together with the item, so you can call `setDefaults()` on it. Defaults are
+applied only while the detail is being displayed, never over submitted values:
+
+```php
+$grid->setItemsDetailForm(function(Nette\Forms\Container $container): void {
+	$container->addTextArea('description');
+
+	$container->addSubmit('save', 'Save');
+});
+
+$grid->getItemDetailForm()->onSetDefaults[] = function(Nette\Forms\Container $container, $item): void {
+	$container->setDefaults([
+		'description' => $item->description,
+	]);
+};
+```
+
+```latte
+{block detail}
+	{formContainer items_detail_form}
+		{formContainer items_detail_form_$item->id}
+			{input description}
+			{input save}
+		{/formContainer}
+	{/formContainer}
+{/block}
+```
+
 ## Item detail template variables
 
 Additional variables can be passed to item detail template (/block) via `ItemDetail::setTemplateParameters(['foo' => 'bar', ...])`

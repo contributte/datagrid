@@ -329,6 +329,7 @@
 
 										{if isset($filter['items_detail_form'])}
 											{var $item_detail_params['items_detail_form'] = $filter['items_detail_form']}
+											{php $filter['items_detail_form']->setItem($item)}
 										{/if}
 
 										{ifset #detail}
