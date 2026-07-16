@@ -1,0 +1,21 @@
+{**
+ * @var string $baselineCss
+ * @var string $datagridCss
+ * @var string $gridHtml
+ *}
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Datagrid Visual Preview</title>
+	<style>{$baselineCss|noescape}</style>
+	<style>{$datagridCss|noescape}</style>
+</head>
+<body>
+	<div class="preview-shell">
+		<h1 class="preview-title">Datagrid Visual Preview</h1>
+		{$gridHtml|noescape}
+	</div>
+</body>
+</html>
