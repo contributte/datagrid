@@ -9,6 +9,9 @@ export const AutosubmitPerPageAttribute = "data-autosubmit-per-page";
 export const AutosubmitChangeAttribute = "data-autosubmit-change";
 
 export class AutosubmitPlugin implements DatagridPlugin {
+	constructor(private delay?: number) {
+	}
+
 	onDatagridInit(datagrid: Datagrid): boolean {
 		datagrid.ajax.addEventListener('complete', (event) => {
 			this.initPerPage(datagrid);
@@ -62,7 +65,7 @@ export class AutosubmitPlugin implements DatagridPlugin {
 					if (submitEl.hasAttribute(AutosubmitChangeAttribute)) {
 						submitEl.addEventListener(
 							"change",
-							debounce(() => datagrid.ajax.submitForm(form))
+							debounce(() => datagrid.ajax.submitForm(form), this.delay)
 						);
 					}
 
@@ -75,7 +78,7 @@ export class AutosubmitPlugin implements DatagridPlugin {
 							}
 
 							return datagrid.ajax.submitForm(form);
-						})
+						}, this.delay)
 					);
 				}
 			});
