@@ -1,5 +1,5 @@
 import { DatagridPlugin } from "../../types";
-import { debounce, isEnter, isFunctionKey, isInKeyRange } from "../../utils";
+import { debounce, isEnter, shouldIgnoreKey } from "../../utils";
 import { Datagrid } from "../..";
 
 export const AutosubmitAttribute = "data-autosubmit";
@@ -70,7 +70,7 @@ export class AutosubmitPlugin implements DatagridPlugin {
 						"keyup",
 						debounce(e => {
 							// Ignore keys such as alt, ctrl, etc, F-keys... (when enter is not pressed)
-							if (!isEnter(e) && (isInKeyRange(e, 9, 40) || isFunctionKey(e))) {
+							if (!isEnter(e) && shouldIgnoreKey(e)) {
 								return;
 							}
 

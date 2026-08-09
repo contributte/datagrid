@@ -16,6 +16,13 @@ export function isInKeyRange(e: KeyboardEvent, min: number, max: number): boolea
 	return code >= min && code <= max;
 }
 
+export function shouldIgnoreKey(e: KeyboardEvent): boolean {
+	if (e.key.length === 1) { // Printable characters always change the input value
+		return false;
+	}
+	return e.key !== "Backspace" && e.key !== "Delete";
+}
+
 export function isEnter(e: KeyboardEvent): boolean {
 	return e.key === "Enter";
 }
