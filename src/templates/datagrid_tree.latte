@@ -72,7 +72,7 @@
 						</a>
 						{foreach $columns as $key => $column}
 							{var $col = 'col-' . $key}
-							{php $column = $row->applyColumnCallback($key, clone $column)}
+							{do $column = $row->applyColumnCallback($key, clone $column)}
 
 							{if $column->hasTemplate()}
 								{include $column->getTemplate(), item => $item, (expand) $column->getTemplateVariables()}
@@ -98,7 +98,7 @@
 
 								<div class="datagrid-tree-item-right-columns-column text-{$column->hasAlign() ? $column->getAlign() : 'start'}">
 									{var $col = 'col-' . $key}
-									{php $column = $row->applyColumnCallback($key, clone $column)}
+									{do $column = $row->applyColumnCallback($key, clone $column)}
 
 									{if $column->hasTemplate()}
 										{include $column->getTemplate(), row => $row, item => $item, (expand) $column->getTemplateVariables()}
