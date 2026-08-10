@@ -28,7 +28,7 @@ export class SortableJS implements SortableInterface {
 
 		return datagrid.ajax.request({ method: "GET", url, data }).then(
 			() => undefined,
-			(error: unknown) => console.error("Datagrid: sortable request failed", error),
+			(error: unknown) => console.error("Datagrid: sortable request failed", { url, data, error }),
 		);
 	}
 
