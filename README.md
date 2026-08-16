@@ -41,55 +41,33 @@ To install latest version of `ublaboo/datagrid` use [Composer](https://getcompos
 composer require ublaboo/datagrid
 ```
 
+## Quick start
+
+Create a component, give it an array data source, and add one column:
+
+```php
+use Contributte\Datagrid\Datagrid;
+
+protected function createComponentUsersGrid(): Datagrid
+{
+	$grid = new Datagrid($this, 'usersGrid');
+	$grid->setDataSource([
+		['id' => 1, 'name' => 'John'],
+	]);
+	$grid->addColumnText('name', 'Name');
+
+	return $grid;
+}
+```
+
+Render `{control usersGrid}` in the component template. It renders a grid with a **Name** column and the `John` row. See [the detailed documentation index](.docs/README.md) for data-source variants and all grid modes.
+
 ## Resources
 
 | Resource | Link |
 |----------|------|
 | **Skeleton Demo** | [https://examples.contributte.org/datagrid-skeleton/](https://examples.contributte.org/datagrid-skeleton/) |
 | **Skeleton Repository** | [github.com/contributte/datagrid-skeleton](https://github.com/contributte/datagrid-skeleton) |
-
-## Topics
-
-- [Introduction](.docs/introduction.md)
-
-**Data sources**
-
-- [Data sources](.docs/data-source.md)
-
-**UI**
-
-- [Columns](.docs/columns.md)
-- [Filters](.docs/filters.md)
-- [Localization](.docs/localization.md)
-- [Pagination](.docs/pagination.md)
-- [Assets](.docs/assets.md)
-
-**Actions**
-
-- [Actions](.docs/actions.md)
-- [Group action](.docs/group-action.md)
-
-**Templates**
-
-- [Row](.docs/row.md)
-- [Templates](.docs/template.md)
-
-**Export**
-
-- [Exports](.docs/export.md)
-
-**State storage**
-
-- [State storage](.docs/state-storage.md)
-
-**Inline** (advanced)
-
-- [Inline edit](.docs/inline-edit.md)
-- [Inline add](.docs/inline-add.md)
-
-**Tree view** (advanced)
-
-- [Tree view](.docs/tree-view.md)
 
 ## Development
 
