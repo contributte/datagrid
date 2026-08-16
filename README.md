@@ -19,7 +19,7 @@ Website ðŸš€ <a href="https://contributte.org">contributte.org</a> | Contact ðŸ‘
 </p>
 
 <p align=center>
-	<img src="https://github.com/contributte/datagrid/blob/master/.docs/assets/datagrid.gif">
+	<img src=".docs/assets/datagrid.gif">
 </p>
 
 First class datagrid for Nette Framework with filtering, sorting, pagination, tree view, table view, localization, exports and inline editing.
