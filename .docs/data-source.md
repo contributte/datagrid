@@ -1,6 +1,7 @@
 # Datasources
 
 - [ORM Relations](#orm-relations)
+- [After fetching data for rendering](#after-fetching-data-for-rendering)
 - [ApiDataSource](#apidatasource)
 - [NextrasDataSource](#nextrasdatasource)
 - [NetteDatabaseTableDataSource](#nettedatabasetabledatasource)
@@ -49,6 +50,32 @@ When you are using for example Doctrine as a data source, you can easily access 
 $grid->addColumnText('name', 'Name', 'name');
 $grid->addColumnText('grandma_name', 'Grandma', 'grandma.name');
 ```
+
+## After fetching data for rendering
+
+Use `$grid->onAfterFetchData` to load related data in bulk before any `Row` objects or row callbacks are processed. This event works with every supported data source. For example, fetch order item counts once for the displayed orders instead of querying them separately in each column renderer:
+
+```php
+$itemCounts = [];
+
+$grid->onAfterFetchData[] = static function (array $items) use ($orderRepository, &$itemCounts): void {
+  $ids = array_map(static fn ($order) => $order->id, $items);
+  $itemCounts = $ids === [] ? [] : $orderRepository->getItemCountsByOrderIds($ids);
+};
+
+$grid->addColumnNumber('itemCount', 'Items')
+  ->setRenderer(static function ($order) use (&$itemCounts): int {
+    return $itemCounts[$order->id] ?? 0;
+  });
+```
+
+The callback receives the fetched items as an array, after filtering, sorting and pagination. It runs once per `render()`, including when no items were found. With pagination disabled, it receives all fetched items. Array data keeps its keys; traversable data is materialized once into a numerically indexed array shared by the callbacks and the subsequent rendering, preserving every item and its order. Without subscribers, traversable data is not materialized by this event.
+
+When redrawing a single row, the callback normally receives only that row (or an empty array if it no longer exists). With `ColumnsSummary` enabled, the grid fetches the current page to recalculate the summary, so the event receives that whole page even though only one row is redrawn.
+
+This is a notification for preparing related data, not a callback for replacing the result set: the array is not passed by reference and return values are ignored. It is not invoked by exports; an AJAX export that subsequently renders the grid can still trigger the event for that rendering.
+
+Unlike `onRender`, this event runs after the data has been fetched. The data model's `onAfterPaginated` receives a data source before fetching and only runs when pagination is applied. `DoctrineDataSource::onDataLoaded` is specific to Doctrine; `onAfterFetchData` provides a rendering hook independent of the data source.
 
 ## ApiDataSource
 

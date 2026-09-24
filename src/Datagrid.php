@@ -66,6 +66,7 @@ use UnexpectedValueException;
 /**
  * @method onRedraw()
  * @method onRender(Datagrid $dataGrid)
+ * @method void onAfterFetchData(array $items)
  * @method onColumnAdd(string $key, Column $column)
  * @method onColumnShow(string $key)
  * @method onColumnHide(string $key)
@@ -98,6 +99,13 @@ class Datagrid extends Control
 
 	/** @var array|callable[] */
 	public array $onRender = [];
+
+	/**
+	 * Fired after fetching data for rendering, before creating rows.
+	 *
+	 * @var array<callable(array<mixed>): void>
+	 */
+	public array $onAfterFetchData = [];
 
 	/** @var array|callable[] */
 	public array $onExport = [];
@@ -375,6 +383,12 @@ class Datagrid extends Control
 				$this->createSorting($this->sort, $this->sortCallback),
 				$this->assembleFilters()
 			);
+
+		if ($this->onAfterFetchData !== []) {
+			// Materialize iterators once so callbacks cannot consume the rows to be rendered.
+			$items = is_array($items) ? $items : iterator_to_array($items, false);
+			$this->onAfterFetchData($items);
+		}
 
 		$hasGroupActionOnRows = false;
 
