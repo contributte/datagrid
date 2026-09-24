@@ -4,18 +4,24 @@ namespace Contributte\Datagrid\Tests\Cases;
 
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\DataSource\IDataSource;
+use Contributte\Datagrid\Response\CsvResponse;
 use Contributte\Datagrid\Row;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Generator;
 use Mockery;
+use Nette\Application\AbortException;
+use Nette\Application\UI\Presenter;
 use Nette\Application\UI\TemplateFactory;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Http\IRequest;
+use Nette\Http\IResponse;
+use ReflectionProperty;
 use Tester\Assert;
 use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
 
-final class OnAfterFetchDataTest extends TestCase
+final class OnDataLoadedTest extends TestCase
 {
 
 	private Datagrid $grid;
@@ -44,7 +50,7 @@ final class OnAfterFetchDataTest extends TestCase
 		$this->grid->perPage = 2;
 		$this->grid->page = 2;
 
-		$this->grid->onAfterFetchData[] = function (array $items): void {
+		$this->grid->getDataModel()->onDataLoaded[] = function (array $items): void {
 			$this->events[] = array_column($items, 'id');
 			$this->amounts = array_column($items, 'amount', 'id');
 		};
@@ -62,10 +68,10 @@ final class OnAfterFetchDataTest extends TestCase
 
 	public function testEmptyResultAndRepeatedRender(): void
 	{
-		$this->grid->onAfterFetchData[] = function (array $items): void {
+		$this->grid->setDataSource([]);
+		$this->grid->getDataModel()->onDataLoaded[] = function (array $items): void {
 			$this->events[] = $items;
 		};
-		$this->grid->setDataSource([]);
 		$this->grid->render();
 		$this->grid->render();
 
@@ -75,7 +81,7 @@ final class OnAfterFetchDataTest extends TestCase
 
 	public function testRedrawSingleRow(): void
 	{
-		$this->grid->onAfterFetchData[] = function (array $items): void {
+		$this->grid->getDataModel()->onDataLoaded[] = function (array $items): void {
 			$this->events[] = array_column($items, 'id');
 		};
 		$this->grid->redrawItem(3);
@@ -87,7 +93,7 @@ final class OnAfterFetchDataTest extends TestCase
 
 	public function testRedrawWithSummaryFetchesWholePage(): void
 	{
-		$this->grid->onAfterFetchData[] = function (array $items): void {
+		$this->grid->getDataModel()->onDataLoaded[] = function (array $items): void {
 			$this->events[] = array_column($items, 'id');
 		};
 		$summary = $this->grid->setColumnsSummary(['amount']);
@@ -106,7 +112,7 @@ final class OnAfterFetchDataTest extends TestCase
 	{
 		$this->setIterableSource($this->generateItems());
 		foreach ([1, 2] as $subscriber) {
-			$this->grid->onAfterFetchData[] = function (array $items) use ($subscriber): void {
+			$this->grid->getDataModel()->onDataLoaded[] = function (array $items) use ($subscriber): void {
 				$this->events[$subscriber] = array_column($items, 'id');
 			};
 		}
@@ -121,7 +127,7 @@ final class OnAfterFetchDataTest extends TestCase
 	{
 		$items = ['first' => $this->data[0], 'second' => $this->data[1]];
 		$this->setIterableSource($items);
-		$this->grid->onAfterFetchData[] = function (array $data): void {
+		$this->grid->getDataModel()->onDataLoaded[] = function (array $data): void {
 			$this->received = $data;
 		};
 		$this->grid->render();
@@ -130,7 +136,7 @@ final class OnAfterFetchDataTest extends TestCase
 		Assert::same([1, 2], $this->renderedIds());
 	}
 
-	public function testGeneratorRemainsLazyWithoutCallbacks(): void
+	public function testGeneratorIsMaterializedWithoutCallbacks(): void
 	{
 		$items = (function (): Generator {
 			foreach ([1, 2] as $id) {
@@ -144,26 +150,50 @@ final class OnAfterFetchDataTest extends TestCase
 		});
 		$this->grid->render();
 
-		Assert::same(['fetch:1', 'row:1', 'fetch:2', 'row:2'], $this->events);
+		Assert::same(['fetch:1', 'fetch:2', 'row:1', 'row:2'], $this->events);
 		Assert::same([1, 2], $this->renderedIds());
 	}
 
-	public function testExportsDoNotInvokeEvent(): void
+	public function testExportCallbacksReceiveLoadedData(): void
 	{
-		$this->grid->onAfterFetchData[] = static function (): void {
-			Assert::fail('Export must not invoke onAfterFetchData.');
+		$this->grid->getDataModel()->onDataLoaded[] = function (array $items): void {
+			$this->events[] = ['loaded', array_column($items, 'id')];
 		};
 		$this->grid->addFilterSelect('status', 'Status', ['active' => 'Active']);
 		$this->grid->setFilter(['status' => 'active']);
 		foreach ([false, true] as $filtered) {
 			$this->grid->addExportCallback('Export', function (array $items): void {
-				$this->events[] = array_column($items, 'id');
+				$this->events[] = ['exported', array_column($items, 'id')];
 			}, $filtered);
 		}
 
 		$this->grid->handleExport(1);
 		$this->grid->handleExport(2);
 
+		Assert::same([
+			['loaded', [1, 2, 3, 4]],
+			['exported', [1, 2, 3, 4]],
+			['loaded', [1, 3, 4]],
+			['exported', [1, 3, 4]],
+		], $this->events);
+	}
+
+	public function testCsvExportUsesBatchLoadedValues(): void
+	{
+		$this->grid->getDataModel()->onDataLoaded[] = function (array $items): void {
+			$this->events[] = array_column($items, 'id');
+			$this->amounts = array_column($items, 'amount', 'id');
+		};
+		$this->grid->getColumn('amount')->setRenderer(fn (array $item): int => $this->amounts[$item['id']] ?? 0);
+		$this->grid->addFilterSelect('status', 'Status', ['active' => 'Active']);
+		$this->grid->setFilter(['status' => 'active']);
+		$this->grid->setItemsPerPageList([2], false);
+		$this->grid->perPage = 2;
+		$this->grid->addExportCsv('All', 'all.csv');
+		$this->grid->addExportCsvFiltered('Filtered', 'filtered.csv');
+
+		Assert::same("Amount\n10\n20\n30\n40\n", $this->exportCsv(1));
+		Assert::same("Amount\n10\n30\n40\n", $this->exportCsv(2));
 		Assert::same([[1, 2, 3, 4], [1, 3, 4]], $this->events);
 	}
 
@@ -207,8 +237,24 @@ final class OnAfterFetchDataTest extends TestCase
 	private function generateItems(): Generator
 	{
 		foreach ($this->data as $item) {
-			// Repeated keys must not discard any rows when materializing a generator.
-			yield 'same-key' => $item;
+			yield $item['id'] => $item;
+		}
+	}
+
+	private function exportCsv(int $id): string
+	{
+		Assert::exception(fn () => $this->grid->handleExport($id), AbortException::class);
+		$response = (new ReflectionProperty(Presenter::class, 'response'))->getValue($this->grid->getPresenter());
+		Assert::type(CsvResponse::class, $response);
+		$httpResponse = Mockery::mock(IResponse::class);
+		$httpResponse->shouldReceive('setContentType', 'setHeader')->andReturnSelf();
+		ob_start();
+		try {
+			$response->send(Mockery::mock(IRequest::class), $httpResponse);
+
+			return (string) ob_get_contents();
+		} finally {
+			ob_end_clean();
 		}
 	}
 
@@ -219,4 +265,4 @@ final class OnAfterFetchDataTest extends TestCase
 
 }
 
-(new OnAfterFetchDataTest())->run();
+(new OnDataLoadedTest())->run();

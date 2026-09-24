@@ -1,7 +1,7 @@
 # Datasources
 
 - [ORM Relations](#orm-relations)
-- [After fetching data for rendering](#after-fetching-data-for-rendering)
+- [After loading data](#after-loading-data)
 - [ApiDataSource](#apidatasource)
 - [NextrasDataSource](#nextrasdatasource)
 - [NetteDatabaseTableDataSource](#nettedatabasetabledatasource)
@@ -51,14 +51,17 @@ $grid->addColumnText('name', 'Name', 'name');
 $grid->addColumnText('grandma_name', 'Grandma', 'grandma.name');
 ```
 
-## After fetching data for rendering
+## After loading data
 
-Use `$grid->onAfterFetchData` to load related data in bulk before any `Row` objects or row callbacks are processed. This event works with every supported data source. For example, fetch order item counts once for the displayed orders instead of querying them separately in each column renderer:
+Register a callback on `$grid->getDataModel()->onDataLoaded` to prepare related data in bulk. The event belongs to `DataModel` and runs once after each `filterData()` or `filterRow()` fetch, including empty results. It covers rendering, single-row redraws and exports, before consumers create rows or invoke column renderers.
+
+For example, load item counts for all fetched orders in one query:
 
 ```php
+$grid->setDataSource($orderRepository->findAll());
 $itemCounts = [];
 
-$grid->onAfterFetchData[] = static function (array $items) use ($orderRepository, &$itemCounts): void {
+$grid->getDataModel()->onDataLoaded[] = static function (array $items) use ($orderRepository, &$itemCounts): void {
   $ids = array_map(static fn ($order) => $order->id, $items);
   $itemCounts = $ids === [] ? [] : $orderRepository->getItemCountsByOrderIds($ids);
 };
@@ -69,13 +72,13 @@ $grid->addColumnNumber('itemCount', 'Items')
   });
 ```
 
-The callback receives the fetched items as an array, after filtering, sorting and pagination. It runs once per `render()`, including when no items were found. With pagination disabled, it receives all fetched items. Array data keeps its keys; traversable data is materialized once into a numerically indexed array shared by the callbacks and the subsequent rendering, preserving every item and its order. Without subscribers, traversable data is not materialized by this event.
+The event receives the result of the data-loading operation after its filters, sorting and optional pagination have been applied. Exports load their full result set, so the example also prepares values for orders beyond the displayed page.
 
-When redrawing a single row, the callback normally receives only that row (or an empty array if it no longer exists). With `ColumnsSummary` enabled, the grid fetches the current page to recalculate the summary, so the event receives that whole page even though only one row is redrawn.
+Both loading methods return the same array passed to the event. Arrays retain their keys; traversables are always materialized using `iterator_to_array()` with key preservation, whether or not subscribers are registered. Standard PHP array key semantics apply, including the last value winning for repeated iterator keys. Custom lazy sources are therefore fully consumed before the event and before rendering or export. The callback is a notification: it does not receive the array by reference and its return value is ignored.
 
-This is a notification for preparing related data, not a callback for replacing the result set: the array is not passed by reference and return values are ignored. It is not invoked by exports; an AJAX export that subsequently renders the grid can still trigger the event for that rendering.
+Call `setDataSource()` before `getDataModel()`; accessing an uninitialized data model throws `DatagridException`. Each `setDataSource()` call creates a new model, so register callbacks on the model for that source.
 
-Unlike `onRender`, this event runs after the data has been fetched. The data model's `onAfterPaginated` receives a data source before fetching and only runs when pagination is applied. `DoctrineDataSource::onDataLoaded` is specific to Doctrine; `onAfterFetchData` provides a rendering hook independent of the data source.
+The existing `DoctrineDataSource::$onDataLoaded` remains unchanged for compatibility. For Doctrine sources it runs first, inside `getData()`, followed by the model's event. Register at one layer for each piece of work to avoid doing it twice.
 
 ## ApiDataSource
 
