@@ -33,6 +33,7 @@ use Nextras\Orm\Collection\ICollection;
  * @method onBeforeFilter(IDataSource $dataSource)
  * @method onAfterFilter(IDataSource $dataSource)
  * @method onAfterPaginated(IDataSource $dataSource)
+ * @method void onDataLoaded(array $items)
  */
 final class DataModel
 {
@@ -47,6 +48,9 @@ final class DataModel
 
 	/** @var array|callable[] */
 	public array $onAfterPaginated = [];
+
+	/** @var array<callable(array<mixed>): void> */
+	public array $onDataLoaded = [];
 
 	private IDataSource $dataSource;
 
@@ -105,7 +109,7 @@ final class DataModel
 		?DatagridPaginator $paginatorComponent,
 		Sorting $sorting,
 		array $filters
-	): iterable
+	): array
 	{
 		$this->onBeforeFilter($this->dataSource);
 
@@ -127,18 +131,27 @@ final class DataModel
 
 			$this->onAfterPaginated($this->dataSource);
 
-			return $this->dataSource->getData();
+			return $this->loadData($this->dataSource);
 		}
 
-		return $this->dataSource->sort($sorting)->getData();
+		return $this->loadData($this->dataSource->sort($sorting));
 	}
 
-	public function filterRow(array $condition): mixed
+	public function filterRow(array $condition): array
 	{
 		$this->onBeforeFilter($this->dataSource);
 		$this->onAfterFilter($this->dataSource);
 
-		return $this->dataSource->filterOne($condition)->getData();
+		return $this->loadData($this->dataSource->filterOne($condition));
+	}
+
+	private function loadData(IDataSource $dataSource): array
+	{
+		$items = $dataSource->getData();
+		$items = is_array($items) ? $items : iterator_to_array($items);
+		$this->onDataLoaded($items);
+
+		return $items;
 	}
 
 }

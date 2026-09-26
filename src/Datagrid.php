@@ -509,6 +509,15 @@ class Datagrid extends Control
 			: null;
 	}
 
+	public function getDataModel(): DataModel
+	{
+		if ($this->dataModel === null) {
+			throw new DatagridException('You have to set a data source first.');
+		}
+
+		return $this->dataModel;
+	}
+
 
 	/********************************************************************************
 	 *                                  TEMPLATING *
