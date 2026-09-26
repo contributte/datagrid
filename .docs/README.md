@@ -4,6 +4,7 @@
 
 **Data sources**
 - [Data sources](data-source.md)
+- [Events](events.md)
 
 **UI**
 - [Columns](columns.md)

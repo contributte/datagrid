@@ -1,7 +1,6 @@
 # Datasources
 
 - [ORM Relations](#orm-relations)
-- [After loading data](#after-loading-data)
 - [ApiDataSource](#apidatasource)
 - [NextrasDataSource](#nextrasdatasource)
 - [NetteDatabaseTableDataSource](#nettedatabasetabledatasource)
@@ -50,35 +49,6 @@ When you are using for example Doctrine as a data source, you can easily access 
 $grid->addColumnText('name', 'Name', 'name');
 $grid->addColumnText('grandma_name', 'Grandma', 'grandma.name');
 ```
-
-## After loading data
-
-Register a callback on `$grid->getDataModel()->onDataLoaded` to prepare related data in bulk. The event belongs to `DataModel` and runs once after each `filterData()` or `filterRow()` fetch, including empty results. It covers rendering, single-row redraws and exports, before consumers create rows or invoke column renderers.
-
-For example, load item counts for all fetched orders in one query:
-
-```php
-$grid->setDataSource($orderRepository->findAll());
-$itemCounts = [];
-
-$grid->getDataModel()->onDataLoaded[] = static function (array $items) use ($orderRepository, &$itemCounts): void {
-  $ids = array_map(static fn ($order) => $order->id, $items);
-  $itemCounts = $ids === [] ? [] : $orderRepository->getItemCountsByOrderIds($ids);
-};
-
-$grid->addColumnNumber('itemCount', 'Items')
-  ->setRenderer(static function ($order) use (&$itemCounts): int {
-    return $itemCounts[$order->id] ?? 0;
-  });
-```
-
-The event receives the result of the data-loading operation after its filters, sorting and optional pagination have been applied. Exports load their full result set, so the example also prepares values for orders beyond the displayed page.
-
-Both loading methods return the same array passed to the event. Arrays retain their keys; traversables are always materialized using `iterator_to_array()` with key preservation, whether or not subscribers are registered. Standard PHP array key semantics apply, including the last value winning for repeated iterator keys. Custom lazy sources are therefore fully consumed before the event and before rendering or export. The callback is a notification: it does not receive the array by reference and its return value is ignored.
-
-Call `setDataSource()` before `getDataModel()`; accessing an uninitialized data model throws `DatagridException`. Each `setDataSource()` call creates a new model, so register callbacks on the model for that source.
-
-The existing `DoctrineDataSource::$onDataLoaded` remains unchanged for compatibility. For Doctrine sources it runs first, inside `getData()`, followed by the model's event. Register at one layer for each piece of work to avoid doing it twice.
 
 ## ApiDataSource
 
