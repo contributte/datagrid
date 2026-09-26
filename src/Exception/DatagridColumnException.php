@@ -2,9 +2,9 @@
 
 namespace Contributte\Datagrid\Exception;
 
-use Exception;
+use LogicException;
 
-class DatagridColumnException extends Exception
+class DatagridColumnException extends LogicException
 {
 
 }

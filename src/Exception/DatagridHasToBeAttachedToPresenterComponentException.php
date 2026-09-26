@@ -2,9 +2,9 @@
 
 namespace Contributte\Datagrid\Exception;
 
-use Exception;
+use LogicException;
 
-class DatagridHasToBeAttachedToPresenterComponentException extends Exception
+class DatagridHasToBeAttachedToPresenterComponentException extends LogicException
 {
 
 }
