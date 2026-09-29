@@ -12,7 +12,6 @@ ruleset.xml export-ignore
 # Agents
 .claude export-ignore
 AGENTS.md export-ignore
-CLAUDE.md export-ignore
 DESIGN.md export-ignore
 # Assets
 .npmignore export-ignore
