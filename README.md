@@ -36,47 +36,24 @@ composer require ublaboo/datagrid
 
 Requires PHP 8.2 or later and Nette 3.2.
 
-Create the grid in a presenter, give it a data source and add columns:
+Create the grid in a presenter, give it a data source and add a column:
 
 ```php
 use Contributte\Datagrid\Datagrid;
-use Nette\Application\UI\Presenter;
-use Nette\Database\Explorer;
 
-final class UserPresenter extends Presenter
+protected function createComponentGrid(): Datagrid
 {
+	$grid = new Datagrid();
+	$grid->setDataSource($this->database->table('user')); // $this->database is Nette\Database\Explorer
+	$grid->addColumnText('name', 'Name');
 
-	public function __construct(
-		private Explorer $database,
-	)
-	{
-		parent::__construct();
-	}
-
-	protected function createComponentGrid(): Datagrid
-	{
-		$grid = new Datagrid();
-		$grid->setDataSource($this->database->table('user'));
-		$grid->addColumnText('name', 'Name')
-			->setSortable()
-			->setFilterText();
-
-		return $grid;
-	}
-
+	return $grid;
 }
 ```
 
 Render it in the template with `{control grid}`. The grid expects Bootstrap 5, Font Awesome and its own JavaScript and
-CSS on the page; the [assets](.docs/assets.md) page shows how to load them from a CDN or a bundler.
-
-> [!TIP]
-> See the grid in action in the [datagrid-skeleton demo](https://examples.contributte.org/datagrid-skeleton/) and
-> its [source code](https://github.com/contributte/datagrid-skeleton).
-
-## Documentation
-
-For details on how to use this package, check out the [documentation](.docs).
+CSS on the page, see [assets](.docs/assets.md). The [documentation](.docs) covers columns, filters, actions and
+the other features.
 
 ## Versions
 
@@ -89,9 +66,19 @@ For details on how to use this package, check out the [documentation](.docs).
 
 ## Development
 
+Install the dependencies and run the checks:
+
+```bash
+make install   # install dependencies
+make qa        # check code style and run static analysis
+make tests     # run tests
+```
+
+Run `make` to list every target.
+
 See [how to contribute](https://contributte.org/contributing.html) to this package.
 
-This package is currently maintained by these authors.
+This package is maintained by these authors.
 
 <a href="https://github.com/paveljanda">
 	<img width="80" height="80" src="https://avatars2.githubusercontent.com/u/1488874?v=3&s=80">
