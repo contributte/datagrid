@@ -422,7 +422,7 @@ This will render a sum of ids under the `"status"` column.
 
 As mentioned above, there is one aggregation function prepared: `Contributte\Datagrid\AggregationFunction\FunctionSum`. You can implement whatever function you like, it just have to implement `Contributte\Datagrid\AggregationFunction\ISingleColumnAggregationFunction`.
 
-Aggregation functions also work with an array data source (`ArrayDataSource`). `FunctionSum` supports it out of the box. A custom function has to implement `Contributte\Datagrid\AggregationFunction\IArrayAggregationFunction` as well, its `processArray(array $data)` method receives the rows (all, filtered or paginated, according to the data type).
+Aggregation functions also work with an array data source (`ArrayDataSource`). `FunctionSum` supports it out of the box. A custom function has to implement `Contributte\Datagrid\AggregationFunction\IArrayAggregationFunction` as well. Its `processArray(array $data)` method receives the rows (all, filtered or paginated, according to the data type). `FunctionSum` casts the result to int.
 
 ### Multiple columns
 

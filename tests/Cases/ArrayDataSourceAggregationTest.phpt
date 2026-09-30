@@ -23,14 +23,14 @@ use Tester\TestCase;
 
 require __DIR__ . '/../bootstrap.php';
 
-final class AggregationFunctionTest extends TestCase
+final class ArrayDataSourceAggregationTest extends TestCase
 {
 
 	private array $data = [
-		['id' => 1, 'amount' => 10, 'status' => 'active'],
+		['id' => 1, 'amount' => 40, 'status' => 'active'],
 		['id' => 2, 'amount' => 20, 'status' => 'inactive'],
-		['id' => 3, 'amount' => 30, 'status' => 'active'],
-		['id' => 4, 'amount' => 40, 'status' => 'active'],
+		['id' => 3, 'amount' => 10, 'status' => 'active'],
+		['id' => 4, 'amount' => 30, 'status' => 'active'],
 	];
 
 	public function testArrayDataSourceSumsArraysAndObjects(): void
@@ -145,4 +145,4 @@ final class AggregationFunctionTest extends TestCase
 
 }
 
-(new AggregationFunctionTest())->run();
+(new ArrayDataSourceAggregationTest())->run();
