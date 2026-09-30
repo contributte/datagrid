@@ -60,7 +60,9 @@ class Export
 			$this->grid->getTranslator()->translate($this->getTitle())
 		);
 
-		$a->addText($this->grid->getTranslator()->translate($this->text));
+		if ($this->text !== '') {
+			$a->addText($this->grid->getTranslator()->translate($this->text));
+		}
 
 		if ($this->isAjax()) {
 			$a->appendAttribute('class', 'ajax');
