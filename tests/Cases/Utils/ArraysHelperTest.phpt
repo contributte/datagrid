@@ -36,6 +36,12 @@ final class ArraysHelperTest extends TestCase
 		Assert::true(ArraysHelper::testTruthy([[null, [false]]]));
 	}
 
+	public function testNormalizeValues(): void
+	{
+		Assert::same([], ArraysHelper::normalizeValues(['a' => '', 'b' => null, 'c' => ['from' => '', 'to' => null]]));
+		Assert::same(['a' => '5', 'b' => ['to' => '0']], ArraysHelper::normalizeValues(['b' => ['from' => '', 'to' => 0], 'a' => 5]));
+	}
+
 }
 
 
