@@ -93,6 +93,12 @@ export class EditablePlugin implements DatagridPlugin {
 									}
 									cell.innerHTML = value;
 								}
+
+								// Keep the editable value in sync with the submitted value so
+								// that a subsequent edit starts from the current value, not the
+								// one rendered on initial page load (see issue #948).
+								cell.setAttribute(EditableValueAttribute, el.value);
+
 								cell.classList.add("edited");
 							} catch {
 								cell.innerHTML = originalValue;
