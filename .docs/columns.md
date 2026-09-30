@@ -353,6 +353,13 @@ $grid->setColumnsHideable();
 
 Hidden columns are saved into [state storage](state-storage.md), so they will remain hidden along all next requests.
 
+A single column can be excluded from hiding, so it is always shown:
+
+```php
+$grid->addColumnText('name', 'Name')
+	->setHideable(false);
+```
+
 ### Default hide
 
 Columns can be hidden by default:
