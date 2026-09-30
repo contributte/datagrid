@@ -2882,6 +2882,8 @@ class Datagrid extends Control
 
 	protected function createSorting(array $sort, ?callable $sortCallback = null): Sorting
 	{
+		$columnCallbacks = [];
+
 		foreach ($sort as $key => $order) {
 			unset($sort[$key]);
 
@@ -2897,6 +2899,29 @@ class Datagrid extends Control
 			}
 
 			$sort[$column->getSortingColumn()] = $order;
+
+			$columnCallback = $column->getSortableCallback();
+
+			if ($columnCallback !== null && !in_array($columnCallback, $columnCallbacks, true)) {
+				$columnCallbacks[] = $columnCallback;
+			}
+		}
+
+		/**
+		 * Multiple sorted columns with custom callbacks - call all of them in sort order
+		 */
+		if (count($columnCallbacks) > 1 && ($sortCallback === null || in_array($sortCallback, $columnCallbacks, true))) {
+			$sortCallback = static function ($dataSource, array $sort) use ($columnCallbacks) {
+				foreach ($columnCallbacks as $columnCallback) {
+					$result = $columnCallback($dataSource, $sort);
+
+					if ($result !== null) {
+						$dataSource = $result;
+					}
+				}
+
+				return $dataSource;
+			};
 		}
 
 		if ($sortCallback === null && isset($column)) {
