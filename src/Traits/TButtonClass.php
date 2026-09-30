@@ -17,6 +17,23 @@ trait TButtonClass
 		return $this;
 	}
 
+	/**
+	 * Append class(es) to the current button class
+	 */
+	public function addClass(string $class): static
+	{
+		$class = trim($class);
+
+		if ($class === '') {
+			return $this;
+		}
+
+		$current = trim($this->class);
+		$this->class = $current === '' ? $class : $current . ' ' . $class;
+
+		return $this;
+	}
+
 	public function getClass(): string
 	{
 		return $this->class;
