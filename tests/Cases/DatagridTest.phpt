@@ -7,6 +7,7 @@ require __DIR__ . '/../bootstrap.php';
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactoryRouter;
 use Nette\Application\AbortException;
+use Nette\Utils\ArrayHash;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -44,14 +45,6 @@ final class DatagridTest extends TestCase
 
 		$grid->setDefaultFilter(['test' => 'value']);
 
-		// Default filter applied
-		$grid->setFilter(['test' => 'value']);
-		Assert::true($grid->isFilterActive());
-
-		// Other value
-		$grid->setFilter(['test' => 'other']);
-		Assert::true($grid->isFilterActive());
-
 		// Default filter cleared by user -> reset button must stay visible
 		$grid->setFilter([]);
 		Assert::true($grid->isFilterActive());
@@ -59,23 +52,32 @@ final class DatagridTest extends TestCase
 		$grid->setFilter(['test' => '']);
 		Assert::true($grid->isFilterActive());
 
-		// Integer default vs string value from request
-		$grid->setDefaultFilter(['test' => 5]);
-		$grid->setFilter(['test' => '5']);
+		// Session-shaped cleared filter (all keys present, empty values)
+		$grid->setFilter(['test' => '', 'range' => ArrayHash::from(['from' => '', 'to' => ''])]);
 		Assert::true($grid->isFilterActive());
 
-		$grid->setFilter([]);
-		Assert::true($grid->isFilterActive());
-
-		// Range filter cleared
+		// Range default filter cleared
 		$grid->setDefaultFilter(['range' => ['from' => 1, 'to' => 5]]);
 		$grid->setFilter(['range' => ['from' => '', 'to' => '']]);
 		Assert::true($grid->isFilterActive());
+
+		// Default filter holds only empty values -> nothing to reset
+		$grid->setDefaultFilter(['test' => '', 'range' => ['from' => '', 'to' => '']]);
+		$grid->setFilter(['test' => '', 'range' => ArrayHash::from(['from' => '', 'to' => ''])]);
+		Assert::false($grid->isFilterActive());
 
 		// Reset does not go back to default -> empty filter has nothing to reset
 		$grid->setDefaultFilter(['test' => 'value'], false);
 		$grid->setFilter([]);
 		Assert::false($grid->isFilterActive());
+
+		// Unchanged behaviour: non-empty filter is always active
+		$grid->setDefaultFilter(['test' => 'value']);
+		$grid->setFilter(['test' => 'value']);
+		Assert::true($grid->isFilterActive());
+
+		$grid->setFilter(['test' => 'other']);
+		Assert::true($grid->isFilterActive());
 	}
 
 	public function testResetFilterLinkWithRememberOption(): void

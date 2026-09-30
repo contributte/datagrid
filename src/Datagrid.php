@@ -1048,12 +1048,10 @@ class Datagrid extends Control
 	{
 		$isFilter = ArraysHelper::testTruthy($this->filter);
 
-		// Filter differs from default one (e.g. user cleared it), so reset is still meaningful
-		$isDifferentFromDefault = $this->defaultFilter !== []
-			&& $this->defaultFilterUseOnReset
-			&& ArraysHelper::normalizeValues($this->filter) !== ArraysHelper::normalizeValues($this->defaultFilter);
+		// Current filter is empty but reset would apply the default filter
+		$isClearedDefault = !$isFilter && $this->defaultFilterUseOnReset && ArraysHelper::testTruthy($this->defaultFilter);
 
-		return $isFilter || $isDifferentFromDefault || $this->forceFilterActive;
+		return $isFilter || $isClearedDefault || $this->forceFilterActive;
 	}
 
 	public function isFilterDefault(): bool

@@ -49,36 +49,4 @@ final class ArraysHelper
 		return false;
 	}
 
-	/**
-	 * Recursively drop empty values ('' / null / empty arrays), cast scalars to string and sort by keys,
-	 * so two arrays of filter values can be strictly compared
-	 *
-	 * @param array<mixed> $array
-	 * @return array<mixed>
-	 */
-	public static function normalizeValues(array $array): array
-	{
-		$normalized = [];
-
-		foreach ($array as $key => $value) {
-			if (is_array($value)) {
-				$value = self::normalizeValues($value);
-
-				if ($value === []) {
-					continue;
-				}
-			} elseif ($value === '' || $value === null) {
-				continue;
-			} elseif (is_scalar($value)) {
-				$value = (string) $value;
-			}
-
-			$normalized[$key] = $value;
-		}
-
-		ksort($normalized);
-
-		return $normalized;
-	}
-
 }
