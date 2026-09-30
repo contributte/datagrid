@@ -38,6 +38,7 @@
     "doctrine/cache": "^1.13.0",
     "doctrine/orm": "^2.20.2",
     "elasticsearch/elasticsearch": "^8.6",
+    "latte/latte": "^3.0.18",
     "mockery/mockery": "^1.6.12",
     "nette/database": "^3.0.2",
     "nette/tester": "^2.3.4",
