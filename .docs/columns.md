@@ -178,6 +178,8 @@ $grid->addColumnText('name', 'Name')
 	});
 ```
 
+With multiple columns sort enabled, the callbacks of all sorted columns are called one after another (in sort order), each receiving the whole `$sort` array. If a callback returns a value (e.g. the sorted array for an array data source), it is passed to the next callback.
+
 ### Align
 
 Column can be aligned to one side:
