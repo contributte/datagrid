@@ -3,9 +3,11 @@
 namespace Contributte\Datagrid\Tests\Cases;
 
 use Contributte\Datagrid\Datagrid;
+use Contributte\Datagrid\Exception\DatagridArrayDataSourceException;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Contributte\Datagrid\Utils\Sorting;
 use ReflectionMethod;
+use stdClass;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -41,6 +43,7 @@ final class MultiSortCallbackTest extends TestCase
 			->setSortableCallback(function (array $data, array $sort): array {
 				$this->calls[] = ['a', $sort, array_column($data, 'id')];
 
+				// Filters rows so the next callback proves it received this result (chaining probe)
 				return array_values(array_filter($data, static fn (array $row): bool => $row['a'] === 1));
 			});
 
@@ -67,6 +70,81 @@ final class MultiSortCallbackTest extends TestCase
 		Assert::same([3, 2], array_column($items, 'id'));
 	}
 
+	public function testAllColumnCallbacksAreCalledWithoutSortCallback(): void
+	{
+		$this->grid->addColumnText('a', 'A')
+			->setSortable()
+			->setSortableCallback(function (array $data, array $sort): array {
+				$this->calls[] = 'a';
+
+				// Filters rows so the next callback proves it received this result (chaining probe)
+				return array_values(array_filter($data, static fn (array $row): bool => $row['a'] === 1));
+			});
+		$this->grid->addColumnText('b', 'B')
+			->setSortable()
+			->setSortableCallback(function (array $data, array $sort): array {
+				$this->calls[] = 'b';
+
+				return array_reverse($data);
+			});
+
+		// Datagrid::setDefaultSort() on first render - no sort callback is passed
+		$items = $this->filterData(['a' => 'ASC', 'b' => 'DESC'], null);
+
+		Assert::same(['a', 'b'], $this->calls);
+		Assert::same([3, 2], array_column($items, 'id'));
+	}
+
+	public function testNonDataSourceResultIsNotPassedOn(): void
+	{
+		$source = new stdClass();
+
+		$this->grid->addColumnText('a', 'A')
+			->setSortable()
+			->setSortableCallback(function (stdClass $qb, array $sort): bool {
+				$this->calls[] = ['a', $qb];
+
+				return true;
+			});
+		$this->grid->addColumnText('b', 'B')
+			->setSortable()
+			->setSortableCallback(function (stdClass $qb, array $sort): void {
+				$this->calls[] = ['b', $qb];
+			});
+
+		$sorting = $this->createSorting(['a' => 'ASC', 'b' => 'DESC'], null);
+		$callback = $sorting->getSortCallback();
+		Assert::notNull($callback);
+		$callback($source, $sorting->getSort());
+
+		Assert::same([['a', $source], ['b', $source]], $this->calls);
+	}
+
+	public function testNonArrayResultForArraySourceThrows(): void
+	{
+		$this->grid->addColumnText('a', 'A')
+			->setSortable()
+			->setSortableCallback(function (array $data, array $sort): bool {
+				$this->calls[] = 'a';
+
+				return true;
+			});
+		$this->grid->addColumnText('b', 'B')
+			->setSortable()
+			->setSortableCallback(function (array $data, array $sort): array {
+				$this->calls[] = 'b';
+
+				return $data;
+			});
+
+		Assert::exception(
+			fn () => $this->filterData(['a' => 'ASC', 'b' => 'DESC'], null),
+			DatagridArrayDataSourceException::class,
+			'Sorting callback has to return array'
+		);
+		Assert::same(['a'], $this->calls);
+	}
+
 	public function testSingleColumnCallback(): void
 	{
 		$callback = function (array $data, array $sort): array {
@@ -89,11 +167,16 @@ final class MultiSortCallbackTest extends TestCase
 
 	private function filterData(array $sort, ?callable $sortCallback): array
 	{
+		return $this->grid->getDataModel()->filterData(null, $this->createSorting($sort, $sortCallback), []);
+	}
+
+	private function createSorting(array $sort, ?callable $sortCallback): Sorting
+	{
 		$method = new ReflectionMethod(Datagrid::class, 'createSorting');
 		$sorting = $method->invoke($this->grid, $sort, $sortCallback);
 		Assert::type(Sorting::class, $sorting);
 
-		return $this->grid->getDataModel()->filterData(null, $sorting, []);
+		return $sorting;
 	}
 
 }

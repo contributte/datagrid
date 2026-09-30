@@ -2915,7 +2915,13 @@ class Datagrid extends Control
 				foreach ($columnCallbacks as $columnCallback) {
 					$result = $columnCallback($dataSource, $sort);
 
-					if ($result !== null) {
+					if (is_array($dataSource) && !is_array($result)) {
+						// Let ArrayDataSource reject it, same as a single sortable callback
+						return $result;
+					}
+
+					// Pass on only a result of the same kind (e.g. not true or $qb->getQuery() for a query builder)
+					if (gettype($result) === gettype($dataSource)) {
 						$dataSource = $result;
 					}
 				}
