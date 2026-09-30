@@ -1,0 +1,210 @@
+<?php declare(strict_types = 1);
+
+namespace Contributte\Datagrid\DataSource;
+
+use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
+use Contributte\Datagrid\Filter\FilterMultiSelect;
+use Contributte\Datagrid\Filter\FilterRange;
+use Contributte\Datagrid\Filter\FilterSelect;
+use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Utils\DateTimeHelper;
+use Contributte\Datagrid\Utils\Sorting;
+use OpenSearch\Client;
+use RuntimeException;
+use UnexpectedValueException;
+
+class OpenSearchDataSource extends FilterableDataSource implements IDataSource
+{
+
+	protected SearchParamsBuilder $searchParamsBuilder;
+
+	/** @var callable */
+	private $rowFactory;
+
+	public function __construct(private Client $client, string $indexName, ?callable $rowFactory = null)
+	{
+		$this->searchParamsBuilder = new SearchParamsBuilder($indexName, true);
+
+		if ($rowFactory === null) {
+			$rowFactory = static fn (array $hit): array => $hit['_source'];
+		}
+
+		$this->rowFactory = $rowFactory;
+	}
+
+	public function getCount(): int
+	{
+		$searchResult = $this->client->search($this->searchParamsBuilder->buildParams());
+
+		if (!isset($searchResult['hits'])) {
+			throw new UnexpectedValueException();
+		}
+
+		$count = $this->client->count($this->searchParamsBuilder->buildParams());
+
+		return $count['count'];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getData(): array
+	{
+		$searchResult = $this->client->search($this->searchParamsBuilder->buildParams());
+
+		if (!isset($searchResult['hits'])) {
+			throw new UnexpectedValueException();
+		}
+
+		return array_map($this->rowFactory, $searchResult['hits']['hits']);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function filterOne(array $condition): IDataSource
+	{
+		foreach ($condition as $value) {
+			$this->searchParamsBuilder->addIdsQuery($value);
+		}
+
+		return $this;
+	}
+
+	public function limit(int $offset, int $limit): IDataSource
+	{
+		$this->searchParamsBuilder->setFrom($offset);
+		$this->searchParamsBuilder->setSize($limit);
+
+		return $this;
+	}
+
+	public function applyFilterDate(FilterDate $filter): void
+	{
+		foreach ($filter->getCondition() as $column => $value) {
+			$timestampFrom = null;
+			$timestampTo = null;
+
+			if ($value) {
+				try {
+					$dateFrom = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+					$dateFrom->setTime(0, 0, 0);
+
+					$timestampFrom = $dateFrom->getTimestamp();
+
+					$dateTo = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+					$dateTo->setTime(23, 59, 59);
+
+					$timestampTo = $dateTo->getTimestamp();
+
+					$this->searchParamsBuilder->addRangeQuery($column, $timestampFrom, $timestampTo);
+				} catch (DatagridDateTimeHelperException) {
+					// ignore the invalid filter value
+				}
+			}
+		}
+	}
+
+	public function applyFilterDateRange(FilterDateRange $filter): void
+	{
+		foreach ($filter->getCondition() as $column => $values) {
+			$timestampFrom = null;
+			$timestampTo = null;
+
+			if ($values['from']) {
+				try {
+					$dateFrom = DateTimeHelper::tryConvertToDateTime($values['from'], [$filter->getPhpFormat()]);
+					$dateFrom->setTime(0, 0, 0);
+
+					$timestampFrom = $dateFrom->getTimestamp();
+				} catch (DatagridDateTimeHelperException) {
+					// ignore the invalid filter value
+				}
+			}
+
+			if ($values['to']) {
+				try {
+					$dateTo = DateTimeHelper::tryConvertToDateTime($values['to'], [$filter->getPhpFormat()]);
+					$dateTo->setTime(23, 59, 59);
+
+					$timestampTo = $dateTo->getTimestamp();
+				} catch (DatagridDateTimeHelperException) {
+					// ignore the invalid filter value
+				}
+			}
+
+			if (is_int($timestampFrom) || is_int($timestampTo)) {
+				$this->searchParamsBuilder->addRangeQuery($column, $timestampFrom, $timestampTo);
+			}
+		}
+	}
+
+	public function applyFilterRange(FilterRange $filter): void
+	{
+		foreach ($filter->getCondition() as $column => $value) {
+			$this->searchParamsBuilder->addRangeQuery($column, $value['from'] ?? null, $value['to'] ?? null);
+		}
+	}
+
+	public function applyFilterText(FilterText $filter): void
+	{
+		foreach ($filter->getCondition() as $column => $value) {
+			$options = [];
+			if ($filter->isCaseInsensitive()) {
+				$options['case_insensitive'] = true;
+			}
+
+			if ($filter->isExactSearch()) {
+				$this->searchParamsBuilder->addMatchQuery($column, $value);
+			} elseif ($filter->isWildCardSearch()) {
+				$this->searchParamsBuilder->addWildCardQuery($column, $value, $options);
+			} elseif ($filter->isTermSearch()) {
+				$this->searchParamsBuilder->addTermQuery($column, $value, $options);
+			} else {
+				$this->searchParamsBuilder->addPhrasePrefixQuery($column, $value);
+			}
+		}
+	}
+
+	public function applyFilterMultiSelect(FilterMultiSelect $filter): void
+	{
+		foreach ($filter->getCondition() as $column => $values) {
+			$this->searchParamsBuilder->addBooleanMatchQuery($column, $values);
+		}
+	}
+
+	public function applyFilterSelect(FilterSelect $filter): void
+	{
+		foreach ($filter->getCondition() as $column => $value) {
+			$this->searchParamsBuilder->addMatchQuery($column, $value);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws RuntimeException
+	 */
+	public function sort(Sorting $sorting): IDataSource
+	{
+		if (is_callable($sorting->getSortCallback())) {
+			throw new RuntimeException('No can do - not implemented yet');
+		}
+
+		foreach ($sorting->getSort() as $column => $order) {
+			$this->searchParamsBuilder->setSort(
+				[$column => ['order' => strtolower($order)]]
+			);
+		}
+
+		return $this;
+	}
+
+	public function getDataSource(): SearchParamsBuilder
+	{
+		return $this->searchParamsBuilder;
+	}
+
+}
