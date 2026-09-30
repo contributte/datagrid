@@ -10,6 +10,7 @@ use Nette\Database\Conventions\DiscoveredConventions;
 use Nette\Database\Explorer;
 use Nette\Database\Structure;
 use Nette\Database\Table\Selection;
+use Tester\Assert;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
@@ -25,6 +26,38 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 
 		$factory = new TestingDatagridFactory();
 		$this->grid = $factory->createTestingDatagrid();
+	}
+
+	public function testGetCountWithGroupByMultipleColumns(): void
+	{
+		$this->db->query('CREATE TABLE orders_products (
+								id           INTEGER PRIMARY KEY AUTOINCREMENT,
+								title        VARCHAR (50),
+								variant      VARCHAR (50),
+								course_city  VARCHAR (50),
+								course_date  VARCHAR (50)
+							);
+		');
+		$this->db->getStructure()->rebuild();
+
+		$rows = [
+			['title' => 'A', 'variant' => 'x', 'course_city' => null, 'course_date' => null],
+			['title' => 'A', 'variant' => 'x', 'course_city' => null, 'course_date' => null],
+			['title' => 'B', 'variant' => 'y', 'course_city' => null, 'course_date' => null],
+			['title' => 'C', 'variant' => 'z', 'course_city' => 'Prague', 'course_date' => '2021-01-01'],
+		];
+
+		foreach ($rows as $row) {
+			$this->db->query('INSERT INTO orders_products', $row);
+		}
+
+		$selection = $this->db->table('orders_products')
+			->group('title, variant, course_city, course_date');
+
+		$ds = new NetteDatabaseTableDataSource($selection, 'id');
+
+		Assert::same(3, $ds->getCount());
+		Assert::same(3, count($ds->getData()));
 	}
 
 	protected function setUpDatabase(): void
