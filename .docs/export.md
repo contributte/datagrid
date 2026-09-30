@@ -26,11 +26,8 @@ You can tell whether to use ajax or not (`->setAjax()`). Or a button title (`->s
 The export button has the class `btn btn-xs btn-default btn-secondary` by default. Use `->setClass()` to replace it, or `->addClass()` to append to it:
 
 ```php
-$export = $grid->addExportCallback('Export', $callback);
-
-if ($grid->getDataSource()->getCount() === 0) {
-	$export->addClass('disabled'); // class="btn btn-xs btn-default btn-secondary disabled"
-}
+$grid->addExportCallback('Export', $callback)
+	->addClass('my-export'); // class="btn btn-xs btn-default btn-secondary my-export"
 ```
 
 `addClass()` is available on every button that has `setClass()` (exports, toolbar buttons, filter submit, item detail, multi action, inline edit).
