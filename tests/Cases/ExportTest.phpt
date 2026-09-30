@@ -88,6 +88,29 @@ final class ExportTest extends TestCase
 		$this->grid->handleExport(1);
 	}
 
+	public function testExportAddClass(): void
+	{
+		$export = $this->grid->addExportCallback('Export', function (): void {
+		});
+
+		Assert::same('btn btn-xs btn-default btn-secondary', $export->getClass());
+
+		$export->addClass('disabled');
+		$export->addClass('  ');
+		$export->addClass(' foo ');
+
+		Assert::same('btn btn-xs btn-default btn-secondary disabled foo', $export->getClass());
+		Assert::same(
+			'btn btn-xs btn-default btn-secondary disabled foo',
+			$export->render()->getAttribute('class')[0]
+		);
+
+		$export->setClass('');
+		$export->addClass('bar');
+
+		Assert::same('bar', $export->getClass());
+	}
+
 }
 
 Debugger::enable();
