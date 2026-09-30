@@ -156,13 +156,14 @@ final class FilterTest extends TestCase
 	{
 		Assert::same([[], ['name', 'status']], $this->submitInlineEdit([]));
 		Assert::same([['name'], ['status']], $this->submitInlineEdit(['name']));
+		Assert::same([['name'], ['status']], $this->submitInlineEdit(['name'], 'array'));
 	}
 
 	/**
 	 * @param list<string> $hiddenColumns
 	 * @return mixed[]
 	 */
-	private function submitInlineEdit(array $hiddenColumns): array
+	private function submitInlineEdit(array $hiddenColumns, ?string $mappedType = null): array
 	{
 		$factory = new TestingDatagridFactoryRouter();
 		/** @var Datagrid $grid */
@@ -176,11 +177,15 @@ final class FilterTest extends TestCase
 
 		$result = new ArrayHash();
 		$inlineEdit = $grid->addInlineEdit();
-		$inlineEdit->onControlAdd[] = function (Container $container): void {
+		$inlineEdit->onControlAdd[] = function (Container $container) use ($mappedType): void {
+			if ($mappedType !== null) {
+				$container->setMappedType($mappedType);
+			}
+
 			$container->addText('name');
 			$container->addText('status');
 		};
-		$inlineEdit->onSubmit[] = function ($id, ArrayHash $values, array $hidden = ['missing']) use ($result): void {
+		$inlineEdit->onSubmit[] = function ($id, iterable $values, array $hidden = ['missing']) use ($result): void {
 			$result->hidden = $hidden;
 			$result->keys = array_keys((array) $values);
 		};

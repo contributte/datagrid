@@ -1335,8 +1335,9 @@ class Datagrid extends Control
 					$hiddenColumns = array_map('strval', array_keys(array_diff_key($this->columns, $this->getColumns())));
 					$values = $edit->getValues();
 
-					// Leave custom mapped types (Container::setMappedType) untouched
-					if ($values::class === ArrayHash::class) {
+					// Leave custom mapped objects (Container::setMappedType) untouched
+					/** @phpstan-ignore function.impossibleType, instanceof.alwaysTrue (setMappedType() can change the type) */
+					if (is_array($values) || $values instanceof ArrayHash) {
 						foreach ($hiddenColumns as $hiddenColumn) {
 							unset($values[$hiddenColumn]);
 						}
