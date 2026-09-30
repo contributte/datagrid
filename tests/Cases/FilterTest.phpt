@@ -9,6 +9,8 @@ use Contributte\Datagrid\Tests\Files\FormValueObject;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactoryRouter;
 use Nette\Application\AbortException;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\SubmitButton;
+use Nette\Utils\ArrayHash;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -142,6 +144,57 @@ final class FilterTest extends TestCase
 		// the container must still be valid — no implicit Filled rule should
 		// fire on the FilterSelect.
 		Assert::true($filterContainer->isValid());
+	}
+
+	/**
+	 * Regression test for https://github.com/contributte/datagrid/issues/621
+	 *
+	 * Inputs of hidden columns are not rendered, so their empty values must not
+	 * be passed to InlineEdit::onSubmit (saving them would wipe the data).
+	 */
+	public function testInlineEditSubmitSkipsHiddenColumns(): void
+	{
+		Assert::same([[], ['name', 'status']], $this->submitInlineEdit([]));
+		Assert::same([['name'], ['status']], $this->submitInlineEdit(['name']));
+	}
+
+	/**
+	 * @param list<string> $hiddenColumns
+	 * @return mixed[]
+	 */
+	private function submitInlineEdit(array $hiddenColumns): array
+	{
+		$factory = new TestingDatagridFactoryRouter();
+		/** @var Datagrid $grid */
+		$grid = $factory->createTestingDatagrid()->getComponent('grid');
+
+		$grid->setColumnsHideable();
+		$grid->addColumnText('name', 'Name');
+		$grid->addColumnText('status', 'Status');
+		$grid->saveStorageData('_grid_hidden_columns', $hiddenColumns);
+		$grid->saveStorageData('_grid_hidden_columns_manipulated', true);
+
+		$result = new ArrayHash();
+		$inlineEdit = $grid->addInlineEdit();
+		$inlineEdit->onControlAdd[] = function (Container $container): void {
+			$container->addText('name');
+			$container->addText('status');
+		};
+		$inlineEdit->onSubmit[] = function ($id, ArrayHash $values, array $hidden = ['missing']) use ($result): void {
+			$result->hidden = $hidden;
+			$result->keys = array_keys((array) $values);
+		};
+		$inlineEdit->onCustomRedraw[] = function (): void {
+		};
+
+		$filterForm = $grid->createComponentFilter();
+		$submit = $filterForm['inline_edit']['submit'];
+		Assert::type(SubmitButton::class, $submit);
+		$filterForm->setSubmittedBy($submit);
+
+		$grid->filterSucceeded($filterForm);
+
+		return [$result->hidden ?? null, $result->keys ?? null];
 	}
 
 }

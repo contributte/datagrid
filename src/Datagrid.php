@@ -1331,7 +1331,18 @@ class Datagrid extends Control
 				$primaryWhereColumn = $form->getHttpData(Form::DataLine, 'inline_edit[_primary_where_column]');
 
 				if ($edit->getComponent('submit')->isSubmittedBy() && $edit->getErrors() === []) {
-					$this->inlineEdit->onSubmit($id, $form->getComponent('inline_edit')->getValues());
+					// Hidden columns are not rendered, so their inputs were not submitted
+					$hiddenColumns = array_map('strval', array_keys(array_diff_key($this->columns, $this->getColumns())));
+					$values = $edit->getValues();
+
+					// Leave custom mapped types (Container::setMappedType) untouched
+					if ($values::class === ArrayHash::class) {
+						foreach ($hiddenColumns as $hiddenColumn) {
+							unset($values[$hiddenColumn]);
+						}
+					}
+
+					$this->inlineEdit->onSubmit($id, $values, $hiddenColumns);
 					$this->getPresenterInstance()->payload->_datagrid_inline_edited = $id;
 					$this->getPresenterInstance()->payload->_datagrid_name = $this->getFullName();
 				} else {
