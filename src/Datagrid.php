@@ -1999,6 +1999,8 @@ class Datagrid extends Control
 
 			$this->getPresenterInstance()->payload->_datagrid_url = $this->refreshURL;
 			$this->getPresenterInstance()->payload->_datagrid_name = $this->getFullName();
+			$this->getPresenterInstance()->payload->postGet = true;
+			$this->getPresenterInstance()->payload->url = $this->link('this');
 
 			$this->onRedraw();
 		} else {
