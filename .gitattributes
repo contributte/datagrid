@@ -9,6 +9,11 @@ Makefile export-ignore
 phpstan.neon export-ignore
 README.md export-ignore
 ruleset.xml export-ignore
+fxnorm.yml export-ignore
+# Agents
+.claude export-ignore
+AGENTS.md export-ignore
+DESIGN.md export-ignore
 # Assets
 .npmignore export-ignore
 package.json export-ignore

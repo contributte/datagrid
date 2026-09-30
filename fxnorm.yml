@@ -1,0 +1,12 @@
+# fxnorm configuration, written by `fxnorm init`.
+# `fxnorm config` prints what runs and why; `fxnorm rules` lists every rule with its group.
+
+# A Contributte PHP library (composer.json, not `"type": "project"`)
+presets:
+  - contributte-library
+
+# groups:              # add a group, or drop one with a leading minus
+#   - -ci
+
+# rules:               # false, true, error, warning, or options
+#   common/agents-md-length: {min: 50, max: 120}
