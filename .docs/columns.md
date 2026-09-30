@@ -360,6 +360,8 @@ $grid->addColumnText('name', 'Name')
 	->setHideable(false);
 ```
 
+Such a column ignores `setDefaultHide()` and any hidden state already stored.
+
 ### Default hide
 
 Columns can be hidden by default:
