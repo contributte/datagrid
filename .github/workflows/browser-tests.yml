@@ -1,0 +1,22 @@
+name: "Browser tests"
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches: ["master"]
+
+permissions:
+  contents: read
+
+jobs:
+  browser-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser

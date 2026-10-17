@@ -8,6 +8,8 @@ export interface BaseRequestParams {
 
 export interface RequestParams<D = any> extends BaseRequestParams {
 	data?: D;
+	/** Reject cancelled requests instead of returning an empty payload (Naja adapter). */
+	rejectOnCancel?: boolean;
 	options?: Record<string, any>;
 }
 

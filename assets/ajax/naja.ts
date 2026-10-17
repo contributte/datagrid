@@ -119,7 +119,26 @@ export class NajaAjax<C extends Naja = Naja, G extends Datagrid = Datagrid> exte
 
 	async request<D = {}, P = DatagridPayload>(args: RequestParams<D>): Promise<P> {
 		const options = { history: false, ...args.options };
-		return await this.client.makeRequest(args.method, args.url, args.data ?? null, options) as P;
+		if (!args.rejectOnCancel) {
+			return await this.client.makeRequest(args.method, args.url, args.data ?? null, options) as P;
+		}
+
+		// Naja resolves cancelled requests to {}, just like a valid empty response.
+		// A private option survives Naja's option copies and identifies this request.
+		const token = Symbol("datagridRequest");
+		const trackedOptions = { ...options, [token]: true };
+		let succeeded = false;
+		const onSuccess = (event: SuccessEvent) => {
+			if (Reflect.get(event.detail.options, token)) succeeded = true;
+		};
+		this.client.addEventListener("success", onSuccess);
+		try {
+			const payload = await this.client.makeRequest(args.method, args.url, args.data ?? null, trackedOptions) as P;
+			if (!succeeded) throw new DOMException("Request was cancelled", "AbortError");
+			return payload;
+		} finally {
+			this.client.removeEventListener("success", onSuccess);
+		}
 	}
 
 	async submitForm<E extends HTMLFormElement = HTMLFormElement, P = Payload>(element: E): Promise<P> {
