@@ -92,6 +92,7 @@ export class EditablePlugin implements DatagridPlugin {
 									url: cell.getAttribute(EditableUrlAttribute) ?? "",
 									method: "POST",
 									rejectOnCancel: true,
+									options: { unique: false, abort: false },
 									data: {
 										value,
 									},

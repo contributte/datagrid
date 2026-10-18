@@ -94,7 +94,7 @@ test('Escape while focused on a pending editor does not close or resubmit it', a
 	} finally { fixture.release(); }
 });
 
-test('real Naja abort after focus leaves the editor restores the display instead of reporting success', async ({page}) => {
+test('global Escape outside the editor does not abort a pending save', async ({page}) => {
 	const fixture = await mount(page, {pending: true});
 	try {
 		await fixture.cell.click();
@@ -103,14 +103,72 @@ test('real Naja abort after focus leaves the editor restores the display instead
 		await expect.poll(() => fixture.requests.length).toBe(1);
 		await page.locator('#outside').click();
 		await page.keyboard.press('Escape');
-		await expect(fixture.cell).toHaveClass(/edited-error/);
-		await expect(fixture.cell).toHaveText('Original');
-		await expect(fixture.cell).not.toHaveClass(/(?:^| )edited(?: |$)/);
-		await expect(fixture.cell).not.toHaveAttribute('aria-busy');
-		await fixture.cell.click();
+		fixture.release();
+		await expect(fixture.cell).toHaveClass(/(?:^| )edited(?: |$)/);
+		await expect(fixture.cell).toHaveText('Changed');
 		await expect(fixture.cell).not.toHaveClass(/edited-error/);
-		await fixture.cell.locator('textarea').press('Escape');
+		await expect(fixture.cell).not.toHaveAttribute('aria-busy');
 		expect(fixture.requests).toHaveLength(1);
+	} finally { fixture.release(); }
+});
+
+test('two cells save concurrently without aborting each other', async ({page}) => {
+	const fixture = await mount(page, {pending: true});
+	await fixture.cell.evaluate(cell => {
+		const second = cell.cloneNode(true);
+		second.textContent = 'Second';
+		second.setAttribute('data-datagrid-editable-value', 'Second');
+		cell.parentElement.append(second);
+		window.ajax.dispatchEvent(new CustomEvent('success'));
+	});
+	const secondCell = page.locator('td').nth(1);
+	try {
+		await fixture.cell.click();
+		await fixture.cell.locator('textarea').fill('A2');
+		await fixture.cell.locator('textarea').press('Enter');
+		await expect.poll(() => fixture.requests.length).toBe(1);
+		await secondCell.click();
+		await secondCell.locator('textarea').fill('B2');
+		await secondCell.locator('textarea').press('Enter');
+		await expect.poll(() => fixture.requests.length).toBe(2);
+		fixture.release();
+		for (const [cell, value] of [[fixture.cell, 'A2'], [secondCell, 'B2']]) {
+			await expect(cell).toHaveClass(/(?:^| )edited(?: |$)/);
+			await expect(cell).toHaveText(value);
+			await expect(cell).not.toHaveClass(/edited-error/);
+			await expect(cell).not.toHaveAttribute('aria-busy');
+		}
+		expect(fixture.requests).toEqual(['value=A2', 'value=B2']);
+	} finally { fixture.release(); }
+});
+
+test('an unrelated Naja request does not abort a pending cell save', async ({page}) => {
+	const fixture = await mount(page, {pending: true});
+	await page.route('http://datagrid.test/filter', route => route.fulfill({contentType: 'application/json', body: '{}'}));
+	try {
+		await fixture.cell.click();
+		await fixture.cell.locator('textarea').fill('Changed');
+		await fixture.cell.locator('textarea').press('Enter');
+		await expect.poll(() => fixture.requests.length).toBe(1);
+		await page.evaluate(() => window.naja.makeRequest('GET', '/filter', null, {history: false}));
+		fixture.release();
+		await expect(fixture.cell).toHaveClass(/(?:^| )edited(?: |$)/);
+		await expect(fixture.cell).toHaveText('Changed');
+		await expect(fixture.cell).not.toHaveClass(/edited-error/);
+		expect(fixture.requests).toHaveLength(1);
+	} finally { fixture.release(); }
+});
+
+test('the Naja adapter still rejects an explicitly abortable request when opted in', async ({page}) => {
+	const fixture = await mount(page, {pending: true});
+	try {
+		await page.evaluate(() => {
+			window.requestResult = window.ajax.request({url: '/edit', method: 'POST', data: {value: 'Changed'}, rejectOnCancel: true})
+				.then(() => 'success', error => error.name);
+		});
+		await expect.poll(() => fixture.requests.length).toBe(1);
+		await page.keyboard.press('Escape');
+		expect(await page.evaluate(() => window.requestResult)).toBe('AbortError');
 	} finally { fixture.release(); }
 });
 

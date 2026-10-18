@@ -141,17 +141,11 @@ Press Enter or leave the control to save a change. In a textarea, Shift+Enter
 inserts a newline. Escape cancels an edit before saving. Once saving starts,
 the control is read-only (a select is disabled) and the cell has `aria-busy="true"`.
 Repeated Enter, blur and select change events do not send another request.
+Pending saves run independently: editing another cell, filtering, sorting or
+pressing Escape elsewhere does not cancel a submitted save.
 
 A failed or cancelled request restores the original display and marks the cell
 with `edited-error`; this does not imply that the server rolled back a request
 that had already started. Reopening the editor clears the error indicator.
 A successful empty JSON response remains valid. Reinitialization after AJAX
 updates binds each cell only once, including newly redrawn cells.
-
-Browser regression tests use the actual Naja adapter and Chromium:
-
-```sh
-npm install
-npx playwright install chromium
-npm run test:browser
-```
