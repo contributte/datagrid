@@ -62,7 +62,7 @@ touch device profile. Install the development dependencies and Chromium, then ru
 ```sh
 npm install
 npx playwright install chromium
-npm run test:browser
+make playwright
 ```
 
 The browser suite runs separately in CI. Test bundles and results are generated

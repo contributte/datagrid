@@ -19,4 +19,4 @@ jobs:
           node-version: '22.x'
       - run: npm install
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:browser
+      - run: make playwright

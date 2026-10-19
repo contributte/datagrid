@@ -1,4 +1,4 @@
-.PHONY: install qa cs csf phpstan tests coverage
+.PHONY: install qa cs csf phpstan tests coverage playwright
 
 install:
 	composer update
@@ -27,3 +27,6 @@ ifdef GITHUB_ACTION
 else
 	vendor/bin/tester -s -p php --colors 1 -C --coverage coverage.html --coverage-src src tests/Cases
 endif
+
+playwright:
+	npm run test:browser
