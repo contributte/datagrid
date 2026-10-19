@@ -15,6 +15,7 @@ use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Order;
 use Doctrine\Common\Collections\Selectable;
 use LogicException;
 
@@ -87,12 +88,15 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 		}
 
 		if ($sorting->getSort() !== []) {
-			$this->criteria->orderBy($sorting->getSort());
+			$this->criteria->orderBy(array_map(
+				static fn (string $direction): Order => strtoupper($direction) === Order::Ascending->value ? Order::Ascending : Order::Descending,
+				$sorting->getSort()
+			));
 
 			return $this;
 		}
 
-		$this->criteria->orderBy([$this->primaryKey => 'ASC']);
+		$this->criteria->orderBy([$this->primaryKey => Order::Ascending]);
 
 		return $this;
 	}
