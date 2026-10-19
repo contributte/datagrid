@@ -47,6 +47,10 @@ parameters:
 			message: '#string\\|Stringable#'
 			count: 2
 			path: src/Status/Option.php
+		- # Deprecated since ORM 3.7, but OffsetPaginator does not exist in ORM 2
+			message: '#deprecated class Doctrine\\ORM\\Tools\\Pagination\\Paginator#'
+			path: src/DataSource/DoctrineDataSource.php
+			reportUnmatched: false
 		-
 			identifier: missingType.generics
 		-

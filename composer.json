@@ -34,9 +34,8 @@
   "require-dev": {
     "contributte/qa": "^0.4.0",
     "dibi/dibi": "^5.0.2",
-    "doctrine/annotations": "^1.14.4",
-    "doctrine/cache": "^1.13.0",
-    "doctrine/orm": "^2.20.2",
+    "doctrine/collections": "^2.2.0 || >=3.1.1",
+    "doctrine/orm": "^2.20.2 || ^3.0",
     "elasticsearch/elasticsearch": "^8.6",
     "mockery/mockery": "^1.6.12",
     "nette/database": "^3.0.2",
@@ -48,6 +47,7 @@
     "phpstan/phpstan-mockery": "^2.0",
     "phpstan/phpstan-nette": "^2.0",
     "phpstan/phpstan-strict-rules": "^2.0",
+    "symfony/cache": "^6.4.0 || ^7.2.0 || ^8.0.0",
     "tharos/leanmapper": "^3.4.2 || ^4.0.0",
     "tracy/tracy": "^2.6.3"
   },
