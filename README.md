@@ -19,29 +19,10 @@ Website 🚀 <a href="https://contributte.org">contributte.org</a> | Contact �
 </p>
 
 <p align=center>
-	<img src="https://github.com/contributte/datagrid/blob/master/.docs/assets/datagrid.gif">
+	<img src=".docs/assets/datagrid.gif">
 </p>
 
-## About
-
-You are looking at first class datagrid for Nette Framework. Supported features: filtering, sorting, pagination, tree view, table view, translator and many others.
-Give us a star, it makes us so happy. Thanks ⭐.️
-
-| Resource | Link |
-|----------|------|
-| **Documentation** | [documentation](.docs) |
-| **Skeleton Demo** | [https://examples.contributte.org/datagrid-skeleton/](https://examples.contributte.org/datagrid-skeleton/) |
-| **Skeleton Repository** | [github.com/contributte/datagrid-skeleton](https://github.com/contributte/datagrid-skeleton) |
-
-## Usage
-
-To install latest version of `datagrid` use [Composer](https://getcomposer.org).
-
-```
-composer require ublaboo/datagrid
-```
-
-For details on how to use this package, check out our [documentation](.docs).
+First class datagrid for Nette Framework with filtering, sorting, pagination, tree view, table view, localization, exports and inline editing.
 
 ## Versions
 
@@ -51,6 +32,42 @@ For details on how to use this package, check out our [documentation](.docs).
 | stable | `^7.1.0`  | `master` | `3.2+` | `>=8.2` |
 | stable | `^7.0.0`  | `master` | `3.2+` | `>=8.1` |
 | stable | `^6.10.0` | `master` | `3.0+` | `>=7.2` |
+
+## Installation
+
+To install latest version of `ublaboo/datagrid` use [Composer](https://getcomposer.org).
+
+```
+composer require ublaboo/datagrid
+```
+
+## Quick start
+
+Create a component, give it an array data source, and add one column:
+
+```php
+use Contributte\Datagrid\Datagrid;
+
+protected function createComponentUsersGrid(): Datagrid
+{
+	$grid = new Datagrid($this, 'usersGrid');
+	$grid->setDataSource([
+		['id' => 1, 'name' => 'John'],
+	]);
+	$grid->addColumnText('name', 'Name');
+
+	return $grid;
+}
+```
+
+Render `{control usersGrid}` in the component template. It renders a grid with a **Name** column and the `John` row. See [the detailed documentation index](.docs/README.md) for data-source variants and all grid modes.
+
+## Resources
+
+| Resource | Link |
+|----------|------|
+| **Skeleton Demo** | [https://examples.contributte.org/datagrid-skeleton/](https://examples.contributte.org/datagrid-skeleton/) |
+| **Skeleton Repository** | [github.com/contributte/datagrid-skeleton](https://github.com/contributte/datagrid-skeleton) |
 
 ## Development
 
