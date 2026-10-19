@@ -35,7 +35,7 @@
     "contributte/qa": "^0.4.0",
     "dibi/dibi": "^5.0.2",
     "doctrine/collections": "^2.2.0 || >=3.1.1",
-    "doctrine/orm": "^2.20.2 || ^3.0",
+    "doctrine/orm": "^3.0",
     "elasticsearch/elasticsearch": "^8.6",
     "mockery/mockery": "^1.6.12",
     "nette/database": "^3.0.2",

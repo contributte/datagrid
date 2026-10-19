@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\AST\OrderByItem;
 use Doctrine\ORM\Query\AST\PathExpression;
 use Doctrine\ORM\Query\SqlWalker;
 
@@ -131,10 +132,7 @@ class SortableNullsWalker extends SqlWalker
 	public const NULLS_FIRST = 'NULLS FIRST';
 	public const NULLS_LAST = 'NULLS LAST';
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function walkOrderByItem($orderByItem): string
+	public function walkOrderByItem(OrderByItem $orderByItem): string
 	{
 		$sql = parent::walkOrderByItem($orderByItem);
 		$hint = $this->getQuery()->getHint('sortableNulls.fields');
