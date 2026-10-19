@@ -2,9 +2,9 @@
 
 namespace Contributte\Datagrid\Exception;
 
-use Exception;
+use RuntimeException;
 
-class DatagridColumnRendererException extends Exception
+class DatagridColumnRendererException extends RuntimeException
 {
 
 }
