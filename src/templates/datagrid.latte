@@ -20,10 +20,10 @@
 		{form filter, class => 'ajax', data-naja-unique => "datagrid-filter-{$control->getFullName()}"}
 			{if $control->hasOuterFilterRendering()}
 				{block outer-filters}
-					<div class="row text-end datagrid-collapse-filters-button-row" n:if="$control->hasCollapsibleOuterFilters()">
+					<div class="row text-end datagrid-collapse-filters-button-row">
 						<div class="col-sm-12">
 							{include reset-filter}
-							<button class="btn btn-xs btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#datagrid-{$control->getFullName()}-row-filters">
+							<button n:if="$control->hasCollapsibleOuterFilters()" class="btn btn-xs btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#datagrid-{$control->getFullName()}-row-filters">
 								<i n:block="icon-filter" class="{$iconPrefix}filter"></i> {='contributte_datagrid.show_filter'|translate}
 							</button>
 						</div>
