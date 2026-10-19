@@ -13,6 +13,8 @@ export const EditableValueAttribute = "data-datagrid-editable-value";
 export const EditableAttrsAttribute = "data-datagrid-editable-attrs";
 
 export class EditablePlugin implements DatagridPlugin {
+	private readonly boundCells = new WeakSet<HTMLElement>();
+
 	onDatagridInit(datagrid: Datagrid): boolean {
 		datagrid.ajax.addEventListener('success', (event) => {
 			this.initEditableCells(datagrid);
@@ -27,13 +29,17 @@ export class EditablePlugin implements DatagridPlugin {
 
 		datagrid.el.querySelectorAll<HTMLElement>(`[${EditableUrlAttribute}]`).forEach(cell => {
 
+			if (this.boundCells.has(cell)) return;
+			this.boundCells.add(cell);
+
 			cell.addEventListener("click", e => {
 
 				if (cell instanceof HTMLAnchorElement || cell.classList.contains("datagrid-inline-edit")) return;
 
 				if (!cell.classList.contains("editing")) {
 					cell.classList.add("editing");
-					const originalValue = (cell.innerHTML.replace(/<\/?br>/g, "\n")).trim();
+					const originalHtml = cell.innerHTML;
+					const originalValue = (originalHtml.replace(/<\/?br>/g, "\n")).trim();
 					const valueToEdit = (cell.getAttribute(EditableValueAttribute) ?? originalValue).trim();
 
 					cell.setAttribute("originalValue", originalValue);
@@ -61,27 +67,38 @@ export class EditablePlugin implements DatagridPlugin {
 							input.setAttribute("value", valueToEdit);
 					}
 
-					input.focus();
-
 					const attributes = JSON.parse(cell.getAttribute(EditableAttrsAttribute) ?? "{}");
 					for (const key in attributes) {
 						const value = attributes[key];
 						input.setAttribute(key, value);
 					}
 
-					cell.classList.remove("edited");
+					cell.classList.remove("edited", "edited-error");
+					let finished = false;
 
 					const submitCell = async (el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement) => {
+						if (finished) return;
+						finished = true;
 						let value = el.value;
 						if (value !== valueToEdit) {
+							if (el instanceof HTMLSelectElement) {
+								el.disabled = true;
+							} else {
+								el.readOnly = true;
+							}
+							cell.setAttribute("aria-busy", "true");
 							try {
 								const response = await datagrid.ajax.request({
 									url: cell.getAttribute(EditableUrlAttribute) ?? "",
 									method: "POST",
+									rejectOnCancel: true,
+									options: { unique: false, abort: false },
 									data: {
 										value,
 									},
 								}) as any;
+
+								if (!cell.isConnected) return;
 
 								if (type === "select") {
 									cell.innerHTML = (el instanceof HTMLSelectElement)
@@ -95,11 +112,13 @@ export class EditablePlugin implements DatagridPlugin {
 								}
 								cell.classList.add("edited");
 							} catch {
-								cell.innerHTML = originalValue;
+								cell.innerHTML = originalHtml;
 								cell.classList.add("edited-error");
+							} finally {
+								cell.removeAttribute("aria-busy");
 							}
 						} else {
-							cell.innerHTML = originalValue;
+							cell.innerHTML = originalHtml;
 						}
 
 						cell.classList.remove("editing");
@@ -111,20 +130,14 @@ export class EditablePlugin implements DatagridPlugin {
 						)
 						.forEach(el => {
 							if (el instanceof HTMLSelectElement) {
-								let submitted = false;
-								const submitOnce = () => {
-									if (submitted) return;
-									submitted = true;
-									submitCell(el);
-								};
-								el.addEventListener("change", submitOnce);
-								el.addEventListener("blur", submitOnce);
-							} else {
-								el.addEventListener("blur", () => submitCell(el));
+								el.addEventListener("change", () => submitCell(el));
 							}
+							el.addEventListener("blur", () => submitCell(el));
 
 							el.addEventListener("keydown", e => {
-								if (isEnter(e as KeyboardEvent)) {
+								const keyboardEvent = e as KeyboardEvent;
+								if (keyboardEvent.isComposing) return;
+								if (isEnter(keyboardEvent) && !(el instanceof HTMLTextAreaElement && keyboardEvent.shiftKey)) {
 									e.stopPropagation();
 									e.preventDefault();
 									return submitCell(el);
@@ -133,12 +146,15 @@ export class EditablePlugin implements DatagridPlugin {
 								if (isEsc(e as KeyboardEvent)) {
 									e.stopPropagation();
 									e.preventDefault();
+									if (finished) return;
+									finished = true;
 									cell.classList.remove("editing");
-									cell.innerHTML = originalValue;
+									cell.innerHTML = originalHtml;
 								}
 							});
 
 						});
+					input.focus();
 				}
 			});
 		});
