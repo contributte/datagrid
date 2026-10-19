@@ -3,6 +3,9 @@ name: "Assets"
 on:
   workflow_dispatch:
 
+  release:
+    types: ["published"]
+
   push:
     branches: ["master"]
 
@@ -48,5 +51,27 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
       - run: npm version ${{ steps.version.outputs.version }} --no-git-tag-version
       - run: npm publish --provenance --access public --tag master
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-release:
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.event_name == 'release'
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+          path: dist/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version --allow-same-version
+      - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
