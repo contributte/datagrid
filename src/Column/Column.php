@@ -45,6 +45,8 @@ abstract class Column extends FilterableColumn
 
 	protected bool $defaultHide = false;
 
+	protected bool $hideable = true;
+
 	/** @var array|Html[]|null[] */
 	protected array $elementCache = ['td' => null, 'th' => null];
 
@@ -533,6 +535,23 @@ abstract class Column extends FilterableColumn
 	public function getDefaultHide(): bool
 	{
 		return $this->defaultHide;
+	}
+
+	/**
+	 * Set whether the column can be hidden when columns are hideable
+	 *
+	 * @return static
+	 */
+	public function setHideable(bool $hideable = true): self
+	{
+		$this->hideable = $hideable;
+
+		return $this;
+	}
+
+	public function isHideable(): bool
+	{
+		return $this->hideable;
 	}
 
 	public function getColumn(): string

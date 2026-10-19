@@ -2091,6 +2091,13 @@ class Datagrid extends Control
 
 	public function handleHideColumn(string $column): void
 	{
+		if (isset($this->columns[$column]) && !$this->columns[$column]->isHideable()) {
+			$this->redrawControl();
+			$this->onRedraw();
+
+			return;
+		}
+
 		/**
 		 * Store info about hiding a column to storage
 		 */
@@ -2749,7 +2756,7 @@ class Datagrid extends Control
 				$columnsToHide = [];
 
 				foreach ($this->columns as $key => $column) {
-					if ($column->getDefaultHide()) {
+					if ($column->getDefaultHide() && $column->isHideable()) {
 						$columnsToHide[] = $key;
 					}
 				}
@@ -2763,7 +2770,7 @@ class Datagrid extends Control
 			$hiddenColumns = $this->getStorageData('_grid_hidden_columns', []);
 
 			foreach ($hiddenColumns ?? [] as $column) {
-				if (isset($this->columns[$column])) {
+				if (isset($this->columns[$column]) && $this->columns[$column]->isHideable()) {
 					$this->columnsVisibility[$column] = [
 						'visible' => false,
 					];
