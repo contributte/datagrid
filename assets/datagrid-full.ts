@@ -13,6 +13,7 @@ import {
 	SelectpickerPlugin,
 	SortableJS,
 	SortablePlugin,
+	SortPlugin,
 	TomSelect,
 	TreeViewPlugin,
 	VanillaDatepicker,
@@ -43,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				new InlinePlugin(),
 				new ItemDetailPlugin(),
 				new NetteFormsPlugin(netteForms),
+				new SortPlugin(),
 				new SortablePlugin(new SortableJS()),
 				new DatepickerPlugin(new VanillaDatepicker({ buttonClass: 'btn' })),
 				new SelectpickerPlugin(new TomSelect(Select, {
