@@ -5,7 +5,13 @@ export class ItemDetailPlugin implements DatagridPlugin {
 	onDatagridInit(datagrid: Datagrid): boolean {
 		datagrid.el.querySelectorAll<HTMLElement>("[data-toggle-detail-grid]")
 			.forEach((el) => {
-				if (el.getAttribute("data-toggle-detail-grid") !== datagrid.name) return;
+				// datagrid.name comes from data-datagrid-name, which holds the component full name.
+				// data-toggle-detail-grid only holds the plain name, so it never matches for a datagrid
+				// nested in another component - prefer the full name attribute.
+				const gridName = el.getAttribute("data-toggle-detail-grid-fullname")
+					?? el.getAttribute("data-toggle-detail-grid");
+
+				if (gridName !== datagrid.name) return;
 				const toggleId = el.getAttribute("data-toggle-detail")!;
 
 
