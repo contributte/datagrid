@@ -149,3 +149,16 @@ with `edited-error`; this does not imply that the server rolled back a request
 that had already started. Reopening the editor clears the error indicator.
 A successful empty JSON response remains valid. Reinitialization after AJAX
 updates binds each cell only once, including newly redrawn cells.
+
+## Small inline editing: values and display
+
+An explicit value supplied with `setEditableValueCallback()` is preserved,
+including leading/trailing whitespace. Without that callback, the editor reads
+the cell's rendered text (with BR elements as newlines), excluding template
+indentation. Native input normalization is taken into account when detecting an
+unchanged value.
+
+Submitted values are displayed as plain text by default. An explicit non-empty
+HTML replacement returned by the server's editable callback retains its existing
+renderer contract. Configure select elements and editor attributes as trusted
+application configuration.

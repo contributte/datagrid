@@ -22,7 +22,7 @@ async function mount(page, options = {}) {
 		cell.innerHTML = options.html ?? 'Original';
 		cell.setAttribute('data-datagrid-editable-url', '/edit');
 		cell.setAttribute('data-datagrid-editable-type', options.type ?? 'textarea');
-		cell.setAttribute('data-datagrid-editable-value', options.value ?? 'Original');
+		if (!options.noValue) cell.setAttribute('data-datagrid-editable-value', options.value ?? 'Original');
 		if (options.select) cell.setAttribute('data-datagrid-editable-element', options.select);
 	}, options);
 	await page.addScriptTag({path: bundlePath});
@@ -243,13 +243,124 @@ test('a pending response does not overwrite a newly redrawn cell', async ({page}
 	} finally { fixture.release(); }
 });
 
-for (const replacement of [false, 0, '<strong>Rendered</strong>']) {
+for (const replacement of [false, 0, '', '<strong>Rendered</strong>']) {
 	test(`retains existing server-renderer behavior for ${JSON.stringify(replacement)}`, async ({page}) => {
 		const fixture = await mount(page, {response: {_datagrid_editable_new_value: replacement}});
 		await fixture.cell.click();
 		await fixture.cell.locator('textarea').fill('Changed');
 		await fixture.cell.locator('textarea').press('Enter');
 		await expect(fixture.cell).toHaveClass(/edited/);
-		expect(await fixture.cell.innerHTML()).toBe(typeof replacement === 'string' ? replacement : 'Changed');
+		expect(await fixture.cell.innerHTML()).toBe(replacement || 'Changed');
+	});
+}
+
+for (const type of ['text', 'textarea']) {
+	test(`${type}: an explicit value is literal data, with whitespace and entities preserved`, async ({page}) => {
+		await page.route('http://datagrid.test/x', route => route.fulfill({status: 404, body: ''}));
+		const value = '  &lt;test&gt; </textarea><img src=x onerror="window.editorExecuted=true">  ';
+		const fixture = await mount(page, {type, value});
+		await fixture.cell.click();
+		await expect(fixture.cell.locator(type === 'text' ? 'input' : 'textarea')).toHaveValue(value);
+		await expect(fixture.cell.locator('img')).toHaveCount(0);
+		expect(await page.evaluate(() => window.editorExecuted)).toBeUndefined();
+		await page.keyboard.press('Escape');
+		expect(fixture.requests).toEqual([]);
+	});
+}
+
+test('opening a textarea treats a server-escaped attribute as literal text', async ({page}) => {
+	const value = '</textarea><img src=x onerror="window.editorExecuted=true">';
+	const fixture = await mount(page);
+	await fixture.cell.evaluate((cell, value) => {
+		const escaped = value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+		const parsed = document.createElement('template');
+		parsed.innerHTML = `<span data-value="${escaped}"></span>`;
+		cell.setAttribute('data-datagrid-editable-value', parsed.content.firstElementChild.getAttribute('data-value'));
+	}, value);
+	await fixture.cell.click();
+	await expect(fixture.cell.locator('textarea')).toHaveValue(value);
+	await expect(fixture.cell.locator('img')).toHaveCount(0);
+	expect(await page.evaluate(() => window.editorExecuted)).toBeUndefined();
+	await page.keyboard.press('Escape');
+	expect(fixture.requests).toEqual([]);
+});
+
+for (const value of ['', '0', '  \n ', ' first\nsecond ', ' first\r\nsecond ']) {
+	test(`unchanged native textarea value ${JSON.stringify(value)} does not submit`, async ({page}) => {
+		const fixture = await mount(page, {value});
+		await fixture.cell.click();
+		await expect(fixture.cell.locator('textarea')).toHaveValue(value.replace(/\r\n?/g, '\n'));
+		await page.locator('#outside').click();
+		await expect(fixture.cell.locator('textarea')).toHaveCount(0);
+		expect(fixture.requests).toEqual([]);
+	});
+}
+
+test('fallback reads rendered text and BRs, restoring original markup when unchanged', async ({page}) => {
+	const html = '\n\t<span>A &amp; B &amp;lt;tag&amp;gt;</span><br>second\n\t';
+	const fixture = await mount(page, {html, noValue: true});
+	await fixture.cell.click();
+	await expect(fixture.cell.locator('textarea')).toHaveValue('A & B &lt;tag&gt;\nsecond');
+	await page.locator('#outside').click();
+	expect(await fixture.cell.innerHTML()).toBe(html);
+	expect(fixture.requests).toEqual([]);
+});
+
+test('a submitted value is displayed as text unless the server supplies its renderer', async ({page}) => {
+	await page.route('http://datagrid.test/x', route => route.fulfill({status: 404, body: ''}));
+	const fixture = await mount(page);
+	const value = '<img src=x onerror="window.editorExecuted=true"> &lt;literal&gt;';
+	await fixture.cell.click();
+	await fixture.cell.locator('textarea').fill(value);
+	await fixture.cell.locator('textarea').press('Enter');
+	await expect(fixture.cell).toHaveClass(/edited/);
+	expect(await fixture.cell.textContent()).toBe(value);
+	await expect(fixture.cell.locator('img')).toHaveCount(0);
+	expect(await page.evaluate(() => window.editorExecuted)).toBeUndefined();
+});
+
+test('quoted select values are assigned without building a selector', async ({page}) => {
+	const value = 'a\'b"[x]';
+	const fixture = await mount(page, {type: 'select', value, select: '<select><option value="a&apos;b&quot;[x]">Label</option></select>'});
+	await fixture.cell.click();
+	await expect(fixture.cell.locator('select')).toHaveValue(value);
+	await page.locator('#outside').click();
+	expect(fixture.requests).toEqual([]);
+});
+
+test('select fallback matches the displayed label without submitting an unchanged value', async ({page}) => {
+	const fixture = await mount(page, {
+		type: 'select', noValue: true, html: 'Second label',
+		select: '<select><option value="a">First label</option><option value="b">Second label</option></select>',
+	});
+	await fixture.cell.click();
+	await expect(fixture.cell.locator('select')).toHaveValue('b');
+	await page.locator('#outside').click();
+	await expect(fixture.cell).toHaveText('Second label');
+	expect(fixture.requests).toEqual([]);
+});
+
+test('a submitted select label is displayed as literal text', async ({page}) => {
+	const label = '<img src=x onerror="window.editorExecuted=true"> &lt;literal&gt;';
+	const fixture = await mount(page, {
+		type: 'select', value: 'a',
+		select: '<select><option value="a">Original</option><option value="b">&lt;img src=x onerror=&quot;window.editorExecuted=true&quot;&gt; &amp;lt;literal&amp;gt;</option></select>',
+	});
+	await fixture.cell.click();
+	await fixture.cell.locator('select').selectOption('b');
+	await expect(fixture.cell).toHaveClass(/edited/);
+	expect(await fixture.cell.textContent()).toBe(label);
+	await expect(fixture.cell.locator('img')).toHaveCount(0);
+	expect(await page.evaluate(() => window.editorExecuted)).toBeUndefined();
+	expect(fixture.requests).toEqual(['value=b']);
+});
+
+for (const [type, value] of [['number', 'invalid'], ['date', 'invalid']]) {
+	test(`${type}: native value normalization does not trigger an unchanged submission`, async ({page}) => {
+		const fixture = await mount(page, {type, value});
+		await fixture.cell.click();
+		await expect(fixture.cell.locator('input')).toHaveValue('');
+		await page.locator('#outside').click();
+		expect(fixture.requests).toEqual([]);
 	});
 }
