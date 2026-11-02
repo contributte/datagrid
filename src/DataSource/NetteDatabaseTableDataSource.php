@@ -11,10 +11,10 @@ use Contributte\Datagrid\Filter\FilterRange;
 use Contributte\Datagrid\Filter\FilterSelect;
 use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
+use Contributte\Datagrid\Utils\NetteDatabaseSelectionHelper;
 use Contributte\Datagrid\Utils\Sorting;
 use LogicException;
 use Nette\Database\Table\Selection;
-use Nette\Utils\Strings;
 
 class NetteDatabaseTableDataSource extends FilterableDataSource implements IDataSource
 {
@@ -29,23 +29,21 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	{
 		$dataSourceSqlBuilder = $this->dataSource->getSqlBuilder();
 
+		if ($dataSourceSqlBuilder->getGroup() !== '') {
+			$query = sprintf('SELECT COUNT(*) FROM (%s) AS datagrid_count', $this->dataSource->getSql());
+			$explorer = NetteDatabaseSelectionHelper::getContext($this->dataSource);
+
+			/** @phpstan-ignore argument.type */
+			$result = $explorer->query($query, ...$dataSourceSqlBuilder->getParameters());
+
+			return (int) $result->fetchField();
+		}
+
 		try {
 			$primary = $this->dataSource->getPrimary();
 
 		} catch (LogicException) {
-			if ($dataSourceSqlBuilder->getGroup() !== '') {
-				return $this->dataSource->count(
-					'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
-				);
-			}
-
 			return $this->dataSource->count('*');
-		}
-
-		if ($dataSourceSqlBuilder->getGroup() !== '') {
-			return $this->dataSource->count(
-				'DISTINCT ' . Strings::replace($dataSourceSqlBuilder->getGroup(), '~ (DESC|ASC)~')
-			);
 		}
 
 		return $this->dataSource->count(
