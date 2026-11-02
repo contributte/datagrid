@@ -92,12 +92,12 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 
 			if ($value) {
 				try {
-					$dateFrom = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+					$dateFrom = DateTimeHelper::tryConvertToFilterDate($value, $filter->getPhpFormat());
 					$dateFrom->setTime(0, 0, 0);
 
 					$timestampFrom = $dateFrom->getTimestamp();
 
-					$dateTo = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+					$dateTo = DateTimeHelper::tryConvertToFilterDate($value, $filter->getPhpFormat());
 					$dateTo->setTime(23, 59, 59);
 
 					$timestampTo = $dateTo->getTimestamp();
@@ -118,7 +118,7 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 
 			if ($values['from']) {
 				try {
-					$dateFrom = DateTimeHelper::tryConvertToDateTime($values['from'], [$filter->getPhpFormat()]);
+					$dateFrom = DateTimeHelper::tryConvertToFilterDate($values['from'], $filter->getPhpFormat());
 					$dateFrom->setTime(0, 0, 0);
 
 					$timestampFrom = $dateFrom->getTimestamp();
@@ -129,7 +129,7 @@ class ElasticsearchDataSource extends FilterableDataSource implements IDataSourc
 
 			if ($values['to']) {
 				try {
-					$dateTo = DateTimeHelper::tryConvertToDateTime($values['to'], [$filter->getPhpFormat()]);
+					$dateTo = DateTimeHelper::tryConvertToFilterDate($values['to'], $filter->getPhpFormat());
 					$dateTo->setTime(23, 59, 59);
 
 					$timestampTo = $dateTo->getTimestamp();

@@ -3,6 +3,8 @@
 namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
 use Contributte\Datagrid\DataSource\NetteDatabaseTableDataSource;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Nette\Caching\Storages\DevNullStorage;
 use Nette\Database\Connection;
@@ -10,6 +12,7 @@ use Nette\Database\Conventions\DiscoveredConventions;
 use Nette\Database\Explorer;
 use Nette\Database\Structure;
 use Nette\Database\Table\Selection;
+use Tester\Assert;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
@@ -25,6 +28,26 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 
 		$factory = new TestingDatagridFactory();
 		$this->grid = $factory->createTestingDatagrid();
+	}
+
+	public function testPartialDatesFilterActualRows(): void
+	{
+		$year = date('Y');
+		foreach (['05-11', '05-12', '05-24', '05-25'] as $key => $day) {
+			$this->db->query('INSERT INTO dated_items', ['id' => $key + 1, 'created' => $year . '-' . $day . ' 12:30:00']);
+		}
+
+		$date = new FilterDate($this->grid, 'created', 'Created', 'created');
+		$date->setValue('12.5.');
+		$source = new NetteDatabaseTableDataSource($this->db->table('dated_items'), 'id');
+		$source->filter([$date]);
+		Assert::same([2], array_column($source->getData(), 'id'));
+
+		$range = new FilterDateRange($this->grid, 'created', 'Created', 'created', 'To');
+		$range->setValue(['from' => '12.5.', 'to' => '24.5.']);
+		$source = new NetteDatabaseTableDataSource($this->db->table('dated_items'), 'id');
+		$source->filter([$range]);
+		Assert::same([2, 3], array_column($source->getData(), 'id'));
 	}
 
 	protected function setUpDatabase(): void
@@ -43,6 +66,7 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 							);
 		');
 
+		$this->db->query('CREATE TABLE dated_items (id INTEGER PRIMARY KEY, created TEXT)');
 		foreach ($this->data as $row) {
 			$this->db->query('INSERT INTO users', $row);
 		}

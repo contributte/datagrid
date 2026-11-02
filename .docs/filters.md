@@ -206,6 +206,22 @@ $grid->addFilterDate('created', 'User registered on')
 	->setFormat('j. n. Y', 'd. m. yyyy');
 ```
 
+Numeric dates with an omitted trailing year are resolved in date filters using the
+current year in the application's default timezone and the configured PHP format.
+For example, `12.5.` with `j. n. Y` means May 12, while `12/5` means May 12 with
+`d/m/Y` and December 5 with `m/d/Y`. This applies to both `FilterDate` and the
+endpoints of `FilterDateRange`. The final separator is optional.
+
+This handling supports numeric day/month formats ending in `Y` or `y`; full dates
+and other configured formats keep their existing conversion behavior. Invalid
+partial dates, such as February 29 in a non-leap year, follow the data source's
+existing invalid-date policy. Custom condition callbacks still receive the raw
+input.
+
+**Behavior change:** these partial date-filter inputs are no longer interpreted
+by the generic fallback as a time of day or using a different date order. Text
+filters and the generic date-conversion helper's existing methods are unchanged.
+
 ## FilterRange
 
 This filter renders two inputs: From and To. If you want to set inputs placeholders, you have to set both in an array.

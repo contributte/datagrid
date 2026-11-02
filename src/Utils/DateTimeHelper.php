@@ -10,6 +10,46 @@ final class DateTimeHelper
 {
 
 	/**
+	 * Resolve a missing trailing year in a numeric date-filter input.
+	 *
+	 * @throws DatagridDateTimeHelperException
+	 */
+	public static function tryConvertToFilterDate(
+		mixed $value,
+		string $format,
+		?DateTimeImmutable $referenceDate = null
+	): DateTime
+	{
+		if (
+			!is_string($value)
+			|| preg_match('~^([djmn])([./\s-]+)([djmn])([./\s-]+)[Yy]$~D', $format, $parts) !== 1
+			|| str_contains('dj', $parts[1]) === str_contains('dj', $parts[3])
+		) {
+			return self::fromString($value, [$format]);
+		}
+
+		$separator = trim($parts[2]);
+		$separatorPattern = $separator === '' ? '\s+' : '\s*' . preg_quote($separator, '~') . '\s*';
+		$yearSeparator = trim($parts[4]);
+		$trailingSeparator = $yearSeparator === '' ? '' : '(?:\s*' . preg_quote($yearSeparator, '~') . ')?';
+
+		if (preg_match('~^\s*(\d{1,2})' . $separatorPattern . '(\d{1,2})' . $trailingSeparator . '\s*$~D', $value, $matches) !== 1) {
+			return self::fromString($value, [$format]);
+		}
+
+		$referenceDate ??= new DateTimeImmutable();
+		$year = (int) $referenceDate->format('Y');
+		$day = (int) $matches[str_contains('dj', $parts[1]) ? 1 : 2];
+		$month = (int) $matches[str_contains('dj', $parts[1]) ? 2 : 1];
+
+		if (!checkdate($month, $day, $year)) {
+			throw new DatagridDateTimeHelperException();
+		}
+
+		return (new DateTime('now', $referenceDate->getTimezone()))->setDate($year, $month, $day)->setTime(0, 0);
+	}
+
+	/**
 	 * Try to convert string into \DateTime object
 	 *
 	 * @param array|string[] $formats

@@ -59,9 +59,9 @@ class DibiFluentMssqlDataSource extends DibiFluentDataSource
 		$conditions = $filter->getCondition();
 
 		try {
-			$date = DateTimeHelper::tryConvertToDateTime(
+			$date = DateTimeHelper::tryConvertToFilterDate(
 				$conditions[$filter->getColumn()],
-				[$filter->getPhpFormat()]
+				$filter->getPhpFormat()
 			);
 
 			$this->dataSource->where(
