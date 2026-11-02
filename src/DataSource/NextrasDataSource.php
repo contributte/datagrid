@@ -206,7 +206,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 					$preparedColumn => $value,
 				];
 			} else {
-				$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
+				$words = $filter->getSearchTerms($value);
 
 				foreach ($words as $word) {
 					$conditions[] = [
