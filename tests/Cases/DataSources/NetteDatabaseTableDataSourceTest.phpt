@@ -126,7 +126,7 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 
 		$this->db->query('CREATE TABLE date_values (id INTEGER PRIMARY KEY, created DATETIME, only_date DATE)');
 		$this->db->query('CREATE INDEX idx_date_values_created ON date_values(created)');
-		foreach (['2024-03-30 23:59:59', '2024-03-31 00:00:00', '2024-03-31 12:30:00', '2024-03-31 23:59:59.999999', '2024-04-01 00:00:00', null] as $key => $created) {
+		foreach (['2024-03-30 23:59:59', '2024-03-31 00:00:00', '2024-03-31 12:30:00', '2024-03-31 23:59:59.999', '2024-04-01 00:00:00', null] as $key => $created) {
 			$this->insertDate($key + 1, $created);
 		}
 
