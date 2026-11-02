@@ -237,7 +237,7 @@ class ArrayDataSource implements IDataSource
 
 		if ($values['from'] !== null && $values['from'] !== '') {
 			try {
-				$dateFrom = DateTimeHelper::tryConvertToDate($values['from'], [$format]);
+				$dateFrom = DateTimeHelper::tryConvertToFilterDate($values['from'], $format);
 				$dateFrom->setTime(0, 0, 0);
 			} catch (DatagridDateTimeHelperException) {
 				return false;
@@ -264,7 +264,7 @@ class ArrayDataSource implements IDataSource
 
 		if ($values['to'] !== null && $values['to'] !== '') {
 			try {
-				$dateTo = DateTimeHelper::tryConvertToDate($values['to'], [$format]);
+				$dateTo = DateTimeHelper::tryConvertToFilterDate($values['to'], $format);
 				$dateTo->setTime(23, 59, 59);
 			} catch (DatagridDateTimeHelperException) {
 				return false;
@@ -304,7 +304,7 @@ class ArrayDataSource implements IDataSource
 			$rowValue = $row[$column];
 
 			try {
-				$date = DateTimeHelper::tryConvertToDateTime($value, [$format]);
+				$date = DateTimeHelper::tryConvertToFilterDate($value, $format);
 			} catch (DatagridDateTimeHelperException) {
 				return false;
 			}
