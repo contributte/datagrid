@@ -114,6 +114,14 @@ $grid->getInlineEdit()->onSubmit[] = function($id, Nette\Utils\ArrayHash $values
 };
 ```
 
+When columns are hideable (`$grid->setColumnsHideable()`), inputs of hidden columns are not rendered, so they are not sent. Values of hidden columns are left out of `$values`, so saving `$values` does not overwrite them with empty data. The names of the hidden columns are passed as the third argument:
+
+```php
+$grid->getInlineEdit()->onSubmit[] = function($id, Nette\Utils\ArrayHash $values, array $hiddenColumns): void {
+	// $hiddenColumns, e.g. ['name']
+};
+```
+
 ## What happens after editing
 
 By default, after submitting inline edit, the row is redrawn and the green animated background is triggered. But if you want to do something else, you can, just create new listener to event `InlineEdit::onCustomRedraw()`:
