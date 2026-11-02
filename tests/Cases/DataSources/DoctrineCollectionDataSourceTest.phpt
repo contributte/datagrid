@@ -22,6 +22,13 @@ final class DoctrineCollectionDataSourceTest extends BaseDataSourceTest
 		$this->grid = $factory->createTestingDatagrid();
 	}
 
+	public function testPartialDateFilters(): void
+	{
+		$this->assertPartialDateFilters(
+			fn (): DoctrineCollectionDataSource => new DoctrineCollectionDataSource(new ArrayCollection($this->getDateFilterRows()), 'id')
+		);
+	}
+
 	public function testFilterMultipleColumns(): void
 	{
 		$filter = new FilterText($this->grid, 'a', 'b', ['name', 'address']);

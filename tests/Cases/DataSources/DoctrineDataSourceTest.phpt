@@ -39,6 +39,20 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 		$this->grid = $factory->createTestingDatagrid();
 	}
 
+	public function testPartialDateFilters(): void
+	{
+		$this->db->executeStatement('CREATE TABLE dated_items (id INTEGER PRIMARY KEY, created TEXT)');
+		foreach ($this->getDateFilterRows() as $row) {
+			$this->db->insert('dated_items', $row);
+		}
+
+		$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/tmp'], true);
+		$entityManager = EntityManager::create($this->db, $config);
+		$this->assertPartialDateFilters(
+			static fn (): DoctrineDataSource => new DoctrineDataSource($entityManager->getRepository(DatedItem::class)->createQueryBuilder('e')->orderBy('e.id'), 'id')
+		);
+	}
+
 	protected function setUpDatabase(): void
 	{
 		$config = new Configuration();
@@ -113,6 +127,20 @@ class User
 	{
 		$this->address = $address;
 	}
+
+}
+
+/**
+ * @Entity @Table(name="dated_items")
+ */
+class DatedItem
+{
+
+	/** @Id @Column(type="integer") */
+	public int $id;
+
+	/** @Column(type="string") */
+	public string $created;
 
 }
 
