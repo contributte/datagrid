@@ -222,6 +222,34 @@ $grid->addFilterRange('price_range', 'Price:', 'price');
 $grid->addFilterDateRange('date_created', 'User registered:');
 ```
 
+### Index-friendly Nette Selection date comparisons
+
+The standard `NetteDatabaseTableDataSource` can compare date columns using day
+boundaries instead of wrapping them in `DATE()`. Enable it before filtering:
+
+```php
+$source = new Contributte\Datagrid\DataSource\NetteDatabaseTableDataSource($selection, 'id');
+$source->setUseDateRangeComparison();
+$grid->setDataSource($source);
+```
+
+A single day becomes `column >= day AND column < next_day`. Date ranges retain
+inclusive calendar-day endpoints and independently open bounds; the next day is
+calculated as a calendar day, not a fixed number of seconds. Values are bound as
+parameters, and fractional seconds at the end of the selected day are included.
+This can let the database use an ordinary index on the column.
+
+The option is **off by default**. Enable it only for native SQL `DATE`/`DATETIME`
+columns or canonical sortable date values whose calendar-day representation
+matches the database comparison. Text containing timezone offsets, noncanonical
+formats, expressions, or database-specific timezone conversions can differ from
+`DATE(column)` semantics. Existing comparisons remain available by leaving the
+option off or calling `setUseDateRangeComparison(false)`.
+
+This option applies to the standard Nette Selection adapter's implementation.
+MSSQL-specific and other adapters retain their existing filtering paths. It does
+not change input parsing, datepicker behavior or filter callbacks.
+
 ## Default filter values
 
 Datagrid filters can have default filter values. Once user changes the filter, default values are no longer applied to the filter. Example usage:
