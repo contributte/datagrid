@@ -209,7 +209,7 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 				$like .= sprintf('%s = ? %s ', $column, $operator);
 				$args[] = sprintf('%s', $value);
 			} else {
-				$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
+				$words = $filter->getSearchTerms($value);
 
 				foreach ($words as $word) {
 					$like .= sprintf('%s LIKE ? %s ', $column, $operator);

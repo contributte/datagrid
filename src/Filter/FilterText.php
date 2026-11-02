@@ -18,6 +18,8 @@ class FilterText extends Filter
 
 	protected bool $conjunctionSearch = false;
 
+	protected bool $quotedPhraseSearch = false;
+
 	/**
 	 * @param array|string[] $columns
 	 */
@@ -84,6 +86,57 @@ class FilterText extends Filter
 	public function hasSplitWordsSearch(): bool
 	{
 		return $this->splitWordsSearch;
+	}
+
+	/**
+	 * @return static
+	 */
+	public function setQuotedPhraseSearch(bool $enabled = true): self
+	{
+		$this->quotedPhraseSearch = $enabled;
+
+		return $this;
+	}
+
+	/**
+	 * Extract substring terms without changing the raw filter value.
+	 */
+	public function getSearchTerms(mixed $value): array
+	{
+		if (!$this->splitWordsSearch || $this->exact) {
+			return [$value];
+		}
+
+		if (!$this->quotedPhraseSearch) {
+			return explode(' ', $value);
+		}
+
+		$terms = [];
+		$term = '';
+		$quoted = false;
+		$length = strlen($value);
+
+		for ($i = 0; $i < $length; $i++) {
+			$character = $value[$i];
+			if ($character === '\\' && $i + 1 < $length && ($value[$i + 1] === '"' || $value[$i + 1] === '\\')) {
+				$term .= $value[++$i];
+			} elseif ($character === '"') {
+				$quoted = !$quoted;
+			} elseif (!$quoted && str_contains(" \t\r\n\v\f", $character)) {
+				if ($term !== '') {
+					$terms[] = $term;
+					$term = '';
+				}
+			} else {
+				$term .= $character;
+			}
+		}
+
+		if ($term !== '') {
+			$terms[] = $term;
+		}
+
+		return $terms === [] ? [''] : $terms;
 	}
 
 	public function setConjunctionSearch(bool $conjunctionSearch = true): void

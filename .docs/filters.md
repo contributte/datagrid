@@ -164,6 +164,43 @@ $grid->addFilterText('name', 'Name')
 	->setConjunctionSearch();
 ```
 
+### Quoted phrases (opt-in)
+
+Array, Dibi (including PostgreSQL), Doctrine ORM/Collection, Nette Database
+(Selection and raw SQL), and Nextras data sources can group words inside double
+quotes into one substring term:
+
+```php
+$grid->addFilterText('name', 'Search', ['name', 'address'])
+	->setQuotedPhraseSearch();
+```
+
+For example, `"red blue" paint` searches for the two terms `red blue` and
+`paint`, using the adapter's existing OR behavior. `setConjunctionSearch()`
+continues to use the adapter's existing AND behavior. This groups terms; it does
+not introduce SQL full-text search or change case, accent or LIKE wildcard rules.
+
+This mode is **off by default**. With it disabled, spaces and literal quotes keep
+their existing meaning. `setSplitWordsSearch(false)` and `setExactSearch()` take
+precedence: the entire input, including quotes, remains literal.
+
+In quoted mode:
+
+- ASCII whitespace separates terms outside double quotes; whitespace inside a
+  phrase is preserved.
+- Apostrophes remain literal, so `O'Reilly` is one term.
+- `\"` represents a literal double quote and `\\` a literal backslash,
+  inside or outside a phrase. Other backslashes are preserved.
+- An unfinished opening quote groups the remaining text as one phrase, allowing
+  searches while typing. Adjacent quoted and unquoted fragments form one term.
+- Empty quoted groups are ignored; `0` is retained. If no terms remain, the
+  result is an empty substring search, as with blank input.
+
+Raw filter values and custom-condition callback arguments remain unchanged.
+Custom callbacks can call `getSearchTerms($value)` to use the same grouping.
+Elasticsearch retains its separate phrase-prefix query behavior; this option
+does not change it.
+
 ## FilterSelect
 
 `FilterSelect` has one more parameter - options:
