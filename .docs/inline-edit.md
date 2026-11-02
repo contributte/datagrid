@@ -42,6 +42,16 @@ $grid->addColumnText('name', 'Name')
 	->setEditableInputType('text', ['class' => 'form-control']);
 ```
 
+Textareas automatically size to the cell and edited content, up to 12 visible rows.
+Longer values remain fully editable by scrolling. To override the automatic initial
+height, pass an explicit `rows` attribute; values above 12 are also respected:
+
+```php
+$grid->addColumnText('note', 'Note')
+	->setEditableCallback([$this, 'noteEdited'])
+	->setEditableInputType('textarea', ['rows' => 20]);
+```
+
 Or you can use a select:
 
 ```php

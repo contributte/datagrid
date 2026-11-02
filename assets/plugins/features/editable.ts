@@ -56,7 +56,7 @@ export class EditablePlugin implements DatagridPlugin {
 						case "textarea": {
 							const textarea = document.createElement("textarea");
 							const lines = calculateCellLines(cell);
-							textarea.rows = Math.max(Number.isFinite(lines) ? lines : 1, valueToEdit.split("\n").length, 1);
+							textarea.rows = Math.min(12, Math.max(Number.isFinite(lines) ? lines : 1, valueToEdit.split("\n").length, 1));
 							input = textarea;
 							cell.replaceChildren(input);
 							break;

@@ -22,11 +22,50 @@ async function mount(page, options = {}) {
 		cell.innerHTML = options.html ?? 'Original';
 		cell.setAttribute('data-datagrid-editable-url', '/edit');
 		cell.setAttribute('data-datagrid-editable-type', options.type ?? 'textarea');
+		if (options.attrs) cell.setAttribute('data-datagrid-editable-attrs', JSON.stringify(options.attrs));
 		if (!options.noValue) cell.setAttribute('data-datagrid-editable-value', options.value ?? 'Original');
 		if (options.select) cell.setAttribute('data-datagrid-editable-element', options.select);
 	}, options);
 	await page.addScriptTag({path: bundlePath});
 	return {cell: page.locator('td').first(), requests, release: () => pending.splice(0).forEach(resolve => resolve())};
+}
+
+test('a long textarea value opens at a bounded height without losing content', async ({page}) => {
+	const value = Array(100).fill('line').join('\n');
+	const fixture = await mount(page, {value});
+	await fixture.cell.click();
+	const editor = fixture.cell.locator('textarea');
+	await expect(editor).toHaveJSProperty('rows', 12);
+	await expect(editor).toHaveValue(value);
+	expect(await editor.evaluate(el => el.scrollHeight > el.clientHeight)).toBe(true);
+	expect((await editor.boundingBox()).height).toBeLessThan(page.viewportSize().height);
+});
+
+test('short textarea values retain their automatic height', async ({page}) => {
+	const fixture = await mount(page, {value: 'first\nsecond\nthird'});
+	await fixture.cell.click();
+	await expect(fixture.cell.locator('textarea')).toHaveJSProperty('rows', 3);
+});
+
+test('a tall rendered cell does not inflate the automatic textarea height', async ({page}) => {
+	const fixture = await mount(page);
+	await fixture.cell.evaluate(cell => {
+		cell.style.lineHeight = '24px';
+		cell.style.height = '720px';
+	});
+	await fixture.cell.click();
+	await expect(fixture.cell.locator('textarea')).toHaveJSProperty('rows', 12);
+});
+
+for (const rows of [4, 20]) {
+	test(`explicit textarea rows=${rows} overrides the automatic height`, async ({page}) => {
+		const value = Array(100).fill('line').join('\n');
+		const fixture = await mount(page, {value, attrs: {rows}});
+		await fixture.cell.click();
+		const editor = fixture.cell.locator('textarea');
+		await expect(editor).toHaveJSProperty('rows', rows);
+		await expect(editor).toHaveValue(value);
+	});
 }
 
 test('Enter followed by blur sends one POST; an empty successful response is valid', async ({page}) => {
