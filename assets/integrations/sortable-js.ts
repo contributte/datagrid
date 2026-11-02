@@ -31,7 +31,7 @@ export class SortableJS implements SortableInterface {
 
 	initSortable(datagrid: Datagrid): void {
 		const sortable = datagrid.el.querySelector<HTMLElement>("[data-sortable]");
-		if (!sortable) return;
+		if (!sortable || Sortable.get(sortable)) return;
 
 		new Sortable(sortable, {
 			handle: '.handle-sort',
@@ -46,6 +46,8 @@ export class SortableJS implements SortableInterface {
 
 	initSortableTree(datagrid: Datagrid): void {
 		datagrid.el.querySelectorAll<HTMLElement>(".datagrid-tree-item-children").forEach((el) => {
+			if (Sortable.get(el)) return;
+
 			new Sortable(el, {
 				group: 'datagrid-tree',
 				handle: '.handle-sort',

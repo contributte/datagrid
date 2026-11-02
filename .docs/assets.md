@@ -31,6 +31,8 @@ Datagrid has a lot of plugins. You can use them all or just some of them.
   - Inline editing
 - ItemDetailPlugin
   - Item detail view
+- SortPlugin
+  - Keeps sortable column links up to date
 - TreeViewPlugin (advanced)
   - Tree view
 
@@ -69,6 +71,7 @@ import {
 	SelectpickerPlugin,
 	SortableJS,
 	SortablePlugin,
+	SortPlugin,
 	TomSelect,
 	TreeViewPlugin,
 	VanillaDatepicker
@@ -84,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				new InlinePlugin(),
 				new ItemDetailPlugin(),
 				new NetteFormsPlugin(netteForms),
+				new SortPlugin(),
 				new SortablePlugin(new SortableJS()),
 				new DatepickerPlugin(new VanillaDatepicker({ buttonClass: 'btn' })),
 				new SelectpickerPlugin(new TomSelect(Select)),
@@ -129,6 +133,7 @@ It contains these plugins:
 - InlinePlugin
 - ItemDetailPlugin
 - NetteFormsPlugin
+- SortPlugin
 - SortablePlugin
 - DatepickerPlugin
 - SelectpickerPlugin
@@ -236,6 +241,7 @@ import {
 	SelectpickerPlugin,
 	SortableJS,
 	SortablePlugin,
+	SortPlugin,
 	TomSelect,
 	TreeViewPlugin,
 	VanillaDatepicker
@@ -267,6 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				new InlinePlugin(),
 				new ItemDetailPlugin(),
 				new NetteFormsPlugin(netteForms),
+				new SortPlugin(),
 				new SortablePlugin(new SortableJS()),
 				new DatepickerPlugin(new VanillaDatepicker({ buttonClass: 'btn' })),
 				new SelectpickerPlugin(new TomSelect(Select)),
