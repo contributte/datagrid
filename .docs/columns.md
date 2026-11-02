@@ -178,6 +178,8 @@ $grid->addColumnText('name', 'Name')
 	});
 ```
 
+With multiple columns sort enabled, the callbacks of all sorted columns are called one after another (in sort order), each receiving the whole `$sort` array. If a callback returns a value of the same kind as the data source (e.g. the sorted array for an array data source), it is passed to the next callback. Columns without a sortable callback are not sorted when another sorted column has one. With Doctrine, use `addOrderBy()` in the callbacks, so a later callback does not replace the `ORDER BY` of an earlier one.
+
 ### Align
 
 Column can be aligned to one side:
