@@ -114,7 +114,7 @@
 											<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
 										</button>
 										<ul class="dropdown-menu dropdown-menu-end dropdown-menu--grid">
-											<li n:foreach="$columnsVisibility as $v_key => $visibility">
+											<li n:foreach="$columnsVisibility as $v_key => $visibility" n:if="$visibility['column']->isHideable()">
 												{if $visibility['visible']}
 													<a n:href="hideColumn!, column => $v_key" class="ajax dropdown-item">
 														<i n:block="icon-checked" class="{$iconPrefix}check-square"></i>
@@ -176,7 +176,7 @@
 								{/ifset}
 
 								<div class="datagrid-column-header-additions">
-									<div class="btn-group column-settings-menu" n:if="$control->canHideColumns()">
+									<div class="btn-group column-settings-menu" n:if="$control->canHideColumns() && $column->isHideable()">
 										<a class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">
 											<i n:block="icon-caret-down" class="{$iconPrefix}caret-down"></i>
 										</a>
