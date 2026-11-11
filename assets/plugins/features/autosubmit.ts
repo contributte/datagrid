@@ -1,5 +1,5 @@
 import { DatagridPlugin } from "../../types";
-import { debounce, Debounced, isEnter, shouldIgnoreKey } from "../../utils";
+import { debounce, Debounced, isEnter } from "../../utils";
 import { Datagrid } from "../..";
 
 export const AutosubmitAttribute = "data-autosubmit";
@@ -94,14 +94,12 @@ export class AutosubmitPlugin implements DatagridPlugin {
 						datagrid.ajax.submitForm(form);
 					});
 
-					submitEl.addEventListener("keyup", (e) => {
-						// Decided here, not inside debounce(): a late modifier/arrow keyup must not
-						// replace the pending submit. Enter is a named key, so it is ignored here too.
-						if (shouldIgnoreKey(e)) {
-							return;
-						}
-						debouncedSubmit();
-					});
+					// Submit on every value change, whatever caused it: typing, paste or cut (also via
+					// mouse/context menu), drag & drop, autofill, undo, the search clear button or
+					// a virtual keyboard. Keys that don't change the value (modifiers, arrows, ...) don't fire it.
+					// Input during IME composition submits too: Android keyboards keep the word being typed
+					// in a composition, so waiting for compositionend would stop live filtering there.
+					submitEl.addEventListener("input", () => debouncedSubmit());
 				}
 			});
 	}

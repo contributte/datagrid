@@ -121,12 +121,29 @@ test('typing and leaving an input with data-autosubmit-change submits once', asy
 	expect(requests).toEqual(['']);
 });
 
-test('virtual keyboard keyup ("Unidentified") triggers the submit', async ({page}) => {
-	const {input, requests} = await mount(page);
-	await input.evaluate(el => {
-		el.value = 'mobile';
-		el.dispatchEvent(new KeyboardEvent('keyup', {key: 'Unidentified', keyCode: 229, bubbles: true}));
-	});
+test('virtual keyboard: the word being composed is submitted live, without waiting for its end', async ({page}) => {
+	const {requests} = await mount(page);
+	// Android keyboards (Gboard) keep the current word in an IME composition until space or a suggestion is picked
+	const cdp = await page.context().newCDPSession(page);
+	for (const text of ['j', 'jo', 'joh', 'john']) {
+		await cdp.send('Input.imeSetComposition', {text, selectionStart: text.length, selectionEnd: text.length});
+	}
 	await settle(page);
-	expect(requests).toEqual(['mobile']);
+	expect(requests).toEqual(['john']);
+});
+
+test('a value change without any key events (like a paste via context menu) triggers the submit', async ({page}) => {
+	const {requests} = await mount(page);
+	await page.keyboard.insertText('pasted');
+	await settle(page);
+	expect(requests).toEqual(['pasted']);
+});
+
+test('IME composition followed by commit submits the committed value once', async ({page}) => {
+	const {requests} = await mount(page);
+	const cdp = await page.context().newCDPSession(page);
+	await cdp.send('Input.imeSetComposition', {text: 'にほん', selectionStart: 3, selectionEnd: 3});
+	await cdp.send('Input.insertText', {text: '日本'});
+	await settle(page);
+	expect(requests).toEqual(['日本']);
 });
