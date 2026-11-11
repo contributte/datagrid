@@ -269,7 +269,7 @@ class NetteDatabaseDataSource extends FilterableDataSource implements IDataSourc
 				$like .= sprintf('%s = ? %s ', $column, $operator);
 				$args[] = $value;
 			} else {
-				$words = $filter->getSearchTerms($value);
+				$words = $filter->getSearchTerms((string) $value);
 
 				foreach ($words as $word) {
 					$like .= sprintf('%s LIKE ? %s ', $column, $operator);

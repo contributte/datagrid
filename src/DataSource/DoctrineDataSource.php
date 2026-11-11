@@ -281,7 +281,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 				continue;
 			}
 
-			$words = $filter->getSearchTerms($value);
+			$words = $filter->getSearchTerms((string) $value);
 
 			foreach ($words as $word) {
 				$exprs[] = $this->dataSource->expr()->like(

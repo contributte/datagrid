@@ -15,11 +15,15 @@ final class FilterTextTest extends TestCase
 	public function testLegacyTermsRemainUnchanged(): void
 	{
 		$filter = $this->createFilter();
+		Assert::false($filter->hasQuotedPhraseSearch());
 		foreach (['foo  bar', '"red blue" paint', "a\tb", '', '0'] as $value) {
 			Assert::same(explode(' ', $value), $filter->getSearchTerms($value));
 		}
 
-		$filter->setQuotedPhraseSearch()->setQuotedPhraseSearch(false);
+		$filter->setQuotedPhraseSearch();
+		Assert::true($filter->hasQuotedPhraseSearch());
+		$filter->setQuotedPhraseSearch(false);
+		Assert::false($filter->hasQuotedPhraseSearch());
 		Assert::same(['"red', 'blue"'], $filter->getSearchTerms('"red blue"'));
 	}
 
@@ -53,7 +57,7 @@ final class FilterTextTest extends TestCase
 	{
 		$filter = $this->createFilter()->setQuotedPhraseSearch()->setSplitWordsSearch(false);
 		Assert::same(['"red blue" paint'], $filter->getSearchTerms('"red blue" paint'));
-		Assert::same([0], $filter->getSearchTerms(0));
+		Assert::same(['0'], $filter->getSearchTerms('0'));
 		$filter->setSplitWordsSearch(true)->setExactSearch();
 		Assert::same(['"red blue" paint'], $filter->getSearchTerms('"red blue" paint'));
 	}

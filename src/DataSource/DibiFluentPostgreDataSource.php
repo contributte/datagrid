@@ -23,7 +23,7 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 				continue;
 			}
 
-			$words = $filter->getSearchTerms($value);
+			$words = $filter->getSearchTerms((string) $value);
 
 			foreach ($words as $word) {
 				$or[] = $column . ' ILIKE ' . $driver->escapeText('%' . $word . '%');

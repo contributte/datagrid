@@ -178,7 +178,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 				continue;
 			}
 
-			$words = $filter->getSearchTerms($value);
+			$words = $filter->getSearchTerms((string) $value);
 
 			foreach ($words as $word) {
 				$or[] = [sprintf('%s LIKE %%~like~', $column), $word];

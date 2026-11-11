@@ -98,10 +98,17 @@ class FilterText extends Filter
 		return $this;
 	}
 
+	public function hasQuotedPhraseSearch(): bool
+	{
+		return $this->quotedPhraseSearch;
+	}
+
 	/**
 	 * Extract substring terms without changing the raw filter value.
+	 *
+	 * @return list<string>
 	 */
-	public function getSearchTerms(mixed $value): array
+	public function getSearchTerms(string $value): array
 	{
 		if (!$this->splitWordsSearch || $this->exact) {
 			return [$value];

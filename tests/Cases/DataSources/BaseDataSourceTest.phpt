@@ -144,6 +144,27 @@ abstract class BaseDataSourceTest extends TestCase
 		Assert::equal([], $this->getActualResultAsArray());
 	}
 
+	public function testNumericTextWithSplitWordsDisabled(): void
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['age']);
+		$filter->setSplitWordsSearch(false)->setValue(3);
+		$this->ds->filter([$filter]);
+		Assert::equal([$this->data[0]], $this->getActualResultAsArray());
+	}
+
+	public function testZeroTextWithSplitWordsDisabled(): void
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['age']);
+		$filter->setSplitWordsSearch(false)->setValue(0);
+		$this->ds->filter([$filter]);
+		Assert::equal([
+			$this->data[0],
+			$this->data[1],
+			$this->data[4],
+			$this->data[5],
+		], $this->getActualResultAsArray());
+	}
+
 	public function testUnfinishedQuotedPhrase(): void
 	{
 		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
