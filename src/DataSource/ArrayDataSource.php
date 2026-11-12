@@ -3,8 +3,12 @@
 namespace Contributte\Datagrid\DataSource;
 
 use ArrayAccess;
+use Contributte\Datagrid\AggregationFunction\IAggregatable;
+use Contributte\Datagrid\AggregationFunction\IAggregationFunction;
+use Contributte\Datagrid\AggregationFunction\IArrayAggregationFunction;
 use Contributte\Datagrid\Exception\DatagridArrayDataSourceException;
 use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
+use Contributte\Datagrid\Exception\DatagridException;
 use Contributte\Datagrid\Filter\Filter;
 use Contributte\Datagrid\Filter\FilterDate;
 use Contributte\Datagrid\Filter\FilterDateRange;
@@ -18,7 +22,7 @@ use DateTime;
 use DateTimeInterface;
 use Nette\Utils\Strings;
 
-class ArrayDataSource implements IDataSource
+class ArrayDataSource implements IDataSource, IAggregatable
 {
 
 	protected array $data = [];
@@ -140,6 +144,22 @@ class ArrayDataSource implements IDataSource
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @throws DatagridException
+	 */
+	public function processAggregation(IAggregationFunction $function): void
+	{
+		if (!$function instanceof IArrayAggregationFunction) {
+			throw new DatagridException(sprintf(
+				'Aggregation function %s has to implement %s to work with ArrayDataSource',
+				$function::class,
+				IArrayAggregationFunction::class
+			));
+		}
+
+		$function->processArray($this->data);
 	}
 
 	protected function applyFilter(mixed $row, Filter $filter): mixed
