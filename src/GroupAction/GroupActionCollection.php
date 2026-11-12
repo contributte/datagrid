@@ -60,7 +60,7 @@ class GroupActionCollection
 		 * Second foreach for filling "main" select
 		 */
 		foreach ($this->groupActions as $id => $action) {
-			if (! $action instanceof GroupButtonAction) {
+			if (!$action instanceof GroupButtonAction) {
 				$mainOptions[$id] = $action->getTitle();
 			}
 		}
@@ -151,7 +151,7 @@ class GroupActionCollection
 	{
 		$submitter = $this->getFormSubmitter($form);
 
-		if (! $submitter instanceof SubmitButton) {
+		if (!$submitter instanceof SubmitButton) {
 			return;
 		}
 
@@ -160,7 +160,7 @@ class GroupActionCollection
 
 		if (
 			($submitter->getName() === 'submit' && $submitter->isSubmittedBy())
-			 && ($values->group_action === 0 || $values->group_action === null)) {
+			&& ($values->group_action === 0 || $values->group_action === null)) {
 			return;
 		}
 

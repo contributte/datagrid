@@ -59,7 +59,7 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 
 			foreach ($dataRow as $key => $value) {
 				$row[$key] = is_numeric($value)
-					? intval($value)
+					? (int) $value
 					: $value;
 			}
 

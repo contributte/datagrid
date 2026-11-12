@@ -188,7 +188,7 @@ class Action extends Column
 	 * @return static
 	 * @throws DatagridException
 	 */
-	public function setClass(null|string|callable $class): self
+	public function setClass(string|callable|null $class): self
 	{
 		$this->checkPropertyStringOrCallable($class, 'class');
 

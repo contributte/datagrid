@@ -201,7 +201,7 @@ class Row
 		$accessor = PropertyAccessHelper::getAccessor();
 
 		while ($property = array_shift($properties)) {
-			if (!is_object($value) && ! (bool) $value) {
+			if (!is_object($value) && !(bool) $value) {
 				if ($this->datagrid->strictEntityProperty) {
 					throw new DatagridException(sprintf(
 						'Target Property [%s] is not an object or is empty, trying to get [%s]',
