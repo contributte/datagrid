@@ -2,9 +2,9 @@
 
 namespace Contributte\Datagrid\Exception;
 
-use Exception;
+use RuntimeException;
 
-class DatagridDateTimeHelperException extends Exception
+class DatagridDateTimeHelperException extends RuntimeException
 {
 
 }
