@@ -37,6 +37,49 @@ final class ArrayDataSourceTest extends BaseDataSourceTest
 		Assert::same(0, $ds->getCount());
 	}
 
+	public function testPartialDateUsesConfiguredOrder(): void
+	{
+		$year = date('Y');
+		foreach ([
+			['12.5.', 'j. n. Y', '05-12'],
+			['12/5', 'd/m/Y', '05-12'],
+			['12/5', 'm/d/Y', '12-05'],
+		] as [$value, $format, $expected]) {
+			$ds = new ArrayDataSource([
+				['id' => 1, 'date' => $year . '-05-12'],
+				['id' => 2, 'date' => $year . '-12-05'],
+			]);
+			$filter = new FilterDate($this->grid, 'date', 'Date', 'date');
+			$filter->setFormat($format, 'dd/mm/yyyy');
+			$filter->setValue($value);
+			$ds->filter([$filter]);
+
+			Assert::same([$year . '-' . $expected], array_column($ds->getData(), 'date'));
+			Assert::same($value, $filter->getValue());
+		}
+	}
+
+	public function testStrictDateFiltersKeepInvalidInputPolicy(): void
+	{
+		$this->assertStrictDateFilters(fn (): ArrayDataSource => new ArrayDataSource($this->getDateFilterRows()), false);
+	}
+
+	public function testPartialDateRange(): void
+	{
+		$year = date('Y');
+		$ds = new ArrayDataSource([
+			['id' => 1, 'date' => $year . '-05-11'],
+			['id' => 2, 'date' => $year . '-05-12'],
+			['id' => 3, 'date' => $year . '-05-24'],
+			['id' => 4, 'date' => $year . '-05-25'],
+		]);
+		$filter = new FilterDateRange($this->grid, 'date', 'Date', 'date', 'To');
+		$filter->setValue(['from' => '12.5.', 'to' => '24.5.']);
+		$ds->filter([$filter]);
+
+		Assert::same([2, 3], array_column($ds->getData(), 'id'));
+	}
+
 	public function testFilterDateRangeWithInvalidFromValue(): void
 	{
 		$ds = new ArrayDataSource([

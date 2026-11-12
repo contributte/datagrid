@@ -218,6 +218,14 @@ $grid->addFilterDate('created', 'User registered on')
 	->setFormat('j. n. Y', 'd. m. yyyy');
 ```
 
+**Behavior change:** `FilterDate` and `FilterDateRange` now parse text only in the configured PHP format,
+rejecting invalid calendar dates and other formats instead of guessing with `strtotime()`.
+Numeric day/month formats ending in `Y` or `y` also accept an omitted year (for example,
+`12.5.` with `j. n. Y`); this always means the current year in the application's timezone,
+so `28.12.` entered in January is in the future.
+Invalid inputs follow the data source's existing policy;
+custom condition callbacks still receive the raw input.
+
 ## FilterRange
 
 This filter renders two inputs: From and To. If you want to set inputs placeholders, you have to set both in an array.
