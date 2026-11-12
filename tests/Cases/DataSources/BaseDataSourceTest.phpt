@@ -100,6 +100,87 @@ abstract class BaseDataSourceTest extends TestCase
 		Assert::equal([$this->data[5]], $this->getActualResultAsArray());
 	}
 
+	public function testQuotedPhraseSearch(): void
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter->setQuotedPhraseSearch()->setValue('"John Red" Blue');
+		$this->ds->filter([$filter]);
+		Assert::equal([$this->data[4], $this->data[5]], $this->getActualResultAsArray());
+	}
+
+	public function testQuotedPhraseConjunction(): void
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter->setQuotedPhraseSearch()->setValue('"John Red" Red');
+		$filter->setConjunctionSearch();
+		$this->ds->filter([$filter]);
+		Assert::equal([$this->data[5]], $this->getActualResultAsArray());
+	}
+
+	public function testQuotedPhrasesInMultipleColumns(): void
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['name', 'address']);
+		$filter->setQuotedPhraseSearch()->setValue('"John Red" "New York"');
+		$this->ds->filter([$filter]);
+		Assert::equal([$this->data[2], $this->data[5]], $this->getActualResultAsArray());
+	}
+
+	public function testQuotesRemainLiteralByDefault(): void
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter->setValue('"John Red"');
+		$this->ds->filter([$filter]);
+		Assert::equal([], $this->getActualResultAsArray());
+	}
+
+	public function testQuotedModeKeepsWholeInputSettings(): void
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter->setQuotedPhraseSearch()->setSplitWordsSearch(false)->setValue('"John Red"');
+		$this->ds->filter([$filter]);
+		Assert::equal([], $this->getActualResultAsArray());
+		$filter->setSplitWordsSearch(true)->setExactSearch();
+		$this->ds->filter([$filter]);
+		Assert::equal([], $this->getActualResultAsArray());
+	}
+
+	public function testNumericTextWithSplitWordsDisabled(): void
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['age']);
+		$filter->setSplitWordsSearch(false)->setValue(3);
+		$this->ds->filter([$filter]);
+		Assert::equal([$this->data[0]], $this->getActualResultAsArray());
+	}
+
+	public function testZeroTextWithSplitWordsDisabled(): void
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['age']);
+		$filter->setSplitWordsSearch(false)->setValue(0);
+		$this->ds->filter([$filter]);
+		Assert::equal([
+			$this->data[0],
+			$this->data[1],
+			$this->data[4],
+			$this->data[5],
+		], $this->getActualResultAsArray());
+	}
+
+	public function testUnfinishedQuotedPhrase(): void
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter->setQuotedPhraseSearch()->setValue('"John Red');
+		$this->ds->filter([$filter]);
+		Assert::equal([$this->data[5]], $this->getActualResultAsArray());
+	}
+
+	public function testEmptyQuotedPhrase(): void
+	{
+		$filter = new FilterText($this->grid, 'a', 'b', ['name']);
+		$filter->setQuotedPhraseSearch()->setValue('""');
+		$this->ds->filter([$filter]);
+		Assert::equal($this->data, $this->getActualResultAsArray());
+	}
+
 	public function testFilterRangeMin(): void
 	{
 		$filter = new FilterRange($this->grid, 'a', 'b', 'age', '-');

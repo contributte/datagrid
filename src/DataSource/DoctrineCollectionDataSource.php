@@ -193,7 +193,7 @@ final class DoctrineCollectionDataSource extends FilterableDataSource implements
 				continue;
 			}
 
-			$words = $filter->hasSplitWordsSearch() === false ? [$value] : explode(' ', $value);
+			$words = $filter->getSearchTerms((string) $value);
 
 			foreach ($words as $word) {
 				$exprs[] = Criteria::expr()->contains($column, $word);
