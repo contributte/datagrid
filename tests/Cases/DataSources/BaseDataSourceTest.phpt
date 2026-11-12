@@ -219,8 +219,11 @@ abstract class BaseDataSourceTest extends TestCase
 	 */
 	protected function assertPartialDateFilters(callable $createSource): void
 	{
+		$this->assertStrictDateFilters($createSource);
+
 		foreach ([
 			['12.5.', 'j. n. Y', 'd. m. yyyy'],
+			['12. 5. ' . date('Y'), 'j. n. Y', 'd. m. yyyy'],
 			['12/5', 'd/m/Y', 'dd/mm/yyyy'],
 			['5/12', 'm/d/Y', 'mm/dd/yyyy'],
 			[date('Y') . '-05-12', 'Y-m-d', 'yyyy-mm-dd'],
@@ -244,6 +247,34 @@ abstract class BaseDataSourceTest extends TestCase
 			$this->ds = $createSource();
 			$this->ds->filter([$filter]);
 			Assert::same($expected, array_column($this->getActualResultAsArray(), 'id'));
+			Assert::same($value, $filter->getValue());
+		}
+	}
+
+	/**
+	 * @param callable(): IDataSource $createSource
+	 */
+	protected function assertStrictDateFilters(callable $createSource, bool $ignoreInvalid = true): void
+	{
+		foreach (['12/5', '31.2.2026', date('Y') . '-05-12', 'tomorrow'] as $value) {
+			$filter = new FilterDate($this->grid, 'created', 'Created', 'created');
+			$filter->setValue($value);
+			$this->ds = $createSource();
+			$this->ds->filter([$filter]);
+			Assert::same($ignoreInvalid ? [1, 2, 3, 4, 5] : [], array_column($this->getActualResultAsArray(), 'id'));
+			Assert::same($value, $filter->getValue());
+		}
+
+		foreach ([
+			[['from' => '12/5', 'to' => '12.5.'], [1, 2, 3]],
+			[['from' => '11.5.', 'to' => '31.2.2026'], [2, 3, 4, 5]],
+			[['from' => '12/5', 'to' => '31.2.2026'], [1, 2, 3, 4, 5]],
+		] as [$value, $expected]) {
+			$filter = new FilterDateRange($this->grid, 'created', 'Created', 'created', 'To');
+			$filter->setValue($value);
+			$this->ds = $createSource();
+			$this->ds->filter([$filter]);
+			Assert::same($ignoreInvalid ? $expected : [], array_column($this->getActualResultAsArray(), 'id'));
 			Assert::same($value, $filter->getValue());
 		}
 	}

@@ -10,7 +10,9 @@ final class DateTimeHelper
 {
 
 	/**
-	 * Resolve a missing trailing year in a numeric date-filter input.
+	 * Parse the configured filter format, allowing an omitted trailing year in numeric dates.
+	 *
+	 * The reference date supplies the year and timezone only for an omitted year.
 	 *
 	 * @throws DatagridDateTimeHelperException
 	 */
@@ -20,12 +22,26 @@ final class DateTimeHelper
 		?DateTimeImmutable $referenceDate = null
 	): DateTime
 	{
+		if ($value instanceof DateTime || $value instanceof DateTimeImmutable) {
+			return self::fromString($value);
+		}
+
+		$value = (string) $value;
+		if (str_contains($value, "\0")) {
+			throw new DatagridDateTimeHelperException();
+		}
+
+		$date = DateTime::createFromFormat('!' . $format, $value);
+		$errors = DateTime::getLastErrors();
+		if ($date !== false && ($errors === false || ($errors['warning_count'] === 0 && $errors['error_count'] === 0))) {
+			return $date;
+		}
+
 		if (
-			!is_string($value)
-			|| preg_match('~^([djmn])([./\s-]+)([djmn])([./\s-]+)[Yy]$~D', $format, $parts) !== 1
+			preg_match('~^([djmn])([./\s-]+)([djmn])([./\s-]+)[Yy]$~D', $format, $parts) !== 1
 			|| str_contains('dj', $parts[1]) === str_contains('dj', $parts[3])
 		) {
-			return self::fromString($value, [$format]);
+			throw new DatagridDateTimeHelperException();
 		}
 
 		$separator = trim($parts[2]);
@@ -34,7 +50,7 @@ final class DateTimeHelper
 		$trailingSeparator = $yearSeparator === '' ? '' : '(?:\s*' . preg_quote($yearSeparator, '~') . ')?';
 
 		if (preg_match('~^\s*(\d{1,2})' . $separatorPattern . '(\d{1,2})' . $trailingSeparator . '\s*$~D', $value, $matches) !== 1) {
-			return self::fromString($value, [$format]);
+			throw new DatagridDateTimeHelperException();
 		}
 
 		$referenceDate ??= new DateTimeImmutable();

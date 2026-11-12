@@ -59,6 +59,11 @@ final class ArrayDataSourceTest extends BaseDataSourceTest
 		}
 	}
 
+	public function testStrictDateFiltersKeepInvalidInputPolicy(): void
+	{
+		$this->assertStrictDateFilters(fn (): ArrayDataSource => new ArrayDataSource($this->getDateFilterRows()), false);
+	}
+
 	public function testPartialDateRange(): void
 	{
 		$year = date('Y');

@@ -50,6 +50,17 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 		Assert::same([2, 3], array_column($source->getData(), 'id'));
 	}
 
+	public function testStrictDateFiltersKeepInvalidInputPolicy(): void
+	{
+		foreach ($this->getDateFilterRows() as $row) {
+			$this->db->query('INSERT INTO dated_items', $row);
+		}
+
+		$this->assertStrictDateFilters(
+			fn (): NetteDatabaseTableDataSource => new NetteDatabaseTableDataSource($this->db->table('dated_items')->order('id'), 'id')
+		);
+	}
+
 	protected function setUpDatabase(): void
 	{
 		$connection = new Connection('sqlite::memory:');
