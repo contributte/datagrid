@@ -152,9 +152,6 @@ class Datagrid extends Control
 	#[Persistent]
 	public array $filter = [];
 
-	/** @var callable|null */
-	protected $sortCallback = null;
-
 	/** @var callable */
 	protected $rowCallback;
 
@@ -372,7 +369,7 @@ class Datagrid extends Control
 			? $this->dataModel->filterRow($this->redrawItem)
 			: $this->dataModel->filterData(
 				$this->getPaginator(),
-				$this->createSorting($this->sort, $this->sortCallback),
+				$this->createSorting($this->sort),
 				$this->assembleFilters()
 			);
 
@@ -1552,24 +1549,15 @@ class Datagrid extends Control
 			}
 		}
 
-		/**
-		 * When column is sorted via custom callback, apply it
-		 */
-		if ($this->sortCallback === null && $this->sort !== []) {
-			foreach (array_keys($this->sort) as $key) {
-				try {
-					$column = $this->getColumn((string) $key);
+		foreach (array_keys($this->sort) as $key) {
+			try {
+				$this->getColumn((string) $key);
 
-				} catch (DatagridColumnNotFoundException) {
-					$this->deleteStorageData('_grid_sort');
-					$this->sort = [];
+			} catch (DatagridColumnNotFoundException) {
+				$this->deleteStorageData('_grid_sort');
+				$this->sort = [];
 
-					return;
-				}
-
-				if ($column->isSortable() && is_callable($column->getSortableCallback())) {
-					$this->sortCallback = $column->getSortableCallback();
-				}
+				return;
 			}
 		}
 	}
@@ -1764,10 +1752,6 @@ class Datagrid extends Control
 			if ($column->sortableResetPagination()) {
 				$this->saveStorageData('_grid_page', $this->page = 1);
 			}
-
-			if ($column->getSortableCallback() !== null) {
-				$this->sortCallback = $column->getSortableCallback();
-			}
 		}
 
 		$this->saveStorageData('_grid_has_sorted', 1);
@@ -1879,7 +1863,7 @@ class Datagrid extends Control
 
 		$items = $this->dataModel->filterData(
 			null,
-			$this->createSorting($sort, $this->sortCallback),
+			$this->createSorting($sort),
 			$filter
 		);
 
@@ -2897,10 +2881,7 @@ class Datagrid extends Control
 			}
 
 			$sort[$column->getSortingColumn()] = $order;
-		}
-
-		if ($sortCallback === null && isset($column)) {
-			$sortCallback = $column->getSortableCallback();
+			$sortCallback ??= $column->getSortableCallback();
 		}
 
 		return new Sorting($sort, $sortCallback);
