@@ -7,6 +7,7 @@ use Contributte\Datagrid\Filter\FilterDate;
 use Contributte\Datagrid\Filter\FilterDateRange;
 use Contributte\Datagrid\Filter\FilterRange;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
+use Contributte\Datagrid\Utils\Sorting;
 use Tester\Assert;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
@@ -80,6 +81,27 @@ final class ArrayDataSourceTest extends BaseDataSourceTest
 		$ds->filter([$filter]);
 
 		Assert::same(0, $ds->getCount());
+	}
+
+	public function testSortByCollateLocale(): void
+	{
+		if (!class_exists(\Collator::class) || setlocale(LC_COLLATE, 'en_US.UTF-8', 'en_US.utf8') === false) {
+			$this->skip('ext-intl or en_US.UTF-8 locale is not available');
+		}
+
+		try {
+			$rows = [['name' => 'b'], ['name' => 'Á'], ['name' => 'c'], ['name' => 'a']];
+
+			$ds = new ArrayDataSource($rows);
+			$ds->sort(new Sorting(['name' => 'ASC']));
+			Assert::same(['a', 'Á', 'b', 'c'], array_column($ds->getData(), 'name'));
+
+			$ds = new ArrayDataSource($rows);
+			$ds->sort(new Sorting(['name' => 'DESC']));
+			Assert::same(['c', 'b', 'Á', 'a'], array_column($ds->getData(), 'name'));
+		} finally {
+			setlocale(LC_COLLATE, 'C');
+		}
 	}
 
 }
