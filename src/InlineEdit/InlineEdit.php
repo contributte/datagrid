@@ -17,7 +17,7 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
 /**
- * @method onSubmit($id, ArrayHash $values)
+ * @method onSubmit($id, ArrayHash $values, list<string> $hiddenColumns)
  * @method onControlAdd(Container $container)
  * @method onControlAfterAdd(Container $container)
  * @method onSetDefaults(Container $container, $item)
