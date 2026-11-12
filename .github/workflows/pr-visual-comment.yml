@@ -1,0 +1,276 @@
+name: "PR Visual Comment"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "src/**"
+      - "assets/**"
+      - "tests/visual/**"
+      - ".github/workflows/pr-visual-comment.yml"
+
+concurrency:
+  group: pr-visual-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  visual-comment:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      PLAYWRIGHT_VERSION: "1.52.0"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+
+      - name: Install Composer dependencies
+        continue-on-error: true
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Playwright Chromium
+        continue-on-error: true
+        run: npx -y playwright@${PLAYWRIGHT_VERSION} install --with-deps chromium
+
+      - name: Render, capture, and publish visual previews
+        id: visual
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -u
+
+          STATUS="success"
+          FAILURE_REASON=""
+          ARTIFACT_BRANCH="visual-artifacts-pr-${PR_NUMBER}"
+          VISUAL_DIR="${RUNNER_TEMP}/visual-output"
+          HEAD_HTML="${VISUAL_DIR}/head/grid.html"
+          HEAD_PNG="${VISUAL_DIR}/head/head.png"
+          BASE_HTML="${VISUAL_DIR}/base/grid.html"
+          BASE_PNG="${VISUAL_DIR}/base/base.png"
+          ARTIFACT_REPO="${RUNNER_TEMP}/visual-artifacts-repo"
+          RAW_BASE_URL=""
+          RAW_HEAD_URL=""
+
+          mkdir -p "${VISUAL_DIR}/head" "${VISUAL_DIR}/base"
+
+          mark_failure() {
+            if [ "${STATUS}" = "success" ]; then
+              STATUS="failed"
+              FAILURE_REASON="$1"
+            fi
+          }
+
+          if [ "${STATUS}" = "success" ] && ! php tests/visual/test.php --output "${HEAD_HTML}"; then
+            mark_failure "Failed to render head datagrid HTML."
+          fi
+
+          if [ "${STATUS}" = "success" ] && ! npx -y playwright@"${PLAYWRIGHT_VERSION}" screenshot --browser=chromium --full-page "file://${HEAD_HTML}" "${HEAD_PNG}"; then
+            mark_failure "Failed to capture head screenshot."
+          fi
+
+          BASE_WORKTREE="${RUNNER_TEMP}/base-worktree"
+          rm -rf "${BASE_WORKTREE}"
+
+          if [ "${STATUS}" = "success" ] && ! git worktree add --detach "${BASE_WORKTREE}" "${BASE_SHA}"; then
+            mark_failure "Failed to create base commit worktree."
+          fi
+
+          if [ "${STATUS}" = "success" ]; then
+            if ! (cd "${BASE_WORKTREE}" && composer install --no-interaction --no-progress --prefer-dist); then
+              mark_failure "Failed to install base worktree Composer dependencies."
+            fi
+          fi
+
+          if [ "${STATUS}" = "success" ]; then
+            if ! (cd "${BASE_WORKTREE}" && php tests/visual/test.php --output "${BASE_HTML}"); then
+              mark_failure "Failed to render base datagrid HTML."
+            fi
+          fi
+
+          if [ "${STATUS}" = "success" ] && ! npx -y playwright@"${PLAYWRIGHT_VERSION}" screenshot --browser=chromium --full-page "file://${BASE_HTML}" "${BASE_PNG}"; then
+            mark_failure "Failed to capture base screenshot."
+          fi
+
+          if [ "${STATUS}" = "success" ]; then
+            REMOTE_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${REPOSITORY}.git"
+            rm -rf "${ARTIFACT_REPO}"
+
+            if git ls-remote --exit-code --heads "${REMOTE_URL}" "${ARTIFACT_BRANCH}" >/dev/null 2>&1; then
+              if ! git clone --depth 1 --single-branch --branch "${ARTIFACT_BRANCH}" "${REMOTE_URL}" "${ARTIFACT_REPO}"; then
+                mark_failure "Failed to clone visual artifact branch."
+              fi
+            else
+              if ! git clone --depth 1 "${REMOTE_URL}" "${ARTIFACT_REPO}"; then
+                mark_failure "Failed to clone repository for visual artifacts."
+              fi
+              if [ "${STATUS}" = "success" ]; then
+                if ! (cd "${ARTIFACT_REPO}" && git checkout --orphan "${ARTIFACT_BRANCH}"); then
+                  mark_failure "Failed to create visual artifact branch."
+                fi
+              fi
+            fi
+          fi
+
+          if [ "${STATUS}" = "success" ]; then
+            if ! (cd "${ARTIFACT_REPO}" && find . -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -rf {} +); then
+              mark_failure "Failed to prepare visual artifact branch content."
+            fi
+          fi
+
+          if [ "${STATUS}" = "success" ]; then
+            if ! mkdir -p "${ARTIFACT_REPO}/${HEAD_SHA}"; then
+              mark_failure "Failed to create artifact output directory."
+            fi
+          fi
+
+          if [ "${STATUS}" = "success" ]; then
+            if ! cp "${BASE_PNG}" "${ARTIFACT_REPO}/${HEAD_SHA}/base.png"; then
+              mark_failure "Failed to copy base screenshot into artifact branch."
+            fi
+          fi
+
+          if [ "${STATUS}" = "success" ]; then
+            if ! cp "${HEAD_PNG}" "${ARTIFACT_REPO}/${HEAD_SHA}/head.png"; then
+              mark_failure "Failed to copy head screenshot into artifact branch."
+            fi
+          fi
+
+          if [ "${STATUS}" = "success" ]; then
+            (
+              cd "${ARTIFACT_REPO}" || exit 1
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git add "${HEAD_SHA}/base.png" "${HEAD_SHA}/head.png"
+              git commit -m "Visual preview for PR #${PR_NUMBER} (${HEAD_SHA})" || true
+              git push origin "${ARTIFACT_BRANCH}"
+            ) || mark_failure "Failed to commit and push visual artifacts."
+          fi
+
+          if [ "${STATUS}" = "success" ]; then
+            RAW_BASE_URL="https://raw.githubusercontent.com/${REPOSITORY}/${ARTIFACT_BRANCH}/${HEAD_SHA}/base.png"
+            RAW_HEAD_URL="https://raw.githubusercontent.com/${REPOSITORY}/${ARTIFACT_BRANCH}/${HEAD_SHA}/head.png"
+          fi
+
+          FAILURE_REASON="$(echo "${FAILURE_REASON}" | tr '\n' ' ' | sed 's/[[:space:]]\+/ /g' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+
+          {
+            echo "status=${STATUS}"
+            echo "failure_reason=${FAILURE_REASON}"
+            echo "artifact_branch=${ARTIFACT_BRANCH}"
+            echo "raw_base_url=${RAW_BASE_URL}"
+            echo "raw_head_url=${RAW_HEAD_URL}"
+            echo "base_sha=${BASE_SHA}"
+            echo "head_sha=${HEAD_SHA}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Upload visual outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-visual-${{ github.event.pull_request.number }}
+          path: |
+            ${{ runner.temp }}/visual-output
+          if-no-files-found: ignore
+
+      - name: Create or update sticky PR comment
+        if: always()
+        uses: actions/github-script@v7
+        env:
+          STATUS: ${{ steps.visual.outputs.status }}
+          FAILURE_REASON: ${{ steps.visual.outputs.failure_reason }}
+          ARTIFACT_BRANCH: ${{ steps.visual.outputs.artifact_branch }}
+          RAW_BASE_URL: ${{ steps.visual.outputs.raw_base_url }}
+          RAW_HEAD_URL: ${{ steps.visual.outputs.raw_head_url }}
+          BASE_SHA: ${{ steps.visual.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.visual.outputs.head_sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        with:
+          script: |
+            const marker = '<!-- datagrid-visual-preview -->';
+            const status = process.env.STATUS || 'failed';
+            const failureReason = process.env.FAILURE_REASON || 'Unknown failure';
+            const artifactBranch = process.env.ARTIFACT_BRANCH || '';
+            const rawBaseUrl = process.env.RAW_BASE_URL || '';
+            const rawHeadUrl = process.env.RAW_HEAD_URL || '';
+            const baseSha = process.env.BASE_SHA || context.payload.pull_request.base.sha;
+            const headSha = process.env.HEAD_SHA || context.payload.pull_request.head.sha;
+            const runUrl = process.env.RUN_URL;
+
+            let body = '';
+
+            if (status === 'success' && rawBaseUrl && rawHeadUrl) {
+              body = [
+                marker,
+                '## Datagrid Visual Preview',
+                '',
+                `Base: \`${baseSha}\`  `,
+                `Head: \`${headSha}\``,
+                '',
+                '| Base | Head |',
+                '| --- | --- |',
+                `| ![Base datagrid preview](${rawBaseUrl}) | ![Head datagrid preview](${rawHeadUrl}) |`,
+                '',
+                `Direct links: [base.png](${rawBaseUrl}) | [head.png](${rawHeadUrl})`,
+                '',
+                `Artifact branch: \`${artifactBranch}\``
+              ].join('\n');
+            } else {
+              body = [
+                marker,
+                '## Datagrid Visual Preview',
+                '',
+                'Visual capture failed for this run.',
+                '',
+                `- Base: \`${baseSha}\``,
+                `- Head: \`${headSha}\``,
+                `- Reason: ${failureReason}`,
+                `- Logs: [Workflow run](${runUrl})`
+              ].join('\n');
+            }
+
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100
+            });
+
+            const existing = comments.find((comment) =>
+              comment.user?.login === 'github-actions[bot]' &&
+              comment.body?.includes(marker)
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body
+              });
+            }
