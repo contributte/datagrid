@@ -59,6 +59,7 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 	}
 
 }
+
 /**
  * All properties are intentionally public so we can convert it to array in getActualResultAsArray
  *

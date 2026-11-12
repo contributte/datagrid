@@ -69,7 +69,7 @@ final class ColumnActionTest extends TestCase
 
 		$action = $this->grid->addAction('title2', 'Do', 'detail', [
 			'id' => 'name',
-		'name' => 'id',
+			'name' => 'id',
 		]);
 		Assert::same(
 			'<a href="detail?id=John&amp;name=1" class="btn btn-xs btn-default btn-secondary">Do</a>',

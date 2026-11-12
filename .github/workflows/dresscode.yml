@@ -1,0 +1,28 @@
+name: "DressCode"
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+  push:
+    branches: ["*"]
+
+  schedule:
+    - cron: "0 8 * * 1"
+
+jobs:
+  dresscode:
+    name: "DressCode"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+
+      - name: "PHP"
+        uses: "contributte/.github/.github/actions/setup-php@master"
+        with:
+          php: "8.5"
+
+      - name: "DressCode"
+        run: "make dresscode"
