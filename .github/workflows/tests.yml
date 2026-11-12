@@ -11,6 +11,14 @@ on:
     - cron: "0 8 * * 1"
 
 jobs:
+  test86:
+    name: "Nette Tester"
+    uses: contributte/.github/.github/workflows/nette-tester-mysql.yml@master
+    with:
+      php: "8.6"
+      database: tests
+      composer: "composer update --no-interaction --no-progress --prefer-dist --ignore-platform-req=php+"
+
   test85:
     name: "Nette Tester"
     uses: contributte/.github/.github/workflows/nette-tester-mysql.yml@master
