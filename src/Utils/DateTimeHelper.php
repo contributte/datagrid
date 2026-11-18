@@ -5,9 +5,18 @@ namespace Contributte\Datagrid\Utils;
 use Contributte\Datagrid\Exception\DatagridDateTimeHelperException;
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 
 final class DateTimeHelper
 {
+
+	/**
+	 * Return the next calendar day's start without changing the supplied value.
+	 */
+	public static function getNextDay(DateTimeInterface $date): DateTimeImmutable
+	{
+		return DateTimeImmutable::createFromInterface($date)->modify('+1 day')->setTime(0, 0);
+	}
 
 	/**
 	 * Try to convert string into \DateTime object

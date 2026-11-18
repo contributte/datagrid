@@ -4,6 +4,7 @@ namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
 use Contributte\Datagrid\DataSource\DoctrineCollectionDataSource;
 use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Tests\Files\DateFilterTests;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Contributte\Datagrid\Utils\Sorting;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,9 +12,17 @@ use Doctrine\Deprecations\Deprecation;
 use Tester\Assert;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
+require_once __DIR__ . '/../../Files/DateFilterTests.phpt';
 
 final class DoctrineCollectionDataSourceTest extends BaseDataSourceTest
 {
+
+	use DateFilterTests;
+
+	public function testMidnightTransitionTextBoundaries(): void
+	{
+		$this->assertMidnightTransitionTextBoundaries();
+	}
 
 	public function setUp(): void
 	{
@@ -49,6 +58,11 @@ final class DoctrineCollectionDataSourceTest extends BaseDataSourceTest
 		$this->getActualResultAsArray();
 
 		Assert::same(0, Deprecation::getTriggeredDeprecations()['https://github.com/doctrine/collections/pull/389'] ?? 0);
+	}
+
+	protected function createDateSource(array $rows): DoctrineCollectionDataSource
+	{
+		return new DoctrineCollectionDataSource(new ArrayCollection($rows), 'id');
 	}
 
 }
