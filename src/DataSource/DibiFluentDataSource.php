@@ -20,6 +20,8 @@ use ReflectionClass;
 class DibiFluentDataSource extends FilterableDataSource implements IDataSource, IAggregatable
 {
 
+	use DateFilterComparison;
+
 	protected array $data = [];
 
 	public function __construct(protected Fluent $dataSource, protected string $primaryKey)
@@ -111,7 +113,17 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		try {
 			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
-			$this->dataSource->where('DATE(%n) = ?', $filter->getColumn(), $date->format('Y-m-d'));
+			if ($this->indexFriendlyDateFilter) {
+				$this->dataSource->where(
+					'%n >= ? AND %n < ?',
+					$filter->getColumn(),
+					$date->format('Y-m-d'),
+					$filter->getColumn(),
+					DateTimeHelper::getNextDay($date)->format('Y-m-d')
+				);
+			} else {
+				$this->dataSource->where('DATE(%n) = ?', $filter->getColumn(), $date->format('Y-m-d'));
+			}
 		} catch (DatagridDateTimeHelperException) {
 			// ignore the invalid filter value
 		}
@@ -127,9 +139,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		if ($valueFrom) {
 			try {
 				$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
-				$dateFrom->setTime(0, 0, 0);
-
-				$this->dataSource->where('DATE(%n) >= ?', $filter->getColumn(), $dateFrom);
+				if ($this->indexFriendlyDateFilter) {
+					$this->dataSource->where('%n >= ?', $filter->getColumn(), $dateFrom->format('Y-m-d'));
+				} else {
+					$this->dataSource->where('DATE(%n) >= ?', $filter->getColumn(), (clone $dateFrom)->setTime(0, 0, 0));
+				}
 			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
@@ -138,9 +152,11 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		if ($valueTo) {
 			try {
 				$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
-				$dateTo->setTime(23, 59, 59);
-
-				$this->dataSource->where('DATE(%n) <= ?', $filter->getColumn(), $dateTo);
+				if ($this->indexFriendlyDateFilter) {
+					$this->dataSource->where('%n < ?', $filter->getColumn(), DateTimeHelper::getNextDay($dateTo)->format('Y-m-d'));
+				} else {
+					$this->dataSource->where('DATE(%n) <= ?', $filter->getColumn(), (clone $dateTo)->setTime(23, 59, 59));
+				}
 			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}

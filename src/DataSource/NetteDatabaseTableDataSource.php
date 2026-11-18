@@ -12,7 +12,6 @@ use Contributte\Datagrid\Filter\FilterSelect;
 use Contributte\Datagrid\Filter\FilterText;
 use Contributte\Datagrid\Utils\DateTimeHelper;
 use Contributte\Datagrid\Utils\Sorting;
-use DateTime;
 use LogicException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Strings;
@@ -20,24 +19,12 @@ use Nette\Utils\Strings;
 class NetteDatabaseTableDataSource extends FilterableDataSource implements IDataSource
 {
 
-	protected array $data = [];
+	use DateFilterComparison;
 
-	protected bool $useDateRangeComparison = false;
+	protected array $data = [];
 
 	public function __construct(protected Selection $dataSource, protected string $primaryKey)
 	{
-	}
-
-	/**
-	 * Enable index-friendly comparisons for native or canonical SQL date values.
-	 *
-	 * @return static
-	 */
-	public function setUseDateRangeComparison(bool $enabled = true): self
-	{
-		$this->useDateRangeComparison = $enabled;
-
-		return $this;
 	}
 
 	public function getCount(): int
@@ -148,11 +135,11 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		try {
 			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
-			if ($this->useDateRangeComparison) {
+			if ($this->indexFriendlyDateFilter) {
 				$this->dataSource->where(
 					sprintf('%s >= ? AND %s < ?', $filter->getColumn(), $filter->getColumn()),
 					$date->format('Y-m-d'),
-					$this->nextDay($date)
+					DateTimeHelper::getNextDay($date)->format('Y-m-d')
 				);
 			} else {
 				$this->dataSource->where(sprintf('DATE(%s) = ?', $filter->getColumn()), $date->format('Y-m-d'));
@@ -172,11 +159,9 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		if ($valueFrom) {
 			try {
 				$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
-				if ($this->useDateRangeComparison) {
+				if ($this->indexFriendlyDateFilter) {
 					$this->dataSource->where(sprintf('%s >= ?', $filter->getColumn()), $dateFrom->format('Y-m-d'));
 				} else {
-					$dateFrom->setTime(0, 0, 0);
-
 					$this->dataSource->where(
 						sprintf('DATE(%s) >= ?', $filter->getColumn()),
 						$dateFrom->format('Y-m-d')
@@ -190,11 +175,9 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		if ($valueTo) {
 			try {
 				$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
-				if ($this->useDateRangeComparison) {
-					$this->dataSource->where(sprintf('%s < ?', $filter->getColumn()), $this->nextDay($dateTo));
+				if ($this->indexFriendlyDateFilter) {
+					$this->dataSource->where(sprintf('%s < ?', $filter->getColumn()), DateTimeHelper::getNextDay($dateTo)->format('Y-m-d'));
 				} else {
-					$dateTo->setTime(23, 59, 59);
-
 					$this->dataSource->where(
 						sprintf('DATE(%s) <= ?', $filter->getColumn()),
 						$dateTo->format('Y-m-d')
@@ -299,14 +282,6 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 	protected function applyFilterSelect(FilterSelect $filter): void
 	{
 		$this->dataSource->where($filter->getCondition());
-	}
-
-	private function nextDay(DateTime $date): string
-	{
-		$next = clone $date;
-		$next->modify('+1 day');
-
-		return $next->format('Y-m-d');
 	}
 
 }

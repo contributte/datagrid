@@ -54,6 +54,17 @@ For details on how to use this package, check out our [documentation](.docs).
 
 ## Development
 
+### PHP tests
+
+Run `make tests`, `make phpstan` and `make cs` with the Composer development
+dependencies installed. SQL date-filter tests exercise Nette Selection, Nette SQL
+and Dibi on both SQLite (`pdo_sqlite`) and MySQL (`pdo_mysql`); Nextras uses MySQLi.
+Use a dedicated MySQL database named `tests` on `127.0.0.1`, with user `root` and
+an empty password (see `tests/Cases/DataSources/nextrasDatasource.ini`). Fixtures
+recreate their test tables. Set `DATAGRID_TEST_MYSQL_PORT` to use a port other than
+3306, and load the MySQL time zone tables so Nextras can use `Europe/Prague`.
+Unavailable MySQL connections are skipped locally and fail in GitHub Actions.
+
 ### Browser regression tests
 
 Browser tests use the actual Naja adapter with desktop Chromium and a mobile

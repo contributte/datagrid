@@ -3,6 +3,7 @@
 namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
 use Contributte\Datagrid\DataSource\DoctrineDataSource;
+use Contributte\Datagrid\Tests\Files\DateFilterTests;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
@@ -14,11 +15,19 @@ use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Tools\Setup;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
+require_once __DIR__ . '/../../Files/DateFilterTests.phpt';
 
 final class DoctrineDataSourceTest extends BaseDataSourceTest
 {
 
+	use DateFilterTests;
+
 	private Connection $db;
+
+	public function testMidnightTransitionTextBoundaries(): void
+	{
+		$this->assertMidnightTransitionTextBoundaries();
+	}
 
 	public function setUp(): void
 	{
@@ -37,6 +46,20 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 
 		$factory = new TestingDatagridFactory();
 		$this->grid = $factory->createTestingDatagrid();
+	}
+
+	protected function createDateSource(array $rows): DoctrineDataSource
+	{
+		$this->db->executeStatement('DROP TABLE IF EXISTS date_rows');
+		$this->db->executeStatement('CREATE TABLE date_rows (id INTEGER PRIMARY KEY, created DATETIME)');
+		foreach ($rows as $row) {
+			$this->db->insert('date_rows', $row);
+		}
+
+		$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/tmp'], true);
+		$entityManager = EntityManager::create($this->db, $config);
+
+		return new DoctrineDataSource($entityManager->getRepository(DateRow::class)->createQueryBuilder('e'), 'id');
 	}
 
 	protected function setUpDatabase(): void
@@ -154,6 +177,20 @@ class SortableNullsWalker extends SqlWalker
 
 		return $sql;
 	}
+
+}
+
+/**
+ * @Entity @Table(name="date_rows")
+ */
+class DateRow
+{
+
+	/** @Id @Column(type="integer") */
+	public int $id;
+
+	/** @Column(type="string") */
+	public string $created;
 
 }
 

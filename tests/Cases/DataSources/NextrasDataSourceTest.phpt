@@ -4,11 +4,14 @@ namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
 use Contributte\Datagrid\DataSource\NextrasDataSource;
 use Contributte\Datagrid\Filter\FilterText;
+use Contributte\Datagrid\Tests\Files\DateFilterTests;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
+use DateTimeImmutable;
 use Nette\Caching\Cache;
 use Nette\Caching\Storages\DevNullStorage;
 use Nette\Utils\Arrays;
 use Nextras\Dbal\Connection;
+use Nextras\Dbal\Drivers\Exception\ConnectionException;
 use Nextras\Orm\Collection\Expression\LikeExpression;
 use Nextras\Orm\Entity\Entity;
 use Nextras\Orm\Mapper\Dbal\DbalMapper;
@@ -20,6 +23,7 @@ use Tester\Assert;
 use Tester\Environment;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
+require_once __DIR__ . '/../../Files/DateFilterTests.phpt';
 
 if (!extension_loaded('mysqli')) {
 	Environment::skip('Test requires MySQLi extension to be loaded.');
@@ -31,7 +35,11 @@ if (!extension_loaded('mysqli')) {
 final class NextrasDataSourceTest extends BaseDataSourceTest
 {
 
+	use DateFilterTests;
+
 	private Model $model;
+
+	private Connection $dateConnection;
 
 	public function testFilterOnJoinedTable(): void
 	{
@@ -61,15 +69,25 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 	protected function setUpDatabase(): void
 	{
 		$args = Environment::loadData();
+		$args['port'] = (int) (getenv('DATAGRID_TEST_MYSQL_PORT') ?: '3306');
 
 		$storage = new DevNullStorage();
 		$cache = new Cache($storage);
 		$connection = new Connection($args);
+		$this->dateConnection = $connection;
 
-		if (!$connection->ping()) {
-			Environment::skip('MySQL is not running');
+		try {
+			$connection->connect();
+		} catch (ConnectionException $e) {
+			if (getenv('GITHUB_ACTIONS') !== false) {
+				throw $e;
+			}
+
+			Environment::skip('MySQL test database is unavailable.');
 		}
 
+		$connection->query('DROP TABLE IF EXISTS datagrid_date_rows');
+		$connection->query('CREATE TABLE datagrid_date_rows (id INTEGER PRIMARY KEY, created DATETIME(6) NOT NULL)');
 		$connection->query('DROP TABLE IF EXISTS `books`');
 		$connection->query('DROP TABLE IF EXISTS `users`');
 		$connection->query('CREATE TABLE `users` (
@@ -88,6 +106,9 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 							) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_czech_ci;');
 
 		$simpleModelFactory = new SimpleModelFactory($cache, [
+			'dateRows' => new DateRowsRepository(
+				new DateRowsMapper($connection, new DbalMapperCoordinator($connection), $cache)
+			),
 			'users' => new UsersRepository(
 				new UsersMapper($connection, new DbalMapperCoordinator($connection), $cache)
 			),
@@ -100,6 +121,15 @@ final class NextrasDataSourceTest extends BaseDataSourceTest
 
 		$connection->query('INSERT INTO [users] %values[]', $this->data);
 		$connection->query('INSERT INTO [books] %values[]', Arrays::map($this->data, fn (array $data): array => ['id' => $data['id'], 'author_id' => $data['id']]));
+	}
+
+	protected function createDateSource(array $rows): NextrasDataSource
+	{
+		$this->model->dateRows->doClear();
+		$this->dateConnection->query('DELETE FROM datagrid_date_rows');
+		$this->dateConnection->query('INSERT INTO [datagrid_date_rows] %values[]', $rows);
+
+		return new NextrasDataSource($this->model->dateRows->findAll(), 'id');
 	}
 
 	protected function getActualResultAsArray(): array
@@ -166,6 +196,35 @@ class BooksRepository extends Repository
 	public static function getEntityClassNames(): array
 	{
 		return [Book::class];
+	}
+
+}
+
+/**
+ * @property int $id {primary}
+ * @property DateTimeImmutable $created
+ */
+class DateRow extends Entity
+{
+
+}
+
+class DateRowsMapper extends DbalMapper
+{
+
+	public function getTableName(): string
+	{
+		return 'datagrid_date_rows';
+	}
+
+}
+
+class DateRowsRepository extends Repository
+{
+
+	public static function getEntityClassNames(): array
+	{
+		return [DateRow::class];
 	}
 
 }

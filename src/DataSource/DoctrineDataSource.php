@@ -195,9 +195,9 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 				$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
 				$c = $this->checkAliases($column);
 
-				$this->dataSource->andWhere(sprintf('%s >= :%s AND %s <= :%s', $c, $p1, $c, $p2))
+				$this->dataSource->andWhere(sprintf('%s >= :%s AND %s < :%s', $c, $p1, $c, $p2))
 					->setParameter($p1, $date->format('Y-m-d 00:00:00'))
-					->setParameter($p2, $date->format('Y-m-d 23:59:59'));
+					->setParameter($p2, DateTimeHelper::getNextDay($date)->format('Y-m-d 00:00:00'));
 			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
@@ -215,13 +215,12 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		if ($valueFrom) {
 			try {
 				$dateFrom = DateTimeHelper::tryConvertToDate($valueFrom, [$filter->getPhpFormat()]);
-				$dateFrom->setTime(0, 0, 0);
 
 				$p = $this->getPlaceholder();
 
 				$this->dataSource->andWhere(sprintf('%s >= :%s', $c, $p))->setParameter(
 					$p,
-					$dateFrom->format('Y-m-d H:i:s')
+					$dateFrom->format('Y-m-d 00:00:00')
 				);
 			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
@@ -231,13 +230,12 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 		if ($valueTo) {
 			try {
 				$dateTo = DateTimeHelper::tryConvertToDate($valueTo, [$filter->getPhpFormat()]);
-				$dateTo->setTime(23, 59, 59);
 
 				$p = $this->getPlaceholder();
 
-				$this->dataSource->andWhere(sprintf('%s <= :%s', $c, $p))->setParameter(
+				$this->dataSource->andWhere(sprintf('%s < :%s', $c, $p))->setParameter(
 					$p,
-					$dateTo->format('Y-m-d H:i:s')
+					DateTimeHelper::getNextDay($dateTo)->format('Y-m-d 00:00:00')
 				);
 			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value

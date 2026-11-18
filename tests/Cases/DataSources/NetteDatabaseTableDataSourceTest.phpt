@@ -36,11 +36,13 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 	public function testDateRangeComparisonMatchesLegacyResults(): void
 	{
 		$date = new FilterDate($this->grid, 'created', 'Created', 'created');
+		$date->setFormat('Y-m-d', 'yyyy-mm-dd');
 		$date->setValue('2024-03-31');
 		Assert::same([2, 3, 4], $this->dateIds($date, false));
 		Assert::same([2, 3, 4], $this->dateIds($date, true));
 
 		$date = new FilterDate($this->grid, 'only_date', 'Date', 'only_date');
+		$date->setFormat('Y-m-d', 'yyyy-mm-dd');
 		$date->setValue('2024-03-31');
 		Assert::same([2, 3, 4], $this->dateIds($date, true));
 	}
@@ -54,6 +56,7 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 			[['from' => '', 'to' => ''], [1, 2, 3, 4, 5, 6]],
 		] as [$bounds, $expected]) {
 			$filter = new FilterDateRange($this->grid, 'created', 'Created', 'created', 'To');
+			$filter->setFormat('Y-m-d', 'yyyy-mm-dd');
 			$filter->setValue($bounds);
 			Assert::same($expected, $this->dateIds($filter, false));
 			Assert::same($expected, $this->dateIds($filter, true));
@@ -68,6 +71,7 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 		$this->insertDate(10, '2025-01-01 00:00:00');
 		foreach (['2024-02-29' => [7], '2024-12-31' => [9]] as $value => $expected) {
 			$date = new FilterDate($this->grid, 'created', 'Created', 'created');
+			$date->setFormat('Y-m-d', 'yyyy-mm-dd');
 			$date->setValue($value);
 			Assert::same($expected, $this->dateIds($date, true));
 		}
@@ -81,14 +85,15 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 		Assert::same('2024-03-31 20:21:22 Europe/Prague', $to->format('Y-m-d H:i:s e'));
 	}
 
-	public function testDefaultComparisonKeepsOffsetTextSemantics(): void
+	public function testLegacyComparisonKeepsOffsetTextSemantics(): void
 	{
 		$this->insertDate(7, '2024-03-31T00:30:00+02:00');
 		$date = new FilterDate($this->grid, 'created', 'Created', 'created');
+		$date->setFormat('Y-m-d', 'yyyy-mm-dd');
 		$date->setValue('2024-03-31');
 		$source = new NetteDatabaseTableDataSource($this->db->table('date_values')->select('id'), 'id');
 		$source->filter([$date]);
-		Assert::same([2, 3, 4], array_column($source->getData(), 'id'));
+		Assert::same([2, 3, 4, 7], array_column($source->getData(), 'id'));
 
 		Assert::same([2, 3, 4], $this->dateIds($date, false));
 	}
@@ -96,9 +101,10 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 	public function testDateComparisonCanUseAnOrdinaryIndex(): void
 	{
 		$date = new FilterDate($this->grid, 'created', 'Created', 'created');
+		$date->setFormat('Y-m-d', 'yyyy-mm-dd');
 		$date->setValue('2024-03-31');
 		$source = new NetteDatabaseTableDataSource($this->db->table('date_values')->select('id'), 'id');
-		$source->setUseDateRangeComparison();
+		$source->setIndexFriendlyDateFilter();
 		$source->filter([$date]);
 		$builder = $source->getDataSource()->getSqlBuilder();
 		$statement = $this->db->getConnection()->getPdo()->prepare('EXPLAIN QUERY PLAN ' . $builder->buildSelectQuery());
@@ -159,7 +165,7 @@ final class NetteDatabaseTableDataSourceTest extends BaseDataSourceTest
 	private function dateIds(FilterDate|FilterDateRange $filter, bool $optimized): array
 	{
 		$source = new NetteDatabaseTableDataSource($this->db->table('date_values')->select('id'), 'id');
-		$source->setUseDateRangeComparison($optimized);
+		$source->setIndexFriendlyDateFilter($optimized);
 		$source->filter([$filter]);
 
 		$ids = array_column($source->getData(), 'id');
