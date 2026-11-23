@@ -32,6 +32,14 @@ class FilterMultiSelect extends FilterSelect
 	}
 
 	/**
+	 * @return static
+	 */
+	public function setValue(mixed $value): self
+	{
+		return parent::setValue((array) $value);
+	}
+
+	/**
 	 * Get filter condition
 	 */
 	public function getCondition(): array
