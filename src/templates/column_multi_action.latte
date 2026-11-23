@@ -9,7 +9,7 @@
 			{continueIf !$multiAction->testRowCondition($actionKey, $row)}
 
 			{if $action->hasTemplate()}
-				{include $action->getTemplate(), item => $row->getItem(), (expand) $action->getTemplateVariables(), row => $row}
+				{include $action->getTemplate(), (expand) [item => $row->getItem(), ...$action->getTemplateVariables(), row => $row]}
 			{else}
 				{$action->render($row)|noescape}
 			{/if}

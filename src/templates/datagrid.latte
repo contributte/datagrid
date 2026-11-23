@@ -299,7 +299,7 @@
 											{foreach $actions as $key => $action}
 												{if $row->hasAction($key)}
 													{if $action->hasTemplate()}
-														{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables(), row => $row}
+														{include $action->getTemplate(), (expand) [item => $item, ...$action->getTemplateVariables(), row => $row]}
 													{else}
 														{$action->render($row)|noescape}
 													{/if}
@@ -525,7 +525,7 @@
 	{var $item = $row->getItem()}
 
 	{if $column->hasTemplate()}
-		{include $column->getTemplate(), row => $row, item => $item, (expand) $column->getTemplateVariables()}
+		{include $column->getTemplate(), (expand) [row => $row, item => $item, ...$column->getTemplateVariables()]}
 	{else}
 		{ifset #$col}
 			{include #$col, item => $item}
