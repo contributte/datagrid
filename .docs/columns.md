@@ -353,6 +353,15 @@ $grid->setColumnsHideable();
 
 Hidden columns are saved into [state storage](state-storage.md), so they will remain hidden along all next requests.
 
+A single column can be excluded from hiding, so it is always shown:
+
+```php
+$grid->addColumnText('name', 'Name')
+	->setHideable(false);
+```
+
+Such a column ignores `setDefaultHide()` and any hidden state already stored.
+
 ### Default hide
 
 Columns can be hidden by default:
@@ -421,6 +430,8 @@ $grid->addAggregationFunction('status', new FunctionSum('id'));
 This will render a sum of ids under the `"status"` column.
 
 As mentioned above, there is one aggregation function prepared: `Contributte\Datagrid\AggregationFunction\FunctionSum`. You can implement whatever function you like, it just have to implement `Contributte\Datagrid\AggregationFunction\ISingleColumnAggregationFunction`.
+
+Aggregation functions also work with an array data source (`ArrayDataSource`). `FunctionSum` supports it out of the box. A custom function has to implement `Contributte\Datagrid\AggregationFunction\IArrayAggregationFunction` as well. Its `processArray(array $data)` method receives the rows (all, filtered or paginated, according to the data type). `FunctionSum` casts the result to int.
 
 ### Multiple columns
 

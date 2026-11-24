@@ -13,6 +13,8 @@ export const EditableValueAttribute = "data-datagrid-editable-value";
 export const EditableAttrsAttribute = "data-datagrid-editable-attrs";
 
 export class EditablePlugin implements DatagridPlugin {
+	private readonly boundCells = new WeakSet<HTMLElement>();
+
 	onDatagridInit(datagrid: Datagrid): boolean {
 		datagrid.ajax.addEventListener('success', (event) => {
 			this.initEditableCells(datagrid);
@@ -27,41 +29,56 @@ export class EditablePlugin implements DatagridPlugin {
 
 		datagrid.el.querySelectorAll<HTMLElement>(`[${EditableUrlAttribute}]`).forEach(cell => {
 
+			if (this.boundCells.has(cell)) return;
+			this.boundCells.add(cell);
+
 			cell.addEventListener("click", e => {
 
 				if (cell instanceof HTMLAnchorElement || cell.classList.contains("datagrid-inline-edit")) return;
 
 				if (!cell.classList.contains("editing")) {
 					cell.classList.add("editing");
-					const originalValue = (cell.innerHTML.replace(/<\/?br>/g, "\n")).trim();
-					const valueToEdit = (cell.getAttribute(EditableValueAttribute) ?? originalValue).trim();
+					const originalHtml = cell.innerHTML;
+					const content = cell.cloneNode(true) as HTMLElement;
+					content.querySelectorAll("br").forEach(br => br.replaceWith("\n"));
+					const originalValue = content.textContent?.trim() ?? "";
+					// Template whitespace is presentation; an explicit value is exact data.
+					const valueToEdit = cell.getAttribute(EditableValueAttribute) ?? originalValue;
 
 					cell.setAttribute("originalValue", originalValue);
 					cell.setAttribute("valueToEdit", valueToEdit);
 
 					const type = cell.getAttribute(EditableTypeAttribute) ?? "text";
 
-					let input: HTMLElement;
+					let input: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
 					switch (type) {
-						case "textarea":
-							cell.innerHTML = `<textarea rows="${calculateCellLines(cell)}">${valueToEdit}</textarea>`;
-							input = cell.querySelector("textarea")!;
+						case "textarea": {
+							const textarea = document.createElement("textarea");
+							const lines = calculateCellLines(cell);
+							textarea.rows = Math.min(12, Math.max(Number.isFinite(lines) ? lines : 1, valueToEdit.split("\n").length, 1));
+							input = textarea;
+							cell.replaceChildren(input);
 							break;
-						case "select":
+						}
+						case "select": {
 							cell.innerHTML = cell.getAttribute(EditableElementAttribute) ?? "";
-							input = cell.querySelector("select")!;
-							input
-								.querySelectorAll(`option[value='${valueToEdit}']`)
-								.forEach(input => input.setAttribute("selected", "true"));
+							const select = cell.querySelector("select");
+							if (!select) {
+								cell.innerHTML = originalHtml;
+								cell.classList.remove("editing");
+								return;
+							}
+							input = select;
 							break;
-						default:
-							cell.innerHTML = `<input type='${type}' />`;
-							input = cell.querySelector("input")!;
-							input.setAttribute("value", valueToEdit);
+						}
+						default: {
+							const textInput = document.createElement("input");
+							textInput.type = type;
+							input = textInput;
+							cell.replaceChildren(input);
+						}
 					}
-
-					input.focus();
 
 					const attributes = JSON.parse(cell.getAttribute(EditableAttrsAttribute) ?? "{}");
 					for (const key in attributes) {
@@ -69,37 +86,61 @@ export class EditablePlugin implements DatagridPlugin {
 						input.setAttribute(key, value);
 					}
 
-					cell.classList.remove("edited");
+					input.value = valueToEdit;
+					if (input instanceof HTMLSelectElement && !cell.hasAttribute(EditableValueAttribute)) {
+						const option = Array.from(input.options).find(option => option.text === valueToEdit);
+						if (option) input.value = option.value;
+					}
+					// Compare against the native control's normalized value (e.g. CRLF).
+					const initialValue = input.value;
+
+					cell.classList.remove("edited", "edited-error");
+					let finished = false;
 
 					const submitCell = async (el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement) => {
+						if (finished) return;
+						finished = true;
 						let value = el.value;
-						if (value !== valueToEdit) {
+						if (value !== initialValue) {
+							if (el instanceof HTMLSelectElement) {
+								el.disabled = true;
+							} else {
+								el.readOnly = true;
+							}
+							cell.setAttribute("aria-busy", "true");
 							try {
 								const response = await datagrid.ajax.request({
 									url: cell.getAttribute(EditableUrlAttribute) ?? "",
 									method: "POST",
+									rejectOnCancel: true,
+									options: { unique: false, abort: false },
 									data: {
 										value,
 									},
 								}) as any;
 
+								if (!cell.isConnected) return;
+
 								if (type === "select") {
-									cell.innerHTML = (el instanceof HTMLSelectElement)
+									cell.textContent = (el instanceof HTMLSelectElement)
 										? el.options[el.selectedIndex]?.text ?? value
 										: value;
 								} else {
 									if (response._datagrid_editable_new_value) {
-										value = response._datagrid_editable_new_value;
+										cell.innerHTML = response._datagrid_editable_new_value;
+									} else {
+										cell.textContent = value;
 									}
-									cell.innerHTML = value;
 								}
 								cell.classList.add("edited");
 							} catch {
-								cell.innerHTML = originalValue;
+								cell.innerHTML = originalHtml;
 								cell.classList.add("edited-error");
+							} finally {
+								cell.removeAttribute("aria-busy");
 							}
 						} else {
-							cell.innerHTML = originalValue;
+							cell.innerHTML = originalHtml;
 						}
 
 						cell.classList.remove("editing");
@@ -111,20 +152,14 @@ export class EditablePlugin implements DatagridPlugin {
 						)
 						.forEach(el => {
 							if (el instanceof HTMLSelectElement) {
-								let submitted = false;
-								const submitOnce = () => {
-									if (submitted) return;
-									submitted = true;
-									submitCell(el);
-								};
-								el.addEventListener("change", submitOnce);
-								el.addEventListener("blur", submitOnce);
-							} else {
-								el.addEventListener("blur", () => submitCell(el));
+								el.addEventListener("change", () => submitCell(el));
 							}
+							el.addEventListener("blur", () => submitCell(el));
 
 							el.addEventListener("keydown", e => {
-								if (isEnter(e as KeyboardEvent)) {
+								const keyboardEvent = e as KeyboardEvent;
+								if (keyboardEvent.isComposing) return;
+								if (isEnter(keyboardEvent) && !(el instanceof HTMLTextAreaElement && keyboardEvent.shiftKey)) {
 									e.stopPropagation();
 									e.preventDefault();
 									return submitCell(el);
@@ -133,12 +168,15 @@ export class EditablePlugin implements DatagridPlugin {
 								if (isEsc(e as KeyboardEvent)) {
 									e.stopPropagation();
 									e.preventDefault();
+									if (finished) return;
+									finished = true;
 									cell.classList.remove("editing");
-									cell.innerHTML = originalValue;
+									cell.innerHTML = originalHtml;
 								}
 							});
 
 						});
+					input.focus();
 				}
 			});
 		});

@@ -114,7 +114,7 @@
 											<i n:block="icon-gear" class="{$iconPrefix}cog"></i>
 										</button>
 										<ul class="dropdown-menu dropdown-menu-end dropdown-menu--grid">
-											<li n:foreach="$columnsVisibility as $v_key => $visibility">
+											<li n:foreach="$columnsVisibility as $v_key => $visibility" n:if="$visibility['column']->isHideable()">
 												{if $visibility['visible']}
 													<a n:href="hideColumn!, column => $v_key" class="ajax dropdown-item">
 														<i n:block="icon-checked" class="{$iconPrefix}check-square"></i>
@@ -176,7 +176,7 @@
 								{/ifset}
 
 								<div class="datagrid-column-header-additions">
-									<div class="btn-group column-settings-menu" n:if="$control->canHideColumns()">
+									<div class="btn-group column-settings-menu" n:if="$control->canHideColumns() && $column->isHideable()">
 										<a class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">
 											<i n:block="icon-caret-down" class="{$iconPrefix}caret-down"></i>
 										</a>
@@ -299,7 +299,7 @@
 											{foreach $actions as $key => $action}
 												{if $row->hasAction($key)}
 													{if $action->hasTemplate()}
-														{include $action->getTemplate(), item => $item, (expand) $action->getTemplateVariables(), row => $row}
+														{include $action->getTemplate(), (expand) ['item' => $item, ...$action->getTemplateVariables(), 'row' => $row]}
 													{else}
 														{$action->render($row)|noescape}
 													{/if}
@@ -525,7 +525,7 @@
 	{var $item = $row->getItem()}
 
 	{if $column->hasTemplate()}
-		{include $column->getTemplate(), row => $row, item => $item, (expand) $column->getTemplateVariables()}
+		{include $column->getTemplate(), (expand) ['row' => $row, 'item' => $item, ...$column->getTemplateVariables()]}
 	{else}
 		{ifset #$col}
 			{include #$col, item => $item}

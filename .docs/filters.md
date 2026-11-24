@@ -164,6 +164,18 @@ $grid->addFilterText('name', 'Name')
 	->setConjunctionSearch();
 ```
 
+### Quoted phrases (opt-in)
+
+Use double quotes to group words into one search term, e.g. `"red blue" paint`
+searches for `red blue` and `paint`:
+
+```php
+$grid->addFilterText('name', 'Search', ['name', 'address'])
+	->setQuotedPhraseSearch();
+```
+
+This option is off by default. Elasticsearch ignores it.
+
 ## FilterSelect
 
 `FilterSelect` has one more parameter - options:

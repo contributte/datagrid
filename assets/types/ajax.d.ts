@@ -8,6 +8,8 @@ export interface BaseRequestParams {
 
 export interface RequestParams<D = any> extends BaseRequestParams {
 	data?: D;
+	/** Reject cancelled requests instead of returning an empty payload (Naja adapter). */
+	rejectOnCancel?: boolean;
 	options?: Record<string, any>;
 }
 
@@ -63,8 +65,8 @@ export interface SuccessEventDetail<P = DatagridPayload, R extends Response = Re
 
 export interface CompleteEventDetail<P = DatagridPayload, R extends Response = Response> {
 	params: BaseRequestParams;
-	payload: Payload<P>;
-	response: Response;
+	payload?: Partial<Payload<P>>;
+	response?: R;
 }
 
 export interface ErrorEventDetail<E extends Error = Error, R extends Response = Response> {

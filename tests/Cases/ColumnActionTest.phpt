@@ -8,6 +8,7 @@ use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Row;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
+use Nette\Localization\Translator;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -87,6 +88,36 @@ final class ColumnActionTest extends TestCase
 			'<a href="doStuff!?id=1" class="btn btn-xs btn-default btn-secondary"><i class="icon-user"></i>&nbsp;Do</a>',
 			$this->render($action)
 		);
+	}
+
+	public function testActionIconWithoutTextIsNotTranslated(): void
+	{
+		$translator = new class implements Translator {
+
+			/** @var string[] */
+			public array $keys = [];
+
+			public function translate(mixed $message, mixed ...$parameters): string
+			{
+				$this->keys[] = (string) $message;
+
+				return (string) $message;
+			}
+
+		};
+
+		$this->grid->setTranslator($translator);
+
+		$action = $this->grid->addAction('delete', '', 'delete!');
+
+		Datagrid::$iconPrefix = 'icon-';
+		$action->setIcon('trash');
+
+		Assert::same(
+			'<a href="delete!?id=1" class="btn btn-xs btn-default btn-secondary"><i class="icon-trash"></i></a>',
+			$this->render($action)
+		);
+		Assert::notContains('', $translator->keys);
 	}
 
 	public function testActionClass(): void

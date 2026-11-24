@@ -102,6 +102,21 @@ final class NetteDatabaseDataSourceTest extends BaseDataSourceTest
 		Assert::same(['%foo%', '%bar%', '%foo%', '%bar%'], $params);
 	}
 
+	public function testQuotedPhrasesRemainBoundParameters(): void
+	{
+		foreach ([false => 'OR', true => 'AND'] as $conjunction => $operator) {
+			$s = new NetteDatabaseDataSource($this->db, 'SELECT * FROM users');
+			$filter = new FilterText($this->grid, 'a', 'b', ['name', 'address']);
+			$filter->setQuotedPhraseSearch()->setValue('"O\'Reilly Blue" 0 %_');
+			$filter->setConjunctionSearch((bool) $conjunction);
+			$s->filter([$filter]);
+			[$sql, $params] = $s->getQuery();
+			Assert::same(["%O'Reilly Blue%", '%0%', '%%_%', "%O'Reilly Blue%", '%0%', '%%_%'], $params);
+			Assert::notContains("O'Reilly", $sql);
+			Assert::contains(sprintf('name LIKE ? %1$s name LIKE ? %1$s name LIKE ?', $operator), $sql);
+		}
+	}
+
 	public function testGetQueryFilterTextSplitWordsDisabled(): void
 	{
 		$s = new NetteDatabaseDataSource($this->db, 'SELECT * FROM users');

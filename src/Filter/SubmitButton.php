@@ -47,7 +47,9 @@ class SubmitButton extends Button
 			}
 		}
 
-		$el->addText($this->grid->getTranslator()->translate($this->getText()));
+		if ($this->getText() !== '') {
+			$el->addText($this->grid->getTranslator()->translate($this->getText()));
+		}
 
 		return $el;
 	}

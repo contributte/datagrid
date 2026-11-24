@@ -14,3 +14,4 @@ ruleset.xml export-ignore
 package.json export-ignore
 rollup.config.js export-ignore
 tsconfig.json export-ignore
+playwright.config.ts export-ignore

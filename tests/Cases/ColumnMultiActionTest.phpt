@@ -8,6 +8,7 @@ use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\Exception\DatagridException;
 use Contributte\Datagrid\Row;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
+use Nette\Localization\Translator;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -74,6 +75,36 @@ final class ColumnMultiActionTest extends TestCase
 
 		Assert::true($multiAction->testRowCondition('detail', $row));
 		Assert::false($multiAction->testRowCondition('detail', $disabledRow));
+	}
+
+	public function testRenderButtonWithText(): void
+	{
+		$multiAction = new MultiAction($this->grid, 'actions', 'Actions');
+
+		Assert::same(
+			'<button type="button" data-bs-toggle="dropdown" class="btn btn-xs btn-default btn-secondary dropdown-toggle">Actions</button>',
+			(string) $multiAction->renderButton()
+		);
+	}
+
+	public function testRenderButtonIconWithoutText(): void
+	{
+		$this->grid->setTranslator(new class implements Translator {
+
+			public function translate(mixed $message, mixed ...$parameters): string
+			{
+				return $message === '' ? '[empty]' : (string) $message;
+			}
+
+		});
+		Datagrid::$iconPrefix = 'icon-';
+		$multiAction = new MultiAction($this->grid, 'actions', '');
+		$multiAction->setIcon('cog');
+
+		Assert::same(
+			'<button type="button" data-bs-toggle="dropdown" class="btn btn-xs btn-default btn-secondary dropdown-toggle"><i class="icon-cog"></i></button>',
+			(string) $multiAction->renderButton()
+		);
 	}
 
 	public function testTemplateVariablesContainMultiAction(): void

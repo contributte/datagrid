@@ -92,7 +92,9 @@ class Action extends Column
 			$a->addAttributes($this->attributes);
 		}
 
-		$a->addText($this->translate($this->getName()));
+		if ($this->getName() !== '') {
+			$a->addText($this->translate($this->getName()));
+		}
 
 		$title = $this->getTitle($row);
 

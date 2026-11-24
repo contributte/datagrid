@@ -47,7 +47,9 @@ class MultiAction extends Column
 
 		$this->tryAddIcon($button, $this->getIcon(), $this->getName());
 
-		$button->addText($this->grid->getTranslator()->translate($this->name));
+		if ($this->name !== '') {
+			$button->addText($this->grid->getTranslator()->translate($this->name));
+		}
 
 		if ($this->getTitle() !== null) {
 			$button->setAttribute(

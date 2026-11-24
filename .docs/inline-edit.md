@@ -42,6 +42,16 @@ $grid->addColumnText('name', 'Name')
 	->setEditableInputType('text', ['class' => 'form-control']);
 ```
 
+Textareas automatically size to the cell and edited content, up to 12 visible rows.
+Longer values remain fully editable by scrolling. To override the automatic initial
+height, pass an explicit `rows` attribute; values above 12 are also respected:
+
+```php
+$grid->addColumnText('note', 'Note')
+	->setEditableCallback([$this, 'noteEdited'])
+	->setEditableInputType('textarea', ['rows' => 20]);
+```
+
 Or you can use a select:
 
 ```php
@@ -114,6 +124,14 @@ $grid->getInlineEdit()->onSubmit[] = function($id, Nette\Utils\ArrayHash $values
 };
 ```
 
+When columns are hideable (`$grid->setColumnsHideable()`), inputs of hidden columns are not rendered, so they are not sent. Values of hidden columns are left out of `$values`, so saving `$values` does not overwrite them with empty data. The names of the hidden columns are passed as the third argument:
+
+```php
+$grid->getInlineEdit()->onSubmit[] = function($id, Nette\Utils\ArrayHash $values, array $hiddenColumns): void {
+	// $hiddenColumns, e.g. ['name']
+};
+```
+
 ## What happens after editing
 
 By default, after submitting inline edit, the row is redrawn and the green animated background is triggered. But if you want to do something else, you can, just create new listener to event `InlineEdit::onCustomRedraw()`:
@@ -134,3 +152,31 @@ If you don't want to set all columns editable, you may want to show these column
 ```php
 $grid->getInlineEdit()->setShowNonEditingColumns();
 ```
+
+## Small inline editing: keyboard and request lifecycle
+
+Press Enter or leave the control to save a change. In a textarea, Shift+Enter
+inserts a newline. Escape cancels an edit before saving. Once saving starts,
+the control is read-only (a select is disabled) and the cell has `aria-busy="true"`.
+Repeated Enter, blur and select change events do not send another request.
+Pending saves run independently: editing another cell, filtering, sorting or
+pressing Escape elsewhere does not cancel a submitted save.
+
+A failed or cancelled request restores the original display and marks the cell
+with `edited-error`; this does not imply that the server rolled back a request
+that had already started. Reopening the editor clears the error indicator.
+A successful empty JSON response remains valid. Reinitialization after AJAX
+updates binds each cell only once, including newly redrawn cells.
+
+## Small inline editing: values and display
+
+An explicit value supplied with `setEditableValueCallback()` is preserved,
+including leading/trailing whitespace. Without that callback, the editor reads
+the cell's rendered text (with BR elements as newlines), excluding template
+indentation. Native input normalization is taken into account when detecting an
+unchanged value.
+
+Submitted values are displayed as plain text by default. An explicit non-empty
+HTML replacement returned by the server's editable callback retains its existing
+renderer contract. Configure select elements and editor attributes as trusted
+application configuration.
