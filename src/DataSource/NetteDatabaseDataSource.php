@@ -110,9 +110,9 @@ class NetteDatabaseDataSource extends FilterableDataSource implements IDataSourc
 		return $this;
 	}
 
-	public function getDataSource(): Explorer
+	public function getDataSource(): NetteDatabaseDataSource
 	{
-		return $this->connection;
+		return $this;
 	}
 
 	/**
@@ -128,7 +128,7 @@ class NetteDatabaseDataSource extends FilterableDataSource implements IDataSourc
 	/**
 	 * @param mixed[] $params
 	 */
-	protected function addWhereCondition(string $sql, array $params = []): void
+	public function addWhereCondition(string $sql, array $params = []): void
 	{
 		$this->whereConditions[] = [$sql, $params];
 	}
