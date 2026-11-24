@@ -4,6 +4,7 @@ namespace Contributte\Datagrid\Filter;
 
 use Contributte\Datagrid\Datagrid;
 use Nette\Forms\Container;
+use Nette\Utils\Arrays;
 
 class FilterRange extends OneColumnFilter
 {
@@ -85,6 +86,12 @@ class FilterRange extends OneColumnFilter
 				'to' => $value['to'] ?? '',
 			],
 		];
+	}
+
+	protected function isValidValue(mixed $value): bool
+	{
+		return is_array($value)
+			&& Arrays::every($value, static fn (mixed $item): bool => !is_array($item));
 	}
 
 }

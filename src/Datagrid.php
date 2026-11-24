@@ -976,19 +976,28 @@ class Datagrid extends Control
 	{
 		foreach ($this->filter as $key => $value) {
 			if (!isset($this->filters[$key])) {
-				$this->deleteStorageData($key);
+				$this->deleteStoredFilter((string) $key);
 
 				continue;
 			}
 
-			if (is_iterable($value)) {
-				if (!ArraysHelper::testEmpty($value)) {
-					$this->filters[$key]->setValue($value);
+			try {
+				if (is_iterable($value)) {
+					if (!ArraysHelper::testEmpty($value)) {
+						$this->filters[$key]->setValue($value);
+					}
+				} else {
+					if ($value !== '' && $value !== null) {
+						$this->filters[$key]->setValue($value);
+					}
 				}
-			} else {
-				if ($value !== '' && $value !== null) {
-					$this->filters[$key]->setValue($value);
+			} catch (InvalidArgumentException $e) {
+				if ($this->strictStorageFilterValues) {
+					throw $e;
 				}
+
+				unset($this->filter[$key]);
+				$this->deleteStoredFilter((string) $key);
 			}
 		}
 
@@ -2992,6 +3001,13 @@ class Datagrid extends Control
 	private function getPresenterInstance(): Presenter
 	{
 		return $this->getPresenter();
+	}
+
+	private function deleteStoredFilter(string $key): void
+	{
+		$storedFilters = $this->getStorageData('_grid_filters', []);
+		unset($storedFilters[$key]);
+		$this->saveStorageData('_grid_filters', $storedFilters);
 	}
 
 	private function shouldRememberState(string $key): bool

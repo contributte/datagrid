@@ -6,6 +6,7 @@ use Contributte\Datagrid\Datagrid;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Utils\Arrays;
 use UnexpectedValueException;
 
 class FilterMultiSelect extends FilterSelect
@@ -32,6 +33,14 @@ class FilterMultiSelect extends FilterSelect
 	}
 
 	/**
+	 * @return static
+	 */
+	public function setValue(mixed $value): self
+	{
+		return parent::setValue((array) $value);
+	}
+
+	/**
 	 * Get filter condition
 	 */
 	public function getCondition(): array
@@ -43,6 +52,12 @@ class FilterMultiSelect extends FilterSelect
 		}
 
 		return $return;
+	}
+
+	protected function isValidValue(mixed $value): bool
+	{
+		return is_array($value)
+			&& Arrays::every($value, static fn (mixed $item): bool => !is_array($item));
 	}
 
 	protected function addControl(
