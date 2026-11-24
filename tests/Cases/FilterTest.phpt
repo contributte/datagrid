@@ -147,6 +147,26 @@ final class FilterTest extends TestCase
 	}
 
 	/**
+	 * A hand-written URL like ?grid-filter[status]=yes passes a scalar
+	 * to a multi-select filter.
+	 */
+	public function testFilterMultiSelectAcceptsScalarValue(): void
+	{
+		$factory = new TestingDatagridFactoryRouter();
+		/** @var Datagrid $grid */
+		$grid = $factory->createTestingDatagrid()->getComponent('grid');
+
+		$grid->addColumnText('status', 'Status')
+			->setFilterMultiSelect(['yes' => 'Yes', 'no' => 'No']);
+
+		$grid->filter = ['status' => 'yes'];
+		$filters = $grid->assembleFilters();
+
+		Assert::same(['yes'], $filters['status']->getValue());
+		Assert::same(['status' => ['yes']], $filters['status']->getCondition());
+	}
+
+	/**
 	 * Regression test for https://github.com/contributte/datagrid/issues/621
 	 *
 	 * Inputs of hidden columns are not rendered, so their empty values must not

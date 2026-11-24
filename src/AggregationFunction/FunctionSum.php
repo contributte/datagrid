@@ -2,6 +2,7 @@
 
 namespace Contributte\Datagrid\AggregationFunction;
 
+use ArrayAccess;
 use Contributte\Datagrid\Utils\PropertyAccessHelper;
 use Dibi\Fluent;
 use Doctrine\Common\Collections\Collection;
@@ -10,7 +11,7 @@ use Nette\Database\Table\Selection;
 use Nextras\Orm\Collection\DbalCollection;
 use Nextras\Orm\Collection\ICollection;
 
-class FunctionSum implements ISingleColumnAggregationFunction
+class FunctionSum implements ISingleColumnAggregationFunction, IArrayAggregationFunction
 {
 
 	protected int $result = 0;
@@ -61,6 +62,22 @@ class FunctionSum implements ISingleColumnAggregationFunction
 			foreach ($dataSource->fetchAll() as $item)
 				$this->result += $item->getValue($this->column);
 		}
+	}
+
+	/**
+	 * @param array<mixed> $data
+	 */
+	public function processArray(array $data): void
+	{
+		$result = 0;
+
+		foreach ($data as $row) {
+			$result += is_array($row) || $row instanceof ArrayAccess
+				? $row[$this->column]
+				: PropertyAccessHelper::getValue($row, $this->column);
+		}
+
+		$this->result = (int) $result;
 	}
 
 	public function renderResult(): mixed
