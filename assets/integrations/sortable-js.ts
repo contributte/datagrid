@@ -26,7 +26,10 @@ export class SortableJS implements SortableInterface {
 		if (nextId) data[`${componentPrefix}next_id`] = nextId;
 		if (parentId) data[`${componentPrefix}parent_id`] = parentId;
 
-		return datagrid.ajax.request({ method: "GET", url, data });
+		return datagrid.ajax.request({ method: "GET", url, data }).then(
+			() => undefined,
+			(error: unknown) => console.error("Datagrid: sortable request failed", { url, data, error }),
+		);
 	}
 
 	initSortable(datagrid: Datagrid): void {
