@@ -231,8 +231,8 @@ final class NetteDatabaseDataSourceTest extends BaseDataSourceTest
 		$s->filter([$filter]);
 		[$sql, $params] = $s->getQuery();
 
-		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE DATE(created) = ?', $sql);
-		Assert::same(['2012-12-12'], $params);
+		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE created >= ? AND created < ?', $sql);
+		Assert::same(['2012-12-12', '2012-12-13'], $params);
 	}
 
 	public function testFilterDateInvalid(): void
@@ -256,8 +256,8 @@ final class NetteDatabaseDataSourceTest extends BaseDataSourceTest
 		$s->filter([$filter]);
 		[$sql, $params] = $s->getQuery();
 
-		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE DATE(created) >= ? AND DATE(created) <= ?', $sql);
-		Assert::same(['2003-02-01', '2149-12-03'], $params);
+		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE created >= ? AND created < ?', $sql);
+		Assert::same(['2003-02-01', '2149-12-04'], $params);
 	}
 
 	public function testFilterDateRangeOnlyFrom(): void
@@ -268,7 +268,7 @@ final class NetteDatabaseDataSourceTest extends BaseDataSourceTest
 		$s->filter([$filter]);
 		[$sql, $params] = $s->getQuery();
 
-		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE DATE(created) >= ?', $sql);
+		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE created >= ?', $sql);
 		Assert::same(['2003-02-01'], $params);
 	}
 
@@ -280,8 +280,8 @@ final class NetteDatabaseDataSourceTest extends BaseDataSourceTest
 		$s->filter([$filter]);
 		[$sql, $params] = $s->getQuery();
 
-		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE DATE(created) <= ?', $sql);
-		Assert::same(['2149-12-03'], $params);
+		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE created < ?', $sql);
+		Assert::same(['2149-12-04'], $params);
 	}
 
 	public function testFilterDateRangeInvalidFrom(): void
@@ -293,8 +293,8 @@ final class NetteDatabaseDataSourceTest extends BaseDataSourceTest
 		[$sql, $params] = $s->getQuery();
 
 		// Invalid from is silently ignored — only to condition added
-		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE DATE(created) <= ?', $sql);
-		Assert::same(['2149-12-03'], $params);
+		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE created < ?', $sql);
+		Assert::same(['2149-12-04'], $params);
 	}
 
 	public function testFilterDateRangeInvalidTo(): void
@@ -306,7 +306,7 @@ final class NetteDatabaseDataSourceTest extends BaseDataSourceTest
 		[$sql, $params] = $s->getQuery();
 
 		// Invalid to is silently ignored — only from condition added
-		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE DATE(created) >= ?', $sql);
+		Assert::same('SELECT * FROM (SELECT * FROM users) AS datagrid_base WHERE created >= ?', $sql);
 		Assert::same(['2003-02-01'], $params);
 	}
 

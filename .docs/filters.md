@@ -234,6 +234,15 @@ $grid->addFilterRange('price_range', 'Price:', 'price');
 $grid->addFilterDateRange('date_created', 'User registered:');
 ```
 
+### Date comparisons
+
+Nette Selection, Nette SQL and Dibi Fluent use index-friendly calendar-day ranges
+by default (`column >= day AND column < next_day`); Doctrine, Doctrine Collection
+and Nextras also use an exclusive next-day upper bound to include fractional seconds.
+For timezone-bearing or noncanonical text, call `setIndexFriendlyDateFilter(false)`
+on the Nette or Dibi data source to retain its legacy `DATE(column)` comparisons.
+MSSQL-specific overrides, input parsing and custom filter callbacks are unchanged.
+
 ## Default filter values
 
 Datagrid filters can have default filter values. Once user changes the filter, default values are no longer applied to the filter. Example usage:

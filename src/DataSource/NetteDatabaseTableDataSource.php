@@ -19,6 +19,8 @@ use Nette\Utils\Strings;
 class NetteDatabaseTableDataSource extends FilterableDataSource implements IDataSource
 {
 
+	use DateFilterComparison;
+
 	protected array $data = [];
 
 	public function __construct(protected Selection $dataSource, protected string $primaryKey)
@@ -133,7 +135,15 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		try {
 			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
 
-			$this->dataSource->where(sprintf('DATE(%s) = ?', $filter->getColumn()), $date->format('Y-m-d'));
+			if ($this->indexFriendlyDateFilter) {
+				$this->dataSource->where(
+					sprintf('%s >= ? AND %s < ?', $filter->getColumn(), $filter->getColumn()),
+					$date->format('Y-m-d'),
+					DateTimeHelper::getNextDay($date)->format('Y-m-d')
+				);
+			} else {
+				$this->dataSource->where(sprintf('DATE(%s) = ?', $filter->getColumn()), $date->format('Y-m-d'));
+			}
 		} catch (DatagridDateTimeHelperException) {
 			// ignore the invalid filter value
 		}
@@ -149,12 +159,14 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		if ($valueFrom) {
 			try {
 				$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
-				$dateFrom->setTime(0, 0, 0);
-
-				$this->dataSource->where(
-					sprintf('DATE(%s) >= ?', $filter->getColumn()),
-					$dateFrom->format('Y-m-d')
-				);
+				if ($this->indexFriendlyDateFilter) {
+					$this->dataSource->where(sprintf('%s >= ?', $filter->getColumn()), $dateFrom->format('Y-m-d'));
+				} else {
+					$this->dataSource->where(
+						sprintf('DATE(%s) >= ?', $filter->getColumn()),
+						$dateFrom->format('Y-m-d')
+					);
+				}
 			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}
@@ -163,12 +175,14 @@ class NetteDatabaseTableDataSource extends FilterableDataSource implements IData
 		if ($valueTo) {
 			try {
 				$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
-				$dateTo->setTime(23, 59, 59);
-
-				$this->dataSource->where(
-					sprintf('DATE(%s) <= ?', $filter->getColumn()),
-					$dateTo->format('Y-m-d')
-				);
+				if ($this->indexFriendlyDateFilter) {
+					$this->dataSource->where(sprintf('%s < ?', $filter->getColumn()), DateTimeHelper::getNextDay($dateTo)->format('Y-m-d'));
+				} else {
+					$this->dataSource->where(
+						sprintf('DATE(%s) <= ?', $filter->getColumn()),
+						$dateTo->format('Y-m-d')
+					);
+				}
 			} catch (DatagridDateTimeHelperException) {
 				// ignore the invalid filter value
 			}

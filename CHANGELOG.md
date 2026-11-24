@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- Date filters in Nette Selection, Nette SQL and Dibi Fluent now use index-friendly calendar-day ranges by default. For timezone-bearing or noncanonical text, `setIndexFriendlyDateFilter(false)` restores the adapter's legacy `DATE(column)` comparisons. MSSQL-specific overrides are unchanged.
+- Doctrine, Doctrine Collection and Nextras date filters include fractional seconds at the end of the selected day by using an exclusive next-day upper bound.
+
 ## [7.1.1] - 2025-08-25
 
 ### Bug Fixes
