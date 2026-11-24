@@ -30,6 +30,8 @@ class FunctionSum implements ISingleColumnAggregationFunction, IArrayAggregation
 
 	public function processDataSource(Fluent|QueryBuilder|Collection|Selection|ICollection $dataSource): void
 	{
+		$this->result = 0;
+
 		if ($dataSource instanceof Fluent) {
 			$connection = $dataSource->getConnection();
 			$this->result = (int) $connection->select('SUM(%n)', $this->column)

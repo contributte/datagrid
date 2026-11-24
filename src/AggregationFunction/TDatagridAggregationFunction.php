@@ -108,8 +108,16 @@ trait TDatagridAggregationFunction
 			throw new DatagridException('Used DataSource has to implement IAggregatable for aggegations to work');
 		}
 
+		/**
+		 * Without a paginator (pagination disabled or "all" items per page),
+		 * the filtered data are exactly the displayed data and onAfterPaginated is never fired
+		 */
+		$types = $this->getPaginator() === null
+			? [IAggregationFunction::DATA_TYPE_FILTERED, IAggregationFunction::DATA_TYPE_PAGINATED]
+			: [IAggregationFunction::DATA_TYPE_FILTERED];
+
 		if ($this->multipleAggregationFunction !== null) {
-			if ($this->multipleAggregationFunction->getFilterDataType() === IAggregationFunction::DATA_TYPE_FILTERED) {
+			if (in_array($this->multipleAggregationFunction->getFilterDataType(), $types, true)) {
 				$dataSource->processAggregation($this->multipleAggregationFunction);
 			}
 
@@ -117,7 +125,7 @@ trait TDatagridAggregationFunction
 		}
 
 		foreach ($this->aggregationFunctions as $aggregationFunction) {
-			if ($aggregationFunction->getFilterDataType() === IAggregationFunction::DATA_TYPE_FILTERED) {
+			if (in_array($aggregationFunction->getFilterDataType(), $types, true)) {
 				$dataSource->processAggregation($aggregationFunction);
 			}
 		}
