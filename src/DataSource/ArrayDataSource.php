@@ -3,6 +3,7 @@
 namespace Contributte\Datagrid\DataSource;
 
 use ArrayAccess;
+use Collator;
 use Contributte\Datagrid\AggregationFunction\IAggregatable;
 use Contributte\Datagrid\AggregationFunction\IAggregationFunction;
 use Contributte\Datagrid\AggregationFunction\IArrayAggregationFunction;
@@ -116,6 +117,12 @@ class ArrayDataSource implements IDataSource, IAggregatable
 
 		$sort = $sorting->getSort();
 
+		// SORT_LOCALE_STRING is deprecated since PHP 8.6, Collator keeps sorting by the LC_COLLATE locale
+		$locale = setlocale(LC_COLLATE, '0');
+		$collator = $locale !== false && preg_match('#^(C|POSIX)([.@]|$)#', $locale) !== 1 && class_exists(Collator::class)
+			? new Collator($locale)
+			: null;
+
 		foreach ($sort as $column => $order) {
 			$data = [];
 
@@ -126,10 +133,14 @@ class ArrayDataSource implements IDataSource, IAggregatable
 				$data[$sortBy][] = $item;
 			}
 
-			if ($order === 'ASC') {
-				ksort($data, SORT_LOCALE_STRING);
+			if ($collator !== null) {
+				uksort($data, fn (int|string $a, int|string $b): int => $order === 'ASC'
+					? (int) $collator->compare(strval($a), strval($b))
+					: (int) $collator->compare(strval($b), strval($a)));
+			} elseif ($order === 'ASC') {
+				ksort($data, SORT_STRING);
 			} else {
-				krsort($data, SORT_LOCALE_STRING);
+				krsort($data, SORT_STRING);
 			}
 
 			$dataSource = [];
