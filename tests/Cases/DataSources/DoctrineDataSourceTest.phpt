@@ -4,14 +4,15 @@ namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
 use Contributte\Datagrid\DataSource\DoctrineDataSource;
 use Contributte\Datagrid\Tests\Files\TestingDatagridFactory;
-use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\AST\OrderByItem;
 use Doctrine\ORM\Query\AST\PathExpression;
 use Doctrine\ORM\Query\SqlWalker;
-use Doctrine\ORM\Tools\Setup;
 
 require __DIR__ . '/BaseDataSourceTest.phpt';
 
@@ -24,10 +25,16 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 	{
 		$this->setUpDatabase();
 
-		$config = Setup::createAnnotationMetadataConfiguration([__DIR__ . '/tmp'], true);
-		$entityManager = EntityManager::create($this->db, $config);
+		$config = ORMSetup::createAttributeMetadataConfiguration([__DIR__], true);
 
-		$queryBuilder = $entityManager->getRepository('Contributte\\Datagrid\\Tests\\Cases\\DataSources\\User')->createQueryBuilder('e');
+		// ORM 3 with symfony/var-exporter 8 has no LazyGhost proxies, native lazy objects (PHP 8.4+) are required
+		if (PHP_VERSION_ID >= 80400 && method_exists($config, 'enableNativeLazyObjects')) {
+			$config->enableNativeLazyObjects(true);
+		}
+
+		$entityManager = new EntityManager($this->db, $config);
+
+		$queryBuilder = $entityManager->getRepository(User::class)->createQueryBuilder('e');
 
 		$this->ds = new DoctrineDataSource($queryBuilder, 'id');
 		$this->ds->setQueryHint(Query::HINT_CUSTOM_OUTPUT_WALKER, SortableNullsWalker::class);
@@ -41,9 +48,7 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 
 	protected function setUpDatabase(): void
 	{
-		$config = new Configuration();
-
-		$this->db = DriverManager::getConnection(['url' => 'sqlite:///:memory:'], $config);
+		$this->db = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
 
 		$this->db->executeQuery('CREATE TABLE users (
 								id      INTEGER      PRIMARY KEY AUTOINCREMENT,
@@ -61,22 +66,24 @@ final class DoctrineDataSourceTest extends BaseDataSourceTest
 }
 /**
  * All properties are intentionally public so we can convert it to array in getActualResultAsArray
- *
- * @Entity @Table(name="users")
- **/
+ */
+#[ORM\Entity]
+#[ORM\Table(name: 'users')]
 class User
 {
 
-	/** @Id @Column(type="integer") @GeneratedValue **/
+	#[ORM\Id]
+	#[ORM\Column(type: 'integer')]
+	#[ORM\GeneratedValue]
 	public int $id;
 
-	/** @Column(type="string") **/
+	#[ORM\Column(type: 'string')]
 	public string $name;
 
-	/** @Column(type="integer") **/
+	#[ORM\Column(type: 'integer')]
 	public int $age;
 
-	/** @Column(type="string") **/
+	#[ORM\Column(type: 'string')]
 	public string $address;
 
 	public function getId(): int
@@ -125,10 +132,7 @@ class SortableNullsWalker extends SqlWalker
 	public const NULLS_FIRST = 'NULLS FIRST';
 	public const NULLS_LAST = 'NULLS LAST';
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function walkOrderByItem($orderByItem)
+	public function walkOrderByItem(OrderByItem $orderByItem): string
 	{
 		$sql = parent::walkOrderByItem($orderByItem);
 		$hint = $this->getQuery()->getHint('sortableNulls.fields');
