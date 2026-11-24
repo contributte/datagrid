@@ -3,6 +3,7 @@
 namespace Contributte\Datagrid\Filter;
 
 use Contributte\Datagrid\Datagrid;
+use InvalidArgumentException;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 
@@ -61,9 +62,14 @@ abstract class Filter
 
 	/**
 	 * @return static
+	 * @throws InvalidArgumentException
 	 */
 	public function setValue(mixed $value): self
 	{
+		if (!$this->isValidValue($value)) {
+			throw new InvalidArgumentException(sprintf("Unexpected value of filter '%s': %s given.", $this->key, get_debug_type($value)));
+		}
+
 		$this->value = $value;
 		$this->valueSet = true;
 
@@ -152,6 +158,14 @@ abstract class Filter
 	public function getAttributes(): array
 	{
 		return $this->attributes;
+	}
+
+	/**
+	 * Tell whether the value has the shape this filter works with
+	 */
+	protected function isValidValue(mixed $value): bool
+	{
+		return !is_array($value);
 	}
 
 	protected function addAttributes(BaseControl $input): BaseControl
