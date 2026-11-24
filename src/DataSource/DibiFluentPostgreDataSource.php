@@ -14,7 +14,6 @@ class DibiFluentPostgreDataSource extends DibiFluentDataSource
 		$or = [];
 
 		foreach ($condition as $column => $value) {
-
 			$column = '[' . $column . ']';
 
 			if ($filter->isExactSearch()) {

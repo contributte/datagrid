@@ -6,7 +6,7 @@ final class Sorting
 {
 
 	/** @var callable|null */
-	private $sortCallback = null;
+	private $sortCallback;
 
 	/**
 	 * @param mixed[]|string[] $sort

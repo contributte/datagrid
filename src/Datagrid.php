@@ -153,7 +153,7 @@ class Datagrid extends Control
 	public array $filter = [];
 
 	/** @var callable|null */
-	protected $sortCallback = null;
+	protected $sortCallback;
 
 	/** @var callable */
 	protected $rowCallback;
@@ -206,10 +206,10 @@ class Datagrid extends Control
 	protected bool $forceFilterActive = false;
 
 	/** @var callable|null */
-	protected $treeViewChildrenCallback = null;
+	protected $treeViewChildrenCallback;
 
 	/** @var callable|null */
-	protected $treeViewHasChildrenCallback = null;
+	protected $treeViewHasChildrenCallback;
 
 	protected ?string $treeViewHasChildrenColumn = null;
 
@@ -451,7 +451,6 @@ class Datagrid extends Control
 		$template->render();
 	}
 
-
 	/********************************************************************************
 	 *                                 ROW CALLBACK *
 	 ********************************************************************************/
@@ -467,7 +466,6 @@ class Datagrid extends Control
 
 		return $this;
 	}
-
 
 	/********************************************************************************
 	 *                                 DATA SOURCE *
@@ -517,7 +515,6 @@ class Datagrid extends Control
 
 		return $this->dataModel;
 	}
-
 
 	/********************************************************************************
 	 *                                  TEMPLATING *
@@ -1637,7 +1634,6 @@ class Datagrid extends Control
 		}
 	}
 
-
 	/********************************************************************************
 	 *                                TOOLBAR BUTTONS *
 	 ********************************************************************************/
@@ -2146,13 +2142,12 @@ class Datagrid extends Control
 		$action->onClick($__id);
 	}
 
-
 	/********************************************************************************
 	 *                                  PAGINATION *
 	 ********************************************************************************/
 
 	/**
-	 * @param array|array|int[]|array|string[] $itemsPerPageList
+	 * @param array|int[]|string[] $itemsPerPageList
 	 * @return static
 	 */
 	public function setItemsPerPageList(array $itemsPerPageList, bool $includeAll = true): self
@@ -2235,7 +2230,7 @@ class Datagrid extends Control
 	}
 
 	/**
-	 * @return array|array|int[]|array|string[]|\Stringable[]
+	 * @return array|int[]|string[]|\Stringable[]
 	 */
 	public function getItemsPerPageList(): array
 	{
@@ -2276,7 +2271,6 @@ class Datagrid extends Control
 		return null;
 	}
 
-
 	/********************************************************************************
 	 *                                     I18N *
 	 ********************************************************************************/
@@ -2299,7 +2293,6 @@ class Datagrid extends Control
 
 		return $this->translator;
 	}
-
 
 	/********************************************************************************
 	 *                                 COLUMNS ORDER *
@@ -2620,7 +2613,6 @@ class Datagrid extends Control
 		return $this->inlineAdd;
 	}
 
-
 	/********************************************************************************
 	 *                               COLUMNS HIDING *
 	 ********************************************************************************/
@@ -2672,7 +2664,6 @@ class Datagrid extends Control
 		return $this->columnsSummary;
 	}
 
-
 	/********************************************************************************
 	 *                                   INTERNAL *
 	 ********************************************************************************/
@@ -2721,7 +2712,6 @@ class Datagrid extends Control
 		return $this->filterSubmitButton;
 	}
 
-
 	/********************************************************************************
 	 *                                   INTERNAL *
 	 ********************************************************************************/
@@ -2767,7 +2757,7 @@ class Datagrid extends Control
 		try {
 			$this->getParentComponent();
 
-			if (! (bool) $this->getStorageData('_grid_hidden_columns_manipulated', false)) {
+			if (!(bool) $this->getStorageData('_grid_hidden_columns_manipulated', false)) {
 				$columnsToHide = [];
 
 				foreach ($this->columns as $key => $column) {
@@ -2996,8 +2986,8 @@ class Datagrid extends Control
 
 	private function shouldRememberState(string $key): bool
 	{
-		return $this->rememberState ||
-			($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_STORAGE_KEYS, true));
+		return $this->rememberState
+			|| ($this->rememberHideableColumnsState && in_array($key, self::HIDEABLE_COLUMNS_STORAGE_KEYS, true));
 	}
 
 }

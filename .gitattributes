@@ -8,7 +8,7 @@ tests export-ignore
 Makefile export-ignore
 phpstan.neon export-ignore
 README.md export-ignore
-ruleset.xml export-ignore
+dresscode.neon export-ignore
 # Assets
 .npmignore export-ignore
 package.json export-ignore

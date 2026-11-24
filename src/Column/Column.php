@@ -23,7 +23,7 @@ abstract class Column extends FilterableColumn
 	protected bool $sortableResetPagination = false;
 
 	/** @var callable|null */
-	protected $sortableCallback = null;
+	protected $sortableCallback;
 
 	protected string $sort = '';
 
@@ -39,7 +39,7 @@ abstract class Column extends FilterableColumn
 	protected $editableCallback;
 
 	/** @var callable|null */
-	protected $editableConditionCallback = null;
+	protected $editableConditionCallback;
 
 	protected array $editableElement = ['textarea', ['class' => 'form-control']];
 
@@ -51,7 +51,7 @@ abstract class Column extends FilterableColumn
 	protected array $elementCache = ['td' => null, 'th' => null];
 
 	/** @var callable|null */
-	protected $editableValueCallback = null;
+	protected $editableValueCallback;
 
 	public function render(Row $row): mixed
 	{

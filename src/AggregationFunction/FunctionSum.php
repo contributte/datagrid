@@ -17,7 +17,7 @@ class FunctionSum implements ISingleColumnAggregationFunction, IArrayAggregation
 	protected int $result = 0;
 
 	/** @var callable|null */
-	protected $renderer = null;
+	protected $renderer;
 
 	public function __construct(protected string $column, protected string $dataType = IAggregationFunction::DATA_TYPE_PAGINATED)
 	{
@@ -59,8 +59,9 @@ class FunctionSum implements ISingleColumnAggregationFunction, IArrayAggregation
 		}
 
 		if ($dataSource instanceof DbalCollection) {
-			foreach ($dataSource->fetchAll() as $item)
+			foreach ($dataSource->fetchAll() as $item) {
 				$this->result += $item->getValue($this->column);
+			}
 		}
 	}
 

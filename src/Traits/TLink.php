@@ -49,9 +49,9 @@ trait TLink
 
 			if (is_string($link)) {
 				if (
-					str_starts_with($link, '#error') ||
-					(strrpos($href, '!') !== false && str_starts_with($link, '#')) ||
-					(in_array($presenter->invalidLinkMode, [Presenter::InvalidLinkWarning, Presenter::InvalidLinkSilent], true) && str_starts_with($link, '#'))
+					str_starts_with($link, '#error')
+					|| (strrpos($href, '!') !== false && str_starts_with($link, '#'))
+					|| (in_array($presenter->invalidLinkMode, [Presenter::InvalidLinkWarning, Presenter::InvalidLinkSilent], true) && str_starts_with($link, '#'))
 				) {
 					continue; // Did not find signal handler
 				}

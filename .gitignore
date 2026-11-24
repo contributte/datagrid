@@ -1,6 +1,9 @@
 # Editor
 /.idea
 
+# Tools
+/temp
+
 # Tests
 /tests/temp
 /coverage.xml

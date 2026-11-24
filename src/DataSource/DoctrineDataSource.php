@@ -147,7 +147,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 			/**
 			 * Has the statement already a order by clause?
 			 */
-			if (! (bool) $this->dataSource->getDQLPart('orderBy')) {
+			if (!(bool) $this->dataSource->getDQLPart('orderBy')) {
 				$this->dataSource->orderBy($this->checkAliases($this->primaryKey));
 			}
 		}

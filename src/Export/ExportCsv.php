@@ -46,7 +46,7 @@ class ExportCsv extends Export
 			$outputEncoding,
 			$delimiter,
 			$includeBom
-): void {
+		): void {
 			$columns = $this->getColumns();
 
 			if ($columns === []) {

@@ -1,0 +1,69 @@
+# Nette Coding Standard adjusted to the Contributte layout
+use: nette
+
+paths:
+	- src
+	- tests
+
+excludePaths:
+	- tests/temp
+
+fileExtensions: [php, phpt]
+
+file:
+	lineLength: none
+
+spacing:
+	declare: keep                       # `declare(strict_types = 1)`
+	arrowFunction: 'fn ($x) => $x'
+
+blankLines:
+	beforeDeclaration: 1
+	aroundMethods: 1
+	bodyStart:
+		class: 1
+		anonymousClass: 1
+	bodyEnd:
+		class: 1
+		anonymousClass: 1
+		branch: keep
+
+braces:
+	position:
+		multilineSignature: nextLine
+
+multiline:
+	spreadAlways: []
+	items:
+		parameter: keep
+	edges:
+		condition: keep
+	trailingComma:
+		argument: optional
+		parameter: optional
+		closureUse: optional
+
+classes:
+	emptyParentheses:
+		instantiation: required
+	visibility:
+		interfaceMethod: required
+
+# public API, renaming would break BC
+naming:
+	constant: keep
+	variable: keep
+
+literals:
+	digitSeparator:
+		integer: forbidden
+
+hygiene:
+	call_user_func: keep
+	separateIssets: keep                # chained isset() narrows types for PHPStan
+
+phpdoc:
+	annotation:
+		inlineVar: keep
+	property:
+		promoted: keep

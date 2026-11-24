@@ -16,7 +16,7 @@ class ColumnsSummary
 	protected array $format = [];
 
 	/** @var callable|null */
-	protected $rowCallback = null;
+	protected $rowCallback;
 
 	protected ?Renderer $renderer = null;
 

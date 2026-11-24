@@ -1,19 +1,20 @@
-.PHONY: install qa cs csf phpstan tests coverage playwright
+.PHONY: install qa dresscode dresscode-fix phpstan tests coverage playwright
+
+DRESSCODE = temp/dresscode/bin/dresscode
 
 install:
 	composer update
 
-qa: phpstan cs
+qa: phpstan dresscode
 
-cs:
-ifdef GITHUB_ACTION
-	vendor/bin/phpcs --standard=ruleset.xml --extensions=php,phpt --tab-width=4 --ignore=tests/tmp -q --report=checkstyle src tests | cs2pr
-else
-	vendor/bin/phpcs --standard=ruleset.xml --extensions=php,phpt --tab-width=4 --ignore=tests/tmp --colors -nsp src tests
-endif
+dresscode: $(DRESSCODE)
+	$(DRESSCODE) check
 
-csf:
-	vendor/bin/phpcbf --standard=ruleset.xml --extensions=php,phpt --tab-width=4 --ignore=tests/tmp --colors -nsp src tests
+dresscode-fix: $(DRESSCODE)
+	$(DRESSCODE) fix
+
+$(DRESSCODE):
+	composer create-project dresscode/dresscode temp/dresscode "^1.4" --no-dev --no-interaction --no-progress
 
 phpstan:
 	vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=512M

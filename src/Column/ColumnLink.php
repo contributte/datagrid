@@ -49,7 +49,7 @@ class ColumnLink extends Column
 
 		$value = parent::render($row);
 
-		if (! (bool) $value && $this->icon !== null) {
+		if (!(bool) $value && $this->icon !== null) {
 			return null;
 		}
 
