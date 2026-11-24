@@ -25,6 +25,18 @@ final class DibiFluentDataSourceTest extends BaseDataSourceTest
 		$this->grid = $factory->createTestingDatagrid();
 	}
 
+	public function testPartialDateFilters(): void
+	{
+		$this->db->query('CREATE TABLE dated_items (id INTEGER PRIMARY KEY, created TEXT)');
+		foreach ($this->getDateFilterRows() as $row) {
+			$this->db->insert('dated_items', $row)->execute();
+		}
+
+		$this->assertPartialDateFilters(
+			fn (): DibiFluentDataSource => new DibiFluentDataSource($this->db->select('*')->from('dated_items')->orderBy('id'), 'id')
+		);
+	}
+
 	protected function setUpDatabase(): void
 	{
 		$this->db = dibi::connect([

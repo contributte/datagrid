@@ -119,7 +119,7 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 	{
 		foreach ($filter->getCondition() as $column => $value) {
 			try {
-				$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+				$date = DateTimeHelper::tryConvertToFilterDate($value, $filter->getPhpFormat());
 				$dateEnd = clone $date;
 
 				$this->dataSource = $this->dataSource->findBy([
@@ -143,9 +143,9 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 
 		if ($valueFrom) {
 			try {
-				$dateFrom = DateTimeHelper::tryConvertToDateTime(
+				$dateFrom = DateTimeHelper::tryConvertToFilterDate(
 					$valueFrom,
-					[$filter->getPhpFormat()]
+					$filter->getPhpFormat()
 				);
 				$dataCondition[$this->prepareColumn($filter->getColumn()) . '>='] = $dateFrom->setTime(0, 0, 0);
 			} catch (DatagridDateTimeHelperException) {
@@ -155,9 +155,9 @@ class NextrasDataSource extends FilterableDataSource implements IDataSource, IAg
 
 		if ($valueTo) {
 			try {
-				$dateTo = DateTimeHelper::tryConvertToDateTime(
+				$dateTo = DateTimeHelper::tryConvertToFilterDate(
 					$valueTo,
-					[$filter->getPhpFormat()]
+					$filter->getPhpFormat()
 				);
 				$dataCondition[$this->prepareColumn($filter->getColumn()) . '<='] = $dateTo->setTime(23, 59, 59);
 			} catch (DatagridDateTimeHelperException) {

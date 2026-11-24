@@ -109,7 +109,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 		$conditions = $filter->getCondition();
 
 		try {
-			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
+			$date = DateTimeHelper::tryConvertToFilterDate($conditions[$filter->getColumn()], $filter->getPhpFormat());
 
 			$this->dataSource->where('DATE(%n) = ?', $filter->getColumn(), $date->format('Y-m-d'));
 		} catch (DatagridDateTimeHelperException) {
@@ -126,7 +126,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 		if ($valueFrom) {
 			try {
-				$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
+				$dateFrom = DateTimeHelper::tryConvertToFilterDate($valueFrom, $filter->getPhpFormat());
 				$dateFrom->setTime(0, 0, 0);
 
 				$this->dataSource->where('DATE(%n) >= ?', $filter->getColumn(), $dateFrom);
@@ -137,7 +137,7 @@ class DibiFluentDataSource extends FilterableDataSource implements IDataSource, 
 
 		if ($valueTo) {
 			try {
-				$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
+				$dateTo = DateTimeHelper::tryConvertToFilterDate($valueTo, $filter->getPhpFormat());
 				$dateTo->setTime(23, 59, 59);
 
 				$this->dataSource->where('DATE(%n) <= ?', $filter->getColumn(), $dateTo);

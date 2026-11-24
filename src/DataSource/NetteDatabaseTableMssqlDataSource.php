@@ -15,7 +15,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 		$conditions = $filter->getCondition();
 
 		try {
-			$date = DateTimeHelper::tryConvertToDateTime($conditions[$filter->getColumn()], [$filter->getPhpFormat()]);
+			$date = DateTimeHelper::tryConvertToFilterDate($conditions[$filter->getColumn()], $filter->getPhpFormat());
 
 			$this->dataSource->where(
 				sprintf('CONVERT(varchar(10), %s, 112) = ?', $filter->getColumn()),
@@ -35,7 +35,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 		if ($valueFrom) {
 			try {
-				$dateFrom = DateTimeHelper::tryConvertToDateTime($valueFrom, [$filter->getPhpFormat()]);
+				$dateFrom = DateTimeHelper::tryConvertToFilterDate($valueFrom, $filter->getPhpFormat());
 				$dateFrom->setTime(0, 0, 0);
 
 				$this->dataSource->where(
@@ -49,7 +49,7 @@ class NetteDatabaseTableMssqlDataSource extends NetteDatabaseTableDataSource imp
 
 		if ($valueTo) {
 			try {
-				$dateTo = DateTimeHelper::tryConvertToDateTime($valueTo, [$filter->getPhpFormat()]);
+				$dateTo = DateTimeHelper::tryConvertToFilterDate($valueTo, $filter->getPhpFormat());
 				$dateTo->setTime(23, 59, 59);
 
 				$this->dataSource->where(

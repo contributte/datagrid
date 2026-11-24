@@ -4,6 +4,8 @@ namespace Contributte\Datagrid\Tests\Cases\DataSources;
 
 use Contributte\Datagrid\Datagrid;
 use Contributte\Datagrid\DataSource\IDataSource;
+use Contributte\Datagrid\Filter\FilterDate;
+use Contributte\Datagrid\Filter\FilterDateRange;
 use Contributte\Datagrid\Filter\FilterRange;
 use Contributte\Datagrid\Filter\FilterSelect;
 use Contributte\Datagrid\Filter\FilterText;
@@ -291,6 +293,82 @@ abstract class BaseDataSourceTest extends TestCase
 		$this->ds->filter([$filter]);
 
 		Assert::equal([$this->data[5]], $this->getActualResultAsArray());
+	}
+
+	/**
+	 * @param callable(): IDataSource $createSource
+	 */
+	protected function assertPartialDateFilters(callable $createSource): void
+	{
+		$this->assertStrictDateFilters($createSource);
+
+		foreach ([
+			['12.5.', 'j. n. Y', 'd. m. yyyy'],
+			['12. 5. ' . date('Y'), 'j. n. Y', 'd. m. yyyy'],
+			['12/5', 'd/m/Y', 'dd/mm/yyyy'],
+			['5/12', 'm/d/Y', 'mm/dd/yyyy'],
+			[date('Y') . '-05-12', 'Y-m-d', 'yyyy-mm-dd'],
+		] as [$value, $phpFormat, $jsFormat]) {
+			$filter = new FilterDate($this->grid, 'created', 'Created', 'created');
+			$filter->setFormat($phpFormat, $jsFormat);
+			$filter->setValue($value);
+			$this->ds = $createSource();
+			$this->ds->filter([$filter]);
+			Assert::same([2, 3], array_column($this->getActualResultAsArray(), 'id'));
+			Assert::same($value, $filter->getValue());
+		}
+
+		foreach ([
+			[['from' => '11.5.', 'to' => '24.5.'], [2, 3, 4]],
+			[['from' => '11.5.', 'to' => ''], [2, 3, 4, 5]],
+			[['from' => '', 'to' => '24.5.'], [1, 2, 3, 4]],
+		] as [$value, $expected]) {
+			$filter = new FilterDateRange($this->grid, 'created', 'Created', 'created', 'To');
+			$filter->setValue($value);
+			$this->ds = $createSource();
+			$this->ds->filter([$filter]);
+			Assert::same($expected, array_column($this->getActualResultAsArray(), 'id'));
+			Assert::same($value, $filter->getValue());
+		}
+	}
+
+	/**
+	 * @param callable(): IDataSource $createSource
+	 */
+	protected function assertStrictDateFilters(callable $createSource, bool $ignoreInvalid = true): void
+	{
+		foreach (['12/5', '31.2.2026', date('Y') . '-05-12', 'tomorrow'] as $value) {
+			$filter = new FilterDate($this->grid, 'created', 'Created', 'created');
+			$filter->setValue($value);
+			$this->ds = $createSource();
+			$this->ds->filter([$filter]);
+			Assert::same($ignoreInvalid ? [1, 2, 3, 4, 5] : [], array_column($this->getActualResultAsArray(), 'id'));
+			Assert::same($value, $filter->getValue());
+		}
+
+		foreach ([
+			[['from' => '12/5', 'to' => '12.5.'], [1, 2, 3]],
+			[['from' => '11.5.', 'to' => '31.2.2026'], [2, 3, 4, 5]],
+			[['from' => '12/5', 'to' => '31.2.2026'], [1, 2, 3, 4, 5]],
+		] as [$value, $expected]) {
+			$filter = new FilterDateRange($this->grid, 'created', 'Created', 'created', 'To');
+			$filter->setValue($value);
+			$this->ds = $createSource();
+			$this->ds->filter([$filter]);
+			Assert::same($ignoreInvalid ? $expected : [], array_column($this->getActualResultAsArray(), 'id'));
+			Assert::same($value, $filter->getValue());
+		}
+	}
+
+	protected function getDateFilterRows(): array
+	{
+		$rows = [];
+		$year = date('Y');
+		foreach (['05-10 23:59:59', '05-12 00:00:00', '05-12 23:59:59', '05-23 23:59:59', '05-25 00:00:00'] as $key => $date) {
+			$rows[] = ['id' => $key + 1, 'created' => $year . '-' . $date];
+		}
+
+		return $rows;
 	}
 
 	protected function getActualResultAsArray(): array

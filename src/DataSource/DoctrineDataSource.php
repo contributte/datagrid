@@ -192,7 +192,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 		foreach ($filter->getCondition() as $column => $value) {
 			try {
-				$date = DateTimeHelper::tryConvertToDateTime($value, [$filter->getPhpFormat()]);
+				$date = DateTimeHelper::tryConvertToFilterDate($value, $filter->getPhpFormat());
 				$c = $this->checkAliases($column);
 
 				$this->dataSource->andWhere(sprintf('%s >= :%s AND %s <= :%s', $c, $p1, $c, $p2))
@@ -214,7 +214,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 		if ($valueFrom) {
 			try {
-				$dateFrom = DateTimeHelper::tryConvertToDate($valueFrom, [$filter->getPhpFormat()]);
+				$dateFrom = DateTimeHelper::tryConvertToFilterDate($valueFrom, $filter->getPhpFormat());
 				$dateFrom->setTime(0, 0, 0);
 
 				$p = $this->getPlaceholder();
@@ -230,7 +230,7 @@ class DoctrineDataSource extends FilterableDataSource implements IDataSource, IA
 
 		if ($valueTo) {
 			try {
-				$dateTo = DateTimeHelper::tryConvertToDate($valueTo, [$filter->getPhpFormat()]);
+				$dateTo = DateTimeHelper::tryConvertToFilterDate($valueTo, $filter->getPhpFormat());
 				$dateTo->setTime(23, 59, 59);
 
 				$p = $this->getPlaceholder();
