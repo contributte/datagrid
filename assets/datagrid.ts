@@ -9,7 +9,9 @@ import {
 	InlinePlugin,
 	NetteFormsPlugin,
 	SelectpickerPlugin,
-	SortablePlugin
+	SortablePlugin,
+	SortPlugin,
+	TreeViewPlugin
 } from "./plugins";
 import { SortableJS } from "./integrations";
 import { DatepickerPlugin } from "./plugins";
@@ -218,9 +220,11 @@ export const createFullDatagrids = (ajax: Ajax, _options: Partial<DatagridsOptio
 				new EditablePlugin(),
 				new InlinePlugin(),
 				new NetteFormsPlugin(),
+				new SortPlugin(),
 				new SortablePlugin(new SortableJS()),
 				new DatepickerPlugin(new VanillaDatepicker()),
-				new SelectpickerPlugin(new TomSelect(Select))
+				new SelectpickerPlugin(new TomSelect(Select)),
+				new TreeViewPlugin()
 			],
 		},
 		..._options,
